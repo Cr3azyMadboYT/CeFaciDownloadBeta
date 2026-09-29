@@ -1,0 +1,165 @@
+// The bridge between the design boards' logic and the real app: real venues, the engine, saved preferences.
+import venuesJson from '../data/venues.json';
+import { KINDS, ZONES } from '../engine/catalog';
+import { cuisineLabels, fold, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
+import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
+
+const VENUES = venuesJson as Venue[];
+const BY_ID = new Map(VENUES.map((v) => [v.id, v]));
+
+export interface Prefs { zone: string; likes: string[]; dist: string; name?: string; user?: string; }
+const PKEY = 'cefaci.prefs';
+function loadPrefs(): Prefs {
+  try { const raw = localStorage.getItem(PKEY); if (raw) return { zone: 'centru', likes: [], dist: '20', ...JSON.parse(raw) }; } catch { /* storage blocked */ }
+  return { zone: 'centru', likes: [], dist: '20' };
+}
+
+// Colours and icons in the design's own palette, chosen by kind so the cards stay varied but predictable.
+const LOOK: Record<string, [string, string, string][]> = {
+  mancare: [['#FF6A4D', '#0E1440', '#FFD43B'], ['#FFD43B', '#0E1440', '#FF6A4D'], ['#FF8A73', '#0E1440', '#FFE58A']],
+  cafea: [['#DCE0EA', '#0E1440', '#FF6A4D'], ['#FFE58A', '#0E1440', '#8C6CFF']],
+  desert: [['#FF8A73', '#0E1440', '#FFE58A']],
+  bar: [['#8C6CFF', '#0E1440', '#FFD43B'], ['#FF6A4D', '#0E1440', '#8C6CFF']],
+  club: [['#0E1440', '#FFD43B', '#8C6CFF']],
+  film: [['#1D2660', '#F3F5FF', '#2F5BFF']],
+  teatru: [['#B7A3FF', '#0E1440', '#FFD43B']],
+  cultura: [['#FFD43B', '#0E1440', '#8EA6FF'], ['#8EA6FF', '#0E1440', '#FFD43B']],
+  activitate: [['#2F5BFF', '#FFFFFF', '#8EA6FF'], ['#B7A3FF', '#0E1440', '#FFD43B']],
+};
+const ICON_OF: Record<string, string> = {
+  restaurant: 'fork', fast_food: 'burger', cafe: 'coffee', ice_cream: 'sweet', bar: 'cocktail', pub: 'beer', biergarten: 'beer',
+  nightclub: 'club', cinema: 'film', theatre: 'smile', arts_centre: 'star', museum: 'landmark', gallery: 'star',
+  bowling_alley: 'bowl', escape_game: 'key', amusement_arcade: 'dice', trampoline_park: 'bolt', miniature_golf: 'target',
+  ice_rink: 'bolt', water_park: 'waves', theme_park: 'star', zoo: 'heart',
+};
+const CUISINE_ICON: Record<string, string> = { pizza: 'pizza', burger: 'burger', coffee_shop: 'coffee', cake: 'sweet', dessert: 'sweet', ice_cream: 'sweet' };
+const hash = (s: string) => { let x = 0; for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) | 0; return Math.abs(x); };
+const SLOT = ['15:00', '20:00', '23:00'];
+
+/** One venue in the shape the design's screens expect (PLACES entries). */
+function toPlace(v: Venue, origin: { lat: number; lon: number }) {
+  const k = info(v);
+  const looks = LOOK[v.cat] ?? LOOK.mancare;
+  const [bg, fg, dot] = looks[hash(v.id) % looks.length];
+  const cl = cuisineLabels(v);
+  const title = cl.length ? (v.k === 'restaurant' ? 'Restaurant, ' + cl.slice(0, 2).join(' și ').toLowerCase() : v.kind + ', ' + cl[0].toLowerCase()) : v.kind;
+  const d = km(origin, v);
+  const phone = v.phone ?? '';
+  const needsRes = v.k === 'escape_game' || v.k === 'bowling_alley' ? 'required' : v.k === 'restaurant' && (phone || v.website) ? 'recommended' : 'none';
+  return {
+    id: v.id, name: v.name, title, icon: CUISINE_ICON[v.cuisines[0]] ?? ICON_OF[v.k] ?? 'star', bg, fg, dot,
+    price: priceOf(v), dur: k.hours, dist: Math.max(3, Math.round(3 + d * 2.4)), km: d, vibes: vibesOf(v), min: k.min, max: k.max,
+    when: ['now', 'eve', 'tom', 'we'], res: phone || v.website ? needsRes : 'none', verified: false, partner: false,
+    age: v.k === 'nightclub', t: SLOT[k.night], zone: zoneById(v.zone).name, real: v,
+    contact: phone || v.website ? { phone, wa: false, web: !!v.website, site: v.website ?? '', unit: v.cat === 'activitate' ? 'o rezervare' : 'o masă' } : undefined,
+  };
+}
+type Place = ReturnType<typeof toPlace>;
+
+const WHEN_MAP: Record<string, When> = { now: 'acum', eve: 'diseara', tom: 'maine', we: 'weekend' };
+const WHO_MAP: Record<string, Who> = { 1: '1', 2: '2', 34: '34', 5: '5' };
+const BUDGET_MAX: Record<string, number> = { 0: 0, 50: 50, 100: 100, 200: 200, any: Infinity };
+const MIN_TO_KM: Record<string, number> = { 10: 4, 20: 10, 30: 18 };
+const DUR_MAX: Record<string, number> = { 1: 1.5, 23: 3, 4: 99 };
+const VIBE_LIKES: Record<string, string[]> = { bowl: ['Fun', 'Competitiv'], escape: ['Fun', 'Competitiv'], film: ['Cultură', 'Chill'], party: ['Party'], karaoke: ['Fun', 'Party'], food: ['Mâncare bună'], cafe: ['Chill'], sport: ['Competitiv'], nature: ['Aer liber'], culture: ['Cultură'], board: ['Fun'], standup: ['Cultură', 'Fun'] };
+
+export const APP = {
+  prefs: loadPrefs(),
+  places: [] as Place[],
+  byIdMap: new Map<string, Place>(),
+  reasons: new Map<string, string>(),
+  cache: new Map<string, Place[]>(),
+  restart: () => {},
+
+  savePrefs(p: Partial<Prefs>) {
+    this.prefs = { ...this.prefs, ...p };
+    try { localStorage.setItem(PKEY, JSON.stringify(this.prefs)); } catch { /* ignore */ }
+    this.rebuild();
+  },
+  origin() { return zoneById(this.prefs.zone); },
+  zoneName() { return zoneById(this.prefs.zone).name; },
+  zones() { return ZONES; },
+  rebuild() {
+    const o = this.origin();
+    this.places.length = 0; // the boards hold this array, so it is refilled in place
+    for (const v of VENUES) this.places.push(toPlace(v, o));
+    this.byIdMap = new Map(this.places.map((p) => [p.id, p]));
+    this.cache.clear();
+  },
+  byId(id: string) { return this.byIdMap.get(id); },
+  ctx(): Ctx {
+    const likes = this.prefs.likes.flatMap((l) => VIBE_LIKES[l] ?? [l]);
+    return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: [] };
+  },
+  /** The design's matches(f): real ranking from the engine, as PLACES entries. */
+  matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string }): Place[] {
+    const key = JSON.stringify(f) + this.prefs.zone + new Date().getHours();
+    const hit = this.cache.get(key);
+    if (hit) return hit;
+    const ask: Ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: BUDGET_MAX[f.budget] ?? Infinity, maxKm: MIN_TO_KM[f.dist] ?? 10, vibes: f.vibes as Ask['vibes'] };
+    const r = recommend(VENUES, ask, this.ctx(), 0, 200);
+    const list = r.picks.filter((s) => info(s.v).hours <= (DUR_MAX[f.dur] ?? 99)).map((s) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
+    this.cache.set(key, list);
+    return list;
+  },
+  reason(id: string) { return this.reasons.get(id); },
+  /** Free-text search, same card shape. */
+  search(q: string): Place[] {
+    const r = search(VENUES, q, this.ctx(), 30);
+    return r.results.map((s: Scored) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
+  },
+  searchNote(q: string) {
+    const n = fold(q).trim();
+    return n ? '' : '';
+  },
+  openLabel(id: string, when: string) {
+    const p = this.byIdMap.get(id);
+    if (!p) return '';
+    const t = targetTime(WHEN_MAP[when] ?? 'acum', KINDS[p.real.k]?.night ?? 1, new Date());
+    return openAt(p.real, t).label;
+  },
+  /** Five real places for the "Da / Poate / Nu" step of sign-up, matched to what the person likes. */
+  picks(likes: string[]) {
+    const ask: Ask = { who: '34', when: 'weekend', budget: Infinity, maxKm: 12, vibes: [...new Set(likes.flatMap((l) => VIBE_LIKES[l] ?? []))] as Ask['vibes'] };
+    return recommend(VENUES, ask, this.ctx(), 0, 5).picks.map((s) => this.byIdMap.get(s.v.id)!);
+  },
+  pickMemo: new Map<string, { name: string; tag: string; sub: string; bg: string; fg: string; dot: string; like: string }[]>(),
+  /** Real places for the sign-up "Da / Poate / Nu" cards, near the chosen zone and matched to the chosen likes. */
+  picksFor(likes: string[], zoneId: string) {
+    const key = likes.join(',') + '@' + zoneId;
+    const hit = this.pickMemo.get(key);
+    if (hit) return hit;
+    const origin = zoneById(zoneId);
+    const vibes = [...new Set(likes.flatMap((l) => VIBE_LIKES[l] ?? []))] as Ask['vibes'];
+    const ctx: Ctx = { prefs: { zone: zoneId, likes: vibes }, origin, now: new Date(), history: [] };
+    const r = recommend(VENUES, { who: '34', when: 'weekend', budget: Infinity, maxKm: 8, vibes }, ctx, 0, 5);
+    const LIKE_OF: Record<string, string> = { mancare: 'food', cafea: 'cafe', desert: 'cafe', bar: 'party', club: 'party', film: 'film', teatru: 'culture', cultura: 'culture', activitate: 'bowl' };
+    const out = r.picks.map((s) => {
+      const p = toPlace(s.v, origin);
+      return { name: p.name, tag: s.v.kind + ' · ' + p.dist + ' min', sub: (p.title !== s.v.kind ? p.title + '. ' : '') + (p.price ? 'Cam ' + p.price + ' lei de persoană. ' : '') + (s.reasons[0] ?? ''), bg: p.bg, fg: p.fg, dot: p.dot, like: s.v.k === 'escape_game' ? 'escape' : LIKE_OF[s.v.cat] ?? 'food' };
+    });
+    this.pickMemo.set(key, out);
+    return out;
+  },
+  fixWhen(WHEN: Record<string, { date: string }>) {
+    const months = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
+    const fmt = (d: Date) => d.getDate() + ' ' + months[d.getMonth()];
+    const now = new Date();
+    const tom = new Date(now.getTime() + 864e5);
+    const sat = new Date(now.getTime()); sat.setDate(sat.getDate() + ((6 - sat.getDay() + 7) % 7 || 7));
+    if (WHEN.eve) WHEN.eve.date = 'Azi, ' + fmt(now);
+    if (WHEN.tom) WHEN.tom.date = 'Mâine, ' + fmt(tom);
+    if (WHEN.we) WHEN.we.date = 'Sâmbătă, ' + fmt(sat);
+  },
+  count: VENUES.length,
+  todayText() {
+    const days = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
+    const months = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
+    const d = new Date();
+    return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()];
+  },
+};
+APP.rebuild();
+
+export function initBridge(extra: Record<string, unknown>) { Object.assign(APP, extra); }
+export { BY_ID };
