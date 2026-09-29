@@ -1,0 +1,135 @@
+[
+ {
+  "id": "centru",
+  "name": "Centrul Vechi",
+  "area": "București",
+  "lat": 44.4312,
+  "lon": 26.101
+ },
+ {
+  "id": "s1",
+  "name": "Sector 1",
+  "area": "București",
+  "lat": 44.47,
+  "lon": 26.07
+ },
+ {
+  "id": "s2",
+  "name": "Sector 2",
+  "area": "București",
+  "lat": 44.453,
+  "lon": 26.138
+ },
+ {
+  "id": "s3",
+  "name": "Sector 3",
+  "area": "București",
+  "lat": 44.42,
+  "lon": 26.15
+ },
+ {
+  "id": "s4",
+  "name": "Sector 4",
+  "area": "București",
+  "lat": 44.38,
+  "lon": 26.115
+ },
+ {
+  "id": "s5",
+  "name": "Sector 5",
+  "area": "București",
+  "lat": 44.39,
+  "lon": 26.06
+ },
+ {
+  "id": "s6",
+  "name": "Sector 6",
+  "area": "București",
+  "lat": 44.435,
+  "lon": 26.025
+ },
+ {
+  "id": "buftea",
+  "name": "Buftea",
+  "area": "Ilfov",
+  "lat": 44.568,
+  "lon": 25.948
+ },
+ {
+  "id": "chitila",
+  "name": "Chitila",
+  "area": "Ilfov",
+  "lat": 44.508,
+  "lon": 25.982
+ },
+ {
+  "id": "mogosoaia",
+  "name": "Mogoșoaia",
+  "area": "Ilfov",
+  "lat": 44.529,
+  "lon": 25.999
+ },
+ {
+  "id": "otopeni",
+  "name": "Otopeni",
+  "area": "Ilfov",
+  "lat": 44.55,
+  "lon": 26.07
+ },
+ {
+  "id": "corbeanca",
+  "name": "Corbeanca",
+  "area": "Ilfov",
+  "lat": 44.603,
+  "lon": 26.035
+ },
+ {
+  "id": "voluntari",
+  "name": "Voluntari și Pipera",
+  "area": "Ilfov",
+  "lat": 44.49,
+  "lon": 26.14
+ },
+ {
+  "id": "pantelimon",
+  "name": "Pantelimon",
+  "area": "Ilfov",
+  "lat": 44.452,
+  "lon": 26.205
+ },
+ {
+  "id": "popesti",
+  "name": "Popești-Leordeni",
+  "area": "Ilfov",
+  "lat": 44.38,
+  "lon": 26.17
+ },
+ {
+  "id": "bragadiru",
+  "name": "Bragadiru",
+  "area": "Ilfov",
+  "lat": 44.37,
+  "lon": 25.975
+ },
+ {
+  "id": "chiajna",
+  "name": "Chiajna și Militari",
+  "area": "Ilfov",
+  "lat": 44.455,
+  "lon": 25.975
+ },
+ {
+  "id": "snagov",
+  "name": "Snagov",
+  "area": "Ilfov",
+  "lat": 44.7,
+  "lon": 26.17
+ },
+ {
+  "id": "magurele",
+  "name": "Măgurele",
+  "area": "Ilfov",
+  "lat": 44.35,
+  "lon": 26.03
+ }
+]
