@@ -20,3 +20,8 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 ## Comenzi
 - `npm i`, `npx vitest run`, `node scripts/extract-boards.mjs && npx vite build`
 - APK: `cp dist/index.html android/assets/` apoi apktool b + uber-apk-signer cu `android-release.jks` (parola în chat, nu în git).
+
+## Amintirea pentru bon (decizie Cornel, 30.09)
+- La 40 de minute după check-in (scanat codul localului sau scanat de ospătar), Bilu trimite notificarea: „Nu uita de bon, ne ajută și pe noi și pe tine :)”.
+- La check-in, pe ecran, Bilu spune o dată: „Păstrează bonul la final, îți aduce 25 XP.”
+- Maximum 2 amintiri; a doua: a doua zi la prânz („Ai uitat bonul de aseară?”). Bonul se poate pune până a doua zi seara.
