@@ -3,3 +3,5 @@ dist
 shots
 android-release.jks
 android/assets/index.html
+*.jks
+*.keystore
