@@ -1,6 +1,8 @@
 // Text patches applied to the design boards: [where ('code' | 'tpl'), find, replace].
 import { CONT_ACCOUNT } from './board-patches-cont.mjs';
+import { CONT_EMAIL } from './board-patches-email.mjs';
 import { DEMO_BUDGET } from './board-patches-budget.mjs';
+import { DEMO_REAL } from './board-patches-real.mjs';
 
 // They swap the design's sample venues for real ones and add search, keeping every screen as designed.
 
@@ -16,6 +18,7 @@ const ZONE_SCREEN = `<sc-if value="{{zoneOpen}}" hint-placeholder-val="{{ false 
 <div style="display: flex; align-items: center; gap: 6px; height: 44px"><button type="button" class="press iconbtn" onClick="{{zoneClose}}" aria-label="Înapoi" style="margin-left: -12px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button></div>
 <h1 id="zn-t" class="h1" style="font-size: 34px">De unde pleci?</h1>
 <p class="muted" style="margin: 0">Distanțele și recomandările se socotesc de aici.</p>
+<button type="button" class="{{hereCls}}" aria-pressed="{{hereOn}}" onClick="{{useHere}}" style="align-self: flex-start; display: flex; align-items: center; gap: 8px; padding: 0 16px"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path><circle cx="12" cy="12" r="7"></circle><circle cx="12" cy="12" r="2.5"></circle></svg>{{hereLabel}}</button>
 <sc-for list="{{zoneGroups}}" as="g" hint-placeholder-count="2"><div style="display: flex; flex-direction: column; gap: 8px"><p class="lbl" style="margin: 6px 0 0">{{g.area}}</p><div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{g.zones}}" as="z" hint-placeholder-count="6"><button type="button" class="{{z.cls}}" aria-pressed="{{z.on}}" onClick="{{z.pick}}">{{z.name}}</button></sc-for></div></div></sc-for>
 </section>
 </sc-if>
@@ -43,7 +46,10 @@ export const PATCHES = {
     return {
       appZone: APP.zoneName(), zoneAria: 'Zona ta: ' + APP.zoneName() + '. Schimbă zona', openZone: () => this.setState({ zoneOpen: true }),
       zoneOpen: !!s.zoneOpen, zoneClose: () => this.setState({ zoneOpen: false }),
-      zoneGroups: ['București', 'Ilfov'].map((area) => ({ area, zones: APP.zones().filter((z) => z.area === area).map((z) => ({ name: z.name, on: z.id === APP.prefs.zone, cls: z.id === APP.prefs.zone ? 'press chip on' : 'press chip', pick: () => { APP.savePrefs({ zone: z.id }); this.setState({ zoneOpen: false, page: 0 }); this.toast('Pleci din ' + z.name + '. Am refăcut recomandările.'); } })) })),
+      // optional real location, asked only when the person taps it (decision 19a)
+      hereOn: APP.hasHere(), hereCls: APP.hasHere() ? 'press chip on' : 'press chip', hereLabel: s.hereBusy ? 'Caut locația…' : (APP.hasHere() ? 'Folosesc locația ta' : 'Folosește locația mea'),
+      useHere: () => { if (this.state.hereBusy) return; this.setState({ hereBusy: true }); APP.useHere().then((err) => { this.setState({ hereBusy: false, page: 0, zoneOpen: !!err }); this.toast(err || 'Pleci de lângă tine. Am refăcut recomandările.'); }); },
+      zoneGroups: ['București', 'Ilfov'].map((area) => ({ area, zones: APP.zones().filter((z) => z.area === area).map((z) => ({ name: z.name, on: !APP.hasHere() && z.id === APP.prefs.zone, cls: !APP.hasHere() && z.id === APP.prefs.zone ? 'press chip on' : 'press chip', pick: () => { APP.savePrefs({ zone: z.id, here: undefined }); this.setState({ zoneOpen: false, page: 0 }); this.toast('Pleci din ' + z.name + '. Am refăcut recomandările.'); } })) })),
       sq: zq, sqOn: zq.length > 0, sqHints: zq.trim().length < 2,
       onSq: (e) => this.setState({ sq: e && e.target ? String(e.target.value).slice(0, 60) : '', page: 0 }),
       sqClear: () => this.setState({ sq: '', page: 0 }),
@@ -66,6 +72,7 @@ export const PATCHES = {
     ['tpl', 'Cornel Adrian', '{{meName}}'],
     ['tpl', '@CornaciDev', '@{{meUser}}'],
     ...DEMO_BUDGET,
+    ...DEMO_REAL,
   ],
   Cont: [
     ['tpl', '<div style="padding: 14px; border-radius: 18px; background: var(--s1); border: 1px solid var(--line); display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #2F5BFF; color: #FFD43B; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg></span><span class="col" style="flex: 1 1 auto; gap: 3px"><span style="font: 700 17px/1.1 \'Instrument Sans\', system-ui, sans-serif">Buftea</span><span class="muted">Găsit după locație · poți schimba oricând</span></span></div>', '<sc-for list="{{zoneGroups}}" as="g" hint-placeholder-count="2"><div class="col" style="gap: 8px"><p class="lbl">{{g.area}}</p><div style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{g.zones}}" as="z" hint-placeholder-count="6"><button type="button" class="{{z.cls}}" aria-pressed="{{z.on}}" onClick="{{z.pick}}">{{z.name}}</button></sc-for></div></div></sc-for>'],
@@ -78,5 +85,6 @@ export const PATCHES = {
     ['code', "const FOUND = [", "const FOUND = []; // real friends arrive with accounts (etapa 2)\nconst FOUND_DESIGN = ["],
     ['code', "s.synced ? 'I-am găsit! Adaugă-i și votați împreună data viitoare.'", "s.synced ? 'Încă n-am găsit pe nimeni din agendă în CeFaci. Când vin prietenii tăi, îi vezi aici și votați împreună.'"],
     ...CONT_ACCOUNT,
+    ...CONT_EMAIL,
   ],
 };

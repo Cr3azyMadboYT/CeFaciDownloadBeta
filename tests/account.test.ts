@@ -20,6 +20,23 @@ describe('sign-up', () => {
     expect(c.state.step).toBe('name');
     expect(c.renderVals().progText).toBe('1 din 6');
   });
+  it('signs in with an email code', async () => {
+    const sent: string[] = [];
+    APP.emailStart = async (e: string) => { sent.push(e); return null; };
+    APP.emailVerify = async (_e: string, code: string) => (code === '123456' ? null : 'Codul nu e bun sau a expirat.');
+    const c = board(); c.renderVals().goEmail();
+    expect(c.state.step).toBe('phone');
+    type(c.renderVals().onPhone, 'ana@');
+    expect(c.renderVals().phoneOff).toBe(true);
+    type(c.renderVals().onPhone, ' Ana@Exemplu.ro ');
+    expect(c.renderVals().phoneOff).toBe(false);
+    c.renderVals().phoneNext(); await Promise.resolve(); await Promise.resolve();
+    expect(sent).toEqual(['ana@exemplu.ro']); expect(c.renderVals().codeOpen).toBe(true);
+    type(c.renderVals().onCode, '111111'); c.renderVals().phoneNext(); await Promise.resolve(); await Promise.resolve();
+    expect(c.renderVals().codeBad).toBe(true); expect(c.state.step).toBe('phone');
+    type(c.renderVals().onCode, '123456'); c.renderVals().phoneNext(); await Promise.resolve(); await Promise.resolve();
+    expect(c.state.step).toBe('name');
+  });
   it('reads the birth date as it is typed and asks before going on', () => {
     vi.useFakeTimers(); vi.setSystemTime(new Date(2026, 9, 3));
     const c = board(); c.renderVals().goLocal();

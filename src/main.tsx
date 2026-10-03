@@ -4,7 +4,9 @@ import * as DemoView from './boards/Demo.view.js';
 import { make as makeCont } from './boards/Cont.logic.js';
 import { make as makeDemo } from './boards/Demo.logic.js';
 import { APP, initBridge } from './app/bridge';
-import { signInWithGoogle, watchAuth } from './app/auth';
+import { cloudClient, emailStart, emailVerify, signInWithGoogle, watchAuth } from './app/auth';
+import { createAccount, makeUploader, restore } from './app/cloud';
+import './app/fonts.css';
 import './app/shell.css';
 
 const W = 390, H = 844;
@@ -22,9 +24,7 @@ function board(name: string): Board {
   return compiled[name];
 }
 
-const fonts = document.createElement('link');
-fonts.rel = 'stylesheet'; fonts.href = DemoView.FONTS;
-document.head.appendChild(fonts);
+// fonts ship inside the app (src/app/fonts.css): no Google Fonts request, same look offline
 const style = document.createElement('style');
 document.head.appendChild(style);
 const stage = document.getElementById('root')!;
@@ -54,6 +54,12 @@ function show(name: string) {
       birth: st.birthIso || undefined, budget: st.budget, who: st.who, when: st.when, mood: st.mood, moves: st.moves,
       liked: votes.filter(([, v]) => v === 'yes').map(([id]) => id), disliked: votes.filter(([, v]) => v === 'no').map(([id]) => id),
     });
+    // signed in and new: the account is created now, with everything answered during sign-up
+    if (signedIn && !accountKnown && st.birthIso) {
+      const { name: _n, user: _u, birth: _b, google: _g, here: _h, ...answers } = APP.prefs;
+      createAccount(cloudClient(), { username: String(st.user || ''), first: String(st.first || '').trim(), birth: st.birthIso, prefs: answers })
+        .then((err) => { accountKnown = !err; if (err) (current?.comp as unknown as { toast?: (t: string) => void })?.toast?.(err); });
+    }
   }
   current?.unmount();
   currentName = name;
@@ -61,15 +67,39 @@ function show(name: string) {
   const b = board(name);
   style.textContent = b.css;
   current = mount(b, host, { theme: 'zi' }, { navigate: show });
-}
-initBridge({ restart: () => { try { localStorage.clear(); } catch { /* */ } show('Cont'); }, google: signInWithGoogle });
-show(onboarded() ? 'Demo' : 'Cont');
-// back from Google: remember the account and skip the start screen, with the first name filled in
-watchAuth((who) => {
-  if (!who || APP.prefs.google === who.id) return;
-  APP.savePrefs({ google: who.id });
-  if (currentName === 'Cont' && current) {
-    const st = current.comp.state as Record<string, any>;
-    if (st.step === 'start') current.comp.setState({ step: 'name', first: st.first || who.first });
+  if (name === 'Demo') {
+    // bring back what was saved, then save after every change (a little later, so a burst of changes writes once)
+    const comp = current.comp as DCLogic & { pid?: number };
+    const saved = APP.loadBoardState();
+    if (Object.keys(saved).length) {
+      comp.setState(saved);
+      comp.pid = Math.max(0, ...((saved.plans as { pid?: number }[] | undefined) ?? []).map((p) => p.pid ?? 0));
+    }
+    const set = comp.setState.bind(comp);
+    let t: ReturnType<typeof setTimeout> | undefined;
+    comp.setState = (p: unknown) => { set(p); clearTimeout(t); t = setTimeout(() => APP.saveBoardState(comp.state as Record<string, unknown>), 300); };
   }
+}
+initBridge({ restart: () => { try { localStorage.clear(); } catch { /* */ } show('Cont'); }, google: signInWithGoogle, emailStart, emailVerify });
+show(onboarded() ? 'Demo' : 'Cont');
+// After signing in (Google or email): an existing account comes back whole (reinstalling loses nothing);
+// a new one continues the sign-up with the first name filled in. From then on changes go to Supabase.
+let signedIn = false;
+let accountKnown = false;
+watchAuth((who) => {
+  if (!who) { signedIn = false; APP.onSaved = () => {}; return; }
+  if (signedIn) return;
+  signedIn = true;
+  const upload = makeUploader(cloudClient(), who.id);
+  restore(cloudClient(), who.id).then((r) => {
+    accountKnown = r.known;
+    APP.prefs = { ...APP.prefs, ...JSON.parse(localStorage.getItem('cefaci.prefs') || '{}'), google: who.id };
+    APP.rebuild();
+    APP.onSaved = (state) => { if (accountKnown) upload(state, APP.prefs as unknown as Record<string, unknown>); };
+    if (r.known) { if (currentName === 'Cont') show('Demo'); return; }
+    if (currentName === 'Cont' && current) {
+      const st = current.comp.state as Record<string, any>;
+      if (st.step === 'start' || st.step === 'phone') current.comp.setState({ step: 'name', first: st.first || who.first });
+    }
+  }).catch(() => { /* offline: keep going on the phone */ });
 });

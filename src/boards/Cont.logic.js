@@ -85,7 +85,7 @@ class Component extends DCLogic {
     const on = (x) => (x ? 'press chip on' : 'press chip');
     const seg = (x) => (x ? 'press seg on' : 'press seg');
     const SAY = {
-      phone: ['hi', 'Salut! Întâi numărul tău. Îți trimit un cod, ca să știu că ești tu.'],
+      phone: ['hi', s.sent ? 'Ți-am trimis un cod de 6 cifre pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod de 6 cifre, ca să știu că ești tu.'],
       name: s.ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
       zone: ['up', 'Spune-mi de unde pleci și cât de departe ești dispus să mergi pentru o seară bună.'],
       likes: ['hi', likesN >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
@@ -106,17 +106,22 @@ class Component extends DCLogic {
       bl: biluPose(say[0], say[0] === 'up' ? 'ul' : 'c'), say: say[1],
       startBl: biluPose('hi', 'c'), doneBl: biluPose('yay', 'c'),
       goGoogle: () => { this.setState({ authErr: '' }); APP.google().then((err) => { if (err) this.setState({ authErr: err }); }); },
-      goLocal: () => this.go('name'), goSso: () => this.setState({ authErr: 'Intrarea cu Apple vine în curând.' }), showApple: false, authErr: s.authErr || ''
+      goEmail: () => this.setState({ step: 'phone', sent: false, code: '', authErr: '' }), goLocal: () => this.go('name'), goSso: () => this.setState({ authErr: 'Intrarea cu Apple vine în curând.' }), showApple: false, authErr: s.authErr || ''
     };
     // phone
-    const digits = s.phone.replace(/\D/g, '');
-    v.phone = s.phone; v.onPhone = (e) => set({ phone: e && e.target ? String(e.target.value).slice(0, 13) : '', sent: false, code: '' });
+    const mail = s.phone.trim().toLowerCase();
+    const mailOk = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(mail);
+    v.phone = s.phone; v.onPhone = (e) => set({ phone: e && e.target ? String(e.target.value).slice(0, 80) : '', sent: false, code: '', authErr: '' });
     v.codeOpen = s.sent; v.code = s.code; v.codeBad = s.codeBad;
     v.onCode = (e) => set({ code: e && e.target ? String(e.target.value).replace(/\D/g, '').slice(0, 6) : '', codeBad: false });
-    v.codeDemo = () => set({ code: '318642', codeBad: false });
-    v.phoneOff = s.sent ? s.code.length !== 6 : digits.length < 9;
-    v.phoneBtn = s.sent ? 'Confirmă codul' : 'Trimite-mi codul';
-    v.phoneNext = () => { if (!this.state.sent) { set({ sent: true }); return; } if (this.state.code === '318642') this.go('name'); else set({ codeBad: true }); };
+    v.resend = () => { set({ authErr: '', code: '' }); APP.emailStart(mail).then((err) => set({ authErr: err || '' })); };
+    v.phoneOff = !!s.busy || (s.sent ? s.code.length !== 6 : !mailOk);
+    v.phoneBtn = s.busy ? 'O clipă…' : (s.sent ? 'Confirmă codul' : 'Trimite-mi codul');
+    v.phoneNext = () => {
+      set({ busy: true, authErr: '' });
+      if (!this.state.sent) { APP.emailStart(mail).then((err) => set(err ? { busy: false, authErr: err } : { busy: false, sent: true })); return; }
+      APP.emailVerify(mail, this.state.code).then((err) => { if (err) set({ busy: false, codeBad: true }); else { set({ busy: false }); this.go('name'); } });
+    };
     // name
     const u = clean(s.user);
     v.first = s.first; v.onFirst = (e) => set({ first: e && e.target ? String(e.target.value).slice(0, 24) : '' });

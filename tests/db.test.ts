@@ -92,7 +92,17 @@ it('keeps every rule of the database', async () => {
   await expectFail('vote closed at deadline', () => as('teen', `insert into ballots (session_id, option_id, user_id, value) values ($1, $2, $3, 'da')`, [vs, o[0], U.teen]));
   eq('closed flag', (await as('cris', `select closed from vote_results($1) limit 1`, [vs])).rows[0].closed, true);
   
-  // account deletion
+  // saved state and the Plus week
+  await expectOk('save app state', () => as('bob', `update profile_private set app_state = '{"xp":150}'::jsonb where id = $1`, [U.bob]));
+  eq('state saved', (await as('bob', `select app_state->>'xp' x from profile_private`)).rows[0].x, '150');
+  const t1 = (await as('bob', `select start_plus_trial() t`)).rows[0].t;
+  await db.exec(`select pg_sleep(0.01)`);
+  eq('trial cannot restart', String((await as('bob', `select start_plus_trial() t`)).rows[0].t), String(t1));
+  await as('bob', `update profile_private set plus_trial_started_at = now() + interval '30 days', birth_date = '2015-01-01' where id = $1`, [U.bob]);
+  const bobPriv = (await as('bob', `select birth_date::text b, plus_trial_started_at t from profile_private`)).rows[0];
+  eq('birth date locked', bobPriv.b, '1999-05-05'); eq('trial date locked', String(bobPriv.t), String(t1));
+
+    // account deletion
   await expectOk('delete account', () => as('cris', `select delete_my_account()`));
   eq('cris gone', (await q(`select count(*)::int n from profiles where id = $1`, [U.cris])).rows[0].n, 0);
   expect(bad, 'failed checks').toBe(0);

@@ -1,7 +1,7 @@
 // The bridge between the design boards' logic and the real app: real venues, the engine, saved preferences.
 import venuesJson from '../data/venues.json';
 import { KINDS, ZONES } from '../engine/catalog';
-import { adultOnly, cuisineLabels, fold, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
+import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
 import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
 
 const VENUES = venuesJson as Venue[];
@@ -18,8 +18,12 @@ export interface Prefs {
   moves?: string[];               // 'walk' | 'car' | 'bus' | 'bike'
   liked?: string[]; disliked?: string[]; // venue ids from the "Ai merge aici?" cards
   google?: string;                // Supabase user id, when signed in with Google
+  here?: { lat: number; lon: number; at: number }; // the phone's location, when the person chose "Folosește locația mea"
 }
 const PKEY = 'cefaci.prefs';
+const SKEY = 'cefaci.state';
+// what the main board keeps between launches: plans, XP and stamps, theme, the tour seen, the Plus free week
+const KEEP = ['plans', 'theme', 'doodles', 'xp', 'welcomeXp', 'stamps', 'tut', 'plus', 'plusSaved', 'removed', 'ended', 'dropTaken', 'billXp'];
 const DEFAULTS: Prefs = { zone: 'centru', likes: [], dist: '20', moves: ['walk', 'car'] };
 function loadPrefs(): Prefs {
   try { const raw = localStorage.getItem(PKEY); if (raw) return { ...DEFAULTS, ...JSON.parse(raw) }; } catch { /* storage blocked */ }
@@ -105,8 +109,21 @@ export const APP = {
     try { localStorage.setItem(PKEY, JSON.stringify(this.prefs)); } catch { /* ignore */ }
     this.rebuild();
   },
-  origin() { return zoneById(this.prefs.zone); },
-  zoneName() { return zoneById(this.prefs.zone).name; },
+  // where distances start: the phone's location if asked for in the last 6 hours, else the chosen zone
+  hasHere() { const h = this.prefs.here; return !!h && Date.now() - h.at < 6 * 3600e3; },
+  origin(): { lat: number; lon: number } { return this.hasHere() ? { lat: this.prefs.here!.lat, lon: this.prefs.here!.lon } : zoneById(this.prefs.zone); },
+  zoneName() { return this.hasHere() ? 'Lângă tine' : zoneById(this.prefs.zone).name; },
+  useHere(): Promise<string | null> {
+    return new Promise((done) => {
+      if (typeof navigator === 'undefined' || !navigator.geolocation) { done('Telefonul nu ne dă locația. Alege zona din listă.'); return; }
+      navigator.geolocation.getCurrentPosition((p) => {
+        const here = { lat: p.coords.latitude, lon: p.coords.longitude, at: Date.now() };
+        const z = nearestZone(here);
+        if (km(here, z) > 40) { done('Ești în afara Bucureștiului și Ilfovului. Alege zona din listă.'); return; }
+        this.savePrefs({ here, zone: z.id }); done(null);
+      }, () => done('N-am primit locația. Poți s-o permiți din setări sau alegi zona din listă.'), { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
+    });
+  },
   zones() { return ZONES; },
   rebuild() {
     const o = this.origin();
@@ -121,8 +138,37 @@ export const APP = {
     const likes = this.prefs.likes.flatMap((l) => VIBE_LIKES[l] ?? [l]);
     return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: [], minor: this.isMinor(), liked: this.prefs.liked, disliked: this.prefs.disliked };
   },
+  /** The main board's state that must survive closing the app (and, once signed in, reinstalling it). */
+  loadBoardState(now = Date.now()): Record<string, unknown> {
+    let saved: Record<string, any> = {};
+    try { saved = JSON.parse(localStorage.getItem(SKEY) || '{}'); } catch { saved = {}; }
+    const out: Record<string, unknown> = {};
+    for (const k of KEEP) if (saved[k] !== undefined) out[k] = saved[k];
+    if (saved.tut && saved.tut.on === false) out.tut = { step: 0, bump: 0, replay: false, lv: false, ...saved.tut, on: false }; else delete out.tut; // a tour left halfway starts again
+    // the free Plus week counts real days from the moment Bilu gave it
+    if (saved.plus === 'trial' && saved.plusStart) {
+      const day = Math.floor((now - saved.plusStart) / 864e5) + 1;
+      if (day > 7) { out.plus = 'off'; out.plusDay = 7; if (!saved.expiredShown) { out.plusModal = 'expired'; saved.expiredShown = true; } }
+      else { out.plusDay = day; if (day >= 5 && !saved.day5Shown) { out.plusModal = 'day5'; saved.day5Shown = true; } }
+      try { localStorage.setItem(SKEY, JSON.stringify(saved)); } catch { /* storage blocked */ }
+    }
+    return out;
+  },
+  saveBoardState(st: Record<string, any>, now = Date.now()) {
+    let prev: Record<string, any> = {};
+    try { prev = JSON.parse(localStorage.getItem(SKEY) || '{}'); } catch { prev = {}; }
+    const next: Record<string, any> = { ...prev };
+    for (const k of KEEP) if (st[k] !== undefined) next[k] = st[k];
+    if (st.plus === 'trial' && !prev.plusStart) next.plusStart = now;
+    next.savedAt = now;
+    try { localStorage.setItem(SKEY, JSON.stringify(next)); } catch { /* storage blocked */ }
+    this.onSaved(next);
+  },
+  onSaved: (_state: Record<string, unknown>) => {},
   age: ageOn,
   google: async (): Promise<string | null> => 'Google nu e pornit.',
+  emailStart: async (_email: string): Promise<string | null> => 'Emailul nu e pornit.',
+  emailVerify: async (_email: string, _code: string): Promise<string | null> => 'Emailul nu e pornit.',
   isMinor() { const a = ageOn(this.prefs.birth); return a !== null && a < 18; },
   /** Minutes to km, by the fastest way the person moves. */
   kmFor(min: string, moves?: string[]) {

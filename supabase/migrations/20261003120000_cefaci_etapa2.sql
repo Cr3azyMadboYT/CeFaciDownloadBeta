@@ -29,9 +29,11 @@ create table public.profile_private (
   id uuid primary key references public.profiles (id) on delete cascade,
   birth_date date not null,
   prefs jsonb not null default '{}'::jsonb,                 -- the sign-up answers (zone, likes, budget...)
+  app_state jsonb not null default '{}'::jsonb,             -- plans, XP, stamps, theme, tour seen: survives reinstalling
+  plus_trial_started_at timestamptz,                        -- the free Plus week, once per account
   updated_at timestamptz not null default now()
 );
-comment on table public.profile_private is 'Only the owner reads or changes it.';
+comment on table public.profile_private is 'Only the owner reads or changes it. Birth date and the Plus trial start cannot be changed once set.';
 
 create table public.friendships (
   requester uuid not null references public.profiles (id) on delete cascade,
@@ -195,6 +197,17 @@ begin
   end if;
   return old;
 end $$;
+-- the birth date is set once at sign-up, and the free Plus week cannot be restarted (not even by reinstalling)
+create or replace function private.profile_private_guard() returns trigger
+language plpgsql set search_path = '' as $$
+begin
+  new.birth_date := old.birth_date;
+  new.plus_trial_started_at := coalesce(old.plus_trial_started_at, new.plus_trial_started_at);
+  new.updated_at := now();
+  return new;
+end $$;
+create trigger profile_private_guard before update on public.profile_private for each row execute function private.profile_private_guard();
+
 create trigger crew_members_guard_ins before insert on public.crew_members for each row execute function private.crew_members_guard();
 create trigger crew_members_guard_del after delete on public.crew_members for each row execute function private.crew_members_guard();
 
@@ -443,6 +456,13 @@ language sql stable security definer set search_path = '' as $$
   order by 7 desc, o.position
 $$;
 
+-- Bilu's gift: starts the free Plus week the first time; afterwards it only tells when it started.
+create or replace function public.start_plus_trial() returns timestamptz
+language sql security definer set search_path = '' as $$
+  update public.profile_private set plus_trial_started_at = coalesce(plus_trial_started_at, now())
+  where id = auth.uid() returning plus_trial_started_at
+$$;
+
 -- GDPR: delete my account and everything tied to it.
 create or replace function public.delete_my_account() returns void
 language plpgsql security definer set search_path = '' as $$
@@ -454,11 +474,11 @@ end $$;
 revoke all on function public.complete_signup(text, text, date, jsonb), public.username_available(text), public.find_user(text),
   public.add_friend_by_code(text), public.mutual_friends(uuid), public.create_crew(text, text, text, uuid[], boolean),
   public.join_crew(text), public.reset_crew_link(uuid), public.start_vote(uuid, uuid[], jsonb, timestamptz, text),
-  public.vote_results(uuid), public.delete_my_account() from public, anon;
+  public.vote_results(uuid), public.delete_my_account(), public.start_plus_trial() from public, anon;
 grant execute on function public.complete_signup(text, text, date, jsonb), public.username_available(text), public.find_user(text),
   public.add_friend_by_code(text), public.mutual_friends(uuid), public.create_crew(text, text, text, uuid[], boolean),
   public.join_crew(text), public.reset_crew_link(uuid), public.start_vote(uuid, uuid[], jsonb, timestamptz, text),
-  public.vote_results(uuid), public.delete_my_account() to authenticated;
+  public.vote_results(uuid), public.delete_my_account(), public.start_plus_trial() to authenticated;
 
 -- ---------- live updates (votes, answers to plans, crew invites, friend requests) ----------
 alter publication supabase_realtime add table public.ballots, public.plan_members, public.crew_members, public.friendships, public.vote_sessions;

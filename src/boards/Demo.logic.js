@@ -145,7 +145,8 @@ const PROFILES = {
   'maria.i': { lvl: 3, outings: 12, together: 0, stamps: [], mutual: ['ioana.m', 'sara.p'] }
 };
 const INKS = ['var(--blue-ink)', 'var(--coral-ink)', 'var(--yellow-ink)', 'var(--violet-ink)'];
-const FRIEND_BASE = [
+const FRIEND_BASE = []; // real friends come from Supabase (etapa 2)
+const FRIEND_BASE_DESIGN = [
   { name: 'Ioana Munteanu', user: 'ioana.m', ini: 'I', bg: '#8C6CFF', fg: '#0E1440' },
   { name: 'Mihai Dobre', user: 'mihai.d', ini: 'M', bg: '#FF6A4D', fg: '#0E1440' },
   { name: 'Sara Popa', user: 'sara.p', ini: 'S', bg: '#FFD43B', fg: '#0E1440' },
@@ -155,7 +156,8 @@ const FRIEND_BASE = [
   { name: 'Elena Rusu', user: 'elena.r', ini: 'E', bg: '#B7A3FF', fg: '#0E1440' }
 ];
 const DAYKEY = { now: 'azi', eve: 'azi', tom: 'mâine', we: 'sâm' };
-const CREWS = [
+const CREWS = []; // real crews come from Supabase (etapa 2)
+const CREWS_DESIGN = [
   { id: 'gv', name: 'Gașca de vineri', icon: 'dice', c: 'var(--violet-ink)', rot: '-6deg', members: GV, admin: 'Ioana', outings: 6, invAt: null },
   { id: 'pj', name: 'Padel de joi', icon: 'target', c: 'var(--coral-ink)', rot: '5deg', members: PJ, admin: null, outings: 2, invAt: null }
 ];
@@ -201,8 +203,8 @@ class Component extends DCLogic {
       celebrate: false, qr: 'closed', seed: 7, theme: null, doodles: true, tick: 0,
       conflict: null, sendOpen: false, toast: '', toastUntil: -1,
       vote: null,
-      q: '', settled: false, sent: false, req: 'pending',
-      lvPhase: 'ask', lvXp: 1420, lvChoice: '', lvChips: [], lvTags: [], lvReason: '', levelDone: false,
+      q: '', settled: false, sent: false, req: 'none',
+      lvPhase: 'ask', lvXp: 0, xp: 0, welcomeXp: false, stamps: [], lvChoice: '', lvChips: [], lvTags: [], lvReason: '', levelDone: false,
       tut: { on: true, step: 0, bump: 0, replay: false, lv: false }, plus: 'locked', plusDay: 1, plusSaved: 0, plusModal: null, plusBusy: false, bill: null, billDone: true, billXp: 0, vscan: null, crew: null, crewOpen: false, crewDraft: null, crews: CREWS.slice(), nc: null, crewView: null, crewFrom: 'plans', ended: [], delArm: false, tixSheet: null, tixView: null, person: null, personFrom: 'friends', personArm: false, removed: [], claim: null, dropTaken: {}, proposal: null, phaseOverride: null
     };
     const ph = phaseOfHour(new Date().getHours());
@@ -650,6 +652,7 @@ class Component extends DCLogic {
     const t = this.state.tut;
     const first = !t.replay && !t.magicOnly;
     const patch = { tut: Object.assign({}, t, { on: false }) };
+    if (first && !this.state.welcomeXp) { patch.welcomeXp = true; patch.xp = (this.state.xp || 0) + 150; }
     if (to) patch.screen = to;
     if (to === 'results') patch.page = 0;
     this.setState(patch);
@@ -796,7 +799,7 @@ class Component extends DCLogic {
       go: () => {
         if (m === 'day5') { close(); return; }
         if (m === 'expired') { this.setState({ plusModal: 'pay' }); return; }
-        if (m === 'pay') { this.setState({ plusBusy: true }); this.later(() => close({ plus: 'active' }, 'Gata! Plus e activ. Bilu e mândru de tine.'), 1100); return; }
+        if (m === 'pay') { close({}, 'Plata pentru Plus vine curând, prin Google Play. Până atunci nu-ți luăm niciun ban.'); return; }
         if (m === 'cancel') { close(); }
       },
       alt: () => {
@@ -846,11 +849,11 @@ class Component extends DCLogic {
       billFinish: () => {
         if (fromTicket) {
           this.updPlan(bpl.pid, { bonDone: true });
-          this.setState({ bill: null, billXp: this.state.billXp + 25 });
+          this.setState({ bill: null, billXp: this.state.billXp + 25, xp: (this.state.xp || 0) + 25 });
           this.toast('+25 XP. Ieșirea la ' + bp.name + ' e confirmată.');
           return;
         }
-        this.setState({ bill: null, billDone: true, billXp: this.state.billXp + 25, screen: 'profile' });
+        this.setState({ bill: null, billDone: true, billXp: this.state.billXp + 25, xp: (this.state.xp || 0) + 25, screen: 'profile' });
         this.toast('+25 XP în carnet.');
       }
     };
@@ -1045,8 +1048,10 @@ class Component extends DCLogic {
     // level
     const inFb = s.screen === 'feedback';
     const leveled = s.lvPhase === 'after';
-    const cap = inFb ? (leveled ? 2500 : 1500) : (s.levelDone ? 2500 : 1500);
-    const xpNow = inFb ? s.lvXp : (s.levelDone ? 1570 : 1420) + (s.billXp || 0);
+    const xpNow = inFb ? s.lvXp : (s.xp || 0);
+    const lvNow = LEVEL_XP.reduce((acc, need, i) => (i && xpNow >= need ? i : acc), 0);
+    const lvTop = lvNow >= LEVEL_XP.length - 1;
+    const cap = lvTop ? LEVEL_XP[LEVEL_XP.length - 1] : LEVEL_XP[lvNow + 1];
     const full = inFb && (s.lvPhase === 'fill' || s.lvPhase === 'level');
     const pct = full ? 100 : Math.min(100, (xpNow / cap) * 100);
     const lvLocked = s.lvPhase !== 'ask';
@@ -1104,7 +1109,10 @@ class Component extends DCLogic {
       askFeedbackReal: false, meName: APP.prefs.name || 'Tu', meUser: APP.prefs.user || 'tu',
       appZone: APP.zoneName(), zoneAria: 'Zona ta: ' + APP.zoneName() + '. Schimbă zona', openZone: () => this.setState({ zoneOpen: true }),
       zoneOpen: !!s.zoneOpen, zoneClose: () => this.setState({ zoneOpen: false }),
-      zoneGroups: ['București', 'Ilfov'].map((area) => ({ area, zones: APP.zones().filter((z) => z.area === area).map((z) => ({ name: z.name, on: z.id === APP.prefs.zone, cls: z.id === APP.prefs.zone ? 'press chip on' : 'press chip', pick: () => { APP.savePrefs({ zone: z.id }); this.setState({ zoneOpen: false, page: 0 }); this.toast('Pleci din ' + z.name + '. Am refăcut recomandările.'); } })) })),
+      // optional real location, asked only when the person taps it (decision 19a)
+      hereOn: APP.hasHere(), hereCls: APP.hasHere() ? 'press chip on' : 'press chip', hereLabel: s.hereBusy ? 'Caut locația…' : (APP.hasHere() ? 'Folosesc locația ta' : 'Folosește locația mea'),
+      useHere: () => { if (this.state.hereBusy) return; this.setState({ hereBusy: true }); APP.useHere().then((err) => { this.setState({ hereBusy: false, page: 0, zoneOpen: !!err }); this.toast(err || 'Pleci de lângă tine. Am refăcut recomandările.'); }); },
+      zoneGroups: ['București', 'Ilfov'].map((area) => ({ area, zones: APP.zones().filter((z) => z.area === area).map((z) => ({ name: z.name, on: !APP.hasHere() && z.id === APP.prefs.zone, cls: !APP.hasHere() && z.id === APP.prefs.zone ? 'press chip on' : 'press chip', pick: () => { APP.savePrefs({ zone: z.id, here: undefined }); this.setState({ zoneOpen: false, page: 0 }); this.toast('Pleci din ' + z.name + '. Am refăcut recomandările.'); } })) })),
       sq: zq, sqOn: zq.length > 0, sqHints: zq.trim().length < 2,
       onSq: (e) => this.setState({ sq: e && e.target ? String(e.target.value).slice(0, 60) : '', page: 0 }),
       sqClear: () => this.setState({ sq: '', page: 0 }),
@@ -1620,15 +1628,16 @@ class Component extends DCLogic {
       prAct: () => { if (prU === 'tudor.m') { if (this.state.req === 'pending') { this.setState({ req: 'accepted' }); this.toast('Acum sunteți prieteni. Îi vezi nivelul și ștampilele.'); } } else this.setState({ sent: !this.state.sent }); },
       prLimitedSub: prU === 'tudor.m' ? 'Vrea să fiți prieteni' : (s.sent ? 'Cererea așteaptă răspuns' : 'Nu sunteți încă prieteni'),
 
-      askFeedback: !s.levelDone,
-      goFeedback: () => this.setState({ screen: 'feedback', lvPhase: 'ask', lvXp: 1420, lvChoice: '', lvChips: [], lvTags: [], lvReason: '' }),
+      askFeedback: false, // the outing check-in comes with real outings (bon + XP, etapa 3)
+      hasFreeFriends: false, hasTrending: false, isFounder: String(APP.prefs.user || '').toLowerCase() === 'cornacidev',
+      goFeedback: () => this.setState({ screen: 'feedback', lvPhase: 'ask', lvXp: 0, xp: 0, welcomeXp: false, stamps: [], lvChoice: '', lvChips: [], lvTags: [], lvReason: '' }),
       fbBack: () => this.setState({ screen: 'profile', levelDone: this.state.levelDone || ['level', 'after'].indexOf(this.state.lvPhase) !== -1 }),
-      fbReplay: () => this.setState({ lvPhase: 'ask', lvXp: 1420, lvChoice: '', lvChips: [], lvTags: [], lvReason: '' }),
-      lvlName: inFb ? (leveled ? LEVELS[4] : LEVELS[3]) : (s.levelDone ? LEVELS[4] : LEVELS[3]),
-      lvlText: leveled ? 'Nivel 4' : 'Nivel 3',
-      lvlShort: s.levelDone ? 'Nivel 4' : 'Nivel 3',
+      fbReplay: () => this.setState({ lvPhase: 'ask', lvXp: 0, xp: 0, welcomeXp: false, stamps: [], lvChoice: '', lvChips: [], lvTags: [], lvReason: '' }),
+      lvlName: lvNow ? LEVELS[lvNow] : 'Abia ai început',
+      lvlText: 'Nivel ' + lvNow,
+      lvlShort: 'Nivel ' + lvNow,
       xpText: this.fmtNum(xpNow) + ' / ' + this.fmtNum(cap) + ' XP',
-      nextLvl: 'Încă ' + this.fmtNum(Math.max(0, cap - xpNow)) + ' până la ' + (s.levelDone ? LEVELS[5] : LEVELS[4]),
+      nextLvl: lvTop ? 'Ai ajuns la cel mai înalt nivel.' : 'Încă ' + this.fmtNum(Math.max(0, cap - xpNow)) + ' până la ' + LEVELS[lvNow + 1],
       profBar: pct.toFixed(1) + '%',
       barW: pct.toFixed(1) + '%', barNow: Math.round(pct),
       trackCls: s.lvPhase === 'fill' ? 'track shine' : 'track',
