@@ -4,7 +4,7 @@ import * as DemoView from './boards/Demo.view.js';
 import { make as makeCont } from './boards/Cont.logic.js';
 import { make as makeDemo } from './boards/Demo.logic.js';
 import { APP, initBridge } from './app/bridge';
-import { cloudClient, emailStart, emailVerify, signInWithGoogle, watchAuth } from './app/auth';
+import { cloudClient, deleteAccountEverywhere, emailStart, emailVerify, signInWithGoogle, watchAuth } from './app/auth';
 import { createAccount, makeUploader, restore } from './app/cloud';
 import './app/fonts.css';
 import './app/shell.css';
@@ -80,7 +80,11 @@ function show(name: string) {
     comp.setState = (p: unknown) => { set(p); clearTimeout(t); t = setTimeout(() => APP.saveBoardState(comp.state as Record<string, unknown>), 300); };
   }
 }
-initBridge({ restart: () => { try { localStorage.clear(); } catch { /* */ } show('Cont'); }, google: signInWithGoogle, emailStart, emailVerify });
+initBridge({
+  restart: () => { try { localStorage.clear(); } catch { /* */ } signedIn = false; accountKnown = false; APP.prefs = { zone: 'centru', likes: [], dist: '20' }; APP.rebuild(); show('Cont'); },
+  deleteAccount: async () => { await deleteAccountEverywhere(); APP.restart(); },
+  google: signInWithGoogle, emailStart, emailVerify,
+});
 show(onboarded() ? 'Demo' : 'Cont');
 // After signing in (Google or email): an existing account comes back whole (reinstalling loses nothing);
 // a new one continues the sign-up with the first name filled in. From then on changes go to Supabase.

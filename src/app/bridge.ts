@@ -167,6 +167,8 @@ export const APP = {
   onSaved: (_state: Record<string, unknown>) => {},
   age: ageOn,
   google: async (): Promise<string | null> => 'Google nu e pornit.',
+  /** Deletes the account (when there is one) and everything on the phone, then starts from the beginning. */
+  deleteAccount: async () => { try { localStorage.clear(); } catch { /* storage blocked */ } APP.restart(); },
   emailStart: async (_email: string): Promise<string | null> => 'Emailul nu e pornit.',
   emailVerify: async (_email: string, _code: string): Promise<string | null> => 'Emailul nu e pornit.',
   isMinor() { const a = ageOn(this.prefs.birth); return a !== null && a < 18; },

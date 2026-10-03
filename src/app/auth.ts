@@ -66,3 +66,11 @@ export function watchAuth(cb: (who: Who | null) => void) {
   sb().auth.getSession().then(({ data }) => cb(whoOf(data.session))).catch(() => cb(null));
   sb().auth.onAuthStateChange((_e, s) => cb(whoOf(s)));
 }
+
+/** GDPR: removes the account and all it holds on the server, then signs out. */
+export async function deleteAccountEverywhere(): Promise<void> {
+  try {
+    const { data } = await sb().auth.getSession();
+    if (data.session) { await sb().rpc('delete_my_account'); await sb().auth.signOut(); }
+  } catch { /* offline: the phone is still cleared */ }
+}
