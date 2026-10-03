@@ -3,7 +3,7 @@
 *Ultima actualizare: [data publicării]*
 
 ## Cine se ocupă de datele tale
-CeFaci este o aplicație făcută de **[Numele tău complet]**, persoană fizică, din România („noi”).
+CeFaci este o aplicație făcută de **Neagu Cornel Adrian**, persoană fizică, din România („noi”).
 Contact pentru orice întrebare despre date: **contact@cornacidev.ro**.
 
 ## Ce date folosim și de ce
@@ -23,7 +23,7 @@ Nu vindem date. Nu arătăm reclame. Nu facem profiluri pentru alte firme. Nu ur
 
 ## Cine mai vede datele (împuterniciți)
 - **Supabase** (găzduirea bazei de date, servere în Frankfurt, UE);
-- **Google**, doar dacă intri cu Google;
+- **Google**, doar dacă intri cu Google, și **Google Cloud Vision**, care citește poza bonului fiscal când o trimiți (CUI-ul localului, data și totalul; poza nu e păstrată de Google);
 - [dacă activăm statistici] **PostHog**, servere în UE, statistici de folosire fără nume și fără email.
 
 Prietenii tăi văd ce scrie în aplicație: prenumele, username-ul, nivelul și ștampilele. Data nașterii nu o vede nimeni în afară de tine.

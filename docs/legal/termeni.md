@@ -2,7 +2,7 @@
 
 *Ultima actualizare: [data publicării]*
 
-1. **Ce e CeFaci.** O aplicație care te ajută să alegi unde ieși în București și Ilfov, singur sau cu prietenii. Este făcută de **[Numele tău complet]**, persoană fizică. Contact: contact@cornacidev.ro.
+1. **Ce e CeFaci.** O aplicație care te ajută să alegi unde ieși în București și Ilfov, singur sau cu prietenii. Este făcută de **Neagu Cornel Adrian**, persoană fizică. Contact: contact@cornacidev.ro.
 2. **Vârsta.** Trebuie să ai cel puțin 16 ani. Ne spui data nașterii adevărată. Între 16 și 18 ani îți arătăm doar locurile potrivite pentru oricine.
 3. **Contul.** Îl faci cu Google sau cu emailul. Ai grijă de el. Poți folosi aplicația și fără cont, caz în care totul rămâne doar pe telefonul tău.
 4. **Ce nu ai voie să faci.** Să te dai drept altcineva, să hărțuiești pe cineva, să trimiți spam, să folosești automat aplicația pentru a copia datele sau să încerci să-i strici funcționarea. Putem suspenda conturile care fac asta.

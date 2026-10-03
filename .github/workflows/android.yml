@@ -1,0 +1,74 @@
+# Builds the Android app on GitHub (no PC needed). The APK is attached to each run under "Artifacts".
+# Signing uses four repository secrets (Settings → Secrets and variables → Actions):
+#   CEFACI_KEYSTORE_B64 (the .jks file, base64), CEFACI_KEYSTORE_PASSWORD, CEFACI_KEY_ALIAS, CEFACI_KEY_PASSWORD.
+# Without them the build still runs and produces a debug APK (installable for testing, but Google sign-in needs the release key).
+name: Aplicația Android
+
+on:
+  push:
+    branches: [claude/new-session-hzbjtf, main]
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Testele
+        run: |
+          npm ci
+          npx vitest run
+      - name: Aplicația web și proiectul Android
+        run: |
+          node scripts/extract-boards.mjs
+          npx vite build
+          npx cap sync android
+      - name: Cheia de semnare (din secrete)
+        id: sign
+        env:
+          KEYSTORE_B64: ${{ secrets.CEFACI_KEYSTORE_B64 }}
+          STORE_PW: ${{ secrets.CEFACI_KEYSTORE_PASSWORD }}
+          ALIAS: ${{ secrets.CEFACI_KEY_ALIAS }}
+          KEY_PW: ${{ secrets.CEFACI_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ]; then echo "signed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/cefaci.jks"
+          mkdir -p ~/.gradle
+          {
+            echo "CEFACI_KEYSTORE=$RUNNER_TEMP/cefaci.jks"
+            echo "CEFACI_KEYSTORE_PASSWORD=$STORE_PW"
+            echo "CEFACI_KEY_ALIAS=$ALIAS"
+            echo "CEFACI_KEY_PASSWORD=$KEY_PW"
+          } >> ~/.gradle/gradle.properties
+          echo "signed=true" >> "$GITHUB_OUTPUT"
+      - name: APK semnat (pentru telefon) și AAB (pentru Google Play)
+        if: steps.sign.outputs.signed == 'true'
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease bundleRelease
+      - name: APK de test (fără cheie)
+        if: steps.sign.outputs.signed != 'true'
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CeFaci-android-${{ github.run_number }}
+          path: |
+            android/app/build/outputs/apk/**/*.apk
+            android/app/build/outputs/bundle/**/*.aab
+          if-no-files-found: error
+      - name: Curățenie
+        if: always()
+        run: rm -f "$RUNNER_TEMP/cefaci.jks" ~/.gradle/gradle.properties
