@@ -150,3 +150,13 @@ export function Sheet({ open, onClose, children }: { open: boolean; onClose: () 
     </Modal>
   );
 }
+
+/** Small pill label (`.tag` / `.role`). */
+export function Tag({ text, bg, fg, big }: { text: string; bg: string; fg: string; big?: boolean }) {
+  return (
+    <View style={{ height: big ? 24 : 22, paddingHorizontal: big ? 9 : 8, borderRadius: 999, backgroundColor: bg, justifyContent: 'center' }}>
+      <T style={{ fontFamily: F.b, fontSize: big ? 12 : 11, color: fg }}>{text}</T>
+    </View>
+  );
+}
+

@@ -28,10 +28,17 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 - Plus (20 lei/lună) doar prin Google Play / App Store. Netopia pentru comisionul localurilor și bilete.
 - Localuri fondatoare: 0% 3 luni, apoi 4% pe viață. Dovada ieșirii: un cod QR CeFaci la bar + poza bonului fiscal.
 
+## Aplicația de telefon = `mobile/` (decizie Cornel, 03.10: „aplicație scrisă pentru telefon, nu web app împachetat”)
+- React Native + Expo (SDK 57), ecrane native refăcute după canvas (`mobile/src/app/*`, piese în `mobile/src/ui`). Pachet `ro.cefaci.app`.
+- Folosește direct `src/engine`, `src/data`, `src/app/bridge.ts` (APP) și `src/app/cloud.ts`; `localStorage` vine din SQLite (`expo-sqlite/localStorage`).
+- Ecranele web din `src/boards` (generate din `design/`) rămân referința vizuală și testele lor; UI-ul aplicației se schimbă acum în `mobile/`.
+- Prietenii merg pe Supabase (`mobile/src/lib/friends.ts`). Gășcile și votul în timp real: încă de legat.
+- Verificare: `cd mobile && npx tsc --noEmit`; previzualizare: `npx expo export --platform web` + Playwright la 412×915.
+- Istoric, nefolosit: `android-capacitor-v1/`, `android-webview-v0/`.
+
 ## Comenzi
 - `npm i`, `npx vitest run`, `node scripts/extract-boards.mjs && npx vite build`
-- APK-ul se construiește pe GitHub la fiecare push (`.github/workflows/android.yml`, la Actions → Artifacts). Semnat doar dacă există secretele `CEFACI_KEYSTORE_B64`, `CEFACI_KEYSTORE_PASSWORD`, `CEFACI_KEY_ALIAS`, `CEFACI_KEY_PASSWORD`.
-- Aplicația Android e nativă (Capacitor, `android/`, pachet `ro.cefaci.app`): `npx vite build && npx cap sync android`, apoi `cd android && ./gradlew bundleRelease`. Cheia de semnare se citește din `~/.gradle/gradle.properties`, niciodată din git. Pașii: `docs/android.md`. Vechiul APK WebView: `android-webview-v0/` (doar istoric).
+- Telefonul: `cd mobile && npm ci && npx tsc --noEmit`. APK-ul îl face GitHub la fiecare push (`.github/workflows/android.yml`, Actions → Artifacts). Semnat cu cheia reală doar dacă există secretele `CEFACI_KEYSTORE_B64`, `CEFACI_KEYSTORE_PASSWORD`, `CEFACI_KEY_ALIAS`, `CEFACI_KEY_PASSWORD`; altfel cu o cheie de test (Google login nu merge). Pașii: `docs/android.md`.
 
 ## Bonul (decizie Cornel, 03.10)
 - Bonul se citește pe server: funcția Supabase `citeste-bon` (Google Vision, cheia în secretul `VISION_API_KEY`), cititorul în `supabase/functions/citeste-bon/bon.ts` (teste: `tests/bon.test.ts`).

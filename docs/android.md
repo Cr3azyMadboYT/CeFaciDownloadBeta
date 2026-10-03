@@ -1,32 +1,33 @@
-# Aplicația de Android (Capacitor)
+# Aplicația de telefon (React Native, nativă)
 
-Aplicația e acum nativă: aceleași ecrane, într-o aplicație Android cu login Google nativ și locație.
-Proiectul e în `android/`. Vechiul APK WebView a rămas în `android-webview-v0/`, doar ca istoric.
+Aplicația e scrisă pentru telefon: ecrane native Android (React Native + Expo), nu o pagină web într-o fereastră.
+Codul e în `mobile/`. Motorul de căutare, localurile și codul de cont sunt comune cu restul proiectului (`src/engine`, `src/data`, `src/app/bridge.ts`, `src/app/cloud.ts`).
+Istoric: `android-capacitor-v1/` (varianta Capacitor, cu pagină web) și `android-webview-v0/` (primul APK). Nu se mai folosesc.
 
-## O singură dată, pe PC
-1. Instalează **Android Studio**.
-2. În `~/.gradle/gradle.properties` (pe Windows: `C:\Users\<tu>\.gradle\gradle.properties`) adaugă cheia de semnare. Fișierul ăsta nu intră niciodată în git:
-   ```
-   CEFACI_KEYSTORE=C:/drum/spre/cefaci-android-release.jks
-   CEFACI_KEYSTORE_PASSWORD=parola-ta
-   CEFACI_KEY_ALIAS=cefaci
-   CEFACI_KEY_PASSWORD=parola-ta
-   ```
-3. **Google Cloud → APIs & Services → Credentials**, în același proiect ca login-ul din Supabase:
-   - un client OAuth de tip **Android** (făcut pe 03.10: `9736925899-q7tsi0l9bn6bt00s9t62aht9te3puock.apps.googleusercontent.com`; nu se pune în cod, Google recunoaște aplicația după pachet și amprentă), cu pachetul `ro.cefaci.app` și amprenta SHA-1 a cheii:
-     `17:63:E7:B2:9C:4A:3F:EA:98:68:21:B7:4D:A4:39:8A:DB:F1:E0:6F`
-     (după ce urci în Google Play, adaugi și amprenta SHA-1 din Play Console → App integrity → App signing);
-   - clientul de tip **Web** e cel pus deja în Supabase → Authentication → Providers → Google. ID-ul lui se scrie în `.env.local`:
-     ```
-     VITE_GOOGLE_WEB_CLIENT_ID=9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com   (e deja pus în src/app/auth.ts)
-     ```
+## Cum iau aplicația (fără PC)
+La fiecare `push`, GitHub o construiește singur: **Actions → Aplicația Android → ultima rulare → Artifacts → CeFaci-android-N**.
+În arhivă e `CeFaci-N.apk` (de instalat pe telefon) și, cu cheia reală, `CeFaci-N.aab` (pentru Google Play).
 
-## De fiecare dată când faci o versiune
+## Cheia de semnare (o singură dată, pe GitHub)
+Settings → Secrets and variables → Actions → New repository secret, patru secrete:
+- `CEFACI_KEYSTORE_B64`: fișierul `.jks` în base64;
+- `CEFACI_KEYSTORE_PASSWORD`, `CEFACI_KEY_ALIAS`, `CEFACI_KEY_PASSWORD`.
+
+Fără ele, APK-ul se semnează cu o cheie de test: se instalează și merge, dar **login-ul cu Google merge doar cu cheia reală**.
+Cheia nu intră niciodată în git (`*.jks` e în `.gitignore`).
+
+## Google (deja făcut pe 03.10)
+- Client OAuth **Android**: `9736925899-q7tsi0l9bn6bt00s9t62aht9te3puock.apps.googleusercontent.com`, pachet `ro.cefaci.app`,
+  amprenta SHA-1 a cheii: `17:63:E7:B2:9C:4A:3F:EA:98:68:21:B7:4D:A4:39:8A:DB:F1:E0:6F`.
+  După ce urci în Google Play, adaugi și amprenta din Play Console → App integrity → App signing.
+- Client OAuth **Web** (cel din Supabase → Auth → Google): `9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com`, pus în `mobile/src/lib/auth.ts`.
+
+## Pe un PC (dacă vreodată ai unul)
 ```
-npm i
-node scripts/extract-boards.mjs && npx vite build
-npx cap sync android
-cd android && ./gradlew bundleRelease     # fișierul pentru Google Play: app/build/outputs/bundle/release/app-release.aab
-cd android && ./gradlew assembleRelease   # sau un APK de instalat direct: app/build/outputs/apk/release/app-release.apk
+cd mobile && npm ci
+npx tsc --noEmit                       # verificarea codului
+npx expo export --platform web         # previzualizare rapidă în browser (aceleași ecrane, randate pe web)
+npx expo prebuild --platform android   # face folderul android/ (nu se pune în git)
+cd android && ./gradlew assembleRelease
 ```
-Înainte de fiecare versiune nouă, crește `versionCode` (cu 1) și `versionName` în `android/app/build.gradle`.
+Înainte de o versiune nouă în magazin, crește `version` și `android.versionCode` în `mobile/app.json`.

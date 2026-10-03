@@ -11,6 +11,7 @@ import { InstrumentSans_400Regular, InstrumentSans_500Medium, InstrumentSans_600
 import { Caveat_700Bold } from '@expo-google-fonts/caveat';
 import { noapte, ThemeCtx, zi } from '../ui/theme';
 import { setBoard, useApp } from '../lib/session';
+import { Toast } from '../ui/Toast';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -26,7 +27,12 @@ export default function Root() {
     <SafeAreaProvider>
       <ThemeCtx.Provider value={ctx}>
         <StatusBar style={t.dark ? 'light' : 'dark'} />
-        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg }, animation: 'slide_from_right' }} />
+        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg }, animation: 'slide_from_right' }}>
+          <Stack.Screen name="cont" options={{ animation: 'fade' }} />
+          <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+          <Stack.Screen name="zona" options={{ animation: 'slide_from_bottom' }} />
+        </Stack>
+        <Toast />
       </ThemeCtx.Provider>
     </SafeAreaProvider>
   );

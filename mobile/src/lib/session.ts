@@ -6,6 +6,7 @@ import * as Location from 'expo-location';
 import { APP, initBridge, type Prefs } from '../../../src/app/bridge';
 import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
+import { resetFilters } from './filters';
 import { deleteAccountEverywhere, emailStart, emailVerify, sb, signInWithGoogle, watchAuth, type Who } from './auth';
 
 export { APP };
@@ -14,12 +15,12 @@ export type { Prefs };
 // ---------- a tiny store ----------
 export interface Board {
   theme?: 'zi' | 'noapte';
-  plans?: Plan[];
+  plans?: unknown[];
   xp?: number;
   welcomeXp?: boolean;
   stamps?: unknown[];
   tut?: { on: boolean; step: number };
-  plus?: 'off' | 'trial' | 'on';
+  plus?: 'locked' | 'off' | 'trial' | 'active';
   plusDay?: number;
   plusModal?: string;
   removed?: string[];
@@ -27,7 +28,6 @@ export interface Board {
   billXp?: number;
   [k: string]: unknown;
 }
-export interface Plan { pid: number; id: string; name: string; when: string; who: string; at: number; status?: 'active' | 'done' | 'cancelled'; res?: string }
 
 type Snap = { board: Board; prefs: Prefs; who: Who | null; onboarded: boolean; known: boolean };
 let snap: Snap = {
@@ -79,6 +79,7 @@ export async function finishSignup(a: SignupAnswers): Promise<string | null> {
   }
   if (!snap.board.welcomeXp) setBoard((b) => ({ welcomeXp: true, xp: (b.xp ?? 0) + 150 })); // Bilu's welcome, once
   snap = { ...snap, onboarded: true };
+  resetFilters();
   emit();
   return err;
 }
@@ -90,6 +91,7 @@ export async function startOver(deleteAccount: boolean) {
   APP.prefs = { zone: 'centru', likes: [], dist: '20' };
   APP.rebuild();
   snap = { board: {}, prefs: APP.prefs, who: null, onboarded: false, known: false };
+  resetFilters();
   emit();
 }
 
@@ -133,6 +135,7 @@ watchAuth((who) => {
     APP.onSaved = (state) => { if (snap.known) upload(state, APP.prefs as unknown as Record<string, unknown>); };
     snap = { ...snap, known: r.known, prefs: { ...APP.prefs }, board: r.known ? (APP.loadBoardState() as Board) : snap.board, onboarded: r.known || snap.onboarded };
     emit();
+    if (r.known) resetFilters();
     signInListeners.forEach((f) => f(who, r.known));
   }).catch(() => { signInListeners.forEach((f) => f(who, false)); });
 });
