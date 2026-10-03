@@ -2,6 +2,10 @@
 
 Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizatorul: Cornel, scrie în română, casual. Mascota: Bilu (bilet galben) — rămâne în toate versiunile.
 
+## Unde e designul
+- `design/canvas/client/`, `design/canvas/business/`, `design/canvas/admin/` — toate cele 3 canvasuri (sursa de adevăr pentru UI).
+- `docs/directie-si-decizii.md` — deciziile de produs și bani. `START-AICI.md` — pașii de lucru.
+
 ## Stare
 - Etapa 1 gata: ecranele din canvas (`design/Cont.dc.html`, `design/Demo.dc.html`) rulează pe 3.250 de localuri reale OpenStreetMap (`src/data/venues.json`), cu motorul din `src/engine`.
 - Nu redesena UI: se modifică doar prin `scripts/board-patches.mjs` (patch-uri text), apoi `node scripts/extract-boards.mjs`.

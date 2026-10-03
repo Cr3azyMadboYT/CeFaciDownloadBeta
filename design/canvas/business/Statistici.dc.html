@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci Business — Statistici</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#EEF1F7;--s3:#DCE0EA;--line:#D2D7E3;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow:#FFD43B;--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral:#FF6A4D;--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet:#8C6CFF;--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);--side:#0E1440;--side-ink:#F3F5FF;--side-ink2:#A9B1DA;--cs:#2F5BFF;--c0:#EEF1F7;--c1:#8CA3FF;--c2:#5C7FFF;--c3:#2F5BFF;--c4:#1C38B0;--t1:#0E1440;--t2:#0E1440;--t3:#FFFFFF;--t4:#FFFFFF;--grid:#E3E7F0;font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#24242A;--s3:#2E2E35;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18);--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.22);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16);--side:#0B0B0E;--cs:#5C7FFF;--c0:#24242A;--c1:#2E4FD6;--c2:#5478FF;--c3:#8EA6FF;--c4:#C6D2FF;--t1:#FFFFFF;--t2:#FFFFFF;--t3:#0E1440;--t4:#0E1440;--grid:#2A2A31}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.06)}}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible{outline-color:#FFD43B}
+.nav{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:12px;color:var(--side-ink2);text-decoration:none;font:600 14px/1 'Instrument Sans',system-ui,sans-serif;transition:background-color .15s ease,color .15s ease}
+.nav:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
+.nav.on{background:#FFD43B;color:#0E1440}
+.nav:focus-visible{outline:3px solid #FFD43B;outline-offset:2px}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:34px;line-height:1;font-weight:780;font-stretch:90%;letter-spacing:-.025em}
+.h2{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:20px;line-height:1.1;font-weight:740;letter-spacing:-.01em}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px}
+.tag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font:700 12px/1 'Instrument Sans',system-ui,sans-serif;white-space:nowrap}
+.btns{height:40px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--s1);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.chip{height:36px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);font:600 13px/1 'Instrument Sans',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip.sm{height:32px;padding:0 11px;font-size:12px}
+.hbar{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0;background:var(--cs);transition:width .45s cubic-bezier(.23,1,.32,1),filter .15s ease}
+.cell{border-radius:4px;transition:outline-color .1s ease}
+.cell:hover{outline:2px solid var(--ink);outline-offset:1px}
+.fade{transition:opacity .25s ease}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.hs{scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
+.tr{display:grid;gap:6px;padding:7px 8px;border-bottom:1px solid var(--line);font:500 13px/1.2 'Instrument Sans',system-ui,sans-serif}
+.tr>span:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.tr.th{font-weight:650;color:var(--ink2)}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 1440px; height: 900px; position: relative; overflow: hidden; display: flex; background: var(--bg); color: var(--ink)">
+
+<nav aria-label="Meniu" style="width: 248px; flex: none; height: 900px; padding: 22px 14px 18px; background: var(--side); color: var(--side-ink); display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 30px; height: 30px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 23px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Business</span>
+</div>
+<div style="margin-top: 22px; padding: 12px; border-radius: 16px; background: rgba(255, 255, 255, 0.07); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #2F5BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2zM10.6 9.5h2.8"></path></svg></span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font: 700 15px/1.1 'Instrument Sans', system-ui, sans-serif">Pista 9</span><span style="font: 500 12px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Bowling · Buftea</span></span>
+</div>
+<div style="display: flex; gap: 6px">
+<span class="tag" style="height: 22px; background: rgba(47, 91, 255, 0.28); color: #C9D5FF"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="#2F5BFF"></path><path d="m9 12 2 2 4-4" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Verificat</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Partener</span>
+</div>
+</div>
+<div style="margin-top: 18px; display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Azi</a>
+<a href="Rezervari.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path></svg><span style="flex: 1 1 auto">Rezervări</span><span class="tag" style="height: 20px; padding: 0 7px; background: #FF6A4D; color: #0E1440">3</span></a>
+<a href="Oferte.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 5 19M4 6.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0M15 17.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0"></path></svg>Oferte și Live Drops</a>
+<a href="Evenimente.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2"></path></svg>Evenimente și bilete</a>
+<a href="Statistici.dc.html" class="nav on" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16M8 17v-5M13 17V9M18 17V5"></path></svg>Statistici</a>
+<a href="Profil.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5"></path></svg>Profilul localului</a>
+<a href="Echipa.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Echipă</a>
+</div>
+<a href="Scanner.dc.html" class="nav" style="margin-top: auto; border: 1px solid rgba(255, 255, 255, 0.14)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>Scanner pe telefon</a>
+<div style="margin-top: 14px; padding: 0 8px; display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 99px; background: #FFD43B; color: #0E1440; display: flex; align-items: center; justify-content: center; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">AS</span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font: 650 13px/1.1 'Instrument Sans', system-ui, sans-serif">Andrei Stoica</span><span style="font: 500 12px/1.1 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Proprietar</span></span>
+</div>
+</nav>
+
+<main class="hs" style="flex: 1 1 auto; min-width: 0; height: 900px; overflow-y: auto; padding: 28px 32px 36px; display: flex; flex-direction: column; gap: 18px">
+<header style="flex: none; display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">Cum te găsesc oamenii și cine vine</span>
+<h1 class="h1">Statistici</h1>
+</header>
+<div role="group" aria-label="Perioada" style="flex: none; display: flex; align-items: center; gap: 8px">
+<sc-for list="{{ranges}}" as="r" hint-placeholder-count="3"><button type="button" class="{{r.cls}}" aria-pressed="{{r.on}}" onClick="{{r.pick}}">{{r.label}}</button></sc-for>
+<span class="muted" style="margin-left: 8px">Totul de mai jos e pentru {{rangeText}}, comparat cu perioada dinainte.</span>
+</div>
+
+<div style="flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<section class="card" aria-label="{{k.label}}" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">{{k.label}}</span>
+<span style="font: 700 34px/1 'Instrument Sans', system-ui, sans-serif; letter-spacing: -0.02em">{{k.value}}</span>
+<span style="display: flex; align-items: center; gap: 6px; font: 650 13px/1 'Instrument Sans', system-ui, sans-serif; color: var(--green-ink)"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; stroke-width: 2.4"><path d="M7 17 17 7M9 7h8v8"></path></svg>{{k.delta}}<span style="font-weight: 500; color: var(--ink2)">față de perioada dinainte</span></span>
+</section>
+</sc-for>
+</div>
+
+<div style="flex: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start">
+
+<section class="card" aria-labelledby="fn-t" style="padding: 18px 20px 20px">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 5px"><h2 id="fn-t" class="h2">De la recomandare la vizită</h2><span class="muted">{{funnelLead}}</span></div>
+<button type="button" class="press chip sm" aria-pressed="{{fnTable}}" onClick="{{toggleFn}}">{{fnLabel}}</button>
+</div>
+<sc-if value="{{fnChart}}" hint-placeholder-val="{{ true }}">
+<div class="fade" style="margin-top: 16px; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{funnel}}" as="f" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<sc-if value="{{f.hasDrop}}" hint-placeholder-val="{{ false }}"><span style="padding-left: 2px; display: flex; align-items: center; gap: 6px; font: 600 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M12 5v14M5 12l7 7 7-7"></path></svg>{{f.conv}}</span></sc-if>
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="width: 150px; flex: none; font: 600 13px/1.25 'Instrument Sans', system-ui, sans-serif">{{f.label}}</span>
+<div style="position: relative; flex: 1 1 auto; height: 24px" onMouseEnter="{{f.enter}}" onMouseLeave="{{f.leave}}"><span class="hbar" style="width: {{f.w}}; filter: {{f.filter}}"></span></div>
+<span style="width: 58px; flex: none; text-align: right; font: 700 14px/1 'Instrument Sans', system-ui, sans-serif; font-variant-numeric: tabular-nums">{{f.v}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+<p aria-live="polite" class="muted" style="margin: 12px 0 0; min-height: 18px">{{fnTip}}</p>
+</sc-if>
+<sc-if value="{{fnTable}}" hint-placeholder-val="{{ false }}">
+<div role="table" aria-label="De la recomandare la vizită" style="margin-top: 14px">
+<div role="row" class="tr th" style="grid-template-columns: minmax(0, 1fr) 90px 150px"><span role="columnheader">Pas</span><span role="columnheader">Oameni</span><span role="columnheader">Din pasul dinainte</span></div>
+<sc-for list="{{funnel}}" as="f" hint-placeholder-count="4"><div role="row" class="tr" style="grid-template-columns: minmax(0, 1fr) 90px 150px"><span role="cell">{{f.label}}</span><span role="cell">{{f.v}}</span><span role="cell">{{f.convShort}}</span></div></sc-for>
+</div>
+</sc-if>
+</section>
+
+<section class="card" aria-labelledby="hm-t" style="padding: 18px 20px 20px">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 5px"><h2 id="hm-t" class="h2">Când vin</h2><span class="muted">Rezervări și sosiri pe zi și oră. Vineri și sâmbătă seara ești plin.</span></div>
+<button type="button" class="press chip sm" aria-pressed="{{hmTable}}" onClick="{{toggleHm}}">{{hmLabel}}</button>
+</div>
+<sc-if value="{{hmChart}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 14px; position: relative">
+<div aria-hidden="true" style="display: grid; grid-template-columns: 34px repeat(9, minmax(0, 1fr)); gap: 3px">
+<span></span>
+<sc-for list="{{hours}}" as="h" hint-placeholder-count="9"><span style="text-align: center; font: 600 11px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink3); padding-bottom: 4px">{{h}}</span></sc-for>
+<sc-for list="{{heat}}" as="row" hint-placeholder-count="7">
+<span style="display: flex; align-items: center; font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{row.day}}</span>
+<sc-for list="{{row.cells}}" as="c" hint-placeholder-count="9"><span class="cell" onMouseEnter="{{c.enter}}" onMouseLeave="{{c.leave}}" style="height: 28px; background: {{c.bg}}"></span></sc-for>
+</sc-for>
+</div>
+<div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 4px; font: 600 11px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">
+<span style="margin-right: 4px">Mai puține</span>
+<sc-for list="{{legend}}" as="l" hint-placeholder-count="5"><span style="width: 26px; height: 12px; border-radius: 3px; background: {{l.bg}}"></span></sc-for>
+<span style="margin-left: 4px">Mai multe</span>
+</div>
+<span aria-live="polite" style="font: 650 13px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink)">{{hmTip}}</span>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{hmTable}}" hint-placeholder-val="{{ false }}">
+<div role="table" aria-label="Grupuri pe zi și oră" style="margin-top: 14px">
+<div role="row" class="tr th" style="grid-template-columns: 40px repeat(9, minmax(0, 1fr))"><span role="columnheader">Ziua</span><sc-for list="{{hours}}" as="h" hint-placeholder-count="9"><span role="columnheader">{{h}}</span></sc-for></div>
+<sc-for list="{{heat}}" as="row" hint-placeholder-count="7"><div role="row" class="tr" style="grid-template-columns: 40px repeat(9, minmax(0, 1fr))"><span role="rowheader">{{row.day}}</span><sc-for list="{{row.cells}}" as="c" hint-placeholder-count="9"><span role="cell">{{c.v}}</span></sc-for></div></sc-for>
+</div>
+</sc-if>
+</section>
+
+<section class="card" aria-labelledby="gp-t" style="padding: 18px 20px 20px">
+<h2 id="gp-t" class="h2">Cu cine vin</h2>
+<p class="muted" style="margin: 5px 0 0">Mărimea grupurilor care au venit. Gășcile de 3–4 sunt cele mai multe.</p>
+<div role="img" aria-label="{{groupAria}}" style="margin-top: 16px; height: 40px; display: flex; gap: 2px; border-radius: 8px; overflow: hidden">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="4"><span style="flex: {{g.flex}}; min-width: 0; background: {{g.bg}}; color: {{g.fg}}; display: flex; align-items: center; justify-content: center; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">{{g.inside}}</span></sc-for>
+</div>
+<ul style="list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="4"><li style="display: flex; align-items: flex-start; gap: 8px"><span aria-hidden="true" style="width: 12px; height: 12px; margin-top: 2px; flex: none; border-radius: 3px; background: {{g.bg}}"></span><span style="display: flex; flex-direction: column; gap: 3px"><span style="font: 650 13px/1.2 'Instrument Sans', system-ui, sans-serif">{{g.label}}</span><span class="muted">{{g.pct}}</span></span></li></sc-for>
+</ul>
+</section>
+
+<section class="card" aria-labelledby="fb-t" style="padding: 18px 20px 20px">
+<h2 id="fb-t" class="h2">Ce spun după ieșire</h2>
+<p class="muted" style="margin: 5px 0 0">{{fbLead}}</p>
+<div style="margin-top: 14px; display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 12px">
+<span style="width: 150px; flex: none; font: 600 13px/1.2 'Instrument Sans', system-ui, sans-serif">{{t.label}}</span>
+<div style="position: relative; flex: 1 1 auto; height: 18px"><span class="hbar" style="width: {{t.w}}"></span></div>
+<span style="width: 40px; flex: none; text-align: right; font: 700 14px/1 'Instrument Sans', system-ui, sans-serif; font-variant-numeric: tabular-nums">{{t.v}}</span>
+</div>
+</sc-for>
+</div>
+<p class="muted" style="margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line)">Spun doar cei care au venit cu cod scanat. Ce răspund nu schimbă XP-ul nimănui și nici locul tău în recomandări.</p>
+</section>
+</div>
+
+<section style="flex: none; padding: 18px 20px; border-radius: 20px; background: var(--yellow-soft); display: flex; align-items: center; gap: 16px">
+<span aria-hidden="true" style="width: 48px; height: 48px; flex: none; border-radius: 14px; background: #FFD43B; color: #0E1440; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" style="width: 24px; height: 24px"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path></svg></span>
+<div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 4px"><span style="font: 700 15px/1.3 'Instrument Sans', system-ui, sans-serif">Marțea, între 16:00 și 19:00, ai piste goale.</span><span class="muted" style="color: var(--ink)">Un Live Drop de −20% marți la 17:00 ar putea aduce 2–3 grupuri. E doar o sugestie: nu schimbă cum apari în recomandări.</span></div>
+<a href="Oferte.dc.html" class="press btns" style="flex: none">Creează Live Drop</a>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":1440,"height":900}}'>
+const HEAT = [
+  ['Lu', [0, 1, 2, 3, 4, 3, 2, 1, 0]],
+  ['Ma', [0, 1, 1, 2, 3, 2, 1, 0, 0]],
+  ['Mi', [1, 1, 2, 4, 5, 4, 2, 1, 0]],
+  ['Jo', [1, 2, 3, 5, 7, 6, 4, 2, 0]],
+  ['Vi', [1, 2, 4, 7, 11, 14, 13, 9, 4]],
+  ['Sâ', [3, 4, 6, 8, 12, 15, 14, 11, 6]],
+  ['Du', [4, 5, 6, 5, 4, 3, 1, 0, 0]]
+];
+const DAYNAME = { Lu: 'Luni', Ma: 'Marți', Mi: 'Miercuri', Jo: 'Joi', Vi: 'Vineri', 'Sâ': 'Sâmbătă', Du: 'Duminică' };
+const HOURS = ['16', '17', '18', '19', '20', '21', '22', '23', '0'];
+const RANGES = { d7: [0.25, 'ultimele 7 zile', 'Ultimele 7 zile'], d30: [1, 'ultimele 30 de zile', 'Ultimele 30 de zile'], d90: [3, 'ultimele 90 de zile', 'Ultimele 90 de zile'] };
+const RAMP = ['var(--c0)', 'var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)'];
+const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { range: 'd30', fnTable: false, hmTable: false, fnHov: -1, hm: null };
+  }
+  renderVals() {
+    const s = this.state;
+    const theme = this.props.theme ?? 'zi';
+    const k = RANGES[s.range][0];
+    const sc = (n) => Math.round(n * k);
+    const F = [['Te-au văzut în recomandări', 4820], ['Ți-au deschis pagina', 1310], ['Te-au ales într-un plan', 412], ['Au venit, cu cod scanat', 286]].map(([label, v]) => [label, sc(v)]);
+    const funnel = F.map(([label, v], i) => {
+      const prev = i ? F[i - 1][1] : v;
+      const pct = prev ? Math.round(v / prev * 100) : 0;
+      return {
+        label, v: fmt(v), w: (v / F[0][1] * 100).toFixed(1) + '%',
+        hasDrop: i > 0, conv: pct + '% merg mai departe', convShort: i ? pct + '%' : '—',
+        filter: s.fnHov === i ? 'brightness(1.15)' : 'none',
+        enter: () => this.setState({ fnHov: i }), leave: () => { if (this.state.fnHov === i) this.setState({ fnHov: -1 }); }
+      };
+    });
+    const hv = s.fnHov >= 0 ? F[s.fnHov] : null;
+    const heatVals = HEAT.map(([d, row]) => [d, row.map((v) => sc(v))]);
+    const max = Math.max(1, ...heatVals.map(([, r]) => Math.max(...r)));
+    const bin = (v) => (v <= 0 ? 0 : (v <= max * 0.25 ? 1 : (v <= max * 0.5 ? 2 : (v <= max * 0.75 ? 3 : 4))));
+    const heat = heatVals.map(([d, row]) => ({
+      day: d,
+      cells: row.map((v, j) => ({
+        v: String(v), bg: RAMP[bin(v)],
+        enter: () => this.setState({ hm: [d, j, v] }), leave: () => this.setState({ hm: null })
+      }))
+    }));
+    const hm = s.hm;
+    const hourLabel = (j) => (HOURS[j] === '0' ? '00:00' : HOURS[j] + ':00');
+    const G = [['Singuri', 6], ['În doi', 22], ['3–4 persoane', 41], ['5 sau mai mulți', 31]];
+    const groups = G.map(([label, p], i) => ({
+      label, pct: p + '%', flex: String(p), bg: RAMP[i + 1], fg: 'var(--t' + (i + 1) + ')', inside: p >= 12 ? p + '%' : ''
+    }));
+    const T = [['Servire lentă', 14], ['Prea aglomerat', 11], ['Prea scump', 6], ['Nu era ce părea', 2]].map(([label, v]) => [label, Math.max(v ? 1 : 0, sc(v))]);
+    const tmax = Math.max(1, ...T.map((t) => t[1]));
+    return {
+      themeClass: ({ zi: 'light', noapte: 'graphite' })[theme] ?? 'light',
+      ranges: Object.keys(RANGES).map((key) => ({ label: RANGES[key][2], on: s.range === key, cls: s.range === key ? 'press chip on' : 'press chip', pick: () => this.setState({ range: key, hm: null, fnHov: -1 }) })),
+      rangeText: RANGES[s.range][1],
+      kpis: [
+        { label: 'Te-au văzut în recomandări', value: fmt(F[0][1]), delta: '+12%' },
+        { label: 'Te-au ales într-un plan', value: fmt(F[2][1]), delta: '+8%' },
+        { label: 'Au venit, cu cod scanat', value: fmt(F[3][1]), delta: '+15%' },
+        { label: 'Au zis „Super” după ieșire', value: '78%', delta: '+3 puncte' }
+      ],
+      funnelLead: 'Din ' + fmt(F[0][1]) + ' de oameni care te-au văzut, ' + fmt(F[3][1]) + ' au ajuns la tine.',
+      funnel,
+      fnTip: hv ? hv[0] + ': ' + fmt(hv[1]) + ' oameni, adică ' + (hv[1] / F[0][1] * 100).toFixed(1).replace('.', ',') + '% din cei care te-au văzut.' : 'Treci cu mouse-ul peste o bară ca să vezi procentul din total.',
+      fnTable: s.fnTable, fnChart: !s.fnTable, fnLabel: s.fnTable ? 'Vezi graficul' : 'Vezi ca tabel', toggleFn: () => this.setState({ fnTable: !this.state.fnTable }),
+      hours: HOURS, heat,
+      legend: RAMP.map((bg) => ({ bg })),
+      hmTip: hm ? DAYNAME[hm[0]] + ', ' + hourLabel(hm[1]) + ': ' + hm[2] + (hm[2] === 1 ? ' grup' : ' grupuri') : 'Treci peste un pătrat pentru cifră.',
+      hmTable: s.hmTable, hmChart: !s.hmTable, hmLabel: s.hmTable ? 'Vezi graficul' : 'Vezi ca tabel', toggleHm: () => this.setState({ hmTable: !this.state.hmTable, hm: null }),
+      groups, groupAria: G.map(([l, p]) => l + ' ' + p + '%').join(', '),
+      fbLead: T.reduce((a, t) => a + t[1], 0) + ' de observații în ' + RANGES[s.range][1] + '. Cele mai multe sunt despre servire.',
+      tags: T.map(([label, v]) => ({ label, v: String(v), w: (v / tmax * 100).toFixed(1) + '%' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

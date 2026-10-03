@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci — Level up</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;family=Caveat:wght@500..700&amp;display=swap">
+<style>
+body{margin:0;background:#E9EBF2}
+.cf{--bg:#0B1030;--s1:#141B45;--s2:#1D2660;--line:#2B3575;--ink:#F3F5FF;--ink2:#A9B1DA;--ink3:#8690C4;--blue:#2F5BFF;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.2);--yellow:#FFD43B;--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral:#FF6A4D;--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.16);--violet:#8C6CFF;--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.2);--navy:#0E1440;--scrim:rgba(4,7,24,.66);font-family:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.light{--bg:#EEF1FB;--s1:#FFFFFF;--s2:#E6EAF8;--line:#D3D9EF;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--scrim:rgba(14,20,64,.42)}
+.cf{--doodle:#FFFFFF;--doodle-o:.06;isolation:isolate}
+.cf.day{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#DCE0EA;--line:#D2D7E3;--sheet:#FFFFFF;--doodle:#0E1440;--doodle-o:.085}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#28282F;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--slot:#000000;--scrim:rgba(0,0,0,.62);--doodle:#FFFFFF;--doodle-o:.07}
+.doodles{position:absolute;left:0;top:0;width:390px;height:844px;z-index:-1;pointer-events:none;color:var(--doodle);opacity:var(--doodle-o)}
+.doodles .d1{color:var(--blue)}
+.doodles .d2{color:var(--coral)}
+.doodles .d3{color:var(--violet)}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.i.l{width:28px;height:28px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover,.fb:hover{filter:brightness(1.07)}}
+.cf :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.cf.light :focus-visible{outline-color:#2447E0}
+.fb{cursor:pointer;-webkit-tap-highlight-color:transparent;background:var(--s1);border:1px solid var(--line);color:var(--ink);transition:transform .45s cubic-bezier(.34,1.56,.64,1),border-color .2s ease,background-color .2s ease}
+.fb:active{transform:scale(.96)}
+.fb.on{border-color:var(--yellow);background:var(--yellow-soft);transform:scale(1.02)}
+.fb.lock,.chip.lock,.press.lock{pointer-events:none}
+.chip{cursor:pointer;-webkit-tap-highlight-color:transparent;background:var(--s1);border:1px solid var(--line);color:var(--ink);transition:transform .45s cubic-bezier(.34,1.56,.64,1),background-color .18s ease,border-color .18s ease}
+.chip.on{background:var(--coral-soft);border-color:var(--coral);transform:scale(1.03)}
+.chip:active{transform:scale(.95)}
+.track{position:relative;overflow:hidden}
+.track.shine::after{content:'';position:absolute;top:0;bottom:0;left:-70px;width:70px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.8),rgba(255,255,255,0));animation:shine .75s ease .2s both}
+@keyframes shine{from{transform:translateX(0)}to{transform:translateX(440px)}}
+.bar{display:block;height:10px;border-radius:99px;background:#FFD43B;transition:width .6s cubic-bezier(.23,1,.32,1)}
+.xpchip{display:flex;align-items:center;gap:10px;height:54px;padding:0 20px 0 18px;border-radius:999px;white-space:nowrap;animation:xpfly 1.25s both}
+.xpchip.second{animation-name:xpfly2}
+.xpchip.yel{background:#FFD43B;color:#0E1440}
+.xpchip.blu{background:#2F5BFF;color:#FFFFFF}
+.xpchip.dim{background:var(--s2);color:var(--ink)}
+@keyframes xpfly{0%{opacity:0;transform:translateY(24px) scale(.7)}14%{opacity:1;transform:translateY(0) scale(1.07)}24%{transform:translateY(0) scale(1)}62%{opacity:1;transform:translateY(0) scale(1);animation-timing-function:cubic-bezier(.55,0,1,.45)}100%{opacity:0;transform:translateY(-335px) scale(.42)}}
+@keyframes xpfly2{0%{opacity:0;transform:translateY(24px) scale(.7)}14%{opacity:1;transform:translateY(0) scale(1.07)}24%{transform:translateY(0) scale(1)}62%{opacity:1;transform:translateY(0) scale(1);animation-timing-function:cubic-bezier(.55,0,1,.45)}100%{opacity:0;transform:translateY(-397px) scale(.42)}}
+.fadein{animation:fadein .45s cubic-bezier(.23,1,.32,1) both}
+@keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.lvl{animation:lvlIn .32s ease both}
+@keyframes lvlIn{from{opacity:0}to{opacity:1}}
+.thud{animation:thud .32s ease .5s both}
+@keyframes thud{0%,100%{transform:none}25%{transform:translateY(4px)}55%{transform:translateY(-2px)}80%{transform:translateY(1px)}}
+.slam{animation:slam .64s cubic-bezier(.2,.9,.3,1) .12s both}
+@keyframes slam{0%{opacity:0;transform:scale(2.4) rotate(-28deg)}55%{opacity:1;transform:scale(.9) rotate(-5deg)}74%{transform:scale(1.04) rotate(-9deg)}100%{opacity:1;transform:scale(1) rotate(-8deg)}}
+.burst{animation:burst .8s cubic-bezier(.23,1,.32,1) .46s both}
+@keyframes burst{0%{opacity:.95;transform:scale(.92)}100%{opacity:0;transform:scale(1.75)}}
+.flap{position:absolute;left:64px;top:50px;width:72px;height:100px;perspective:320px}
+.fh{position:absolute;left:0;right:0;height:50px;overflow:hidden;background:#1D2660;display:block}
+.fh.t{top:0;border-radius:10px 10px 0 0}
+.fh.b{bottom:0;border-radius:0 0 10px 10px}
+.fd{display:block;height:100px;text-align:center;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:84px;line-height:100px;font-weight:800;color:#FFD43B}
+.fh.b .fd{margin-top:-50px}
+.fl{-webkit-backface-visibility:hidden;backface-visibility:hidden;z-index:2}
+.fl.t{transform-origin:50% 100%;animation:flipT .26s cubic-bezier(.55,0,1,.45) .74s both}
+.fl.b{transform-origin:50% 0;animation:flipB .38s cubic-bezier(.2,.9,.3,1.3) 1s both}
+@keyframes flipT{from{transform:rotateX(0deg)}to{transform:rotateX(-90deg)}}
+@keyframes flipB{from{transform:rotateX(90deg)}to{transform:rotateX(0deg)}}
+.seam{position:absolute;left:0;right:0;top:49px;height:2px;background:#0B1030;z-index:3}
+.let{display:inline-block;animation:letIn .55s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes letIn{from{opacity:0;transform:translateY(28px) rotate(8deg)}to{opacity:1;transform:none}}
+.up{animation:upIn .5s cubic-bezier(.23,1,.32,1) both}
+@keyframes upIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.cfp{position:absolute;left:0;top:0;opacity:0;animation-duration:1.8s;animation-fill-mode:both}
+.c1{animation-name:c1}.c2{animation-name:c2}.c3{animation-name:c3}.c4{animation-name:c4}.c5{animation-name:c5}.c6{animation-name:c6}.c7{animation-name:c7}.c8{animation-name:c8}.c9{animation-name:c9}.c10{animation-name:c10}.c11{animation-name:c11}.c12{animation-name:c12}
+@keyframes c1{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(-150px,-150px) rotate(220deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(-195px,250px) rotate(620deg) scale(.9)}}
+@keyframes c2{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(-92px,-205px) rotate(-180deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(-120px,270px) rotate(-560deg) scale(.9)}}
+@keyframes c3{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(-30px,-235px) rotate(260deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(-44px,290px) rotate(700deg) scale(.9)}}
+@keyframes c4{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(32px,-232px) rotate(-240deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(46px,285px) rotate(-650deg) scale(.9)}}
+@keyframes c5{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(94px,-200px) rotate(200deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(124px,265px) rotate(590deg) scale(.9)}}
+@keyframes c6{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(152px,-146px) rotate(-210deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(196px,245px) rotate(-600deg) scale(.9)}}
+@keyframes c7{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(-172px,-66px) rotate(160deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(-214px,305px) rotate(520deg) scale(.9)}}
+@keyframes c8{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(172px,-66px) rotate(-170deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(214px,305px) rotate(-540deg) scale(.9)}}
+@keyframes c9{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(-122px,-112px) rotate(300deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(-162px,322px) rotate(760deg) scale(.9)}}
+@keyframes c10{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(122px,-112px) rotate(-310deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(162px,322px) rotate(-770deg) scale(.9)}}
+@keyframes c11{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(-62px,-165px) rotate(140deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(-82px,335px) rotate(480deg) scale(.9)}}
+@keyframes c12{0%{opacity:0;transform:translate(0,0) scale(.4);animation-timing-function:cubic-bezier(.15,.7,.3,1)}8%{opacity:1}40%{transform:translate(62px,-165px) rotate(-150deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.85,.5)}100%{opacity:0;transform:translate(82px,335px) rotate(-500deg) scale(.9)}}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.confetti{display:none!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink)">
+<svg class="doodles" aria-hidden="true" viewBox="0 0 390 844"><g style="fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round"><path d="M-10 196 C 50 178, 110 222, 176 200 S 300 176, 400 206" style="stroke-dasharray: 2 7"></path><path d="M-10 418 C 70 440, 140 396, 214 420 S 330 446, 400 414"></path><path d="M-10 612 C 40 596, 96 640, 160 618 S 280 590, 400 626" style="stroke-dasharray: 10 8"></path><path d="M-10 796 C 80 776, 150 818, 230 796 S 340 780, 400 800" style="stroke-dasharray: 2 7"></path><path d="M300 40 c 20 10, 40 -4, 60 8" ></path><path d="M20 520 q 10 -18 24 -4 t 26 -2"></path><g class="d1" transform="translate(186 8) scale(1.25) rotate(-14 12 12)"><path d="M12 21s-6-5.4-6-10a6 6 0 0 1 12 0c0 4.6-6 10-6 10z"></path><circle cx="12" cy="11" r="2"></circle></g><g class="d2" transform="translate(22 63) scale(1.1) rotate(10 12 12)"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></g><g class="d3" transform="translate(334 59) scale(1.35) rotate(-6 12 12)"><path d="M3 6h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4z"></path><path d="M14 7v2M14 11v2M14 15v2"></path></g><g class="d1" transform="translate(174 164) scale(1.2) rotate(18 12 12)"><path d="M4 6l16 0-8 15z"></path><path d="M4 6q8-3.5 16 0"></path><circle cx="10.5" cy="10" r="1.3"></circle><circle cx="13.5" cy="13.5" r="1.3"></circle></g><g class="d2" transform="translate(186 210) scale(1.05) rotate(-20 12 12)"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.4"></path><path d="M12 18h.01"></path></g><g class="d3" transform="translate(22 265) scale(1.3) rotate(6 12 12)"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2z"></path><path d="M10.6 9.5h2.8"></path></g><g class="d1" transform="translate(334 261) scale(1.25) rotate(12 12 12)"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"></path><path d="M16 11h2a2 2 0 0 1 0 4h-2"></path><path d="M8 3c0 1.5 1 1.5 1 3M11.5 3c0 1.5 1 1.5 1 3"></path></g><g class="d2" transform="translate(174 366) scale(1.1) rotate(-10 12 12)"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z"></path></g><g class="d3" transform="translate(186 412) scale(1.35) rotate(0 12 12)"><path d="M9 18V6l10-2v12"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="16" r="2"></circle></g><g class="d1" transform="translate(22 458) scale(1.2) rotate(15 12 12)"><path d="M4 11a8 5.5 0 0 1 16 0z"></path><path d="M3 14h18"></path><path d="M4 17h16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path></g><g class="d2" transform="translate(334 463) scale(1.05) rotate(-14 12 12)"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M9 9h.01M15 15h.01M12 12h.01M15 9h.01M9 15h.01"></path></g><g class="d3" transform="translate(174 559) scale(1.3) rotate(10 12 12)"><path d="M3 19c3-1 4-5 7-5s4 2 6 1" style="stroke-dasharray: 1.5 3"></path><path d="M17 5l4 4M21 5l-4 4"></path></g><g class="d1" transform="translate(186 614) scale(1.25) rotate(-6 12 12)"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></g><g class="d2" transform="translate(22 660) scale(1.1) rotate(18 12 12)"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></g><g class="d3" transform="translate(334 665) scale(1.35) rotate(-20 12 12)"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></g><g class="d1" transform="translate(174 761) scale(1.2) rotate(6 12 12)"><path d="M4 16v-3l2.2-5h11.6L20 13v3z"></path><circle cx="8" cy="17" r="1.8"></circle><circle cx="16" cy="17" r="1.8"></circle></g><g class="d2" transform="translate(186 816) scale(1.05) rotate(12 12 12)"><rect x="3" y="10" width="18" height="10" rx="1.5"></rect><path d="M3 10l1.5-5 16-1.5.8 4.5"></path><path d="M8 5l2 4M13 4.5l2 4"></path></g></g><g style="fill: currentColor; font-family: Caveat, 'Bradley Hand', 'Segoe Print', cursive; font-weight: 600"><text x="14" y="25" transform="rotate(-7 14 25)" style="font-size: 17px">ce facem diseară?</text><text x="230" y="32" transform="rotate(5 230 32)" style="font-size: 15px">unde ieșim?</text><text x="72" y="78" transform="rotate(-3 72 78)" style="font-size: 19px">cine vine?</text><text x="30" y="135" transform="rotate(8 30 135)" style="font-size: 16px">oare unde?</text><text x="214" y="131" transform="rotate(-9 214 131)" style="font-size: 18px">cât costă?</text><text x="8" y="177" transform="rotate(4 8 177)" style="font-size: 15px">oare e deschis?</text><text x="216" y="184" transform="rotate(-5 216 184)" style="font-size: 17px">la ce oră?</text><text x="14" y="230" transform="rotate(6 14 230)" style="font-size: 17px">pizza sau burger?</text><text x="230" y="226" transform="rotate(-2 230 226)" style="font-size: 15px">e loc pentru 5?</text><text x="72" y="283" transform="rotate(9 72 283)" style="font-size: 19px">trebuie rezervare?</text><text x="30" y="329" transform="rotate(-6 30 329)" style="font-size: 16px">bowling sau karaoke?</text><text x="214" y="325" transform="rotate(3 214 325)" style="font-size: 18px">cu mașina sau pe jos?</text><text x="8" y="382" transform="rotate(-7 8 382)" style="font-size: 15px">mâncăm ceva?</text><text x="216" y="378" transform="rotate(5 216 378)" style="font-size: 17px">afară sau înăuntru?</text><text x="14" y="435" transform="rotate(-3 14 435)" style="font-size: 17px">până la ce oră?</text><text x="230" y="431" transform="rotate(8 230 431)" style="font-size: 15px">ceva nou?</text><text x="72" y="477" transform="rotate(-9 72 477)" style="font-size: 19px">cine conduce?</text><text x="30" y="534" transform="rotate(4 30 534)" style="font-size: 16px">e departe?</text><text x="214" y="530" transform="rotate(-5 214 530)" style="font-size: 18px">plouă?</text><text x="8" y="576" transform="rotate(6 8 576)" style="font-size: 15px">film sau plimbare?</text><text x="216" y="583" transform="rotate(-2 216 583)" style="font-size: 17px">hai?</text><text x="14" y="629" transform="rotate(9 14 629)" style="font-size: 17px">ne vedem la 8?</text><text x="230" y="625" transform="rotate(-6 230 625)" style="font-size: 15px">și după?</text><text x="72" y="682" transform="rotate(3 72 682)" style="font-size: 19px">cât stăm?</text><text x="30" y="728" transform="rotate(-7 30 728)" style="font-size: 16px">vine toată gașca?</text><text x="214" y="735" transform="rotate(5 214 735)" style="font-size: 18px">ce zici?</text><text x="8" y="781" transform="rotate(-3 8 781)" style="font-size: 15px">unde parcăm?</text><text x="216" y="777" transform="rotate(8 216 777)" style="font-size: 17px">acum sau mai târziu?</text><text x="14" y="834" transform="rotate(-9 14 834)" style="font-size: 17px">dulce sau sărat?</text><text x="230" y="830" transform="rotate(4 230 830)" style="font-size: 15px">mergem?</text></g></svg>
+<div style="padding: 52px 20px 0; display: flex; flex-direction: column; height: 844px">
+
+<div style="display: flex; align-items: center; height: 44px">
+<a href="Carnet.dc.html" class="press" aria-label="Închide" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; border-radius: 14px; color: var(--ink)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></a>
+</div>
+
+<div style="margin-top: 8px; padding: 14px 16px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line)">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: baseline; gap: 8px">
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 21px; line-height: 1; font-weight: 760; letter-spacing: -0.01em">{{lvlName}}</span>
+<span style="font: 600 13px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{lvlText}}</span>
+</span>
+<span aria-live="polite" style="font: 700 14px/1 'Instrument Sans', system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--ink)">{{xpText}}</span>
+</div>
+<div class="{{trackCls}}" style="margin-top: 10px; height: 10px; border-radius: 99px; background: var(--s2)" role="progressbar" aria-label="Progresul spre nivelul următor" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{barNow}}"><span class="bar" style="width: {{barW}}"></span></div>
+</div>
+
+<article style="margin-top: 14px; border-radius: 24px; background: var(--s1); border: 1px solid var(--line); overflow: hidden">
+<svg viewBox="0 0 348 104" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="display: block; width: 100%; height: 104px"><rect width="190" height="104" fill="#2F5BFF"></rect><rect x="190" width="158" height="104" fill="#FF6A4D"></rect><circle cx="40" cy="30" r="12" fill="#8EA6FF"></circle><circle cx="92" cy="70" r="20" fill="#5C80FF"></circle><circle cx="150" cy="26" r="7" fill="#FFD43B"></circle><circle cx="40" cy="86" r="7" fill="#0B1030"></circle><path d="M176 130 L232 -26 M204 130 L260 -26 M232 130 L288 -26 M260 130 L316 -26 M288 130 L344 -26 M316 130 L372 -26" stroke="#0B1030" style="stroke-width: 7"></path></svg>
+<div style="padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; line-height: 1.1; font-weight: 740; letter-spacing: -0.015em">Bowling, apoi burger</h2>
+<span style="font: 500 14px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Vineri, 2 oct., cu gașca de vineri</span>
+</div>
+</article>
+
+<sc-if value="{{showAsk}}" hint-placeholder-val="{{ true }}">
+<div>
+<h1 style="margin: 26px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 54px; line-height: 0.95; font-weight: 790; font-stretch: 88%; letter-spacing: -0.035em">Cum a fost?</h1>
+<p style="margin: 8px 0 0; font: 500 15px/1.35 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Ne ajută să vă găsim ceva mai potrivit. XP-ul e același orice alegi.</p>
+<div style="margin-top: 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<button type="button" class="{{fb.super}}" onClick="{{pickSuper}}" style="height: 92px; padding: 14px 16px; border-radius: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i l" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--yellow-ink)"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg><span>Super</span></button>
+<button type="button" class="{{fb.ok}}" onClick="{{pickOk}}" style="height: 92px; padding: 14px 16px; border-radius: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i l" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--blue-ink)"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><path d="M9 9h.01"></path><path d="M15 9h.01"></path></svg><span>Ok</span></button>
+<button type="button" class="{{fb.meh}}" onClick="{{pickMeh}}" style="height: 92px; padding: 14px 16px; border-radius: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i l" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--coral-ink)"><circle cx="12" cy="12" r="10"></circle><path d="M8 15h8"></path><path d="M9 9h.01"></path><path d="M15 9h.01"></path></svg><span>Nu prea</span></button>
+<button type="button" class="{{fb.no}}" onClick="{{pickNo}}" style="height: 92px; padding: 14px 16px; border-radius: 20px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i l" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><circle cx="12" cy="12" r="10"></circle><path d="m4.9 4.9 14.2 14.2"></path></svg><span>N-am mers</span></button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{showAfter}}" hint-placeholder-val="{{ false }}">
+<div class="fadein">
+<h1 style="margin: 26px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 54px; line-height: 0.95; font-weight: 790; font-stretch: 88%; letter-spacing: -0.035em">Mulțumim!</h1>
+<p style="margin: 10px 0 0; font: 500 16px/1.4 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Acum ești Busolă. Următorul nivel, Motorul găștii, vine la 2.500 XP.</p>
+<a href="Carnet.dc.html" class="press" style="margin-top: 22px; height: 56px; border-radius: 18px; background: var(--blue); color: #FFFFFF; display: flex; align-items: center; justify-content: center; text-decoration: none; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif">Vezi carnetul</a>
+<button type="button" class="press" onClick="{{replay}}" style="margin-top: 8px; width: 100%; height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 14px; background: transparent; color: var(--blue-ink); font: 650 15px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>Vezi animația din nou</button>
+</div>
+</sc-if>
+
+<sc-if value="{{showMeh}}" hint-placeholder-val="{{ false }}">
+<div class="fadein">
+<h1 style="margin: 26px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 48px; line-height: 0.95; font-weight: 790; font-stretch: 88%; letter-spacing: -0.035em">Am notat.</h1>
+<p id="meh-label" style="margin: 10px 0 0; font: 500 16px/1.4 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Ce n-a mers? Opțional, ca să nu mai trimitem pe nimeni degeaba.</p>
+<div role="group" aria-labelledby="meh-label" style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="4">
+<button type="button" class="{{t.cls}}" aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="height: 44px; padding: 0 16px; border-radius: 999px; font: 600 15px/1 'Instrument Sans', system-ui, sans-serif">{{t.label}}</button>
+</sc-for>
+</div>
+<button type="button" class="{{mehBtnCls}}" onClick="{{mehDone}}" style="margin-top: 22px; width: 100%; height: 56px; border: 0; border-radius: 18px; background: var(--blue); color: #FFFFFF; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif">Gata</button>
+</div>
+</sc-if>
+
+<sc-if value="{{showNoWent}}" hint-placeholder-val="{{ false }}">
+<div class="fadein">
+<h1 style="margin: 26px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 46px; line-height: 0.95; font-weight: 790; font-stretch: 88%; letter-spacing: -0.035em">Ce s-a întâmplat?</h1>
+<div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{reasons}}" as="r" hint-placeholder-count="3">
+<button type="button" class="{{r.cls}}" aria-pressed="{{r.on}}" onClick="{{r.pick}}" style="height: 52px; padding: 0 16px; border-radius: 16px; text-align: left; font: 600 16px/1 'Instrument Sans', system-ui, sans-serif">{{r.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{hasReason}}" hint-placeholder-val="{{ false }}"><p class="fadein" aria-live="polite" style="margin: 14px 0 0; font: 500 15px/1.4 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{reasonText}}</p></sc-if>
+<button type="button" class="press" onClick="{{replay}}" style="margin-top: 18px; width: 100%; height: 48px; border: 1px solid var(--line); border-radius: 16px; background: transparent; color: var(--ink); font: 650 15px/1 'Instrument Sans', system-ui, sans-serif">Înapoi</button>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{showChips}}" hint-placeholder-val="{{ false }}">
+<div aria-live="polite" style="position: absolute; left: 0; right: 0; top: 462px; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; z-index: 5">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="2">
+<span class="{{c.cls}}" style="animation-delay: {{c.d}}"><span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">{{c.n}}</span><span style="font: 650 14px/1.1 'Instrument Sans', system-ui, sans-serif">{{c.t}}</span></span>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{isLevel}}" hint-placeholder-val="{{ false }}">
+<div class="lvl" role="dialog" aria-modal="true" aria-labelledby="lvl-title" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 20; background: #0B1030; color: #F3F5FF; overflow: hidden">
+<div class="confetti" aria-hidden="true" style="position: absolute; left: 195px; top: 196px; width: 0; height: 0; z-index: 1">
+<sc-for list="{{confetti}}" as="p" hint-placeholder-count="0">
+<span class="{{p.cls}}" style="width: {{p.w}}; height: {{p.h}}; border-radius: {{p.r}}; background: {{p.c}}; animation-delay: {{p.d}}"></span>
+</sc-for>
+</div>
+<div class="thud" style="position: relative; z-index: 2; height: 844px; padding: 96px 24px 32px; display: flex; flex-direction: column; align-items: center">
+<span class="burst" aria-hidden="true" style="position: absolute; left: 95px; top: 96px; width: 200px; height: 200px; border-radius: 999px; border: 3px solid #FFD43B"></span>
+<div class="slam" aria-hidden="true" style="position: relative; width: 200px; height: 200px; flex: none">
+<svg viewBox="0 0 200 200" style="position: absolute; left: 0; top: 0; width: 200px; height: 200px"><circle cx="100" cy="100" r="96" fill="none" stroke="#FFD43B" style="stroke-width: 4"></circle><circle cx="100" cy="100" r="85" fill="none" stroke="#FFD43B" style="stroke-width: 1.5; stroke-dasharray: 4 5"></circle><path id="lvl-ring" d="M100,100 m-73,0 a73,73 0 1,1 146,0 a73,73 0 1,1 -146,0" fill="none"></path><text fill="#FFD43B" style="font: 700 12px 'Instrument Sans', system-ui, sans-serif; letter-spacing: 0.26em"><textPath href="#lvl-ring">NIVEL NOU • CEFACI • NIVEL NOU • CEFACI •</textPath></text></svg>
+<div class="flap">
+<span class="fh t"><span class="fd">4</span></span>
+<span class="fh b"><span class="fd">3</span></span>
+<span class="fh t fl"><span class="fd">3</span></span>
+<span class="fh b fl"><span class="fd">4</span></span>
+<span class="seam"></span>
+</div>
+</div>
+<p class="up" style="animation-delay: 1.05s; margin: 34px 0 0; font: 700 15px/1 'Instrument Sans', system-ui, sans-serif; color: #FFD43B">Nivel 4</p>
+<h1 id="lvl-title" aria-label="Busolă" style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 68px; line-height: 1; font-weight: 800; font-stretch: 86%; letter-spacing: -0.04em; white-space: nowrap"><sc-for list="{{letters}}" as="l" hint-placeholder-count="8"><span class="let" aria-hidden="true" style="animation-delay: {{l.d}}">{{l.ch}}</span></sc-for></h1>
+<p class="up" style="animation-delay: 1.6s; margin: 12px 0 0; max-width: 300px; text-align: center; font: 500 16px/1.4 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">{{lvlSub}}</p>
+<div class="up" style="animation-delay: 1.85s; margin-top: 26px; width: 100%; display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 20px; background: #141B45; border: 1px solid #2B3575">
+<span aria-hidden="true" style="width: 48px; height: 48px; flex: none; border-radius: 14px; background: rgba(255, 212, 59, 0.16); color: #FFD43B; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" style="width: 24px; height: 24px"><path d="M19.914 11.105A7.298 7.298 0 0 0 20 10a8 8 0 0 0-16 0c0 4.993 5.539 10.193 7.399 11.799a1 1 0 0 0 1.202 0 32 32 0 0 0 .824-.738"></path><circle cx="12" cy="10" r="3"></circle><path d="M16 18h6"></path><path d="M19 15v6"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+<span style="font: 650 13px/1 'Instrument Sans', system-ui, sans-serif; color: #8690C4">Ai deblocat</span>
+<span style="font: 700 17px/1.2 'Instrument Sans', system-ui, sans-serif; color: #F3F5FF">Propui locuri noi în CeFaci</span>
+<span style="font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Le verificăm și apar cu numele tău.</span>
+</span>
+</div>
+<button type="button" class="press up" onClick="{{finish}}" style="animation-delay: 2.05s; margin-top: auto; width: 100%; height: 56px; border: 0; border-radius: 18px; background: #FFD43B; color: #0E1440; font: 700 17px/1 'Instrument Sans', system-ui, sans-serif">Hai mai departe</button>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.state = this.initial();
+  }
+  initial() {
+    return { phase: 'ask', xp: 1420, choice: '', chips: [], tags: [], reason: '' };
+  }
+  componentWillUnmount() {
+    this.clear();
+  }
+  clear() {
+    this.timers.forEach((t) => { clearTimeout(t); clearInterval(t); });
+    this.timers = [];
+  }
+  later(fn, ms) {
+    this.timers.push(setTimeout(fn, ms));
+  }
+  countTo(target, ms) {
+    const start = this.state.xp;
+    const steps = Math.max(1, Math.round(ms / 40));
+    let k = 0;
+    const id = setInterval(() => {
+      k += 1;
+      const eased = 1 - Math.pow(1 - k / steps, 3);
+      this.setState({ xp: k >= steps ? target : Math.round(start + (target - start) * eased) });
+      if (k >= steps) clearInterval(id);
+    }, 40);
+    this.timers.push(id);
+  }
+  answer(choice) {
+    if (this.state.phase !== 'ask') return;
+    if (choice === 'no') {
+      this.setState({ phase: 'nowent', choice });
+      return;
+    }
+    if (choice === 'meh') {
+      this.setState({ phase: 'meh', choice });
+      return;
+    }
+    this.reward(choice);
+  }
+  mehDone() {
+    if (this.state.phase !== 'meh') return;
+    this.reward('meh');
+  }
+  reward(choice) {
+    const chips = [
+      { n: '+100', t: 'Ieșire bifată', cls: 'xpchip yel', d: '0ms' },
+      { n: '+50', t: 'Loc nou pentru tine', cls: 'xpchip blu second', d: '220ms' }
+    ];
+    this.setState({ phase: 'xp', choice, chips });
+    this.later(() => {
+      this.setState({ phase: 'fill' });
+      this.countTo(1420 + 150, 650);
+    }, 1250);
+    this.later(() => {
+      this.setState({ phase: 'level' });
+    }, 2150);
+  }
+  finish() {
+    this.setState({ phase: 'after' });
+  }
+  replay() {
+    this.clear();
+    this.setState(this.initial());
+  }
+  fmt(n) {
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+  renderVals() {
+    const theme = this.props.theme ?? 'zi';
+    const s = this.state;
+    const leveled = s.phase === 'after';
+    const cap = leveled ? 2500 : 1500;
+    const rewarding = s.phase === 'xp' || s.phase === 'fill' || s.phase === 'level';
+    const full = s.phase === 'fill' || s.phase === 'level';
+    const pct = full ? 100 : Math.min(100, (s.xp / cap) * 100);
+    const locked = s.phase !== 'ask';
+    const meh = s.choice === 'meh';
+    const fbCls = (key) => 'fb' + (s.choice === key ? ' on' : '') + (locked ? ' lock' : '');
+    const tagList = ['Prea scump', 'Prea aglomerat', 'Servire lentă', 'Nu era ce părea'];
+    const reasonList = [
+      { id: 'plans', label: 'S-au schimbat planurile', text: 'Am notat. Nu contează la nivel, dar nici nu pierzi nimic.' },
+      { id: 'closed', label: 'Era închis', text: 'Mulțumim. Verificăm programul, ca să nu mai trimitem pe nimeni degeaba.' },
+      { id: 'full', label: 'Era plin', text: 'Mulțumim. Data viitoare îți arătăm din timp dacă trebuie rezervare.' }
+    ];
+    const chosen = reasonList.find((r) => r.id === s.reason);
+    const colors = ['#FFD43B', '#8EA6FF', '#FF6A4D', '#B7A3FF', '#FFFFFF', '#2F5BFF'];
+    const shapes = [['8px', '14px', '2px'], ['9px', '9px', '99px'], ['13px', '6px', '2px'], ['6px', '11px', '2px']];
+    const confetti = [];
+    for (let k = 0; k < 36; k += 1) {
+      const sh = shapes[k % shapes.length];
+      confetti.push({ cls: 'cfp c' + ((k % 12) + 1), w: sh[0], h: sh[1], r: sh[2], c: colors[(k * 7) % colors.length], d: (460 + (k % 3) * 60 + Math.floor(k / 12) * 90) + 'ms' });
+    }
+    return {
+      themeClass: ({ zi: 'light day', noapte: 'graphite', luminos: 'light day', 'hârtie': 'light day', grafit: 'graphite' })[theme] ?? 'light day',
+      lvlName: leveled ? 'Busolă' : 'Radar',
+      lvlText: leveled ? 'Nivel 4' : 'Nivel 3',
+      xpText: this.fmt(s.xp) + ' / ' + this.fmt(cap) + ' XP',
+      barW: pct.toFixed(1) + '%',
+      barNow: Math.round(pct),
+      trackCls: s.phase === 'fill' ? 'track shine' : 'track',
+      showAsk: s.phase === 'ask' || (rewarding && !meh),
+      showAfter: leveled,
+      showMeh: s.phase === 'meh' || (rewarding && meh),
+      mehBtnCls: rewarding ? 'press lock' : 'press',
+      lvlSub: meh ? 'Nu toate serile ies bine, dar ai încercat deja 10 locuri din zonă.' : 'Ai încercat 10 locuri din zonă. Acum știi pe unde să ieși.',
+      showNoWent: s.phase === 'nowent',
+      showChips: s.phase === 'xp' || s.phase === 'fill',
+      isLevel: s.phase === 'level',
+      chips: s.chips,
+      fb: { super: fbCls('super'), ok: fbCls('ok'), meh: fbCls('meh'), no: fbCls('no') },
+      pickSuper: () => this.answer('super'),
+      pickOk: () => this.answer('ok'),
+      pickMeh: () => this.answer('meh'),
+      pickNo: () => this.answer('no'),
+      mehDone: () => this.mehDone(),
+      finish: () => this.finish(),
+      replay: () => this.replay(),
+      letters: 'Busolă'.split('').map((ch, n) => ({ ch, d: (1150 + n * 45) + 'ms' })),
+      confetti,
+      tags: tagList.map((t) => {
+        const on = s.tags.indexOf(t) !== -1;
+        return { label: t, on, cls: (on ? 'chip on' : 'chip') + (rewarding ? ' lock' : ''), pick: () => { if (this.state.phase === 'meh') this.setState({ tags: on ? s.tags.filter((x) => x !== t) : s.tags.concat([t]) }); } };
+      }),
+      reasons: reasonList.map((r) => ({ label: r.label, on: s.reason === r.id, cls: s.reason === r.id ? 'fb on' : 'fb', pick: () => this.setState({ reason: r.id }) })),
+      hasReason: !!chosen,
+      reasonText: chosen ? chosen.text : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

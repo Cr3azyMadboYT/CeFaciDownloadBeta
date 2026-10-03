@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci — Gașcă nouă</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;family=Caveat:wght@500..700&amp;display=swap">
+<style>
+body{margin:0;background:#E9EBF2}
+.cf{--bg:#0B1030;--s1:#141B45;--s2:#1D2660;--line:#2B3575;--ink:#F3F5FF;--ink2:#A9B1DA;--ink3:#8690C4;--blue:#2F5BFF;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.2);--yellow:#FFD43B;--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral:#FF6A4D;--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.16);--violet:#8C6CFF;--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.2);--navy:#0E1440;--slot:#03061A;--scrim:rgba(4,7,24,.66);font-family:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.light{--bg:#EEF1FB;--s1:#FFFFFF;--s2:#E6EAF8;--line:#D3D9EF;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--slot:#0E1440;--scrim:rgba(14,20,64,.42)}
+.cf{--doodle:#FFFFFF;--doodle-o:.06;isolation:isolate}
+.cf.day{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#DCE0EA;--line:#D2D7E3;--sheet:#FFFFFF;--doodle:#0E1440;--doodle-o:.085}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#28282F;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--slot:#000000;--scrim:rgba(0,0,0,.62);--doodle:#FFFFFF;--doodle-o:.07}
+.doodles{position:absolute;left:0;top:0;width:390px;height:844px;z-index:-1;pointer-events:none;color:var(--doodle);opacity:var(--doodle-o)}
+.doodles .d1{color:var(--blue)}
+.doodles .d2{color:var(--coral)}
+.doodles .d3{color:var(--violet)}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.07)}}
+.cf :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.cf.light :focus-visible{outline-color:#2447E0}
+.av{flex:none;border-radius:999px;display:flex;align-items:center;justify-content:center;font:700 13px/1 'Instrument Sans',system-ui,sans-serif}
+.mark{position:relative;flex:none;border-radius:999px;border-style:solid;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-weight:800;letter-spacing:-.02em}
+.mark::after{content:'';position:absolute;inset:3px;border-radius:999px;border:1.5px dashed currentColor;opacity:.55}
+.rise{animation:rise .5s cubic-bezier(.23,1,.32,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.field{transition:border-color .18s ease,box-shadow .18s ease}
+.field:focus-within{border-color:var(--blue)!important;box-shadow:0 0 0 3px var(--blue-soft)}
+.field input::placeholder{color:var(--ink3);opacity:1}
+.sw{width:40px;height:40px;padding:0;border:0;border-radius:999px;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:inset 0 0 0 1px rgba(14,20,64,.16);transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease}
+.sw.on{box-shadow:inset 0 0 0 1px rgba(14,20,64,.16),0 0 0 3px var(--bg),0 0 0 5px var(--ink);transform:scale(1.06)}
+.pick{width:100%;display:flex;align-items:center;gap:12px;min-height:60px;padding:0;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tick{width:26px;height:26px;flex:none;border-radius:999px;border:2px solid var(--ink3);display:flex;align-items:center;justify-content:center;color:transparent;transition:background-color .18s ease,border-color .18s ease,color .18s ease,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.pick.on .tick{background:var(--blue);border-color:var(--blue);color:#FFFFFF;transform:scale(1.08)}
+.cta:disabled{background:var(--s2)!important;color:var(--ink2)!important;cursor:default;transform:none}
+.print{animation:print 1.2s cubic-bezier(.3,.8,.25,1) .25s both}
+@keyframes print{0%{transform:translateY(-101%)}62%{transform:translateY(2.5%)}80%{transform:translateY(-.8%)}100%{transform:translateY(0)}}
+.after{animation:after .5s cubic-bezier(.23,1,.32,1) both}
+@keyframes after{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.stampin{animation:stampin .5s cubic-bezier(.2,.9,.3,1) both}
+@keyframes stampin{0%{opacity:0;transform:scale(2.1) rotate(-24deg)}60%{opacity:1;transform:scale(.92) rotate(-6deg)}100%{opacity:1;transform:scale(1) rotate(-10deg)}}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink)">
+
+<sc-if value="{{isForm}}" hint-placeholder-val="{{ true }}">
+<div style="height: 844px; padding: 52px 20px 0; display: flex; flex-direction: column">
+
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1; font-weight: 770; font-stretch: 90%; letter-spacing: -0.02em">Gașcă nouă</h1>
+<a href="Planuri.dc.html" class="press" aria-label="Închide" style="width: 44px; height: 44px; margin-right: -8px; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--s1); color: var(--ink)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></a>
+</div>
+
+<div style="margin-top: 18px; display: flex; align-items: flex-end; gap: 16px">
+<span class="mark" aria-hidden="true" style="width: 68px; height: 68px; margin-bottom: -4px; border-width: 3px; border-color: {{col.ink}}; color: {{col.ink}}; font-size: 22px; transform: rotate(-6deg)">{{initials}}</span>
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+<label for="gname" style="font: 600 15px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Numele gășcii</label>
+<div class="field" style="height: 52px; display: flex; align-items: center; padding: 0 14px; border-radius: 16px; background: var(--s1); border: 1.5px solid var(--line)">
+<input id="gname" type="text" value="{{name}}" onChange="{{onName}}" placeholder="{{autoName}}" style="flex: 1 1 auto; min-width: 0; height: 48px; padding: 0; border: 0; outline: none; background: transparent; color: var(--ink); font: 600 17px/1 'Instrument Sans', system-ui, sans-serif">
+</div>
+</div>
+</div>
+
+<div style="margin-top: 18px; display: flex; align-items: center; justify-content: space-between">
+<p id="lbl-col" style="margin: 0; font: 600 15px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Culoarea gășcii</p>
+<div role="group" aria-labelledby="lbl-col" style="display: flex; gap: 12px">
+<sc-for list="{{colors}}" as="c" hint-placeholder-count="4">
+<button type="button" class="{{c.cls}}" aria-label="{{c.label}}" aria-pressed="{{c.on}}" onClick="{{c.pick}}" style="background: {{c.c}}"></button>
+</sc-for>
+</div>
+</div>
+
+<p id="lbl-who" style="margin: 22px 0 0; font: 600 15px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Cine intră?</p>
+<p style="margin: 4px 0 0; font: 500 13px/1.35 'Instrument Sans', system-ui, sans-serif; color: var(--ink3)">Doar prietenii tăi. Primesc o invitație și intră după ce acceptă.</p>
+<ul aria-labelledby="lbl-who" style="list-style: none; margin: 6px -20px 0; padding: 0 20px; flex: 1 1 auto; min-height: 0; overflow-y: auto">
+<sc-for list="{{friends}}" as="f" hint-placeholder-count="6">
+<li>
+<button type="button" class="{{f.cls}}" aria-pressed="{{f.on}}" onClick="{{f.pick}}">
+<span class="av" aria-hidden="true" style="width: 38px; height: 38px; background: {{f.bg}}; color: {{f.fg}}">{{f.ini}}</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<span style="font: 650 15px/1.2 'Instrument Sans', system-ui, sans-serif">{{f.name}}</span>
+<span style="font: 500 13px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">@{{f.user}}</span>
+</span>
+<span class="tick" aria-hidden="true"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.6"><path d="M20 6 9 17l-5-5"></path></svg></span>
+</button>
+</li>
+</sc-for>
+</ul>
+
+<div style="margin: 0 -20px; padding: 12px 20px 30px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); border-top: 1px solid var(--line)">
+<p style="margin: 0; text-align: center; font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink3)">Cine n-are CeFaci primește link de instalare, după.</p>
+<button type="button" class="press cta" disabled="{{noneSel}}" onClick="{{create}}" style="height: 56px; border: 0; border-radius: 18px; background: var(--blue); color: #FFFFFF; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif">{{ctaLabel}}</button>
+</div>
+
+</div>
+</sc-if>
+
+<sc-if value="{{isMade}}" hint-placeholder-val="{{ false }}">
+<div style="height: 844px; position: relative">
+
+<div style="padding: 52px 20px 0; display: flex; align-items: center; gap: 8px; height: 96px">
+<a href="Planuri.dc.html" class="press" aria-label="Închide" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; border-radius: 14px; color: var(--ink)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></a>
+<span style="flex: 1 1 auto; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Gașcă creată</span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; left: 10px; right: 10px; top: 106px; height: 12px; border-radius: 99px; background: var(--slot); z-index: 2"></div>
+
+<div style="position: absolute; left: 0; right: 0; top: 112px; height: 340px; padding: 0 20px; overflow: hidden">
+<article class="print" aria-label="Cardul gășcii" style="position: relative; border-radius: 22px; background: {{col.c}}; color: {{col.text}}">
+<div style="position: relative; padding: 22px 20px 18px">
+<span style="font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">Gașcă nouă</span>
+<span class="mark stampin" aria-hidden="true" style="position: absolute; right: 18px; top: 16px; width: 66px; height: 66px; border-width: 3px; border-color: {{col.text}}; color: {{col.text}}; font-size: 21px; animation-delay: 1.35s">{{initials}}</span>
+<h1 style="margin: 10px 0 0; max-width: 238px; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 42px; line-height: 0.95; font-weight: 800; font-stretch: 86%; letter-spacing: -0.035em">{{finalName}}</h1>
+<div style="margin-top: 16px; display: flex; align-items: center; gap: 10px">
+<span style="display: flex; flex: none" aria-hidden="true">
+<span style="display: block; flex: none; border-radius: 999px; border: 2px solid {{col.c}}"><span role="img" aria-label="Poza ta de profil" style="width: 30px; height: 30px; flex: none; display: block; border-radius: 999px; overflow: hidden;"><svg viewBox="18 26 64 64" aria-hidden="true" style="display: block; width: 100%; height: 100%"><rect width="100" height="125" fill="#FFD43B"></rect><circle cx="82" cy="20" r="26" fill="#FFE58A"></circle><path d="M8 125 C10 98 29 88 50 88 C71 88 90 98 92 125 Z" fill="#FF6A4D"></path><path d="M43 70 H57 V92 H43 Z" fill="#D9967A"></path><ellipse cx="50" cy="56" rx="18" ry="21" fill="#EDB08F"></ellipse><path d="M31 60 C27 37 39 28 51 29 C64 30 72 40 69 57 C66 47 58 42 47 43 C39 44 34 50 33 61 Z" fill="#0E1440"></path></svg></span></span>
+<sc-for list="{{picked}}" as="p" hint-placeholder-count="2">
+<span class="av" style="width: 34px; height: 34px; margin-left: -9px; font-size: 12px; background: {{p.bg}}; color: {{p.fg}}; border: 2px solid {{col.c}}">{{p.ini}}</span>
+</sc-for>
+</span>
+<span style="font: 700 15px/1.2 'Instrument Sans', system-ui, sans-serif">{{membersText}}</span>
+</div>
+</div>
+<div aria-hidden="true" style="position: relative; height: 24px">
+<span style="position: absolute; left: -12px; top: 0; width: 24px; height: 24px; border-radius: 99px; background: var(--bg)"></span>
+<span style="position: absolute; right: -12px; top: 0; width: 24px; height: 24px; border-radius: 99px; background: var(--bg)"></span>
+<span style="position: absolute; left: 20px; right: 20px; top: 11px; border-top: 2px dashed {{col.dash}}"></span>
+</div>
+<div style="padding: 10px 20px 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 5px">
+<span style="font: 650 12px/1 'Instrument Sans', system-ui, sans-serif">Creată</span>
+<span style="font: 700 16px/1.1 'Instrument Sans', system-ui, sans-serif">Azi, 28 sept.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 5px">
+<span style="font: 650 12px/1 'Instrument Sans', system-ui, sans-serif">Admin</span>
+<span style="font: 700 16px/1.1 'Instrument Sans', system-ui, sans-serif">Tu</span>
+</div>
+</div>
+</article>
+</div>
+
+<div class="after" style="position: absolute; left: 20px; right: 20px; top: 466px; animation-delay: 1.35s; display: flex; flex-direction: column">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1; font-weight: 770; font-stretch: 90%; letter-spacing: -0.02em">Invitațiile au plecat.</h2>
+<p style="margin: 8px 0 0; font: 500 15px/1.4 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{inviteText}}</p>
+<button type="button" class="press" onClick="{{copyLink}}" style="margin-top: 18px; height: 54px; border: 0; border-radius: 18px; background: var(--blue); color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 8px; font: 650 16px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 1 1 0 10h-2"></path><path d="M8 12h8"></path></svg>{{linkLabel}}</button>
+<p style="margin: 8px 0 0; text-align: center; font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink3)">Cine n-are CeFaci instalează aplicația din link și intră direct în gașcă. Expiră în 7 zile.</p>
+<a href="Planuri.dc.html" class="press" style="margin-top: 14px; height: 52px; border-radius: 18px; border: 1px solid var(--line); color: var(--ink); display: flex; align-items: center; justify-content: center; text-decoration: none; font: 650 16px/1 'Instrument Sans', system-ui, sans-serif">Gata</a>
+<button type="button" class="press" onClick="{{again}}" style="margin-top: 4px; height: 44px; border: 0; border-radius: 14px; background: transparent; color: var(--blue-ink); display: flex; align-items: center; justify-content: center; gap: 8px; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>Vezi animația din nou</button>
+</div>
+
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.state = { name: '', color: 'violet', sel: [], phase: 'form', copied: false };
+  }
+  componentWillUnmount() {
+    this.timers.forEach((t) => clearTimeout(t));
+  }
+  initialsOf(name) {
+    const words = name.trim().split(/\s+/).map((w) => w.replace(/[^A-Za-zĂÂÎȘȚăâîșț]/g, '')).filter(Boolean);
+    if (!words.length) return '?';
+    const caps = words.filter((w) => w[0] !== w[0].toLowerCase());
+    const pick = caps.length >= 2 ? caps : words;
+    return (pick[0][0] + (pick.length > 1 ? pick[pick.length - 1][0] : '')).toUpperCase();
+  }
+  renderVals() {
+    const s = this.state;
+    const people = [
+      { id: 'ioana', name: 'Ioana Munteanu', user: 'ioana.m', ini: 'I', bg: '#8C6CFF', fg: '#0E1440' },
+      { id: 'mihai', name: 'Mihai Dobre', user: 'mihai.d', ini: 'M', bg: '#FF6A4D', fg: '#0E1440' },
+      { id: 'sara', name: 'Sara Popa', user: 'sara.p', ini: 'S', bg: '#FFD43B', fg: '#0E1440' },
+      { id: 'radu', name: 'Radu Constantin', user: 'radu.c', ini: 'R', bg: '#3A4585', fg: '#F3F5FF' },
+      { id: 'bia', name: 'Bianca Toma', user: 'bia.t', ini: 'B', bg: '#5B3FD9', fg: '#FFFFFF' },
+      { id: 'vlad', name: 'Vlad Stan', user: 'vlad.s', ini: 'V', bg: '#8EA6FF', fg: '#0E1440' },
+      { id: 'elena', name: 'Elena Rusu', user: 'elena.r', ini: 'E', bg: '#B7A3FF', fg: '#0E1440' }
+    ];
+    const colorList = [
+      { id: 'violet', label: 'Violet', c: '#8C6CFF', ink: 'var(--violet-ink)', text: '#0E1440', dash: 'rgba(14, 20, 64, 0.35)' },
+      { id: 'blue', label: 'Albastru', c: '#2F5BFF', ink: 'var(--blue-ink)', text: '#FFFFFF', dash: 'rgba(255, 255, 255, 0.55)' },
+      { id: 'coral', label: 'Coral', c: '#FF6A4D', ink: 'var(--coral-ink)', text: '#0E1440', dash: 'rgba(14, 20, 64, 0.35)' },
+      { id: 'yellow', label: 'Galben', c: '#FFD43B', ink: 'var(--yellow-ink)', text: '#0E1440', dash: 'rgba(14, 20, 64, 0.35)' }
+    ];
+    const col = colorList.find((c) => c.id === s.color) || colorList[0];
+    const picked = people.filter((p) => s.sel.indexOf(p.id) !== -1);
+    const firsts = picked.map((p) => p.name.split(' ')[0]);
+    const n = picked.length;
+    let autoName = 'Gașca nouă';
+    if (n === 1) autoName = 'Tu și ' + firsts[0];
+    else if (n === 2) autoName = 'Tu, ' + firsts[0] + ' și ' + firsts[1];
+    else if (n > 2) autoName = firsts[0] + ', ' + firsts[1] + ' și încă ' + (n - 1);
+    const finalName = s.name.trim() || autoName;
+    let inviteText = '';
+    if (n === 1) inviteText = firsts[0] + ' intră în gașcă după ce acceptă.';
+    else if (n === 2) inviteText = firsts[0] + ' și ' + firsts[1] + ' intră în gașcă după ce acceptă.';
+    else if (n > 2) inviteText = firsts[0] + ', ' + firsts[1] + ' și încă ' + (n - 2) + ' intră în gașcă după ce acceptă.';
+    let ctaLabel = 'Alege cel puțin un prieten';
+    if (n === 1) ctaLabel = 'Creează și invită 1 prieten';
+    else if (n > 1) ctaLabel = 'Creează și invită ' + n + ' prieteni';
+    return {
+      themeClass: ({ zi: 'light day', noapte: 'graphite', luminos: 'light day', 'hârtie': 'light day', grafit: 'graphite' })[this.props.theme ?? 'zi'] ?? 'light day',
+      isForm: s.phase === 'form',
+      isMade: s.phase === 'made',
+      name: s.name,
+      onName: (e) => this.setState({ name: (e && e.target ? e.target.value : '').slice(0, 28) }),
+      autoName,
+      finalName,
+      initials: this.initialsOf(finalName),
+      col,
+      colors: colorList.map((c) => ({
+        c: c.c,
+        label: c.label,
+        on: c.id === s.color,
+        cls: c.id === s.color ? 'sw on' : 'sw',
+        pick: () => this.setState({ color: c.id })
+      })),
+      friends: people.map((p) => {
+        const on = s.sel.indexOf(p.id) !== -1;
+        return Object.assign({}, p, {
+          on,
+          cls: on ? 'pick on' : 'pick',
+          pick: () => this.setState({ sel: on ? this.state.sel.filter((x) => x !== p.id) : this.state.sel.concat([p.id]) })
+        });
+      }),
+      picked,
+      noneSel: n === 0,
+      ctaLabel,
+      create: () => { if (this.state.sel.length) this.setState({ phase: 'made', copied: false }); },
+      membersText: n === 1 ? 'Tu și un invitat' : 'Tu și ' + n + ' invitați',
+      inviteText,
+      linkLabel: s.copied ? 'Link copiat' : 'Copiază linkul de invitație',
+      copyLink: () => this.setState({ copied: true }),
+      again: () => {
+        this.setState({ phase: 'form' });
+        this.timers.push(setTimeout(() => this.setState({ phase: 'made', copied: false }), 40));
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

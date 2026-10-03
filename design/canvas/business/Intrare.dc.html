@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci Business — Intrarea în aplicație</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#F3F5FA;--s1:#FFFFFF;--s2:#EAEDF5;--s3:#DCE0EA;--line:#D2D7E3;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow-soft:rgba(255,212,59,.32);--yellow-ink:#7A5E00;--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#24242A;--s3:#2E2E35;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--yellow-soft:rgba(255,212,59,.16);--yellow-ink:#FFD43B;--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16)}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible,.dark :focus-visible{outline-color:#FFD43B}
+.col{display:flex;flex-direction:column}
+.scrn{position:absolute;left:0;top:0;width:390px;height:844px;display:flex;flex-direction:column;background:var(--bg)}
+.top{flex:none;height:96px;padding:44px 16px 0;display:flex;align-items:center;gap:10px}
+.back{width:44px;height:44px;flex:none;border:0;border-radius:99px;background:var(--s1);color:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--line)}
+.body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:6px 20px 20px;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.foot{flex:none;padding:12px 20px 30px;background:var(--bg);border-top:1px solid var(--line)}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:30px;line-height:1.02;font-weight:780;font-stretch:92%;letter-spacing:-.02em}
+.h2{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:19px;line-height:1.1;font-weight:740}
+.lead{margin:0;font:500 15px/1.45 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.f15{font:650 15px/1.25 'Instrument Sans',system-ui,sans-serif}
+.num{font-variant-numeric:tabular-nums}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px}
+.tag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font:700 12px/1 'Instrument Sans',system-ui,sans-serif;white-space:nowrap}
+.big{width:100%;height:56px;border:0;border-radius:18px;background:var(--blue);color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font:650 17px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.big:disabled{background:var(--s3);color:var(--ink2);cursor:default}
+.btns{height:48px;padding:0 16px;border:1px solid var(--line);border-radius:16px;background:var(--s1);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 15px/1 'Instrument Sans',system-ui,sans-serif}
+.btnq{height:44px;padding:0 10px;border:0;background:transparent;color:var(--blue-ink);font:650 15px/1 'Instrument Sans',system-ui,sans-serif}
+.chip{height:40px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);font:600 14px/1 'Instrument Sans',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.field{min-height:52px;display:flex;align-items:center;gap:8px;padding:0 14px;border-radius:14px;background:var(--s1);border:1.5px solid var(--line);transition:border-color .15s ease,box-shadow .15s ease}
+.field:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.field input{flex:1 1 auto;min-width:0;height:48px;border:0;outline:none;background:transparent;color:var(--ink);font:600 16px/1.3 'Instrument Sans',system-ui,sans-serif}
+.field input::placeholder{color:var(--ink3)}
+.field.code input{font:700 24px/1 'Instrument Sans',system-ui,sans-serif;letter-spacing:.18em;font-variant-numeric:tabular-nums;text-transform:uppercase}
+.who{width:100%;padding:18px;border:1.5px solid var(--line);border-radius:22px;background:var(--s1);color:var(--ink);display:flex;align-items:center;gap:14px;text-align:left}
+.who:hover{border-color:var(--blue)}
+.ico{width:52px;height:52px;flex:none;border-radius:16px;display:flex;align-items:center;justify-content:center}
+.res{width:100%;min-height:72px;padding:12px 14px;border:1px solid var(--line);border-radius:18px;background:var(--s1);color:var(--ink);display:flex;align-items:center;gap:12px;text-align:left}
+.res:hover{border-color:var(--blue)}
+.demo{padding:12px 14px;border-radius:16px;border:1.5px dashed var(--line)}
+.demo .dchip{height:36px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--s2);color:var(--ink);font:600 13px/1 'Instrument Sans',system-ui,sans-serif}
+.ok{padding:12px 14px;border-radius:14px;background:var(--green-soft);color:var(--green-ink);display:flex;align-items:flex-start;gap:10px;font:600 14px/1.4 'Instrument Sans',system-ui,sans-serif}
+.err{padding:12px 14px;border-radius:14px;background:var(--coral-soft);color:var(--coral-ink);display:flex;align-items:flex-start;gap:10px;font:600 14px/1.4 'Instrument Sans',system-ui,sans-serif}
+.tl{display:flex;gap:12px;align-items:flex-start}
+.dot{width:26px;height:26px;flex:none;border-radius:99px;display:flex;align-items:center;justify-content:center}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.scr{animation:scr .32s cubic-bezier(.23,1,.32,1) both}
+@keyframes scr{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.spin{width:18px;height:18px;border-radius:99px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#FFFFFF;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dark{background:#0B0B0E;color:#FFFFFF}
+.dark .muted{color:#A9B1DA}
+.pchip{height:38px;padding:0 12px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.06);color:#FFFFFF;font:600 13px/1 'Instrument Sans',system-ui,sans-serif}
+.corner{position:absolute;width:40px;height:40px;border:4px solid #FFD43B;transition:border-color .25s ease}
+.beam{position:absolute;left:12px;right:12px;height:3px;border-radius:3px;background:#FFD43B;box-shadow:0 0 18px 4px rgba(255,212,59,.45);animation:beam 2.2s ease-in-out infinite alternate}
+@keyframes beam{from{top:16px}to{top:204px}}
+.psheet{animation:psheet .45s cubic-bezier(.32,.72,0,1) both}
+@keyframes psheet{from{transform:translateY(100%)}to{transform:none}}
+.fade{animation:fade .25s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.etab{flex:1 1 0;height:46px;border:0;border-radius:14px;background:transparent;color:#A9B1DA;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+.etab.on{background:#FFD43B;color:#0E1440}
+.rrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.1)}
+.bilu{position:absolute;filter:drop-shadow(0 8px 16px rgba(0,0,0,.3));transition:left .6s cubic-bezier(.32,.72,0,1),top .6s cubic-bezier(.32,.72,0,1),width .6s cubic-bezier(.32,.72,0,1);pointer-events:none}
+.bilu-svg{display:block;width:100%;height:auto;overflow:visible}
+.bilu .bl-body{animation:blbob 2.6s ease-in-out infinite}
+.bilu .bl-shadow{transform-origin:60px 137px;animation:blshadow 2.6s ease-in-out infinite}
+.bilu .bl-eyes{transform-origin:60px 40px;animation:blblink 4.6s infinite}
+.bilu .bl-armL{transform-origin:24px 88px}
+.bilu .bl-armR{transform-origin:96px 88px}
+.bilu.m-hi .bl-armR{animation:blwave .5s ease-in-out infinite alternate}
+.bilu.m-up .bl-armR,.bilu.m-down .bl-armR,.bilu.m-left .bl-armL{animation:blnudge 1.1s ease-in-out infinite alternate}
+.bilu.m-wink .bl-armR{animation:blnudge 1.4s ease-in-out infinite alternate}
+.bilu.m-yay .bl-body{animation:bljump .62s cubic-bezier(.3,.7,.4,1) infinite}
+.bilu.m-yay .bl-shadow{animation:blshadowj .62s cubic-bezier(.3,.7,.4,1) infinite}
+.bilu.m-yay .bl-armL{animation:blwave .31s ease-in-out infinite alternate-reverse}
+.bilu.m-yay .bl-armR{animation:blwave .31s ease-in-out infinite alternate}
+.bilu.m-oops .bl-body{animation:blshake .5s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes blbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes blshadow{0%,100%{transform:scale(1)}50%{transform:scale(.88)}}
+@keyframes blblink{0%,91%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}97%{transform:scaleY(1)}}
+@keyframes blwave{from{transform:rotate(-12deg)}to{transform:rotate(14deg)}}
+@keyframes blnudge{from{transform:rotate(-4deg)}to{transform:rotate(6deg)}}
+@keyframes bljump{0%,100%{transform:translateY(0)}45%{transform:translateY(-16px)}}
+@keyframes blshadowj{0%,100%{transform:scale(1)}45%{transform:scale(.6)}}
+@keyframes blshake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
+.tut{position:absolute;left:0;top:0;right:0;bottom:0;z-index:90}
+.tspot{position:absolute;z-index:1;pointer-events:none;transition:left .6s cubic-bezier(.32,.72,0,1),top .6s cubic-bezier(.32,.72,0,1),width .6s cubic-bezier(.32,.72,0,1),height .6s cubic-bezier(.32,.72,0,1),border-radius .6s ease,box-shadow .5s ease}
+.tspot.ring::after{content:'';position:absolute;inset:-7px;border-radius:inherit;border:3px solid #FFD43B;animation:tring 1.5s ease-out infinite}
+@keyframes tring{0%{opacity:.95;transform:scale(.97)}100%{opacity:0;transform:scale(1.08)}}
+.tcatch{position:absolute;left:0;top:0;right:0;bottom:0;z-index:2;padding:0;border:0;background:transparent;cursor:pointer}
+.thot{position:absolute;z-index:3;padding:0;border:0;background:transparent;cursor:pointer}
+.tbub{position:absolute;z-index:4;pointer-events:none;padding:16px 18px 14px;border-radius:22px;background:#FFFFFF;color:#0E1440;box-shadow:0 18px 40px rgba(0,0,0,.35);transition:left .6s cubic-bezier(.32,.72,0,1),top .6s cubic-bezier(.32,.72,0,1),width .6s cubic-bezier(.32,.72,0,1)}
+.tbub .ttext{margin:0;font:600 16px/1.42 'Instrument Sans',system-ui,sans-serif}
+.tbub .ttext b{font-weight:800;color:#2447E0}
+.tbub.sa .ttext{animation:tsayA .45s cubic-bezier(.23,1,.32,1) both}
+.tbub.sb .ttext{animation:tsayB .45s cubic-bezier(.23,1,.32,1) both}
+@keyframes tsayA{from{opacity:0;transform:translateY(6px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+@keyframes tsayB{from{opacity:0;transform:translateY(6px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+.tfoot{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tdots{display:flex;gap:5px}
+.tdots span{width:7px;height:7px;border-radius:99px;background:#D2D7E3;transition:width .3s ease,background-color .3s ease}
+.tdots span.on{width:20px;background:#2F5BFF}
+.thint{font:650 12px/1 'Instrument Sans',system-ui,sans-serif;color:#5A6390}
+.tskip{position:absolute;z-index:5;height:40px;padding:0 16px;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:rgba(14,20,64,.55);color:#FFFFFF;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.bilu *,.tspot,.tspot::after,.tbub,.tbub *{animation:none!important;transition:none!important}}
+.bilu.m-oops2 .bl-body{animation:blshake2 .5s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes blshake2{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
+.tgo{height:56px;padding:0 26px;border:0;border-radius:18px;background:#FFD43B;color:#0E1440;font:750 17px/1 'Instrument Sans',system-ui,sans-serif;box-shadow:0 10px 24px rgba(255,212,59,.3);cursor:pointer}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink)">
+
+<sc-if value="{{isWho}}" hint-placeholder-val="{{ true }}">
+<section class="scrn scr" aria-labelledby="who-t" style="background: #0E1440; color: #FFFFFF">
+<div style="padding: 60px 24px 0; display: flex; align-items: center; gap: 10px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 32px; height: 32px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 25px; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<span class="tag" style="background: rgba(255, 212, 59, 0.16); color: #FFD43B">Business</span>
+<button type="button" class="press" onClick="{{toggleTheme}}" aria-label="{{themeLabel}}" style="margin-left: auto; width: 44px; height: 44px; border: 0; border-radius: 99px; background: rgba(255, 255, 255, 0.08); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{themeIcon}}"></path></svg></button>
+</div>
+<div class="col" style="padding: 64px 24px 0; gap: 12px">
+<h1 id="who-t" style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 44px; line-height: 0.98; font-weight: 800; font-stretch: 90%; letter-spacing: -0.03em">Cine ești?</h1>
+<p style="margin: 0; font: 500 16px/1.45 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">Alegi o dată. Aplicația arată doar ce-ți trebuie ție.</p>
+</div>
+<div class="col" style="padding: 36px 20px 0; gap: 12px">
+<button type="button" class="press who" onClick="{{goBiz}}" style="background: #FFFFFF; border-color: #FFFFFF; color: #0E1440"><span class="ico" aria-hidden="true" style="background: #FFD43B; color: #0E1440"><svg class="i" viewBox="0 0 24 24" style="width: 26px; height: 26px"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5"></path></svg></span><span class="col" style="flex: 1 1 auto; gap: 5px"><span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; line-height: 1; font-weight: 780">Business</span><span style="font: 500 14px/1.35 'Instrument Sans', system-ui, sans-serif; color: #454E7E">Am un local sau o activitate. Vreau rezervări, oferte și bilete.</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+<button type="button" class="press who" onClick="{{goEmp}}" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.18); color: #FFFFFF"><span class="ico" aria-hidden="true" style="background: #2F5BFF; color: #FFFFFF"><svg class="i" viewBox="0 0 24 24" style="width: 26px; height: 26px"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg></span><span class="col" style="flex: 1 1 auto; gap: 5px"><span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; line-height: 1; font-weight: 780">Angajat</span><span style="font: 500 14px/1.35 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">Lucrez la un local și am primit un cod de la șef.</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+</div>
+<p style="margin: auto 24px 34px; font: 500 13px/1.45 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Cauți ce să faci în oraș? Aia e aplicația CeFaci, nu asta.</p>
+</section>
+</sc-if>
+
+<sc-if value="{{isBiz}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="biz-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button></div>
+<div class="body">
+<h1 id="biz-t" class="h1">Afacerea ta</h1>
+<p class="lead" style="margin-top: 10px">Dacă ai deja cont, intri. Dacă nu, îți cauți localul: poate e deja în CeFaci și trebuie doar revendicat.</p>
+<div class="col" style="margin-top: 26px; gap: 12px">
+<button type="button" class="press who" onClick="{{goLogin}}"><span class="ico" aria-hidden="true" style="background: var(--blue-soft); color: var(--blue-ink)"><svg class="i" viewBox="0 0 24 24" style="width: 24px; height: 24px"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"></path></svg></span><span class="col" style="flex: 1 1 auto; gap: 4px"><span class="f15" style="font-size: 17px">Intră în cont</span><span class="muted">Localul tău e deja în CeFaci Business.</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+<button type="button" class="press who" onClick="{{goSearch}}"><span class="ico" aria-hidden="true" style="background: var(--yellow-soft); color: var(--yellow-ink)"><svg class="i" viewBox="0 0 24 24" style="width: 24px; height: 24px"><path d="M11 3a8 8 0 1 0 0 16 8 8 0 1 0 0-16M21 21l-4.3-4.3"></path></svg></span><span class="col" style="flex: 1 1 auto; gap: 4px"><span class="f15" style="font-size: 17px">Caută sau înscrie localul</span><span class="muted">Îl revendici dacă există, îl înscrii dacă nu.</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+</div>
+<div class="col" style="margin-top: 26px; padding: 16px; border-radius: 18px; background: var(--s2); gap: 8px">
+<span class="f15">Cum verificăm</span>
+<span class="muted">Cerem CUI-ul firmei și trimitem un cod la telefonul public al localului. Apoi echipa CeFaci se uită peste cerere, de obicei în 24 de ore. Doar după asta apare localul în aplicație.</span>
+</div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isLogin}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="lg-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button></div>
+<div class="body">
+<h1 id="lg-t" class="h1">Intră în cont</h1>
+<div class="col" style="margin-top: 22px; gap: 14px">
+<div class="col" style="gap: 6px"><label for="lg-id" class="lbl">Email sau telefon</label><div class="field"><input id="lg-id" type="text" autocomplete="username" value="{{lgId}}" onChange="{{onLgId}}" placeholder="ex: andrei@localul-tau.ro"></div></div>
+<div class="col" style="gap: 6px"><label for="lg-pw" class="lbl">Parola</label><div class="field"><input id="lg-pw" type="password" autocomplete="current-password" value="{{lgPw}}" onChange="{{onLgPw}}" placeholder="parola ta"></div></div>
+<button type="button" class="press btnq" onClick="{{lgForgot}}" style="align-self: flex-start; padding: 0">Ai uitat parola?</button>
+</div>
+<div class="demo" style="margin-top: 22px"><p class="lbl">Demo</p><div style="margin-top: 8px; display: flex; gap: 8px"><button type="button" class="press dchip" onClick="{{lgDemo}}">Completează ca Andrei, de la Pista 9</button></div></div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{doLogin}}" disabled="{{lgOff}}"><sc-if value="{{lgBusy}}" hint-placeholder-val="{{ false }}"><span class="spin" aria-hidden="true"></span></sc-if>{{lgBtn}}</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isIn}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="in-t">
+<div class="body" style="padding-top: 70px">
+<span class="tag" style="background: var(--green-soft); color: var(--green-ink)"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; stroke-width: 2.6"><path d="M20 6 9 17l-5-5"></path></svg>Ai intrat</span>
+<h1 id="in-t" class="h1" style="margin-top: 14px">Bine ai revenit, Andrei.</h1>
+<p class="lead" style="margin-top: 10px">Pista 9 · Bowling, Buftea. Pe telefon ai ziua de azi, cererile și scannerul. Panoul întreg e și pe calculator.</p>
+<div style="margin-top: 22px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div class="card col" style="padding: 14px; gap: 6px"><span class="muted">Cereri noi</span><span class="num" style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 34px; font-weight: 800; line-height: 1">3</span></div>
+<div class="card col" style="padding: 14px; gap: 6px"><span class="muted">Rezervări azi</span><span class="num" style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 34px; font-weight: 800; line-height: 1">11</span></div>
+</div>
+</div>
+<div class="foot col" style="gap: 10px"><a class="press big" href="Demo.dc.html">Deschide panoul (Demo)</a><button type="button" class="press btns" onClick="{{restart}}">Ia-o de la capăt</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isSearch}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="sr-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><h1 id="sr-t" class="h2" style="font-size: 22px">Găsește-ți localul</h1></div>
+<div class="body">
+<div class="field"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><path d="M11 3a8 8 0 1 0 0 16 8 8 0 1 0 0-16M21 21l-4.3-4.3"></path></svg><label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Numele sau adresa localului</label><input id="q" type="search" value="{{q}}" onChange="{{onQ}}" placeholder="Numele sau strada"></div>
+<p class="lbl" style="margin-top: 18px">{{resLabel}}</p>
+<ul style="list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px"><sc-for list="{{results}}" as="r" hint-placeholder-count="6"><li><button type="button" class="press res" onClick="{{r.pick}}"><span class="ico" aria-hidden="true" style="width: 44px; height: 44px; border-radius: 14px; background: var(--s2); color: var(--ink2)"><svg class="i" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8"></path></svg></span><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 4px"><span class="f15">{{r.name}}</span><span class="muted">{{r.meta}}</span></span><span class="tag" style="flex: none; background: {{r.tagBg}}; color: {{r.tagFg}}">{{r.tag}}</span></button></li></sc-for></ul>
+<sc-if value="{{noRes}}" hint-placeholder-val="{{ false }}"><div class="col pop" style="margin-top: 6px; padding: 16px; border-radius: 18px; background: var(--s2); gap: 6px"><span class="f15">{{noResTitle}}</span><span class="muted">Nu-i nimic. Îl înscrii tu în 3 pași și apare după verificare.</span></div></sc-if>
+</div>
+<div class="foot col" style="gap: 8px"><span class="muted" style="text-align: center">Nu-ți găsești localul?</span><button type="button" class="press btns" onClick="{{goReg}}" style="width: 100%">Înscrie un local nou</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isClaim}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="cl-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="col" style="flex: 1 1 auto; gap: 6px"><span class="lbl">{{clStepText}}</span><div aria-hidden="true" style="display: flex; gap: 5px"><sc-for list="{{clBars}}" as="b" hint-placeholder-count="3"><span style="flex: 1 1 0; height: 5px; border-radius: 3px; background: {{b.bg}}"></span></sc-for></div></div></div>
+<div class="body">
+<h1 id="cl-t" class="h1">Revendică {{loc.name}}</h1>
+<div class="card" style="margin-top: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 12px"><span class="ico" aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: var(--yellow-soft); color: var(--yellow-ink)"><svg class="i" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8"></path></svg></span><span class="col" style="min-width: 0; gap: 3px"><span class="f15">{{loc.name}}</span><span class="muted">{{loc.meta}}</span></span></div>
+
+<sc-if value="{{clS1}}" hint-placeholder-val="{{ true }}">
+<div class="col" style="margin-top: 20px; gap: 14px">
+<h2 class="h2">Cine ești</h2>
+<div class="col" style="gap: 6px"><label for="cl-n" class="lbl">Numele tău</label><div class="field"><input id="cl-n" type="text" autocomplete="name" value="{{cl.name}}" onChange="{{onClName}}" placeholder="Prenume și nume"></div></div>
+<div class="col" style="gap: 8px"><p id="cl-r" class="lbl">Ce ești la local</p><div role="group" aria-labelledby="cl-r" style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{clRoles}}" as="c" hint-placeholder-count="3"><button type="button" class="{{c.cls}}" aria-pressed="{{c.on}}" onClick="{{c.pick}}">{{c.label}}</button></sc-for></div></div>
+<div class="col" style="gap: 6px"><label for="cl-p" class="lbl">Telefonul tău</label><div class="field"><input id="cl-p" type="tel" autocomplete="tel" value="{{cl.phone}}" onChange="{{onClPhone}}" placeholder="07xx xxx xxx"></div><span class="muted">Pe ăsta te sună echipa CeFaci dacă are întrebări.</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{clS2}}" hint-placeholder-val="{{ false }}">
+<div class="col" style="margin-top: 20px; gap: 14px">
+<h2 class="h2">Firma</h2>
+<p class="lead" style="font-size: 14px">Verificăm automat CUI-ul la Registrul Comerțului și ne uităm dacă firma se potrivește cu localul.</p>
+<div class="col" style="gap: 6px"><label for="cl-c" class="lbl">CUI</label><div style="display: flex; gap: 8px"><div class="field" style="flex: 1 1 auto"><input id="cl-c" type="text" inputmode="numeric" value="{{cl.cui}}" onChange="{{onClCui}}" placeholder="ex: RO41234567"></div><button type="button" class="press btns" onClick="{{clCuiCheck}}" disabled="{{clCuiOff}}" style="height: 52px">Verifică</button></div></div>
+<sc-if value="{{clCuiBusy}}" hint-placeholder-val="{{ false }}"><p class="muted" role="status" style="margin: 0">Căutăm firma la Registrul Comerțului…</p></sc-if>
+<sc-if value="{{clCuiOk}}" hint-placeholder-val="{{ false }}"><div class="ok pop" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg><span class="col" style="gap: 3px"><span>{{loc.firm}}</span><span style="font-weight: 500">Firmă activă, cu sediul în Buftea. Se potrivește cu localul ales.</span></span></div></sc-if>
+<div class="demo"><p class="lbl">Demo</p><button type="button" class="press dchip" onClick="{{clCuiDemo}}" style="margin-top: 8px">Scrie un CUI de test</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{clS3}}" hint-placeholder-val="{{ false }}">
+<div class="col" style="margin-top: 20px; gap: 14px">
+<h2 class="h2">Telefonul localului</h2>
+<p class="lead" style="font-size: 14px">Trimitem un cod la numărul public al localului, <strong style="color: var(--ink)">{{loc.phone}}</strong>. Îl luăm din Google și de pe site-ul localului, nu din ce scrii tu. Dacă poți răspunde la telefonul ăsta, localul e al tău.</p>
+<sc-if value="{{clHasPhone}}" hint-placeholder-val="{{ true }}">
+<div class="col" style="gap: 12px">
+<div role="group" aria-label="Cum primești codul" style="display: flex; gap: 8px"><sc-for list="{{clVia}}" as="c" hint-placeholder-count="2"><button type="button" class="{{c.cls}}" aria-pressed="{{c.on}}" onClick="{{c.pick}}">{{c.label}}</button></sc-for></div>
+<sc-if value="{{clNotSent}}" hint-placeholder-val="{{ true }}"><button type="button" class="press btns" onClick="{{clSend}}" style="width: 100%">Trimite codul</button></sc-if>
+<sc-if value="{{clSentOpen}}" hint-placeholder-val="{{ false }}">
+<div class="col" style="gap: 10px">
+<label for="cl-k" class="lbl">Codul primit la local</label>
+<div style="display: flex; gap: 8px"><div class="field code" style="flex: 1 1 auto"><input id="cl-k" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="{{cl.code}}" onChange="{{onClCode}}" placeholder="000000"></div><button type="button" class="press btns" onClick="{{clVerify}}" disabled="{{clCodeOff}}" style="height: 52px">Confirmă</button></div>
+<sc-if value="{{clCodeBad}}" hint-placeholder-val="{{ false }}"><div class="err pop" role="alert">Codul nu e bun. Mai încearcă sau cere altul.</div></sc-if>
+<div class="demo"><p class="lbl">Demo · pe telefonul localului a venit codul 482915</p><button type="button" class="press dchip" onClick="{{clCodeDemo}}" style="margin-top: 8px">Scrie codul</button></div>
+</div>
+</sc-if>
+<sc-if value="{{clCodeOk}}" hint-placeholder-val="{{ false }}"><div class="ok pop" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Telefonul localului e confirmat.</div></sc-if>
+<button type="button" class="press btnq" onClick="{{clNoPhone}}" style="align-self: flex-start; padding: 0">Nu am acces la telefonul ăsta</button>
+</div>
+</sc-if>
+<sc-if value="{{clDocMode}}" hint-placeholder-val="{{ false }}">
+<div class="col" style="gap: 12px">
+<p class="lead" style="font-size: 14px">Atunci încarcă un document care arată că localul e al tău: certificatul de înregistrare, contractul de închiriere sau autorizația de funcționare. Verificarea durează mai mult, 2–3 zile.</p>
+<sc-if value="{{clNoDoc}}" hint-placeholder-val="{{ true }}"><button type="button" class="press btns" onClick="{{clAddDoc}}" style="width: 100%"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path></svg>Alege documentul</button></sc-if>
+<sc-if value="{{clHasDoc}}" hint-placeholder-val="{{ false }}"><div class="ok pop" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>certificat-inregistrare.pdf · 1,2 MB</div></sc-if>
+<button type="button" class="press btnq" onClick="{{clBackPhone}}" style="align-self: flex-start; padding: 0">Am totuși acces la telefon</button>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{clNext}}" disabled="{{clNextOff}}">{{clNextLabel}}</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isDispute}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="dp-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button></div>
+<div class="body">
+<span class="tag" style="background: var(--s2); color: var(--ink2)">Are deja proprietar</span>
+<h1 id="dp-t" class="h1" style="margin-top: 12px">{{loc.name}} e deja revendicat</h1>
+<p class="lead" style="margin-top: 10px">Dacă localul e al tău și nu tu ai făcut contul, sau localul și-a schimbat proprietarul, trimite o dispută. Echipa CeFaci vă contactează pe amândoi. Până atunci, pagina localului rămâne neschimbată.</p>
+<div class="col" style="margin-top: 20px; gap: 14px">
+<div class="col" style="gap: 8px"><p id="dp-w" class="lbl">Ce s-a întâmplat</p><div role="group" aria-labelledby="dp-w" class="col" style="gap: 8px"><sc-for list="{{dpWhy}}" as="c" hint-placeholder-count="3"><button type="button" class="{{c.cls}}" aria-pressed="{{c.on}}" onClick="{{c.pick}}" style="justify-content: flex-start; height: auto; min-height: 44px; padding: 10px 14px; border-radius: 14px; text-align: left; line-height: 1.3">{{c.label}}</button></sc-for></div></div>
+<div class="col" style="gap: 6px"><label for="dp-n" class="lbl">Numele tău</label><div class="field"><input id="dp-n" type="text" autocomplete="name" value="{{dp.name}}" onChange="{{onDpName}}" placeholder="Prenume și nume"></div></div>
+<div class="col" style="gap: 6px"><label for="dp-p" class="lbl">Telefonul tău</label><div class="field"><input id="dp-p" type="tel" autocomplete="tel" value="{{dp.phone}}" onChange="{{onDpPhone}}" placeholder="07xx xxx xxx"></div></div>
+<div class="col" style="gap: 8px"><p class="lbl">Document obligatoriu</p><span class="muted">Certificatul de înregistrare al firmei sau contractul de închiriere, pe numele tău sau al firmei tale.</span>
+<sc-if value="{{dpNoDoc}}" hint-placeholder-val="{{ true }}"><button type="button" class="press btns" onClick="{{dpAddDoc}}" style="width: 100%"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path></svg>Alege documentul</button></sc-if>
+<sc-if value="{{dpHasDoc}}" hint-placeholder-val="{{ false }}"><div class="ok pop" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>contract-inchiriere.pdf · 2,4 MB</div></sc-if>
+</div>
+<div class="demo"><p class="lbl">Demo</p><button type="button" class="press dchip" onClick="{{dpDemo}}" style="margin-top: 8px">Completează tot</button></div>
+</div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{dpSend}}" disabled="{{dpOff}}">Trimite disputa</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isReg}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="rg-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="col" style="flex: 1 1 auto; gap: 6px"><span class="lbl">{{rgStepText}}</span><div aria-hidden="true" style="display: flex; gap: 5px"><sc-for list="{{rgBars}}" as="b" hint-placeholder-count="3"><span style="flex: 1 1 0; height: 5px; border-radius: 3px; background: {{b.bg}}"></span></sc-for></div></div></div>
+<div class="body">
+<h1 id="rg-t" class="h1">Înscrie un local nou</h1>
+
+<sc-if value="{{rgS1}}" hint-placeholder-val="{{ true }}">
+<div class="col" style="margin-top: 18px; gap: 14px">
+<h2 class="h2">Localul</h2>
+<div class="col" style="gap: 6px"><label for="rg-n" class="lbl">Numele localului</label><div class="field"><input id="rg-n" type="text" value="{{rg.name}}" onChange="{{onRgName}}" placeholder="ex: Terasa din parc"></div></div>
+<div class="col" style="gap: 8px"><p id="rg-c" class="lbl">Ce e</p><div role="group" aria-labelledby="rg-c" style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{rgCats}}" as="c" hint-placeholder-count="7"><button type="button" class="{{c.cls}}" aria-pressed="{{c.on}}" onClick="{{c.pick}}">{{c.label}}</button></sc-for></div></div>
+<div class="col" style="gap: 6px"><label for="rg-a" class="lbl">Adresa</label><div class="field"><input id="rg-a" type="text" autocomplete="street-address" value="{{rg.addr}}" onChange="{{onRgAddr}}" placeholder="Strada și numărul, orașul"></div></div>
+<div class="col" style="gap: 6px"><label for="rg-pp" class="lbl">Telefonul public al localului</label><div class="field"><input id="rg-pp" type="tel" value="{{rg.pphone}}" onChange="{{onRgPPhone}}" placeholder="07xx xxx xxx"></div><span class="muted">Apare în CeFaci când nu se poate rezerva prin aplicație.</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{rgS2}}" hint-placeholder-val="{{ false }}">
+<div class="col" style="margin-top: 18px; gap: 14px">
+<h2 class="h2">Firma și tu</h2>
+<div class="col" style="gap: 6px"><label for="rg-cui" class="lbl">CUI</label><div style="display: flex; gap: 8px"><div class="field" style="flex: 1 1 auto"><input id="rg-cui" type="text" inputmode="numeric" value="{{rg.cui}}" onChange="{{onRgCui}}" placeholder="ex: RO41234567"></div><button type="button" class="press btns" onClick="{{rgCuiCheck}}" disabled="{{rgCuiOff}}" style="height: 52px">Verifică</button></div></div>
+<sc-if value="{{rgCuiBusy}}" hint-placeholder-val="{{ false }}"><p class="muted" role="status" style="margin: 0">Căutăm firma la Registrul Comerțului…</p></sc-if>
+<sc-if value="{{rgCuiOk}}" hint-placeholder-val="{{ false }}"><div class="ok pop" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg><span class="col" style="gap: 3px"><span>{{rgFirm}}</span><span style="font-weight: 500">Firmă activă. O trecem în cerere.</span></span></div></sc-if>
+<div class="col" style="gap: 6px"><label for="rg-y" class="lbl">Numele tău</label><div class="field"><input id="rg-y" type="text" autocomplete="name" value="{{rg.you}}" onChange="{{onRgYou}}" placeholder="Prenume și nume"></div></div>
+<div class="col" style="gap: 8px"><p id="rg-r" class="lbl">Ce ești la local</p><div role="group" aria-labelledby="rg-r" style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{rgRoles}}" as="c" hint-placeholder-count="3"><button type="button" class="{{c.cls}}" aria-pressed="{{c.on}}" onClick="{{c.pick}}">{{c.label}}</button></sc-for></div></div>
+<div class="demo"><p class="lbl">Demo</p><button type="button" class="press dchip" onClick="{{rgDemo2}}" style="margin-top: 8px">Completează pasul</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{rgS3}}" hint-placeholder-val="{{ false }}">
+<div class="col" style="margin-top: 18px; gap: 14px">
+<h2 class="h2">Telefonul tău</h2>
+<p class="lead" style="font-size: 14px">Pe el intri în cont și te sună echipa CeFaci dacă are întrebări.</p>
+<div class="col" style="gap: 6px"><label for="rg-p" class="lbl">Telefonul tău</label><div style="display: flex; gap: 8px"><div class="field" style="flex: 1 1 auto"><input id="rg-p" type="tel" autocomplete="tel" value="{{rg.phone}}" onChange="{{onRgPhone}}" placeholder="07xx xxx xxx"></div><button type="button" class="press btns" onClick="{{rgSend}}" disabled="{{rgSendOff}}" style="height: 52px">{{rgSendLabel}}</button></div></div>
+<sc-if value="{{rgSentOpen}}" hint-placeholder-val="{{ false }}">
+<div class="col" style="gap: 10px">
+<label for="rg-k" class="lbl">Codul din SMS</label>
+<div style="display: flex; gap: 8px"><div class="field code" style="flex: 1 1 auto"><input id="rg-k" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="{{rg.code}}" onChange="{{onRgCode}}" placeholder="000000"></div><button type="button" class="press btns" onClick="{{rgVerify}}" disabled="{{rgCodeOff}}" style="height: 52px">Confirmă</button></div>
+<sc-if value="{{rgCodeBad}}" hint-placeholder-val="{{ false }}"><div class="err pop" role="alert">Codul nu e bun. Mai încearcă sau cere altul.</div></sc-if>
+<div class="demo"><p class="lbl">Demo · în SMS a venit codul 271604</p><button type="button" class="press dchip" onClick="{{rgCodeDemo}}" style="margin-top: 8px">Scrie codul</button></div>
+</div>
+</sc-if>
+<sc-if value="{{rgCodeOk}}" hint-placeholder-val="{{ false }}"><div class="ok pop" role="status"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Telefonul tău e confirmat.</div></sc-if>
+<div class="card col" style="padding: 14px; gap: 6px"><span class="lbl">Trimiți la verificare</span><span class="f15">{{rgSumName}}</span><span class="muted">{{rgSumMeta}}</span></div>
+</div>
+</sc-if>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{rgNext}}" disabled="{{rgNextOff}}">{{rgNextLabel}}</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isPend}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="pd-t">
+<div class="body" style="padding-top: 64px">
+<span class="tag" style="background: var(--yellow-soft); color: var(--yellow-ink)"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 6v6l4 2"></path></svg>În verificare</span>
+<h1 id="pd-t" class="h1" style="margin-top: 14px">{{pdTitle}}</h1>
+<p class="lead" style="margin-top: 10px">{{pdLead}}</p>
+<ol style="list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 16px"><sc-for list="{{pdSteps}}" as="t" hint-placeholder-count="5"><li class="tl"><span class="dot" aria-hidden="true" style="background: {{t.bg}}; color: {{t.fg}}; box-shadow: {{t.ring}}"><svg class="i s" viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke-width: 2.6"><path d="{{t.icon}}"></path></svg></span><span class="col" style="gap: 3px; padding-top: 3px"><span class="f15" style="color: {{t.color}}">{{t.label}}</span><span class="muted">{{t.sub}}</span></span></li></sc-for></ol>
+<div class="col" style="margin-top: 22px; padding: 16px; border-radius: 18px; background: var(--s2); gap: 10px">
+<span class="f15">Între timp</span>
+<span class="muted">Poți pregăti profilul: poze, program, prețuri. Nu apare nimic public până nu e acceptată cererea.</span>
+<button type="button" class="press btns" onClick="{{pdProfile}}">Pregătește profilul</button>
+</div>
+<div class="demo" style="margin-top: 16px"><p class="lbl">Demo · ce face adminul CeFaci</p><div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px"><button type="button" class="press dchip" onClick="{{pdAccept}}">Acceptă cererea</button><button type="button" class="press dchip" onClick="{{pdAsk}}">Cere încă un document</button></div></div>
+<sc-if value="{{pdAsked}}" hint-placeholder-val="{{ false }}"><div class="err pop" role="alert" style="margin-top: 12px">Echipa CeFaci cere o poză cu firma de la intrare, ca să se vadă că localul e deschis. Ai primit și SMS.</div></sc-if>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isOk}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="ok-t">
+<div class="body" style="padding-top: 70px">
+<span class="pop" aria-hidden="true" style="width: 76px; height: 76px; border-radius: 24px; background: #FFD43B; color: #0E1440; display: flex; align-items: center; justify-content: center; transform: rotate(-6deg)"><svg class="i" viewBox="0 0 24 24" style="width: 38px; height: 38px; stroke-width: 2.4"><path d="M20 6 9 17l-5-5"></path></svg></span>
+<h1 id="ok-t" class="h1" style="margin-top: 20px">{{okTitle}}</h1>
+<p class="lead" style="margin-top: 10px">{{okLead}}</p>
+<ol style="margin: 22px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<li class="card" style="padding: 14px; display: flex; gap: 12px; align-items: center"><span class="dot num" style="background: var(--blue-soft); color: var(--blue-ink); font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">1</span><span class="col" style="gap: 3px"><span class="f15">Completează profilul</span><span class="muted">Poze, program, prețuri, vibe-uri.</span></span></li>
+<li class="card" style="padding: 14px; display: flex; gap: 12px; align-items: center"><span class="dot num" style="background: var(--blue-soft); color: var(--blue-ink); font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">2</span><span class="col" style="gap: 3px"><span class="f15">Adaugă echipa</span><span class="muted">Generezi câte un cod pentru fiecare angajat.</span></span></li>
+<li class="card" style="padding: 14px; display: flex; gap: 12px; align-items: center"><span class="dot num" style="background: var(--blue-soft); color: var(--blue-ink); font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">3</span><span class="col" style="gap: 3px"><span class="f15">Pune prima ofertă</span><span class="muted">Opțional. Nu te urcă în recomandări, e doar un bonus.</span></span></li>
+</ol>
+</div>
+<div class="foot col" style="gap: 10px"><a class="press big" href="Demo.dc.html">Deschide panoul (Demo)</a><button type="button" class="press btns" onClick="{{restart}}">Ia-o de la capăt</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isEmp}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="em-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button></div>
+<div class="body">
+<h1 id="em-t" class="h1">Codul de la șef</h1>
+<p class="lead" style="margin-top: 10px">Șeful îl generează din Echipă, în CeFaci Business. Merge o singură dată și se leagă de telefonul ăsta.</p>
+<label for="ec" class="lbl" style="display: block; margin-top: 24px">Codul de angajat</label>
+<div class="field code" style="margin-top: 6px"><input id="ec" type="text" autocomplete="off" autocapitalize="characters" maxlength="8" value="{{ecCode}}" onChange="{{onEcCode}}" placeholder="P9-XXXX"></div>
+<sc-if value="{{ecHasErr}}" hint-placeholder-val="{{ false }}"><div class="err pop" role="alert" style="margin-top: 12px"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5M12 17h.01M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20"></path></svg>{{ecErr}}</div></sc-if>
+<div class="demo" style="margin-top: 22px"><p class="lbl">Demo · coduri de încercat</p><div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{ecDemos}}" as="d" hint-placeholder-count="4"><button type="button" class="press dchip" onClick="{{d.pick}}">{{d.label}}</button></sc-for></div></div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{ecCheck}}" disabled="{{ecOff}}"><sc-if value="{{ecBusy}}" hint-placeholder-val="{{ false }}"><span class="spin" aria-hidden="true"></span></sc-if>{{ecBtn}}</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isEmpOk}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="eo-t">
+<div class="body" style="padding-top: 64px">
+<span class="tag" style="background: var(--green-soft); color: var(--green-ink)"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; stroke-width: 2.6"><path d="M20 6 9 17l-5-5"></path></svg>Cod valid</span>
+<h1 id="eo-t" class="h1" style="margin-top: 14px">Tu ești {{emp.name}}?</h1>
+<div class="card" style="margin-top: 20px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; align-items: center; gap: 12px"><span class="ico" aria-hidden="true" style="width: 44px; height: 44px; border-radius: 14px; background: #2F5BFF; color: #FFFFFF"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2zM10.6 9.5h2.8"></path></svg></span><span class="col" style="gap: 3px"><span class="f15">Pista 9</span><span class="muted">Bowling · Buftea</span></span></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<div class="col" style="padding: 10px 12px; border-radius: 14px; background: var(--s2); gap: 5px"><span class="muted">Rol</span><span class="f15">{{emp.roleLabel}}</span></div>
+<div class="col" style="padding: 10px 12px; border-radius: 14px; background: var(--s2); gap: 5px"><span class="muted">Adăugat de</span><span class="f15">Andrei Stoica</span></div>
+</div>
+<span class="muted">{{emp.roleHint}}</span>
+</div>
+<p class="muted" style="margin: 16px 0 0">Dacă apeși „Da, sunt eu”, contul se leagă de telefonul ăsta. Pe alt telefon îți trebuie un cod nou.</p>
+</div>
+<div class="foot col" style="gap: 8px"><button type="button" class="press big" onClick="{{empYes}}">Da, sunt eu</button><button type="button" class="press btns" onClick="{{empNo}}">Nu sunt eu</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ false }}">
+<section class="scrn dark" aria-label="Aplicația de angajat">
+<div style="flex: none; padding: 44px 20px 0; display: flex; align-items: center; gap: 12px">
+<span class="ico" aria-hidden="true" style="width: 40px; height: 40px; border-radius: 12px; background: #2F5BFF; color: #FFFFFF"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2zM10.6 9.5h2.8"></path></svg></span>
+<span class="col" style="flex: 1 1 auto; gap: 4px"><span style="font: 700 16px/1.1 'Instrument Sans', system-ui, sans-serif">Pista 9</span><span style="font: 500 13px/1.1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">{{hWho}}</span></span>
+<button type="button" class="press" onClick="{{logout}}" style="height: 40px; padding: 0 14px; border: 0; border-radius: 99px; background: rgba(255, 255, 255, 0.1); color: #FFFFFF; font: 650 13px/1 'Instrument Sans', system-ui, sans-serif">Ieși</button>
+</div>
+
+<sc-if value="{{hOn}}" hint-placeholder-val="{{ true }}">
+<div class="col" style="flex: 1 1 auto; min-height: 0">
+<sc-if value="{{hIsScan}}" hint-placeholder-val="{{ true }}">
+<div class="body" style="padding: 0 20px">
+<h2 style="margin: 18px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 26px; line-height: 1.02; font-weight: 780">Scanează codul clientului</h2>
+<div aria-hidden="true" style="position: relative; margin: 16px auto 0; width: 224px; height: 224px; border-radius: 24px; background: #16161C; overflow: hidden">
+<svg viewBox="0 0 120 150" style="position: absolute; left: 50%; top: 50%; width: 100px; height: 125px; margin: -62px 0 0 -50px; opacity: 0.32"><rect x="4" y="2" width="112" height="146" rx="16" fill="none" stroke="#FFFFFF" stroke-width="3"></rect><rect x="22" y="26" width="76" height="76" rx="6" fill="#FFFFFF"></rect><path d="M28 32h18v18H28zM74 32h18v18H74zM28 78h18v18H28zM54 56h8v8h-8zM66 68h8v8h-8zM54 80h8v8h-8zM78 80h8v8h-8zM66 90h8v6h-8z" fill="#16161C"></path></svg>
+<span class="corner" style="border-color: {{hFrame}}; left: 12px; top: 12px; border-right: 0; border-bottom: 0; border-radius: 14px 0 0 0"></span>
+<span class="corner" style="border-color: {{hFrame}}; right: 12px; top: 12px; border-left: 0; border-bottom: 0; border-radius: 0 14px 0 0"></span>
+<span class="corner" style="border-color: {{hFrame}}; left: 12px; bottom: 12px; border-right: 0; border-top: 0; border-radius: 0 0 0 14px"></span>
+<span class="corner" style="border-color: {{hFrame}}; right: 12px; bottom: 12px; border-left: 0; border-top: 0; border-radius: 0 0 14px 0"></span>
+<sc-if value="{{hScanning}}" hint-placeholder-val="{{ true }}"><span class="beam"></span></sc-if>
+</div>
+<p aria-live="polite" style="margin: 12px 0 0; text-align: center; font: 550 14px/1.4 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">{{hHint}}</p>
+<div style="margin-top: 14px; padding: 12px 14px; border-radius: 16px; border: 1.5px dashed rgba(255, 255, 255, 0.22)">
+<p style="margin: 0; font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Demo · cine e la ușă</p>
+<div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{hDemos}}" as="d" hint-placeholder-count="3"><button type="button" class="press pchip" onClick="{{d.pick}}">{{d.label}}</button></sc-for></div>
+<sc-if value="{{hNobody}}" hint-placeholder-val="{{ false }}"><p style="margin: 8px 0 0; font: 500 13px/1.35 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">Au venit toți cei cu rezervare.</p></sc-if>
+</div>
+<p style="margin: 16px 0 0; font: 650 13px/1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">{{hScansLabel}}</p>
+<ul style="list-style: none; margin: 4px 0 0; padding: 0"><sc-for list="{{hScans}}" as="x" hint-placeholder-count="2"><li class="rrow {{x.anim}}"><span class="ico" aria-hidden="true" style="width: 32px; height: 32px; border-radius: 99px; background: {{x.bg}}; color: {{x.fg}}"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.4"><path d="{{x.icon}}"></path></svg></span><span class="col" style="flex: 1 1 auto; gap: 3px"><span style="font: 650 14px/1.2 'Instrument Sans', system-ui, sans-serif">{{x.title}}</span><span class="muted">{{x.sub}}</span></span><span class="num" style="font: 600 13px/1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">{{x.t}}</span></li></sc-for></ul>
+</div>
+</sc-if>
+<sc-if value="{{hIsRes}}" hint-placeholder-val="{{ false }}">
+<div class="body" style="padding: 0 20px">
+<h2 style="margin: 18px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 26px; line-height: 1.02; font-weight: 780">Rezervările de azi</h2>
+<p style="margin: 6px 0 0" class="muted">{{hResCount}}</p>
+<ul style="list-style: none; margin: 10px 0 0; padding: 0"><sc-for list="{{hRes}}" as="r" hint-placeholder-count="5"><li class="rrow"><span class="num" style="width: 46px; flex: none; font: 700 15px/1 'Instrument Sans', system-ui, sans-serif">{{r.t}}</span><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 4px"><span style="font: 650 15px/1.2 'Instrument Sans', system-ui, sans-serif">{{r.name}}</span><span class="muted">{{r.meta}}</span></span><sc-if value="{{r.isPend}}" hint-placeholder-val="{{ false }}"><span style="display: flex; gap: 6px; flex: none"><button type="button" class="press" onClick="{{r.ok}}" style="height: 40px; padding: 0 12px; border: 0; border-radius: 12px; background: #FFD43B; color: #0E1440; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">Confirmă</button><button type="button" class="press" onClick="{{r.no}}" aria-label="{{r.noLabel}}" style="width: 40px; height: 40px; border: 0; border-radius: 12px; background: rgba(255, 255, 255, 0.1); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></span></sc-if><sc-if value="{{r.isDone}}" hint-placeholder-val="{{ true }}"><span class="tag" style="flex: none; background: {{r.tagBg}}; color: {{r.tagFg}}">{{r.tag}}</span></sc-if></li></sc-for></ul>
+</div>
+</sc-if>
+<div style="flex: none; padding: 10px 20px 26px">
+<sc-if value="{{hTabs}}" hint-placeholder-val="{{ false }}"><div role="tablist" aria-label="Aplicația" style="margin-bottom: 10px; padding: 4px; border-radius: 18px; background: rgba(255, 255, 255, 0.08); display: flex; gap: 4px"><sc-for list="{{hTabList}}" as="t" hint-placeholder-count="2"><button type="button" role="tab" class="{{t.cls}}" aria-selected="{{t.on}}" onClick="{{t.pick}}">{{t.label}}</button></sc-for></div></sc-if>
+<div style="padding: 10px 12px; border-radius: 16px; border: 1.5px dashed rgba(255, 255, 255, 0.22)"><p style="margin: 0; font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Demo · ce face șeful din Echipă</p><div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px"><button type="button" class="press pchip" onClick="{{hPause}}">Te pune pe pauză</button><button type="button" class="press pchip" onClick="{{hOffShift}}">E sâmbătă, nu ești în tură</button></div></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{hPaused}}" hint-placeholder-val="{{ false }}">
+<div class="col pop" style="flex: 1 1 auto; padding: 90px 28px 0; align-items: center; text-align: center; gap: 14px">
+<span class="ico" aria-hidden="true" style="width: 72px; height: 72px; border-radius: 99px; background: rgba(255, 212, 59, 0.16); color: #FFD43B"><svg class="i" viewBox="0 0 24 24" style="width: 32px; height: 32px"><path d="M10 4H6v16h4zM18 4h-4v16h4z"></path></svg></span>
+<p style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1.05; font-weight: 780">Ești pe pauză</p>
+<p style="margin: 0; font: 500 15px/1.45 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">Andrei te-a pus pe pauză. Când revii, contul pornește la loc de aici, fără cod nou.</p>
+<div style="margin-top: auto; margin-bottom: 30px; width: 100%; padding: 10px 12px; border-radius: 16px; border: 1.5px dashed rgba(255, 255, 255, 0.22); text-align: left"><p style="margin: 0; font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Demo</p><button type="button" class="press pchip" onClick="{{hResume}}" style="margin-top: 8px">Andrei te repornește</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{hOff}}" hint-placeholder-val="{{ false }}">
+<div class="col pop" style="flex: 1 1 auto; padding: 90px 28px 30px; align-items: center; text-align: center; gap: 14px">
+<span class="ico" aria-hidden="true" style="width: 72px; height: 72px; border-radius: 99px; background: rgba(255, 255, 255, 0.1); color: #FFFFFF"><svg class="i" viewBox="0 0 24 24" style="width: 32px; height: 32px"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 6v6l4 2"></path></svg></span>
+<p style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1.05; font-weight: 780">{{hOffTitle}}</p>
+<p style="margin: 0; font: 500 15px/1.45 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">{{hOffText}}</p>
+<sc-if value="{{hCanAsk}}" hint-placeholder-val="{{ true }}"><button type="button" class="press" onClick="{{hAsk}}" style="margin-top: 10px; width: 100%; height: 56px; border: 0; border-radius: 18px; background: #FFD43B; color: #0E1440; font: 700 17px/1 'Instrument Sans', system-ui, sans-serif">Cer acces pentru azi</button></sc-if>
+<sc-if value="{{hWaiting}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 10px 0 0; width: 100%; padding: 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.08); font: 600 14px/1.4 'Instrument Sans', system-ui, sans-serif">Am trimis cererea. Andrei și Carmen primesc o notificare și îți răspund de acolo.</p></sc-if>
+<button type="button" class="press" onClick="{{hBackOn}}" style="margin-top: auto; height: 40px; padding: 0 14px; border: 0; border-radius: 99px; background: rgba(255, 255, 255, 0.1); color: #FFFFFF; font: 600 13px/1 'Instrument Sans', system-ui, sans-serif">Demo: înapoi la vineri seara</button>
+</div>
+</sc-if>
+
+<sc-if value="{{hSheet}}" hint-placeholder-val="{{ false }}">
+<div>
+<button type="button" class="fade" aria-label="Închide" onClick="{{hNext}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 2; padding: 0; border: 0; background: rgba(0, 0, 0, 0.55); cursor: pointer"></button>
+<div class="psheet" role="dialog" aria-modal="true" aria-label="Rezultatul scanării" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 10px 20px 30px; border-radius: 28px 28px 0 0; background: #FFFFFF; color: #0E1440; display: flex; flex-direction: column">
+<span aria-hidden="true" style="align-self: center; width: 36px; height: 5px; border-radius: 3px; background: #D2D7E3"></span>
+<div style="margin-top: 16px; display: flex; align-items: center; gap: 14px">
+<span class="ico pop" aria-hidden="true" style="width: 60px; height: 60px; border-radius: 99px; background: #1E9E5A; color: #FFFFFF"><svg class="i" viewBox="0 0 24 24" style="width: 30px; height: 30px; stroke-width: 2.6"><path d="M20 6 9 17l-5-5"></path></svg></span>
+<div class="col" style="gap: 5px"><p style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 27px; line-height: 1; font-weight: 790">{{sr.title}}</p><span style="font: 600 14px/1.2 'Instrument Sans', system-ui, sans-serif; color: #454E7E">{{sr.kicker}}</span></div>
+</div>
+<div style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><sc-for list="{{sr.facts}}" as="f" hint-placeholder-count="3"><div class="col" style="padding: 10px 12px; border-radius: 14px; background: #EEF1F7; gap: 5px"><span style="font: 600 12px/1 'Instrument Sans', system-ui, sans-serif; color: #454E7E">{{f.k}}</span><span style="font: 700 15px/1.15 'Instrument Sans', system-ui, sans-serif">{{f.v}}</span></div></sc-for></div>
+<sc-if value="{{sr.hasOffer}}" hint-placeholder-val="{{ false }}"><div class="col" style="margin-top: 10px; padding: 14px 16px; border-radius: 16px; background: #FFD43B; gap: 4px"><span style="font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">Oferta revendicată</span><span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; line-height: 1.05; font-weight: 800">{{sr.offer}}</span><span style="font: 550 13px/1.35 'Instrument Sans', system-ui, sans-serif">Aplici reducerea în casa de marcat. CeFaci nu atinge plata.</span></div></sc-if>
+<sc-if value="{{sr.isDone}}" hint-placeholder-val="{{ false }}"><div class="pop" role="status" style="margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: rgba(30, 160, 90, 0.14); color: #1E7A4C; display: flex; align-items: center; gap: 10px; font: 650 14px/1.35 'Instrument Sans', system-ui, sans-serif"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{{sr.doneText}}</div></sc-if>
+<button type="button" class="press" onClick="{{sr.go}}" style="margin-top: 16px; height: 56px; border: 0; border-radius: 18px; background: {{sr.btnBg}}; color: #FFFFFF; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif">{{sr.btn}}</button>
+</div>
+</div>
+</sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<p class="pop" role="status" style="position: absolute; left: 16px; right: 16px; bottom: 112px; z-index: 40; margin: 0; padding: 14px 16px; border-radius: 16px; background: #0E1440; color: #FFFFFF; font: 600 14px/1.35 'Instrument Sans', system-ui, sans-serif; box-shadow: 0 14px 34px rgba(14, 20, 64, 0.3); border: 1px solid rgba(255, 255, 255, 0.12)">{{toast}}</p>
+</sc-if>
+<sc-if value="{{tut.on}}" hint-placeholder-val="{{ false }}">
+<div class="tut" role="dialog" aria-modal="true" aria-label="Turul cu Bilu">
+<span class="{{tut.spotCls}}" aria-hidden="true" style="left: {{tut.sx}}; top: {{tut.sy}}; width: {{tut.sw}}; height: {{tut.sh}}; border-radius: {{tut.sr}}; box-shadow: {{tut.shadow}}"></span>
+<button type="button" class="tcatch" aria-label="{{tut.catchLabel}}" onClick="{{tut.tap}}"></button>
+<sc-if value="{{tut.hot}}" hint-placeholder-val="{{ false }}"><button type="button" class="thot" aria-label="{{tut.hotLabel}}" onClick="{{tut.hit}}" style="left: {{tut.sx}}; top: {{tut.sy}}; width: {{tut.sw}}; height: {{tut.sh}}; border-radius: {{tut.sr}}"></button></sc-if>
+<div class="{{tut.bl.cls}}" aria-hidden="true" style="z-index: 4; left: {{tut.bx}}; top: {{tut.by}}; width: {{tut.bw}}"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{tut.bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{tut.bl.hLx}}" cy="{{tut.bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-armR"><path d="{{tut.bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{tut.bl.hRx}}" cy="{{tut.bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{tut.bl.brow}}"></path><g class="bl-eyes"><g opacity="{{tut.bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{tut.bl.pLx}}" cy="{{tut.bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{tut.bl.gLx}}" cy="{{tut.bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{tut.bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{tut.bl.pRx}}" cy="{{tut.bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{tut.bl.gRx}}" cy="{{tut.bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{tut.bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{tut.bl.mouth}}" fill="#0E1440"></path><path d="{{tut.bl.tongue}}" fill="#FF6A4D"></path></g></svg></div>
+<div class="{{tut.bubCls}}" aria-live="polite" style="left: {{tut.qx}}; top: {{tut.qy}}; width: {{tut.qw}}">
+<p class="ttext">{{tut.text}}</p>
+<div class="tfoot"><span class="tdots" aria-hidden="true"><sc-for list="{{tut.dots}}" as="d" hint-placeholder-count="6"><span class="{{d.cls}}"></span></sc-for></span><span class="thint">{{tut.hint}}</span></div>
+</div>
+<sc-if value="{{tut.showSkip}}" hint-placeholder-val="{{ true }}"><button type="button" class="tskip press" onClick="{{tut.skip}}" style="right: 16px; top: 50px">Sari peste</button></sc-if>
+<sc-if value="{{tut.isFinal}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; left: 24px; right: 24px; top: 520px; z-index: 6; display: flex; flex-direction: column"><button type="button" class="press tgo" onClick="{{tut.close}}">Hai la treabă!</button></div>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":390,"height":844}}'>
+const IC = {
+  check: 'M20 6 9 17l-5-5', clock: 'M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 6v6l4 2', dot: 'M12 11.5v1', pct: 'M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5',
+  sun: 'M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41',
+  moon: 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z'
+};
+const LOCALS = [
+  { id: 'pista9', name: 'Pista 9', cat: 'Bowling', addr: 'Str. Știrbei Vodă 12, Buftea', owned: true, phone: '0740 000 909', firm: 'PISTA NOUĂ ENTERTAINMENT SRL' },
+  { id: 'casagrill', name: 'Casa Grill', cat: 'Restaurant', addr: 'Str. Mihai Eminescu 5, Buftea', owned: false, phone: '0721 000 222', firm: 'CASA GRILL BUFTEA SRL' },
+  { id: 'lab', name: 'Laboratorul', cat: 'Escape room', addr: 'Str. Gării 3, Buftea', owned: false, phone: '0722 000 318', firm: 'LABORATORUL GAMES SRL' },
+  { id: 'mia', name: 'Cofetăria Mia', cat: 'Cofetărie', addr: 'Str. Independenței 40, Buftea', owned: false, phone: '0731 000 445', firm: 'MIA DULCE SRL' },
+  { id: 'zarul', name: 'Zarul', cat: 'Board games', addr: 'Str. Libertății 8, Buftea', owned: true, phone: '0744 000 120', firm: 'ZARUL ARUNCAT SRL' },
+  { id: 'boabe', name: 'Boabe', cat: 'Cafenea', addr: 'Piața Mare 2, Buftea', owned: false, phone: '0755 000 610', firm: 'BOABE PRĂJITE SRL' }
+];
+const CATS = ['Restaurant', 'Cafenea', 'Bar', 'Club', 'Activitate', 'Sport', 'Cultură'];
+const ROLES3 = ['Proprietar', 'Administrator', 'Manager'];
+const WHY = ['Contul e al fostului proprietar', 'Nu eu am făcut contul, dar localul e al meu', 'Altceva, explic la telefon'];
+const EMP_CODES = {
+  P94K7M: { ok: true, name: 'Ana Marin', short: 'Ana', role: 'scan', roleLabel: 'Scanare', roleHint: 'Scanezi codul clientului la intrare. Vezi prenumele, câte persoane sunt și oferta. Atât.', sched: 'Lu–Vi, 17:00–02:00' },
+  P9H2WD: { ok: true, name: 'Radu Enache', short: 'Radu', role: 'recep', roleLabel: 'Recepție', roleHint: 'Vezi rezervările zilei, le confirmi și scanezi codul clientului la intrare.', sched: 'Ma–Sâ, 16:00–24:00' },
+  P98TZA: { ok: false, err: 'Codul a expirat: n-a fost folosit în 48 de ore. Cere-i șefului unul nou din Echipă.' },
+  P93MKD: { ok: false, err: 'Codul a fost deja folosit pe alt telefon. Dacă ți-ai schimbat telefonul, cere-i șefului un cod nou.' }
+};
+const RES0 = [
+  { id: 'r1', a: '20:00', name: 'Ana V.', n: 6, lane: 3, src: 'cefaci', st: 'conf' },
+  { id: 'r2', a: '20:00', name: 'Cristi S.', n: 4, lane: 5, src: 'cefaci', st: 'conf' },
+  { id: 'r3', a: '19:00', name: 'Sorin P.', n: 2, lane: 4, src: 'drop', st: 'conf' },
+  { id: 'r4', a: '20:30', name: 'Cornel A.', n: 4, lane: 2, src: 'cefaci', st: 'pend' },
+  { id: 'r5', a: '21:30', name: 'Dan P.', n: 4, lane: 1, src: 'cefaci', st: 'conf' },
+  { id: 'r6', a: '22:00', name: 'Radu C.', n: 3, lane: 6, src: 'cefaci', st: 'pend' },
+  { id: 'r7', a: '19:00', name: 'Maria I.', n: 5, lane: 1, src: 'cefaci', st: 'came', at: '19:38' }
+];
+const RST = { conf: ['Confirmată', 'rgba(47, 91, 255, 0.28)', '#C9D5FF'], came: ['A venit', 'rgba(60, 200, 130, 0.2)', '#5FD39A'], cancel: ['Refuzată', 'rgba(255, 255, 255, 0.1)', '#A9B1DA'] };
+const norm = (x) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const digits = (x) => String(x || '').replace(/\D/g, '');
+const nowText = () => '19:42';
+
+const BL_ARMS = {
+  rest: ['M24 88Q12 94 13 106', 13, 107, 'M96 88Q108 94 107 106', 107, 107],
+  hi: ['M24 88Q12 94 13 106', 13, 107, 'M96 86Q112 76 112 58', 112, 56],
+  up: ['M24 88Q12 94 13 106', 13, 107, 'M96 86Q110 72 108 50', 108, 48],
+  down: ['M24 88Q12 94 13 106', 13, 107, 'M96 90Q110 98 116 112', 117, 114],
+  left: ['M24 86Q8 80 2 66', 1, 64, 'M96 88Q108 94 107 106', 107, 107],
+  wink: ['M24 88Q12 94 13 106', 13, 107, 'M96 88Q112 84 110 68', 110, 66],
+  yay: ['M24 86Q8 74 10 54', 10, 52, 'M96 86Q112 74 110 54', 110, 52],
+  oops: ['M24 90Q10 76 30 60', 31, 58, 'M96 90Q110 76 90 60', 89, 58]
+};
+const BL_LOOK = { c: [0, 0], up: [0, -3.5], down: [0, 3.5], left: [-3.5, 0], right: [3.5, 0], ul: [-2.6, -2.6], ur: [2.6, -2.6], dl: [-2.6, 2.6], dr: [2.6, 2.6] };
+function biluPose(mood, look) {
+  const a = BL_ARMS[mood] || BL_ARMS.rest;
+  const l = BL_LOOK[look || 'c'] || BL_LOOK.c;
+  const open = 'M48 52Q60 70 72 52Z';
+  const smile = 'M50 54Q60 64 70 54Q60 59 50 54Z';
+  const p = {
+    armL: a[0], hLx: a[1], hLy: a[2], armR: a[3], hRx: a[4], hRy: a[5],
+    pLx: 46 + l[0], pLy: 41 + l[1], pRx: 74 + l[0], pRy: 41 + l[1],
+    gLx: 47.6 + l[0], gLy: 38.6 + l[1], gRx: 75.6 + l[0], gRy: 38.6 + l[1],
+    eL: 1, eR: 1, arcs: '', brow: 0, mouth: smile, tongue: '', cls: 'bilu m-' + mood
+  };
+  if (mood === 'hi') { p.mouth = open; p.tongue = 'M53 60Q60 67 67 60Q60 57 53 60Z'; }
+  if (mood === 'wink') { p.eL = 0; p.arcs = 'M39 42Q46 35 53 42'; p.mouth = 'M49 53Q60 67 71 53Z'; p.tongue = 'M54 60Q60 64 66 60Q60 58 54 60Z'; }
+  if (mood === 'yay') { p.eL = 0; p.eR = 0; p.arcs = 'M39 43Q46 32 53 43M67 43Q74 32 81 43'; p.mouth = 'M46 50Q60 76 74 50Z'; p.tongue = 'M52 62Q60 71 68 62Q60 58 52 62Z'; }
+  if (mood === 'oops') { p.brow = 1; p.mouth = 'M55 58A5 6 0 1 0 65 58A5 6 0 1 0 55 58Z'; p.tongue = ''; }
+  return p;
+}
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.state = {
+      scr: 'who', theme: null, toast: '',
+      lg: { id: '', pw: '', busy: false },
+      q: '', loc: null,
+      cl: { step: 1, name: '', role: 'Proprietar', phone: '', cui: '', cuiSt: '', via: 'sms', sent: false, code: '', codeOk: false, codeBad: false, docMode: false, doc: false },
+      dp: { name: '', phone: '', why: '', doc: false },
+      rg: { step: 1, name: '', cat: '', addr: '', pphone: '', cui: '', cuiSt: '', you: '', role: 'Proprietar', phone: '', sent: false, code: '', codeOk: false, codeBad: false },
+      pend: null, pdAsked: false, tut: { on: false, step: 0, bump: 0, oops: false },
+      ec: { code: '', busy: false, err: '' }, emp: null,
+      h: { mode: 'on', tab: 'scan', scView: 'cam', target: null, done: false, res: RES0, scans: [], fresh: '', offKind: 'shift', waiting: false }
+    };
+  }
+  componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  say(msg) { this.setState({ toast: msg }); this.later(() => { if (this.state.toast === msg) this.setState({ toast: '' }); }, 3800); }
+  patch(key, obj) { this.setState((s) => ({ [key]: Object.assign({}, s[key], obj) })); }
+  go(scr) { this.setState({ scr, toast: '' }); }
+  restart() {
+    this.setState({ tut: { on: false, step: 0, bump: 0, oops: false }, scr: 'who', q: '', loc: null, pend: null, pdAsked: false, emp: null, lg: { id: '', pw: '', busy: false }, ec: { code: '', busy: false, err: '' }, cl: { step: 1, name: '', role: 'Proprietar', phone: '', cui: '', cuiSt: '', via: 'sms', sent: false, code: '', codeOk: false, codeBad: false, docMode: false, doc: false }, dp: { name: '', phone: '', why: '', doc: false }, rg: { step: 1, name: '', cat: '', addr: '', pphone: '', cui: '', cuiSt: '', you: '', role: 'Proprietar', phone: '', sent: false, code: '', codeOk: false, codeBad: false } });
+  }
+  back() {
+    const s = this.state;
+    if (s.scr === 'claim' && s.cl.step > 1) { this.patch('cl', { step: s.cl.step - 1 }); return; }
+    if (s.scr === 'reg' && s.rg.step > 1) { this.patch('rg', { step: s.rg.step - 1 }); return; }
+    const to = { biz: 'who', login: 'biz', search: 'biz', claim: 'search', dispute: 'search', reg: 'search', emp: 'who', empok: 'emp' }[s.scr] || 'who';
+    this.go(to);
+  }
+  input(key, field, fn) { return (e) => this.patch(key, { [field]: fn(e && e.target ? String(e.target.value) : '') }); }
+  submit(kind, name) { this.setState({ pend: { kind, name }, pdAsked: false, scr: 'pend' }); }
+  hPatch(obj) { this.patch('h', obj); }
+  tutStart() { this.setState({ tut: { on: true, step: 0, bump: 0, oops: false } }); }
+  tutSet(patch) { this.setState({ tut: Object.assign({}, this.state.tut, patch) }); }
+  tutEnd() { this.setState({ tut: Object.assign({}, this.state.tut, { on: false }) });  }
+  tutVals() {
+    const t = this.state.tut || { on: false, step: 0, bump: 0 };
+    const S = (x, y, w, h, r) => [x, y, w, h, r];
+    const steps = (() => { const emp = this.state.emp || EMP_CODES.P94K7M; return [
+      { spot: S(195, 330, 0, 0, 0), dim: 0.78, mood: 'hi', look: 'c', b: [110, 130, 170], q: [24, 370, 342], text: 'Salutare, ' + emp.short + '! Bine ai venit în echipa Pista 9. Îți arăt în 15 secunde tot ce ai de făcut.', hint: 'Apasă oriunde pe ecran' },
+      { spot: S(73, 136, 244, 242, 30), mood: 'up', look: 'ur', b: [12, 404, 92], q: [110, 398, 262], text: 'Îndrepți camera spre codul de pe telefonul clientului. Vezi pe loc prenumele, câte persoane sunt și ce ofertă are, inclusiv reducerea pentru membrii Plus.', hint: 'Apasă oriunde' }
+    ].concat(emp.role === 'recep' ? [
+      { spot: S(12, 619, 366, 70, 20), mood: 'down', look: 'dr', b: [12, 440, 92], q: [110, 424, 262], text: 'La Recepție ai și rezervările zilei. Le confirmi de aici, iar ce scanezi apare bifat și acolo.', hint: 'Apasă oriunde' }
+    ] : []).concat([
+      { spot: S(195, 330, 0, 0, 0), dim: 0.8, final: true, mood: 'yay', look: 'c', b: [120, 120, 150], q: [24, 330, 342], text: 'Gata! Dacă șeful te pune pe pauză sau nu ești în tură, îți spun eu aici. Spor la treabă!', hint: '' }
+    ]); })();
+    const k = Math.max(0, Math.min(steps.length - 1, t.step));
+    const st = steps[k];
+    const pose = biluPose(st.mood, st.look);
+    if (st.mood === 'oops' && t.bump % 2 === 0) pose.cls = 'bilu m-oops2';
+    const px = (n) => n + 'px';
+    const full = st.spot[2] === 0;
+    return {
+      on: !!t.on, isFinal: !!st.final, hot: !!st.hot, hotLabel: st.hotLabel || '',
+      spotCls: full ? 'tspot' : 'tspot ring',
+      sx: px(st.spot[0]), sy: px(st.spot[1]), sw: px(st.spot[2]), sh: px(st.spot[3]), sr: px(st.spot[4]),
+      shadow: '0 0 0 2400px rgba(4, 7, 24, ' + (st.dim || 0.66) + ')',
+      bl: pose, bx: px(st.b[0]), by: px(st.b[1]), bw: px(st.b[2]),
+      qx: px(st.q[0]), qy: px(st.q[1]), qw: px(st.q[2]),
+      bubCls: 'tbub ' + ((k + (t.bump || 0)) % 2 ? 'sb' : 'sa'),
+      text: st.text, hint: st.hint,
+      dots: steps.map((x, i) => ({ cls: i === k ? 'on' : '' })),
+      catchLabel: st.hot ? 'Apasă pe zona luminată' : (st.final ? 'Turul s-a terminat' : 'Mai departe'),
+      showSkip: !st.final,
+      tap: () => {
+        const cur = this.state.tut;
+        const s0 = steps[Math.min(steps.length - 1, cur.step)];
+        if (s0.final) return;
+        if (s0.hot) { this.tutSet({ oops: true, bump: (cur.bump || 0) + 1 }); return; }
+        this.tutSet({ step: cur.step + 1, oops: false });
+      },
+      hit: () => {  this.tutSet({ step: this.state.tut.step + 1, oops: false }); },
+      skip: () => this.tutEnd(),
+      close: () => this.tutEnd()
+    };
+  }
+  renderVals() {
+    const s = this.state;
+    const theme = s.theme || this.props.theme || 'zi';
+    const on = (x) => (x ? 'press chip on' : 'press chip');
+    const bars = (step) => [1, 2, 3].map((k) => ({ bg: k <= step ? 'var(--blue)' : 'var(--s3)' }));
+    const v = {
+      themeClass: theme === 'noapte' ? 'graphite' : 'light',
+      themeLabel: theme === 'noapte' ? 'Treci pe tema de zi' : 'Treci pe tema de noapte', themeIcon: theme === 'noapte' ? IC.sun : IC.moon,
+      toggleTheme: () => this.setState({ theme: theme === 'noapte' ? 'zi' : 'noapte' }),
+      hasToast: s.toast !== '', toast: s.toast, tut: this.tutVals(),
+      isWho: s.scr === 'who', isBiz: s.scr === 'biz', isLogin: s.scr === 'login', isIn: s.scr === 'in', isSearch: s.scr === 'search', isClaim: s.scr === 'claim', isDispute: s.scr === 'dispute', isReg: s.scr === 'reg', isPend: s.scr === 'pend', isOk: s.scr === 'ok', isEmp: s.scr === 'emp', isEmpOk: s.scr === 'empok', isHome: s.scr === 'home',
+      back: () => this.back(), restart: () => this.restart(),
+      goBiz: () => this.go('biz'), goEmp: () => this.go('emp'), goLogin: () => this.go('login'), goSearch: () => this.go('search')
+    };
+
+    // Login
+    v.lgId = s.lg.id; v.lgPw = s.lg.pw;
+    v.onLgId = this.input('lg', 'id', (x) => x.slice(0, 60)); v.onLgPw = this.input('lg', 'pw', (x) => x.slice(0, 40));
+    v.lgOff = s.lg.busy || s.lg.id.trim().length < 3 || s.lg.pw.length < 4;
+    v.lgBusy = s.lg.busy; v.lgBtn = s.lg.busy ? 'Se verifică…' : 'Intră';
+    v.lgDemo = () => this.patch('lg', { id: 'andrei@pista9.ro', pw: 'bowling9' });
+    v.lgForgot = () => this.say('Îți trimitem un link de resetare pe email sau prin SMS.');
+    v.doLogin = () => { if (v.lgOff) return; this.patch('lg', { busy: true }); this.later(() => { this.patch('lg', { busy: false }); this.go('in'); }, 900); };
+
+    // Search
+    const qn = norm(s.q.trim());
+    const found = LOCALS.filter((l) => !qn || norm(l.name + ' ' + l.addr + ' ' + l.cat).indexOf(qn) !== -1);
+    v.q = s.q; v.onQ = (e) => this.setState({ q: e && e.target ? String(e.target.value).slice(0, 40) : '' });
+    v.resLabel = qn ? (found.length ? found.length + (found.length === 1 ? ' rezultat' : ' rezultate') : 'Niciun rezultat') : 'Localuri din Buftea care sunt deja în CeFaci';
+    v.results = found.map((l) => ({
+      name: l.name, meta: l.cat + ' · ' + l.addr, tag: l.owned ? 'Are proprietar' : 'Revendică', tagBg: l.owned ? 'var(--s2)' : 'var(--blue-soft)', tagFg: l.owned ? 'var(--ink2)' : 'var(--blue-ink)',
+      pick: () => {
+        if (l.owned) { this.setState({ loc: l.id, dp: { name: '', phone: '', why: '', doc: false } }); this.go('dispute'); return; }
+        this.setState({ loc: l.id, cl: { step: 1, name: '', role: 'Proprietar', phone: '', cui: '', cuiSt: '', via: 'sms', sent: false, code: '', codeOk: false, codeBad: false, docMode: false, doc: false } });
+        this.go('claim');
+      }
+    }));
+    v.noRes = !!qn && found.length === 0;
+    v.noResTitle = 'N-am găsit „' + s.q.trim() + '” în CeFaci';
+    v.goReg = () => { this.setState((st) => ({ rg: Object.assign({}, st.rg, { step: 1, name: v.noRes ? st.q.trim() : st.rg.name }) })); this.go('reg'); };
+
+    // Claim
+    const L = LOCALS.find((l) => l.id === s.loc) || LOCALS[1];
+    v.loc = { name: L.name, meta: L.cat + ' · ' + L.addr, phone: L.phone, firm: L.firm };
+    const cl = s.cl;
+    v.cl = cl;
+    v.clStepText = 'Pasul ' + cl.step + ' din 3'; v.clBars = bars(cl.step);
+    v.clS1 = cl.step === 1; v.clS2 = cl.step === 2; v.clS3 = cl.step === 3;
+    v.onClName = this.input('cl', 'name', (x) => x.slice(0, 40)); v.onClPhone = this.input('cl', 'phone', (x) => x.slice(0, 16));
+    v.clRoles = ROLES3.map((r) => ({ label: r, on: cl.role === r, cls: on(cl.role === r), pick: () => this.patch('cl', { role: r }) }));
+    v.onClCui = (e) => this.patch('cl', { cui: e && e.target ? String(e.target.value).toUpperCase().replace(/[^RO0-9]/g, '').slice(0, 12) : '', cuiSt: '' });
+    v.clCuiOff = digits(cl.cui).length < 6 || cl.cuiSt === 'busy';
+    v.clCuiBusy = cl.cuiSt === 'busy'; v.clCuiOk = cl.cuiSt === 'ok';
+    v.clCuiCheck = () => { if (digits(this.state.cl.cui).length < 6) return; this.patch('cl', { cuiSt: 'busy' }); this.later(() => this.patch('cl', { cuiSt: 'ok' }), 1000); };
+    v.clCuiDemo = () => { this.patch('cl', { cui: 'RO41234567', cuiSt: 'busy' }); this.later(() => this.patch('cl', { cuiSt: 'ok' }), 1000); };
+    v.clHasPhone = !cl.docMode; v.clDocMode = cl.docMode;
+    v.clVia = [['sms', 'SMS'], ['call', 'Apel automat']].map(([k, label]) => ({ label, on: cl.via === k, cls: on(cl.via === k), pick: () => this.patch('cl', { via: k }) }));
+    v.clNotSent = !cl.sent && !cl.codeOk; v.clSentOpen = cl.sent && !cl.codeOk;
+    v.clSend = () => { this.patch('cl', { sent: true }); this.say(this.state.cl.via === 'sms' ? 'Am trimis codul prin SMS la ' + L.phone + '.' : 'Te sunăm acum la ' + L.phone + ' și îți spunem codul.'); };
+    v.onClCode = (e) => this.patch('cl', { code: e && e.target ? digits(e.target.value).slice(0, 6) : '', codeBad: false });
+    v.clCodeOff = cl.code.length !== 6; v.clCodeBad = cl.codeBad; v.clCodeOk = cl.codeOk;
+    v.clVerify = () => { if (this.state.cl.code === '482915') this.patch('cl', { codeOk: true, codeBad: false }); else this.patch('cl', { codeBad: true }); };
+    v.clCodeDemo = () => this.patch('cl', { code: '482915', codeBad: false });
+    v.clNoPhone = () => this.patch('cl', { docMode: true }); v.clBackPhone = () => this.patch('cl', { docMode: false });
+    v.clNoDoc = !cl.doc; v.clHasDoc = cl.doc; v.clAddDoc = () => this.patch('cl', { doc: true });
+    const clReady = [cl.name.trim().length >= 3 && digits(cl.phone).length >= 10, cl.cuiSt === 'ok', cl.docMode ? cl.doc : cl.codeOk][cl.step - 1];
+    v.clNextOff = !clReady; v.clNextLabel = cl.step === 3 ? 'Trimite cererea' : 'Continuă';
+    v.clNext = () => { if (!clReady) return; if (cl.step < 3) { this.patch('cl', { step: cl.step + 1 }); return; } this.submit(cl.docMode ? 'claimdoc' : 'claim', L.name); };
+
+    // Dispute
+    const dp = s.dp;
+    v.dp = dp;
+    v.onDpName = this.input('dp', 'name', (x) => x.slice(0, 40)); v.onDpPhone = this.input('dp', 'phone', (x) => x.slice(0, 16));
+    v.dpWhy = WHY.map((w) => ({ label: w, on: dp.why === w, cls: on(dp.why === w), pick: () => this.patch('dp', { why: w }) }));
+    v.dpNoDoc = !dp.doc; v.dpHasDoc = dp.doc; v.dpAddDoc = () => this.patch('dp', { doc: true });
+    v.dpDemo = () => this.patch('dp', { name: 'Andrei Stoica', phone: '0740 123 456', why: WHY[0], doc: true });
+    v.dpOff = !(dp.name.trim().length >= 3 && digits(dp.phone).length >= 10 && dp.why && dp.doc);
+    v.dpSend = () => { if (v.dpOff) return; this.submit('dispute', L.name); };
+
+    // Register
+    const rg = s.rg;
+    v.rg = rg;
+    v.rgStepText = 'Pasul ' + rg.step + ' din 3'; v.rgBars = bars(rg.step);
+    v.rgS1 = rg.step === 1; v.rgS2 = rg.step === 2; v.rgS3 = rg.step === 3;
+    v.onRgName = this.input('rg', 'name', (x) => x.slice(0, 40)); v.onRgAddr = this.input('rg', 'addr', (x) => x.slice(0, 60)); v.onRgPPhone = this.input('rg', 'pphone', (x) => x.slice(0, 16));
+    v.onRgYou = this.input('rg', 'you', (x) => x.slice(0, 40));
+    v.rgCats = CATS.map((c) => ({ label: c, on: rg.cat === c, cls: on(rg.cat === c), pick: () => this.patch('rg', { cat: c }) }));
+    v.rgRoles = ROLES3.map((r) => ({ label: r, on: rg.role === r, cls: on(rg.role === r), pick: () => this.patch('rg', { role: r }) }));
+    v.onRgCui = (e) => this.patch('rg', { cui: e && e.target ? String(e.target.value).toUpperCase().replace(/[^RO0-9]/g, '').slice(0, 12) : '', cuiSt: '' });
+    v.rgCuiOff = digits(rg.cui).length < 6 || rg.cuiSt === 'busy';
+    v.rgCuiBusy = rg.cuiSt === 'busy'; v.rgCuiOk = rg.cuiSt === 'ok';
+    v.rgFirm = (rg.name.trim() || 'Localul tău').toUpperCase() + ' SRL';
+    v.rgCuiCheck = () => { this.patch('rg', { cuiSt: 'busy' }); this.later(() => this.patch('rg', { cuiSt: 'ok' }), 1000); };
+    v.rgDemo2 = () => { this.patch('rg', { cui: 'RO45678123', cuiSt: 'busy', you: this.state.rg.you || 'Andrei Stoica' }); this.later(() => this.patch('rg', { cuiSt: 'ok' }), 1000); };
+    v.onRgPhone = this.input('rg', 'phone', (x) => x.slice(0, 16));
+    v.rgSendOff = digits(rg.phone).length < 10 || rg.codeOk; v.rgSendLabel = rg.sent ? 'Retrimite' : 'Trimite codul';
+    v.rgSend = () => { this.patch('rg', { sent: true, code: '', codeBad: false }); this.say('Ți-am trimis un SMS cu codul.'); };
+    v.rgSentOpen = rg.sent && !rg.codeOk;
+    v.onRgCode = (e) => this.patch('rg', { code: e && e.target ? digits(e.target.value).slice(0, 6) : '', codeBad: false });
+    v.rgCodeOff = rg.code.length !== 6; v.rgCodeBad = rg.codeBad; v.rgCodeOk = rg.codeOk;
+    v.rgVerify = () => { if (this.state.rg.code === '271604') this.patch('rg', { codeOk: true, codeBad: false }); else this.patch('rg', { codeBad: true }); };
+    v.rgCodeDemo = () => this.patch('rg', { code: '271604', codeBad: false });
+    v.rgSumName = rg.name.trim() || 'Localul tău';
+    v.rgSumMeta = [rg.cat || 'fără categorie', rg.addr.trim() || 'fără adresă', rg.cuiSt === 'ok' ? 'CUI verificat' : 'CUI neverificat'].join(' · ');
+    const rgReady = [rg.name.trim().length >= 2 && !!rg.cat && rg.addr.trim().length >= 5 && digits(rg.pphone).length >= 10, rg.cuiSt === 'ok' && rg.you.trim().length >= 3, rg.codeOk][rg.step - 1];
+    v.rgNextOff = !rgReady; v.rgNextLabel = rg.step === 3 ? 'Trimite la verificare' : 'Continuă';
+    v.rgNext = () => { if (!rgReady) return; if (rg.step < 3) { this.patch('rg', { step: rg.step + 1 }); return; } this.submit('new', rg.name.trim()); };
+
+    // Pending
+    const pd = s.pend || { kind: 'claim', name: 'Casa Grill' };
+    const T = (label, sub, st) => ({ label, sub, bg: st === 'done' ? 'var(--green-soft)' : (st === 'now' ? '#FFD43B' : 'var(--s2)'), fg: st === 'done' ? 'var(--green-ink)' : (st === 'now' ? '#0E1440' : 'var(--ink3)'), icon: st === 'done' ? IC.check : (st === 'now' ? IC.clock : IC.dot), ring: st === 'now' ? '0 0 0 4px rgba(255, 212, 59, 0.3)' : 'none', color: st === 'next' ? 'var(--ink2)' : 'var(--ink)' });
+    const sent = T('Cerere trimisă', 'Azi, ' + nowText(), 'done');
+    const adminNow = s.pdAsked ? T('Echipa CeFaci mai cere ceva', 'Vezi mai jos. Restul e în regulă.', 'now') : null;
+    const kinds = {
+      claim: { title: 'Revendicarea pentru ' + pd.name + ' e trimisă', lead: 'Codul de la telefonul localului s-a potrivit, deci e aproape gata. Mai trece echipa CeFaci peste ea.', steps: [sent, T('CUI verificat automat', 'Registrul Comerțului · firma se potrivește', 'done'), T('Telefonul localului confirmat', 'Cu codul primit la local', 'done'), adminNow || T('Verificare făcută de echipa CeFaci', 'De obicei în 24 de ore', 'now'), T('Localul e al tău în CeFaci', 'Primești SMS și notificare', 'next')] },
+      claimdoc: { title: 'Revendicarea pentru ' + pd.name + ' e trimisă', lead: 'Fără codul de la telefonul localului, echipa CeFaci verifică documentul de mână.', steps: [sent, T('CUI verificat automat', 'Registrul Comerțului · firma se potrivește', 'done'), T('Document primit', 'certificat-inregistrare.pdf', 'done'), adminNow || T('Verificare făcută de echipa CeFaci', 'De obicei în 2–3 zile', 'now'), T('Localul e al tău în CeFaci', 'Primești SMS și notificare', 'next')] },
+      dispute: { title: 'Disputa pentru ' + pd.name + ' e trimisă', lead: 'Proprietarul actual din CeFaci e anunțat și are 3 zile să răspundă. Pagina localului nu se schimbă până nu decidem.', steps: [sent, T('Document primit', 'contract-inchiriere.pdf', 'done'), T('Proprietarul actual e anunțat', 'Are 3 zile să răspundă', 'done'), adminNow || T('Echipa CeFaci vă sună pe amândoi', 'De obicei în 2–5 zile', 'now'), T('Decizia', 'Primești SMS și notificare', 'next')] },
+      new: { title: 'Cererea pentru ' + pd.name + ' e trimisă', lead: 'Localul nu apare în CeFaci până nu îl verifică echipa. De obicei durează o zi.', steps: [sent, T('CUI verificat automat', 'Registrul Comerțului · firmă activă', 'done'), T('Telefonul tău confirmat', 'Prin SMS', 'done'), adminNow || T('Verificare făcută de echipa CeFaci', 'Adresa, pozele, telefonul public · de obicei în 24 de ore', 'now'), T('Localul apare în CeFaci', 'Primești SMS și notificare', 'next')] }
+    };
+    const K = kinds[pd.kind] || kinds.claim;
+    v.pdTitle = K.title; v.pdLead = K.lead; v.pdSteps = K.steps; v.pdAsked = s.pdAsked;
+    v.pdProfile = () => this.say('Profilul se salvează ca ciornă. Apare public doar după ce e acceptată cererea.');
+    v.pdAccept = () => this.go('ok');
+    v.pdAsk = () => { this.setState({ pdAsked: true }); this.say('Ai primit SMS: echipa CeFaci mai cere o poză.'); };
+    v.okTitle = pd.kind === 'dispute' ? 'Gata! Acum tu administrezi ' + pd.name : 'Gata! ' + pd.name + ' e în CeFaci';
+    v.okLead = pd.kind === 'dispute' ? 'Echipa CeFaci a decis în favoarea ta. Contul vechi al localului s-a închis, iar oamenii lui nu mai au acces.' : 'Echipa CeFaci a acceptat cererea. Localul apare acum în aplicație, cu insigna „Verificat”.';
+
+    // Employee code
+    const ec = s.ec;
+    const key = ec.code.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    v.ecCode = ec.code;
+    v.onEcCode = (e) => this.patch('ec', { code: e && e.target ? String(e.target.value).toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 8) : '', err: '' });
+    v.ecOff = key.length < 6 || ec.busy; v.ecBusy = ec.busy; v.ecBtn = ec.busy ? 'Se verifică…' : 'Intră cu codul';
+    v.ecHasErr = !!ec.err; v.ecErr = ec.err;
+    v.ecDemos = [['P9-4K7M', 'P9-4K7M · Scanare'], ['P9-H2WD', 'P9-H2WD · Recepție'], ['P9-8TZA', 'Cod expirat'], ['P9-3MKD', 'Cod deja folosit']].map(([c, label]) => ({ label, pick: () => this.patch('ec', { code: c, err: '' }) }));
+    v.ecCheck = () => {
+      if (v.ecOff) return;
+      this.patch('ec', { busy: true, err: '' });
+      this.later(() => {
+        const hit = EMP_CODES[key];
+        if (!hit) { this.patch('ec', { busy: false, err: 'Codul nu există. Verifică literele și cifrele, sau cere-i șefului să ți-l trimită din nou.' }); return; }
+        if (!hit.ok) { this.patch('ec', { busy: false, err: hit.err }); return; }
+        this.setState({ emp: hit, ec: { code: this.state.ec.code, busy: false, err: '' } });
+        this.go('empok');
+      }, 800);
+    };
+    const emp = s.emp || EMP_CODES.P94K7M;
+    v.emp = { name: emp.name, roleLabel: emp.roleLabel, roleHint: emp.roleHint };
+    v.empYes = () => { this.setState({ h: { mode: 'on', tab: 'scan', scView: 'cam', target: null, done: false, res: RES0, scans: [], fresh: '', offKind: 'shift', waiting: false } }); this.go('home'); this.tutStart(); };
+    v.empNo = () => { this.setState({ emp: null, ec: { code: '', busy: false, err: '' } }); this.go('emp'); this.say('Spune-i șefului. Codul rămâne nefolosit și poate fi anulat din Echipă.'); };
+
+    // Employee home
+    const h = s.h;
+    const isRecep = emp.role === 'recep';
+    v.hWho = emp.short + ' · ' + emp.roleLabel;
+    v.logout = () => { this.restart(); this.say('Ai ieșit. Ca să intri din nou îți trebuie un cod nou de la șef.'); };
+    v.hOn = h.mode === 'on'; v.hPaused = h.mode === 'paused'; v.hOff = h.mode === 'off';
+    v.hTabs = isRecep;
+    v.hTabList = [['scan', 'Scanner'], ['res', 'Rezervări']].map(([k, label]) => ({ label, on: h.tab === k, cls: h.tab === k ? 'press etab on' : 'press etab', pick: () => this.hPatch({ tab: k }) }));
+    v.hIsScan = !isRecep || h.tab === 'scan'; v.hIsRes = isRecep && h.tab === 'res';
+    v.hFrame = h.scView === 'reading' ? '#5FD39A' : '#FFD43B';
+    v.hScanning = h.scView === 'cam';
+    v.hHint = h.scView === 'reading' ? 'Se citește codul…' : 'Îndreaptă camera spre codul de pe telefonul clientului.';
+    const arriving = h.res.filter((r) => r.st === 'conf').sort((a, b) => (a.a < b.a ? -1 : 1)).slice(0, 3);
+    v.hDemos = arriving.map((r) => ({ label: r.name + (r.src === 'drop' ? ' · Live Drop' : ' · ' + r.a), pick: () => { if (this.state.h.scView !== 'cam') return; this.hPatch({ scView: 'reading', target: r.id, done: false }); this.later(() => this.hPatch({ scView: 'result' }), 800); } }));
+    v.hNobody = arriving.length === 0;
+    v.hScansLabel = h.scans.length ? 'Scanate de tine azi' : 'Încă n-ai scanat nimic azi';
+    v.hScans = h.scans.map((x) => ({ t: x.t, title: x.title, sub: x.sub, icon: x.offer ? IC.pct : IC.check, bg: x.offer ? 'rgba(255, 212, 59, 0.2)' : 'rgba(60, 200, 130, 0.2)', fg: x.offer ? '#FFD43B' : '#5FD39A', anim: x.id === h.fresh ? 'pop' : '' }));
+    const target = h.res.find((r) => r.id === h.target) || h.res[0];
+    const isDrop = target.src === 'drop';
+    const next = () => this.hPatch({ scView: 'cam', target: null, done: false });
+    v.hSheet = h.scView === 'result';
+    v.hNext = next;
+    v.sr = {
+      title: isDrop ? 'Cod valid, cu ofertă' : 'Cod valid', kicker: (isDrop ? 'Live Drop · ' : 'Rezervare · ') + target.name,
+      facts: [{ k: 'Persoane', v: String(target.n) }, { k: 'Pista', v: String(target.lane) }, { k: 'Ora', v: target.a }],
+      hasOffer: isDrop, offer: '−25% la pistă',
+      isDone: h.done, doneText: isDrop ? 'Gata. ' + target.name + ' vede în aplicație „S-a aplicat reducerea”.' : 'Sosire bifată. ' + target.name + ' primește ștampila în carnet.',
+      btn: h.done ? 'Scanează următorul' : (isDrop ? 'Am aplicat reducerea' : 'Bifează sosirea'), btnBg: h.done ? '#0E1440' : '#2F5BFF',
+      go: h.done ? next : () => {
+        const t = nowText();
+        const id = 'x' + (this.state.h.scans.length + 1);
+        this.setState((st) => ({ h: Object.assign({}, st.h, { done: true, fresh: id, res: st.h.res.map((r) => (r.id === target.id ? Object.assign({}, r, { st: 'came', at: t }) : r)), scans: [{ id, t, offer: isDrop, title: isDrop ? 'Ofertă aplicată · −25%' : 'Sosire bifată', sub: target.name + ' · ' + target.n + ' persoane · Pista ' + target.lane }].concat(st.h.scans) }) }));
+      }
+    };
+    const rsorted = h.res.slice().sort((a, b) => (a.a < b.a ? -1 : a.a > b.a ? 1 : a.lane - b.lane));
+    v.hResCount = rsorted.filter((r) => r.st !== 'cancel').length + ' rezervări · ' + rsorted.filter((r) => r.st === 'pend').length + ' de confirmat';
+    v.hRes = rsorted.map((r) => {
+      const st = RST[r.st] || RST.conf;
+      return {
+        t: r.a, name: r.name, meta: r.n + ' persoane · Pista ' + r.lane + (r.src === 'drop' ? ' · Live Drop' : ''),
+        isPend: r.st === 'pend', isDone: r.st !== 'pend', tag: r.st === 'came' && r.at ? 'A venit ' + r.at : st[0], tagBg: st[1], tagFg: st[2], noLabel: 'Refuză rezervarea pentru ' + r.name,
+        ok: () => { this.hPatch({ res: this.state.h.res.map((x) => (x.id === r.id ? Object.assign({}, x, { st: 'conf' }) : x)) }); this.say(r.name + ' a primit confirmarea și codul QR.'); },
+        no: () => { this.hPatch({ res: this.state.h.res.map((x) => (x.id === r.id ? Object.assign({}, x, { st: 'cancel' }) : x)) }); this.say('Am refuzat. Clientul vede alte locuri libere la aceeași oră.'); }
+      };
+    });
+    v.hPause = () => this.hPatch({ mode: 'paused', scView: 'cam' });
+    v.hResume = () => { this.hPatch({ mode: 'on' }); this.say('Andrei te-a repornit. Poți scana din nou.'); };
+    v.hOffShift = () => this.hPatch({ mode: 'off', waiting: false, scView: 'cam' });
+    v.hOffTitle = 'Nu ești în tură acum';
+    v.hOffText = 'Programul tău: ' + emp.sched + '. Poți intra cu o oră înainte de tură. Dacă te-a chemat cineva azi, cere acces.';
+    v.hCanAsk = !h.waiting; v.hWaiting = h.waiting;
+    v.hAsk = () => {
+      this.hPatch({ waiting: true });
+      this.later(() => { if (this.state.h.mode !== 'off') return; this.hPatch({ mode: 'on', waiting: false }); this.say('Andrei ți-a dat tură extra azi, până la 02:00.'); }, 4500);
+    };
+    v.hBackOn = () => this.hPatch({ mode: 'on', waiting: false });
+    return v;
+  }
+}
+</script>
+</body>
+</html>

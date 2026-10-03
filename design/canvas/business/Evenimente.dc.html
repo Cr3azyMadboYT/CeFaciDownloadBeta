@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci Business — Evenimente și bilete</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#EEF1F7;--s3:#DCE0EA;--line:#D2D7E3;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow:#FFD43B;--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral:#FF6A4D;--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet:#8C6CFF;--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);--side:#0E1440;--side-ink:#F3F5FF;--side-ink2:#A9B1DA;--cs:#2F5BFF;--grid:#E3E7F0;font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#24242A;--s3:#2E2E35;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18);--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.22);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16);--side:#0B0B0E;--cs:#5C7FFF;--grid:#2A2A31}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.06)}}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible{outline-color:#FFD43B}
+.nav{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:12px;color:var(--side-ink2);text-decoration:none;font:600 14px/1 'Instrument Sans',system-ui,sans-serif;transition:background-color .15s ease,color .15s ease}
+.nav:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
+.nav.on{background:#FFD43B;color:#0E1440}
+.nav:focus-visible{outline:3px solid #FFD43B;outline-offset:2px}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:34px;line-height:1;font-weight:780;font-stretch:90%;letter-spacing:-.025em}
+.h2{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:20px;line-height:1.1;font-weight:740;letter-spacing:-.01em}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px}
+.tag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font:700 12px/1 'Instrument Sans',system-ui,sans-serif;white-space:nowrap}
+.btnp{height:44px;padding:0 16px;border:0;border-radius:14px;background:var(--blue);color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btns{height:44px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--s1);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btnq{height:44px;padding:0 12px;border:0;border-radius:14px;background:transparent;color:var(--ink2);display:inline-flex;align-items:center;gap:6px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif}
+.chip{height:36px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);font:600 13px/1 'Instrument Sans',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.ev{width:100%;display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:var(--s1);color:var(--ink);text-align:left}
+.ev.on{border:2px solid var(--blue);padding:13px 15px;background:var(--blue-soft)}
+.tg{position:relative;width:44px;height:26px;flex:none;border-radius:999px;background:var(--ink3);transition:background-color .2s ease}
+.tg span{position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tg.on{background:var(--blue)}
+.tg.on span{transform:translateX(18px)}
+.field{height:44px;display:flex;align-items:center;padding:0 12px;border-radius:12px;background:var(--s2);border:1.5px solid transparent;transition:border-color .15s ease,box-shadow .15s ease}
+.field:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.field input{flex:1 1 auto;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font:600 14px/1 'Instrument Sans',system-ui,sans-serif}
+.bar{position:absolute;bottom:0;width:24px;margin-left:-12px;padding:0;border:0;border-radius:4px 4px 0 0;background:var(--cs);cursor:pointer;transition:filter .15s ease}
+.bar:hover,.bar:focus-visible{filter:brightness(1.15)}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.hs{scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 1440px; height: 900px; position: relative; overflow: hidden; display: flex; background: var(--bg); color: var(--ink)">
+
+<nav aria-label="Meniu" style="width: 248px; flex: none; height: 900px; padding: 22px 14px 18px; background: var(--side); color: var(--side-ink); display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 30px; height: 30px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 23px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Business</span>
+</div>
+<div style="margin-top: 22px; padding: 12px; border-radius: 16px; background: rgba(255, 255, 255, 0.07); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #2F5BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2zM10.6 9.5h2.8"></path></svg></span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font: 700 15px/1.1 'Instrument Sans', system-ui, sans-serif">Pista 9</span><span style="font: 500 12px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Bowling · Buftea</span></span>
+</div>
+<div style="display: flex; gap: 6px">
+<span class="tag" style="height: 22px; background: rgba(47, 91, 255, 0.28); color: #C9D5FF"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="#2F5BFF"></path><path d="m9 12 2 2 4-4" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Verificat</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Partener</span>
+</div>
+</div>
+<div style="margin-top: 18px; display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Azi</a>
+<a href="Rezervari.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path></svg><span style="flex: 1 1 auto">Rezervări</span><span class="tag" style="height: 20px; padding: 0 7px; background: #FF6A4D; color: #0E1440">3</span></a>
+<a href="Oferte.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 5 19M4 6.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0M15 17.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0"></path></svg>Oferte și Live Drops</a>
+<a href="Evenimente.dc.html" class="nav on" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2"></path></svg>Evenimente și bilete</a>
+<a href="Statistici.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16M8 17v-5M13 17V9M18 17V5"></path></svg>Statistici</a>
+<a href="Profil.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5"></path></svg>Profilul localului</a>
+<a href="Echipa.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Echipă</a>
+</div>
+<a href="Scanner.dc.html" class="nav" style="margin-top: auto; border: 1px solid rgba(255, 255, 255, 0.14)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>Scanner pe telefon</a>
+<div style="margin-top: 14px; padding: 0 8px; display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 99px; background: #FFD43B; color: #0E1440; display: flex; align-items: center; justify-content: center; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">AS</span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font: 650 13px/1.1 'Instrument Sans', system-ui, sans-serif">Andrei Stoica</span><span style="font: 500 12px/1.1 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Proprietar</span></span>
+</div>
+</nav>
+
+<main class="hs" style="flex: 1 1 auto; min-width: 0; height: 900px; overflow-y: auto; padding: 28px 32px 32px; display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+<header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px"><span class="lbl">Seri cu bilet</span><h1 class="h1">Evenimente</h1></div>
+<button type="button" class="press btnp" onClick="{{openNew}}"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Eveniment nou</button>
+</header>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<sc-for list="{{events}}" as="e" hint-placeholder-count="4">
+<button type="button" class="{{e.cls}}" aria-pressed="{{e.on}}" onClick="{{e.pick}}">
+<span aria-hidden="true" style="width: 56px; height: 60px; flex: none; border-radius: 14px; background: {{e.dateBg}}; color: {{e.dateFg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px"><span style="font: 700 11px/1 'Instrument Sans', system-ui, sans-serif">{{e.dow}}</span><span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; line-height: 1; font-weight: 800">{{e.day}}</span></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 5px">
+<span style="font: 700 15px/1.2 'Instrument Sans', system-ui, sans-serif">{{e.name}}</span>
+<span class="muted">{{e.meta}}</span>
+<span aria-hidden="true" style="display: block; height: 6px; border-radius: 99px; background: var(--blue-soft); overflow: hidden"><span style="display: block; height: 6px; width: {{e.pct}}; border-radius: 99px; background: var(--blue)"></span></span>
+</span>
+<span style="flex: none; text-align: right; display: flex; flex-direction: column; gap: 4px"><span style="font: 700 16px/1 'Instrument Sans', system-ui, sans-serif">{{e.sold}}</span><span class="muted" style="font-size: 12px">vândute</span></span>
+</button>
+</sc-for>
+</div>
+<div style="padding: 14px 16px; border-radius: 16px; background: var(--s2); display: flex; align-items: flex-start; gap: 10px">
+<svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="margin-top: 2px; color: var(--blue-ink)"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+<p style="margin: 0; font: 500 13px/1.45 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Biletele cumpărate prin CeFaci ajung în aplicația fiecărui om din gașcă. La intrare le scanezi ca pe orice cod. Localurile care nu sunt partenere își vând biletele pe site-ul lor, iar clienții le adaugă în aplicație.</p>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; min-width: 0">
+<sc-if value="{{isNew}}" hint-placeholder-val="{{ false }}">
+<section class="card pop" aria-labelledby="nw-t" style="padding: 20px">
+<div style="display: flex; align-items: center; justify-content: space-between"><h2 id="nw-t" class="h2" style="font-size: 24px">Eveniment nou</h2><button type="button" class="press btnq" onClick="{{closeNew}}">Renunță</button></div>
+<label for="ev-name" class="lbl" style="display: block; margin-top: 16px">Numele</label>
+<div class="field" style="margin-top: 6px"><input id="ev-name" type="text" maxlength="40" value="{{nName}}" onChange="{{onName}}" placeholder="ex: Seară de turneu"></div>
+<p class="lbl" style="margin-top: 14px">Când</p>
+<div role="group" aria-label="Ziua" style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{nDays}}" as="p" hint-placeholder-count="5"><button type="button" class="{{p.cls}}" aria-pressed="{{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
+<div role="group" aria-label="Ora" style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{nHours}}" as="p" hint-placeholder-count="4"><button type="button" class="{{p.cls}}" aria-pressed="{{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
+<div style="margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{steppers}}" as="st" hint-placeholder-count="3">
+<div style="padding: 6px 6px 6px 12px; border-radius: 14px; background: var(--s2); display: flex; align-items: center; gap: 4px">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 5px"><span class="lbl" style="font-size: 12px">{{st.label}}</span><span aria-live="polite" style="font: 700 16px/1 'Instrument Sans', system-ui, sans-serif">{{st.value}}</span></span>
+<button type="button" class="press btns" onClick="{{st.less}}" aria-label="{{st.lessLabel}}" style="width: 34px; height: 34px; padding: 0"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<button type="button" class="press btns" onClick="{{st.more}}" aria-label="{{st.moreLabel}}" style="width: 34px; height: 34px; padding: 0"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14"></path></svg></button>
+</div>
+</sc-for>
+</div>
+<p class="lbl" style="margin-top: 14px">Vârstă minimă</p>
+<div role="group" aria-label="Vârstă minimă" style="margin-top: 6px; display: flex; gap: 6px"><sc-for list="{{nAges}}" as="p" hint-placeholder-count="3"><button type="button" class="{{p.cls}}" aria-pressed="{{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
+<button type="button" class="press btnp" onClick="{{createEv}}" style="margin-top: 18px; width: 100%; height: 52px; font-size: 16px">Publică evenimentul</button>
+</section>
+</sc-if>
+
+<sc-if value="{{showDetail}}" hint-placeholder-val="{{ true }}">
+<section class="card" aria-labelledby="ev-t" style="padding: 20px">
+<div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="tag" style="align-self: flex-start; background: {{d.stBg}}; color: {{d.stFg}}">{{d.status}}</span>
+<h2 id="ev-t" class="h1" style="font-size: 30px">{{d.name}}</h2>
+<span class="muted" style="font-size: 14px">{{d.when}}</span>
+</div>
+<div style="display: flex; gap: 8px">
+<a href="Scanner.dc.html" class="press btns"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>Scanează la intrare</a>
+</div>
+</div>
+<div style="margin-top: 18px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{d.stats}}" as="k" hint-placeholder-count="4">
+<div style="padding: 14px; border-radius: 16px; background: var(--s2); display: flex; flex-direction: column; gap: 6px"><span class="lbl" style="font-size: 12px">{{k.label}}</span><span style="font: 700 24px/1 'Instrument Sans', system-ui, sans-serif; letter-spacing: -0.01em">{{k.value}}</span><span class="muted" style="font-size: 12px">{{k.sub}}</span></div>
+</sc-for>
+</div>
+
+<div style="margin-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<h3 style="margin: 0; font: 700 15px/1.2 'Instrument Sans', system-ui, sans-serif">Bilete vândute pe zi, ultimele 7 zile</h3>
+<button type="button" class="press chip" aria-pressed="{{asTable}}" onClick="{{toggleTable}}">{{tableLabel}}</button>
+</div>
+<sc-if value="{{asChart}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 12px; position: relative; height: 200px; padding-left: 28px">
+<sc-for list="{{d.ticks}}" as="t" hint-placeholder-count="3"><div aria-hidden="true" style="position: absolute; left: 28px; right: 0; bottom: {{t.y}}; height: 1px; background: var(--grid)"></div><span aria-hidden="true" style="position: absolute; left: 0; bottom: {{t.y}}; transform: translateY(50%); width: 22px; text-align: right; font: 600 11px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink3); font-variant-numeric: tabular-nums">{{t.v}}</span></sc-for>
+<div style="position: absolute; left: 28px; right: 0; top: 0; bottom: 26px">
+<sc-for list="{{d.bars}}" as="b" hint-placeholder-count="7">
+<button type="button" class="bar" aria-label="{{b.aria}}" onMouseEnter="{{b.enter}}" onMouseLeave="{{b.leave}}" onFocus="{{b.enter}}" onBlur="{{b.leave}}" style="left: {{b.x}}; height: {{b.h}}"></button>
+<sc-if value="{{b.showLabel}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; left: {{b.x}}; bottom: {{b.labelY}}; transform: translateX(-50%); font: 700 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink)">{{b.v}}</span></sc-if>
+</sc-for>
+<sc-if value="{{hasTip}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="position: absolute; left: {{tip.x}}; bottom: {{tip.y}}; transform: translateX(-50%); padding: 8px 10px; border-radius: 10px; background: #0E1440; color: #FFFFFF; white-space: nowrap; pointer-events: none; box-shadow: 0 8px 20px rgba(14, 20, 64, 0.25)"><span style="display: block; font: 700 15px/1 'Instrument Sans', system-ui, sans-serif">{{tip.v}}</span><span style="display: block; margin-top: 4px; font: 500 12px/1 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">{{tip.day}}</span></div>
+</sc-if>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 28px; right: 0; bottom: 0; height: 18px">
+<sc-for list="{{d.bars}}" as="b" hint-placeholder-count="7"><span style="position: absolute; left: {{b.x}}; transform: translateX(-50%); font: 600 11px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{b.day}}</span></sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{asTable}}" hint-placeholder-val="{{ false }}">
+<div role="table" aria-label="Bilete vândute pe zi" style="margin-top: 12px; font: 500 14px/1.2 'Instrument Sans', system-ui, sans-serif">
+<div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 100px; padding: 8px 10px; border-bottom: 1px solid var(--line); font-weight: 650; color: var(--ink2)"><span role="columnheader">Ziua</span><span role="columnheader" style="text-align: right">Bilete</span></div>
+<sc-for list="{{d.bars}}" as="b" hint-placeholder-count="7"><div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) 100px; padding: 7px 10px; border-bottom: 1px solid var(--line)"><span role="cell">{{b.dayLong}}</span><span role="cell" style="text-align: right; font-variant-numeric: tabular-nums">{{b.v}}</span></div></sc-for>
+</div>
+</sc-if>
+
+<div style="margin-top: 18px; display: flex; flex-direction: column">
+<button type="button" class="press" role="switch" aria-checked="{{d.selling}}" onClick="{{toggleSell}}" style="width: 100%; min-height: 58px; display: flex; align-items: center; gap: 12px; padding: 8px 0; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px"><span style="font: 650 14px/1.2 'Instrument Sans', system-ui, sans-serif">Vânzare online prin CeFaci</span><span class="muted">{{d.sellText}}</span></span>
+<span class="{{d.sellTg}}" aria-hidden="true"><span></span></span>
+</button>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0 0; border-top: 1px solid var(--line)">
+<span class="muted" style="flex: 1 1 auto">Dacă anulezi, toți cumpărătorii primesc banii înapoi automat și sunt anunțați în aplicație.</span>
+<button type="button" class="{{cancelCls}}" onClick="{{cancelEv}}" style="height: 40px; color: var(--coral-ink)">{{cancelLabel}}</button>
+</div>
+</div>
+</section>
+</sc-if>
+</div>
+</main>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<p class="pop" role="status" style="position: absolute; left: 248px; right: 0; bottom: 24px; margin: 0 auto; width: max-content; max-width: 640px; padding: 14px 18px; border-radius: 16px; background: #0E1440; color: #FFFFFF; font: 600 14px/1.35 'Instrument Sans', system-ui, sans-serif; box-shadow: 0 14px 34px rgba(14, 20, 64, 0.3)">{{toast}}</p>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":1440,"height":900}}'>
+const WEEK = [['Sâ', 'sâmbătă, 26 sept.'], ['Du', 'duminică, 27 sept.'], ['Lu', 'luni, 28 sept.'], ['Ma', 'marți, 29 sept.'], ['Mi', 'miercuri, 30 sept.'], ['Jo', 'joi, 1 oct.'], ['Vi', 'vineri, 2 oct.']];
+const EVENTS = [
+  { id: 'e1', name: 'Turneul de vineri', dow: 'VI', day: '2', when: 'Vineri, 2 octombrie, 21:00–23:30 · pistele 7 și 8', online: 60, door: 80, cap: 32, sold: 24, groups: 9, age: '16+', sales: [2, 1, 4, 3, 5, 6, 3], selling: true },
+  { id: 'e2', name: 'Cosmic bowling', dow: 'SÂ', day: '3', when: 'Sâmbătă, 3 octombrie, 22:00–01:00 · toate pistele', online: 45, door: 55, cap: 64, sold: 38, groups: 12, age: '18+', sales: [4, 6, 3, 7, 8, 5, 5], selling: true },
+  { id: 'e3', name: 'Liga de joi', dow: 'JO', day: '8', when: 'Joi, 8 octombrie, 20:00–22:30 · pistele 5–8', online: 40, door: 0, cap: 24, sold: 9, groups: 4, age: 'toate vârstele', sales: [0, 1, 2, 1, 2, 1, 2], selling: true },
+  { id: 'e4', name: 'Duminică în familie', dow: 'DU', day: '11', when: 'Duminică, 11 octombrie, 12:00–15:00 · toate pistele', online: 30, door: 35, cap: 40, sold: 0, groups: 0, age: 'toate vârstele', sales: [0, 0, 0, 0, 0, 0, 0], selling: false }
+];
+const NEW_DAYS = [['Vi 9', 'Vineri, 9 octombrie', 'VI', '9'], ['Sâ 10', 'Sâmbătă, 10 octombrie', 'SÂ', '10'], ['Vi 16', 'Vineri, 16 octombrie', 'VI', '16'], ['Sâ 17', 'Sâmbătă, 17 octombrie', 'SÂ', '17']];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.n = 4;
+    this.state = { list: EVENTS, sel: 'e1', mode: 'detail', table: false, hov: -1, arm: false, toast: '', nName: '', nDay: 0, nHour: '21:00', nOnline: 50, nDoor: 60, nCap: 32, nAge: '16+' };
+  }
+  componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
+  say(msg) {
+    this.setState({ toast: msg });
+    this.timers.push(setTimeout(() => { if (this.state.toast === msg) this.setState({ toast: '' }); }, 3600));
+  }
+  patch(id, p) { this.setState((s) => ({ list: s.list.map((e) => (e.id === id ? Object.assign({}, e, p) : e)) })); }
+  renderVals() {
+    const s = this.state;
+    const theme = this.props.theme ?? 'zi';
+    const ev = s.list.find((e) => e.id === s.sel) || s.list[0] || EVENTS[0];
+    const max = Math.max(4, ...ev.sales);
+    const top = Math.ceil(max / 4) * 4;
+    const plotH = 174;
+    const bars = ev.sales.map((v, k) => {
+      const x = ((k + 0.5) / 7 * 100).toFixed(2) + '%';
+      const hpx = Math.max(v ? 3 : 0, Math.round(v / top * plotH));
+      const isMax = v === max && v > 0;
+      return {
+        v: String(v), x, h: hpx + 'px', labelY: (hpx + 6) + 'px', day: WEEK[k][0], dayLong: WEEK[k][1],
+        showLabel: (isMax || k === 6) && s.hov !== k,
+        aria: WEEK[k][1] + ': ' + v + (v === 1 ? ' bilet' : ' bilete'),
+        enter: () => this.setState({ hov: k }), leave: () => { if (this.state.hov === k) this.setState({ hov: -1 }); }
+      };
+    });
+    const tipBar = s.hov >= 0 ? bars[s.hov] : null;
+    const ticks = [0, top / 2, top].map((t) => ({ v: String(t), y: (26 + t / top * plotH) + 'px' }));
+    const status = ev.sold >= ev.cap ? ['Sold out', 'var(--coral-soft)', 'var(--coral-ink)'] : (ev.selling ? ['În vânzare', 'var(--green-soft)', 'var(--green-ink)'] : ['Vânzarea e oprită', 'var(--s3)', 'var(--ink2)']);
+    const chips = (list, cur, key) => list.map(([v, label]) => ({ label, on: cur === v, cls: cur === v ? 'press chip on' : 'press chip', pick: () => this.setState({ [key]: v }) }));
+    const stepper = (label, key, step, min, maxv, unit) => ({
+      label, value: s[key] === 0 && key === 'nDoor' ? 'doar online' : s[key] + unit,
+      lessLabel: 'Scade ' + label.toLowerCase(), moreLabel: 'Crește ' + label.toLowerCase(),
+      less: () => this.setState({ [key]: Math.max(min, this.state[key] - step) }),
+      more: () => this.setState({ [key]: Math.min(maxv, this.state[key] + step) })
+    });
+    return {
+      themeClass: ({ zi: 'light', noapte: 'graphite' })[theme] ?? 'light',
+      events: s.list.map((e) => ({
+        name: e.name, dow: e.dow, day: e.day, sold: e.sold + '/' + e.cap,
+        meta: e.online + ' lei online' + (e.door ? ' · ' + e.door + ' la intrare' : ' · doar online') + ' · ' + e.age,
+        pct: Math.min(100, e.sold / e.cap * 100).toFixed(1) + '%',
+        on: s.mode === 'detail' && s.sel === e.id, cls: s.mode === 'detail' && s.sel === e.id ? 'press ev on' : 'press ev',
+        dateBg: e.selling ? '#0E1440' : 'var(--s3)', dateFg: e.selling ? '#FFD43B' : 'var(--ink2)',
+        pick: () => this.setState({ sel: e.id, mode: 'detail', hov: -1, arm: false })
+      })),
+      isNew: s.mode === 'new', showDetail: s.mode === 'detail',
+      openNew: () => this.setState({ mode: 'new' }), closeNew: () => this.setState({ mode: 'detail' }),
+      nName: s.nName, onName: (e) => { const v = e && e.target ? String(e.target.value) : ''; this.setState({ nName: v.slice(0, 40) }); },
+      nDays: NEW_DAYS.map(([label], k) => ({ label, on: s.nDay === k, cls: s.nDay === k ? 'press chip on' : 'press chip', pick: () => this.setState({ nDay: k }) })),
+      nHours: chips([['19:00', '19:00'], ['20:00', '20:00'], ['21:00', '21:00'], ['22:00', '22:00']], s.nHour, 'nHour'),
+      steppers: [stepper('Preț online', 'nOnline', 5, 10, 200, ' lei'), stepper('La intrare', 'nDoor', 5, 0, 250, ' lei'), stepper('Locuri', 'nCap', 4, 4, 128, '')],
+      nAges: chips([['toate vârstele', 'Toate vârstele'], ['16+', '16+'], ['18+', '18+']], s.nAge, 'nAge'),
+      createEv: () => {
+        this.n += 1;
+        const d = NEW_DAYS[s.nDay];
+        const e = { id: 'e' + this.n, name: s.nName.trim() || 'Seară de turneu', dow: d[2], day: d[3], when: d[1] + ', ' + s.nHour + ' · pistele 7 și 8', online: s.nOnline, door: s.nDoor, cap: s.nCap, sold: 0, groups: 0, age: s.nAge, sales: [0, 0, 0, 0, 0, 0, 0], selling: true };
+        this.setState((st) => ({ list: st.list.concat([e]), sel: e.id, mode: 'detail', nName: '' }));
+        this.say('Evenimentul e publicat. Apare în CeFaci la cei care caută ce să facă în seara aia.');
+      },
+      d: {
+        name: ev.name, when: ev.when, status: status[0], stBg: status[1], stFg: status[2],
+        stats: [
+          { label: 'Vândute', value: ev.sold + ' din ' + ev.cap, sub: ev.groups + (ev.groups === 1 ? ' grup' : ' grupuri') },
+          { label: 'Încasat online', value: (ev.sold * ev.online).toLocaleString('ro-RO') + ' lei', sub: ev.online + ' lei biletul' },
+          { label: 'La intrare', value: ev.door ? ev.door + ' lei' : '—', sub: ev.door ? 'rămân ' + Math.max(0, ev.cap - ev.sold) + ' locuri' : 'se vinde doar online' },
+          { label: 'Scanate la intrare', value: '0 din ' + ev.sold, sub: 'se deschide cu o oră înainte' }
+        ],
+        bars, ticks,
+        selling: ev.selling, sellTg: ev.selling ? 'tg on' : 'tg',
+        sellText: ev.selling ? 'Biletele se vând acum în aplicație.' : 'Nu se mai vând bilete online. Cele vândute rămân valabile.'
+      },
+      asTable: s.table, asChart: !s.table, tableLabel: s.table ? 'Vezi graficul' : 'Vezi ca tabel', toggleTable: () => this.setState({ table: !this.state.table, hov: -1 }),
+      hasTip: !!tipBar, tip: tipBar ? { x: tipBar.x, y: (parseInt(tipBar.h, 10) + 8) + 'px', v: tipBar.v + (tipBar.v === '1' ? ' bilet' : ' bilete'), day: tipBar.dayLong } : { x: '0', y: '0', v: '', day: '' },
+      toggleSell: () => { this.patch(ev.id, { selling: !ev.selling }); this.say(ev.selling ? 'Am oprit vânzarea online. Biletele vândute rămân valabile.' : 'Vânzarea online e pornită.'); },
+      cancelCls: s.arm ? 'press btns pop' : 'press btnq',
+      cancelLabel: s.arm ? 'Sigur? Apasă iar ca să anulezi' : 'Anulează evenimentul',
+      cancelEv: () => {
+        if (!this.state.arm) { this.setState({ arm: true }); return; }
+        const rest = s.list.filter((e) => e.id !== ev.id);
+        this.setState({ list: rest, sel: rest.length ? rest[0].id : null, arm: false, mode: rest.length ? 'detail' : 'new' });
+        this.say('Evenimentul e anulat. ' + (ev.sold ? 'Cei ' + ev.sold + ' cumpărători primesc banii înapoi și sunt anunțați.' : 'Nu se vânduse niciun bilet.'));
+      },
+      hasToast: s.toast !== '', toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

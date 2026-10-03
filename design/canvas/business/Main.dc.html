@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci Business — Azi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#EEF1F7;--s3:#DCE0EA;--line:#D2D7E3;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow:#FFD43B;--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral:#FF6A4D;--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet:#8C6CFF;--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);--side:#0E1440;--side-ink:#F3F5FF;--side-ink2:#A9B1DA;font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#24242A;--s3:#2E2E35;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18);--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.22);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16);--side:#0B0B0E}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.06)}}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible{outline-color:#FFD43B}
+.nav{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:12px;color:var(--side-ink2);text-decoration:none;font:600 14px/1 'Instrument Sans',system-ui,sans-serif;transition:background-color .15s ease,color .15s ease}
+.nav:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
+.nav.on{background:#FFD43B;color:#0E1440}
+.nav:focus-visible{outline:3px solid #FFD43B;outline-offset:2px}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:34px;line-height:1;font-weight:780;font-stretch:90%;letter-spacing:-.025em}
+.h2{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:20px;line-height:1.1;font-weight:740;letter-spacing:-.01em}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px}
+.tag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font:700 12px/1 'Instrument Sans',system-ui,sans-serif;white-space:nowrap}
+.btnp{height:44px;padding:0 16px;border:0;border-radius:14px;background:var(--blue);color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btns{height:44px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--s1);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btnq{height:44px;padding:0 12px;border:0;border-radius:14px;background:transparent;color:var(--ink2);display:inline-flex;align-items:center;gap:6px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif}
+.chip{height:36px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);font:600 13px/1 'Instrument Sans',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.tg{position:relative;width:44px;height:26px;flex:none;border-radius:999px;background:var(--ink3);transition:background-color .2s ease}
+.tg span{position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tg.on{background:var(--blue)}
+.tg.on span{transform:translateX(18px)}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.up{animation:up .45s cubic-bezier(.23,1,.32,1) both}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.live{width:8px;height:8px;flex:none;border-radius:99px;background:#FF6A4D;animation:live 1.6s ease-out infinite}
+@keyframes live{0%{box-shadow:0 0 0 0 rgba(255,106,77,.55)}100%{box-shadow:0 0 0 10px rgba(255,106,77,0)}}
+.hs{scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
+.blk{transition:box-shadow .15s ease,filter .15s ease}
+.blk:hover{filter:brightness(1.08)}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 1440px; height: 900px; position: relative; overflow: hidden; display: flex; background: var(--bg); color: var(--ink)">
+
+<nav aria-label="Meniu" style="width: 248px; flex: none; height: 900px; padding: 22px 14px 18px; background: var(--side); color: var(--side-ink); display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 30px; height: 30px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 23px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Business</span>
+</div>
+<div style="margin-top: 22px; padding: 12px; border-radius: 16px; background: rgba(255, 255, 255, 0.07); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #2F5BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2zM10.6 9.5h2.8"></path></svg></span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font: 700 15px/1.1 'Instrument Sans', system-ui, sans-serif">Pista 9</span><span style="font: 500 12px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Bowling · Buftea</span></span>
+</div>
+<div style="display: flex; gap: 6px">
+<span class="tag" style="height: 22px; background: rgba(47, 91, 255, 0.28); color: #C9D5FF"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="#2F5BFF"></path><path d="m9 12 2 2 4-4" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Verificat</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Partener</span>
+</div>
+</div>
+<div style="margin-top: 18px; display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" class="nav on" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Azi</a>
+<a href="Rezervari.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path></svg><span style="flex: 1 1 auto">Rezervări</span><span class="tag" style="height: 20px; padding: 0 7px; background: #FF6A4D; color: #0E1440">{{navReq}}</span></a>
+<a href="Oferte.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 5 19M4 6.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0M15 17.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0"></path></svg>Oferte și Live Drops</a>
+<a href="Evenimente.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2"></path></svg>Evenimente și bilete</a>
+<a href="Statistici.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16M8 17v-5M13 17V9M18 17V5"></path></svg>Statistici</a>
+<a href="Profil.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5"></path></svg>Profilul localului</a>
+<a href="Echipa.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Echipă</a>
+</div>
+<a href="Scanner.dc.html" class="nav" style="margin-top: auto; border: 1px solid rgba(255, 255, 255, 0.14)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>Scanner pe telefon</a>
+<div style="margin-top: 14px; padding: 0 8px; display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 99px; background: #FFD43B; color: #0E1440; display: flex; align-items: center; justify-content: center; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">AS</span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font: 650 13px/1.1 'Instrument Sans', system-ui, sans-serif">Andrei Stoica</span><span style="font: 500 12px/1.1 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Proprietar</span></span>
+</div>
+</nav>
+
+<main class="hs" style="flex: 1 1 auto; min-width: 0; height: 900px; overflow-y: auto; padding: 28px 32px 32px; display: flex; flex-direction: column; gap: 20px">
+<header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex: none">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">Vineri, 2 octombrie · 19:40</span>
+<h1 class="h1">Bună seara, Andrei.</h1>
+</div>
+<div style="display: flex; align-items: center; gap: 10px">
+<button type="button" class="press" role="switch" aria-checked="{{open}}" onClick="{{toggleOpen}}" style="height: 44px; padding: 0 12px 0 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); display: flex; align-items: center; gap: 10px; font: 650 14px/1 'Instrument Sans', system-ui, sans-serif">Primim rezervări prin CeFaci<span class="{{openTg}}" aria-hidden="true"><span></span></span></button>
+<a href="Scanner.dc.html" class="press btnp"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>Scanează un cod</a>
+</div>
+</header>
+
+<sc-if value="{{closed}}" hint-placeholder-val="{{ false }}">
+<div class="pop" role="status" style="flex: none; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; background: var(--coral-soft); color: var(--ink)">
+<svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--coral-ink)"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path></svg>
+<span style="font: 600 14px/1.35 'Instrument Sans', system-ui, sans-serif">Rezervările noi prin CeFaci sunt oprite. Clienții văd „Nu mai primim rezervări azi”, iar cererile deja trimise rămân mai jos.</span>
+</div>
+</sc-if>
+
+<div style="flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<section class="card" aria-label="{{k.label}}" style="padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; background: {{k.bg}}">
+<span class="lbl" style="display: flex; align-items: center; gap: 8px"><sc-if value="{{k.live}}" hint-placeholder-val="{{ false }}"><span class="live" aria-hidden="true"></span></sc-if>{{k.label}}</span>
+<span style="display: flex; align-items: baseline; gap: 8px"><span style="font: 700 34px/1 'Instrument Sans', system-ui, sans-serif; letter-spacing: -0.02em">{{k.value}}</span><span style="font: 600 14px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{k.unit}}</span></span>
+<span aria-hidden="true" style="display: block; height: 8px; border-radius: 99px; background: {{k.track}}; overflow: hidden"><span style="display: block; height: 8px; width: {{k.pct}}; border-radius: 99px; background: {{k.fill}}; transition: width 0.4s ease"></span></span>
+<span class="muted">{{k.sub}}</span>
+</section>
+</sc-for>
+</div>
+
+<div style="flex: none; display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 20px; align-items: start">
+<div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+
+<section class="card" aria-labelledby="req-t" style="padding: 18px 20px 8px">
+<div style="display: flex; align-items: center; gap: 10px">
+<h2 id="req-t" class="h2">Cereri de rezervare</h2>
+<span class="tag" style="background: var(--coral-soft); color: var(--coral-ink)">{{reqCountText}}</span>
+</div>
+<p class="muted" style="margin: 6px 0 0">Clientul așteaptă răspunsul în aplicație. Dacă nu răspunzi în 15 minute, îi arătăm alte locuri din zonă.</p>
+<ul style="list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column">
+<sc-for list="{{reqs}}" as="r" hint-placeholder-count="3">
+<li style="display: flex; align-items: center; gap: 14px; min-height: 68px; padding: 10px 0; border-top: 1px solid var(--line)">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 99px; background: {{r.bg}}; color: {{r.fg}}; display: flex; align-items: center; justify-content: center; font: 700 14px/1 'Instrument Sans', system-ui, sans-serif">{{r.ini}}</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font: 650 15px/1.2 'Instrument Sans', system-ui, sans-serif">{{r.name}} <span style="font-weight: 500; color: var(--ink2)">· {{r.meta}}</span></span><span class="muted">{{r.note}}</span></span>
+<sc-if value="{{r.isNew}}" hint-placeholder-val="{{ true }}">
+<div style="flex: none; display: flex; align-items: center; gap: 8px">
+<button type="button" class="press btnp" onClick="{{r.ok}}" style="height: 40px">Confirmă</button>
+<button type="button" class="press btns" onClick="{{r.alt}}" style="height: 40px">Altă oră</button>
+<button type="button" class="press btnq" onClick="{{r.no}}" style="height: 40px">Refuză</button>
+</div>
+</sc-if>
+<sc-if value="{{r.isAlt}}" hint-placeholder-val="{{ false }}">
+<div class="pop" role="group" aria-label="Propune altă oră lui {{r.name}}" style="flex: none; display: flex; align-items: center; gap: 6px">
+<span class="muted" style="margin-right: 2px">Propune:</span>
+<sc-for list="{{r.times}}" as="t" hint-placeholder-count="3"><button type="button" class="press chip" onClick="{{t.pick}}">{{t.label}}</button></sc-for>
+<button type="button" class="press btnq" onClick="{{r.back}}" aria-label="Renunță" style="width: 40px; height: 40px; padding: 0; justify-content: center"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+</div>
+</sc-if>
+<sc-if value="{{r.isDone}}" hint-placeholder-val="{{ false }}">
+<span class="tag pop" style="flex: none; height: 28px; padding: 0 11px; background: {{r.tagBg}}; color: {{r.tagFg}}"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="width: 14px; height: 14px; stroke-width: 2.4"><path d="{{r.tagIcon}}"></path></svg>{{r.tagText}}</span>
+</sc-if>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section class="card" aria-labelledby="tl-t" style="padding: 18px 20px 18px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 id="tl-t" class="h2">Pistele în seara asta</h2>
+<div style="display: flex; align-items: center; gap: 14px; font: 600 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--blue)"></span>Rezervare</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--blue-soft); border: 1.5px dashed var(--blue-ink)"></span>De confirmat</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: #FFD43B"></span>Live Drop</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--violet)"></span>Eveniment</span>
+<span style="display: flex; align-items: center; gap: 6px"><span aria-hidden="true" style="width: 14px; height: 10px; border-radius: 3px; background: var(--s3)"></span>La intrare</span>
+</div>
+</div>
+<div style="margin-top: 14px; position: relative; display: flex; flex-direction: column; gap: 6px">
+<div aria-hidden="true" style="display: flex; padding-left: 64px">
+<sc-for list="{{hours}}" as="h" hint-placeholder-count="7"><span style="flex: 1 1 0; font: 600 11px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink3); font-variant-numeric: tabular-nums">{{h}}</span></sc-for>
+</div>
+<sc-for list="{{lanes}}" as="ln" hint-placeholder-count="8">
+<div style="display: flex; align-items: center; height: 30px">
+<span style="width: 64px; flex: none; font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{ln.name}}</span>
+<div style="position: relative; flex: 1 1 auto; height: 30px; border-radius: 8px; background: var(--s2)">
+<sc-for list="{{ln.blocks}}" as="b" hint-placeholder-count="2"><button type="button" class="press blk" aria-label="{{b.aria}}" aria-pressed="{{b.on}}" onClick="{{b.pick}}" style="position: absolute; top: 2px; bottom: 2px; left: {{b.left}}; width: {{b.width}}; padding: 0 8px; border: {{b.border}}; border-radius: 6px; background: {{b.bg}}; color: {{b.fg}}; box-shadow: {{b.ring}}; font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{b.label}}</button></sc-for>
+</div>
+</div>
+</sc-for>
+<div aria-hidden="true" style="position: absolute; top: 16px; bottom: 0; left: calc(64px + (100% - 64px) * 0.381); width: 2px; border-radius: 2px; background: #FF6A4D"></div>
+<span aria-hidden="true" style="position: absolute; top: -2px; left: calc(64px + (100% - 64px) * 0.381 - 18px); padding: 2px 6px; border-radius: 6px; background: #FF6A4D; color: #0E1440; font: 700 10px/1.2 'Instrument Sans', system-ui, sans-serif">19:40</span>
+</div>
+<div aria-live="polite" style="margin-top: 14px; min-height: 46px; padding: 10px 14px; border-radius: 14px; background: var(--s2); display: flex; align-items: center; gap: 10px; font: 550 14px/1.35 'Instrument Sans', system-ui, sans-serif; color: var(--ink)">
+<svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+<span>{{selText}}</span>
+</div>
+</section>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+<section aria-labelledby="drop-t" style="padding: 18px 20px; border-radius: 20px; background: var(--yellow-soft)">
+<div style="display: flex; align-items: center; gap: 8px">
+<sc-if value="{{dropOn}}" hint-placeholder-val="{{ true }}"><span class="live" aria-hidden="true"></span></sc-if>
+<span class="lbl" style="color: var(--ink)">Live Drop</span>
+<span class="muted" style="margin-left: auto">{{dropState}}</span>
+</div>
+<h2 id="drop-t" class="h2" style="margin-top: 10px; font-size: 24px">−25% la pistă până la 21:00</h2>
+<div style="margin-top: 12px; display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="flex: 1 1 auto; height: 8px; border-radius: 99px; background: rgba(255, 212, 59, 0.45); overflow: hidden"><span style="display: block; height: 8px; width: {{dropPct}}; border-radius: 99px; background: #E0A800; transition: width 0.4s ease"></span></span>
+<span style="flex: none; font: 700 14px/1 'Instrument Sans', system-ui, sans-serif">{{dropText}}</span>
+</div>
+<p class="muted" style="margin: 10px 0 0">Clientul are 45 de minute să ajungă. La scanare, codul lui arată oferta, iar ospătarul o aplică în casa de marcat.</p>
+<sc-if value="{{dropOn}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 12px; display: flex; gap: 8px">
+<button type="button" class="press btns" onClick="{{addStock}}" disabled="{{stockMax}}">Mai pune 2 locuri</button>
+<button type="button" class="press btnq" onClick="{{stopDrop}}">Oprește acum</button>
+</div>
+</sc-if>
+<sc-if value="{{dropOff}}" hint-placeholder-val="{{ false }}">
+<div class="pop" style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font: 600 13px/1.35 'Instrument Sans', system-ui, sans-serif">Oprit la 19:40. Cine l-a luat deja îl păstrează.</span>
+<a href="Oferte.dc.html" class="press btns" style="height: 40px">Oferte</a>
+</div>
+</sc-if>
+</section>
+
+<section class="card" aria-labelledby="scan-t" style="padding: 18px 20px 8px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<h2 id="scan-t" class="h2">Ultimele scanări</h2>
+<span class="muted">de la personal</span>
+</div>
+<ul style="list-style: none; margin: 10px 0 0; padding: 0">
+<sc-for list="{{scans}}" as="sc" hint-placeholder-count="4">
+<li style="display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line)">
+<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 99px; background: {{sc.bg}}; color: {{sc.fg}}; display: flex; align-items: center; justify-content: center"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.2"><path d="{{sc.icon}}"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font: 650 14px/1.2 'Instrument Sans', system-ui, sans-serif">{{sc.title}}</span><span class="muted">{{sc.sub}}</span></span>
+<span style="flex: none; font: 600 12px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink3); font-variant-numeric: tabular-nums">{{sc.t}}</span>
+</li>
+</sc-for>
+</ul>
+</section>
+</div>
+</div>
+</main>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<p class="pop" role="status" style="position: absolute; left: 248px; right: 0; bottom: 24px; margin: 0 auto; width: max-content; max-width: 640px; padding: 14px 18px; border-radius: 16px; background: #0E1440; color: #FFFFFF; font: 600 14px/1.35 'Instrument Sans', system-ui, sans-serif; box-shadow: 0 14px 34px rgba(14, 20, 64, 0.3)">{{toast}}</p>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":1440,"height":900}}'>
+const REQS = [
+  { id: 'r1', ini: 'C', bg: '#2F5BFF', fg: '#FFFFFF', name: 'Cornel A.', people: 4, meta: '4 persoane · 20:30 · Pista 2', note: 'Din CeFaci, cu gașca. Vor pista 2 ore.', lane: 2, start: 20.5, end: 22.5, times: [21, 21.5, 22] },
+  { id: 'r2', ini: 'B', bg: '#8C6CFF', fg: '#0E1440', name: 'Bianca T.', people: 6, meta: '6 persoane · 21:00 · Pista 4', note: 'Ar vrea două piste alăturate, dacă se poate.', lane: 4, start: 21, end: 23, times: [21.5, 22, 22.5] },
+  { id: 'r3', ini: 'R', bg: '#FF6A4D', fg: '#0E1440', name: 'Radu C.', people: 3, meta: '3 persoane · 22:30 · Pista 6', note: 'Prima dată la voi.', lane: 6, start: 22.5, end: 24, times: [21.5, 22, 23] }
+];
+const BLOCKS = [
+  [1, 17, 18.5, 'walk', 'La intrare · 3', 'Pista 1 · 17:00–18:30 · 3 persoane venite la intrare, fără rezervare.'],
+  [1, 19, 21, 'res', 'Maria I. · 5 · a venit', 'Pista 1 · 19:00–21:00 · Maria I., 5 persoane · rezervare prin CeFaci · a venit, cod scanat la 19:38 de Mihnea.'],
+  [1, 21.5, 23, 'res', 'Dan P. · 4', 'Pista 1 · 21:30–23:00 · Dan P., 4 persoane · rezervare prin CeFaci · confirmată.'],
+  [2, 18, 20, 'drop', 'Tudor M. · 2 · −25%', 'Pista 2 · 18:00–20:00 · Tudor M., 2 persoane · a venit din Live Drop, −25% aplicat la 19:31.'],
+  [3, 17.5, 19.5, 'res', 'Elena R. · 4 · a venit', 'Pista 3 · 17:30–19:30 · Elena R., 4 persoane · a venit, sosire bifată la 18:50.'],
+  [3, 20, 22, 'res', 'Ana V. · 6', 'Pista 3 · 20:00–22:00 · Ana V., 6 persoane · rezervare prin CeFaci · confirmată.'],
+  [4, 19, 21, 'drop', 'Sorin P. · 2 · −25%', 'Pista 4 · 19:00–21:00 · Sorin P., 2 persoane · Live Drop luat la 18:42, încă nescanat.'],
+  [5, 20, 22, 'res', 'Cristi S. · 4', 'Pista 5 · 20:00–22:00 · Cristi S., 4 persoane · rezervare prin CeFaci · confirmată.'],
+  [5, 22.5, 24, 'res', 'Irina M. · 3', 'Pista 5 · 22:30–24:00 · Irina M., 3 persoane · rezervare prin telefon, trecută de tine.'],
+  [6, 18.5, 20, 'walk', 'La intrare · 2', 'Pista 6 · 18:30–20:00 · 2 persoane venite la intrare.'],
+  [7, 21, 23.5, 'event', 'Turneul de vineri', 'Pistele 7 și 8 · 21:00–23:30 · Turneul de vineri · 24 de bilete vândute din 32.'],
+  [8, 19.25, 20.75, 'walk', 'La intrare · 3', 'Pista 8 · 19:15–20:45 · 3 persoane venite la intrare.'],
+  [8, 21, 23.5, 'event', 'Turneul de vineri', 'Pistele 7 și 8 · 21:00–23:30 · Turneul de vineri · 24 de bilete vândute din 32.']
+];
+const STYLE = {
+  res: ['var(--blue)', '#FFFFFF', '0'],
+  pend: ['var(--blue-soft)', 'var(--blue-ink)', '1.5px dashed var(--blue-ink)'],
+  drop: ['#FFD43B', '#0E1440', '0'],
+  event: ['var(--violet)', '#0E1440', '0'],
+  walk: ['var(--s3)', 'var(--ink2)', '0']
+};
+const ICON = {
+  check: 'M20 6 9 17l-5-5',
+  x: 'M18 6 6 18M6 6l12 12',
+  clock: 'M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 6v6l4 2',
+  pct: 'M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5'
+};
+function hm(x) {
+  const h = Math.floor(x);
+  const m = Math.round((x - h) * 60);
+  return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.state = { req: { r1: 'new', r2: 'new', r3: 'new' }, prop: {}, sel: null, dropOn: true, stock: 6, open: true, toast: '' };
+  }
+  componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
+  say(msg) {
+    this.setState({ toast: msg });
+    this.timers.push(setTimeout(() => { if (this.state.toast === msg) this.setState({ toast: '' }); }, 3600));
+  }
+  setReq(id, st, extra) {
+    this.setState((s) => ({ req: Object.assign({}, s.req, { [id]: st }), prop: Object.assign({}, s.prop, extra || {}) }));
+  }
+  renderVals() {
+    const s = this.state;
+    const theme = this.props.theme ?? 'zi';
+    const pending = REQS.filter((r) => s.req[r.id] === 'new' || s.req[r.id] === 'alt');
+    const okList = REQS.filter((r) => s.req[r.id] === 'ok');
+    const resToday = 12 + okList.length;
+    const persons = 41 + okList.reduce((a, r) => a + r.people, 0);
+    const taken = 4;
+
+    const reqs = REQS.map((r) => {
+      const st = s.req[r.id];
+      const done = { ok: ['var(--green-soft)', 'var(--green-ink)', ICON.check, 'Confirmată · a primit codul QR'], prop: ['var(--yellow-soft)', 'var(--yellow-ink)', ICON.clock, 'Ai propus ' + hm(s.prop[r.id] || r.start) + ' · așteptăm răspunsul'], no: ['var(--coral-soft)', 'var(--coral-ink)', ICON.x, 'Refuzată · îi arătăm alte locuri'] }[st] || ['', '', '', ''];
+      return {
+        ini: r.ini, bg: r.bg, fg: r.fg, name: r.name, meta: r.meta, note: r.note,
+        isNew: st === 'new', isAlt: st === 'alt', isDone: st === 'ok' || st === 'prop' || st === 'no',
+        tagBg: done[0], tagFg: done[1], tagIcon: done[2], tagText: done[3],
+        ok: () => { this.setReq(r.id, 'ok'); this.say(r.name + ' a primit confirmarea și codul QR. Pista ' + r.lane + ' e a lor de la ' + hm(r.start) + '.'); },
+        alt: () => this.setReq(r.id, 'alt'),
+        back: () => this.setReq(r.id, 'new'),
+        no: () => { this.setReq(r.id, 'no'); this.say('Am trimis răspunsul către ' + r.name + ' și îi arătăm alte locuri libere la aceeași oră.'); },
+        times: r.times.map((t) => ({ label: hm(t), pick: () => { this.setReq(r.id, 'prop', { [r.id]: t }); this.say('Ai propus ora ' + hm(t) + ' pentru ' + r.name + '. Dacă acceptă, rezervarea se confirmă singură.'); } }))
+      };
+    });
+
+    const blocks = BLOCKS.map(([lane, a, b, kind, label, detail], k) => ({ key: 'b' + k, lane, a, b, kind, label, detail }));
+    REQS.forEach((r) => {
+      const st = s.req[r.id];
+      if (st === 'no') return;
+      const a = st === 'prop' ? (s.prop[r.id] || r.start) : r.start;
+      const b = a + (r.end - r.start);
+      const kind = st === 'ok' ? 'res' : 'pend';
+      const label = r.name + ' · ' + r.people + (st === 'ok' ? '' : (st === 'prop' ? ' · propus' : ' · de confirmat'));
+      const detail = 'Pista ' + r.lane + ' · ' + hm(a) + '–' + hm(b) + ' · ' + r.name + ', ' + r.people + ' persoane · ' + (st === 'ok' ? 'rezervare prin CeFaci · confirmată acum.' : (st === 'prop' ? 'ai propus altă oră, așteptăm răspunsul.' : 'cerere nouă, o confirmi sus.'));
+      blocks.push({ key: r.id, lane: r.lane, a, b: Math.min(24, b), kind, label, detail });
+    });
+    const lanes = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({
+      name: 'Pista ' + n,
+      blocks: blocks.filter((x) => x.lane === n).map((x) => {
+        const st = STYLE[x.kind];
+        const on = s.sel === x.key;
+        return {
+          label: x.label, aria: x.detail, on,
+          left: ((x.a - 17) / 7 * 100).toFixed(3) + '%',
+          width: 'calc(' + ((x.b - x.a) / 7 * 100).toFixed(3) + '% - 3px)',
+          bg: st[0], fg: st[1], border: st[2],
+          ring: on ? '0 0 0 2px var(--s1), 0 0 0 4px var(--ink)' : 'none',
+          pick: () => this.setState({ sel: on ? null : x.key })
+        };
+      })
+    }));
+    const selBlock = blocks.find((x) => x.key === s.sel);
+
+    const kpis = [
+      { label: 'Rezervări azi', value: String(resToday), unit: persons + ' de persoane', pct: '100%', track: 'var(--blue-soft)', fill: 'var(--blue)', sub: pending.length ? 'Încă ' + pending.length + (pending.length === 1 ? ' cerere de confirmat' : ' cereri de confirmat') : 'Toate cererile au răspuns', bg: 'var(--s1)', live: false },
+      { label: 'Au venit până acum', value: '6', unit: 'din 8', pct: '75%', track: 'var(--blue-soft)', fill: 'var(--blue)', sub: 'Cu codul scanat la intrare', bg: 'var(--s1)', live: false },
+      { label: 'Piste libere acum', value: '3', unit: 'din 8', pct: '37.5%', track: 'var(--blue-soft)', fill: 'var(--blue)', sub: 'Pistele 3, 5 și 7 · următoarea ocupată la 20:00', bg: 'var(--s1)', live: false },
+      { label: 'Live Drop', value: s.dropOn ? String(taken) : 'Oprit', unit: s.dropOn ? 'din ' + s.stock + ' luate' : taken + ' luate', pct: (taken / s.stock * 100).toFixed(1) + '%', track: 'rgba(255, 212, 59, 0.45)', fill: '#E0A800', sub: '−25% la pistă · până la 21:00', bg: 'var(--s1)', live: s.dropOn }
+    ];
+
+    return {
+      themeClass: ({ zi: 'light', noapte: 'graphite' })[theme] ?? 'light',
+      navReq: String(pending.length),
+      open: s.open, closed: !s.open, openTg: s.open ? 'tg on' : 'tg',
+      toggleOpen: () => { const nx = !this.state.open; this.setState({ open: nx }); this.say(nx ? 'Primești din nou rezervări prin CeFaci.' : 'Am oprit rezervările noi pentru azi. Poți să le pornești oricând.'); },
+      kpis,
+      reqs, reqCountText: pending.length ? pending.length + (pending.length === 1 ? ' nouă' : ' noi') : 'Nicio cerere',
+      hours: ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+      lanes,
+      selText: selBlock ? selBlock.detail : 'Apasă pe o rezervare din program ca s-o vezi aici. Linia coral e ora de acum.',
+      dropOn: s.dropOn, dropOff: !s.dropOn,
+      dropState: s.dropOn ? 'se termină la 21:00' : 'oprit',
+      dropPct: (taken / s.stock * 100).toFixed(1) + '%', dropText: taken + ' din ' + s.stock + ' luate',
+      stockMax: s.stock >= 10,
+      addStock: () => { if (this.state.stock < 10) { this.setState({ stock: this.state.stock + 2 }); this.say('Ai pus încă 2 locuri la oferta de −25%. Apar imediat în aplicație.'); } },
+      stopDrop: () => { this.setState({ dropOn: false }); this.say('Live Drop-ul e oprit. Cei 4 care l-au luat îl păstrează 45 de minute.'); },
+      scans: [
+        { t: '19:38', title: 'Cod valid · sosire bifată', sub: 'Maria I. · 5 persoane · Pista 1 · Mihnea', icon: ICON.check, bg: 'var(--green-soft)', fg: 'var(--green-ink)' },
+        { t: '19:31', title: 'Ofertă aplicată · −25%', sub: 'Tudor M. · 2 persoane · Live Drop · Denisa', icon: ICON.pct, bg: 'var(--yellow-soft)', fg: 'var(--yellow-ink)' },
+        { t: '19:12', title: 'Cod expirat', sub: 'Oferta s-a ținut 45 de minute, până la 19:05', icon: ICON.x, bg: 'var(--coral-soft)', fg: 'var(--coral-ink)' },
+        { t: '18:50', title: 'Cod valid · sosire bifată', sub: 'Elena R. · 4 persoane · Pista 3 · Mihnea', icon: ICON.check, bg: 'var(--green-soft)', fg: 'var(--green-ink)' }
+      ],
+      hasToast: s.toast !== '', toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

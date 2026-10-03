@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci — Biletul serii</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;family=Caveat:wght@500..700&amp;display=swap">
+<style>
+body{margin:0;background:#E9EBF2}
+.cf{--bg:#0B1030;--s1:#141B45;--s2:#1D2660;--line:#2B3575;--ink:#F3F5FF;--ink2:#A9B1DA;--ink3:#8690C4;--blue:#2F5BFF;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.2);--yellow:#FFD43B;--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral:#FF6A4D;--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.16);--violet:#8C6CFF;--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.2);--navy:#0E1440;--slot:#03061A;--scrim:rgba(4,7,24,.66);font-family:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.light{--bg:#EEF1FB;--s1:#FFFFFF;--s2:#E6EAF8;--line:#D3D9EF;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--slot:#0E1440;--scrim:rgba(14,20,64,.42)}
+.cf{--doodle:#FFFFFF;--doodle-o:.06;isolation:isolate}
+.cf.day{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#DCE0EA;--line:#D2D7E3;--sheet:#FFFFFF;--doodle:#0E1440;--doodle-o:.085}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#28282F;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--slot:#000000;--scrim:rgba(0,0,0,.62);--doodle:#FFFFFF;--doodle-o:.07}
+.doodles{position:absolute;left:0;top:0;width:390px;height:844px;z-index:-1;pointer-events:none;color:var(--doodle);opacity:var(--doodle-o)}
+.doodles .d1{color:var(--blue)}
+.doodles .d2{color:var(--coral)}
+.doodles .d3{color:var(--violet)}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.07)}}
+.cf :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.cf.light :focus-visible{outline-color:#2447E0}
+.print{animation:print 1.2s cubic-bezier(.3,.8,.25,1) .3s both}
+@keyframes print{0%{transform:translateY(-101%)}62%{transform:translateY(2.5%)}80%{transform:translateY(-.8%)}100%{transform:translateY(0)}}
+.after{animation:after .5s cubic-bezier(.23,1,.32,1) both}
+@keyframes after{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.slam{animation:slam .6s cubic-bezier(.2,.9,.3,1) both}
+@keyframes slam{0%{opacity:0;transform:scale(2.2) rotate(-26deg)}55%{opacity:1;transform:scale(.92) rotate(-9deg)}75%{transform:scale(1.04) rotate(-13deg)}100%{opacity:1;transform:scale(1) rotate(-12deg)}}
+.pop{animation:pop .42s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
+.dots{display:flex;gap:4px;flex:none}
+.dots span{width:7px;height:7px;border-radius:99px;background:var(--yellow-ink);animation:dot 1s ease-in-out infinite}
+.dots span:nth-child(2){animation-delay:.15s}
+.dots span:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{opacity:.35;transform:none}50%{opacity:1;transform:translateY(-3px)}}
+.sheet{animation:sheet .5s cubic-bezier(.32,.72,0,1) both}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+.scrim{animation:fade .25s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.slot{height:58px;border-radius:14px;border:1.5px solid var(--line);background:transparent;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:700 15px/1 'Instrument Sans',system-ui,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .18s ease,background-color .18s ease,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.slot:active{transform:scale(.95)}
+.slot.on{border:2px solid var(--blue);background:var(--blue-soft)}
+.slot:disabled{opacity:.45;cursor:default;text-decoration:line-through}
+.stampsm{animation:stampsm .5s cubic-bezier(.2,.9,.3,1) .1s both}
+@keyframes stampsm{0%{opacity:0;transform:scale(1.8) rotate(-18deg)}60%{opacity:1;transform:scale(.94) rotate(-5deg)}100%{opacity:1;transform:rotate(-7deg)}}
+.cel{animation:cel 1.8s ease both}
+@keyframes cel{0%{opacity:0}10%{opacity:1}78%{opacity:1}100%{opacity:0}}
+.bigstamp{animation:bigstamp 1.8s cubic-bezier(.2,.9,.3,1) both}
+@keyframes bigstamp{0%{opacity:0;transform:scale(2.6) rotate(-24deg)}22%{opacity:1;transform:scale(.92) rotate(-7deg)}32%{transform:scale(1.04) rotate(-11deg)}40%{transform:scale(1) rotate(-10deg)}78%{opacity:1;transform:scale(1) rotate(-10deg)}100%{opacity:0;transform:scale(.55) translateY(160px) rotate(-7deg)}}
+.qrbtn{animation:pop .42s cubic-bezier(.34,1.56,.64,1) .35s both}
+.qrin{animation:qrin .22s cubic-bezier(.2,.9,.3,1.15) both;transform-origin:78% 100%}
+@keyframes qrin{from{opacity:0;transform:scale(.6) translateY(40px)}to{opacity:1;transform:none}}
+.qrout{animation:qrout .16s cubic-bezier(.55,0,1,.45) both;transform-origin:78% 100%}
+@keyframes qrout{from{opacity:1;transform:none}to{opacity:0;transform:scale(.7) translateY(40px)}}
+.fadein2{animation:fade .2s ease both}
+.fadeout2{animation:fadeout .16s ease both}
+@keyframes fadeout{from{opacity:1}to{opacity:0}}
+.tick{width:0;animation:tick 6s linear both}
+.tick2{width:0;animation:tick2 6s linear both}
+@keyframes tick{from{width:100%}to{width:0}}
+@keyframes tick2{from{width:100%}to{width:0}}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink)">
+<svg class="doodles" aria-hidden="true" viewBox="0 0 390 844"><g style="fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round"><path d="M-10 196 C 50 178, 110 222, 176 200 S 300 176, 400 206" style="stroke-dasharray: 2 7"></path><path d="M-10 418 C 70 440, 140 396, 214 420 S 330 446, 400 414"></path><path d="M-10 612 C 40 596, 96 640, 160 618 S 280 590, 400 626" style="stroke-dasharray: 10 8"></path><path d="M-10 796 C 80 776, 150 818, 230 796 S 340 780, 400 800" style="stroke-dasharray: 2 7"></path><path d="M300 40 c 20 10, 40 -4, 60 8" ></path><path d="M20 520 q 10 -18 24 -4 t 26 -2"></path><g class="d1" transform="translate(186 8) scale(1.25) rotate(-14 12 12)"><path d="M12 21s-6-5.4-6-10a6 6 0 0 1 12 0c0 4.6-6 10-6 10z"></path><circle cx="12" cy="11" r="2"></circle></g><g class="d2" transform="translate(22 63) scale(1.1) rotate(10 12 12)"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></g><g class="d3" transform="translate(334 59) scale(1.35) rotate(-6 12 12)"><path d="M3 6h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4z"></path><path d="M14 7v2M14 11v2M14 15v2"></path></g><g class="d1" transform="translate(174 164) scale(1.2) rotate(18 12 12)"><path d="M4 6l16 0-8 15z"></path><path d="M4 6q8-3.5 16 0"></path><circle cx="10.5" cy="10" r="1.3"></circle><circle cx="13.5" cy="13.5" r="1.3"></circle></g><g class="d2" transform="translate(186 210) scale(1.05) rotate(-20 12 12)"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.4"></path><path d="M12 18h.01"></path></g><g class="d3" transform="translate(22 265) scale(1.3) rotate(6 12 12)"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2z"></path><path d="M10.6 9.5h2.8"></path></g><g class="d1" transform="translate(334 261) scale(1.25) rotate(12 12 12)"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"></path><path d="M16 11h2a2 2 0 0 1 0 4h-2"></path><path d="M8 3c0 1.5 1 1.5 1 3M11.5 3c0 1.5 1 1.5 1 3"></path></g><g class="d2" transform="translate(174 366) scale(1.1) rotate(-10 12 12)"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z"></path></g><g class="d3" transform="translate(186 412) scale(1.35) rotate(0 12 12)"><path d="M9 18V6l10-2v12"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="16" r="2"></circle></g><g class="d1" transform="translate(22 458) scale(1.2) rotate(15 12 12)"><path d="M4 11a8 5.5 0 0 1 16 0z"></path><path d="M3 14h18"></path><path d="M4 17h16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path></g><g class="d2" transform="translate(334 463) scale(1.05) rotate(-14 12 12)"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M9 9h.01M15 15h.01M12 12h.01M15 9h.01M9 15h.01"></path></g><g class="d3" transform="translate(174 559) scale(1.3) rotate(10 12 12)"><path d="M3 19c3-1 4-5 7-5s4 2 6 1" style="stroke-dasharray: 1.5 3"></path><path d="M17 5l4 4M21 5l-4 4"></path></g><g class="d1" transform="translate(186 614) scale(1.25) rotate(-6 12 12)"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></g><g class="d2" transform="translate(22 660) scale(1.1) rotate(18 12 12)"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></g><g class="d3" transform="translate(334 665) scale(1.35) rotate(-20 12 12)"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></g><g class="d1" transform="translate(174 761) scale(1.2) rotate(6 12 12)"><path d="M4 16v-3l2.2-5h11.6L20 13v3z"></path><circle cx="8" cy="17" r="1.8"></circle><circle cx="16" cy="17" r="1.8"></circle></g><g class="d2" transform="translate(186 816) scale(1.05) rotate(12 12 12)"><rect x="3" y="10" width="18" height="10" rx="1.5"></rect><path d="M3 10l1.5-5 16-1.5.8 4.5"></path><path d="M8 5l2 4M13 4.5l2 4"></path></g></g><g style="fill: currentColor; font-family: Caveat, 'Bradley Hand', 'Segoe Print', cursive; font-weight: 600"><text x="14" y="25" transform="rotate(-7 14 25)" style="font-size: 17px">ce facem diseară?</text><text x="230" y="32" transform="rotate(5 230 32)" style="font-size: 15px">unde ieșim?</text><text x="72" y="78" transform="rotate(-3 72 78)" style="font-size: 19px">cine vine?</text><text x="30" y="135" transform="rotate(8 30 135)" style="font-size: 16px">oare unde?</text><text x="214" y="131" transform="rotate(-9 214 131)" style="font-size: 18px">cât costă?</text><text x="8" y="177" transform="rotate(4 8 177)" style="font-size: 15px">oare e deschis?</text><text x="216" y="184" transform="rotate(-5 216 184)" style="font-size: 17px">la ce oră?</text><text x="14" y="230" transform="rotate(6 14 230)" style="font-size: 17px">pizza sau burger?</text><text x="230" y="226" transform="rotate(-2 230 226)" style="font-size: 15px">e loc pentru 5?</text><text x="72" y="283" transform="rotate(9 72 283)" style="font-size: 19px">trebuie rezervare?</text><text x="30" y="329" transform="rotate(-6 30 329)" style="font-size: 16px">bowling sau karaoke?</text><text x="214" y="325" transform="rotate(3 214 325)" style="font-size: 18px">cu mașina sau pe jos?</text><text x="8" y="382" transform="rotate(-7 8 382)" style="font-size: 15px">mâncăm ceva?</text><text x="216" y="378" transform="rotate(5 216 378)" style="font-size: 17px">afară sau înăuntru?</text><text x="14" y="435" transform="rotate(-3 14 435)" style="font-size: 17px">până la ce oră?</text><text x="230" y="431" transform="rotate(8 230 431)" style="font-size: 15px">ceva nou?</text><text x="72" y="477" transform="rotate(-9 72 477)" style="font-size: 19px">cine conduce?</text><text x="30" y="534" transform="rotate(4 30 534)" style="font-size: 16px">e departe?</text><text x="214" y="530" transform="rotate(-5 214 530)" style="font-size: 18px">plouă?</text><text x="8" y="576" transform="rotate(6 8 576)" style="font-size: 15px">film sau plimbare?</text><text x="216" y="583" transform="rotate(-2 216 583)" style="font-size: 17px">hai?</text><text x="14" y="629" transform="rotate(9 14 629)" style="font-size: 17px">ne vedem la 8?</text><text x="230" y="625" transform="rotate(-6 230 625)" style="font-size: 15px">și după?</text><text x="72" y="682" transform="rotate(3 72 682)" style="font-size: 19px">cât stăm?</text><text x="30" y="728" transform="rotate(-7 30 728)" style="font-size: 16px">vine toată gașca?</text><text x="214" y="735" transform="rotate(5 214 735)" style="font-size: 18px">ce zici?</text><text x="8" y="781" transform="rotate(-3 8 781)" style="font-size: 15px">unde parcăm?</text><text x="216" y="777" transform="rotate(8 216 777)" style="font-size: 17px">acum sau mai târziu?</text><text x="14" y="834" transform="rotate(-9 14 834)" style="font-size: 17px">dulce sau sărat?</text><text x="230" y="830" transform="rotate(4 230 830)" style="font-size: 15px">mergem?</text></g></svg>
+
+<div style="padding: 52px 20px 0; display: flex; align-items: center; gap: 8px; height: 96px">
+<a href="Main.dc.html" class="press" aria-label="Închide" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; border-radius: 14px; color: var(--ink)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></a>
+<span style="flex: 1 1 auto; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Plan confirmat</span>
+</div>
+
+<div aria-hidden="true" style="position: absolute; left: 10px; right: 10px; top: 106px; height: 12px; border-radius: 99px; background: var(--slot); z-index: 2"></div>
+
+<div style="position: absolute; left: 0; right: 0; top: 112px; height: 424px; padding: 0 20px; overflow: hidden">
+<article class="print" aria-label="Biletul serii" style="position: relative; border-radius: 22px; background: #FFD43B; color: #0E1440">
+<div style="padding: 24px 20px 18px">
+<div style="display: flex; align-items: center; justify-content: space-between">
+<span style="font: 700 13px/1 'Instrument Sans', system-ui, sans-serif; color: #3A4270">Biletul serii</span>
+<svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="color: #3A4270"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg>
+</div>
+<h1 style="margin: 10px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 60px; line-height: 0.92; font-weight: 800; font-stretch: 86%; letter-spacing: -0.04em">Asta facem.</h1>
+<div style="margin-top: 20px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 5px">
+<span style="font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #3A4270">Când</span>
+<span style="font: 700 17px/1.1 'Instrument Sans', system-ui, sans-serif">Vineri, 2 oct.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 5px">
+<span style="font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #3A4270">Cu cine</span>
+<span style="font: 700 17px/1.1 'Instrument Sans', system-ui, sans-serif">Gașca de vineri</span>
+</div>
+</div>
+<div style="position: relative; margin-top: 18px">
+<span aria-hidden="true" style="position: absolute; left: 5px; top: 12px; height: 30px; width: 2px; background: #0E1440"></span>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font: 600 16px/24px 'Instrument Sans', system-ui, sans-serif">
+<li style="position: relative; display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 99px; background: #0E1440; flex: none"></span><span style="width: 48px; font-weight: 800; font-variant-numeric: tabular-nums">19:00</span><span style="display: flex; align-items: center; gap: 6px">Bowling la Pista 9<svg viewBox="0 0 24 24" role="img" aria-label="Local verificat" style="display: inline-block; width: 16px; height: 16px; flex: none; vertical-align: -3px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" style="fill: #2F5BFF"></path><path d="m9 12 2 2 4-4" style="fill: none; stroke: #FFFFFF; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"></path></svg></span></li>
+<li style="position: relative; display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 99px; background: #FF6A4D; border: 2px solid #0E1440; flex: none"></span><span style="width: 48px; font-weight: 800; font-variant-numeric: tabular-nums">20:30</span><span>Burger la Casa Grill</span></li>
+</ol>
+</div>
+<div style="margin-top: 18px; display: flex; align-items: center; gap: 10px">
+<span style="display: flex" aria-hidden="true">
+<span style="width: 32px; height: 32px; border-radius: 999px; background: #0E1440; color: #FFD43B; border: 2px solid #FFD43B; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">CA</span>
+<span style="width: 32px; height: 32px; margin-left: -8px; border-radius: 999px; background: #0E1440; color: #FFD43B; border: 2px solid #FFD43B; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">I</span>
+<span style="width: 32px; height: 32px; margin-left: -8px; border-radius: 999px; background: #0E1440; color: #FFD43B; border: 2px solid #FFD43B; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">M</span>
+<span style="width: 32px; height: 32px; margin-left: -8px; border-radius: 999px; background: #0E1440; color: #FFD43B; border: 2px solid #FFD43B; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">S</span>
+<span style="width: 32px; height: 32px; margin-left: -8px; border-radius: 999px; background: #0E1440; color: #FFD43B; border: 2px solid #FFD43B; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">R</span>
+</span>
+<span style="font: 700 16px/1.2 'Instrument Sans', system-ui, sans-serif">Vin toți 5</span>
+</div>
+</div>
+
+<div aria-hidden="true" style="position: relative; height: 24px">
+<span style="position: absolute; left: -12px; top: 0; width: 24px; height: 24px; border-radius: 99px; background: var(--bg)"></span>
+<span style="position: absolute; right: -12px; top: 0; width: 24px; height: 24px; border-radius: 99px; background: var(--bg)"></span>
+<span style="position: absolute; left: 20px; right: 20px; top: 11px; border-top: 2px dashed rgba(14, 20, 64, 0.35)"></span>
+<sc-if value="{{showSmallStamp}}" hint-placeholder-val="{{ false }}"><span class="stampsm" style="position: absolute; left: 50%; top: -9px; margin-left: -58px; width: 116px; height: 40px; border: 2.5px solid #D93A1C; border-radius: 8px; background: #FFD43B; color: #D93A1C; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1; font-weight: 800; letter-spacing: 0.08em">REZERVAT</span><span style="font: 700 10px/1 'Instrument Sans', system-ui, sans-serif; letter-spacing: 0.03em">{{stampSub}}</span></span></sc-if>
+</div>
+
+<div style="padding: 12px 16px 18px 20px; display: flex; align-items: center; gap: 12px">
+<div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 5px">
+<span style="font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #3A4270">Cost de persoană</span>
+<span style="font: 700 17px/1.1 'Instrument Sans', system-ui, sans-serif">~85 lei</span>
+</div>
+<div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 5px">
+<span style="font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #3A4270">Rezervare</span>
+<span style="display: flex; align-items: center; gap: 6px; font: 700 17px/1.1 'Instrument Sans', system-ui, sans-serif"><span aria-hidden="true" style="width: 9px; height: 9px; border-radius: 99px; background: {{resDot}}"></span>{{resText}}</span>
+</div>
+
+</div>
+
+<svg aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 22px; mix-blend-mode: multiply; opacity: 0.12; pointer-events: none"><filter id="grain-bilet"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"></feTurbulence><feColorMatrix type="saturate" values="0"></feColorMatrix></filter><rect width="100%" height="100%" filter="url(#grain-bilet)"></rect></svg>
+</article>
+</div>
+
+<div class="after" style="animation-delay: 1.35s; position: absolute; left: 20px; right: 20px; top: 548px; display: flex; flex-direction: column; gap: 10px">
+<sc-if value="{{isNone}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 8px 8px 8px 14px; border-radius: 18px; background: var(--coral-soft)">
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<span style="display: flex; align-items: center; gap: 6px; font: 700 14px/1.25 'Instrument Sans', system-ui, sans-serif; color: var(--ink)">Pista 9 cere rezervare<svg viewBox="0 0 24 24" role="img" aria-label="Local verificat" style="display: inline-block; width: 15px; height: 15px; flex: none; vertical-align: -3px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" style="fill: #2F5BFF"></path><path d="m9 12 2 2 4-4" style="fill: none; stroke: #FFFFFF; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"></path></svg></span>
+<span style="font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Faceți o rezervare ca să vă asigurați locul.</span>
+</span>
+<button type="button" class="press" onClick="{{openRes}}" style="flex: none; height: 44px; padding: 0 16px; border: 0; border-radius: 14px; background: var(--blue); color: #FFFFFF; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif">Rezervă</button>
+<button type="button" class="press" aria-label="Sună la Pista 9" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 14px; background: var(--s1); color: var(--ink); display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg></button>
+</div>
+</sc-if>
+<sc-if value="{{isPending}}" hint-placeholder-val="{{ false }}">
+<div class="pop" role="status" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 14px; border-radius: 18px; background: var(--yellow-soft)">
+<span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+<span style="flex: 1 1 auto; font: 600 14px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink)">Cerere trimisă. Pista 9 confirmă în câteva minute.</span>
+</div>
+</sc-if>
+<sc-if value="{{isConfirmed}}" hint-placeholder-val="{{ false }}">
+<div class="pop" role="status" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 8px 8px 14px; border-radius: 18px; background: var(--blue-soft)">
+<svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--blue-ink)"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<span style="font: 700 14px/1.25 'Instrument Sans', system-ui, sans-serif; color: var(--ink)">Rezervat la Pista 9</span>
+<span style="font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{confText}}</span>
+</span>
+<button type="button" class="press" onClick="{{cancel}}" style="flex: none; height: 44px; padding: 0 12px; border: 0; border-radius: 12px; background: transparent; color: var(--ink2); font: 650 14px/1 'Instrument Sans', system-ui, sans-serif">Anulează</button>
+</div>
+</sc-if>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<button type="button" class="press" style="height: 62px; border: 0; border-radius: 16px; background: var(--blue); color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font: 650 13px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>Navighează</button>
+<button type="button" class="press" style="height: 62px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font: 650 13px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"></path><path d="M3 10h18"></path><path d="M16 19h6"></path><path d="M19 16v6"></path></svg>În calendar</button>
+<button type="button" class="press" style="height: 62px; border: 1px solid var(--line); border-radius: 16px; background: var(--s1); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font: 650 13px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="m8.59 13.51 6.83 3.98"></path><path d="m15.41 6.51-6.82 3.98"></path></svg>Trimite gășcii</button>
+</div>
+<p style="margin: 4px 0 0; display: flex; align-items: center; gap: 8px; font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink3)"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"></path><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"></path></svg>Îți amintim cu 90 de minute înainte.</p>
+<button type="button" class="press" style="height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 14px; border: 1px dashed var(--line); border-radius: 14px; background: transparent; color: var(--ink2); font: 600 14px/1 'Instrument Sans', system-ui, sans-serif"><span>Dacă e plin: alternative la 5 minute</span><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+</div>
+
+
+<sc-if value="{{isSheet}}" hint-placeholder-val="{{ false }}">
+<div>
+<button type="button" class="scrim" aria-label="Închide" onClick="{{closeRes}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 10; padding: 0; border: 0; background: var(--scrim); cursor: pointer"></button>
+<section class="sheet" role="dialog" aria-modal="true" aria-labelledby="res-title" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 11; padding: 8px 20px 34px; border-radius: 28px 28px 0 0; background: var(--sheet, var(--s1)); display: flex; flex-direction: column">
+<span aria-hidden="true" style="align-self: center; width: 36px; height: 5px; border-radius: 3px; background: var(--line)"></span>
+<h2 id="res-title" style="margin: 16px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 26px; line-height: 1; font-weight: 770; font-stretch: 90%; letter-spacing: -0.02em">Rezervare la Pista 9</h2>
+<p style="margin: 8px 0 0; display: flex; align-items: center; gap: 6px; font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)"><svg viewBox="0 0 24 24" role="img" aria-label="Local verificat" style="display: inline-block; width: 15px; height: 15px; flex: none; vertical-align: -3px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" style="fill: #2F5BFF"></path><path d="m9 12 2 2 4-4" style="fill: none; stroke: #FFFFFF; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round"></path></svg>Local verificat. Rezervi direct din CeFaci.</p>
+<div style="margin-top: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="padding: 10px 12px; border-radius: 16px; background: var(--s2); display: flex; flex-direction: column; justify-content: center; gap: 6px">
+<span style="font: 600 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Când</span>
+<span style="font: 700 16px/1.1 'Instrument Sans', system-ui, sans-serif">Vineri, 2 oct.</span>
+</div>
+<div style="padding: 6px 6px 6px 12px; border-radius: 16px; background: var(--s2); display: flex; align-items: center; gap: 4px">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px"><span style="font: 600 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Persoane</span><span aria-live="polite" style="font: 700 16px/1.1 'Instrument Sans', system-ui, sans-serif">{{people}}</span></span>
+<button type="button" class="press" onClick="{{fewer}}" aria-label="Mai puține persoane" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 12px; background: var(--s1); color: var(--ink); display: flex; align-items: center; justify-content: center"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<button type="button" class="press" onClick="{{more}}" aria-label="Mai multe persoane" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 12px; background: var(--s1); color: var(--ink); display: flex; align-items: center; justify-content: center"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
+</div>
+</div>
+<p id="lbl-ora" style="margin: 16px 0 8px; font: 600 15px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Ora</p>
+<div role="group" aria-labelledby="lbl-ora" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{slots}}" as="t" hint-placeholder-count="4">
+<button type="button" class="{{t.cls}}" aria-pressed="{{t.on}}" disabled="{{t.full}}" onClick="{{t.pick}}"><span>{{t.label}}</span><span style="font: 600 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{t.sub}}</span></button>
+</sc-for>
+</div>
+<p style="margin: 14px 0 0; font: 500 13px/1.4 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Pe numele Cornel Adrian. Anulezi gratuit până vineri la 17:00, iar gașca vede rezervarea pe bilet.</p>
+<button type="button" class="press" onClick="{{sendRes}}" style="margin-top: 16px; height: 56px; border: 0; border-radius: 18px; background: var(--blue); color: #FFFFFF; font: 650 17px/1 'Instrument Sans', system-ui, sans-serif">Trimite rezervarea</button>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{celebrate}}" hint-placeholder-val="{{ false }}">
+<div class="cel" aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 30; background: rgba(8, 11, 30, 0.55); display: flex; align-items: center; justify-content: center">
+<span class="bigstamp" style="padding: 16px 26px 14px; border: 5px solid #FF4A2A; border-radius: 16px; background: #FFD43B; color: #D93A1C; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35)">
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: 0.08em">REZERVAT</span>
+<span style="font: 700 15px/1 'Instrument Sans', system-ui, sans-serif; letter-spacing: 0.03em">{{bigSub}}</span>
+</span>
+</div>
+</sc-if>
+<p role="status" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{srStatus}}</p>
+
+<sc-if value="{{qrShown}}" hint-placeholder-val="{{ false }}">
+<div>
+<button type="button" class="{{qrScrimCls}}" aria-label="Închide codul" onClick="{{closeQr}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 40; padding: 0; border: 0; background: rgba(8, 11, 30, 0.6); cursor: pointer"></button>
+<section class="{{qrCardCls}}" role="dialog" aria-modal="true" aria-labelledby="qr-title" style="position: absolute; left: 24px; right: 24px; top: 150px; z-index: 41; padding: 22px 20px 20px; border-radius: 28px; background: #FFFFFF; color: #0E1440; display: flex; flex-direction: column; align-items: center; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35)">
+<button type="button" class="press" onClick="{{closeQr}}" aria-label="Închide" style="position: absolute; right: 10px; top: 10px; width: 44px; height: 44px; border: 0; border-radius: 999px; background: #EEF0F6; color: #0E1440; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+<h2 id="qr-title" style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 26px; line-height: 1; font-weight: 770; font-stretch: 90%; letter-spacing: -0.02em">Arată codul la intrare</h2>
+<p style="margin: 8px 0 0; text-align: center; font: 500 14px/1.35 'Instrument Sans', system-ui, sans-serif; color: #454E7E">{{confLine}}</p>
+<div style="margin-top: 16px; padding: 10px; border-radius: 20px; border: 2px solid #0E1440">
+<svg viewBox="0 0 25 25" role="img" aria-label="Cod QR pentru rezervare" style="display: block; width: 200px; height: 200px; shape-rendering: crispEdges"><path d="{{qrPath}}" fill="#0E1440"></path></svg>
+</div>
+<div style="margin-top: 12px; width: 200px; height: 4px; border-radius: 99px; background: #E3E6EF; overflow: hidden"><span class="{{tickCls}}" style="display: block; height: 4px; border-radius: 99px; background: #2F5BFF"></span></div>
+<p style="margin: 14px 0 0; font: 500 13px/1 'Instrument Sans', system-ui, sans-serif; color: #454E7E">Sau spune codul</p>
+<p aria-live="polite" style="margin: 6px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1; font-weight: 780; letter-spacing: 0.12em; font-variant-numeric: tabular-nums">{{digits}}</p>
+<p style="margin: 12px 0 0; text-align: center; font: 500 13px/1.35 'Instrument Sans', system-ui, sans-serif; color: #454E7E">Codul se schimbă la câteva secunde, ca să nu poată fi copiat.</p>
+</section>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.qrTimer = null;
+    this.state = { res: 'none', people: 5, slot: '19:00', celebrate: false, stampDone: false, qr: 'closed', seed: 7 };
+  }
+  componentWillUnmount() {
+    this.timers.forEach((t) => clearTimeout(t));
+    clearInterval(this.qrTimer);
+  }
+  later(fn, ms) {
+    this.timers.push(setTimeout(fn, ms));
+  }
+  makeQr(seed0) {
+    let seed = seed0;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const finders = [[0, 0], [14, 0], [0, 14]];
+    let d = '';
+    for (let y = 0; y < 21; y += 1) {
+      for (let x = 0; x < 21; x += 1) {
+        let on;
+        const f = finders.find(([fx, fy]) => x >= fx && x < fx + 7 && y >= fy && y < fy + 7);
+        if (f) {
+          const dx = x - f[0];
+          const dy = y - f[1];
+          on = dx === 0 || dx === 6 || dy === 0 || dy === 6 || (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4);
+        } else if (finders.some(([fx, fy]) => x >= fx - 1 && x <= fx + 7 && y >= fy - 1 && y <= fy + 7)) {
+          on = false;
+        } else if (y === 6) {
+          on = x % 2 === 0;
+        } else if (x === 6) {
+          on = y % 2 === 0;
+        } else {
+          on = rnd() > 0.5;
+        }
+        if (on) d += 'M' + (x + 2) + ' ' + (y + 2) + 'h1v1h-1z';
+      }
+    }
+    return d;
+  }
+  digitsFor(seed) {
+    const n = String((seed * 7919 + 482915) % 1000000).padStart(6, '0');
+    return n.slice(0, 3) + ' ' + n.slice(3);
+  }
+  send() {
+    this.setState({ res: 'pending' });
+    this.later(() => this.setState({ res: 'confirmed', celebrate: true, stampDone: false }), 1800);
+    this.later(() => this.setState({ celebrate: false, stampDone: true }), 1800 + 1800);
+  }
+  openQr() {
+    if (this.state.qr !== 'closed') return;
+    this.setState({ qr: 'open' });
+    clearInterval(this.qrTimer);
+    this.qrTimer = setInterval(() => this.setState({ seed: this.state.seed + 1 }), 6000);
+  }
+  closeQr() {
+    if (this.state.qr !== 'open') return;
+    clearInterval(this.qrTimer);
+    this.setState({ qr: 'closing' });
+    this.later(() => this.setState({ qr: 'closed' }), 170);
+  }
+  renderVals() {
+    const theme = this.props.theme ?? 'zi';
+    const s = this.state;
+    const slots = [['18:30', false], ['19:00', false], ['19:30', false], ['20:00', true]];
+    const dots = { none: '#D93A1C', sheet: '#D93A1C', pending: '#8A6A00', confirmed: '#2F5BFF' };
+    const texts = { none: 'Încă nefăcută', sheet: 'Încă nefăcută', pending: 'În așteptare', confirmed: 'Confirmată' };
+    const confirmed = s.res === 'confirmed';
+    const closing = s.qr === 'closing';
+    return {
+      themeClass: ({ zi: 'light day', noapte: 'graphite', luminos: 'light day', 'hârtie': 'light day', grafit: 'graphite' })[theme] ?? 'light day',
+      isNone: s.res === 'none' || s.res === 'sheet',
+      isSheet: s.res === 'sheet',
+      isPending: s.res === 'pending',
+      isConfirmed: confirmed,
+      celebrate: confirmed && s.celebrate,
+      showSmallStamp: confirmed && s.stampDone,
+      resDot: dots[s.res],
+      resText: texts[s.res],
+      people: s.people + ' persoane',
+      fewer: () => this.setState({ people: Math.max(2, this.state.people - 1) }),
+      more: () => this.setState({ people: Math.min(8, this.state.people + 1) }),
+      slots: slots.map(([label, full]) => ({
+        label,
+        full,
+        sub: full ? 'plin' : 'liber',
+        on: s.slot === label,
+        cls: s.slot === label ? 'slot on' : 'slot',
+        pick: () => { if (!full) this.setState({ slot: label }); }
+      })),
+      openRes: () => this.setState({ res: 'sheet' }),
+      closeRes: () => this.setState({ res: 'none' }),
+      sendRes: () => this.send(),
+      cancel: () => { clearInterval(this.qrTimer); this.setState({ res: 'none', celebrate: false, stampDone: false, qr: 'closed' }); },
+      confText: 'Vineri, ' + s.slot + ', ' + s.people + ' persoane',
+      confLine: 'Pista 9, vineri, ' + s.slot + ', ' + s.people + ' persoane',
+      stampSub: 'vineri, ' + s.slot,
+      bigSub: 'Pista 9, vineri, ' + s.slot,
+      srStatus: confirmed ? 'Rezervarea e confirmată. Când ajungi, scanează codul CeFaci al localului.' : '',
+      qrShown: s.qr !== 'closed',
+      qrCardCls: closing ? 'qrout' : 'qrin',
+      qrScrimCls: closing ? 'fadeout2' : 'fadein2',
+      openQr: () => this.openQr(),
+      closeQr: () => this.closeQr(),
+      qrPath: this.makeQr(s.seed),
+      digits: this.digitsFor(s.seed),
+      tickCls: s.seed % 2 === 0 ? 'tick' : 'tick2'
+    };
+  }
+}
+</script>
+</body>
+</html>

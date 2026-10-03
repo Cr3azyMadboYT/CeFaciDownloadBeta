@@ -1,0 +1,162 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-09-29T08:05:00Z"
+  },
+  "title": "CeFaci Business — panoul localurilor",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Demo.dc.html": {
+      "x": 0,
+      "y": -1500,
+      "w": 1440,
+      "h": 900,
+      "title": "Demo conectat (pentru video)",
+      "is_interactive": true
+    },
+    "Intrare.dc.html": {
+      "x": 1520,
+      "y": -1500,
+      "w": 390,
+      "h": 844,
+      "title": "Intrarea în aplicație: Business sau Angajat",
+      "is_interactive": true
+    },
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Azi",
+      "is_interactive": true
+    },
+    "Rezervari.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Rezervări",
+      "is_interactive": true
+    },
+    "Scanner.dc.html": {
+      "x": 3040,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Scanner (telefonul personalului)",
+      "is_interactive": true
+    },
+    "Oferte.dc.html": {
+      "x": 0,
+      "y": 1400,
+      "w": 1440,
+      "h": 900,
+      "title": "Oferte și Live Drops",
+      "is_interactive": true
+    },
+    "Evenimente.dc.html": {
+      "x": 1520,
+      "y": 1400,
+      "w": 1440,
+      "h": 900,
+      "title": "Evenimente și bilete",
+      "is_interactive": true
+    },
+    "Statistici.dc.html": {
+      "x": 0,
+      "y": 2700,
+      "w": 1440,
+      "h": 900,
+      "title": "Statistici",
+      "is_interactive": true
+    },
+    "Profil.dc.html": {
+      "x": 1520,
+      "y": 2700,
+      "w": 1440,
+      "h": 900,
+      "title": "Profilul localului",
+      "is_interactive": true
+    },
+    "Echipa.dc.html": {
+      "x": 3040,
+      "y": 2700,
+      "w": 1440,
+      "h": 900,
+      "title": "Echipă și acces",
+      "is_interactive": true
+    },
+    "Plati.dc.html": {
+      "x": 4560,
+      "y": 2700,
+      "w": 1440,
+      "h": 900,
+      "title": "Plăți și comisioane",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Demo.dc.html",
+    "Intrare.dc.html",
+    "Main.dc.html",
+    "Rezervari.dc.html",
+    "Scanner.dc.html",
+    "Oferte.dc.html",
+    "Evenimente.dc.html",
+    "Statistici.dc.html",
+    "Profil.dc.html",
+    "Echipa.dc.html",
+    "Plati.dc.html"
+  ],
+  "notes": {
+    "row1": {
+      "x": 0,
+      "y": -300,
+      "text": "Ziua localului",
+      "kind": "title1",
+      "maxW": 3430
+    },
+    "row2": {
+      "x": 0,
+      "y": 1100,
+      "text": "Oferte, Live Drops și bilete",
+      "kind": "title1",
+      "maxW": 2960
+    },
+    "row3": {
+      "x": 0,
+      "y": 2400,
+      "text": "Cum merge localul",
+      "kind": "title1",
+      "maxW": 6000
+    },
+    "howto": {
+      "x": 3040,
+      "y": 1400,
+      "w": 380,
+      "text": "CeFaci Business: panoul în care un local partener își vede seara, confirmă rezervări, pune oferte și Live Drops, vinde bilete la evenimente și își vede statisticile. Apasă Play pe orice ecran; meniul din stânga te duce între ele. Clienții se anunță singuri: scanează codul CeFaci al localului (unul singur, la bar sau la intrare; îl găsești în Profilul localului) și la plecare pun poza bonului fiscal. Scannerul personalului rămâne opțional. Reguli: ofertele nu urcă localul în recomandări, CeFaci nu atinge plata la masă, personalul vede doar numele și câte persoane vin. Localul din demo e Pista 9; oamenii și cifrele sunt inventate.",
+      "fill": "blue",
+      "size": "m"
+    },
+    "row0": {
+      "x": 0,
+      "y": -1800,
+      "text": "Demo: panoul cap-coadă și intrarea în aplicație",
+      "kind": "title1",
+      "maxW": 1910
+    },
+    "demohow": {
+      "x": 1990,
+      "y": -1500,
+      "w": 400,
+      "text": "Panoul (stânga): pornește cu turul lui Bilu, biletul-mascotă (la Echipă apeși tu; îl revezi din butonul cu Bilu, jos în meniu). Apoi totul e legat. Ceasul merge, la ~24 s intră o cerere nouă, iar la ~46 s Denisa cere acces în aplicație, deși nu e în tură. Încearcă: confirmă o cerere · scanează din Scannerul din meniu · oprește și repornește Live Drop-ul · anulează turneul · în Echipă, generează un cod, pune-l pe Mihnea pe pauză sau scoate-l, apoi deschide scannerul · în Oferte, setează reducerea Plus · scanează-o pe Ana V. (client Plus), apoi din scanner „Închide o masă” (opțional) și vezi comisionul în Plăți și comisioane, unde mesele sunt „Confirmat cu bonul” · în Profilul localului e codul CeFaci de pus la bar.\n\nTelefonul (dreapta): prima deschidere a aplicației. Business: intri în cont, revendici un local existent (CUI + cod la telefonul localului), deschizi o dispută sau înscrii unul nou, apoi aștepți verificarea. Angajat: scrii codul de la șef (P9-4K7M e Scanare, P9-H2WD e Recepție) și Bilu îți face un tur de 15 secunde prin aplicația de angajat, cu pauză și cerere de acces în afara turei.",
+      "fill": "yellow",
+      "size": "m"
+    }
+  },
+  "designSystems": []
+}

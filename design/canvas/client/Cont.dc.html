@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci — Cont nou și preferințe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#EEF1FB;--s1:#FFFFFF;--s2:#E6EAF8;--s3:#D3D9EF;--line:#D3D9EF;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#28282F;--s3:#35353D;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16);--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18)}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible,.dark :focus-visible{outline-color:#FFD43B}
+.col{display:flex;flex-direction:column}
+.scrn{position:absolute;left:0;top:0;width:390px;height:844px;display:flex;flex-direction:column;background:var(--bg)}
+.top{flex:none;height:96px;padding:44px 16px 0;display:flex;align-items:center;gap:12px}
+.back{width:44px;height:44px;flex:none;border:0;border-radius:99px;background:var(--s1);color:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px var(--line)}
+.prog{flex:1 1 auto;height:6px;border-radius:99px;background:var(--s3);overflow:hidden}
+.prog span{display:block;height:100%;border-radius:99px;background:var(--blue);transition:width .5s cubic-bezier(.23,1,.32,1)}
+.body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:4px 20px 20px;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.foot{flex:none;padding:12px 20px 30px;background:var(--bg);border-top:1px solid var(--line)}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:30px;line-height:1.02;font-weight:780;font-stretch:92%;letter-spacing:-.02em}
+.lead{margin:0;font:500 15px/1.45 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.num{font-variant-numeric:tabular-nums}
+.big{width:100%;height:56px;border:0;border-radius:18px;background:var(--blue);color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font:650 17px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.big:disabled{background:var(--s3);color:var(--ink2);cursor:default}
+.btnq{height:44px;padding:0 10px;border:0;background:transparent;color:var(--blue-ink);font:650 15px/1 'Instrument Sans',system-ui,sans-serif}
+.chip{height:42px;padding:0 15px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);font:600 14px/1 'Instrument Sans',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.seg{flex:1 1 0;min-height:48px;padding:6px 8px;border:1px solid var(--line);border-radius:14px;background:var(--s1);color:var(--ink);font:650 14px/1.2 'Instrument Sans',system-ui,sans-serif}
+.seg.on{border:2px solid var(--blue);background:var(--blue-soft);color:var(--blue-ink)}
+.field{min-height:54px;display:flex;align-items:center;gap:8px;padding:0 14px;border-radius:14px;background:var(--s1);border:1.5px solid var(--line);transition:border-color .15s ease,box-shadow .15s ease}
+.field:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.field input{flex:1 1 auto;min-width:0;height:50px;border:0;outline:none;background:transparent;color:var(--ink);font:600 17px/1.3 'Instrument Sans',system-ui,sans-serif}
+.field input::placeholder{color:var(--ink3)}
+.field.code input{font:700 26px/1 'Instrument Sans',system-ui,sans-serif;letter-spacing:.3em;font-variant-numeric:tabular-nums}
+.ok{padding:10px 12px;border-radius:12px;background:var(--green-soft);color:var(--green-ink);font:600 14px/1.35 'Instrument Sans',system-ui,sans-serif}
+.err{padding:10px 12px;border-radius:12px;background:var(--coral-soft);color:var(--coral-ink);font:600 14px/1.35 'Instrument Sans',system-ui,sans-serif}
+.demo{padding:10px 12px;border-radius:14px;border:1.5px dashed var(--line)}
+.dchip{height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--s2);color:var(--ink);font:600 13px/1 'Instrument Sans',system-ui,sans-serif}
+.say{display:flex;align-items:flex-end;gap:8px;margin-bottom:14px}
+.bilu-mini{flex:none;position:relative}
+.bilu-mini .bilu-svg{display:block;width:100%;height:auto;overflow:visible}
+.sbub{position:relative;margin:0 0 10px;padding:12px 14px;border-radius:18px 18px 18px 6px;background:var(--s1);border:1px solid var(--line);font:600 15px/1.4 'Instrument Sans',system-ui,sans-serif;animation:sb .45s cubic-bezier(.23,1,.32,1) both}
+@keyframes sb{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tile{position:relative;min-height:96px;padding:12px;border:2px solid transparent;border-radius:20px;color:#0E1440;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;text-align:left;font:750 15px/1.15 'Instrument Sans',system-ui,sans-serif;overflow:hidden}
+.tile.on{border-color:#0E1440;box-shadow:0 0 0 3px #FFD43B}
+.tile .tick{position:absolute;right:10px;top:10px;width:24px;height:24px;border-radius:99px;background:#0E1440;color:#FFD43B;display:flex;align-items:center;justify-content:center;animation:tick .3s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes tick{from{transform:scale(0)}to{transform:none}}
+.pcard{position:relative;height:340px;border-radius:26px;overflow:hidden;color:#FFFFFF;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;box-shadow:0 16px 36px rgba(14,20,64,.25);animation:pc .45s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pc{from{opacity:0;transform:translateY(20px) rotate(-2deg) scale(.96)}to{opacity:1;transform:none}}
+.pcard.a{animation-name:pc}.pcard.b{animation-name:pc2}
+@keyframes pc2{from{opacity:0;transform:translateY(20px) rotate(2deg) scale(.96)}to{opacity:1;transform:none}}
+.vote{flex:1 1 0;height:60px;border:0;border-radius:20px;display:flex;align-items:center;justify-content:center;gap:8px;font:750 16px/1 'Instrument Sans',system-ui,sans-serif}
+.dark{background:#0E1440;color:#FFFFFF}
+.sso{width:100%;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:10px;font:650 16px/1 'Instrument Sans',system-ui,sans-serif}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.scr{animation:scr .32s cubic-bezier(.23,1,.32,1) both}
+@keyframes scr{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.sumchip{height:32px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.12);color:#FFFFFF;display:inline-flex;align-items:center;font:650 13px/1 'Instrument Sans',system-ui,sans-serif}
+.bilu{position:relative;filter:drop-shadow(0 8px 16px rgba(0,0,0,.3));transition:left .6s cubic-bezier(.32,.72,0,1),top .6s cubic-bezier(.32,.72,0,1),width .6s cubic-bezier(.32,.72,0,1);pointer-events:none}
+.bilu-svg{display:block;width:100%;height:auto;overflow:visible}
+.bilu .bl-body{animation:blbob 2.6s ease-in-out infinite}
+.bilu .bl-shadow{transform-origin:60px 137px;animation:blshadow 2.6s ease-in-out infinite}
+.bilu .bl-eyes{transform-origin:60px 40px;animation:blblink 4.6s infinite}
+.bilu .bl-armL{transform-origin:24px 88px}
+.bilu .bl-armR{transform-origin:96px 88px}
+.bilu.m-hi .bl-armR{animation:blwave .5s ease-in-out infinite alternate}
+.bilu.m-up .bl-armR,.bilu.m-down .bl-armR,.bilu.m-left .bl-armL{animation:blnudge 1.1s ease-in-out infinite alternate}
+.bilu.m-wink .bl-armR{animation:blnudge 1.4s ease-in-out infinite alternate}
+.bilu.m-yay .bl-body{animation:bljump .62s cubic-bezier(.3,.7,.4,1) infinite}
+.bilu.m-yay .bl-shadow{animation:blshadowj .62s cubic-bezier(.3,.7,.4,1) infinite}
+.bilu.m-yay .bl-armL{animation:blwave .31s ease-in-out infinite alternate-reverse}
+.bilu.m-yay .bl-armR{animation:blwave .31s ease-in-out infinite alternate}
+.bilu.m-magic .bl-armR,.bilu.m-magic .bl-wand{transform-origin:96px 88px;animation:blwand .32s ease-in-out infinite alternate}
+@keyframes blwand{from{transform:rotate(-14deg)}to{transform:rotate(10deg)}}
+.bilu.m-oops .bl-body{animation:blshake .5s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes blbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes blshadow{0%,100%{transform:scale(1)}50%{transform:scale(.88)}}
+@keyframes blblink{0%,91%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}97%{transform:scaleY(1)}}
+@keyframes blwave{from{transform:rotate(-12deg)}to{transform:rotate(14deg)}}
+@keyframes blnudge{from{transform:rotate(-4deg)}to{transform:rotate(6deg)}}
+@keyframes bljump{0%,100%{transform:translateY(0)}45%{transform:translateY(-16px)}}
+@keyframes blshadowj{0%,100%{transform:scale(1)}45%{transform:scale(.6)}}
+@keyframes blshake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}
+.tut{position:absolute;left:0;top:0;right:0;bottom:0;z-index:90}
+.tspot{position:absolute;z-index:1;pointer-events:none;transition:left .6s cubic-bezier(.32,.72,0,1),top .6s cubic-bezier(.32,.72,0,1),width .6s cubic-bezier(.32,.72,0,1),height .6s cubic-bezier(.32,.72,0,1),border-radius .6s ease,box-shadow .5s ease}
+.tspot.ring::after{content:'';position:absolute;inset:-7px;border-radius:inherit;border:3px solid #FFD43B;animation:tring 1.5s ease-out infinite}
+@keyframes tring{0%{opacity:.95;transform:scale(.97)}100%{opacity:0;transform:scale(1.08)}}
+.tcatch{position:absolute;left:0;top:0;right:0;bottom:0;z-index:2;padding:0;border:0;background:transparent;cursor:pointer}
+.thot{position:absolute;z-index:3;padding:0;border:0;background:transparent;cursor:pointer}
+.tbub{position:absolute;z-index:4;pointer-events:none;padding:16px 18px 14px;border-radius:22px;background:#FFFFFF;color:#0E1440;box-shadow:0 18px 40px rgba(0,0,0,.35);transition:left .6s cubic-bezier(.32,.72,0,1),top .6s cubic-bezier(.32,.72,0,1),width .6s cubic-bezier(.32,.72,0,1)}
+.tbub .ttext{margin:0;font:600 16px/1.42 'Instrument Sans',system-ui,sans-serif}
+.tbub .ttext b{font-weight:800;color:#2447E0}
+.tbub.sa .ttext{animation:tsayA .45s cubic-bezier(.23,1,.32,1) both}
+.tbub.sb .ttext{animation:tsayB .45s cubic-bezier(.23,1,.32,1) both}
+@keyframes tsayA{from{opacity:0;transform:translateY(6px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+@keyframes tsayB{from{opacity:0;transform:translateY(6px);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
+.tfoot{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tdots{display:flex;gap:5px}
+.tdots span{width:7px;height:7px;border-radius:99px;background:#D2D7E3;transition:width .3s ease,background-color .3s ease}
+.tdots span.on{width:20px;background:#2F5BFF}
+.thint{font:650 12px/1 'Instrument Sans',system-ui,sans-serif;color:#5A6390}
+.tskip{position:absolute;z-index:5;height:40px;padding:0 16px;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:rgba(14,20,64,.55);color:#FFFFFF;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;cursor:pointer}
+@media (prefers-reduced-motion:reduce){.bilu *,.tspot,.tspot::after,.tbub,.tbub *{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink)">
+
+<sc-if value="{{isStart}}" hint-placeholder-val="{{ true }}">
+<section class="scrn dark scr" aria-labelledby="st-t">
+<div style="padding: 60px 24px 0; display: flex; align-items: center; gap: 10px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 32px; height: 32px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 25px; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<button type="button" class="press" onClick="{{toggleTheme}}" aria-label="{{themeLabel}}" style="margin-left: auto; width: 44px; height: 44px; border: 0; border-radius: 99px; background: rgba(255, 255, 255, 0.08); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 16px; height: 16px"><path d="{{themeIcon}}"></path></svg></button>
+</div>
+<div class="{{startBl.cls}}" aria-hidden="true" style="width: 170px; margin: 40px auto 0"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{startBl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{startBl.hLx}}" cy="{{startBl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{startBl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{startBl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{startBl.hRx}}" cy="{{startBl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{startBl.brow}}"></path><g class="bl-eyes"><g opacity="{{startBl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{startBl.pLx}}" cy="{{startBl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{startBl.gLx}}" cy="{{startBl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{startBl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{startBl.pRx}}" cy="{{startBl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{startBl.gRx}}" cy="{{startBl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{startBl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{startBl.mouth}}" fill="#0E1440"></path><path d="{{startBl.tongue}}" fill="#FF6A4D"></path></g></svg></div>
+<h1 id="st-t" style="margin: 18px 24px 0; text-align: center; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 38px; line-height: 1; font-weight: 800; font-stretch: 90%; letter-spacing: -0.03em">Nu mai stai acasă<br>fără să vrei.</h1>
+<p style="margin: 12px 32px 0; text-align: center; font: 500 16px/1.45 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.</p>
+<div class="col" style="margin: auto 20px 32px; gap: 10px">
+<button type="button" class="press sso" onClick="{{goPhone}}" style="border: 0; background: #FFD43B; color: #0E1440"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2"></path></svg>Continuă cu telefonul</button>
+<button type="button" class="press sso" onClick="{{goSso}}" style="border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.06); color: #FFFFFF">Continuă cu Google</button>
+<button type="button" class="press sso" onClick="{{goSso}}" style="border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.06); color: #FFFFFF">Continuă cu Apple</button>
+<p style="margin: 6px 0 0; text-align: center; font: 500 12px/1.4 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Ai deja cont? <span style="color: #FFD43B; font-weight: 700">Intră</span> · Continuând, accepți Termenii și Politica de confidențialitate.</p>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isPhone}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="ph-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="prog" aria-hidden="true"><span style="width: {{progW}}"></span></div><span class="lbl num" style="flex: none">{{progText}}</span></div>
+<div class="body">
+<div class="say"><div class="bilu-mini {{bl.cls}}" aria-hidden="true" style="width: 70px"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hLx}}" cy="{{bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{bl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hRx}}" cy="{{bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{bl.brow}}"></path><g class="bl-eyes"><g opacity="{{bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pLx}}" cy="{{bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gLx}}" cy="{{bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pRx}}" cy="{{bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gRx}}" cy="{{bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{bl.mouth}}" fill="#0E1440"></path><path d="{{bl.tongue}}" fill="#FF6A4D"></path></g></svg></div><p class="sbub">{{say}}</p></div>
+<h1 id="ph-t" class="h1">Numărul tău</h1>
+<div class="col" style="margin-top: 18px; gap: 12px">
+<div class="field"><span style="font: 650 17px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">+40</span><label for="ph" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Numărul de telefon</label><input id="ph" type="tel" autocomplete="tel-national" value="{{phone}}" onChange="{{onPhone}}" placeholder="7xx xxx xxx"></div>
+<sc-if value="{{codeOpen}}" hint-placeholder-val="{{ false }}">
+<div class="col pop" style="gap: 8px"><label for="cd" class="lbl">Codul din SMS</label><div class="field code"><input id="cd" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="{{code}}" onChange="{{onCode}}" placeholder="000000"></div>
+<sc-if value="{{codeBad}}" hint-placeholder-val="{{ false }}"><p class="err pop" role="alert" style="margin: 0">Codul nu e bun. Mai încearcă.</p></sc-if>
+<div class="demo"><p class="lbl">Demo · în SMS a venit codul 318642</p><button type="button" class="press dchip" onClick="{{codeDemo}}" style="margin-top: 8px">Scrie codul</button></div></div>
+</sc-if>
+</div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{phoneNext}}" disabled="{{phoneOff}}">{{phoneBtn}}</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isName}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="nm-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="prog" aria-hidden="true"><span style="width: {{progW}}"></span></div><span class="lbl num" style="flex: none">{{progText}}</span></div>
+<div class="body">
+<div class="say"><div class="bilu-mini {{bl.cls}}" aria-hidden="true" style="width: 70px"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hLx}}" cy="{{bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{bl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hRx}}" cy="{{bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{bl.brow}}"></path><g class="bl-eyes"><g opacity="{{bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pLx}}" cy="{{bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gLx}}" cy="{{bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pRx}}" cy="{{bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gRx}}" cy="{{bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{bl.mouth}}" fill="#0E1440"></path><path d="{{bl.tongue}}" fill="#FF6A4D"></path></g></svg></div><p class="sbub">{{say}}</p></div>
+<h1 id="nm-t" class="h1">Cum te cheamă?</h1>
+<div class="col" style="margin-top: 18px; gap: 14px">
+<div class="col" style="gap: 6px"><label for="fn" class="lbl">Prenumele</label><div class="field"><input id="fn" type="text" autocomplete="given-name" value="{{first}}" onChange="{{onFirst}}" placeholder="ex: Cornel"></div><span class="muted">Prietenii îți văd prenumele și inițiala numelui.</span></div>
+<div class="col" style="gap: 6px"><label for="un" class="lbl">Username</label><div class="field"><span style="font: 650 17px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink3)">@</span><input id="un" type="text" autocomplete="username" value="{{user}}" onChange="{{onUser}}" placeholder="cum te găsesc prietenii"></div>
+<sc-if value="{{userTaken}}" hint-placeholder-val="{{ false }}"><div class="col pop" style="gap: 8px"><p class="err" style="margin: 0">@{{user}} e deja luat. Încearcă una din astea:</p><div style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{userSugg}}" as="u" hint-placeholder-count="3"><button type="button" class="press dchip" onClick="{{u.pick}}">@{{u.label}}</button></sc-for></div></div></sc-if>
+<sc-if value="{{userOk}}" hint-placeholder-val="{{ false }}"><p class="ok pop" style="margin: 0">@{{user}} e liber.</p></sc-if>
+</div>
+<div class="col" style="gap: 8px"><p id="yr" class="lbl">Anul nașterii</p><div role="group" aria-labelledby="yr" style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{years}}" as="y" hint-placeholder-count="5"><button type="button" class="{{y.cls}}" aria-pressed="{{y.on}}" onClick="{{y.pick}}">{{y.label}}</button></sc-for></div><span class="muted">{{ageNote}}</span></div>
+</div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{next}}" disabled="{{nameOff}}">Mai departe</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isZone}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="zn-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="prog" aria-hidden="true"><span style="width: {{progW}}"></span></div><span class="lbl num" style="flex: none">{{progText}}</span></div>
+<div class="body">
+<div class="say"><div class="bilu-mini {{bl.cls}}" aria-hidden="true" style="width: 70px"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hLx}}" cy="{{bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{bl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hRx}}" cy="{{bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{bl.brow}}"></path><g class="bl-eyes"><g opacity="{{bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pLx}}" cy="{{bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gLx}}" cy="{{bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pRx}}" cy="{{bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gRx}}" cy="{{bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{bl.mouth}}" fill="#0E1440"></path><path d="{{bl.tongue}}" fill="#FF6A4D"></path></g></svg></div><p class="sbub">{{say}}</p></div>
+<h1 id="zn-t" class="h1">Unde ieși de obicei?</h1>
+<div class="col" style="margin-top: 16px; gap: 16px">
+<div style="padding: 14px; border-radius: 18px; background: var(--s1); border: 1px solid var(--line); display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #2F5BFF; color: #FFD43B; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg></span><span class="col" style="flex: 1 1 auto; gap: 3px"><span style="font: 700 17px/1.1 'Instrument Sans', system-ui, sans-serif">Buftea</span><span class="muted">Găsit după locație · poți schimba oricând</span></span></div>
+<div class="col" style="gap: 8px"><p id="dist" class="lbl">Cât de departe mergi?</p><div role="group" aria-labelledby="dist" style="display: flex; gap: 8px"><sc-for list="{{dists}}" as="o" hint-placeholder-count="3"><button type="button" class="{{o.cls}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
+<div class="col" style="gap: 8px"><p id="mov" class="lbl">Cum ajungi? <span style="font-weight: 500; color: var(--ink3)">Oricâte</span></p><div role="group" aria-labelledby="mov" style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{moves}}" as="o" hint-placeholder-count="4"><button type="button" class="{{o.cls}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
+</div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{next}}" disabled="{{zoneOff}}">Mai departe</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isLikes}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="lk-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="prog" aria-hidden="true"><span style="width: {{progW}}"></span></div><span class="lbl num" style="flex: none">{{progText}}</span></div>
+<div class="body">
+<div class="say"><div class="bilu-mini {{bl.cls}}" aria-hidden="true" style="width: 70px"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hLx}}" cy="{{bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{bl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hRx}}" cy="{{bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{bl.brow}}"></path><g class="bl-eyes"><g opacity="{{bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pLx}}" cy="{{bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gLx}}" cy="{{bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pRx}}" cy="{{bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gRx}}" cy="{{bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{bl.mouth}}" fill="#0E1440"></path><path d="{{bl.tongue}}" fill="#FF6A4D"></path></g></svg></div><p class="sbub">{{say}}</p></div>
+<h1 id="lk-t" class="h1">Ce-ți place?</h1>
+<p class="lead" style="margin-top: 6px">{{likesLead}}</p>
+<div role="group" aria-labelledby="lk-t" style="margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px"><sc-for list="{{likes}}" as="l" hint-placeholder-count="12"><button type="button" class="{{l.cls}}" aria-pressed="{{l.on}}" onClick="{{l.pick}}" style="background: {{l.bg}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width: 28px; height: 28px"><path d="{{l.icon}}"></path></svg><span>{{l.label}}</span><sc-if value="{{l.on}}" hint-placeholder-val="{{ false }}"><span class="tick" aria-hidden="true"><svg class="i" viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke-width: 3"><path d="M20 6 9 17l-5-5"></path></svg></span></sc-if></button></sc-for></div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{next}}" disabled="{{likesOff}}">{{likesBtn}}</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isStyle}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="sy-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="prog" aria-hidden="true"><span style="width: {{progW}}"></span></div><span class="lbl num" style="flex: none">{{progText}}</span></div>
+<div class="body">
+<div class="say"><div class="bilu-mini {{bl.cls}}" aria-hidden="true" style="width: 70px"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hLx}}" cy="{{bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{bl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hRx}}" cy="{{bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{bl.brow}}"></path><g class="bl-eyes"><g opacity="{{bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pLx}}" cy="{{bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gLx}}" cy="{{bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pRx}}" cy="{{bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gRx}}" cy="{{bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{bl.mouth}}" fill="#0E1440"></path><path d="{{bl.tongue}}" fill="#FF6A4D"></path></g></svg></div><p class="sbub">{{say}}</p></div>
+<h1 id="sy-t" class="h1">Cum ieși tu?</h1>
+<div class="col" style="margin-top: 16px; gap: 18px">
+<sc-for list="{{styleRows}}" as="r" hint-placeholder-count="4"><div class="col" style="gap: 8px"><p id="{{r.id}}" class="lbl">{{r.label}}</p><div role="group" aria-labelledby="{{r.id}}" style="display: flex; gap: 6px"><sc-for list="{{r.opts}}" as="o" hint-placeholder-count="4"><button type="button" class="{{o.cls}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div></sc-for>
+</div>
+</div>
+<div class="foot"><button type="button" class="press big" onClick="{{next}}" disabled="{{styleOff}}">Mai departe</button></div>
+</section>
+</sc-if>
+
+<sc-if value="{{isPicks}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="pk-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="prog" aria-hidden="true"><span style="width: {{progW}}"></span></div><span class="lbl num" style="flex: none">{{progText}}</span></div>
+<div class="body">
+<div class="say"><div class="bilu-mini {{bl.cls}}" aria-hidden="true" style="width: 70px"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hLx}}" cy="{{bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{bl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hRx}}" cy="{{bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{bl.brow}}"></path><g class="bl-eyes"><g opacity="{{bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pLx}}" cy="{{bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gLx}}" cy="{{bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pRx}}" cy="{{bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gRx}}" cy="{{bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{bl.mouth}}" fill="#0E1440"></path><path d="{{bl.tongue}}" fill="#FF6A4D"></path></g></svg></div><p class="sbub">{{say}}</p></div>
+<h1 id="pk-t" class="h1" style="font-size: 26px">Ai merge aici?</h1>
+<p class="muted" style="margin: 4px 0 12px">{{pickCount}}</p>
+<article class="{{card.cls}}" aria-live="polite" style="background: {{card.bg}}">
+<span aria-hidden="true" style="position: absolute; right: -40px; top: -40px; width: 180px; height: 180px; border-radius: 99px; background: {{card.dot}}; opacity: 0.55"></span>
+<span aria-hidden="true" style="position: absolute; left: 24px; top: 26px; width: 74px; height: 74px; border-radius: 22px; background: rgba(255, 255, 255, 0.16); display: flex; align-items: center; justify-content: center; color: {{card.fg}}"><svg class="i" viewBox="0 0 24 24" style="width: 38px; height: 38px"><path d="{{card.icon}}"></path></svg></span>
+<span style="position: relative; align-self: flex-start; height: 26px; padding: 0 10px; border-radius: 999px; background: rgba(14, 20, 64, 0.55); display: flex; align-items: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">{{card.tag}}</span>
+<h2 style="position: relative; margin: 10px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1; font-weight: 800; color: {{card.fg}}">{{card.title}}</h2>
+<p style="position: relative; margin: 6px 0 0; font: 600 15px/1.35 'Instrument Sans', system-ui, sans-serif; color: {{card.fg}}; opacity: 0.9">{{card.sub}}</p>
+</article>
+</div>
+<div class="foot" style="display: flex; gap: 10px">
+<button type="button" class="press vote" onClick="{{voteNo}}" style="background: var(--s1); color: var(--ink); box-shadow: 0 0 0 1px var(--line)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>Nu prea</button>
+<button type="button" class="press vote" onClick="{{voteMaybe}}" style="flex: 0.8 1 0; background: var(--s2); color: var(--ink)">Poate</button>
+<button type="button" class="press vote" onClick="{{voteYes}}" style="background: #FFD43B; color: #0E1440"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Da!</button>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{isFriends}}" hint-placeholder-val="{{ false }}">
+<section class="scrn scr" aria-labelledby="fr-t">
+<div class="top"><button type="button" class="press back" onClick="{{back}}" aria-label="Înapoi"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button><div class="prog" aria-hidden="true"><span style="width: {{progW}}"></span></div><span class="lbl num" style="flex: none">{{progText}}</span></div>
+<div class="body">
+<div class="say"><div class="bilu-mini {{bl.cls}}" aria-hidden="true" style="width: 70px"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{bl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hLx}}" cy="{{bl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{bl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{bl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{bl.hRx}}" cy="{{bl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{bl.brow}}"></path><g class="bl-eyes"><g opacity="{{bl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pLx}}" cy="{{bl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gLx}}" cy="{{bl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{bl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{bl.pRx}}" cy="{{bl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{bl.gRx}}" cy="{{bl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{bl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{bl.mouth}}" fill="#0E1440"></path><path d="{{bl.tongue}}" fill="#FF6A4D"></path></g></svg></div><p class="sbub">{{say}}</p></div>
+<h1 id="fr-t" class="h1">Cu cine ieși?</h1>
+<p class="lead" style="margin-top: 6px">Cu prietenii în aplicație votați împreună unde mergeți. Numerele din agendă le verificăm criptat și nu le păstrăm.</p>
+<sc-if value="{{friendsAsk}}" hint-placeholder-val="{{ true }}"><div class="col" style="margin-top: 18px; gap: 10px"><button type="button" class="press big" onClick="{{syncContacts}}">Caută-mi prietenii din agendă</button><button type="button" class="press btnq" onClick="{{next}}" style="align-self: center">Mai târziu</button></div></sc-if>
+<sc-if value="{{friendsFound}}" hint-placeholder-val="{{ false }}">
+<ul style="list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px"><sc-for list="{{found}}" as="f" hint-placeholder-count="4"><li class="pop" style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 18px; background: var(--s1); border: 1px solid var(--line); animation-delay: {{f.d}}"><span aria-hidden="true" style="width: 42px; height: 42px; flex: none; border-radius: 99px; background: {{f.bg}}; color: #0E1440; display: flex; align-items: center; justify-content: center; font: 700 15px/1 'Instrument Sans', system-ui, sans-serif">{{f.ini}}</span><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 3px"><span style="font: 650 15px/1.2 'Instrument Sans', system-ui, sans-serif">{{f.name}}</span><span class="muted">@{{f.user}}</span></span><button type="button" class="{{f.cls}}" onClick="{{f.add}}" style="height: 38px; padding: 0 14px">{{f.label}}</button></li></sc-for></ul>
+</sc-if>
+</div>
+<sc-if value="{{friendsFound}}" hint-placeholder-val="{{ false }}"><div class="foot"><button type="button" class="press big" onClick="{{next}}">Gata</button></div></sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{isDone}}" hint-placeholder-val="{{ false }}">
+<section class="scrn dark scr" aria-labelledby="dn-t">
+<div class="{{doneBl.cls}}" aria-hidden="true" style="width: 150px; margin: 70px auto 0"><svg class="bilu-svg" viewBox="0 0 120 144" aria-hidden="true"><ellipse class="bl-shadow" cx="60" cy="137" rx="28" ry="5" fill="rgba(0, 0, 0, 0.28)"></ellipse><g class="bl-body"><path d="M48 110L46 127M72 110L74 127" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440"></ellipse><g class="bl-armL"><path d="{{doneBl.armL}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{doneBl.hLx}}" cy="{{doneBl.hLy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><g class="bl-wand" opacity="{{doneBl.wand}}"><path d="M108 49L122 30" stroke="#0E1440" stroke-width="4.5" stroke-linecap="round"></path><path d="M125.0 15.0L127.0 20.2L132.6 20.5L128.2 24.1L129.7 29.5L125.0 26.4L120.3 29.5L121.8 24.1L117.4 20.5L123.0 20.2Z" fill="#FFFFFF" stroke="#0E1440" stroke-width="2.2" stroke-linejoin="round"></path></g><g class="bl-armR"><path d="{{doneBl.armR}}" fill="none" stroke="#0E1440" stroke-width="6" stroke-linecap="round"></path><circle cx="{{doneBl.hRx}}" cy="{{doneBl.hRy}}" r="6.5" fill="#FFD43B" stroke="#0E1440" stroke-width="3.5"></circle></g><path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke="#0E1440" stroke-width="4" stroke-linejoin="round"></path><path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" opacity="0.55"></path><path d="M33 70H87" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 6" opacity="0.35"></path><path d="M52 92l3 3 7-7" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"></path><ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" opacity="0.55"></ellipse><path d="M39 25Q46 20 53 25M67 25Q74 20 81 25" fill="none" stroke="#0E1440" stroke-width="3" stroke-linecap="round" opacity="{{doneBl.brow}}"></path><g class="bl-eyes"><g opacity="{{doneBl.eL}}"><ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{doneBl.pLx}}" cy="{{doneBl.pLy}}" r="5" fill="#0E1440"></circle><circle cx="{{doneBl.gLx}}" cy="{{doneBl.gLy}}" r="1.8" fill="#FFFFFF"></circle></g><g opacity="{{doneBl.eR}}"><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke="#0E1440" stroke-width="3"></ellipse><circle cx="{{doneBl.pRx}}" cy="{{doneBl.pRy}}" r="5" fill="#0E1440"></circle><circle cx="{{doneBl.gRx}}" cy="{{doneBl.gRy}}" r="1.8" fill="#FFFFFF"></circle></g></g><path d="{{doneBl.arcs}}" fill="none" stroke="#0E1440" stroke-width="3.5" stroke-linecap="round"></path><path d="{{doneBl.mouth}}" fill="#0E1440"></path><path d="{{doneBl.tongue}}" fill="#FF6A4D"></path></g></svg></div>
+<h1 id="dn-t" style="margin: 16px 24px 0; text-align: center; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 34px; line-height: 1.02; font-weight: 800; letter-spacing: -0.02em">{{doneTitle}}</h1>
+<p style="margin: 10px 30px 0; text-align: center; font: 500 15px/1.45 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">Cu cât ieși mai mult și îmi spui cum a fost, cu atât te nimeresc mai bine.</p>
+<div style="margin: 18px 24px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px"><sc-for list="{{summary}}" as="x" hint-placeholder-count="6"><span class="sumchip">{{x.t}}</span></sc-for></div>
+<p style="margin: 16px 30px 0; text-align: center; font: 500 12px/1.45 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Ce-mi spui folosesc doar ca să-ți recomand locuri. Nu vindem date și nu arătăm reclame. Schimbi oricând din Profil → Preferințe.</p>
+<div class="col" style="margin: auto 20px 32px; gap: 8px"><a class="press big" href="Demo.dc.html" style="background: #FFD43B; color: #0E1440">Intră în aplicație</a><button type="button" class="press btnq" onClick="{{restart}}" style="align-self: center; color: #FFFFFF">Ia-o de la capăt</button></div>
+</section>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":390,"height":844}}'>
+const BL_ARMS = {
+  rest: ['M24 88Q12 94 13 106', 13, 107, 'M96 88Q108 94 107 106', 107, 107],
+  hi: ['M24 88Q12 94 13 106', 13, 107, 'M96 86Q112 76 112 58', 112, 56],
+  up: ['M24 88Q12 94 13 106', 13, 107, 'M96 86Q110 72 108 50', 108, 48],
+  down: ['M24 88Q12 94 13 106', 13, 107, 'M96 90Q110 98 116 112', 117, 114],
+  left: ['M24 86Q8 80 2 66', 1, 64, 'M96 88Q108 94 107 106', 107, 107],
+  wink: ['M24 88Q12 94 13 106', 13, 107, 'M96 88Q112 84 110 68', 110, 66],
+  yay: ['M24 86Q8 74 10 54', 10, 52, 'M96 86Q112 74 110 54', 110, 52],
+  oops: ['M24 90Q10 76 30 60', 31, 58, 'M96 90Q110 76 90 60', 89, 58],
+  magic: ['M24 88Q12 94 13 106', 13, 107, 'M96 86Q110 72 108 50', 108, 48]
+};
+const BL_LOOK = { c: [0, 0], up: [0, -3.5], down: [0, 3.5], left: [-3.5, 0], right: [3.5, 0], ul: [-2.6, -2.6], ur: [2.6, -2.6], dl: [-2.6, 2.6], dr: [2.6, 2.6] };
+function biluPose(mood, look) {
+  const a = BL_ARMS[mood] || BL_ARMS.rest;
+  const l = BL_LOOK[look || 'c'] || BL_LOOK.c;
+  const open = 'M48 52Q60 70 72 52Z';
+  const smile = 'M50 54Q60 64 70 54Q60 59 50 54Z';
+  const p = {
+    armL: a[0], hLx: a[1], hLy: a[2], armR: a[3], hRx: a[4], hRy: a[5],
+    pLx: 46 + l[0], pLy: 41 + l[1], pRx: 74 + l[0], pRy: 41 + l[1],
+    gLx: 47.6 + l[0], gLy: 38.6 + l[1], gRx: 75.6 + l[0], gRy: 38.6 + l[1],
+    eL: 1, eR: 1, arcs: '', brow: 0, wand: 0, mouth: smile, tongue: '', cls: 'bilu m-' + mood
+  };
+  if (mood === 'hi') { p.mouth = open; p.tongue = 'M53 60Q60 67 67 60Q60 57 53 60Z'; }
+  if (mood === 'wink') { p.eL = 0; p.arcs = 'M39 42Q46 35 53 42'; p.mouth = 'M49 53Q60 67 71 53Z'; p.tongue = 'M54 60Q60 64 66 60Q60 58 54 60Z'; }
+  if (mood === 'yay') { p.eL = 0; p.eR = 0; p.arcs = 'M39 43Q46 32 53 43M67 43Q74 32 81 43'; p.mouth = 'M46 50Q60 76 74 50Z'; p.tongue = 'M52 62Q60 71 68 62Q60 58 52 62Z'; }
+  if (mood === 'magic') { p.wand = 1; p.eL = 0; p.arcs = 'M39 42Q46 35 53 42'; p.mouth = 'M49 53Q60 67 71 53Z'; p.tongue = 'M54 60Q60 64 66 60Q60 58 54 60Z'; }
+  if (mood === 'oops') { p.brow = 1; p.mouth = 'M55 58A5 6 0 1 0 65 58A5 6 0 1 0 55 58Z'; p.tongue = ''; }
+  return p;
+}
+const SUN = 'M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41';
+const MOON = 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z';
+const LIKES = [
+  ['bowl', 'Bowling și jocuri', '#8EA6FF', 'M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M9 8h.01M13 7h.01M11 11h.01'],
+  ['escape', 'Escape room', '#B7A3FF', 'M15 7a5 5 0 1 0-4.9 6H8v3H6v3h5v-4.1A5 5 0 0 0 15 7zM15 7h.01'],
+  ['film', 'Film', '#FFE58A', 'M4 4h16v16H4zM4 9h16M4 15h16M9 4v16M15 4v16'],
+  ['party', 'Club și party', '#FF8A73', 'M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0M21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0'],
+  ['karaoke', 'Karaoke', '#FFD43B', 'M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3M19 10v2a7 7 0 0 1-14 0v-2M12 19v3'],
+  ['food', 'Mâncare bună', '#FF8A73', 'M3 11h18M5 11a7 7 0 0 0 14 0M12 4v3M8 5l1 2M16 5l-1 2'],
+  ['cafe', 'Cafenele și deserturi', '#FFE58A', 'M17 8h1a4 4 0 0 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4zM6 2v2M10 2v2M14 2v2'],
+  ['sport', 'Sport: padel, fotbal', '#5FD39A', 'M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 2v20M2 12h20'],
+  ['nature', 'Natură și plimbări', '#5FD39A', 'M12 22V12M5 12l7-10 7 10zM8 17l4-5 4 5'],
+  ['culture', 'Muzee și teatru', '#B7A3FF', 'M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M2 10l10-7 10 7z'],
+  ['board', 'Board games', '#8EA6FF', 'M4 4h16v16H4zM8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01'],
+  ['standup', 'Stand-up', '#FFD43B', 'M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3M8 22h8M12 16v6']
+];
+const PICKS = [
+  ['Pista 9', 'Bowling · 8 min', 'Seara de vineri, cu gașca și nachos', '#2F5BFF', '#FFFFFF', '#8EA6FF', 'bowl'],
+  ['Laboratorul', 'Escape room · 12 min', '60 de minute să ieșiți din laborator', '#8C6CFF', '#0E1440', '#FFD43B', 'escape'],
+  ['Lacul Buftea', 'Plimbare · 5 min', 'Apus pe malul lacului, gratis', '#1E7A4C', '#FFFFFF', '#5FD39A', 'nature'],
+  ['Club Neon 21', 'Club · 14 min', 'DJ până la 4, intrare 40 de lei', '#0E1440', '#FFD43B', '#8C6CFF', 'party'],
+  ['Cofetăria Mia', 'Desert · 4 min', 'Cea mai bună prăjitură cu vișine din zonă', '#FF8A73', '#0E1440', '#FFE58A', 'cafe']
+];
+const FOUND = [['I', 'Ioana Munteanu', 'ioana.m', '#8C6CFF'], ['M', 'Mihai Stan', 'mihai.s', '#FF6A4D'], ['S', 'Sara Pop', 'sara.p', '#FFD43B'], ['R', 'Radu Ene', 'radu.e', '#5FD39A']];
+const TAKEN = ['cornel', 'andrei', 'maria', 'ana', 'radu', 'ioana'];
+const STEPS = ['start', 'phone', 'name', 'zone', 'likes', 'style', 'picks', 'friends', 'done'];
+const clean = (x) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9._]/g, '').slice(0, 20);
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.state = this.fresh();
+  }
+  fresh() {
+    return { step: 'start', theme: this.state ? this.state.theme : null, phone: '', sent: false, code: '', codeBad: false, first: '', user: '', year: null, dist: '20', moves: ['walk', 'car'], likes: [], budget: '100', who: 'group', when: ['eve', 'we'], mood: 'mix', pick: 0, votes: [], synced: false, added: [] };
+  }
+  componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  go(step) { this.setState({ step }); }
+  renderVals() {
+    const s = this.state;
+    const theme = s.theme || this.props.theme || 'zi';
+    const k = STEPS.indexOf(s.step);
+    const set = (patch) => this.setState(patch);
+    const first = s.first.trim();
+    const likesN = s.likes.length;
+    const yes = s.votes.filter((v) => v === 'yes').length;
+    const on = (x) => (x ? 'press chip on' : 'press chip');
+    const seg = (x) => (x ? 'press seg on' : 'press seg');
+    const SAY = {
+      phone: ['hi', 'Salut! Întâi numărul tău. Îți trimit un cod, ca să știu că ești tu.'],
+      name: ['wink', 'Super. Acum cum să-ți zic? Prietenii te găsesc după username.'],
+      zone: ['up', 'Buftea, ce frumos! Cât de departe ești dispus să mergi pentru o seară bună?'],
+      likes: ['hi', likesN >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
+      style: ['wink', 'Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.'],
+      picks: ['up', s.pick === 0 ? 'Ultimul pas: 5 locuri reale din zonă. Zi-mi repede dacă ai merge.' : (s.votes[s.votes.length - 1] === 'yes' ? 'Notat! Îmi place cum gândești.' : (s.votes[s.votes.length - 1] === 'no' ? 'Ok, pe ăsta nu ți-l mai arăt des.' : 'Hmm, bine. Îl las pe „poate”.'))],
+      friends: ['hi', s.synced ? 'I-am găsit! Adaugă-i și votați împreună data viitoare.' : 'Cu prietenii e mai distractiv. Vrei să văd care sunt deja pe CeFaci?']
+    };
+    const say = SAY[s.step] || ['hi', ''];
+    const v = {
+      themeClass: theme === 'noapte' ? 'graphite' : 'light',
+      themeLabel: theme === 'noapte' ? 'Treci pe tema de zi' : 'Treci pe tema de noapte', themeIcon: theme === 'noapte' ? SUN : MOON,
+      toggleTheme: () => set({ theme: theme === 'noapte' ? 'zi' : 'noapte' }),
+      isStart: s.step === 'start', isPhone: s.step === 'phone', isName: s.step === 'name', isZone: s.step === 'zone', isLikes: s.step === 'likes', isStyle: s.step === 'style', isPicks: s.step === 'picks', isFriends: s.step === 'friends', isDone: s.step === 'done',
+      progW: Math.round(Math.max(0, k - 1) / 7 * 100) + '%', progText: Math.max(1, k) + ' din 7',
+      back: () => this.go(STEPS[Math.max(0, k - 1)]),
+      next: () => this.go(STEPS[Math.min(STEPS.length - 1, k + 1)]),
+      restart: () => this.setState(this.fresh()),
+      bl: biluPose(say[0], say[0] === 'up' ? 'ul' : 'c'), say: say[1],
+      startBl: biluPose('hi', 'c'), doneBl: biluPose('yay', 'c'),
+      goPhone: () => this.go('phone'), goSso: () => this.setState({ step: 'name', first: 'Cornel' })
+    };
+    // phone
+    const digits = s.phone.replace(/\D/g, '');
+    v.phone = s.phone; v.onPhone = (e) => set({ phone: e && e.target ? String(e.target.value).slice(0, 13) : '', sent: false, code: '' });
+    v.codeOpen = s.sent; v.code = s.code; v.codeBad = s.codeBad;
+    v.onCode = (e) => set({ code: e && e.target ? String(e.target.value).replace(/\D/g, '').slice(0, 6) : '', codeBad: false });
+    v.codeDemo = () => set({ code: '318642', codeBad: false });
+    v.phoneOff = s.sent ? s.code.length !== 6 : digits.length < 9;
+    v.phoneBtn = s.sent ? 'Confirmă codul' : 'Trimite-mi codul';
+    v.phoneNext = () => { if (!this.state.sent) { set({ sent: true }); return; } if (this.state.code === '318642') this.go('name'); else set({ codeBad: true }); };
+    // name
+    const u = clean(s.user);
+    v.first = s.first; v.onFirst = (e) => set({ first: e && e.target ? String(e.target.value).slice(0, 24) : '' });
+    v.user = u; v.onUser = (e) => set({ user: e && e.target ? clean(e.target.value) : '' });
+    v.userTaken = u.length >= 3 && TAKEN.indexOf(u) !== -1;
+    v.userOk = u.length >= 3 && !v.userTaken;
+    v.userSugg = [u + '.buftea', u + '_iese', u + '23'].map((label) => ({ label, pick: () => set({ user: label }) }));
+    v.years = [['2011', 2011], ['2009', 2009], ['2006', 2006], ['2001', 2001], ['1995', 1995], ['Mai demult', 1985]].map(([label, y]) => ({ label, on: s.year === y, cls: on(s.year === y), pick: () => set({ year: y }) }));
+    const age = s.year ? 2026 - s.year : null;
+    v.ageNote = age == null ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : (age < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : (age < 18 ? 'Îți ascundem locurile 18+, cum sunt cluburile. În rest, tot ce e în Buftea.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.'));
+    v.nameOff = first.length < 2 || !v.userOk || !s.year || age < 16;
+    // zone
+    v.dists = [['10', '10 min'], ['20', '20 min'], ['30', '30 min']].map(([key, label]) => ({ label, on: s.dist === key, cls: seg(s.dist === key), pick: () => set({ dist: key }) }));
+    v.moves = [['walk', 'Pe jos'], ['car', 'Cu mașina'], ['bus', 'Cu autobuzul'], ['bike', 'Pe bicicletă']].map(([key, label]) => { const o = s.moves.indexOf(key) !== -1; return { label, on: o, cls: on(o), pick: () => set({ moves: o ? s.moves.filter((x) => x !== key) : s.moves.concat([key]) }) }; });
+    v.zoneOff = s.moves.length === 0;
+    // likes
+    v.likes = LIKES.map(([key, label, bg, icon]) => { const o = s.likes.indexOf(key) !== -1; return { label, bg, icon, on: o, cls: o ? 'press tile on' : 'press tile', pick: () => set({ likes: o ? s.likes.filter((x) => x !== key) : s.likes.concat([key]) }) }; });
+    v.likesLead = likesN === 0 ? 'Alege măcar 3. Poți schimba oricând.' : (likesN < 3 ? 'Mai alege ' + (3 - likesN) + '.' : likesN + ' alese. Bun început!');
+    v.likesOff = likesN < 3; v.likesBtn = likesN < 3 ? 'Alege încă ' + (3 - likesN) : 'Mai departe';
+    // style
+    const row = (id, label, key, opts, multi) => ({ id, label, opts: opts.map(([val, text]) => { const o = multi ? s[key].indexOf(val) !== -1 : s[key] === val; return { label: text, on: o, cls: seg(o), pick: () => set({ [key]: multi ? (o ? s[key].filter((x) => x !== val) : s[key].concat([val])) : val }) }; }) });
+    v.styleRows = [
+      row('st-b', 'Cât cheltui de obicei, de persoană', 'budget', [['0', 'Gratis'], ['50', '≤ 50 lei'], ['100', '≤ 100'], ['any', 'Oricât']], false),
+      row('st-w', 'Cu cine ieși cel mai des', 'who', [['solo', 'Singur'], ['duo', 'În doi'], ['group', 'Cu gașca']], false),
+      row('st-t', 'Când ieși', 'when', [['day', 'Ziua'], ['eve', 'Seara'], ['late', 'Noaptea'], ['we', 'Weekend']], true),
+      row('st-m', 'Mai degrabă', 'mood', [['chill', 'Chill'], ['mix', 'Și-și'], ['party', 'Party']], false)
+    ];
+    v.styleOff = s.when.length === 0;
+    // picks
+    const p = PICKS[Math.min(s.pick, PICKS.length - 1)];
+    v.card = { title: p[0], tag: p[1], sub: p[2], bg: p[3], fg: p[4], dot: p[5], icon: LIKES.find((l) => l[0] === p[6])[3], cls: 'pcard ' + (s.pick % 2 ? 'b' : 'a') };
+    v.pickCount = (Math.min(s.pick, 4) + 1) + ' din 5 · ' + yes + ' „da” până acum';
+    const vote = (x) => () => { const votes = this.state.votes.concat([x]); if (votes.length >= PICKS.length) { this.setState({ votes, pick: PICKS.length }); this.later(() => this.go('friends'), 450); return; } this.setState({ votes, pick: votes.length }); };
+    v.voteYes = vote('yes'); v.voteNo = vote('no'); v.voteMaybe = vote('maybe');
+    // friends
+    v.friendsAsk = !s.synced; v.friendsFound = s.synced;
+    v.syncContacts = () => set({ synced: true });
+    v.found = FOUND.map(([ini, name, user, bg], i) => { const a = s.added.indexOf(user) !== -1; return { ini, name, user, bg, d: (i * 90) + 'ms', label: a ? 'Cerere trimisă' : 'Adaugă', cls: a ? 'press chip on' : 'press chip', add: () => set({ added: a ? s.added.filter((x) => x !== user) : s.added.concat([user]) }) }; });
+    // done
+    v.doneTitle = 'Gata' + (first ? ', ' + first : '') + '! Acum te cunosc puțin.';
+    const likeNames = s.likes.slice(0, 3).map((key) => LIKES.find((l) => l[0] === key)[1]);
+    v.summary = likeNames.map((t) => ({ t })).concat([{ t: 'până la ' + s.dist + ' min' }, { t: ({ '0': 'gratis', '50': '≤ 50 lei', '100': '≤ 100 lei', any: 'orice buget' })[s.budget] }, { t: yes + ' din 5 locuri pe listă' }]);
+    return v;
+  }
+}
+</script>
+</body>
+</html>

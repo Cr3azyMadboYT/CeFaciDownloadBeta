@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci — Prieteni</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;family=Caveat:wght@500..700&amp;display=swap">
+<style>
+body{margin:0;background:#E9EBF2}
+.cf{--bg:#0B1030;--s1:#141B45;--s2:#1D2660;--line:#2B3575;--ink:#F3F5FF;--ink2:#A9B1DA;--ink3:#8690C4;--blue:#2F5BFF;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.2);--yellow:#FFD43B;--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral:#FF6A4D;--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.16);--violet:#8C6CFF;--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.2);--navy:#0E1440;--slot:#03061A;--scrim:rgba(4,7,24,.66);font-family:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.light{--bg:#EEF1FB;--s1:#FFFFFF;--s2:#E6EAF8;--line:#D3D9EF;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--slot:#0E1440;--scrim:rgba(14,20,64,.42)}
+.cf{--doodle:#FFFFFF;--doodle-o:.06;isolation:isolate}
+.cf.day{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#DCE0EA;--line:#D2D7E3;--sheet:#FFFFFF;--doodle:#0E1440;--doodle-o:.085}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#28282F;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--slot:#000000;--scrim:rgba(0,0,0,.62);--doodle:#FFFFFF;--doodle-o:.07}
+.doodles{position:absolute;left:0;top:0;width:390px;height:844px;z-index:-1;pointer-events:none;color:var(--doodle);opacity:var(--doodle-o)}
+.doodles .d1{color:var(--blue)}
+.doodles .d2{color:var(--coral)}
+.doodles .d3{color:var(--violet)}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.07)}}
+.cf :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.cf.light :focus-visible{outline-color:#2447E0}
+.av{flex:none;border-radius:999px;display:flex;align-items:center;justify-content:center;font:700 13px/1 'Instrument Sans',system-ui,sans-serif}
+.mark{position:relative;flex:none;border-radius:999px;border-style:solid;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-weight:800;letter-spacing:-.02em}
+.mark::after{content:'';position:absolute;inset:3px;border-radius:999px;border:1.5px dashed currentColor;opacity:.55}
+.rise{animation:rise .5s cubic-bezier(.23,1,.32,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.field{transition:border-color .18s ease,box-shadow .18s ease}
+.field:focus-within{border-color:var(--blue)!important;box-shadow:0 0 0 3px var(--blue-soft)}
+.field input::placeholder{color:var(--ink3);opacity:1}
+.pop{animation:pop .42s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
+.sent{animation:sent .45s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes sent{0%{transform:scale(.9)}60%{transform:scale(1.05)}100%{transform:none}}
+.newrow{animation:newrow .5s cubic-bezier(.23,1,.32,1) both}
+@keyframes newrow{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.sheet{animation:sheet .5s cubic-bezier(.32,.72,0,1) both}
+@keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+.scrim{animation:fade .25s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink)">
+<div style="height: 844px; padding: 52px 20px 0; display: flex; flex-direction: column">
+
+<div style="display: flex; align-items: center; gap: 2px; height: 44px">
+<a href="Planuri.dc.html" class="press" aria-label="Înapoi la Planuri" style="width: 44px; height: 44px; margin-left: -12px; display: flex; align-items: center; justify-content: center; border-radius: 14px; color: var(--ink)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></a>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1; font-weight: 770; font-stretch: 90%; letter-spacing: -0.02em">Prieteni</h1>
+</div>
+
+<div style="margin-top: 12px; display: flex; align-items: center; gap: 12px; padding: 12px 12px 12px 14px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line)">
+<span role="img" aria-label="Poza ta de profil" style="width: 44px; height: 44px; flex: none; display: block; border-radius: 999px; overflow: hidden;"><svg viewBox="18 26 64 64" aria-hidden="true" style="display: block; width: 100%; height: 100%"><rect width="100" height="125" fill="#FFD43B"></rect><circle cx="82" cy="20" r="26" fill="#FFE58A"></circle><path d="M8 125 C10 98 29 88 50 88 C71 88 90 98 92 125 Z" fill="#FF6A4D"></path><path d="M43 70 H57 V92 H43 Z" fill="#D9967A"></path><ellipse cx="50" cy="56" rx="18" ry="21" fill="#EDB08F"></ellipse><path d="M31 60 C27 37 39 28 51 29 C64 30 72 40 69 57 C66 47 58 42 47 43 C39 44 34 50 33 61 Z" fill="#0E1440"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="display: flex; align-items: center; gap: 6px; font: 650 16px/1.2 'Instrument Sans', system-ui, sans-serif">Cornel Adrian<span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #0E1440; color: #FFD43B; display: inline-flex; align-items: center; font: 800 11px/1 'Instrument Sans', system-ui, sans-serif">Founder</span></span>
+<span style="font: 500 14px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">@CornaciDev</span>
+</span>
+<button type="button" class="press" onClick="{{openCode}}" style="flex: none; height: 44px; padding: 0 14px; border: 0; border-radius: 14px; background: var(--s2); color: var(--ink); display: flex; align-items: center; gap: 8px; font: 650 14px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><rect width="5" height="5" x="3" y="3" rx="1"></rect><rect width="5" height="5" x="16" y="3" rx="1"></rect><rect width="5" height="5" x="3" y="16" rx="1"></rect><path d="M21 16h-3a2 2 0 0 0-2 2v3"></path><path d="M21 21v.01"></path><path d="M12 7v3a2 2 0 0 1-2 2H7"></path><path d="M3 12h.01"></path><path d="M12 3h.01"></path><path d="M12 16v.01"></path><path d="M16 12h1"></path><path d="M21 12v.01"></path><path d="M12 21v-1"></path></svg>Codul meu</button>
+</div>
+
+<label for="uname" style="margin-top: 22px; font: 600 15px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Adaugă după username</label>
+<div class="field" style="margin-top: 8px; height: 54px; flex: none; display: flex; align-items: center; gap: 2px; padding: 0 5px 0 16px; border-radius: 16px; background: var(--s1); border: 1.5px solid var(--line)">
+<span aria-hidden="true" style="font: 650 17px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink3)">@</span>
+<input id="uname" type="text" value="{{q}}" onChange="{{onQ}}" placeholder="ex: maria.i" aria-describedby="uname-hint" style="flex: 1 1 auto; min-width: 0; height: 50px; padding: 0; border: 0; outline: none; background: transparent; color: var(--ink); font: 600 17px/1 'Instrument Sans', system-ui, sans-serif">
+<sc-if value="{{hasQ}}" hint-placeholder-val="{{ false }}"><button type="button" class="press" aria-label="Șterge textul" onClick="{{clearQ}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 12px; background: transparent; color: var(--ink3); display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg></button></sc-if>
+</div>
+<p id="uname-hint" style="margin: 8px 0 0; font: 500 13px/1.35 'Instrument Sans', system-ui, sans-serif; color: var(--ink3)">Căutăm doar username-ul exact, ca să nu poată fi găsit oricine.</p>
+
+<div aria-live="polite">
+<sc-if value="{{showFound}}" hint-placeholder-val="{{ false }}">
+<div class="pop" style="margin-top: 12px; display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line)">
+<span class="av" aria-hidden="true" style="width: 44px; height: 44px; font-size: 15px; background: {{found.bg}}; color: {{found.fg}}">{{found.ini}}</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font: 650 16px/1.2 'Instrument Sans', system-ui, sans-serif">{{found.name}}</span>
+<span style="font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{found.meta}}</span>
+</span>
+<sc-if value="{{found.canAdd}}" hint-placeholder-val="{{ false }}"><button type="button" class="press" onClick="{{add}}" style="flex: none; height: 44px; padding: 0 16px; border: 0; border-radius: 14px; background: var(--blue); color: #FFFFFF; display: flex; align-items: center; gap: 6px; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Adaugă</button></sc-if>
+<sc-if value="{{found.sent}}" hint-placeholder-val="{{ false }}"><button type="button" class="press sent" onClick="{{undo}}" aria-label="Cerere trimisă. Apasă ca s-o anulezi" style="flex: none; height: 44px; padding: 0 14px; border: 0; border-radius: 14px; background: var(--s2); color: var(--ink); display: flex; align-items: center; gap: 6px; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--blue-ink)"><path d="M20 6 9 17l-5-5"></path></svg>Trimisă</button></sc-if>
+<sc-if value="{{found.hasNote}}" hint-placeholder-val="{{ false }}"><span style="flex: none; max-width: 110px; text-align: right; font: 600 13px/1.25 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{found.note}}</span></sc-if>
+</div>
+<sc-if value="{{found.sent}}" hint-placeholder-val="{{ false }}"><p class="pop" style="margin: 8px 0 0; font: 500 13px/1.35 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Devin prieteni doar dacă acceptă. Apasă pe „Trimisă” ca s-o anulezi.</p></sc-if>
+</sc-if>
+
+<sc-if value="{{showNotFound}}" hint-placeholder-val="{{ false }}">
+<div class="pop" style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; border-radius: 20px; background: var(--s1); border: 1.5px dashed var(--line)">
+<span style="font: 650 15px/1.3 'Instrument Sans', system-ui, sans-serif">Nu găsim pe nimeni cu @{{qNorm}}.</span>
+<span style="font: 500 14px/1.35 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Verifică scrierea sau trimite-i linkul tău. Instalează CeFaci, își face cont și îți vine cererea.</span>
+<button type="button" class="press" onClick="{{copyLink}}" style="align-self: flex-start; height: 44px; padding: 0 16px; border: 0; border-radius: 14px; background: var(--s2); color: var(--ink); display: flex; align-items: center; gap: 8px; font: 650 14px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 1 1 0 10h-2"></path><path d="M8 12h8"></path></svg>{{linkLabel}}</button>
+</div>
+</sc-if>
+</div>
+
+<sc-if value="{{showReq}}" hint-placeholder-val="{{ true }}">
+<div>
+<h2 style="margin: 22px 0 10px; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; line-height: 1; font-weight: 740; letter-spacing: -0.01em">Cereri noi</h2>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 20px; background: var(--yellow-soft); border: 1px solid var(--line)">
+<span class="av" aria-hidden="true" style="width: 44px; height: 44px; font-size: 15px; background: #FF8A73; color: #0E1440">T</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font: 650 16px/1.2 'Instrument Sans', system-ui, sans-serif">Tudor Marin</span>
+<span style="font: 500 13px/1.3 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">@tudor.m, prieten cu Radu</span>
+</span>
+<button type="button" class="press" onClick="{{accept}}" style="flex: none; height: 44px; padding: 0 14px; border: 0; border-radius: 14px; background: var(--blue); color: #FFFFFF; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif">Acceptă</button>
+<button type="button" class="press" onClick="{{decline}}" aria-label="Refuză cererea lui Tudor" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 14px; background: var(--s1); color: var(--ink); display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{showDeclined}}" hint-placeholder-val="{{ false }}"><p class="pop" aria-live="polite" style="margin: 16px 0 0; font: 500 13px/1.35 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Ai refuzat cererea. Tudor nu primește nicio notificare.</p></sc-if>
+
+<div style="margin-top: 22px; display: flex; align-items: baseline; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 20px; line-height: 1; font-weight: 740; letter-spacing: -0.01em">Prietenii tăi</h2>
+<span style="font: 550 13px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">{{countText}}</span>
+</div>
+<ul style="list-style: none; margin: 6px -20px 0; padding: 0 20px 34px; flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+<sc-for list="{{friends}}" as="f" hint-placeholder-count="6">
+<li class="{{f.cls}}" style="flex: none; display: flex; align-items: center; gap: 12px; min-height: 60px; border-bottom: 1px solid var(--line)">
+<span class="av" aria-hidden="true" style="width: 38px; height: 38px; background: {{f.bg}}; color: {{f.fg}}">{{f.ini}}</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<span style="font: 650 15px/1.2 'Instrument Sans', system-ui, sans-serif">{{f.name}}</span>
+<span style="font: 500 13px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">@{{f.user}}</span>
+</span>
+<sc-if value="{{f.isNew}}" hint-placeholder-val="{{ false }}"><span style="flex: none; height: 24px; padding: 0 9px; border-radius: 999px; background: var(--yellow-soft); color: var(--yellow-ink); display: flex; align-items: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">Nou</span></sc-if>
+<button type="button" class="press" aria-label="{{f.menuLabel}}" style="width: 44px; height: 44px; flex: none; margin-right: -10px; border: 0; border-radius: 12px; background: transparent; color: var(--ink3); display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button>
+</li>
+</sc-for>
+</ul>
+
+</div>
+
+<sc-if value="{{showCode}}" hint-placeholder-val="{{ false }}">
+<div>
+<button type="button" class="scrim" aria-label="Închide codul" onClick="{{closeCode}}" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 10; padding: 0; border: 0; background: var(--scrim); cursor: pointer"></button>
+<section class="sheet" role="dialog" aria-modal="true" aria-labelledby="code-title" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 11; padding: 8px 20px 34px; border-radius: 28px 28px 0 0; background: var(--sheet, var(--s1)); display: flex; flex-direction: column; align-items: center">
+<span aria-hidden="true" style="width: 36px; height: 5px; border-radius: 3px; background: var(--line)"></span>
+<h2 id="code-title" style="margin: 18px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 28px; line-height: 1; font-weight: 770; font-stretch: 90%; letter-spacing: -0.02em">Codul tău</h2>
+<p style="margin: 8px 0 0; max-width: 290px; text-align: center; font: 500 15px/1.4 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Un prieten îl scanează din CeFaci și îți trimite cerere. Tu decizi dacă o accepți.</p>
+<div style="margin-top: 18px; padding: 14px; border-radius: 24px; background: #FFFFFF; border: 1px solid var(--line); transform: rotate(-2deg)">
+<svg viewBox="0 0 25 25" role="img" aria-label="Cod QR pentru @CornaciDev" style="display: block; width: 184px; height: 184px; shape-rendering: crispEdges"><path d="{{qrPath}}" fill="#0E1440"></path></svg>
+</div>
+<p style="margin: 16px 0 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 24px; line-height: 1; font-weight: 760; letter-spacing: -0.01em">@CornaciDev</p>
+<div style="margin-top: 20px; width: 100%; display: flex; gap: 8px">
+<button type="button" class="press" onClick="{{copyLink}}" style="flex: 1 1 auto; height: 54px; border: 0; border-radius: 16px; background: var(--blue); color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 8px; font: 650 16px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17H7A5 5 0 0 1 7 7h2"></path><path d="M15 7h2a5 5 0 1 1 0 10h-2"></path><path d="M8 12h8"></path></svg>{{linkLabel}}</button>
+<button type="button" class="press" onClick="{{closeCode}}" style="flex: none; height: 54px; padding: 0 20px; border: 1px solid var(--line); border-radius: 16px; background: transparent; color: var(--ink); font: 650 16px/1 'Instrument Sans', system-ui, sans-serif">Gata</button>
+</div>
+</section>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timer = null;
+    this.state = { q: '', settled: false, sent: false, req: 'pending', showCode: false, copied: false };
+    this.qrPath = this.makeQr();
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+  norm(v) {
+    return String(v || '').trim().replace(/^@+/, '').toLowerCase();
+  }
+  onQ(e) {
+    const q = e && e.target ? e.target.value : '';
+    clearTimeout(this.timer);
+    this.setState({ q, settled: false });
+    this.timer = setTimeout(() => this.setState({ settled: true }), 650);
+  }
+  makeQr() {
+    const n = 21;
+    let seed = 11;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const finders = [[0, 0], [14, 0], [0, 14]];
+    let d = '';
+    for (let y = 0; y < n; y += 1) {
+      for (let x = 0; x < n; x += 1) {
+        let on;
+        const f = finders.find(([fx, fy]) => x >= fx && x < fx + 7 && y >= fy && y < fy + 7);
+        if (f) {
+          const dx = x - f[0];
+          const dy = y - f[1];
+          on = dx === 0 || dx === 6 || dy === 0 || dy === 6 || (dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4);
+        } else if (finders.some(([fx, fy]) => x >= fx - 1 && x <= fx + 7 && y >= fy - 1 && y <= fy + 7)) {
+          on = false;
+        } else if (y === 6) {
+          on = x % 2 === 0;
+        } else if (x === 6) {
+          on = y % 2 === 0;
+        } else {
+          on = rnd() > 0.5;
+        }
+        if (on) d += 'M' + (x + 2) + ' ' + (y + 2) + 'h1v1h-1z';
+      }
+    }
+    return d;
+  }
+  renderVals() {
+    const s = this.state;
+    const base = [
+      { name: 'Ioana Munteanu', user: 'ioana.m', ini: 'I', bg: '#8C6CFF', fg: '#0E1440' },
+      { name: 'Mihai Dobre', user: 'mihai.d', ini: 'M', bg: '#FF6A4D', fg: '#0E1440' },
+      { name: 'Sara Popa', user: 'sara.p', ini: 'S', bg: '#FFD43B', fg: '#0E1440' },
+      { name: 'Radu Constantin', user: 'radu.c', ini: 'R', bg: '#3A4585', fg: '#F3F5FF' },
+      { name: 'Bianca Toma', user: 'bia.t', ini: 'B', bg: '#5B3FD9', fg: '#FFFFFF' },
+      { name: 'Vlad Stan', user: 'vlad.s', ini: 'V', bg: '#8EA6FF', fg: '#0E1440' },
+      { name: 'Elena Rusu', user: 'elena.r', ini: 'E', bg: '#B7A3FF', fg: '#0E1440' }
+    ];
+    const tudor = { name: 'Tudor Marin', user: 'tudor.m', ini: 'T', bg: '#FF8A73', fg: '#0E1440' };
+    const strangers = {
+      'maria.i': { name: 'Maria Ionescu', ini: 'M', bg: '#FFE58A', fg: '#0E1440', meta: '2 prieteni comuni: Ioana și Sara' }
+    };
+    const list = (s.req === 'accepted' ? [Object.assign({ isNew: true }, tudor)] : []).concat(base.map((f) => Object.assign({ isNew: false }, f)));
+    const n = this.norm(s.q);
+    let found = null;
+    const friend = list.find((f) => f.user === n);
+    if (strangers[n]) {
+      found = Object.assign({ canAdd: !s.sent, sent: s.sent, hasNote: false, note: '' }, strangers[n]);
+    } else if (friend) {
+      found = Object.assign({}, friend, { meta: '@' + friend.user, canAdd: false, sent: false, hasNote: true, note: 'Sunteți deja prieteni' });
+    } else if (n === 'tudor.m' && s.req === 'pending') {
+      found = Object.assign({}, tudor, { meta: '@tudor.m', canAdd: false, sent: false, hasNote: true, note: 'Ți-a trimis el o cerere' });
+    } else if (n === 'cornacidev') {
+      found = { name: 'Cornel Adrian', ini: 'CA', bg: '#2F5BFF', fg: '#FFFFFF', meta: '@CornaciDev', canAdd: false, sent: false, hasNote: true, note: 'Ăsta ești tu' };
+    }
+    const linkLabel = s.copied ? 'Link copiat' : 'Trimite linkul tău';
+    return {
+      themeClass: ({ zi: 'light day', noapte: 'graphite', luminos: 'light day', 'hârtie': 'light day', grafit: 'graphite' })[this.props.theme ?? 'zi'] ?? 'light day',
+      q: s.q,
+      qNorm: n,
+      onQ: (e) => this.onQ(e),
+      hasQ: s.q.length > 0,
+      clearQ: () => { clearTimeout(this.timer); this.setState({ q: '', settled: false }); },
+      showFound: !!found,
+      found: found || { name: '', ini: '', bg: 'transparent', fg: 'inherit', meta: '', canAdd: false, sent: false, hasNote: false, note: '' },
+      showNotFound: !found && s.settled && n.length >= 3,
+      add: () => this.setState({ sent: true }),
+      undo: () => this.setState({ sent: false }),
+      linkLabel,
+      copyLink: () => this.setState({ copied: true }),
+      showReq: s.req === 'pending',
+      showDeclined: s.req === 'declined',
+      accept: () => this.setState({ req: 'accepted' }),
+      decline: () => this.setState({ req: 'declined' }),
+      countText: list.length + ' prieteni',
+      friends: list.map((f) => Object.assign({}, f, { cls: f.isNew ? 'newrow' : '', menuLabel: 'Opțiuni pentru ' + f.name.split(' ')[0] })),
+      showCode: s.showCode,
+      openCode: () => this.setState({ showCode: true }),
+      closeCode: () => this.setState({ showCode: false }),
+      qrPath: this.qrPath
+    };
+  }
+}
+</script>
+</body>
+</html>

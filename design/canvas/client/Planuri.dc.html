@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci — Planuri</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;family=Caveat:wght@500..700&amp;display=swap">
+<style>
+body{margin:0;background:#E9EBF2}
+.cf{--bg:#0B1030;--s1:#141B45;--s2:#1D2660;--line:#2B3575;--ink:#F3F5FF;--ink2:#A9B1DA;--ink3:#8690C4;--blue:#2F5BFF;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.2);--yellow:#FFD43B;--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral:#FF6A4D;--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.16);--violet:#8C6CFF;--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.2);--navy:#0E1440;--slot:#03061A;--scrim:rgba(4,7,24,.66);font-family:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.light{--bg:#EEF1FB;--s1:#FFFFFF;--s2:#E6EAF8;--line:#D3D9EF;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--slot:#0E1440;--scrim:rgba(14,20,64,.42)}
+.cf{--doodle:#FFFFFF;--doodle-o:.06;isolation:isolate}
+.cf.day{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#DCE0EA;--line:#D2D7E3;--sheet:#FFFFFF;--doodle:#0E1440;--doodle-o:.085}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#28282F;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--slot:#000000;--scrim:rgba(0,0,0,.62);--doodle:#FFFFFF;--doodle-o:.07}
+.doodles{position:absolute;left:0;top:0;width:390px;height:844px;z-index:-1;pointer-events:none;color:var(--doodle);opacity:var(--doodle-o)}
+.doodles .d1{color:var(--blue)}
+.doodles .d2{color:var(--coral)}
+.doodles .d3{color:var(--violet)}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.07)}}
+.cf :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.cf.light :focus-visible{outline-color:#2447E0}
+.av{flex:none;border-radius:999px;display:flex;align-items:center;justify-content:center;font:700 13px/1 'Instrument Sans',system-ui,sans-serif}
+.mark{position:relative;flex:none;border-radius:999px;border-style:solid;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-weight:800;letter-spacing:-.02em}
+.mark::after{content:'';position:absolute;inset:3px;border-radius:999px;border:1.5px dashed currentColor;opacity:.55}
+.rise{animation:rise .5s cubic-bezier(.23,1,.32,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:52px;border:0;background:transparent;color:var(--ink3);text-decoration:none;font:600 12px/1 'Instrument Sans',system-ui,sans-serif;border-radius:14px;cursor:pointer}
+.tab.on{color:var(--ink)}
+.tab.on .i{color:var(--blue-ink)}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink)">
+<svg class="doodles" aria-hidden="true" viewBox="0 0 390 844"><g style="fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round"><path d="M-10 196 C 50 178, 110 222, 176 200 S 300 176, 400 206" style="stroke-dasharray: 2 7"></path><path d="M-10 418 C 70 440, 140 396, 214 420 S 330 446, 400 414"></path><path d="M-10 612 C 40 596, 96 640, 160 618 S 280 590, 400 626" style="stroke-dasharray: 10 8"></path><path d="M-10 796 C 80 776, 150 818, 230 796 S 340 780, 400 800" style="stroke-dasharray: 2 7"></path><path d="M300 40 c 20 10, 40 -4, 60 8" ></path><path d="M20 520 q 10 -18 24 -4 t 26 -2"></path><g class="d1" transform="translate(186 8) scale(1.25) rotate(-14 12 12)"><path d="M12 21s-6-5.4-6-10a6 6 0 0 1 12 0c0 4.6-6 10-6 10z"></path><circle cx="12" cy="11" r="2"></circle></g><g class="d2" transform="translate(22 63) scale(1.1) rotate(10 12 12)"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></g><g class="d3" transform="translate(334 59) scale(1.35) rotate(-6 12 12)"><path d="M3 6h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4z"></path><path d="M14 7v2M14 11v2M14 15v2"></path></g><g class="d1" transform="translate(174 164) scale(1.2) rotate(18 12 12)"><path d="M4 6l16 0-8 15z"></path><path d="M4 6q8-3.5 16 0"></path><circle cx="10.5" cy="10" r="1.3"></circle><circle cx="13.5" cy="13.5" r="1.3"></circle></g><g class="d2" transform="translate(186 210) scale(1.05) rotate(-20 12 12)"><path d="M9 9a3 3 0 1 1 4.5 2.6c-.9.5-1.5 1.2-1.5 2.4"></path><path d="M12 18h.01"></path></g><g class="d3" transform="translate(22 265) scale(1.3) rotate(6 12 12)"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2z"></path><path d="M10.6 9.5h2.8"></path></g><g class="d1" transform="translate(334 261) scale(1.25) rotate(12 12 12)"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"></path><path d="M16 11h2a2 2 0 0 1 0 4h-2"></path><path d="M8 3c0 1.5 1 1.5 1 3M11.5 3c0 1.5 1 1.5 1 3"></path></g><g class="d2" transform="translate(174 366) scale(1.1) rotate(-10 12 12)"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z"></path></g><g class="d3" transform="translate(186 412) scale(1.35) rotate(0 12 12)"><path d="M9 18V6l10-2v12"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="16" r="2"></circle></g><g class="d1" transform="translate(22 458) scale(1.2) rotate(15 12 12)"><path d="M4 11a8 5.5 0 0 1 16 0z"></path><path d="M3 14h18"></path><path d="M4 17h16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path></g><g class="d2" transform="translate(334 463) scale(1.05) rotate(-14 12 12)"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M9 9h.01M15 15h.01M12 12h.01M15 9h.01M9 15h.01"></path></g><g class="d3" transform="translate(174 559) scale(1.3) rotate(10 12 12)"><path d="M3 19c3-1 4-5 7-5s4 2 6 1" style="stroke-dasharray: 1.5 3"></path><path d="M17 5l4 4M21 5l-4 4"></path></g><g class="d1" transform="translate(186 614) scale(1.25) rotate(-6 12 12)"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></g><g class="d2" transform="translate(22 660) scale(1.1) rotate(18 12 12)"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></g><g class="d3" transform="translate(334 665) scale(1.35) rotate(-20 12 12)"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></g><g class="d1" transform="translate(174 761) scale(1.2) rotate(6 12 12)"><path d="M4 16v-3l2.2-5h11.6L20 13v3z"></path><circle cx="8" cy="17" r="1.8"></circle><circle cx="16" cy="17" r="1.8"></circle></g><g class="d2" transform="translate(186 816) scale(1.05) rotate(12 12 12)"><rect x="3" y="10" width="18" height="10" rx="1.5"></rect><path d="M3 10l1.5-5 16-1.5.8 4.5"></path><path d="M8 5l2 4M13 4.5l2 4"></path></g></g><g style="fill: currentColor; font-family: Caveat, 'Bradley Hand', 'Segoe Print', cursive; font-weight: 600"><text x="14" y="25" transform="rotate(-7 14 25)" style="font-size: 17px">ce facem diseară?</text><text x="230" y="32" transform="rotate(5 230 32)" style="font-size: 15px">unde ieșim?</text><text x="72" y="78" transform="rotate(-3 72 78)" style="font-size: 19px">cine vine?</text><text x="30" y="135" transform="rotate(8 30 135)" style="font-size: 16px">oare unde?</text><text x="214" y="131" transform="rotate(-9 214 131)" style="font-size: 18px">cât costă?</text><text x="8" y="177" transform="rotate(4 8 177)" style="font-size: 15px">oare e deschis?</text><text x="216" y="184" transform="rotate(-5 216 184)" style="font-size: 17px">la ce oră?</text><text x="14" y="230" transform="rotate(6 14 230)" style="font-size: 17px">pizza sau burger?</text><text x="230" y="226" transform="rotate(-2 230 226)" style="font-size: 15px">e loc pentru 5?</text><text x="72" y="283" transform="rotate(9 72 283)" style="font-size: 19px">trebuie rezervare?</text><text x="30" y="329" transform="rotate(-6 30 329)" style="font-size: 16px">bowling sau karaoke?</text><text x="214" y="325" transform="rotate(3 214 325)" style="font-size: 18px">cu mașina sau pe jos?</text><text x="8" y="382" transform="rotate(-7 8 382)" style="font-size: 15px">mâncăm ceva?</text><text x="216" y="378" transform="rotate(5 216 378)" style="font-size: 17px">afară sau înăuntru?</text><text x="14" y="435" transform="rotate(-3 14 435)" style="font-size: 17px">până la ce oră?</text><text x="230" y="431" transform="rotate(8 230 431)" style="font-size: 15px">ceva nou?</text><text x="72" y="477" transform="rotate(-9 72 477)" style="font-size: 19px">cine conduce?</text><text x="30" y="534" transform="rotate(4 30 534)" style="font-size: 16px">e departe?</text><text x="214" y="530" transform="rotate(-5 214 530)" style="font-size: 18px">plouă?</text><text x="8" y="576" transform="rotate(6 8 576)" style="font-size: 15px">film sau plimbare?</text><text x="216" y="583" transform="rotate(-2 216 583)" style="font-size: 17px">hai?</text><text x="14" y="629" transform="rotate(9 14 629)" style="font-size: 17px">ne vedem la 8?</text><text x="230" y="625" transform="rotate(-6 230 625)" style="font-size: 15px">și după?</text><text x="72" y="682" transform="rotate(3 72 682)" style="font-size: 19px">cât stăm?</text><text x="30" y="728" transform="rotate(-7 30 728)" style="font-size: 16px">vine toată gașca?</text><text x="214" y="735" transform="rotate(5 214 735)" style="font-size: 18px">ce zici?</text><text x="8" y="781" transform="rotate(-3 8 781)" style="font-size: 15px">unde parcăm?</text><text x="216" y="777" transform="rotate(8 216 777)" style="font-size: 17px">acum sau mai târziu?</text><text x="14" y="834" transform="rotate(-9 14 834)" style="font-size: 17px">dulce sau sărat?</text><text x="230" y="830" transform="rotate(4 230 830)" style="font-size: 15px">mergem?</text></g></svg>
+<div style="height: 764px; padding: 52px 20px 0; display: flex; flex-direction: column">
+
+<div style="display: flex; align-items: center; height: 44px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1; font-weight: 770; font-stretch: 90%; letter-spacing: -0.02em">Planuri</h1>
+</div>
+
+<p style="margin: 18px 0 10px; font: 600 15px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">Urmează</p>
+<a href="Bilet.dc.html" class="press rise" style="position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 16px 12px 12px; border-radius: 20px; background: #FFD43B; color: #0E1440; text-decoration: none">
+<span aria-hidden="true" style="position: absolute; left: -9px; top: 50%; margin-top: -9px; width: 18px; height: 18px; border-radius: 99px; background: var(--bg)"></span>
+<span aria-hidden="true" style="position: absolute; right: -9px; top: 50%; margin-top: -9px; width: 18px; height: 18px; border-radius: 99px; background: var(--bg)"></span>
+<span style="width: 54px; height: 58px; flex: none; border-radius: 14px; background: #0E1440; color: #FFD43B; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px">
+<span style="font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">vineri</span>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 19px; line-height: 1; font-weight: 760">19:00</span>
+</span>
+<span aria-hidden="true" style="align-self: stretch; width: 0; border-left: 2px dashed rgba(14, 20, 64, 0.3)"></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font: 700 17px/1.2 'Instrument Sans', system-ui, sans-serif">Bowling, apoi burger</span>
+<span style="font: 550 14px/1.2 'Instrument Sans', system-ui, sans-serif; color: #2C3363">2 oct., cu Gașca de vineri</span>
+</span>
+<svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+
+<div style="margin-top: 28px; display: flex; align-items: center; justify-content: space-between">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 22px; line-height: 1; font-weight: 740; letter-spacing: -0.01em">Gășcile tale</h2>
+<a href="GascaNoua.dc.html" class="press" style="height: 44px; margin-right: -4px; padding: 0 16px 0 12px; border-radius: 999px; background: var(--blue-soft); color: var(--blue-ink); display: flex; align-items: center; gap: 6px; text-decoration: none; font: 650 15px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Gașcă nouă</a>
+</div>
+
+<div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px">
+<a href="Gasca.dc.html" class="press rise" style="animation-delay: 60ms; display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line); color: var(--ink); text-decoration: none">
+<span class="mark" aria-hidden="true" style="width: 50px; height: 50px; border-width: 2.5px; border-color: var(--violet-ink); color: var(--violet-ink); font-size: 17px; transform: rotate(-6deg)">GV</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font: 650 16px/1.2 'Instrument Sans', system-ui, sans-serif">Gașca de vineri</span>
+<span style="font: 500 13px/1.25 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">5 membri, 6 ieșiri împreună</span>
+</span>
+<span aria-hidden="true" style="display: flex; flex: none">
+<span class="av" style="width: 28px; height: 28px; font-size: 11px; background: #8C6CFF; color: #0E1440; border: 2px solid var(--s1)">I</span>
+<span class="av" style="width: 28px; height: 28px; margin-left: -8px; font-size: 11px; background: #FF6A4D; color: #0E1440; border: 2px solid var(--s1)">M</span>
+<span class="av" style="width: 28px; height: 28px; margin-left: -8px; font-size: 11px; background: #FFD43B; color: #0E1440; border: 2px solid var(--s1)">S</span>
+<span class="av" style="width: 28px; height: 28px; margin-left: -8px; font-size: 11px; background: var(--s2); color: var(--ink); border: 2px solid var(--s1)">+1</span>
+</span>
+</a>
+<button type="button" class="press rise" style="animation-delay: 120ms; display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line); color: var(--ink); text-align: left">
+<span class="mark" aria-hidden="true" style="width: 50px; height: 50px; border-width: 2.5px; border-color: var(--coral-ink); color: var(--coral-ink); font-size: 17px; transform: rotate(5deg)">PJ</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font: 650 16px/1.2 'Instrument Sans', system-ui, sans-serif">Padel de joi</span>
+<span style="font: 500 13px/1.25 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">4 membri, 2 ieșiri împreună</span>
+</span>
+<span aria-hidden="true" style="display: flex; flex: none">
+<span class="av" style="width: 28px; height: 28px; font-size: 11px; background: #3A4585; color: #F3F5FF; border: 2px solid var(--s1)">R</span>
+<span class="av" style="width: 28px; height: 28px; margin-left: -8px; font-size: 11px; background: #5B3FD9; color: #FFFFFF; border: 2px solid var(--s1)">B</span>
+<span class="av" style="width: 28px; height: 28px; margin-left: -8px; font-size: 11px; background: #8EA6FF; color: #0E1440; border: 2px solid var(--s1)">V</span>
+</span>
+</button>
+<button type="button" class="press rise" style="animation-delay: 180ms; display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line); color: var(--ink); text-align: left">
+<span class="mark" aria-hidden="true" style="width: 50px; height: 50px; border-width: 2.5px; border-color: var(--blue-ink); color: var(--blue-ink); font-size: 17px; transform: rotate(-3deg)">F</span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font: 650 16px/1.2 'Instrument Sans', system-ui, sans-serif">Familia</span>
+<span style="font: 500 13px/1.25 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">3 membri, încă nicio ieșire</span>
+</span>
+<span aria-hidden="true" style="display: flex; flex: none">
+<span class="av" style="width: 28px; height: 28px; font-size: 11px; background: #B7A3FF; color: #0E1440; border: 2px solid var(--s1)">E</span>
+<span class="av" style="width: 28px; height: 28px; margin-left: -8px; font-size: 11px; background: #FFE58A; color: #0E1440; border: 2px solid var(--s1)">D</span>
+</span>
+</button>
+</div>
+
+<a href="Prieteni.dc.html" class="press rise" style="animation-delay: 240ms; margin-top: 28px; display: flex; align-items: center; gap: 14px; padding: 12px 14px 12px 12px; border-radius: 20px; background: var(--s1); border: 1px solid var(--line); color: var(--ink); text-decoration: none">
+<span aria-hidden="true" style="width: 50px; height: 50px; flex: none; border-radius: 16px; background: var(--blue-soft); color: var(--blue-ink); display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font: 650 16px/1.2 'Instrument Sans', system-ui, sans-serif">Prieteni</span>
+<span style="font: 500 13px/1.25 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)">7 prieteni. Adaugi după username.</span>
+</span>
+<span style="flex: none; height: 28px; padding: 0 10px; border-radius: 999px; background: #FF6A4D; color: #0E1440; display: flex; align-items: center; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">1 cerere</span>
+<svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+
+</div>
+
+<nav aria-label="Navigare principală" style="position: absolute; left: 0; right: 0; bottom: 0; height: 80px; padding: 8px 12px 20px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--bg); border-top: 1px solid var(--line)">
+<a href="Main.dc.html" class="tab"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span>Acasă</span></a>
+<button type="button" class="tab"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"></path><circle cx="12" cy="12" r="10"></circle></svg><span>Explorează</span></button>
+<a href="Planuri.dc.html" class="tab on" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg><span>Planuri</span></a>
+<a href="Carnet.dc.html" class="tab"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Profil</span></a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { themeClass: ({ zi: 'light day', noapte: 'graphite', luminos: 'light day', 'hârtie': 'light day', grafit: 'graphite' })[this.props.theme ?? 'zi'] ?? 'light day' };
+  }
+}
+</script>
+</body>
+</html>

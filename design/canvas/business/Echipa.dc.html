@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci Business — Echipă și acces</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#EEF1F7;--s3:#DCE0EA;--line:#D2D7E3;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow:#FFD43B;--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral:#FF6A4D;--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet:#8C6CFF;--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);--side:#0E1440;--side-ink:#F3F5FF;--side-ink2:#A9B1DA;font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#24242A;--s3:#2E2E35;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18);--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.22);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16);--side:#0B0B0E}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.06)}}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible{outline-color:#FFD43B}
+.nav{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:12px;color:var(--side-ink2);text-decoration:none;font:600 14px/1 'Instrument Sans',system-ui,sans-serif;transition:background-color .15s ease,color .15s ease}
+.nav:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
+.nav.on{background:#FFD43B;color:#0E1440}
+.nav:focus-visible{outline:3px solid #FFD43B;outline-offset:2px}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:34px;line-height:1;font-weight:780;font-stretch:90%;letter-spacing:-.025em}
+.h2{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:20px;line-height:1.1;font-weight:740;letter-spacing:-.01em}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px}
+.tag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font:700 12px/1 'Instrument Sans',system-ui,sans-serif;white-space:nowrap}
+.btnp{height:44px;padding:0 16px;border:0;border-radius:14px;background:var(--blue);color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btnp:disabled{background:var(--s3);color:var(--ink2);cursor:default}
+.btns{height:40px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--s1);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 13px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btnq{height:40px;padding:0 10px;border:0;border-radius:12px;background:transparent;color:var(--ink2);display:inline-flex;align-items:center;gap:6px;font:650 13px/1 'Instrument Sans',system-ui,sans-serif}
+.seg{height:40px;border:1px solid var(--line);border-radius:12px;background:var(--s1);color:var(--ink);font:650 13px/1 'Instrument Sans',system-ui,sans-serif}
+.seg.on{border:2px solid var(--blue);background:var(--blue-soft);color:var(--blue-ink)}
+.field{height:44px;display:flex;align-items:center;padding:0 12px;border-radius:12px;background:var(--s2);border:1.5px solid transparent;transition:border-color .15s ease,box-shadow .15s ease}
+.field:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.field input{flex:1 1 auto;min-width:0;border:0;outline:none;background:transparent;color:var(--ink);font:600 14px/1 'Instrument Sans',system-ui,sans-serif}
+.field input::placeholder{color:var(--ink3)}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) 62px 62px 62px 62px;align-items:center;min-height:44px;padding:0 2px;border-top:1px solid var(--line);font:550 13px/1.3 'Instrument Sans',system-ui,sans-serif}
+.f14{font:600 14px/1.3 'Instrument Sans',system-ui,sans-serif}
+.f15{font:650 15px/1.2 'Instrument Sans',system-ui,sans-serif}
+.num{font-variant-numeric:tabular-nums}
+.col{display:flex;flex-direction:column}
+.av{flex:none;border-radius:99px;display:flex;align-items:center;justify-content:center;font:700 13px/1 'Instrument Sans',system-ui,sans-serif}
+.chip{height:36px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);font:600 13px/1 'Instrument Sans',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.chip.sm{height:32px;padding:0 11px;font-size:12px}
+.tg{position:relative;width:44px;height:26px;flex:none;border-radius:999px;background:var(--ink3);transition:background-color .2s ease}
+.tg span{position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tg.on{background:var(--blue)}
+.tg.on span{transform:translateX(18px)}
+.mem{width:100%;min-height:64px;display:flex;align-items:center;gap:14px;padding:8px 10px;border:0;border-radius:14px;background:transparent;color:var(--ink);text-align:left;font:inherit}
+.mem:hover{background:var(--s2)}
+.mem.on{background:var(--blue-soft)}
+.scr{animation:scr .3s cubic-bezier(.23,1,.32,1) both}
+@keyframes scr{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.mrow>span:not(:first-child){display:flex;justify-content:center}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.hs{scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 1440px; height: 900px; position: relative; overflow: hidden; display: flex; background: var(--bg); color: var(--ink)">
+
+<nav aria-label="Meniu" style="width: 248px; flex: none; height: 900px; padding: 22px 14px 18px; background: var(--side); color: var(--side-ink); display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 30px; height: 30px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 23px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Business</span>
+</div>
+<div style="margin-top: 22px; padding: 12px; border-radius: 16px; background: rgba(255, 255, 255, 0.07); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #2F5BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2zM10.6 9.5h2.8"></path></svg></span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font: 700 15px/1.1 'Instrument Sans', system-ui, sans-serif">Pista 9</span><span style="font: 500 12px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Bowling · Buftea</span></span>
+</div>
+<div style="display: flex; gap: 6px">
+<span class="tag" style="height: 22px; background: rgba(47, 91, 255, 0.28); color: #C9D5FF"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="#2F5BFF"></path><path d="m9 12 2 2 4-4" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Verificat</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Partener</span>
+</div>
+</div>
+<div style="margin-top: 18px; display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Azi</a>
+<a href="Rezervari.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path></svg><span style="flex: 1 1 auto">Rezervări</span><span class="tag" style="height: 20px; padding: 0 7px; background: #FF6A4D; color: #0E1440">3</span></a>
+<a href="Oferte.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 5 19M4 6.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0M15 17.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0"></path></svg>Oferte și Live Drops</a>
+<a href="Evenimente.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2"></path></svg>Evenimente și bilete</a>
+<a href="Statistici.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16M8 17v-5M13 17V9M18 17V5"></path></svg>Statistici</a>
+<a href="Profil.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5"></path></svg>Profilul localului</a>
+<a href="Echipa.dc.html" class="nav on" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Echipă</a>
+</div>
+<a href="Scanner.dc.html" class="nav" style="margin-top: auto; border: 1px solid rgba(255, 255, 255, 0.14)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>Scanner pe telefon</a>
+<div style="margin-top: 14px; padding: 0 8px; display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 99px; background: #FFD43B; color: #0E1440; display: flex; align-items: center; justify-content: center; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">AS</span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font: 650 13px/1.1 'Instrument Sans', system-ui, sans-serif">Andrei Stoica</span><span style="font: 500 12px/1.1 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Proprietar</span></span>
+</div>
+</nav>
+
+<main class="hs" style="flex: 1 1 auto; min-width: 0; height: 900px; overflow-y: auto; padding: 28px 32px 36px">
+<div class="scr" style="display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 24px; align-items: start">
+<div class="col" style="gap: 16px; min-width: 0">
+<header class="col" style="gap: 8px"><span class="lbl">Cine lucrează în panou și în aplicația de angajat</span><h1 class="h1">Echipă și acces</h1></header>
+<sc-if value="{{hasReq}}" hint-placeholder-val="{{ false }}">
+<section class="pop" role="status" aria-label="Cerere de acces" style="padding: 14px 16px; border-radius: 20px; background: var(--coral-soft); display: flex; align-items: center; gap: 14px">
+<span class="av" aria-hidden="true" style="width: 42px; height: 42px; font-size: 14px; background: #FF6A4D; color: #0E1440">{{reqIni}}</span>
+<div class="col" style="flex: 1 1 auto; min-width: 0; gap: 4px"><span class="f15">{{reqTitle}}</span><span class="muted" style="color: var(--ink)">{{reqText}}</span></div>
+<button type="button" class="press btnp" onClick="{{reqYes}}" style="flex: none">Dă-i tură extra azi</button>
+<button type="button" class="press btns" onClick="{{reqNo}}" style="flex: none">Refuză</button>
+</section>
+</sc-if>
+<section class="card" aria-labelledby="tm-t" style="padding: 18px 12px 8px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; padding: 0 6px"><h2 id="tm-t" class="h2">Echipa</h2><span class="muted">{{tmCount}}</span></div>
+<ul style="list-style: none; margin: 10px 0 0; padding: 0"><sc-for list="{{team}}" as="m" hint-placeholder-count="6"><li class="{{m.anim}}" style="border-top: 1px solid var(--line); padding: 4px 0"><button type="button" class="{{m.cls}}" aria-pressed="{{m.on}}" onClick="{{m.pick}}"><span class="av" aria-hidden="true" style="width: 42px; height: 42px; font-size: 14px; background: {{m.bg}}; color: {{m.fg}}; opacity: {{m.op}}">{{m.ini}}</span><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 4px"><span class="f15" style="display: flex; align-items: center; gap: 8px">{{m.name}}<span class="tag" style="background: {{m.roleBg}}; color: {{m.roleFg}}">{{m.role}}</span></span><span class="muted">{{m.sub}}</span></span><sc-if value="{{m.hasSt}}" hint-placeholder-val="{{ true }}"><span class="tag" style="flex: none; background: {{m.stBg}}; color: {{m.stFg}}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 99px; background: currentColor"></span>{{m.st}}</span></sc-if><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><path d="m9 18 6-6-6-6"></path></svg></button></li></sc-for></ul>
+</section>
+<section class="card" aria-labelledby="iv-t" style="padding: 18px">
+<h2 id="iv-t" class="h2">Adaugă un angajat</h2>
+<p class="muted" style="margin: 6px 0 0">Scrii numele și rolul, iar noi generăm un cod unic. Omul deschide CeFaci Business, alege „Angajat” și scrie codul. Codul merge o singură dată și expiră în 48 de ore dacă nu e folosit.</p>
+<div style="margin-top: 14px; display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 10px; align-items: end">
+<div class="col" style="gap: 6px"><label for="gn" class="lbl">Numele (îl vezi doar tu în Echipă)</label><div class="field"><input id="gn" type="text" maxlength="30" value="{{gName}}" onChange="{{onGName}}" placeholder="ex: Ana Marin"></div></div>
+<div class="col" style="gap: 6px"><p id="gr" class="lbl">Rol</p><div role="group" aria-labelledby="gr" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px"><sc-for list="{{gRoles}}" as="r" hint-placeholder-count="3"><button type="button" class="{{r.cls}}" aria-pressed="{{r.on}}" onClick="{{r.pick}}">{{r.label}}</button></sc-for></div></div>
+</div>
+<button type="button" class="press btnp" onClick="{{genCode}}" disabled="{{genOff}}" style="margin-top: 14px; height: 48px">Generează codul</button>
+</section>
+</div>
+<div class="col" style="gap: 16px; min-width: 0">
+<section class="card" aria-labelledby="md-t" style="padding: 18px">
+<div style="display: flex; align-items: center; gap: 14px">
+<span class="av" aria-hidden="true" style="width: 52px; height: 52px; font-size: 16px; background: {{md.bg}}; color: {{md.fg}}">{{md.ini}}</span>
+<div class="col" style="flex: 1 1 auto; min-width: 0; gap: 5px"><h2 id="md-t" class="h2">{{md.name}}</h2><span class="muted">{{md.status}}</span></div>
+<span class="tag" style="flex: none; background: {{md.roleBg}}; color: {{md.roleFg}}">{{md.role}}</span>
+</div>
+<sc-if value="{{md.isMe}}" hint-placeholder-val="{{ false }}"><p class="f14" style="margin: 14px 0 0; font-weight: 550">Ești proprietarul. Contul tău nu are program, nu poate fi pus pe pauză și poate face tot. Scanezi și tu când lipsește cineva.</p></sc-if>
+<sc-if value="{{md.isCode}}" hint-placeholder-val="{{ false }}">
+<div class="col">
+<div class="col pop" style="margin-top: 16px; padding: 18px; border-radius: 18px; background: var(--s2); align-items: center; gap: 8px; text-align: center">
+<span class="lbl">Codul de intrare</span>
+<span class="num" style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 42px; line-height: 1; font-weight: 800; letter-spacing: 0.06em">{{md.code}}</span>
+<span class="muted">{{md.codeText}}</span>
+</div>
+<div style="margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button type="button" class="press btnp" onClick="{{md.wa}}">Trimite pe WhatsApp</button>
+<button type="button" class="press btns" onClick="{{md.copy}}">Copiază codul</button>
+<button type="button" class="press btns" onClick="{{md.regen}}">Generează alt cod</button>
+<button type="button" class="press btnq" onClick="{{md.cancel}}" style="justify-content: center">Anulează codul</button>
+</div>
+<p class="muted" style="margin: 12px 0 0">La prima folosire, codul se leagă de telefonul de pe care a intrat omul. Dacă își schimbă telefonul, îi generezi altul de aici.</p>
+</div>
+</sc-if>
+<sc-if value="{{md.isStaff}}" hint-placeholder-val="{{ true }}">
+<div class="col">
+<div class="col" style="margin-top: 16px; gap: 8px"><p id="md-role" class="lbl">Rol</p><div role="group" aria-labelledby="md-role" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px"><sc-for list="{{md.roles}}" as="r" hint-placeholder-count="3"><button type="button" class="{{r.cls}}" aria-pressed="{{r.on}}" onClick="{{r.pick}}">{{r.label}}</button></sc-for></div><span class="muted">{{md.roleHint}}</span></div>
+<button type="button" class="press" role="switch" aria-checked="{{md.paused}}" onClick="{{md.togglePause}}" style="margin-top: 16px; width: 100%; min-height: 62px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); display: flex; align-items: center; gap: 12px; text-align: left"><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 3px"><span class="f14">Pe pauză</span><span class="muted">{{md.pauseHint}}</span></span><span class="{{md.pauseTg}}" aria-hidden="true"><span></span></span></button>
+<button type="button" class="press" role="switch" aria-checked="{{md.schedOn}}" onClick="{{md.toggleSched}}" style="margin-top: 8px; width: 100%; min-height: 62px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--s1); color: var(--ink); display: flex; align-items: center; gap: 12px; text-align: left"><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 3px"><span class="f14">Doar în programul de lucru</span><span class="muted">{{md.schedHint}}</span></span><span class="{{md.schedTg}}" aria-hidden="true"><span></span></span></button>
+<sc-if value="{{md.schedOn}}" hint-placeholder-val="{{ true }}">
+<div class="col pop" style="margin-top: 8px; padding: 14px; border-radius: 14px; background: var(--s2); gap: 10px">
+<div role="group" aria-label="Zilele de lucru" style="display: flex; gap: 5px"><sc-for list="{{md.days}}" as="d" hint-placeholder-count="7"><button type="button" class="{{d.cls}}" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 1 1 0; padding: 0; justify-content: center">{{d.label}}</button></sc-for></div>
+<div role="group" aria-label="Orele" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px"><sc-for list="{{md.shifts}}" as="h" hint-placeholder-count="4"><button type="button" class="{{h.cls}}" aria-pressed="{{h.on}}" onClick="{{h.pick}}" style="justify-content: center">{{h.label}}</button></sc-for></div>
+<span class="muted">Poate intra cu o oră înainte de tură.</span>
+</div>
+</sc-if>
+<sc-if value="{{md.canExtra}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 10px; padding: 12px 14px; border-radius: 14px; background: var(--yellow-soft); display: flex; align-items: center; gap: 12px"><span class="f14" style="flex: 1 1 auto; font-weight: 550">Nu e în tură acum. Dacă vine totuși azi, îi dai acces până la închidere.</span><button type="button" class="press btns" onClick="{{md.giveExtra}}" style="flex: none">Tură extra azi</button></div></sc-if>
+<sc-if value="{{md.hasExtra}}" hint-placeholder-val="{{ false }}"><div style="margin-top: 10px; padding: 12px 14px; border-radius: 14px; background: var(--green-soft); display: flex; align-items: center; gap: 12px"><span class="f14" style="flex: 1 1 auto; font-weight: 550; color: var(--green-ink)">Are tură extra azi, până la 02:00.</span><button type="button" class="press btns" onClick="{{md.stopExtra}}" style="flex: none">Oprește tura extra</button></div></sc-if>
+<button type="button" class="{{md.rmCls}}" onClick="{{md.rm}}" style="margin-top: 14px; align-self: flex-start">{{md.rmLabel}}</button>
+</div>
+</sc-if>
+</section>
+<section class="card" aria-labelledby="pm-t" style="padding: 18px 18px 8px">
+<h2 id="pm-t" class="h2">Cine ce poate face</h2>
+<div role="table" aria-labelledby="pm-t" style="margin-top: 12px">
+<div role="row" class="mrow" style="border-top: 0; min-height: 34px; font-weight: 650; font-size: 12px; color: var(--ink2)"><span role="columnheader">Poate</span><span role="columnheader">Proprietar</span><span role="columnheader">Manager</span><span role="columnheader">Recepție</span><span role="columnheader">Scanare</span></div>
+<sc-for list="{{perms}}" as="p" hint-placeholder-count="7"><div role="row" class="mrow"><span role="rowheader">{{p.label}}</span><sc-for list="{{p.cells}}" as="c" hint-placeholder-count="4"><span role="cell" aria-label="{{c.aria}}"><span class="av" aria-hidden="true" style="width: 26px; height: 26px; background: {{c.bg}}; color: {{c.fg}}"><svg class="i s" viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke-width: 2.6"><path d="{{c.icon}}"></path></svg></span></span></sc-for></div></sc-for>
+</div>
+</section>
+<section class="col" style="padding: 18px; border-radius: 20px; background: var(--blue-soft); gap: 10px">
+<h2 class="h2" style="font-size: 18px">Siguranța clienților</h2>
+<p class="f14" style="margin: 0; font-weight: 550">La scanare, angajatul vede doar prenumele, câte persoane sunt și oferta. Niciodată telefonul clientului.</p>
+<p class="f14" style="margin: 0; font-weight: 550">Pauza, programul și scoaterea din echipă se aplică pe loc, și pe telefon. Încearcă: pune-l pe Mihnea pe pauză sau scoate-l, apoi deschide scannerul.</p>
+</section>
+</div>
+</div>
+</main>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<p class="pop" role="status" style="position: absolute; left: 248px; right: 0; bottom: 24px; margin: 0 auto; width: max-content; max-width: 640px; padding: 14px 18px; border-radius: 16px; background: #0E1440; color: #FFFFFF; font: 600 14px/1.35 'Instrument Sans', system-ui, sans-serif; box-shadow: 0 14px 34px rgba(14, 20, 64, 0.3)">{{toast}}</p>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":1440,"height":900}}'>
+const IC = { check: 'M20 6 9 17l-5-5', dash: 'M6 12h12' };
+const ROLE = { owner: ['Proprietar', 'var(--yellow-soft)', 'var(--yellow-ink)'], manager: ['Manager', 'var(--violet-soft)', 'var(--violet-ink)'], recep: ['Recepție', 'var(--blue-soft)', 'var(--blue-ink)'], scan: ['Scanare', 'var(--s3)', 'var(--ink)'] };
+const ROLE_SUB = { manager: 'Aproape tot, fără profilul localului și fără manageri noi.', recep: 'Rezervările zilei și scannerul, pe telefon.', scan: 'Doar scannerul: vede cine a venit și ce ofertă are.' };
+const DAYS7 = ['Lu', 'Ma', 'Mi', 'Jo', 'Vi', 'Sâ', 'Du'];
+const TODAY = 'Vi';
+const SHIFTS = { '08–16': [8, 16, '08:00–16:00'], '12–24': [12, 24, '12:00–24:00'], '16–24': [16, 24, '16:00–24:00'], '17–02': [17, 26, '17:00–02:00'] };
+const CODES = ['4K7M', 'H2WD', '9RTF', 'Z8QC', 'M3XP', 'W6LB', 'Q5NS'];
+function daysText(ds) {
+  const idx = DAYS7.map((d, i) => (ds.indexOf(d) !== -1 ? i : -1)).filter((i) => i >= 0);
+  if (idx.length === 7) return 'în fiecare zi';
+  if (!idx.length) return 'nicio zi aleasă';
+  const runs = []; let st = idx[0]; let pr = idx[0];
+  idx.slice(1).concat([99]).forEach((i) => { if (i === pr + 1) { pr = i; return; } runs.push(pr - st >= 2 ? DAYS7[st] + '–' + DAYS7[pr] : (pr > st ? DAYS7[st] + ' și ' + DAYS7[pr] : DAYS7[st])); st = i; pr = i; });
+  return runs.join(', ');
+}
+function schedText(sc) { return sc ? daysText(sc.days) + ', ' + SHIFTS[sc.shift][2] : 'oricând e deschis localul'; }
+const TEAM0 = [
+  { id: 't1', ini: 'AS', bg: '#FFD43B', fg: '#0E1440', name: 'Andrei Stoica', role: 'owner', me: true },
+  { id: 't2', ini: 'CD', bg: '#8C6CFF', fg: '#0E1440', name: 'Carmen Dobre', role: 'manager', sched: { days: ['Ma', 'Mi', 'Jo', 'Vi', 'Sâ'], shift: '16–24' } },
+  { id: 't3', ini: 'MR', bg: '#2F5BFF', fg: '#FFFFFF', name: 'Mihnea Radu', role: 'scan', sched: { days: ['Lu', 'Ma', 'Mi', 'Jo', 'Vi'], shift: '17–02' } },
+  { id: 't4', ini: 'DP', bg: '#FF6A4D', fg: '#0E1440', name: 'Denisa Pavel', role: 'recep', sched: { days: ['Sâ', 'Du'], shift: '12–24' } },
+  { id: 't5', ini: 'BI', bg: '#B7A3FF', fg: '#0E1440', name: 'Bogdan Ilie', role: 'scan', paused: true, pauseNote: 'concediu până pe 5 oct.', sched: null },
+  { id: 't6', ini: 'ST', bg: '#DCE0EA', fg: '#0E1440', name: 'Sorin Tudose', role: 'scan', code: 'P9-7QX2', codeLeft: 31, sched: null }
+];
+const PERMS = [['Scanează coduri și bifează sosiri', [1, 1, 1, 1]], ['Vede și confirmă rezervările zilei', [1, 1, 1, 0]], ['Pune oferte, Live Drops și evenimente', [1, 1, 0, 0]], ['Vede statisticile', [1, 1, 0, 0]], ['Generează coduri, pune pauză și program pentru Recepție și Scanare', [1, 1, 0, 0]], ['Adaugă manageri și scoate oameni din echipă', [1, 0, 0, 0]], ['Modifică profilul localului', [1, 0, 0, 0]]];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.nid = 50;
+    this.state = { team: TEAM0, tmArm: null, tmSel: 't4', gName: '', gRole: 'scan', freshTeam: '', req: 't4', toast: '', scBlockedName: null, scBlockedWhy: '' };
+  }
+  componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  say(msg) { this.setState({ toast: msg }); this.later(() => { if (this.state.toast === msg) this.setState({ toast: '' }); }, 3800); }
+  nowH() { return 19.7; }
+  staffNow() { return this.state.team.find((m) => (m.role === 'scan' || m.role === 'recep') && this.shiftOk(m)) || null; }
+  shiftOk(m) {
+    if (m.me) return true;
+    if (m.code || m.paused) return false;
+    if (m.extra || !m.sched) return true;
+    const sh = SHIFTS[m.sched.shift]; const h = this.nowH();
+    return m.sched.days.indexOf(TODAY) !== -1 && h >= sh[0] - 1 && h < sh[1];
+  }
+  patchMember(id, patch) { this.setState((s) => ({ team: s.team.map((m) => (m.id === id ? Object.assign({}, m, patch) : m)) })); }
+  nextCode() { this.codeIx = (this.codeIx || 0) + 1; return 'P9-' + CODES[(this.codeIx - 1) % CODES.length]; }
+  renderVals() {
+    const s = this.state;
+    const theme = this.props.theme ?? 'zi';
+    const prof = { name: 'Pista 9' };
+    const vals = { themeClass: ({ zi: 'light', noapte: 'graphite' })[theme] ?? 'light', hasToast: s.toast !== '', toast: s.toast };
+    // Echipă
+    const first = (m) => m.name.split(' ')[0];
+    vals.tmCount = s.team.length + (s.team.length === 1 ? ' om' : ' oameni');
+    const stOf = (m) => {
+      if (m.me) return ['Tu · poți face tot', '', '', ''];
+      if (m.code) return ['Cod nefolosit · expiră în ' + m.codeLeft + ' h', 'Cod trimis', 'var(--blue-soft)', 'var(--blue-ink)'];
+      if (m.paused) return ['Pe pauză' + (m.pauseNote ? ' · ' + m.pauseNote : ''), 'Pe pauză', 'var(--yellow-soft)', 'var(--yellow-ink)'];
+      if (m.extra) return ['Tură extra azi, până la 02:00', 'În tură', 'var(--green-soft)', 'var(--green-ink)'];
+      if (this.shiftOk(m)) return ['În tură acum · ' + schedText(m.sched), 'În tură', 'var(--green-soft)', 'var(--green-ink)'];
+      return ['Nu e în tură acum · ' + schedText(m.sched), 'Liber', 'var(--s2)', 'var(--ink2)'];
+    };
+    vals.team = s.team.map((m) => {
+      const r = ROLE[m.role];
+      const st = stOf(m);
+      const on = s.tmSel === m.id;
+      return { ini: m.ini, bg: m.bg, fg: m.fg, name: m.name, sub: st[0], role: r[0], roleBg: r[1], roleFg: r[2], op: m.code || m.paused ? '0.55' : '1', hasSt: !!st[1], st: st[1], stBg: st[2], stFg: st[3], on, cls: on ? 'press mem on' : 'press mem', pick: () => this.setState({ tmSel: m.id, tmArm: null }), anim: m.id === s.freshTeam ? 'pop' : '' };
+    });
+    const req = s.req ? s.team.find((m) => m.id === s.req) : null;
+    vals.hasReq = !!req;
+    vals.reqIni = req ? req.ini : '';
+    vals.reqTitle = req ? req.name + ' cere acces în aplicație' : '';
+    vals.reqText = req ? 'Nu e în tură azi (' + schedText(req.sched) + '). Cu tură extra poate scana și vedea rezervările până la 02:00.' : '';
+    vals.reqYes = () => { if (!req) return; this.patchMember(req.id, { extra: true }); this.setState({ req: null, tmSel: req.id }); this.say(first(req) + ' are tură extra azi, până la 02:00. Aplicația s-a deblocat pe loc.'); };
+    vals.reqNo = () => { if (!req) return; this.setState({ req: null }); this.say('Am refuzat. ' + first(req) + ' vede în aplicație că azi nu are acces.'); };
+    vals.gName = s.gName; vals.onGName = (e) => this.setState({ gName: e && e.target ? String(e.target.value).slice(0, 30) : '' });
+    vals.gRoles = [['manager', 'Manager'], ['recep', 'Recepție'], ['scan', 'Scanare']].map(([v, label]) => ({ label, on: s.gRole === v, cls: s.gRole === v ? 'press seg on' : 'press seg', pick: () => this.setState({ gRole: v }) }));
+    vals.genOff = s.gName.trim().length < 2;
+    vals.genCode = () => {
+      const name = this.state.gName.trim();
+      if (name.length < 2) return;
+      this.nid += 1;
+      const parts = name.split(/\s+/);
+      const code = this.nextCode();
+      const m = { id: 't' + this.nid, ini: (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase(), bg: '#DCE0EA', fg: '#0E1440', name, role: this.state.gRole, code, codeLeft: 48, sched: null };
+      this.setState((st) => ({ team: st.team.concat([m]), gName: '', freshTeam: m.id, tmSel: m.id }));
+      this.say('Codul ' + code + ' e gata. Trimite-l pe WhatsApp sau arată-l pe ecran.');
+      this.later(() => {
+        const cur = this.state.team.find((x) => x.id === m.id);
+        if (!cur || cur.code !== code) return;
+        this.patchMember(m.id, { code: null });
+        this.say(parts[0] + ' a intrat cu codul ' + code + '. Contul e legat acum de telefonul de pe care a intrat.');
+      }, 9000);
+    };
+    const sel = s.team.find((m) => m.id === s.tmSel) || s.team[0];
+    const sst = stOf(sel);
+    const sr0 = ROLE[sel.role];
+    const inShift = this.shiftOk(sel);
+    const armed = s.tmArm === sel.id;
+    vals.md = {
+      ini: sel.ini, bg: sel.bg, fg: sel.fg, name: sel.name, status: sst[0], role: sr0[0], roleBg: sr0[1], roleFg: sr0[2],
+      isMe: !!sel.me, isCode: !sel.me && !!sel.code, isStaff: !sel.me && !sel.code,
+      code: sel.code || '', codeText: 'Merge o singură dată · expiră în ' + (sel.codeLeft || 48) + ' h dacă nu e folosit',
+      wa: () => this.say('Se deschide WhatsApp cu mesajul: „Codul tău pentru CeFaci Business, la ' + (prof.name.trim() || 'local') + ': ' + sel.code + '”.'),
+      copy: () => this.say('Am copiat codul ' + sel.code + '.'),
+      regen: () => { const code = this.nextCode(); this.patchMember(sel.id, { code, codeLeft: 48 }); this.say('Codul vechi nu mai merge. Noul cod, ' + code + ', e valabil 48 de ore.'); },
+      cancel: () => { this.setState((st) => ({ team: st.team.filter((x) => x.id !== sel.id), tmSel: 't1' })); this.say('Am anulat codul. Nu mai poate fi folosit.'); },
+      roles: [['manager', 'Manager'], ['recep', 'Recepție'], ['scan', 'Scanare']].map(([v, label]) => ({ label, on: sel.role === v, cls: sel.role === v ? 'press seg on' : 'press seg', pick: () => { if (sel.role === v) return; this.patchMember(sel.id, { role: v }); this.say(first(sel) + ' are acum rolul ' + label + '. ' + ROLE_SUB[v]); } })),
+      roleHint: ROLE_SUB[sel.role] || '',
+      paused: !!sel.paused, pauseTg: sel.paused ? 'tg on' : 'tg',
+      pauseHint: sel.paused ? 'În aplicație vede „Ești pe pauză” și nu poate scana.' : 'Pentru concediu sau zile libere. Nu trebuie cod nou când revine.',
+      togglePause: () => {
+        const cur = this.state.team.find((x) => x.id === sel.id);
+        if (!cur) return;
+        if (!cur.paused) {
+          const wasScanner = (this.staffNow() || {}).id === cur.id;
+          this.patchMember(cur.id, { paused: true, extra: false, pauseNote: '' });
+          this.setState((st) => ({ scBlockedName: wasScanner ? first(cur) : st.scBlockedName, scBlockedWhy: wasScanner ? 'paused' : st.scBlockedWhy }));
+          this.say(first(cur) + ' e pe pauză. Aplicația de pe telefon s-a oprit pe loc.');
+        } else {
+          this.patchMember(cur.id, { paused: false, pauseNote: '' });
+          this.setState((st) => (st.scBlockedName === first(cur) && st.scBlockedWhy === 'paused' ? { scBlockedName: null } : {}));
+          this.say(first(cur) + ' poate intra din nou în aplicație, fără cod nou.');
+        }
+      },
+      schedOn: !!sel.sched, schedTg: sel.sched ? 'tg on' : 'tg',
+      schedHint: sel.sched ? schedText(sel.sched) : 'Oprit: poate intra oricând e deschis localul.',
+      toggleSched: () => { const cur = this.state.team.find((x) => x.id === sel.id); if (!cur) return; this.patchMember(cur.id, { sched: cur.sched ? null : { days: ['Lu', 'Ma', 'Mi', 'Jo', 'Vi'], shift: '17–02' } }); },
+      days: DAYS7.map((d) => { const on = !!sel.sched && sel.sched.days.indexOf(d) !== -1; return { label: d, on, cls: on ? 'press chip sm on' : 'press chip sm', pick: () => { const cur = this.state.team.find((x) => x.id === sel.id); if (!cur || !cur.sched) return; const ds = on ? cur.sched.days.filter((x) => x !== d) : DAYS7.filter((x) => x === d || cur.sched.days.indexOf(x) !== -1); this.patchMember(cur.id, { sched: Object.assign({}, cur.sched, { days: ds }) }); } }; }),
+      shifts: Object.keys(SHIFTS).map((k) => { const on = !!sel.sched && sel.sched.shift === k; return { label: SHIFTS[k][2], on, cls: on ? 'press chip sm on' : 'press chip sm', pick: () => { const cur = this.state.team.find((x) => x.id === sel.id); if (!cur || !cur.sched) return; this.patchMember(cur.id, { sched: Object.assign({}, cur.sched, { shift: k }) }); } }; }),
+      canExtra: !sel.me && !sel.code && !sel.paused && !sel.extra && !inShift,
+      hasExtra: !!sel.extra && !sel.paused,
+      giveExtra: () => { this.patchMember(sel.id, { extra: true }); this.setState((st) => (st.req === sel.id ? { req: null } : {})); this.say(first(sel) + ' are tură extra azi, până la 02:00.'); },
+      stopExtra: () => { this.patchMember(sel.id, { extra: false }); this.say('Am oprit tura extra. ' + first(sel) + ' intră din nou doar în program.'); },
+      rmLabel: armed ? 'Sigur? Apasă iar ca să scoți din echipă' : 'Scoate din echipă', rmCls: armed ? 'press btns pop' : 'press btnq',
+      rm: () => {
+        if (this.state.tmArm !== sel.id) { this.setState({ tmArm: sel.id }); return; }
+        const wasScanner = (this.staffNow() || {}).id === sel.id;
+        this.setState((st) => ({ team: st.team.filter((x) => x.id !== sel.id), tmArm: null, tmSel: 't1', req: st.req === sel.id ? null : st.req, scBlockedName: wasScanner ? first(sel) : st.scBlockedName, scBlockedWhy: wasScanner ? 'removed' : st.scBlockedWhy }));
+        this.say(first(sel) + ' nu mai e în echipă. Contul s-a închis pe loc, și pe telefon.');
+      }
+    };
+    vals.perms = PERMS.map(([label, row]) => ({ label, cells: row.map((v, i) => ({ aria: (v ? 'Da' : 'Nu') + ', ' + ['proprietar', 'manager', 'recepție', 'scanare'][i], icon: v ? IC.check : IC.dash, bg: v ? 'var(--green-soft)' : 'var(--s2)', fg: v ? 'var(--green-ink)' : 'var(--ink3)' })) }));
+
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

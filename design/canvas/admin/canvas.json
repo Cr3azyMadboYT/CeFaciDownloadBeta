@@ -1,0 +1,36 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-09-29T17:05:00Z"
+  },
+  "title": "CeFaci Admin — panoul aplicației",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Panoul de admin (demo conectat)",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Main.dc.html"
+  ],
+  "notes": {
+    "howto": {
+      "x": 1520,
+      "y": 0,
+      "w": 400,
+      "text": "Panoul echipei CeFaci: aici ajunge tot ce trimit localurile și clienții. Încearcă: aprobă revendicarea de la Casa Grill, cere încă o poză la Terasa Luna · rezolvă disputa pentru Zarul (firma veche e radiată) · la Verificarea notelor pornește auditul pentru Club Neon 21 și vezi cum decontul lui se reține · la Deconturi marchează plata către Pista 9. Numerele din Acasă se schimbă după ce faci. Toate cifrele, firmele și persoanele sunt inventate pentru demo.",
+      "fill": "blue",
+      "size": "m"
+    }
+  },
+  "designSystems": []
+}

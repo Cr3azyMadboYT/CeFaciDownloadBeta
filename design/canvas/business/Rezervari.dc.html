@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci Business — Rezervări</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#EEF1F7;--s3:#DCE0EA;--line:#D2D7E3;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow:#FFD43B;--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.3);--coral:#FF6A4D;--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--violet:#8C6CFF;--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);--side:#0E1440;--side-ink:#F3F5FF;--side-ink2:#A9B1DA;font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#24242A;--s3:#2E2E35;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18);--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.22);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16);--side:#0B0B0E}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.06)}}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible{outline-color:#FFD43B}
+.nav{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:12px;color:var(--side-ink2);text-decoration:none;font:600 14px/1 'Instrument Sans',system-ui,sans-serif;transition:background-color .15s ease,color .15s ease}
+.nav:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
+.nav.on{background:#FFD43B;color:#0E1440}
+.nav:focus-visible{outline:3px solid #FFD43B;outline-offset:2px}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:34px;line-height:1;font-weight:780;font-stretch:90%;letter-spacing:-.025em}
+.h2{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:20px;line-height:1.1;font-weight:740;letter-spacing:-.01em}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px}
+.tag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font:700 12px/1 'Instrument Sans',system-ui,sans-serif;white-space:nowrap}
+.btnp{height:44px;padding:0 16px;border:0;border-radius:14px;background:var(--blue);color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btns{height:44px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--s1);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif;text-decoration:none}
+.btnq{height:44px;padding:0 12px;border:0;border-radius:14px;background:transparent;color:var(--ink2);display:inline-flex;align-items:center;gap:6px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif}
+.chip{height:36px;padding:0 14px;border:1px solid var(--line);border-radius:999px;background:var(--s1);color:var(--ink);font:600 13px/1 'Instrument Sans',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.seg{height:40px;border:1px solid var(--line);border-radius:12px;background:var(--s1);color:var(--ink);font:650 13px/1 'Instrument Sans',system-ui,sans-serif}
+.seg.on{border:2px solid var(--blue);background:var(--blue-soft);color:var(--blue-ink)}
+.tg{position:relative;width:44px;height:26px;flex:none;border-radius:999px;background:var(--ink3);transition:background-color .2s ease}
+.tg span{position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:999px;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tg.on{background:var(--blue)}
+.tg.on span{transform:translateX(18px)}
+.day{width:100%;height:64px;border:1px solid var(--line);border-radius:14px;background:var(--s1);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.day.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.row{width:100%;min-height:58px;display:grid;grid-template-columns:64px minmax(0,1fr) 92px 76px 120px 140px;align-items:center;gap:10px;padding:8px 14px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);text-align:left;font:500 14px/1.25 'Instrument Sans',system-ui,sans-serif}
+.row:hover{background:var(--s2)}
+.row.on{background:var(--blue-soft)}
+.field{display:flex;align-items:center;padding:10px 12px;border-radius:12px;background:var(--s2);border:1.5px solid transparent;transition:border-color .15s ease,box-shadow .15s ease}
+.field:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.field textarea{flex:1 1 auto;min-width:0;height:44px;resize:none;border:0;outline:none;background:transparent;color:var(--ink);font:500 14px/1.4 'Instrument Sans',system-ui,sans-serif}
+.field textarea::placeholder{color:var(--ink3)}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.hs{scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 1440px; height: 900px; position: relative; overflow: hidden; display: flex; background: var(--bg); color: var(--ink)">
+
+<nav aria-label="Meniu" style="width: 248px; flex: none; height: 900px; padding: 22px 14px 18px; background: var(--side); color: var(--side-ink); display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 30px; height: 30px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 23px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Business</span>
+</div>
+<div style="margin-top: 22px; padding: 12px; border-radius: 16px; background: rgba(255, 255, 255, 0.07); display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #2F5BFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a2 2 0 0 0-2 2c0 1.5 1 2 1 3.5 0 1-3 3-3 7a4 4 0 0 0 8 0c0-4-3-6-3-7 0-1.5 1-2 1-3.5a2 2 0 0 0-2-2zM10.6 9.5h2.8"></path></svg></span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font: 700 15px/1.1 'Instrument Sans', system-ui, sans-serif">Pista 9</span><span style="font: 500 12px/1.2 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Bowling · Buftea</span></span>
+</div>
+<div style="display: flex; gap: 6px">
+<span class="tag" style="height: 22px; background: rgba(47, 91, 255, 0.28); color: #C9D5FF"><svg viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" fill="#2F5BFF"></path><path d="m9 12 2 2 4-4" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>Verificat</span>
+<span class="tag" style="height: 22px; background: rgba(255, 212, 59, 0.16); color: #FFD43B">Partener</span>
+</div>
+</div>
+<div style="margin-top: 18px; display: flex; flex-direction: column; gap: 2px">
+<a href="Main.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg>Azi</a>
+<a href="Rezervari.dc.html" class="nav on" aria-current="page"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"></path></svg><span style="flex: 1 1 auto">Rezervări</span><span class="tag" style="height: 20px; padding: 0 7px; background: #FF6A4D; color: #0E1440">{{pendingN}}</span></a>
+<a href="Oferte.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 5 19M4 6.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0M15 17.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0"></path></svg>Oferte și Live Drops</a>
+<a href="Evenimente.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2"></path></svg>Evenimente și bilete</a>
+<a href="Statistici.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16M8 17v-5M13 17V9M18 17V5"></path></svg>Statistici</a>
+<a href="Profil.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5"></path></svg>Profilul localului</a>
+<a href="Echipa.dc.html" class="nav"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Echipă</a>
+</div>
+<a href="Scanner.dc.html" class="nav" style="margin-top: auto; border: 1px solid rgba(255, 255, 255, 0.14)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>Scanner pe telefon</a>
+<div style="margin-top: 14px; padding: 0 8px; display: flex; align-items: center; gap: 10px">
+<span aria-hidden="true" style="width: 34px; height: 34px; flex: none; border-radius: 99px; background: #FFD43B; color: #0E1440; display: flex; align-items: center; justify-content: center; font: 700 13px/1 'Instrument Sans', system-ui, sans-serif">AS</span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font: 650 13px/1.1 'Instrument Sans', system-ui, sans-serif">Andrei Stoica</span><span style="font: 500 12px/1.1 'Instrument Sans', system-ui, sans-serif; color: var(--side-ink2)">Proprietar</span></span>
+</div>
+</nav>
+
+<main class="hs" style="flex: 1 1 auto; min-width: 0; height: 900px; overflow-y: auto; padding: 28px 32px 32px; display: flex; flex-direction: column; gap: 18px">
+<header style="flex: none; display: flex; align-items: flex-end; justify-content: space-between; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span class="lbl">{{dayLong}}</span>
+<h1 class="h1">Rezervări</h1>
+</div>
+<button type="button" class="press btns" onClick="{{addPhone}}"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Adaugă o rezervare luată la telefon</button>
+</header>
+
+<div role="group" aria-label="Ziua" style="flex: none; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+<button type="button" class="{{d.cls}}" aria-pressed="{{d.on}}" onClick="{{d.pick}}"><span style="font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; opacity: 0.8">{{d.name}}</span><span style="font: 750 17px/1 'Instrument Sans', system-ui, sans-serif">{{d.num}}</span><span style="font: 600 11px/1 'Instrument Sans', system-ui, sans-serif; opacity: 0.8">{{d.count}}</span></button>
+</sc-for>
+</div>
+
+<div style="flex: none; display: grid; grid-template-columns: minmax(0, 1fr) 392px; gap: 20px; align-items: start">
+<section class="card" aria-labelledby="list-t" style="overflow: hidden">
+<div style="padding: 16px 16px 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<h2 id="list-t" class="h2">{{listTitle}}</h2>
+<div role="group" aria-label="Filtru" style="display: flex; gap: 6px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="5"><button type="button" class="{{f.cls}}" aria-pressed="{{f.on}}" onClick="{{f.pick}}">{{f.label}}<span style="opacity: 0.7">{{f.n}}</span></button></sc-for>
+</div>
+</div>
+<div aria-hidden="true" style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 92px 76px 120px 140px; gap: 10px; padding: 8px 14px; background: var(--s2); font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: var(--ink2)"><span>Ora</span><span>Client</span><span>Persoane</span><span>Pistă</span><span>Sursă</span><span>Stare</span></div>
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+<button type="button" class="{{r.cls}}" aria-label="{{r.aria}}" aria-pressed="{{r.on}}" onClick="{{r.pick}}">
+<span style="font-weight: 700; font-variant-numeric: tabular-nums">{{r.time}}</span>
+<span style="min-width: 0; display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 30px; height: 30px; flex: none; border-radius: 99px; background: {{r.bg}}; color: {{r.fg}}; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Instrument Sans', system-ui, sans-serif">{{r.ini}}</span><span style="font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span></span>
+<span style="font-variant-numeric: tabular-nums">{{r.people}}</span>
+<span>{{r.lane}}</span>
+<span><span class="tag" style="background: {{r.srcBg}}; color: {{r.srcFg}}">{{r.src}}</span></span>
+<span><span class="tag" style="background: {{r.stBg}}; color: {{r.stFg}}"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="width: 13px; height: 13px; stroke-width: 2.4"><path d="{{r.stIcon}}"></path></svg>{{r.stText}}</span></span>
+</button>
+</sc-for>
+<sc-if value="{{noRows}}" hint-placeholder-val="{{ false }}"><p class="muted" style="margin: 0; padding: 22px 16px; border-top: 1px solid var(--line)">Nicio rezervare în filtrul ăsta.</p></sc-if>
+</section>
+
+<div style="display: flex; flex-direction: column; gap: 20px; min-width: 0">
+<section class="card" aria-labelledby="det-t" aria-live="polite" style="padding: 18px 18px 16px">
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 12px">
+<span aria-hidden="true" style="width: 46px; height: 46px; flex: none; border-radius: 99px; background: {{sel.bg}}; color: {{sel.fg}}; display: flex; align-items: center; justify-content: center; font: 700 16px/1 'Instrument Sans', system-ui, sans-serif">{{sel.ini}}</span>
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px"><h2 id="det-t" class="h2">{{sel.name}}</h2><span class="muted">{{sel.people}}</span></div>
+<span class="tag" style="background: {{sel.stBg}}; color: {{sel.stFg}}">{{sel.stText}}</span>
+</div>
+<div style="margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<div style="padding: 10px 12px; border-radius: 12px; background: var(--s2); display: flex; flex-direction: column; gap: 5px"><span class="lbl" style="font-size: 12px">Când</span><span style="font: 700 14px/1.2 'Instrument Sans', system-ui, sans-serif">{{sel.when}}</span></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: var(--s2); display: flex; flex-direction: column; gap: 5px"><span class="lbl" style="font-size: 12px">Pistă</span><span style="font: 700 14px/1.2 'Instrument Sans', system-ui, sans-serif">{{sel.lane}}</span></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: var(--s2); display: flex; flex-direction: column; gap: 5px"><span class="lbl" style="font-size: 12px">Sursă</span><span style="font: 700 14px/1.2 'Instrument Sans', system-ui, sans-serif">{{sel.srcLong}}</span></div>
+<div style="padding: 10px 12px; border-radius: 12px; background: var(--s2); display: flex; flex-direction: column; gap: 5px"><span class="lbl" style="font-size: 12px">Codul QR</span><span style="font: 700 14px/1.2 'Instrument Sans', system-ui, sans-serif">{{sel.code}}</span></div>
+</div>
+<p class="muted" style="margin: 12px 0 0">{{sel.history}}</p>
+<label for="note" class="lbl" style="margin-top: 14px; display: block">Notiță pentru personal</label>
+<div class="field" style="margin-top: 6px"><textarea id="note" placeholder="ex: aniversare, vor să aducă tort" value="{{sel.note}}" onChange="{{sel.onNote}}"></textarea></div>
+<div style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{sel.actions}}" as="a" hint-placeholder-count="2"><button type="button" class="{{a.cls}}" onClick="{{a.run}}" style="height: 40px">{{a.label}}</button></sc-for>
+</div>
+<sc-if value="{{sel.moving}}" hint-placeholder-val="{{ false }}">
+<div class="pop" role="group" aria-label="Alege pista" style="margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+<span class="muted">Libere atunci:</span>
+<sc-for list="{{sel.free}}" as="p" hint-placeholder-count="3"><button type="button" class="press chip" onClick="{{p.pick}}">{{p.label}}</button></sc-for>
+</div>
+</sc-if>
+<p class="muted" style="margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line)">Vezi doar numele și câte persoane vin. Dacă vrei să le spui ceva, le scrii din CeFaci.</p>
+</div>
+</sc-if>
+</section>
+
+<section class="card" aria-labelledby="set-t" style="padding: 18px 18px 8px">
+<h2 id="set-t" class="h2">Cum primești rezervări</h2>
+<p id="lbl-need" class="lbl" style="margin-top: 14px">La tine rezervarea e</p>
+<div role="group" aria-labelledby="lbl-need" style="margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+<sc-for list="{{needOpts}}" as="o" hint-placeholder-count="3"><button type="button" class="{{o.cls}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for>
+</div>
+<p class="muted" style="margin: 8px 0 0">{{needText}}</p>
+<div style="margin-top: 14px; display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line)">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px"><span style="font: 650 14px/1.2 'Instrument Sans', system-ui, sans-serif">Piste prin CeFaci, pe oră</span><span class="muted">Restul rămân pentru telefon și cine vine la intrare.</span></span>
+<button type="button" class="press btns" onClick="{{lessLanes}}" aria-label="Mai puține piste" style="width: 40px; height: 40px; padding: 0"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+<span aria-live="polite" style="width: 52px; text-align: center; font: 700 15px/1 'Instrument Sans', system-ui, sans-serif">{{lanesText}}</span>
+<button type="button" class="press btns" onClick="{{moreLanes}}" aria-label="Mai multe piste" style="width: 40px; height: 40px; padding: 0"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14"></path></svg></button>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line)">
+<span id="lbl-hold" style="flex: 1 1 auto; font: 650 14px/1.2 'Instrument Sans', system-ui, sans-serif">Ții pista după ora rezervării</span>
+<div role="group" aria-labelledby="lbl-hold" style="display: flex; gap: 6px"><sc-for list="{{holdOpts}}" as="o" hint-placeholder-count="3"><button type="button" class="{{o.cls}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line)">
+<span id="lbl-cancel" style="flex: 1 1 auto; font: 650 14px/1.2 'Instrument Sans', system-ui, sans-serif">Anulare gratuită până cu</span>
+<div role="group" aria-labelledby="lbl-cancel" style="display: flex; gap: 6px"><sc-for list="{{cancelOpts}}" as="o" hint-placeholder-count="3"><button type="button" class="{{o.cls}}" aria-pressed="{{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+</div>
+<button type="button" class="press" role="switch" aria-checked="{{auto}}" onClick="{{toggleAuto}}" style="width: 100%; min-height: 60px; display: flex; align-items: center; gap: 12px; padding: 8px 0; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left">
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px"><span style="font: 650 14px/1.2 'Instrument Sans', system-ui, sans-serif">Confirm automat grupurile de până la 4</span><span class="muted">Cele mai mari le confirmi tu, ca să poți lipi piste.</span></span>
+<span class="{{autoTg}}" aria-hidden="true"><span></span></span>
+</button>
+</section>
+</div>
+</div>
+</main>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<p class="pop" role="status" style="position: absolute; left: 248px; right: 0; bottom: 24px; margin: 0 auto; width: max-content; max-width: 640px; padding: 14px 18px; border-radius: 16px; background: #0E1440; color: #FFFFFF; font: 600 14px/1.35 'Instrument Sans', system-ui, sans-serif; box-shadow: 0 14px 34px rgba(14, 20, 64, 0.3)">{{toast}}</p>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":1440,"height":900}}'>
+const ROWS = [
+  { id: 'a1', t: '17:00', end: '18:30', ini: 'O', bg: '#FFE58A', fg: '#0E1440', name: 'Oana B.', n: 2, lane: 8, src: 'cefaci', st: 'came', at: '17:04' },
+  { id: 'a2', t: '17:30', end: '19:30', ini: 'E', bg: '#B7A3FF', fg: '#0E1440', name: 'Elena R.', n: 4, lane: 3, src: 'cefaci', st: 'came', at: '18:50' },
+  { id: 'a3', t: '18:00', end: '20:00', ini: 'T', bg: '#FF8A73', fg: '#0E1440', name: 'Tudor M.', n: 2, lane: 2, src: 'drop', st: 'came', at: '19:31' },
+  { id: 'a4', t: '18:30', end: '20:00', ini: 'P', bg: '#8EA6FF', fg: '#0E1440', name: 'Paul D.', n: 3, lane: 7, src: 'phone', st: 'noshow', at: '18:45' },
+  { id: 'a5', t: '19:00', end: '21:00', ini: 'M', bg: '#2F5BFF', fg: '#FFFFFF', name: 'Maria I.', n: 5, lane: 1, src: 'cefaci', st: 'came', at: '19:38' },
+  { id: 'a6', t: '19:00', end: '21:00', ini: 'S', bg: '#FFD43B', fg: '#0E1440', name: 'Sorin P.', n: 2, lane: 4, src: 'drop', st: 'conf' },
+  { id: 'a7', t: '20:00', end: '22:00', ini: 'A', bg: '#8C6CFF', fg: '#0E1440', name: 'Ana V.', n: 6, lane: 3, src: 'cefaci', st: 'conf' },
+  { id: 'a8', t: '20:00', end: '22:00', ini: 'C', bg: '#3A4585', fg: '#F3F5FF', name: 'Cristi S.', n: 4, lane: 5, src: 'cefaci', st: 'conf' },
+  { id: 'a9', t: '20:30', end: '22:30', ini: 'C', bg: '#2F5BFF', fg: '#FFFFFF', name: 'Cornel A.', n: 4, lane: 2, src: 'cefaci', st: 'pend', at: '17:02' },
+  { id: 'a10', t: '21:00', end: '23:00', ini: 'B', bg: '#8C6CFF', fg: '#0E1440', name: 'Bianca T.', n: 6, lane: 4, src: 'cefaci', st: 'pend', at: '18:15' },
+  { id: 'a11', t: '21:30', end: '23:00', ini: 'D', bg: '#FF6A4D', fg: '#0E1440', name: 'Dan P.', n: 4, lane: 1, src: 'cefaci', st: 'conf' },
+  { id: 'a12', t: '22:30', end: '24:00', ini: 'I', bg: '#B7A3FF', fg: '#0E1440', name: 'Irina M.', n: 3, lane: 5, src: 'phone', st: 'conf' },
+  { id: 'a13', t: '22:30', end: '24:00', ini: 'R', bg: '#FF6A4D', fg: '#0E1440', name: 'Radu C.', n: 3, lane: 6, src: 'cefaci', st: 'pend', at: '19:21' },
+  { id: 'a14', t: '23:00', end: '24:00', ini: 'A', bg: '#FFE58A', fg: '#0E1440', name: 'Alex G.', n: 4, lane: 3, src: 'cefaci', st: 'conf' },
+  { id: 'a15', t: '23:00', end: '24:00', ini: 'L', bg: '#8EA6FF', fg: '#0E1440', name: 'Luca N.', n: 2, lane: 4, src: 'cefaci', st: 'conf' }
+];
+const SRC = {
+  cefaci: ['CeFaci', 'var(--blue-soft)', 'var(--blue-ink)', 'Rezervare prin CeFaci'],
+  drop: ['Live Drop', 'var(--yellow-soft)', 'var(--yellow-ink)', 'Live Drop, −25% la pistă'],
+  phone: ['Telefon', 'var(--s3)', 'var(--ink2)', 'Luată la telefon de tine']
+};
+const ICON = { check: 'M20 6 9 17l-5-5', x: 'M18 6 6 18M6 6l12 12', clock: 'M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 6v6l4 2', dot: 'M12 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2' };
+const ST = {
+  came: ['A venit', 'var(--green-soft)', 'var(--green-ink)', ICON.check],
+  conf: ['Confirmată', 'var(--blue-soft)', 'var(--blue-ink)', ICON.check],
+  pend: ['De confirmat', 'var(--coral-soft)', 'var(--coral-ink)', ICON.clock],
+  noshow: ['N-au venit', 'var(--s3)', 'var(--ink2)', ICON.x],
+  cancel: ['Anulată', 'var(--s3)', 'var(--ink2)', ICON.x]
+};
+const DAYS = [['Lu', '28', 6], ['Ma', '29', 4], ['Mi', '30', 7], ['Jo', '1', 11], ['Vi', '2', 15], ['Sâ', '3', 15], ['Du', '4', 9]];
+const DAY_LONG = ['Luni, 28 septembrie', 'Marți, 29 septembrie', 'Miercuri, 30 septembrie', 'Joi, 1 octombrie', 'Vineri, 2 octombrie', 'Sâmbătă, 3 octombrie', 'Duminică, 4 octombrie'];
+const BUSY = { 1: [[19, 21], [21.5, 23]], 2: [[18, 20], [20.5, 22.5]], 3: [[17.5, 19.5], [20, 22], [23, 24]], 4: [[19, 21], [21, 23], [23, 24]], 5: [[20, 22], [22.5, 24]], 6: [[18.5, 20], [22.5, 24]], 7: [[21, 23.5]], 8: [[17, 18.5], [19.25, 20.75], [21, 23.5]] };
+function toH(t) { const [h, m] = t.split(':').map(Number); return h + m / 60; }
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.state = { day: 4, filter: 'all', sel: 'a9', st: {}, lane: {}, notes: {}, moving: false, need: 'req', lanes: 6, hold: 15, cancel: 3, auto: true, toast: '', extra: 0 };
+  }
+  componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
+  say(msg) {
+    this.setState({ toast: msg });
+    this.timers.push(setTimeout(() => { if (this.state.toast === msg) this.setState({ toast: '' }); }, 3600));
+  }
+  setSt(id, v, msg) { this.setState((s) => ({ st: Object.assign({}, s.st, { [id]: v }), moving: false })); if (msg) this.say(msg); }
+  renderVals() {
+    const s = this.state;
+    const theme = this.props.theme ?? 'zi';
+    const base = ROWS.slice(0, Math.min(ROWS.length, DAYS[s.day][2])).map((r, k) => {
+      if (s.day === 4) return r;
+      const st = s.day < 4 ? (k % 5 === 3 ? 'noshow' : 'came') : (k % 4 === 1 ? 'pend' : 'conf');
+      return Object.assign({}, r, { st });
+    });
+    if (s.day === 4) {
+      for (let k = 0; k < s.extra; k += 1) base.push({ id: 'x' + k, t: '23:30', end: '24:00', ini: 'T', bg: '#DCE0EA', fg: '#0E1440', name: 'Client de la telefon', n: 4, lane: 7, src: 'phone', st: 'conf' });
+    }
+    const count = base.length;
+    const rows0 = base.map((r) => Object.assign({}, r, { st: s.st[r.id] || r.st, lane: s.lane[r.id] || r.lane }));
+    const n = (k) => rows0.filter((r) => r.st === k).length;
+    const pending = s.day === 4 ? n('pend') : 3;
+    const want = { all: null, pend: 'pend', conf: 'conf', came: 'came', noshow: 'noshow' }[s.filter];
+    const rows = rows0.filter((r) => !want || r.st === want);
+    const selRow = rows0.find((r) => r.id === s.sel) || null;
+    const mk = (r) => {
+      const st = ST[r.st];
+      const src = SRC[r.src];
+      return {
+        time: r.t, ini: r.ini, bg: r.bg, fg: r.fg, name: r.name, people: r.n + (r.n === 1 ? ' persoană' : ' persoane'), lane: 'Pista ' + r.lane,
+        src: src[0], srcBg: src[1], srcFg: src[2], stText: st[0], stBg: st[1], stFg: st[2], stIcon: st[3],
+        on: s.sel === r.id, cls: 'press row' + (s.sel === r.id ? ' on' : ''),
+        aria: r.t + ', ' + r.name + ', ' + r.n + ' persoane, pista ' + r.lane + ', ' + src[0] + ', ' + st[0],
+        pick: () => this.setState({ sel: r.id, moving: false })
+      };
+    };
+
+    let sel = null;
+    if (selRow) {
+      const r = selRow;
+      const st = ST[r.st];
+      const acts = [];
+      if (r.st === 'pend') {
+        acts.push({ label: 'Confirmă', cls: 'press btnp', run: () => this.setSt(r.id, 'conf', r.name + ' a primit confirmarea și codul QR.') });
+        acts.push({ label: 'Refuză', cls: 'press btns', run: () => this.setSt(r.id, 'cancel', 'Am trimis răspunsul către ' + r.name + ' și îi arătăm alte locuri libere la aceeași oră.') });
+      } else if (r.st === 'conf') {
+        acts.push({ label: 'Au venit', cls: 'press btnp', run: () => this.setSt(r.id, 'came', 'Sosire bifată. ' + r.name + ' primește ștampila în carnet.') });
+        acts.push({ label: 'N-au venit', cls: 'press btns', run: () => this.setSt(r.id, 'noshow', 'Am eliberat pista ' + r.lane + '. Contează la istoricul clientului, nu la al tău.') });
+        acts.push({ label: 'Mută pe altă pistă', cls: 'press btns', run: () => this.setState({ moving: !this.state.moving }) });
+        acts.push({ label: 'Anulează', cls: 'press btnq', run: () => this.setSt(r.id, 'cancel', 'Rezervarea pentru ' + r.name + ' e anulată. Clientul e anunțat în aplicație.') });
+      } else if (r.st === 'noshow') {
+        acts.push({ label: 'De fapt au venit', cls: 'press btns', run: () => this.setSt(r.id, 'came', 'Am corectat: ' + r.name + ' a venit.') });
+      } else if (r.st === 'cancel') {
+        acts.push({ label: 'Refă rezervarea', cls: 'press btns', run: () => this.setSt(r.id, 'conf', 'Rezervarea pentru ' + r.name + ' e din nou confirmată.') });
+      }
+      const a0 = toH(r.t);
+      const a1 = r.end === '24:00' ? 24 : toH(r.end);
+      const free = [1, 2, 3, 4, 5, 6, 7, 8].filter((l) => l !== r.lane && !(BUSY[l] || []).some(([x, y]) => a0 < y && x < a1));
+      const hist = {
+        came: 'Cerere prin ' + SRC[r.src][0] + ' · confirmată · a venit, cod scanat la ' + (r.at || '19:40') + '.',
+        conf: 'Confirmată. Codul QR se scanează la sosire.',
+        pend: 'Cerere trimisă la ' + (r.at || '17:00') + '. Clientul așteaptă răspunsul tău.',
+        noshow: 'Nu s-au prezentat. Pista a fost eliberată după ' + s.hold + ' minute.',
+        cancel: 'Anulată. Clientul a fost anunțat în aplicație.'
+      }[r.st];
+      sel = {
+        ini: r.ini, bg: r.bg, fg: r.fg, name: r.name, people: r.n + ' persoane', stText: st[0], stBg: st[1], stFg: st[2],
+        when: DAYS[s.day][0] + ' ' + DAYS[s.day][1] + ', ' + r.t + '–' + r.end, lane: 'Pista ' + r.lane, srcLong: SRC[r.src][3],
+        code: r.st === 'came' ? 'Scanat la ' + (r.at || '19:40') : (r.src === 'phone' ? 'Fără cod' : 'Nescanat încă'),
+        history: hist, note: s.notes[r.id] || '',
+        onNote: (e) => { const val = e && e.target ? String(e.target.value) : ''; this.setState((st2) => ({ notes: Object.assign({}, st2.notes, { [r.id]: val.slice(0, 160) }) })); },
+        actions: acts, moving: s.moving && r.st === 'conf',
+        free: free.map((l) => ({ label: 'Pista ' + l, pick: () => { this.setState((st2) => ({ lane: Object.assign({}, st2.lane, { [r.id]: l }), moving: false })); this.say(r.name + ' e acum pe pista ' + l + '. I-am trimis clientului codul actualizat.'); } }))
+      };
+    }
+    const optChip = (val, cur, key, labels) => labels.map(([v, label]) => ({ label, on: cur === v, cls: cur === v ? 'press chip on' : 'press chip', pick: () => this.setState({ [key]: v }) }));
+    return {
+      themeClass: ({ zi: 'light', noapte: 'graphite' })[theme] ?? 'light',
+      pendingN: String(pending),
+      dayLong: DAY_LONG[s.day],
+      days: DAYS.map(([name, num, c], k) => ({ name, num, count: (k === 4 ? c + s.extra : c) + ' rez.', on: s.day === k, cls: s.day === k ? 'press day on' : 'press day', pick: () => this.setState({ day: k, sel: k === 4 ? 'a9' : 'a1', filter: 'all', moving: false }) })),
+      listTitle: count + (count === 1 ? ' rezervare' : ' rezervări'),
+      filters: [['all', 'Toate', rows0.length], ['pend', 'De confirmat', n('pend')], ['conf', 'Confirmate', n('conf')], ['came', 'Au venit', n('came')], ['noshow', 'N-au venit', n('noshow')]].map(([k, label, c]) => ({ label, n: String(c), on: s.filter === k, cls: s.filter === k ? 'press chip on' : 'press chip', pick: () => this.setState({ filter: k }) })),
+      rows: rows.map(mk), noRows: rows.length === 0,
+      hasSel: !!sel,
+      sel: sel || { actions: [], free: [] },
+      needOpts: [['req', 'Obligatorie'], ['rec', 'Recomandată'], ['none', 'Nu e nevoie']].map(([v, label]) => ({ label, on: s.need === v, cls: s.need === v ? 'press seg on' : 'press seg', pick: () => this.setState({ need: v }) })),
+      needText: ({ req: 'În aplicație apare „Cere rezervare”, iar clientul rezervă înainte să vină.', rec: 'Clientul vede „Se umple repede, faceți o rezervare” doar în serile aglomerate.', none: 'Nu apare nimic despre rezervare. Clienții vin direct.' })[s.need],
+      lanesText: s.lanes + ' din 8',
+      lessLanes: () => this.setState({ lanes: Math.max(1, this.state.lanes - 1) }),
+      moreLanes: () => this.setState({ lanes: Math.min(8, this.state.lanes + 1) }),
+      holdOpts: optChip(0, s.hold, 'hold', [[10, '10 min'], [15, '15 min'], [20, '20 min']]),
+      cancelOpts: optChip(0, s.cancel, 'cancel', [[1, '1 oră'], [3, '3 ore'], [24, 'o zi']]),
+      auto: s.auto, autoTg: s.auto ? 'tg on' : 'tg', toggleAuto: () => this.setState({ auto: !this.state.auto }),
+      addPhone: () => { this.setState({ extra: this.state.extra + 1, day: 4 }); this.say('Am adăugat o rezervare de la telefon. Pista apare ocupată și în CeFaci, ca să nu se suprapună.'); },
+      hasToast: s.toast !== '', toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

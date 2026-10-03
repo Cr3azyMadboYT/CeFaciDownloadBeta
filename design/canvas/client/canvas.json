@@ -1,0 +1,207 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-09-28T18:05:00Z"
+  },
+  "title": "CeFaci — preview UI",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Acasă (seara)",
+      "is_interactive": true
+    },
+    "AcasaZi.dc.html": {
+      "x": 470,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Acasă (sâmbătă)",
+      "is_interactive": true
+    },
+    "CeFacem.dc.html": {
+      "x": 940,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Ce facem? (foaia)",
+      "is_interactive": true
+    },
+    "Rezultate.dc.html": {
+      "x": 1410,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "Rezultate",
+      "is_interactive": true
+    },
+    "Vot.dc.html": {
+      "x": 0,
+      "y": 1300,
+      "w": 390,
+      "h": 844,
+      "title": "Votul gășcii",
+      "is_interactive": true
+    },
+    "Bilet.dc.html": {
+      "x": 470,
+      "y": 1300,
+      "w": 390,
+      "h": 844,
+      "title": "Biletul serii",
+      "is_interactive": true
+    },
+    "Carnet.dc.html": {
+      "x": 940,
+      "y": 1300,
+      "w": 390,
+      "h": 844,
+      "title": "Carnetul",
+      "is_interactive": true
+    },
+    "Nivel.dc.html": {
+      "x": 1410,
+      "y": 1300,
+      "w": 390,
+      "h": 844,
+      "title": "Level up",
+      "is_interactive": true
+    },
+    "Planuri.dc.html": {
+      "x": 0,
+      "y": 2600,
+      "w": 390,
+      "h": 844,
+      "title": "Planuri",
+      "is_interactive": true
+    },
+    "Prieteni.dc.html": {
+      "x": 470,
+      "y": 2600,
+      "w": 390,
+      "h": 844,
+      "title": "Prieteni",
+      "is_interactive": true
+    },
+    "GascaNoua.dc.html": {
+      "x": 940,
+      "y": 2600,
+      "w": 390,
+      "h": 844,
+      "title": "Gașcă nouă",
+      "is_interactive": true
+    },
+    "Gasca.dc.html": {
+      "x": 1410,
+      "y": 2600,
+      "w": 390,
+      "h": 844,
+      "title": "Gașca de vineri",
+      "is_interactive": true
+    },
+    "Setari.dc.html": {
+      "x": 1880,
+      "y": 1300,
+      "w": 390,
+      "h": 844,
+      "title": "Setări",
+      "is_interactive": true
+    },
+    "Demo.dc.html": {
+      "x": 0,
+      "y": -1500,
+      "w": 390,
+      "h": 844,
+      "title": "Demo pentru video",
+      "is_interactive": true
+    },
+    "Plus.dc.html": {
+      "x": 890,
+      "y": -1500,
+      "w": 390,
+      "h": 844,
+      "title": "CeFaci Plus (în probă)",
+      "is_interactive": true
+    },
+    "Cont.dc.html": {
+      "x": -470,
+      "y": -1500,
+      "w": 390,
+      "h": 844,
+      "title": "Cont nou și preferințe (înainte de tur)",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Cont.dc.html",
+    "Demo.dc.html",
+    "Plus.dc.html",
+    "Main.dc.html",
+    "AcasaZi.dc.html",
+    "CeFacem.dc.html",
+    "Rezultate.dc.html",
+    "Vot.dc.html",
+    "Bilet.dc.html",
+    "Carnet.dc.html",
+    "Nivel.dc.html",
+    "Planuri.dc.html",
+    "Prieteni.dc.html",
+    "GascaNoua.dc.html",
+    "Gasca.dc.html",
+    "Setari.dc.html"
+  ],
+  "notes": {
+    "row1": {
+      "x": 0,
+      "y": -300,
+      "text": "Decizia: de la întrebare la trei variante",
+      "kind": "title1",
+      "maxW": 1800
+    },
+    "row2": {
+      "x": 0,
+      "y": 1000,
+      "text": "Gașca, biletul și nivelul",
+      "kind": "title1",
+      "maxW": 1800
+    },
+    "howto": {
+      "x": 1880,
+      "y": 0,
+      "w": 320,
+      "text": "Apasă Play pe orice ecran. Decizia: Acasă → Rezultate → Vot → Biletul serii (acolo apeși Rezervă). Prietenii: Planuri → Prieteni (caută maria.i) sau Gașcă nouă. Nivelul: Carnet → Răspunde. Tema Zi / Noapte: Profil → rotița → Setări.",
+      "fill": "blue",
+      "size": "m"
+    },
+    "row3": {
+      "x": 0,
+      "y": 2300,
+      "text": "Prietenii și gășcile",
+      "kind": "title1",
+      "maxW": 1800
+    },
+    "row0": {
+      "x": -470,
+      "y": -1800,
+      "text": "Demo: de la cont nou la aplicația cap-coadă",
+      "kind": "title1",
+      "maxW": 2270
+    },
+    "demo": {
+      "x": 470,
+      "y": -1500,
+      "w": 340,
+      "text": "Demo pentru video: Play pe tot ecranul. Merge cap-coadă: filtre → rezultate → vot cu gașca → bilet → rezervare → „Am ajuns” (scanezi codul CeFaci al localului, de la bar sau intrare, sau confirmi cu locația) → „Pune bonul” (poza bonului fiscal confirmă ieșirea, +25 XP) → trimite gășcii. Mai ai: rezervare la telefon, WhatsApp sau site la localurile nepartenere (Casa Grill, Forno), bilete cu locuri în sală (Cinema Nord), club (Neon 21) și bilete importate (Subsol), Live Drops, planuri multiple, gășci permanente și temporare, level up, temă Zi / Noapte. La pornire te întâmpină Bilu, biletul-mascotă: 2 mesaje de bun venit, un tur cu lanterna pe funcții (la Profil apeși tu) și, la final, 150 XP de bun venit: Nivel 1, Boboc. După XP, Bilu te pune să apeși pe iconița Plus încețoșată (ultima jos), te duce pe pagina încețoșată și acolo face „Hocus… pocus!”: 7 zile de CeFaci Plus cadou. În Plus încearcă „Ziua 5” și „S-a terminat săptămâna”: când expiră, pagina și iconița se încețoșează iar, cu butonul „Reia Plus”. În Profil te așteaptă un bon uitat de vineri (+25 XP). Turul îl revezi din Profil. Turul arată ce vede un cont nou; restul Demo-ului e pe un cont cu istoric (Nivel 3, Radar).",
+      "fill": "green",
+      "size": "m"
+    }
+  },
+  "designSystems": []
+}

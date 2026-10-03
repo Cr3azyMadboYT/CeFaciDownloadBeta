@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<title>CeFaci Admin</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&amp;family=Instrument+Sans:wdth,wght@75..100,400..700&amp;display=swap">
+<style>
+body{margin:0;background:#E8EBF2}
+.cf{--bg:#E8EBF2;--s1:#FFFFFF;--s2:#EEF1F7;--s3:#DCE0EA;--line:#D2D7E3;--ink:#0E1440;--ink2:#454E7E;--ink3:#5A6390;--blue:#2F5BFF;--blue-ink:#2447E0;--blue-soft:rgba(47,91,255,.12);--yellow-ink:#7A5E00;--yellow-soft:rgba(255,212,59,.32);--coral-ink:#A8341C;--coral-soft:rgba(255,106,77,.14);--green-ink:#1E7A4C;--green-soft:rgba(30,160,90,.14);--violet-ink:#5B3FD9;--violet-soft:rgba(140,108,255,.14);--side:#0E1440;--side-ink2:#A9B1DA;--cs:#2F5BFF;font-family:'Instrument Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+.cf.graphite{--bg:#121215;--s1:#1C1C21;--s2:#24242A;--s3:#2E2E35;--line:#35353D;--ink:#F4F4F6;--ink2:#B7B7C1;--ink3:#90909B;--blue-ink:#8EA6FF;--blue-soft:rgba(47,91,255,.22);--yellow-ink:#FFD43B;--yellow-soft:rgba(255,212,59,.16);--coral-ink:#FF8A73;--coral-soft:rgba(255,106,77,.18);--green-ink:#5FD39A;--green-soft:rgba(60,200,130,.16);--violet-ink:#B7A3FF;--violet-soft:rgba(140,108,255,.22);--side:#0B0B0E;--cs:#5C7FFF}
+.cf *{box-sizing:border-box}
+.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.i.s{width:16px;height:16px}
+.press{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .14s cubic-bezier(.23,1,.32,1),background-color .2s ease,color .2s ease,border-color .2s ease}
+.press:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.press:hover{filter:brightness(1.06)}}
+.cf :focus-visible{outline:3px solid #2447E0;outline-offset:2px}
+.cf.graphite :focus-visible{outline-color:#FFD43B}
+.nav{width:100%;height:44px;display:flex;align-items:center;gap:12px;padding:0 12px;border:0;border-radius:12px;background:transparent;color:var(--side-ink2);text-align:left;font:600 14px/1 'Instrument Sans',system-ui,sans-serif;cursor:pointer;transition:background-color .15s ease,color .15s ease}
+.nav:hover{background:rgba(255,255,255,.07);color:#FFFFFF}
+.nav.on{background:#FF6A4D;color:#0E1440}
+.nav:focus-visible{outline:3px solid #FFD43B;outline-offset:2px}
+.h1{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:34px;line-height:1;font-weight:780;font-stretch:90%;letter-spacing:-.025em}
+.h2{margin:0;font-family:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;font-size:20px;line-height:1.1;font-weight:740;letter-spacing:-.01em}
+.lbl{margin:0;font:650 13px/1.2 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.muted{font:500 13px/1.4 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.f14{font:600 14px/1.35 'Instrument Sans',system-ui,sans-serif}
+.f15{font:650 15px/1.2 'Instrument Sans',system-ui,sans-serif}
+.num{font-variant-numeric:tabular-nums}
+.col{display:flex;flex-direction:column}
+.card{background:var(--s1);border:1px solid var(--line);border-radius:20px}
+.tag{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;font:700 12px/1 'Instrument Sans',system-ui,sans-serif;white-space:nowrap}
+.btnp{height:44px;padding:0 16px;border:0;border-radius:14px;background:var(--blue);color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif}
+.btns{height:44px;padding:0 14px;border:1px solid var(--line);border-radius:14px;background:var(--s1);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif}
+.btnq{height:44px;padding:0 12px;border:0;border-radius:14px;background:transparent;color:var(--coral-ink);display:inline-flex;align-items:center;gap:6px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif}
+.btnd{height:44px;padding:0 14px;border:0;border-radius:14px;background:#D93A1C;color:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:650 14px/1 'Instrument Sans',system-ui,sans-serif}
+.av{flex:none;border-radius:99px;display:flex;align-items:center;justify-content:center;font:700 13px/1 'Instrument Sans',system-ui,sans-serif}
+.req{width:100%;display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:18px;background:var(--s1);color:var(--ink);text-align:left}
+.req.on{border:2px solid var(--blue);padding:11px 13px;background:var(--blue-soft)}
+.chk{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.chk:first-child{border-top:0}
+.tr{display:grid;align-items:center;gap:10px;min-height:52px;padding:6px 4px;border-top:1px solid var(--line);font:500 14px/1.25 'Instrument Sans',system-ui,sans-serif}
+.tr.th{min-height:34px;border-top:0;font:650 12px/1 'Instrument Sans',system-ui,sans-serif;color:var(--ink2)}
+.r{text-align:right}
+.hbar{height:10px;border-radius:0 4px 4px 0;background:var(--cs);transition:width .5s cubic-bezier(.23,1,.32,1)}
+.todo{width:100%;min-height:62px;display:flex;align-items:center;gap:14px;padding:10px 14px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);text-align:left}
+.todo:first-child{border-top:0}
+.todo:hover{background:var(--s2)}
+.pop{animation:pop .4s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.scr{animation:scr .3s cubic-bezier(.23,1,.32,1) both}
+@keyframes scr{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hs{scrollbar-width:none}.hs::-webkit-scrollbar{display:none}
+.bill{width:150px;padding:10px 12px;background:#FFFFFF;color:#0E1440;border-radius:4px;transform:rotate(-2deg);box-shadow:0 6px 16px rgba(14,20,64,.2);font:500 10px/1.45 'Courier New',monospace;flex:none}
+.bill .br{display:flex;justify-content:space-between}
+@media (prefers-reduced-motion:reduce){.cf *,.cf *::before,.cf *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div class="cf {{themeClass}}" style="width: 1440px; height: 900px; position: relative; overflow: hidden; display: flex; background: var(--bg); color: var(--ink)">
+
+<nav aria-label="Meniu" style="width: 248px; flex: none; height: 900px; padding: 22px 14px 18px; background: var(--side); color: #F3F5FF; display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<svg viewBox="0 0 24 24" aria-hidden="true" style="width: 30px; height: 30px; flex: none"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" fill="#FFD43B"></path><path d="M13 5v2M13 11v2M13 17v2" stroke="#0E1440" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<span style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 23px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">CeFaci</span>
+<span class="tag" style="height: 22px; background: rgba(255, 106, 77, 0.2); color: #FF8A73">Admin</span>
+</div>
+<p style="margin: 22px 8px 8px; font: 650 12px/1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Echipa CeFaci · Buftea</p>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{navItems}}" as="n" hint-placeholder-count="5"><button type="button" class="{{n.cls}}" aria-current="{{n.cur}}" onClick="{{n.go}}"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="{{n.icon}}"></path></svg><span style="flex: 1 1 auto">{{n.label}}</span><sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{ false }}"><span class="tag pop" style="height: 20px; padding: 0 7px; background: #FFD43B; color: #0E1440">{{n.badge}}</span></sc-if></button></sc-for>
+</div>
+<div style="margin-top: auto; padding: 14px 12px; border-radius: 16px; background: rgba(255, 255, 255, 0.07); font: 500 12px/1.45 'Instrument Sans', system-ui, sans-serif; color: #C9CEE6">Tot ce decizi aici ajunge prin SMS și notificare la localuri și clienți. Fiecare decizie rămâne în istoric, cu numele tău.</div>
+<div style="margin-top: 14px; padding: 0 0 0 8px; display: flex; align-items: center; gap: 10px">
+<span class="av" aria-hidden="true" style="width: 34px; height: 34px; background: #FF6A4D; color: #0E1440">CA</span>
+<span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px"><span style="font: 650 13px/1.1 'Instrument Sans', system-ui, sans-serif">Cornel A.</span><span style="font: 500 12px/1.1 'Instrument Sans', system-ui, sans-serif; color: #A9B1DA">Admin</span></span>
+<button type="button" class="press" onClick="{{toggleTheme}}" aria-label="{{themeLabel}}" style="width: 40px; height: 40px; flex: none; border: 0; border-radius: 12px; background: rgba(255, 255, 255, 0.08); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{themeIcon}}"></path></svg></button>
+</div>
+</nav>
+
+<main class="hs" style="flex: 1 1 auto; min-width: 0; height: 900px; overflow-y: auto; padding: 28px 32px 36px">
+
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+<div class="scr col" style="gap: 20px">
+<header class="col" style="gap: 8px"><span class="lbl">Marți, 29 septembrie</span><h1 class="h1">Bună, echipa CeFaci.</h1></header>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4"><section class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 6px"><span class="lbl">{{k.label}}</span><span class="num" style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 34px; line-height: 1; font-weight: 800; letter-spacing: -0.02em">{{k.value}}</span><span class="muted">{{k.sub}}</span></section></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 460px; gap: 20px; align-items: start">
+<section class="card" aria-labelledby="todo-t" style="padding: 18px 12px 8px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; padding: 0 6px"><h2 id="todo-t" class="h2">De rezolvat</h2><span class="muted">{{todoCount}}</span></div>
+<div style="margin-top: 10px"><sc-for list="{{todos}}" as="t" hint-placeholder-count="4"><button type="button" class="press todo" onClick="{{t.go}}"><span class="av" aria-hidden="true" style="width: 42px; height: 42px; border-radius: 13px; background: {{t.bg}}; color: {{t.fg}}"><svg class="i" viewBox="0 0 24 24"><path d="{{t.icon}}"></path></svg></span><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 4px"><span class="f15">{{t.title}}</span><span class="muted">{{t.sub}}</span></span><span class="tag" style="background: {{t.nBg}}; color: {{t.nFg}}">{{t.n}}</span><svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><path d="m9 18 6-6-6-6"></path></svg></button></sc-for></div>
+</section>
+<div class="col" style="gap: 16px">
+<section class="card" aria-labelledby="rev-t" style="padding: 18px">
+<div style="display: flex; align-items: baseline; justify-content: space-between"><h2 id="rev-t" class="h2">Venit în septembrie</h2><span class="num f15">{{revTotal}}</span></div>
+<div role="table" aria-labelledby="rev-t" style="margin-top: 12px"><sc-for list="{{rev}}" as="r" hint-placeholder-count="3"><div role="row" style="display: grid; grid-template-columns: 150px minmax(0, 1fr) 84px; align-items: center; gap: 10px; min-height: 40px"><span role="rowheader" class="f14" style="font-weight: 550">{{r.label}}</span><span role="cell" aria-hidden="true" style="display: block; background: var(--s2); border-radius: 0 4px 4px 0"><span class="hbar" style="display: block; width: {{r.w}}"></span></span><span role="cell" class="num r f14">{{r.value}}</span></div></sc-for></div>
+<p class="muted" style="margin: 10px 0 0">Plus nu se împarte cu localurile: reducerile le dau ei, abonamentul e al nostru.</p>
+</section>
+<section class="card" aria-labelledby="plus-t" style="padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<h2 id="plus-t" class="h2">CeFaci Plus</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><sc-for list="{{plusStats}}" as="p" hint-placeholder-count="3"><div class="col" style="padding: 10px 12px; border-radius: 14px; background: var(--s2); gap: 5px"><span class="muted" style="font-size: 12px">{{p.k}}</span><span class="num" style="font: 750 20px/1 'Instrument Sans', system-ui, sans-serif">{{p.v}}</span></div></sc-for></div>
+</section>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isReq}}" hint-placeholder-val="{{ false }}">
+<div class="scr" style="display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 24px; align-items: start">
+<div class="col" style="gap: 14px">
+<header class="col" style="gap: 8px"><span class="lbl">Revendicări și înscrieri noi</span><h1 class="h1">Cereri de la localuri</h1></header>
+<div class="col" style="gap: 8px"><sc-for list="{{reqList}}" as="r" hint-placeholder-count="3"><button type="button" class="{{r.cls}}" aria-pressed="{{r.on}}" onClick="{{r.pick}}"><span class="av" aria-hidden="true" style="width: 44px; height: 44px; border-radius: 14px; background: var(--yellow-soft); color: var(--yellow-ink)"><svg class="i" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8"></path></svg></span><span class="col" style="flex: 1 1 auto; min-width: 0; gap: 4px"><span class="f15">{{r.name}}</span><span class="muted">{{r.sub}}</span></span><span class="tag" style="background: {{r.stBg}}; color: {{r.stFg}}">{{r.st}}</span></button></sc-for></div>
+<p class="muted" style="margin: 0">Regula: aprobăm doar ce trece de CUI și de telefonul localului sau de un document verificat de noi. Răspundem în 24 de ore.</p>
+</div>
+<section class="card" aria-labelledby="rq-t" style="padding: 20px">
+<div style="display: flex; align-items: flex-start; gap: 14px">
+<div class="col" style="flex: 1 1 auto; min-width: 0; gap: 6px"><span class="tag" style="align-self: flex-start; background: var(--blue-soft); color: var(--blue-ink)">{{rq.kind}}</span><h2 id="rq-t" class="h1" style="font-size: 30px">{{rq.name}}</h2><span class="muted">{{rq.meta}}</span></div>
+<span class="tag" style="background: {{rq.riskBg}}; color: {{rq.riskFg}}">{{rq.risk}}</span>
+</div>
+<div style="margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div class="col" style="padding: 12px 14px; border-radius: 14px; background: var(--s2); gap: 5px"><span class="lbl">Cine cere</span><span class="f14">{{rq.who}}</span></div>
+<div class="col" style="padding: 12px 14px; border-radius: 14px; background: var(--s2); gap: 5px"><span class="lbl">Trimisă</span><span class="f14">{{rq.at}}</span></div>
+</div>
+<h3 class="lbl" style="margin-top: 18px">Verificări</h3>
+<div style="margin-top: 4px"><sc-for list="{{rq.checks}}" as="c" hint-placeholder-count="4"><div class="chk"><span class="av" aria-hidden="true" style="width: 28px; height: 28px; background: {{c.bg}}; color: {{c.fg}}"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.6"><path d="{{c.icon}}"></path></svg></span><span class="col" style="flex: 1 1 auto; gap: 3px"><span class="f14">{{c.title}}</span><span class="muted">{{c.text}}</span></span><span class="tag" style="background: {{c.bg}}; color: {{c.fg}}">{{c.st}}</span></div></sc-for></div>
+<sc-if value="{{rq.pending}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="press btnp" onClick="{{rq.approve}}">Aprobă și publică</button><button type="button" class="press btns" onClick="{{rq.ask}}">{{rq.askLabel}}</button><button type="button" class="{{rq.rejCls}}" onClick="{{rq.reject}}">{{rq.rejLabel}}</button></div>
+</sc-if>
+<sc-if value="{{rq.done}}" hint-placeholder-val="{{ false }}"><p class="f14 pop" role="status" style="margin: 16px 0 0; padding: 12px 14px; border-radius: 14px; background: {{rq.doneBg}}; color: {{rq.doneFg}}">{{rq.doneText}}</p></sc-if>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{isDisp}}" hint-placeholder-val="{{ false }}">
+<div class="scr col" style="gap: 18px">
+<header class="col" style="gap: 8px"><span class="lbl">Cine e proprietarul localului în CeFaci</span><h1 class="h1">Dispută: Zarul</h1></header>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+<section class="card" aria-labelledby="own-t" style="padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<span class="lbl">Proprietarul actual în CeFaci</span><h2 id="own-t" class="h2">Mihai Georgescu</h2>
+<span class="muted">Contul localului din martie 2026 · 214 ieșiri verificate · 2 angajați cu acces</span>
+<div class="chk"><span class="av" aria-hidden="true" style="width: 28px; height: 28px; background: var(--coral-soft); color: var(--coral-ink)"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.6"><path d="M18 6 6 18M6 6l12 12"></path></svg></span><span class="col" style="gap: 3px"><span class="f14">ZARUL ARUNCAT SRL</span><span class="muted">Radiată de la Registrul Comerțului în august 2026</span></span></div>
+<div class="chk"><span class="av" aria-hidden="true" style="width: 28px; height: 28px; background: var(--yellow-soft); color: var(--yellow-ink)"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.6"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 6v6l4 2"></path></svg></span><span class="col" style="gap: 3px"><span class="f14">Anunțat pe 28 sept.</span><span class="muted">{{dsOwner}}</span></span></div>
+</section>
+<section class="card" aria-labelledby="cl-t" style="padding: 18px; display: flex; flex-direction: column; gap: 10px">
+<span class="lbl">Cere localul</span><h2 id="cl-t" class="h2">Cristina Vlad</h2>
+<span class="muted">„Contul e al fostului proprietar” · 0745 222 333</span>
+<div class="chk"><span class="av" aria-hidden="true" style="width: 28px; height: 28px; background: var(--green-soft); color: var(--green-ink)"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.6"><path d="M20 6 9 17l-5-5"></path></svg></span><span class="col" style="gap: 3px"><span class="f14">ZAR NOU SRL · activă</span><span class="muted">Sediul social la aceeași adresă: Str. Libertății 8</span></span></div>
+<div class="chk"><span class="av" aria-hidden="true" style="width: 28px; height: 28px; background: var(--green-soft); color: var(--green-ink)"><svg class="i s" viewBox="0 0 24 24" style="stroke-width: 2.6"><path d="M20 6 9 17l-5-5"></path></svg></span><span class="col" style="gap: 3px"><span class="f14">contract-inchiriere.pdf</span><span class="muted">Contract din 1 septembrie 2026, pe ZAR NOU SRL</span></span></div>
+</section>
+</div>
+<section class="card" aria-labelledby="dsd-t" style="padding: 18px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="dsd-t" class="h2">Decizia</h2>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px"><sc-for list="{{dsLog}}" as="l" hint-placeholder-count="3"><li class="f14 {{l.anim}}" style="display: flex; gap: 10px; font-weight: 550"><span class="num" style="width: 110px; flex: none; color: var(--ink2)">{{l.t}}</span><span>{{l.text}}</span></li></sc-for></ol>
+<sc-if value="{{dsOpen}}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="press btns" onClick="{{dsCall}}">Am sunat ambele părți</button><button type="button" class="press btnp" onClick="{{dsGive}}">Mută localul la Cristina Vlad</button><button type="button" class="press btns" onClick="{{dsKeep}}">Păstrează la Mihai Georgescu</button></div></sc-if>
+<sc-if value="{{dsDone}}" hint-placeholder-val="{{ false }}"><p class="f14 pop" role="status" style="margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--green-soft); color: var(--green-ink)">{{dsDoneText}}</p></sc-if>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{isBills}}" hint-placeholder-val="{{ false }}">
+<div class="scr" style="display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 24px; align-items: start">
+<div class="col" style="gap: 16px; min-width: 0">
+<header class="col" style="gap: 8px"><span class="lbl">Ce declară localurile față de pozele clienților</span><h1 class="h1">Verificarea notelor</h1></header>
+<sc-for list="{{flags}}" as="f" hint-placeholder-count="3"><article class="card {{f.anim}}" style="padding: 16px; display: flex; gap: 16px; align-items: flex-start">
+<div class="bill" aria-hidden="true"><div style="text-align: center; font-weight: 700; letter-spacing: .1em">{{f.venueUp}}</div><div style="margin: 6px 0; border-top: 1px dashed #0E1440; opacity: .5"></div><div class="br"><span>Consum</span><span>{{f.photo}}</span></div><div style="margin: 6px 0; border-top: 1px dashed #0E1440; opacity: .5"></div><div class="br" style="font-weight: 700"><span>TOTAL</span><span>{{f.photo}}</span></div></div>
+<div class="col" style="flex: 1 1 auto; min-width: 0; gap: 8px">
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap"><h2 class="h2" style="font-size: 18px">{{f.venue}} · {{f.who}}</h2><span class="tag" style="background: {{f.stBg}}; color: {{f.stFg}}">{{f.st}}</span></div>
+<span class="muted">{{f.when}}</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<div class="col" style="padding: 8px 10px; border-radius: 12px; background: var(--s2); gap: 4px"><span class="muted" style="font-size: 12px">Declarat de local</span><span class="num f15">{{f.decl}} lei</span></div>
+<div class="col" style="padding: 8px 10px; border-radius: 12px; background: var(--s2); gap: 4px"><span class="muted" style="font-size: 12px">Pe bonul fiscal</span><span class="num f15">{{f.photo}} lei</span></div>
+<div class="col" style="padding: 8px 10px; border-radius: 12px; background: var(--coral-soft); color: var(--coral-ink); gap: 4px"><span style="font: 600 12px/1 'Instrument Sans', system-ui, sans-serif">Diferență</span><span class="num f15">{{f.diff}}</span></div>
+</div>
+<sc-if value="{{f.open}}" hint-placeholder-val="{{ true }}"><div style="display: flex; gap: 8px; flex-wrap: wrap"><button type="button" class="press btnp" onClick="{{f.ask}}">Cere corectura localului</button><button type="button" class="press btns" onClick="{{f.close}}">Închide: greșeală de tastare</button></div></sc-if>
+</div>
+</article></sc-for>
+</div>
+<div class="col" style="gap: 16px">
+<section class="card" aria-labelledby="vr-t" style="padding: 18px 18px 8px">
+<h2 id="vr-t" class="h2" style="font-size: 18px">Încrederea pe localuri, 30 de zile</h2>
+<div role="table" aria-labelledby="vr-t" style="margin-top: 10px">
+<div role="row" class="tr th" style="grid-template-columns: minmax(0, 1fr) 54px 64px 104px"><span role="columnheader">Local</span><span role="columnheader" class="r">Poze</span><span role="columnheader" class="r">Diferențe</span><span role="columnheader">Stare</span></div>
+<sc-for list="{{venues}}" as="v" hint-placeholder-count="4"><div role="row" class="tr" style="grid-template-columns: minmax(0, 1fr) 54px 64px 104px"><span role="cell" style="font-weight: 650">{{v.name}}</span><span role="cell" class="num r">{{v.photos}}</span><span role="cell" class="num r">{{v.diffs}}</span><span role="cell"><span class="tag" style="background: {{v.bg}}; color: {{v.fg}}">{{v.st}}</span></span></div></sc-for>
+</div>
+</section>
+<sc-if value="{{neonWarn}}" hint-placeholder-val="{{ true }}"><section class="pop" style="padding: 16px 18px; border-radius: 20px; background: var(--coral-soft); display: flex; flex-direction: column; gap: 10px"><span class="f15" style="color: var(--coral-ink)">Club Neon 21: 2 diferențe în 30 de zile</span><span class="f14" style="font-weight: 550">Încă una și regula pornește auditul singură. Poți să-l pornești și acum.</span><button type="button" class="press btnd" onClick="{{startAudit}}" style="align-self: flex-start">Pornește auditul și suspendă Plus</button></section></sc-if>
+<sc-if value="{{neonAudit}}" hint-placeholder-val="{{ false }}"><p class="f14 pop" role="status" style="margin: 0; padding: 14px 16px; border-radius: 16px; background: var(--yellow-soft); color: var(--yellow-ink)">Audit pornit pentru Club Neon 21. Reducerea Plus e suspendată, iar decontul pe septembrie se reține până la final. Localul a primit SMS.</p></sc-if>
+<section class="col" style="padding: 18px; border-radius: 20px; background: var(--blue-soft); gap: 8px">
+<h2 class="h2" style="font-size: 18px">Regula</h2>
+<p class="f14" style="margin: 0; font-weight: 550">Fiecare masă se confirmă cu poza bonului fiscal pusă de client: CUI-ul localului, ora (față de check-in-ul cu codul localului) și totalul. Diferențele apar când localul a scris și el un total.</p>
+<p class="f14" style="margin: 0; font-weight: 550">O diferență peste 10% se trimite localului. 3 în 30 de zile pornesc un audit: Plus suspendat și decont reținut.</p>
+</section>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isPay}}" hint-placeholder-val="{{ false }}">
+<div class="scr col" style="gap: 18px">
+<header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px"><div class="col" style="gap: 8px"><span class="lbl">Septembrie 2026 · plățile se fac pe 5 octombrie</span><h1 class="h1">Deconturi cu localurile</h1></div><button type="button" class="press btns" onClick="{{exportCsv}}"><svg class="i s" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"></path></svg>Exportă pentru contabilitate</button></header>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px"><sc-for list="{{payKpis}}" as="k" hint-placeholder-count="3"><section class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 6px"><span class="lbl">{{k.label}}</span><span class="num" style="font-family: 'Bricolage Grotesque', 'Helvetica Neue', Arial, sans-serif; font-size: 30px; line-height: 1; font-weight: 800">{{k.value}}</span><span class="muted">{{k.sub}}</span></section></sc-for></div>
+<section class="card" aria-labelledby="pt-t" style="padding: 18px 18px 8px">
+<h2 id="pt-t" class="h2">Pe localuri</h2>
+<div role="table" aria-labelledby="pt-t" style="margin-top: 10px">
+<div role="row" class="tr th" style="grid-template-columns: minmax(0, 1fr) 110px 110px 120px 130px 150px 150px"><span role="columnheader">Local</span><span role="columnheader" class="r">Note prin CeFaci</span><span role="columnheader" class="r">Comision 5%</span><span role="columnheader" class="r">Bilete, net</span><span role="columnheader" class="r">Sold</span><span role="columnheader">Stare</span><span role="columnheader"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Acțiune</span></span></div>
+<sc-for list="{{payRows}}" as="r" hint-placeholder-count="5"><div role="row" class="tr" style="grid-template-columns: minmax(0, 1fr) 110px 110px 120px 130px 150px 150px"><span role="cell" style="font-weight: 650">{{r.name}}</span><span role="cell" class="num r">{{r.bills}}</span><span role="cell" class="num r">{{r.fee}}</span><span role="cell" class="num r">{{r.tix}}</span><span role="cell" class="num r" style="font-weight: 700; color: {{r.balFg}}">{{r.bal}}</span><span role="cell"><span class="tag" style="background: {{r.stBg}}; color: {{r.stFg}}">{{r.st}}</span></span><span role="cell"><sc-if value="{{r.canAct}}" hint-placeholder-val="{{ false }}"><button type="button" class="press btns" onClick="{{r.act}}" style="height: 38px; padding: 0 12px">{{r.actLabel}}</button></sc-if></span></div></sc-for>
+</div>
+</section>
+<p class="muted" style="margin: 0">Sold pozitiv: plătim noi localului (biletele încasate minus comisionul). Sold negativ: localul primește factură pentru comision.</p>
+</div>
+</sc-if>
+</main>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<p class="pop" role="status" style="position: absolute; left: 248px; right: 0; bottom: 24px; z-index: 40; margin: 0 auto; width: max-content; max-width: 680px; padding: 14px 18px; border-radius: 16px; background: #0E1440; color: #FFFFFF; font: 600 14px/1.35 'Instrument Sans', system-ui, sans-serif; box-shadow: 0 14px 34px rgba(14, 20, 64, 0.3)">{{toast}}</p>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["zi","noapte"],"default":"zi","section":"Temă"},"$preview":{"width":1440,"height":900}}'>
+const IC = {
+  home: 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
+  store: 'M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5',
+  scale: 'M12 3v18M5 21h14M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z',
+  camera: 'M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3zM12 10a3 3 0 1 0 0 6 3 3 0 1 0 0-6',
+  card: 'M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zM2 10h20M6 15h4',
+  check: 'M20 6 9 17l-5-5', x: 'M18 6 6 18M6 6l12 12', warn: 'M12 8v5M12 17h.01',
+  sun: 'M12 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41',
+  moon: 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z'
+};
+const REQS = [
+  { id: 'r1', name: 'Casa Grill', kind: 'Revendicare', cat: 'Restaurant', addr: 'Str. Mihai Eminescu 5, Buftea', who: 'Ion Popa · Proprietar · 0722 333 444', at: 'Azi, 15:40', risk: 'low', ask: 'Cere încă o poză', checks: [['CUI verificat automat', 'CASA GRILL BUFTEA SRL · activă · sediul în Buftea', 'ok'], ['Telefonul localului', 'Cod confirmat prin SMS la 0721 000 222, numărul public', 'ok'], ['Adresa', 'Se potrivește cu Google și cu Registrul Comerțului', 'ok'], ['Poze', '3 poze, făcute la fața locului', 'ok']] },
+  { id: 'r2', name: 'Laboratorul', kind: 'Revendicare cu document', cat: 'Escape room', addr: 'Str. Gării 3, Buftea', who: 'Vlad Ionescu · Administrator · 0733 111 222', at: 'Ieri, 21:05', risk: 'mid', ask: 'Cere dovada telefonului', checks: [['CUI verificat automat', 'LABORATORUL GAMES SRL · activă', 'ok'], ['Telefonul localului', 'N-a putut răspunde la numărul public', 'warn'], ['Document', 'certificat-inregistrare.pdf · administratorul se potrivește cu cererea', 'ok'], ['Poze', 'Nicio poză încă', 'warn']] },
+  { id: 'r3', name: 'Terasa Luna', kind: 'Înscriere nouă', cat: 'Restaurant', addr: 'Str. Gării 10, Buftea', who: 'Andreea Marin · Proprietar · 0744 555 666', at: 'Azi, 12:10', risk: 'mid', ask: 'Cere o poză cu firma de la intrare', checks: [['CUI verificat automat', 'TERASA LUNA SRL · activă · înființată acum 2 luni', 'ok'], ['Telefonul proprietarului', 'Confirmat prin SMS', 'ok'], ['Adresa', 'Nu apare încă pe Google Maps', 'warn'], ['Poze', '2 poze · una apare și pe alte site-uri', 'bad']] }
+];
+const CHK = { ok: [IC.check, 'var(--green-soft)', 'var(--green-ink)', 'În regulă'], warn: [IC.warn, 'var(--yellow-soft)', 'var(--yellow-ink)', 'De văzut'], bad: [IC.x, 'var(--coral-soft)', 'var(--coral-ink)', 'Problemă'] };
+const RST = { pending: ['În așteptare', 'var(--yellow-soft)', 'var(--yellow-ink)'], approved: ['Aprobată', 'var(--green-soft)', 'var(--green-ink)'], asked: ['Am cerut ceva', 'var(--blue-soft)', 'var(--blue-ink)'], rejected: ['Respinsă', 'var(--s2)', 'var(--ink2)'] };
+const RISK = { low: ['Risc scăzut', 'var(--green-soft)', 'var(--green-ink)'], mid: ['Risc mediu', 'var(--yellow-soft)', 'var(--yellow-ink)'] };
+const FLAGS0 = [
+  { id: 'f1', venue: 'Club Neon 21', who: 'Irina S.', when: '28 sept., 01:40 · verificare aleatorie', decl: 90, photo: 140, st: 'open' },
+  { id: 'f2', venue: 'Club Neon 21', who: 'Paul T.', when: '26 sept., 23:15 · verificare aleatorie', decl: 60, photo: 95, st: 'open' },
+  { id: 'f3', venue: 'Pista 9', who: 'Dan P.', when: '1 oct., 21:12 · verificare aleatorie', decl: 120, photo: 186, st: 'fixed' }
+];
+const FST = { open: ['Deschisă', 'var(--coral-soft)', 'var(--coral-ink)'], asked: ['Trimisă localului', 'var(--blue-soft)', 'var(--blue-ink)'], closed: ['Închisă', 'var(--s2)', 'var(--ink2)'], fixed: ['Corectată de local', 'var(--green-soft)', 'var(--green-ink)'] };
+const PAY0 = [
+  { id: 'p1', name: 'Pista 9', bills: 25680, tix: 3120 },
+  { id: 'p2', name: 'Club Neon 21', bills: 11400, tix: 7912 },
+  { id: 'p3', name: 'Cinema Nord', bills: 0, tix: 13340 },
+  { id: 'p4', name: 'Laboratorul', bills: 4100, tix: 1104 },
+  { id: 'p5', name: 'Cofetăria Mia', bills: 6200, tix: 0 }
+];
+const lei = (x) => (x < 0 ? '−' : '') + String(Math.round(Math.abs(x))).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' lei';
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+    this.state = { screen: 'home', theme: null, toast: '', reqSt: { r1: 'pending', r2: 'pending', r3: 'pending' }, reqSel: 'r1', rejArm: null, ds: 'open', dsCalled: false, flags: FLAGS0, audit: false, paid: [], fresh: '' };
+  }
+  componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
+  say(msg) { this.setState({ toast: msg }); this.timers.push(setTimeout(() => { if (this.state.toast === msg) this.setState({ toast: '' }); }, 3800)); }
+  setReq(id, st) { this.setState((s) => ({ reqSt: Object.assign({}, s.reqSt, { [id]: st }), rejArm: null })); }
+  renderVals() {
+    const s = this.state;
+    const theme = s.theme || this.props.theme || 'zi';
+    const pendingReq = REQS.filter((r) => s.reqSt[r.id] === 'pending').length;
+    const openFlags = s.flags.filter((f) => f.st === 'open').length;
+    const payDue = PAY0.filter((p) => p.tix - p.bills * 0.05 > 0 && s.paid.indexOf(p.id) === -1 && !(p.id === 'p2' && s.audit)).length;
+    const NAV = [['home', 'Acasă', IC.home, 0], ['req', 'Cereri de la localuri', IC.store, pendingReq], ['disp', 'Dispute', IC.scale, s.ds === 'open' ? 1 : 0], ['bills', 'Verificarea notelor', IC.camera, openFlags], ['pay', 'Deconturi', IC.card, payDue]];
+    const go = (k) => this.setState({ screen: k, rejArm: null });
+    const v = {
+      themeClass: theme === 'noapte' ? 'graphite' : 'light',
+      themeLabel: theme === 'noapte' ? 'Treci pe tema de zi' : 'Treci pe tema de noapte', themeIcon: theme === 'noapte' ? IC.sun : IC.moon,
+      toggleTheme: () => this.setState({ theme: theme === 'noapte' ? 'zi' : 'noapte' }),
+      navItems: NAV.map(([k, label, icon, n]) => ({ label, icon, cls: s.screen === k ? 'nav on' : 'nav', cur: s.screen === k ? 'page' : 'false', go: () => go(k), hasBadge: n > 0, badge: String(n) })),
+      isHome: s.screen === 'home', isReq: s.screen === 'req', isDisp: s.screen === 'disp', isBills: s.screen === 'bills', isPay: s.screen === 'pay',
+      hasToast: s.toast !== '', toast: s.toast
+    };
+    // pay numbers (used on Acasă too)
+    const rows = PAY0.map((p) => ({ p, fee: p.bills * 0.05, bal: p.tix - p.bills * 0.05 }));
+    const feeTotal = rows.reduce((a, r) => a + r.fee, 0);
+    const tixFee = rows.reduce((a, r) => a + r.p.tix / 0.92 * 0.08, 0);
+    const plusRev = 1340;
+    const approved = REQS.filter((r) => s.reqSt[r.id] === 'approved').length;
+    v.kpis = [
+      { label: 'Utilizatori activi, săptămâna asta', value: '2.418', sub: '+12% față de săptămâna trecută' },
+      { label: 'Ieșiri verificate cu QR', value: '612', sub: 'în ultimele 7 zile' },
+      { label: 'Localuri partenere', value: String(18 + approved + (s.ds === 'give' ? 0 : 0)), sub: pendingReq ? pendingReq + ' cereri în așteptare' : 'Nicio cerere în așteptare' },
+      { label: 'Venit în septembrie', value: lei(feeTotal + tixFee + plusRev), sub: 'comisioane, taxe de bilete și Plus' }
+    ];
+    const T = (title, sub, n, icon, k, bg, fg) => ({ title, sub, n: n ? String(n) : 'Gata', nBg: n ? '#FFD43B' : 'var(--green-soft)', nFg: n ? '#0E1440' : 'var(--green-ink)', icon, bg, fg, go: () => go(k) });
+    v.todos = [
+      T('Cereri de la localuri', pendingReq ? 'Revendicări și înscrieri de aprobat, în 24 de ore' : 'Toate au primit răspuns', pendingReq, IC.store, 'req', 'var(--yellow-soft)', 'var(--yellow-ink)'),
+      T('Dispute', s.ds === 'open' ? 'Zarul: cine e proprietarul în CeFaci' : 'Disputa pentru Zarul e închisă', s.ds === 'open' ? 1 : 0, IC.scale, 'disp', 'var(--violet-soft)', 'var(--violet-ink)'),
+      T('Diferențe la note', openFlags ? 'Club Neon 21 are 2 diferențe în 30 de zile' : 'Nimic deschis', openFlags, IC.camera, 'bills', 'var(--coral-soft)', 'var(--coral-ink)'),
+      T('Deconturi de plătit', payDue ? 'Plățile către localuri se fac pe 5 octombrie' : 'Toate plățile sunt făcute sau reținute', payDue, IC.card, 'pay', 'var(--blue-soft)', 'var(--blue-ink)')
+    ];
+    const todoN = v.todos.filter((t) => t.n !== 'Gata').length;
+    v.todoCount = todoN ? todoN + ' categorii' : 'Totul e la zi';
+    const revs = [['Comision 5% din note', feeTotal], ['Taxa de 8% la bilete', tixFee], ['CeFaci Plus', plusRev]];
+    const maxR = Math.max.apply(null, revs.map((r) => r[1]));
+    v.rev = revs.map(([label, x]) => ({ label, value: lei(x), w: (x / maxR * 100).toFixed(1) + '%' }));
+    v.revTotal = lei(feeTotal + tixFee + plusRev);
+    v.plusStats = [{ k: 'Membri plătitori', v: '67' }, { k: 'În probă acum', v: '184' }, { k: 'Rămân după probă', v: '36%' }];
+
+    // requests
+    const sel = REQS.find((r) => r.id === s.reqSel) || REQS[0];
+    const sst = s.reqSt[sel.id];
+    v.reqList = REQS.map((r) => { const st = RST[s.reqSt[r.id]]; const on = s.reqSel === r.id; return { name: r.name, sub: r.kind + ' · ' + r.at, st: st[0], stBg: st[1], stFg: st[2], on, cls: on ? 'press req on' : 'press req', pick: () => this.setState({ reqSel: r.id, rejArm: null }) }; });
+    const armed = s.rejArm === sel.id;
+    v.rq = {
+      kind: sel.kind, name: sel.name, meta: sel.cat + ' · ' + sel.addr, who: sel.who, at: sel.at,
+      risk: RISK[sel.risk][0], riskBg: RISK[sel.risk][1], riskFg: RISK[sel.risk][2],
+      checks: sel.checks.map(([title, text, k]) => ({ title, text, icon: CHK[k][0], bg: CHK[k][1], fg: CHK[k][2], st: CHK[k][3] })),
+      pending: sst === 'pending', done: sst !== 'pending',
+      askLabel: sel.ask,
+      rejLabel: armed ? 'Sigur? Apasă iar' : 'Respinge', rejCls: armed ? 'press btnd pop' : 'press btnq',
+      approve: () => { this.setReq(sel.id, 'approved'); this.say(sel.name + ' e acum în CeFaci, cu insigna Verificat. ' + sel.who.split(' ')[0] + ' a primit SMS.'); },
+      ask: () => { this.setReq(sel.id, 'asked'); this.say('Am trimis cererea: „' + sel.ask.replace('Cere ', '') + '”. Cererea rămâne deschisă 7 zile.'); },
+      reject: () => { if (this.state.rejArm !== sel.id) { this.setState({ rejArm: sel.id }); return; } this.setReq(sel.id, 'rejected'); this.say('Cererea pentru ' + sel.name + ' e respinsă. Omul primește motivul prin SMS.'); },
+      doneText: ({ approved: 'Aprobată. Localul apare în aplicație, iar proprietarul poate intra în CeFaci Business.', asked: 'Am cerut încă o dovadă. Cererea rămâne deschisă 7 zile.', rejected: 'Respinsă. Motivul a plecat prin SMS; se poate trimite o cerere nouă.' })[sst] || '',
+      doneBg: sst === 'approved' ? 'var(--green-soft)' : (sst === 'asked' ? 'var(--blue-soft)' : 'var(--s2)'), doneFg: sst === 'approved' ? 'var(--green-ink)' : (sst === 'asked' ? 'var(--blue-ink)' : 'var(--ink2)')
+    };
+
+    // dispute
+    v.dsOwner = s.dsCalled ? 'Sunat pe 29 sept.: spune că a vândut localul în august și n-a mai intrat în cont.' : 'Are termen până pe 1 oct. să răspundă. N-a răspuns încă.';
+    const log = [{ t: '27 sept., 18:02', text: 'Cristina Vlad a trimis disputa, cu contractul de închiriere.', anim: '' }, { t: '28 sept., 09:10', text: 'Mihai Georgescu a fost anunțat prin SMS și email.', anim: '' }];
+    if (s.dsCalled) log.push({ t: '29 sept., 18:40', text: 'Am sunat ambele părți. Mihai confirmă că a vândut localul.', anim: 'pop' });
+    if (s.ds === 'give') log.push({ t: 'Acum', text: 'Decizie: localul trece la Cristina Vlad.', anim: 'pop' });
+    if (s.ds === 'keep') log.push({ t: 'Acum', text: 'Decizie: localul rămâne la Mihai Georgescu.', anim: 'pop' });
+    v.dsLog = log;
+    v.dsOpen = s.ds === 'open'; v.dsDone = s.ds !== 'open';
+    v.dsDoneText = s.ds === 'give' ? 'Zarul trece la Cristina Vlad. Contul vechi s-a închis, iar cei 2 angajați de acolo au pierdut accesul pe loc. Istoricul localului rămâne.' : 'Zarul rămâne la Mihai Georgescu. Cristina primește motivul și poate trimite documente noi.';
+    v.dsCall = () => { this.setState({ dsCalled: true }); this.say('Am notat apelul în istoric.'); };
+    v.dsGive = () => { this.setState({ ds: 'give' }); this.say('Gata: Zarul e acum al Cristinei Vlad. Amândoi au primit SMS.'); };
+    v.dsKeep = () => { this.setState({ ds: 'keep' }); this.say('Gata: Zarul rămâne la Mihai Georgescu. Amândoi au primit SMS.'); };
+
+    // bills
+    const setFlag = (id, st) => this.setState((x) => ({ flags: x.flags.map((f) => (f.id === id ? Object.assign({}, f, { st }) : f)), fresh: id }));
+    v.flags = s.flags.map((f) => { const st = FST[f.st]; return {
+      venue: f.venue, venueUp: f.venue.toUpperCase(), who: f.who, when: f.when, decl: f.decl, photo: f.photo, diff: '+' + Math.round((f.photo - f.decl) / f.decl * 100) + '%',
+      st: st[0], stBg: st[1], stFg: st[2], open: f.st === 'open', anim: s.fresh === f.id ? 'pop' : '',
+      ask: () => { setFlag(f.id, 'asked'); this.say('Am trimis diferența la ' + f.venue + '. Are 3 zile să corecteze sau să explice.'); },
+      close: () => { setFlag(f.id, 'closed'); this.say('Închisă ca greșeală de tastare. Rămâne în istoricul localului.'); }
+    }; });
+    const neonOpen = s.flags.filter((f) => f.venue === 'Club Neon 21' && f.st !== 'closed').length;
+    v.neonWarn = !s.audit && neonOpen >= 2; v.neonAudit = s.audit;
+    v.startAudit = () => { this.setState({ audit: true }); this.say('Audit pornit pentru Club Neon 21. Plus e suspendat acolo.'); };
+    const V = (name, photos, diffs, st) => ({ name, photos, diffs, st: st[0], bg: st[1], fg: st[2] });
+    v.venues = [
+      V('Pista 9', '21', '1', ['Bun', 'var(--green-soft)', 'var(--green-ink)']),
+      V('Cofetăria Mia', '15', '0', ['Bun', 'var(--green-soft)', 'var(--green-ink)']),
+      V('Laboratorul', '9', '0', ['Nou', 'var(--blue-soft)', 'var(--blue-ink)']),
+      V('Club Neon 21', '17', String(neonOpen), s.audit ? ['Audit', 'var(--coral-soft)', 'var(--coral-ink)'] : ['Atenție', 'var(--yellow-soft)', 'var(--yellow-ink)'])
+    ];
+
+    // payouts
+    v.payRows = rows.map((r) => {
+      const held = r.p.id === 'p2' && s.audit;
+      const paid = s.paid.indexOf(r.p.id) !== -1;
+      const weOwe = r.bal > 0;
+      const st = held ? ['Reținut: audit', 'var(--coral-soft)', 'var(--coral-ink)'] : (paid ? (weOwe ? ['Plătit', 'var(--green-soft)', 'var(--green-ink)'] : ['Încasat', 'var(--green-soft)', 'var(--green-ink)']) : (weOwe ? ['De plătit de noi', 'var(--blue-soft)', 'var(--blue-ink)'] : ['Factură trimisă', 'var(--yellow-soft)', 'var(--yellow-ink)']));
+      return {
+        name: r.p.name, bills: r.p.bills ? lei(r.p.bills) : '—', fee: r.fee ? lei(r.fee) : '—', tix: r.p.tix ? lei(r.p.tix) : '—',
+        bal: (weOwe ? '+' : '') + lei(r.bal), balFg: weOwe ? 'var(--blue-ink)' : 'var(--coral-ink)',
+        st: st[0], stBg: st[1], stFg: st[2],
+        canAct: !held && !paid, actLabel: weOwe ? 'Marchează plătit' : 'Marchează încasat',
+        act: () => { this.setState({ paid: this.state.paid.concat([r.p.id]) }); this.say(weOwe ? 'Plata de ' + lei(r.bal) + ' către ' + r.p.name + ' e marcată. Localul primește decontul pe email.' : 'Încasarea de la ' + r.p.name + ' e marcată.'); }
+      };
+    });
+    const toPay = rows.filter((r) => r.bal > 0 && !(r.p.id === 'p2' && s.audit)).reduce((a, r) => a + r.bal, 0);
+    const toGet = rows.filter((r) => r.bal < 0).reduce((a, r) => a - r.bal, 0);
+    const held = s.audit ? rows.find((r) => r.p.id === 'p2').bal : 0;
+    v.payKpis = [
+      { label: 'Plătim localurilor', value: lei(toPay), sub: 'bilete încasate de noi, minus comisionul' },
+      { label: 'Încasăm de la localuri', value: lei(toGet), sub: 'comision pentru localurile fără bilete' },
+      { label: 'Reținut', value: lei(held), sub: held ? 'Club Neon 21, până la finalul auditului' : 'Nimic reținut luna asta' }
+    ];
+    v.exportCsv = () => this.say('Se descarcă deconturi-septembrie-2026.csv, pentru contabilitate.');
+    return v;
+  }
+}
+</script>
+</body>
+</html>
