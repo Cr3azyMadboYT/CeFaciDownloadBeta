@@ -7,7 +7,7 @@ import { SocialLogin } from '@capgo/capacitor-social-login';
 const URL = import.meta.env.VITE_SUPABASE_URL || 'https://vqrmwuarjjntusfbqprx.supabase.co';
 const KEY = import.meta.env.VITE_SUPABASE_KEY || 'sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O';
 // The "Web client" ID from Google Cloud → Credentials (the same one set in Supabase → Auth → Google). Needed by the app.
-const GOOGLE_WEB_CLIENT_ID = import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID || '';
+const GOOGLE_WEB_CLIENT_ID = import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID || '9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com';
 const native = () => Capacitor.isNativePlatform();
 
 let client: ReturnType<typeof createClient> | null = null;

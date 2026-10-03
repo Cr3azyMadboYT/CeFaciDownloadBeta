@@ -18,7 +18,7 @@ Proiectul e în `android/`. Vechiul APK WebView a rămas în `android-webview-v0
      (după ce urci în Google Play, adaugi și amprenta SHA-1 din Play Console → App integrity → App signing);
    - clientul de tip **Web** e cel pus deja în Supabase → Authentication → Providers → Google. ID-ul lui se scrie în `.env.local`:
      ```
-     VITE_GOOGLE_WEB_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
+     VITE_GOOGLE_WEB_CLIENT_ID=9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com   (e deja pus în src/app/auth.ts)
      ```
 
 ## De fiecare dată când faci o versiune
