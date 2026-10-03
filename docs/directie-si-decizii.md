@@ -371,3 +371,13 @@ Ideile de la care am pornit:
 - Urmează: motorul de căutare și recomandări după persoană și grup, ecranul cu preferințe la crearea contului și panoul de administrare al aplicației.
 - În Demo, sfârșitul unei ieșiri se simulează din Planuri, cu butonul „Demo: ieșirea s-a terminat”. În aplicația reală ar veni din ora planului sau din QR-ul scanat la local.
 - Ecranele separate „Gașcă nouă” și „Gașca de vineri” de pe canvas au încă varianta veche, cu inițiale în loc de simbol. Demo-ul are varianta nouă.
+
+## Bonul și check-in-ul la toate localurile (decizie Cornel, 03.10 seara)
+
+- **Bonul se citește pe server**, cu Google Cloud Vision (funcția Supabase `citeste-bon`): CUI-ul localului, cu cifra de control verificată, plus data, ora și totalul. Poza nu se păstrează. Primele 1.000 de bonuri pe lună sunt gratuite, apoi ~1,5 $ la 1.000.
+- **Localuri partenere:** „Am ajuns” cu codul QR CeFaci de la bar. Bonul e obligatoriu: din el se calculează comisionul și se verifică reducerea Plus.
+- **Localuri nepartenere:** „Am ajuns” cu locația telefonului (acolo nu e cod QR). Bonul e opțional și aduce +25 XP. Totalul e folosit doar pentru:
+  - prețul real mediu de persoană al localului, care înlocuiește estimarea pe tip de local;
+  - statistici pe care le arătăm localului când îi propunem parteneriatul („luna trecută au venit 43 de oameni prin CeFaci”).
+- Amintirea „Nu uita de bon” (la 40 de minute) merge la toată lumea, cu aceeași motivație de XP.
+- Google Cloud: proba gratuită (300 $) se termină pe 10.11.2026. Pe 3.11 Cornel trece pe cont plătit și pune un buget de 10 $ cu alertă (amintirea e programată).

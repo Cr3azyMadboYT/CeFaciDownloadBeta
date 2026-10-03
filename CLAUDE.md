@@ -30,7 +30,12 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 
 ## Comenzi
 - `npm i`, `npx vitest run`, `node scripts/extract-boards.mjs && npx vite build`
+- APK-ul se construiește pe GitHub la fiecare push (`.github/workflows/android.yml`, la Actions → Artifacts). Semnat doar dacă există secretele `CEFACI_KEYSTORE_B64`, `CEFACI_KEYSTORE_PASSWORD`, `CEFACI_KEY_ALIAS`, `CEFACI_KEY_PASSWORD`.
 - Aplicația Android e nativă (Capacitor, `android/`, pachet `ro.cefaci.app`): `npx vite build && npx cap sync android`, apoi `cd android && ./gradlew bundleRelease`. Cheia de semnare se citește din `~/.gradle/gradle.properties`, niciodată din git. Pașii: `docs/android.md`. Vechiul APK WebView: `android-webview-v0/` (doar istoric).
+
+## Bonul (decizie Cornel, 03.10)
+- Bonul se citește pe server: funcția Supabase `citeste-bon` (Google Vision, cheia în secretul `VISION_API_KEY`), cititorul în `supabase/functions/citeste-bon/bon.ts` (teste: `tests/bon.test.ts`).
+- Parteneri: QR la bar + bon obligatoriu (comision, Plus). Nepartenere: check-in cu locația, bon opțional pentru +25 XP; totalurile dau prețul real mediu al localului și statistici pentru parteneriat. Detalii: `docs/directie-si-decizii.md`.
 
 ## Amintirea pentru bon (decizie Cornel, 30.09)
 - La 40 de minute după check-in (scanat codul localului sau scanat de ospătar), Bilu trimite notificarea: „Nu uita de bon, ne ajută și pe noi și pe tine :)”.
