@@ -30,8 +30,12 @@ async function signInNative(): Promise<string | null> {
     if (!token) return 'Google nu ne-a dat contul. Mai încearcă o dată.';
     const { error } = await sb().auth.signInWithIdToken({ provider: 'google', token, nonce: raw });
     return error ? 'Nu am putut intra cu Google. Mai încearcă o dată.' : null;
-  } catch {
-    return null; // closed the Google sheet: nothing to say
+  } catch (e) {
+    const msg = String((e as { message?: string })?.message ?? e ?? '');
+    if (/cancel|12501|closed|dismiss/i.test(msg)) return null; // closed the Google sheet: nothing to say
+    // anything else is shown, with Google's own words at the end, so a wrong key or setup can be told apart
+    if (/10:|developer|DEVELOPER_ERROR|no credential|No credentials/i.test(msg)) return 'Google nu recunoaște aplicația (cheia de semnare sau clientul Android). Intră cu emailul până rezolvăm. [' + msg.slice(0, 80) + ']';
+    return 'Nu am putut intra cu Google. [' + msg.slice(0, 80) + ']';
   }
 }
 
