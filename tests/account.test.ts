@@ -43,7 +43,7 @@ describe('sign-up', () => {
     type(c.renderVals().onBirth, '01.01.2010');
     let v = c.renderVals();
     expect(v.nameOff).toBe(false); v.nameNext(); v = c.renderVals();
-    expect(v.ageMinor).toBe(true); expect(v.ageNote).toMatch(/18\+/);
+    expect(v.ageMinor).toBe(true); expect(v.ageNote).toMatch(/pentru oricine/);
     v.ageNo(); expect(c.state.step).toBe('name'); expect(c.renderVals().ageAsk).toBe(false);
     type(c.renderVals().onBirth, '01.01.2012'); expect(c.renderVals().nameOff).toBe(true);
     type(c.renderVals().onBirth, '31.02.2000'); expect(c.renderVals().nameOff).toBe(true);
@@ -61,6 +61,9 @@ describe('answers feed the app', () => {
     const ctx: Ctx = { prefs: { zone: 'centru', likes: [] }, origin: zoneById('centru'), now: new Date(2026, 9, 2, 21), history: [], minor: true };
     expect(search(V, 'club', ctx).results.some((r) => adultOnly(r.v))).toBe(false);
     expect(search(V, 'shisha', ctx).results.some((r) => adultOnly(r.v))).toBe(false);
+    expect(search(V, 'bar cu terasa', ctx).results.some((r) => ['bar', 'pub', 'biergarten'].includes(r.v.k))).toBe(false);
+    expect(search(V, 'sip bucharest', ctx).results.some((r) => r.v.minAge === 18)).toBe(false); // marked 18+ on the map
+    expect(search(V, 'sip bucharest', { ...ctx, minor: false }).results[0].v.minAge).toBe(18);
     const r = recommend(V, { who: '34', when: 'diseara', budget: Infinity, maxKm: 10, vibes: ['Party'] }, ctx, 0, 60);
     expect(r.picks.some((p) => adultOnly(p.v))).toBe(false);
     expect(search(V, 'club', { ...ctx, minor: false }).results.some((x) => adultOnly(x.v))).toBe(true);
