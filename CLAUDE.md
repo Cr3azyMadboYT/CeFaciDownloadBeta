@@ -10,7 +10,11 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 - Etapa 1 gata: ecranele din canvas (`design/Cont.dc.html`, `design/Demo.dc.html`) rulează pe 3.250 de localuri reale OpenStreetMap (`src/data/venues.json`), cu motorul din `src/engine`.
 - Nu redesena UI: se modifică doar prin `scripts/board-patches.mjs` (patch-uri text), apoi `node scripts/extract-boards.mjs`.
 - Căutarea: `src/engine/catalog.ts` (TOPICS = ce caută oamenii, PLACES = cartiere/sectoare/mall-uri/orașe, STOP), `search()` în `src/engine/core.ts`. Cele 88 de căutări reale + ce trebuie să apară primul: `src/engine/queries.ts` (testate în `search.test.ts`). Tabelul: `TABLE=1 npx vitest run scripts/search-table.test.ts`.
-- Încă de exemplu: prieteni/gășci/vot (etapa 2), XP/niveluri (etapa 3), codul SMS 318642.
+- Contul (03.10): fără telefon/SMS deocamdată (pasul e scos, ecranul rămâne în design). Intrare cu Google prin Supabase „CeFaci 2.0” (`src/app/auth.ts`, merge doar din versiunea web, nu din APK/file://) sau „Continuă fără cont” (profil doar pe telefon). Apple ascuns (`showApple: false`).
+- Data nașterii se scrie de mână (ZZ.LL.AAAA), apoi „Sigur e data corectă?”. Sub 16 nu intră; 16–17 nu văd cluburi, narghilea, locuri 18+ (`adultOnly` în core.ts, `ctx.minor`).
+- Răspunsurile de la cont (buget, cu cine, când, chill/party, cum ajunge, „da/nu prea” la locuri) se salvează în `cefaci.prefs` și pornesc filtrele de pe Acasă (`APP.homeDefaults`).
+- Filtre: buget cu interval „de la – până la” + avertisment că prețurile sunt estimate. Patch-uri noi: `scripts/board-patches-cont.mjs`, `scripts/board-patches-budget.mjs`.
+- Încă de exemplu: prieteni/gășci/vot (etapa 2), XP/niveluri (etapa 3).
 
 ## Priorități
 1. Motorul de căutare impecabil (`src/engine/core.ts`, teste în `src/engine/*.test.ts`).

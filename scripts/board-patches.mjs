@@ -1,4 +1,7 @@
 // Text patches applied to the design boards: [where ('code' | 'tpl'), find, replace].
+import { CONT_ACCOUNT } from './board-patches-cont.mjs';
+import { DEMO_BUDGET } from './board-patches-budget.mjs';
+
 // They swap the design's sample venues for real ones and add search, keeping every screen as designed.
 
 const NAV_BTN = `<button type="button" class="press" style="height: 62px; border: 0; border-radius: 16px; background: var(--blue); color: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font: 650 13px/1 'Instrument Sans', system-ui, sans-serif"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 22 2l-9 19-2-8z"></path></svg>Navighează</button>`;
@@ -62,6 +65,7 @@ export const PATCHES = {
     ['code', "      appZone: APP.zoneName(),", "      askFeedbackReal: false, meName: APP.prefs.name || 'Tu', meUser: APP.prefs.user || 'tu',\n      appZone: APP.zoneName(),"],
     ['tpl', 'Cornel Adrian', '{{meName}}'],
     ['tpl', '@CornaciDev', '@{{meUser}}'],
+    ...DEMO_BUDGET,
   ],
   Cont: [
     ['tpl', '<div style="padding: 14px; border-radius: 18px; background: var(--s1); border: 1px solid var(--line); display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #2F5BFF; color: #FFD43B; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg></span><span class="col" style="flex: 1 1 auto; gap: 3px"><span style="font: 700 17px/1.1 \'Instrument Sans\', system-ui, sans-serif">Buftea</span><span class="muted">Găsit după locație · poți schimba oricând</span></span></div>', '<sc-for list="{{zoneGroups}}" as="g" hint-placeholder-count="2"><div class="col" style="gap: 8px"><p class="lbl">{{g.area}}</p><div style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{g.zones}}" as="z" hint-placeholder-count="6"><button type="button" class="{{z.cls}}" aria-pressed="{{z.on}}" onClick="{{z.pick}}">{{z.name}}</button></sc-for></div></div></sc-for>'],
@@ -73,5 +77,6 @@ export const PATCHES = {
      "    const real = APP.picksFor(s.likes, s.zoneId);\n    const rp = real[Math.min(s.pick, real.length - 1)];\n    const p = rp ? [rp.name, rp.tag, rp.sub, rp.bg, rp.fg, rp.dot, rp.like] : PICKS[Math.min(s.pick, PICKS.length - 1)];\n    v.card = { title: p[0], tag: p[1], sub: p[2], bg: p[3], fg: p[4], dot: p[5], icon: (LIKES.find((l) => l[0] === p[6]) || LIKES[5])[3], cls: 'pcard ' + (s.pick % 2 ? 'b' : 'a') };"],
     ['code', "const FOUND = [", "const FOUND = []; // real friends arrive with accounts (etapa 2)\nconst FOUND_DESIGN = ["],
     ['code', "s.synced ? 'I-am găsit! Adaugă-i și votați împreună data viitoare.'", "s.synced ? 'Încă n-am găsit pe nimeni din agendă în CeFaci. Când vin prietenii tăi, îi vezi aici și votați împreună.'"],
+    ...CONT_ACCOUNT,
   ],
 };

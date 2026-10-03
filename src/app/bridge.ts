@@ -1,17 +1,47 @@
 // The bridge between the design boards' logic and the real app: real venues, the engine, saved preferences.
 import venuesJson from '../data/venues.json';
 import { KINDS, ZONES } from '../engine/catalog';
-import { cuisineLabels, fold, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
+import { adultOnly, cuisineLabels, fold, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
 import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
 
 const VENUES = venuesJson as Venue[];
 const BY_ID = new Map(VENUES.map((v) => [v.id, v]));
 
-export interface Prefs { zone: string; likes: string[]; dist: string; name?: string; user?: string; }
+/** Everything the sign-up asked, kept on the phone (accounts with Supabase come in etapa 2). */
+export interface Prefs {
+  zone: string; likes: string[]; dist: string; name?: string; user?: string;
+  birth?: string;                 // yyyy-mm-dd
+  budget?: string;                // '0' | '50' | '100' | 'any'
+  who?: string;                   // 'solo' | 'duo' | 'group'
+  when?: string[];                // 'day' | 'eve' | 'late' | 'we'
+  mood?: string;                  // 'chill' | 'mix' | 'party'
+  moves?: string[];               // 'walk' | 'car' | 'bus' | 'bike'
+  liked?: string[]; disliked?: string[]; // venue ids from the "Ai merge aici?" cards
+  google?: string;                // Supabase user id, when signed in with Google
+}
 const PKEY = 'cefaci.prefs';
+const DEFAULTS: Prefs = { zone: 'centru', likes: [], dist: '20', moves: ['walk', 'car'] };
 function loadPrefs(): Prefs {
-  try { const raw = localStorage.getItem(PKEY); if (raw) return { zone: 'centru', likes: [], dist: '20', ...JSON.parse(raw) }; } catch { /* storage blocked */ }
-  return { zone: 'centru', likes: [], dist: '20' };
+  try { const raw = localStorage.getItem(PKEY); if (raw) return { ...DEFAULTS, ...JSON.parse(raw) }; } catch { /* storage blocked */ }
+  return { ...DEFAULTS };
+}
+
+/** Age in whole years on `now`, from yyyy-mm-dd; null when unknown. */
+export function ageOn(birth: string | undefined, now = new Date()): number | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birth ?? '');
+  if (!m) return null;
+  const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  let age = now.getFullYear() - y;
+  if (now.getMonth() + 1 < mo || (now.getMonth() + 1 === mo && now.getDate() < d)) age--;
+  return age;
+}
+// how far one gets in a minute, by the fastest way the person said they move (km)
+const KM_PER_MIN: Record<string, number> = { walk: 0.08, bike: 0.25, bus: 0.3, car: 0.5 };
+/** A budget filter key: '0', '50', '100', '200', 'any', or a range 'min-max' ('50-', '-120'). */
+export function budgetRange(key: string): { min: number; max: number } {
+  const r = /^(\d*)-(\d*)$/.exec(key);
+  if (r) return { min: r[1] ? Number(r[1]) : 0, max: r[2] ? Number(r[2]) : Infinity };
+  return { min: 0, max: BUDGET_MAX[key] ?? Infinity };
 }
 
 // Colours and icons in the design's own palette, chosen by kind so the cards stay varied but predictable.
@@ -59,7 +89,6 @@ type Place = ReturnType<typeof toPlace>;
 const WHEN_MAP: Record<string, When> = { now: 'acum', eve: 'diseara', tom: 'maine', we: 'weekend' };
 const WHO_MAP: Record<string, Who> = { 1: '1', 2: '2', 34: '34', 5: '5' };
 const BUDGET_MAX: Record<string, number> = { 0: 0, 50: 50, 100: 100, 200: 200, any: Infinity };
-const MIN_TO_KM: Record<string, number> = { 10: 4, 20: 10, 30: 18 };
 const DUR_MAX: Record<string, number> = { 1: 1.5, 23: 3, 4: 99 };
 const VIBE_LIKES: Record<string, string[]> = { bowl: ['Fun', 'Competitiv'], escape: ['Fun', 'Competitiv'], film: ['Cultură', 'Chill'], party: ['Party'], karaoke: ['Fun', 'Party'], food: ['Mâncare bună'], cafe: ['Chill'], sport: ['Competitiv'], nature: ['Aer liber'], culture: ['Cultură'], board: ['Fun'], standup: ['Cultură', 'Fun'] };
 
@@ -82,21 +111,51 @@ export const APP = {
   rebuild() {
     const o = this.origin();
     this.places.length = 0; // the boards hold this array, so it is refilled in place
-    for (const v of VENUES) this.places.push(toPlace(v, o));
+    const minor = this.isMinor();
+    for (const v of VENUES) if (!(minor && adultOnly(v))) this.places.push(toPlace(v, o)); // under 18: no clubs, hookah, 18+
     this.byIdMap = new Map(this.places.map((p) => [p.id, p]));
     this.cache.clear();
   },
   byId(id: string) { return this.byIdMap.get(id); },
   ctx(): Ctx {
     const likes = this.prefs.likes.flatMap((l) => VIBE_LIKES[l] ?? [l]);
-    return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: [] };
+    return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: [], minor: this.isMinor(), liked: this.prefs.liked, disliked: this.prefs.disliked };
+  },
+  age: ageOn,
+  google: async (): Promise<string | null> => 'Google nu e pornit.',
+  isMinor() { const a = ageOn(this.prefs.birth); return a !== null && a < 18; },
+  /** Minutes to km, by the fastest way the person moves. */
+  kmFor(min: string, moves?: string[]) {
+    moves ??= this.prefs.moves;
+    const speed = Math.max(...(moves?.length ? moves : ['car']).map((m: string) => KM_PER_MIN[m] ?? 0.5));
+    return Math.max(1.5, Number(min || 20) * speed);
+  },
+  /** The home filters, started from what the person said at sign-up. */
+  homeDefaults() {
+    const p = this.prefs;
+    const who = p.who === 'solo' ? '1' : p.who === 'duo' ? '2' : '34';
+    const w = p.when ?? [];
+    const when = w.includes('eve') || w.includes('late') ? 'eve' : w.includes('we') ? 'we' : w.includes('day') ? 'now' : 'eve';
+    const budget = p.budget === '0' || p.budget === '50' || p.budget === '100' || p.budget === 'any' ? p.budget : '100';
+    const fromLikes = [...new Set(p.likes.flatMap((l) => VIBE_LIKES[l] ?? []))];
+    const vibes = p.mood === 'chill' ? ['Chill'] : p.mood === 'party' ? ['Party'] : fromLikes.slice(0, 2);
+    return { who, when, dur: '23', budget, vibes, dist: p.dist || '20' };
+  },
+  pickVotes: new Map<string, string>(),
+  notePick(id: string | undefined, vote: string) { if (id) this.pickVotes.set(id, vote); },
+  /** Said under results when prices matter: they are estimates per kind of place, not menus. */
+  priceNote(q: string, budgetKey: string) {
+    const r = search(VENUES, q || '', this.ctx(), 1).parsed;
+    const asked = q && q.trim().length > 1 ? r.budget !== undefined || r.budgetMin !== undefined : budgetKey !== 'any';
+    return asked ? ' · Atenție: prețurile sunt estimate și pot varia.' : '';
   },
   /** The design's matches(f): real ranking from the engine, as PLACES entries. */
   matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string }): Place[] {
     const key = JSON.stringify(f) + this.prefs.zone + new Date().getHours();
     const hit = this.cache.get(key);
     if (hit) return hit;
-    const ask: Ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: BUDGET_MAX[f.budget] ?? Infinity, maxKm: MIN_TO_KM[f.dist] ?? 10, vibes: f.vibes as Ask['vibes'] };
+    const b = budgetRange(f.budget);
+    const ask: Ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: b.max, budgetMin: b.min || undefined, maxKm: this.kmFor(f.dist), vibes: f.vibes as Ask['vibes'] };
     const r = recommend(VENUES, ask, this.ctx(), 0, 200);
     const list = r.picks.filter((s) => info(s.v).hours <= (DUR_MAX[f.dur] ?? 99)).map((s) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
     this.cache.set(key, list);
@@ -123,20 +182,24 @@ export const APP = {
     const ask: Ask = { who: '34', when: 'weekend', budget: Infinity, maxKm: 12, vibes: [...new Set(likes.flatMap((l) => VIBE_LIKES[l] ?? []))] as Ask['vibes'] };
     return recommend(VENUES, ask, this.ctx(), 0, 5).picks.map((s) => this.byIdMap.get(s.v.id)!);
   },
-  pickMemo: new Map<string, { name: string; tag: string; sub: string; bg: string; fg: string; dot: string; like: string }[]>(),
+  pickMemo: new Map<string, { id: string; name: string; tag: string; sub: string; bg: string; fg: string; dot: string; like: string }[]>(),
   /** Real places for the sign-up "Da / Poate / Nu" cards, near the chosen zone and matched to the chosen likes. */
-  picksFor(likes: string[], zoneId: string) {
-    const key = likes.join(',') + '@' + zoneId;
+  picksFor(likes: string[], zoneId: string, more: { budget?: string; when?: string[]; birth?: string; who?: string } = {}) {
+    const key = likes.join(',') + '@' + zoneId + JSON.stringify(more);
     const hit = this.pickMemo.get(key);
     if (hit) return hit;
     const origin = zoneById(zoneId);
     const vibes = [...new Set(likes.flatMap((l) => VIBE_LIKES[l] ?? []))] as Ask['vibes'];
-    const ctx: Ctx = { prefs: { zone: zoneId, likes: vibes }, origin, now: new Date(), history: [] };
-    const r = recommend(VENUES, { who: '34', when: 'weekend', budget: Infinity, maxKm: 8, vibes }, ctx, 0, 5);
+    const age = ageOn(more.birth);
+    const ctx: Ctx = { prefs: { zone: zoneId, likes: vibes }, origin, now: new Date(), history: [], minor: age !== null && age < 18 };
+    const w = more.when ?? [];
+    const when: When = w.includes('eve') || w.includes('late') ? 'diseara' : 'weekend';
+    const who: Who = more.who === 'solo' ? '1' : more.who === 'duo' ? '2' : '34';
+    const r = recommend(VENUES, { who, when, budget: budgetRange(more.budget ?? 'any').max, maxKm: 8, vibes }, ctx, 0, 5);
     const LIKE_OF: Record<string, string> = { mancare: 'food', cafea: 'cafe', desert: 'cafe', bar: 'party', club: 'party', film: 'film', teatru: 'culture', cultura: 'culture', activitate: 'bowl' };
     const out = r.picks.map((s) => {
       const p = toPlace(s.v, origin);
-      return { name: p.name, tag: s.v.kind + ' · ' + p.dist + ' min', sub: (p.title !== s.v.kind ? p.title + '. ' : '') + (p.price ? 'Cam ' + p.price + ' lei de persoană. ' : '') + (s.reasons[0] ?? ''), bg: p.bg, fg: p.fg, dot: p.dot, like: s.v.k === 'escape_game' ? 'escape' : LIKE_OF[s.v.cat] ?? 'food' };
+      return { id: s.v.id, name: p.name, tag: s.v.kind + ' · ' + p.dist + ' min', sub: (p.title !== s.v.kind ? p.title + '. ' : '') + (p.price ? 'Cam ' + p.price + ' lei de persoană. ' : '') + (s.reasons[0] ?? ''), bg: p.bg, fg: p.fg, dot: p.dot, like: s.v.k === 'escape_game' ? 'escape' : LIKE_OF[s.v.cat] ?? 'food' };
     });
     this.pickMemo.set(key, out);
     return out;

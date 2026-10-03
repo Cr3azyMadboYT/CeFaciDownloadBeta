@@ -196,7 +196,7 @@ class Component extends DCLogic {
     this.cid = 0;
     this.eid = 0;
     this.state = {
-      screen: 'home', from: 'home', who: '34', when: 'eve', dur: '23', budget: '100', vibes: ['Fun', 'Competitiv'], dist: '20',
+      screen: 'home', from: 'home', ...APP.homeDefaults(),
       draft: null, sheet: 'closed', page: 0, plans: [], cur: null, lastSurprise: null,
       celebrate: false, qr: 'closed', seed: 7, theme: null, doodles: true, tick: 0,
       conflict: null, sendOpen: false, toast: '', toastUntil: -1,
@@ -934,8 +934,8 @@ class Component extends DCLogic {
       { id: 'f-who', label: 'Cine vine?', flex: '1 1 0', opts: opt('who', WHO, ['1', '2', '34', '5']) },
       { id: 'f-when', label: 'Când?', flex: '1 1 0', opts: opt('when', WHEN, ['now', 'eve', 'tom', 'we']) },
       { id: 'f-dur', label: 'Cât timp aveți?', flex: '1 1 0', opts: opt('dur', DUR, ['1', '23', '4']) },
-      { id: 'f-budget', label: 'Buget de persoană, în lei', flex: '0 0 auto', opts: opt('budget', BUDGET, ['0', '50', '100', '200', 'any']) },
-      { id: 'f-dist', label: 'Cât de departe, cu mașina?', flex: '1 1 0', opts: opt('dist', DIST, ['10', '20', '30']) }
+      { id: 'f-dist', label: 'Cât de departe?', flex: '1 1 0', opts: opt('dist', DIST, ['10', '20', '30']) },
+      { id: 'f-budget', label: 'Buget de persoană, în lei', flex: '0 0 auto', opts: opt('budget', BUDGET, ['0', '50', '100', '200', 'any']) }
     ];
 
     // plans
@@ -1189,7 +1189,7 @@ class Component extends DCLogic {
       openFilters: () => this.openFilters(),
       tokens: WHO[f.who].label + ', ' + WHEN[f.when].label.toLowerCase() + ', ' + summary,
       resTitle: String(s.sq || '').trim().length > 1 ? (all.length ? 'Uite ce am găsit.' : 'N-am găsit nimic.') : items.length ? 'Am găsit ' + words[Math.min(3, items.length)] + '.' : 'N-am găsit nimic.',
-      resSub: String(s.sq || '').trim().length > 1 ? (all.length ? all.length + (all.length === 1 ? ' loc' : (all.length < 20 ? ' locuri' : ' de locuri')) + ' pentru „' + String(s.sq).trim() + '”' + (page ? ', pagina ' + (page + 1) : '') : 'Încearcă un nume, „pizza”, „sector 2” sau „bar cu terasă”.') : all.length ? (all.length + ' locuri se potrivesc cu filtrele tale' + (page ? ', pagina ' + (page + 1) : '')) : 'Niciun loc nu bifează tot ce ai ales.',
+      resSub: (String(s.sq || '').trim().length > 1 ? (all.length ? all.length + (all.length === 1 ? ' loc' : (all.length < 20 ? ' locuri' : ' de locuri')) + ' pentru „' + String(s.sq).trim() + '”' + (page ? ', pagina ' + (page + 1) : '') : 'Încearcă un nume, „pizza”, „sector 2” sau „bar cu terasă”.') : all.length ? (all.length + ' locuri se potrivesc cu filtrele tale' + (page ? ', pagina ' + (page + 1) : '')) : 'Niciun loc nu bifează tot ce ai ales.') + APP.priceNote(String(s.sq || ''), String(this.filtersOf().budget)),
       hasCards: items.length > 0, noCards: items.length === 0, noCardsFlag: items.length === 0, cards,
       more: () => this.setState({ page: (page + 1) * 3 >= all.length ? 0 : page + 1 }),
       noMore: all.length <= 3,
@@ -1199,6 +1199,25 @@ class Component extends DCLogic {
       sheetShown: s.sheet !== 'closed',
       sheetCls: s.sheet === 'closing' ? 'sheetout' : 'sheet', scrimCls: s.sheet === 'closing' ? 'scrimout' : 'scrim',
       closeFilters: () => this.closeFilters(), applyFilters: () => this.applyFilters(),
+      ...(() => {
+        // the budget range typed in the filter sheet becomes a key like '50-120', registered in BUDGET so the summary reads it
+        const key = String((this.state.draft || this.filtersOf()).budget);
+        const r = /^(\d*)-(\d*)$/.exec(key);
+        const cur = r ? [r[1], r[2]] : (key === 'any' ? ['', ''] : ['', key === '0' ? '0' : key]);
+        const put = (lo, hi) => {
+          lo = String(lo).replace(/\D/g, '').slice(0, 4); hi = String(hi).replace(/\D/g, '').slice(0, 4);
+          if (!lo && !hi) { this.setDraft('budget', 'any'); return; }
+          const k = lo + '-' + hi;
+          BUDGET[k] = { label: (lo || '0') + '–' + (hi || '∞'), max: hi ? Number(hi) : 9999, text: lo && hi ? 'între ' + lo + ' și ' + hi + ' lei' : (lo ? 'de la ' + lo + ' lei' : 'până în ' + hi + ' lei') };
+          this.setDraft('budget', k);
+        };
+        return {
+          bMin: r ? cur[0] : '', bMax: r ? cur[1] : '',
+          bMinCls: r && cur[0] ? 'chip on' : 'chip', bMaxCls: r && cur[1] ? 'chip on' : 'chip',
+          onBMin: (e) => put(e && e.target ? e.target.value : '', r ? cur[1] : ''),
+          onBMax: (e) => put(r ? cur[0] : '', e && e.target ? e.target.value : ''),
+        };
+      })(),
       applyLabel: draftCount ? 'Arată ' + draftCount + (draftCount === 1 ? ' variantă' : ' variante') : 'Nimic nu se potrivește',
       rows,
       vibeOpts: VIBES.map((vb) => {

@@ -38,6 +38,7 @@ export interface Ask {
   who: Who;
   when: When;
   budget: number;      // max lei per person, Infinity for any
+  budgetMin?: number;  // min lei per person ("de la 50 la 120 lei")
   maxKm: number;
   vibes: Vibe[];
 }
@@ -47,6 +48,9 @@ export interface Ctx {
   origin: { lat: number; lon: number };
   now: Date;
   history: string[];   // venue ids already planned or visited
+  minor?: boolean;     // under 18: no clubs, hookah or other 18+ places
+  liked?: string[];    // venue ids the person said "da" to at sign-up
+  disliked?: string[]; // venue ids the person said "nu prea" to
 }
 
 export interface Scored {

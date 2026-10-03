@@ -80,12 +80,17 @@ export const WHO_N: Record<Who, number> = { '1': 1, '2': 2, '34': 4, '5': 6 };
  * score = 35 gust + 20 ocazie + 15 calitate + 10 aproape + 10 nou + 10 gașcă
  * (the weights from the "Versiunea 1" document). Returns null when a hard filter fails.
  */
+/** Places only for adults: clubs, hookah lounges, strip clubs. Hidden for people under 18. */
+export const adultOnly = (v: Venue) => v.k === 'nightclub' || v.cuisines.includes('shisha') || /shisha|hookah|narghil|pussy|strip|gentlemen|erotic|\bsexy\b|\bxxx\b|cigars club/.test(fold(v.name));
+
 export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
+  if (ctx.minor && adultOnly(v)) return null;
   const k = info(v);
   const d = km(ctx.origin, v);
   if (d > ask.maxKm) return null;
   const price = priceOf(v);
   if (price > ask.budget) return null;
+  if (ask.budgetMin && price < ask.budgetMin) return null;
   const n = WHO_N[ask.who];
   if (n > k.max) return null;
   const t = targetTime(ask.when, k.night, ctx.now);
@@ -107,10 +112,11 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const calitate = 15 * (0.4 + 0.6 * complete) * (v.brand ? 0.7 : 1) * (v.fast ? 0.75 : 1);
   const aproape = 10 * Math.max(0, 1 - d / Math.max(ask.maxKm, 1));
   const nou = ctx.history.includes(v.id) ? 0 : 10;
+  const said = ctx.liked?.includes(v.id) ? 6 : ctx.disliked?.includes(v.id) ? -15 : 0;
   const gasca = 10 * (n >= k.min && n <= k.max ? (n >= 3 && (k.cat === 'activitate' || k.cat === 'bar') ? 1 : 0.8) : 0.3);
 
   const parts = { gust, ocazie, calitate, aproape, nou, gasca };
-  const score = Object.values(parts).reduce((a, b) => a + b, 0);
+  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said;
   const reasons: string[] = [];
   const hits = want.filter((w) => vibes.includes(w));
   if (hits.length) reasons.push('Se potrivește cu ' + hits.slice(0, 2).join(' și '));
@@ -155,6 +161,7 @@ export interface Parsed {
   street?: string;      // "strada X" / "calea X"
   time?: TimeAsk;
   budget?: number;      // max lei per person
+  budgetMin?: number;   // min lei per person, for a range
   people?: number;
   fancy: boolean; family: boolean; romantic: boolean;
   fixes: string[];      // typo corrections, e.g. "bowlng → bowling"
@@ -243,6 +250,8 @@ export function parseQuery(q: string): Parsed {
   });
   // budget
   const PER = '(?: (?:de )?(?:persoana|pers|om|cap))?';
+  take(new RegExp(' (?:intre|de la) ' + NUMW + ' (?:si|la|pana la) ' + NUMW + ' (?:de )?(?:lei|ron)?' + PER + ' '), (m) => { p.budgetMin = num(m[1]); p.budget = num(m[2]); });
+  take(new RegExp(' (\\d{2,4}) (\\d{2,4}) (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budgetMin = Number(m[1]); p.budget = Number(m[2]); }); // "50-100 lei"
   take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana (?:in|la)) ' + NUMW + ' (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budget = num(m[1]); });
   take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana in) (\\d{2,4})' + PER + ' '), (m) => { p.budget = num(m[1]); }); // "sub 50": lei is implied
   take(new RegExp(' ' + NUMW + ' (?:de )?(?:lei|ron)(?: (?:de )?(?:persoana|pers|om|cap))? '), (m) => { p.budget = num(m[1]); });
@@ -460,6 +469,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
   if (nameIntent) {
     for (const { v, s } of nameHits) {
       if (s < strongest - 0.12) continue;
+      if (ctx.minor && adultOnly(v)) continue;
       const d = km(origin, v);
       if (p.place && d > p.place.r * 4) continue;
       const t = timeFor(v);
@@ -494,7 +504,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (namedIds.has(v.id)) continue;
       const k = info(v);
       const name = fold(v.name);
-      if (ADULT.test(name)) continue;
+      if (ADULT.test(name) || (ctx.minor && adultOnly(v))) continue;
       // what
       let fit = 0.6;
       if (wantsSomething) {
@@ -517,6 +527,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (n && (n > k.max || (n > 1 && n < k.min))) continue;
       const price = priceOf(v);
       if (p.budget !== undefined && price > p.budget) continue;
+      if (p.budgetMin !== undefined && price < p.budgetMin) continue;
       if (p.family && (v.cat === 'bar' || v.cat === 'club')) continue;
       if (p.romantic && (v.fast || (v.cat === 'activitate' && v.k !== 'ice_rink'))) continue;
       if (p.outdoor && !relaxOutdoor && !(v.outdoor || OUTDOOR_HINT.test(name) || ['biergarten', 'zoo', 'water_park', 'theme_park', 'miniature_golf'].includes(v.k))) continue;
@@ -612,7 +623,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
     else if (wantsSomething && c.fit <= 0.62) reasons.push('Ceva asemănător: ' + info(c.v).label.toLowerCase());
     if (o.known) reasons.push(p.time && !p.time.now && o.label === 'Deschis' ? 'Deschis ' + p.time.label : o.label);
     reasons.push(label(c.d) + nearWhat);
-    if (p.budget !== undefined) reasons.push('Cam ' + c.price + ' lei de persoană');
+    if (p.budget !== undefined) reasons.push('Cam ' + c.price + ' lei de persoană (estimat)');
     if (n && n >= 3) reasons.push('Bun pentru ' + n + ' persoane');
     return { v: c.v, score: c.sc, km: c.d, open: o, reasons: reasons.slice(0, 3), parts: empty };
   });

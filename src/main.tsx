@@ -4,6 +4,7 @@ import * as DemoView from './boards/Demo.view.js';
 import { make as makeCont } from './boards/Cont.logic.js';
 import { make as makeDemo } from './boards/Demo.logic.js';
 import { APP, initBridge } from './app/bridge';
+import { signInWithGoogle, watchAuth } from './app/auth';
 import './app/shell.css';
 
 const W = 390, H = 844;
@@ -47,7 +48,12 @@ const onboarded = () => { try { return localStorage.getItem('cefaci.onboarded') 
 function show(name: string) {
   if (currentName === 'Cont' && name === 'Demo' && current) {
     const st = current.comp.state as Record<string, any>;
-    APP.savePrefs({ zone: st.zoneId || 'centru', likes: st.likes || [], dist: st.dist || '20', name: String(st.first || '').trim(), user: String(st.user || '').trim() });
+    const votes = [...APP.pickVotes];
+    APP.savePrefs({
+      zone: st.zoneId || 'centru', likes: st.likes || [], dist: st.dist || '20', name: String(st.first || '').trim(), user: String(st.user || '').trim(),
+      birth: st.birthIso || undefined, budget: st.budget, who: st.who, when: st.when, mood: st.mood, moves: st.moves,
+      liked: votes.filter(([, v]) => v === 'yes').map(([id]) => id), disliked: votes.filter(([, v]) => v === 'no').map(([id]) => id),
+    });
   }
   current?.unmount();
   currentName = name;
@@ -56,5 +62,14 @@ function show(name: string) {
   style.textContent = b.css;
   current = mount(b, host, { theme: 'zi' }, { navigate: show });
 }
-initBridge({ restart: () => { try { localStorage.clear(); } catch { /* */ } show('Cont'); } });
+initBridge({ restart: () => { try { localStorage.clear(); } catch { /* */ } show('Cont'); }, google: signInWithGoogle });
 show(onboarded() ? 'Demo' : 'Cont');
+// back from Google: remember the account and skip the start screen, with the first name filled in
+watchAuth((who) => {
+  if (!who || APP.prefs.google === who.id) return;
+  APP.savePrefs({ google: who.id });
+  if (currentName === 'Cont' && current) {
+    const st = current.comp.state as Record<string, any>;
+    if (st.step === 'start') current.comp.setState({ step: 'name', first: st.first || who.first });
+  }
+});

@@ -59,7 +59,7 @@ const PICKS = [
 const FOUND = []; // real friends arrive with accounts (etapa 2)
 const FOUND_DESIGN = [['I', 'Ioana Munteanu', 'ioana.m', '#8C6CFF'], ['M', 'Mihai Stan', 'mihai.s', '#FF6A4D'], ['S', 'Sara Pop', 'sara.p', '#FFD43B'], ['R', 'Radu Ene', 'radu.e', '#5FD39A']];
 const TAKEN = ['cornel', 'andrei', 'maria', 'ana', 'radu', 'ioana'];
-const STEPS = ['start', 'phone', 'name', 'zone', 'likes', 'style', 'picks', 'friends', 'done'];
+const STEPS = ['start', 'name', 'zone', 'likes', 'style', 'picks', 'friends', 'done']; // no phone step until SMS is paid for
 const clean = (x) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9._]/g, '').slice(0, 20);
 
 class Component extends DCLogic {
@@ -69,7 +69,7 @@ class Component extends DCLogic {
     this.state = this.fresh();
   }
   fresh() {
-    return { step: 'start', zoneId: APP.prefs.zone || 'centru', theme: this.state ? this.state.theme : null, phone: '', sent: false, code: '', codeBad: false, first: '', user: '', year: null, dist: '20', moves: ['walk', 'car'], likes: [], budget: '100', who: 'group', when: ['eve', 'we'], mood: 'mix', pick: 0, votes: [], synced: false, added: [] };
+    return { step: 'start', zoneId: APP.prefs.zone || 'centru', theme: this.state ? this.state.theme : null, phone: '', sent: false, code: '', codeBad: false, first: '', user: '', year: null, birth: '', birthIso: '', ageAsk: false, authErr: '', dist: '20', moves: ['walk', 'car'], likes: [], budget: '100', who: 'group', when: ['eve', 'we'], mood: 'mix', pick: 0, votes: [], synced: false, added: [] };
   }
   componentWillUnmount() { this.timers.forEach((t) => clearTimeout(t)); }
   later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
@@ -86,11 +86,11 @@ class Component extends DCLogic {
     const seg = (x) => (x ? 'press seg on' : 'press seg');
     const SAY = {
       phone: ['hi', 'Salut! Întâi numărul tău. Îți trimit un cod, ca să știu că ești tu.'],
-      name: ['wink', 'Super. Acum cum să-ți zic? Prietenii te găsesc după username.'],
+      name: s.ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
       zone: ['up', 'Spune-mi de unde pleci și cât de departe ești dispus să mergi pentru o seară bună.'],
       likes: ['hi', likesN >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
       style: ['wink', 'Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.'],
-      picks: ['up', s.pick === 0 ? 'Ultimul pas: 5 locuri reale din zonă. Zi-mi repede dacă ai merge.' : (s.votes[s.votes.length - 1] === 'yes' ? 'Notat! Îmi place cum gândești.' : (s.votes[s.votes.length - 1] === 'no' ? 'Ok, pe ăsta nu ți-l mai arăt des.' : 'Hmm, bine. Îl las pe „poate”.'))],
+      picks: ['up', s.pick === 0 ? 'Aproape gata: 5 locuri reale din zona ta. Zi-mi repede dacă ai merge.' : (s.votes[s.votes.length - 1] === 'yes' ? 'Notat! Îmi place cum gândești.' : (s.votes[s.votes.length - 1] === 'no' ? 'Ok, pe ăsta nu ți-l mai arăt des.' : 'Hmm, bine. Îl las pe „poate”.'))],
       friends: ['hi', s.synced ? 'Încă n-am găsit pe nimeni din agendă în CeFaci. Când vin prietenii tăi, îi vezi aici și votați împreună.' : 'Cu prietenii e mai distractiv. Vrei să văd care sunt deja pe CeFaci?']
     };
     const say = SAY[s.step] || ['hi', ''];
@@ -99,13 +99,14 @@ class Component extends DCLogic {
       themeLabel: theme === 'noapte' ? 'Treci pe tema de zi' : 'Treci pe tema de noapte', themeIcon: theme === 'noapte' ? SUN : MOON,
       toggleTheme: () => set({ theme: theme === 'noapte' ? 'zi' : 'noapte' }),
       isStart: s.step === 'start', isPhone: s.step === 'phone', isName: s.step === 'name', isZone: s.step === 'zone', isLikes: s.step === 'likes', isStyle: s.step === 'style', isPicks: s.step === 'picks', isFriends: s.step === 'friends', isDone: s.step === 'done',
-      progW: Math.round(Math.max(0, k - 1) / 7 * 100) + '%', progText: Math.max(1, k) + ' din 7',
+      progW: Math.round(Math.max(0, k - 1) / 6 * 100) + '%', progText: Math.max(1, k) + ' din 6',
       back: () => this.go(STEPS[Math.max(0, k - 1)]),
       next: () => this.go(STEPS[Math.min(STEPS.length - 1, k + 1)]),
       restart: () => this.setState(this.fresh()),
       bl: biluPose(say[0], say[0] === 'up' ? 'ul' : 'c'), say: say[1],
       startBl: biluPose('hi', 'c'), doneBl: biluPose('yay', 'c'),
-      goPhone: () => this.go('phone'), goSso: () => this.setState({ step: 'name', first: 'Cornel' })
+      goGoogle: () => { this.setState({ authErr: '' }); APP.google().then((err) => { if (err) this.setState({ authErr: err }); }); },
+      goLocal: () => this.go('name'), goSso: () => this.setState({ authErr: 'Intrarea cu Apple vine în curând.' }), showApple: false, authErr: s.authErr || ''
     };
     // phone
     const digits = s.phone.replace(/\D/g, '');
@@ -122,11 +123,25 @@ class Component extends DCLogic {
     v.user = u; v.onUser = (e) => set({ user: e && e.target ? clean(e.target.value) : '' });
     v.userTaken = u.length >= 3 && TAKEN.indexOf(u) !== -1;
     v.userOk = u.length >= 3 && !v.userTaken;
-    v.userSugg = [u + '.buftea', u + '_iese', u + '23'].map((label) => ({ label, pick: () => set({ user: label }) }));
-    v.years = [['2011', 2011], ['2009', 2009], ['2006', 2006], ['2001', 2001], ['1995', 1995], ['Mai demult', 1985]].map(([label, y]) => ({ label, on: s.year === y, cls: on(s.year === y), pick: () => set({ year: y }) }));
-    const age = s.year ? 2026 - s.year : null;
-    v.ageNote = age == null ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : (age < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : (age < 18 ? 'Îți ascundem locurile 18+, cum sunt cluburile. În rest, tot ce e în Buftea.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.'));
-    v.nameOff = first.length < 2 || !v.userOk || !s.year || age < 16;
+    // birth date, typed as ZZ.LL.AAAA; under 16 cannot join, 16-17 see no 18+ places
+    const bM = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(s.birth);
+    const bIso = bM ? bM[3] + '-' + bM[2] + '-' + bM[1] : '';
+    const bDt = bM ? new Date(Number(bM[3]), Number(bM[2]) - 1, Number(bM[1])) : null;
+    const bReal = !!bDt && bDt.getDate() === Number(bM[1]) && bDt.getMonth() === Number(bM[2]) - 1 && bDt.getTime() <= Date.now();
+    const age = bReal ? APP.age(bIso) : null;
+    const bOk = age !== null && age <= 110;
+    v.userSugg = [u + '.ies', u + '_cf', u + (bM ? bM[3].slice(2) : '23')].map((label) => ({ label, pick: () => set({ user: label }) }));
+    v.birth = s.birth;
+    v.onBirth = (e) => { const dg = String(e && e.target ? e.target.value : '').replace(/\D/g, '').slice(0, 8); set({ birth: dg.length > 4 ? dg.slice(0, 2) + '.' + dg.slice(2, 4) + '.' + dg.slice(4) : (dg.length > 2 ? dg.slice(0, 2) + '.' + dg.slice(2) : dg), ageAsk: false }); };
+    v.ageNote = !s.birth ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : (!bM ? 'Scrie data așa: 14.05.2004.' : (!bOk ? 'Data nu pare bună. Verifică ziua, luna și anul.' : (age < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : (age < 18 ? 'Până la 18 ani nu-ți arătăm cluburile și alte locuri 18+.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.'))));
+    v.nameOff = first.length < 2 || !v.userOk || !bOk || age < 16;
+    v.nameNext = () => this.setState({ ageAsk: true });
+    v.ageAsk = !!s.ageAsk && bOk;
+    v.ageMinor = bOk && age < 18;
+    v.ageTitle = 'Sigur e data corectă?';
+    v.ageText = bOk ? s.birth + ' înseamnă că ai ' + age + ' ani.' : '';
+    v.ageYes = () => { this.setState({ ageAsk: false, birthIso: bIso }); this.go('zone'); };
+    v.ageNo = () => this.setState({ ageAsk: false });
     // zone
     v.dists = [['10', '10 min'], ['20', '20 min'], ['30', '30 min']].map(([key, label]) => ({ label, on: s.dist === key, cls: seg(s.dist === key), pick: () => set({ dist: key }) }));
     v.moves = [['walk', 'Pe jos'], ['car', 'Cu mașina'], ['bus', 'Cu autobuzul'], ['bike', 'Pe bicicletă']].map(([key, label]) => { const o = s.moves.indexOf(key) !== -1; return { label, on: o, cls: on(o), pick: () => set({ moves: o ? s.moves.filter((x) => x !== key) : s.moves.concat([key]) }) }; });
@@ -146,12 +161,12 @@ class Component extends DCLogic {
     ];
     v.styleOff = s.when.length === 0;
     // picks
-    const real = APP.picksFor(s.likes, s.zoneId);
+    const real = APP.picksFor(s.likes, s.zoneId, { budget: s.budget, when: s.when, who: s.who, birth: s.birthIso });
     const rp = real[Math.min(s.pick, real.length - 1)];
     const p = rp ? [rp.name, rp.tag, rp.sub, rp.bg, rp.fg, rp.dot, rp.like] : PICKS[Math.min(s.pick, PICKS.length - 1)];
     v.card = { title: p[0], tag: p[1], sub: p[2], bg: p[3], fg: p[4], dot: p[5], icon: (LIKES.find((l) => l[0] === p[6]) || LIKES[5])[3], cls: 'pcard ' + (s.pick % 2 ? 'b' : 'a') };
     v.pickCount = (Math.min(s.pick, 4) + 1) + ' din 5 · ' + yes + ' „da” până acum';
-    const vote = (x) => () => { const votes = this.state.votes.concat([x]); if (votes.length >= PICKS.length) { this.setState({ votes, pick: PICKS.length }); this.later(() => this.go('friends'), 450); return; } this.setState({ votes, pick: votes.length }); };
+    const vote = (x) => () => { APP.notePick(rp && rp.id, x); const votes = this.state.votes.concat([x]); if (votes.length >= PICKS.length) { this.setState({ votes, pick: PICKS.length }); this.later(() => this.go('friends'), 450); return; } this.setState({ votes, pick: votes.length }); };
     v.voteYes = vote('yes'); v.voteNo = vote('no'); v.voteMaybe = vote('maybe');
     // friends
     v.friendsAsk = !s.synced; v.friendsFound = s.synced;
