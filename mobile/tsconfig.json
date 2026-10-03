@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "resolveJsonModule": true,
+    "paths": { "@shared/*": ["../src/*"] }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "../src/engine/*.ts", "../src/app/bridge.ts", "../src/app/cloud.ts"],
+  "exclude": ["node_modules", "../src/**/*.test.ts"]
+}

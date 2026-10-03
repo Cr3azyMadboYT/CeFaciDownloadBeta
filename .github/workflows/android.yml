@@ -1,7 +1,8 @@
 # Builds the Android app on GitHub (no PC needed). The APK is attached to each run under "Artifacts".
+# The app is native (React Native, folder mobile/): real Android screens, not a web page.
 # Signing uses four repository secrets (Settings → Secrets and variables → Actions):
 #   CEFACI_KEYSTORE_B64 (the .jks file, base64), CEFACI_KEYSTORE_PASSWORD, CEFACI_KEY_ALIAS, CEFACI_KEY_PASSWORD.
-# Without them the build still runs and produces a debug APK (installable for testing, but Google sign-in needs the release key).
+# Without them the APK is signed with a test key: it installs and runs, but Google sign-in needs the real key.
 name: Aplicația Android
 
 on:
@@ -12,26 +13,36 @@ on:
 jobs:
   apk:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
-      - name: Testele
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Testele (motorul de căutare, contul, baza de date)
         run: |
           npm ci
           npx vitest run
-      - name: Aplicația web și proiectul Android
+      - name: Aplicația de telefon (verificare)
+        working-directory: mobile
         run: |
-          node scripts/extract-boards.mjs
-          npx vite build
-          npx cap sync android
+          npm ci
+          npx tsc --noEmit
+      - name: Proiectul Android nativ
+        working-directory: mobile
+        env:
+          CI: '1'
+          EXPO_NO_TELEMETRY: '1'
+        run: npx expo prebuild --platform android --no-install
       - name: Cheia de semnare (din secrete)
         id: sign
         env:
@@ -50,24 +61,22 @@ jobs:
             echo "CEFACI_KEY_PASSWORD=$KEY_PW"
           } >> ~/.gradle/gradle.properties
           echo "signed=true" >> "$GITHUB_OUTPUT"
-      - name: APK semnat (pentru telefon) și AAB (pentru Google Play)
+      - name: APK (pentru telefon)
+        working-directory: mobile/android
+        run: ./gradlew assembleRelease --no-daemon
+      - name: AAB (pentru Google Play, doar cu cheia reală)
         if: steps.sign.outputs.signed == 'true'
-        working-directory: android
+        working-directory: mobile/android
+        run: ./gradlew bundleRelease --no-daemon
+      - name: Numele fișierului
         run: |
-          chmod +x gradlew
-          ./gradlew assembleRelease bundleRelease
-      - name: APK de test (fără cheie)
-        if: steps.sign.outputs.signed != 'true'
-        working-directory: android
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          mkdir -p out
+          cp mobile/android/app/build/outputs/apk/release/app-release.apk "out/CeFaci-${{ github.run_number }}.apk"
+          if [ -d mobile/android/app/build/outputs/bundle/release ]; then cp mobile/android/app/build/outputs/bundle/release/*.aab "out/CeFaci-${{ github.run_number }}.aab"; fi
       - uses: actions/upload-artifact@v4
         with:
           name: CeFaci-android-${{ github.run_number }}
-          path: |
-            android/app/build/outputs/apk/**/*.apk
-            android/app/build/outputs/bundle/**/*.aab
+          path: out/*
           if-no-files-found: error
       - name: Curățenie
         if: always()

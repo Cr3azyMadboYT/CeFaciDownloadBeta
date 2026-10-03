@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "CeFaci",
+    "slug": "cefaci",
+    "scheme": "cefaci",
+    "version": "0.3.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#EEF1FB",
+    "android": {
+      "package": "ro.cefaci.app",
+      "versionCode": 3,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#0E1440"
+      },
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
+      "softwareKeyboardLayoutMode": "resize",
+      "predictiveBackGestureEnabled": false
+    },
+    "ios": {
+      "bundleIdentifier": "ro.cefaci.app",
+      "supportsTablet": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#0E1440"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "CeFaci folosește locația doar când apeși „Folosește locația mea”, ca să-ți arate locurile din apropiere."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": { "enableMinifyInReleaseBuilds": false }
+        }
+      ],
+      "./plugins/withSigning"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
