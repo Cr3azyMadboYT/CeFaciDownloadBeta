@@ -9,6 +9,7 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 ## Stare
 - Etapa 1 gata: ecranele din canvas (`design/Cont.dc.html`, `design/Demo.dc.html`) rulează pe 3.250 de localuri reale OpenStreetMap (`src/data/venues.json`), cu motorul din `src/engine`.
 - Nu redesena UI: se modifică doar prin `scripts/board-patches.mjs` (patch-uri text), apoi `node scripts/extract-boards.mjs`.
+- Căutarea: `src/engine/catalog.ts` (TOPICS = ce caută oamenii, PLACES = cartiere/sectoare/mall-uri/orașe, STOP), `search()` în `src/engine/core.ts`. Cele 88 de căutări reale + ce trebuie să apară primul: `src/engine/queries.ts` (testate în `search.test.ts`). Tabelul: `TABLE=1 npx vitest run scripts/search-table.test.ts`.
 - Încă de exemplu: prieteni/gășci/vot (etapa 2), XP/niveluri (etapa 3), codul SMS 318642.
 
 ## Priorități
