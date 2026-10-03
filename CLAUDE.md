@@ -10,7 +10,9 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 - Etapa 1 gata: ecranele din canvas (`design/Cont.dc.html`, `design/Demo.dc.html`) rulează pe 3.250 de localuri reale OpenStreetMap (`src/data/venues.json`), cu motorul din `src/engine`.
 - Nu redesena UI: se modifică doar prin `scripts/board-patches.mjs` (patch-uri text), apoi `node scripts/extract-boards.mjs`.
 - Căutarea: `src/engine/catalog.ts` (TOPICS = ce caută oamenii, PLACES = cartiere/sectoare/mall-uri/orașe, STOP), `search()` în `src/engine/core.ts`. Cele 88 de căutări reale + ce trebuie să apară primul: `src/engine/queries.ts` (testate în `search.test.ts`). Tabelul: `TABLE=1 npx vitest run scripts/search-table.test.ts`.
-- Contul (03.10): fără telefon/SMS deocamdată (pasul e scos, ecranul rămâne în design). Intrare cu Google prin Supabase „CeFaci 2.0” (`src/app/auth.ts`, merge doar din versiunea web, nu din APK/file://) sau „Continuă fără cont” (profil doar pe telefon). Apple ascuns (`showApple: false`).
+- Contul: fără telefon/SMS. Intrare cu Google (nativ în aplicație, prin `@capgo/capacitor-social-login` + Supabase `signInWithIdToken`), cu email (cod de 6 cifre, pe ecranul de telefon din design) sau „Continuă fără cont”. Apple ascuns (`showApple: false`). Supabase „CeFaci 2.0”: schema în `supabase/migrations/` (testată în `tests/db.test.ts`), sincronizarea în `src/app/cloud.ts`.
+- Toți pornesc de la 0 (03.10): fără prieteni, gășci, XP sau „Populare” inventate (`scripts/board-patches-real.mjs`). Starea (planuri, XP, tur, proba Plus pe zile reale) se păstrează în `cefaci.state` și, cu cont, în Supabase. Plus: săptămâna gratuită rămâne, plata nu e simulată.
+- Lansarea: după ce avem 5–10 localuri partenere. Business și Admin se leagă după ce terminăm clientul.
 - Data nașterii se scrie de mână (ZZ.LL.AAAA), apoi „Sigur e data corectă?”. Sub 16 nu intră; 16–17 nu văd cluburi, narghilea, locuri 18+ (`adultOnly` în core.ts, `ctx.minor`).
 - Răspunsurile de la cont (buget, cu cine, când, chill/party, cum ajunge, „da/nu prea” la locuri) se salvează în `cefaci.prefs` și pornesc filtrele de pe Acasă (`APP.homeDefaults`).
 - Filtre: buget cu interval „de la – până la” + avertisment că prețurile sunt estimate. Patch-uri noi: `scripts/board-patches-cont.mjs`, `scripts/board-patches-budget.mjs`.
@@ -28,7 +30,7 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 
 ## Comenzi
 - `npm i`, `npx vitest run`, `node scripts/extract-boards.mjs && npx vite build`
-- APK: `cp dist/index.html android/assets/` apoi apktool b + uber-apk-signer cu `android-release.jks` (parola în chat, nu în git).
+- Aplicația Android e nativă (Capacitor, `android/`, pachet `ro.cefaci.app`): `npx vite build && npx cap sync android`, apoi `cd android && ./gradlew bundleRelease`. Cheia de semnare se citește din `~/.gradle/gradle.properties`, niciodată din git. Pașii: `docs/android.md`. Vechiul APK WebView: `android-webview-v0/` (doar istoric).
 
 ## Amintirea pentru bon (decizie Cornel, 30.09)
 - La 40 de minute după check-in (scanat codul localului sau scanat de ospătar), Bilu trimite notificarea: „Nu uita de bon, ne ajută și pe noi și pe tine :)”.

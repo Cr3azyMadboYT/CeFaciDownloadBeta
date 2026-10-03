@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CeFaci</string>
+    <string name="title_activity_main">CeFaci</string>
+    <string name="package_name">ro.cefaci.app</string>
+    <string name="custom_url_scheme">ro.cefaci.app</string>
+</resources>

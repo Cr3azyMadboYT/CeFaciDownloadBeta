@@ -1,19 +1,43 @@
 // Sign-in with Google or with an email code, through Supabase (project "CeFaci 2.0"). Phone sign-in is off until SMS is paid for; Apple waits for an Apple account.
 // The publishable key is meant to live in the app; override both with VITE_SUPABASE_URL / VITE_SUPABASE_KEY.
 import { createClient, type Session } from '@supabase/supabase-js';
+import { Capacitor } from '@capacitor/core';
+import { SocialLogin } from '@capgo/capacitor-social-login';
 
 const URL = import.meta.env.VITE_SUPABASE_URL || 'https://vqrmwuarjjntusfbqprx.supabase.co';
 const KEY = import.meta.env.VITE_SUPABASE_KEY || 'sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O';
+// The "Web client" ID from Google Cloud → Credentials (the same one set in Supabase → Auth → Google). Needed by the app.
+const GOOGLE_WEB_CLIENT_ID = import.meta.env.VITE_GOOGLE_WEB_CLIENT_ID || '';
+const native = () => Capacitor.isNativePlatform();
 
 let client: ReturnType<typeof createClient> | null = null;
 const sb = () => (client ??= createClient(URL, KEY, { auth: { persistSession: true, detectSessionInUrl: true, flowType: 'pkce' } }));
 export const cloudClient = () => sb();
 
-/** Google refuses to sign in from a file opened locally (the APK's WebView); it works from the web address. */
-export const googleAvailable = () => typeof location !== 'undefined' && /^https?:$/.test(location.protocol);
+/** In the app: Google's own sign-in sheet. On the web: Google's page. A plain local file can do neither. */
+export const googleAvailable = () => native() || (typeof location !== 'undefined' && /^https?:$/.test(location.protocol));
+
+const sha256 = async (text: string) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)))].map((b) => b.toString(16).padStart(2, '0')).join('');
+
+/** Native Google sign-in (Android app): Google gives an ID token, Supabase turns it into a session. */
+async function signInNative(): Promise<string | null> {
+  if (!GOOGLE_WEB_CLIENT_ID) return 'Google nu e configurat încă în aplicație. Intră cu emailul.';
+  try {
+    await SocialLogin.initialize({ google: { webClientId: GOOGLE_WEB_CLIENT_ID } });
+    const raw = crypto.randomUUID();                       // Supabase checks the nonce Google signed
+    const res = await SocialLogin.login({ provider: 'google', options: { scopes: ['email', 'profile'], nonce: await sha256(raw) } });
+    const token = (res.result as { idToken?: string | null }).idToken;
+    if (!token) return 'Google nu ne-a dat contul. Mai încearcă o dată.';
+    const { error } = await sb().auth.signInWithIdToken({ provider: 'google', token, nonce: raw });
+    return error ? 'Nu am putut intra cu Google. Mai încearcă o dată.' : null;
+  } catch {
+    return null; // closed the Google sheet: nothing to say
+  }
+}
 
 export async function signInWithGoogle(): Promise<string | null> {
-  if (!googleAvailable()) return 'Google merge deocamdată doar din versiunea web. Continuă fără cont, îl legi mai târziu.';
+  if (native()) return signInNative();
+  if (!googleAvailable()) return 'Google merge doar în aplicație sau pe site. Intră cu emailul sau continuă fără cont.';
   const { error } = await sb().auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
   return error ? 'Nu am putut porni Google. Mai încearcă o dată.' : null;
 }

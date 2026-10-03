@@ -65,4 +65,4 @@ Pas 4 — doar după ce îți confirm: conturi și gașca cu vot în timp real p
 - `npx vite` — aplicația în browser, pe calculator
 - `npx vitest run` — testele
 - `node scripts/extract-boards.mjs && npx vite build` — construiește aplicația (`dist/index.html`)
-- APK: copiază `dist/index.html` în `android/assets/`, apoi `apktool b` și `uber-apk-signer` cu cheia `cefaci-android-release.jks`
+- Aplicația Android: vezi `docs/android.md` (Capacitor, Android Studio, cheia din `~/.gradle/gradle.properties`)
