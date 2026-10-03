@@ -80,8 +80,13 @@ export const WHO_N: Record<Who, number> = { '1': 1, '2': 2, '34': 4, '5': 6 };
  * score = 35 gust + 20 ocazie + 15 calitate + 10 aproape + 10 nou + 10 gașcă
  * (the weights from the "Versiunea 1" document). Returns null when a hard filter fails.
  */
-/** Places only for adults: clubs, hookah lounges, strip clubs. Hidden for people under 18. */
-export const adultOnly = (v: Venue) => v.k === 'nightclub' || v.cuisines.includes('shisha') || /shisha|hookah|narghil|pussy|strip|gentlemen|erotic|\bsexy\b|\bxxx\b|cigars club/.test(fold(v.name));
+/**
+ * Under 18 people see only places for everyone (decision Cornel, 03.10): no clubs, bars, pubs, beer gardens, hookah,
+ * adult venues, nor any place that says on the map it lets in only 18+ (min_age).
+ */
+export const adultOnly = (v: Venue) =>
+  (v.minAge ?? 0) >= 18 || v.k === 'nightclub' || v.k === 'bar' || v.k === 'pub' || v.k === 'biergarten' || v.cuisines.includes('shisha')
+  || /shisha|hookah|narghil|pussy|strip|gentlemen|erotic|\bsexy\b|\bxxx\b|cigars club|casino|cazino|pariuri/.test(fold(v.name));
 
 export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   if (ctx.minor && adultOnly(v)) return null;

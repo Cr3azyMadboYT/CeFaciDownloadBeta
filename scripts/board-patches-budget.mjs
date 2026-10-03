@@ -1,4 +1,4 @@
-// Home filters start from the sign-up answers; budget gets a free "de la – până la" range with a price warning.
+// Home filters start from the sign-up answers; OpenStreetMap credit in Profile; budget gets a free "de la – până la" range with a price warning.
 // Each entry is [where, find, replace]; applied after the patches in board-patches.mjs.
 const RANGE = `</sc-for>
 <div style="display: flex; flex-direction: column; gap: 8px">
@@ -44,4 +44,7 @@ export const DEMO_BUDGET = [
   ['code', "resSub: String(s.sq || '').trim().length > 1 ?", "resSub: (String(s.sq || '').trim().length > 1 ?"],
   ['code', "'Niciun loc nu bifează tot ce ai ales.',", "'Niciun loc nu bifează tot ce ai ales.') + APP.priceNote(String(s.sq || ''), String(this.filtersOf().budget)),"],
   ['tpl', '</sc-for>\n<div style="display: flex; flex-direction: column; gap: 8px">\n<p id="f-vibe"', RANGE],
+  // ODbL: the venue data must credit OpenStreetMap inside the app (under the tour button, in Profile)
+  ['tpl', '<svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><path d="m9 18 6-6-6-6"></path></svg>\n</button>\n</div>\n</sc-if>\n\n<sc-if value="{{isFriends}}"',
+    '<svg class="i s" viewBox="0 0 24 24" aria-hidden="true" style="color: var(--ink3)"><path d="m9 18 6-6-6-6"></path></svg>\n</button>\n<p class="muted" style="margin: 14px 0 0; text-align: center">Datele localurilor: © contribuitorii <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" style="color: inherit">OpenStreetMap</a>, licența ODbL.</p>\n</div>\n</sc-if>\n\n<sc-if value="{{isFriends}}"'],
 ];

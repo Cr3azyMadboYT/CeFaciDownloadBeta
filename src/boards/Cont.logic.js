@@ -133,7 +133,7 @@ class Component extends DCLogic {
     v.userSugg = [u + '.ies', u + '_cf', u + (bM ? bM[3].slice(2) : '23')].map((label) => ({ label, pick: () => set({ user: label }) }));
     v.birth = s.birth;
     v.onBirth = (e) => { const dg = String(e && e.target ? e.target.value : '').replace(/\D/g, '').slice(0, 8); set({ birth: dg.length > 4 ? dg.slice(0, 2) + '.' + dg.slice(2, 4) + '.' + dg.slice(4) : (dg.length > 2 ? dg.slice(0, 2) + '.' + dg.slice(2) : dg), ageAsk: false }); };
-    v.ageNote = !s.birth ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : (!bM ? 'Scrie data așa: 14.05.2004.' : (!bOk ? 'Data nu pare bună. Verifică ziua, luna și anul.' : (age < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : (age < 18 ? 'Până la 18 ani nu-ți arătăm cluburile și alte locuri 18+.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.'))));
+    v.ageNote = !s.birth ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : (!bM ? 'Scrie data așa: 14.05.2004.' : (!bOk ? 'Data nu pare bună. Verifică ziua, luna și anul.' : (age < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : (age < 18 ? 'Până la 18 ani îți arătăm doar locurile pentru oricine, fără baruri și cluburi.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.'))));
     v.nameOff = first.length < 2 || !v.userOk || !bOk || age < 16;
     v.nameNext = () => this.setState({ ageAsk: true });
     v.ageAsk = !!s.ageAsk && bOk;

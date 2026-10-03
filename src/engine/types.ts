@@ -25,6 +25,7 @@ export interface Venue {
   brand?: string;      // set for chains
   wheelchair?: boolean;
   fast?: boolean;      // fast food
+  minAge?: number;     // the place asks for ID at the door (OSM min_age)
 }
 
 export interface Zone { id: string; name: string; area: 'București' | 'Ilfov'; lat: number; lon: number; }

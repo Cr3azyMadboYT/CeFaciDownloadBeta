@@ -60,6 +60,8 @@ for (const e of els) {
   if (phone) v.phone = phone.split(';')[0].trim();
   if (t.brand || t['brand:wikidata']) v.brand = t.brand || name;
   if (t.wheelchair === 'yes') v.wheelchair = true;
+  const minAge = parseInt(t.min_age || t['age:min'] || '', 10); // a place that asks for ID at the door
+  if (minAge >= 16) v.minAge = minAge;
   if (key === 'fast_food') v.fast = true;
   out.push(v);
 }
