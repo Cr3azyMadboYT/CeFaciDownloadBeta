@@ -4,6 +4,7 @@ import goneJson from '../data/gone.json';
 import { KINDS, ZONES } from '../engine/catalog';
 import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
 import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
+import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
 
 const VENUES = venuesJson as Venue[];
 // places that left the map (closed): never recommended, but old plans and stamps still find them
@@ -136,6 +137,39 @@ export const APP = {
   byIdMap: new Map<string, Place>(),
   reasons: new Map<string, string>(),
   cache: new Map<string, Place[]>(),
+  weather: null as Weather | null,
+  /** New forecast from the server: the lists are made again with it. */
+  setWeather(w: Weather | null) {
+    if (w?.at === this.weather?.at) return;
+    this.weather = w; this.cache.clear(); this.pickMemo.clear();
+  },
+  /** The weather line for Acasă and the moment the "când" filter means. */
+  weatherFor(when: string): { line: string; wet: boolean; nice: boolean; icon: string } | null {
+    const now = new Date();
+    const at = (d: number, h: number) => { const t = new Date(now.getFullYear(), now.getMonth(), now.getDate() + d, h, 0); return t; };
+    const sat = (6 - now.getDay() + 7) % 7;
+    const [from, until, label] = when === 'now' ? [now, new Date(now.getTime() + 4 * 3600e3), 'Acum']
+      : when === 'tom' ? [at(1, 19), at(1, 24), 'Mâine seară']
+      : when === 'we' ? [at(sat, 13), at(sat, 23), sat === 0 ? 'Azi' : 'Sâmbătă']
+      : [now.getHours() >= 19 ? now : at(0, 19), at(0, 24), 'Diseară'];
+    const line = wxLine(this.weather, from as Date, until as Date, label as string);
+    const w = wxAt(this.weather, from as Date);
+    if (!line || !w) return null;
+    let wet = w.wet;
+    for (let t = (from as Date).getTime(); t < (until as Date).getTime(); t += 3600e3) if (wxAt(this.weather, new Date(t))?.wet) wet = true;
+    return { line, wet, nice: w.nice && !wet, icon: w.icon };
+  },
+  /** Rain or snow at a plan's moment at an outdoor place: the warning for the ticket. */
+  weatherWarn(id: string, at: Date): string | null {
+    const p = this.byIdMap.get(id);
+    const w = wxAt(this.weather, at);
+    if (!p || !w) return null;
+    const e = exposure(p.real);
+    if (w.wet && e !== 'in') return 'La ora planului: ' + w.text + ', ' + w.temp + '°. ' + (e === 'out' ? 'E în aer liber: ia umbrela sau alege Plan B.' : 'Stați înăuntru, nu pe terasă.');
+    if (w.cold && e === 'out') return 'La ora planului sunt doar ' + w.temp + '°: îmbracă-te gros.';
+    if (w.hot) return 'La ora planului sunt ' + w.temp + '°: ia apă.';
+    return null;
+  },
   restart: () => {},
 
   savePrefs(p: Partial<Prefs>) {
@@ -171,7 +205,7 @@ export const APP = {
   byId(id: string) { return this.byIdMap.get(id); },
   ctx(): Ctx {
     const likes = this.prefs.likes.flatMap((l) => VIBE_LIKES[l] ?? [l]);
-    return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: [], minor: this.isMinor(), liked: this.prefs.liked, disliked: this.prefs.disliked };
+    return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: [], minor: this.isMinor(), liked: this.prefs.liked, disliked: this.prefs.disliked, weather: this.weather };
   },
   /** The main board's state that must survive closing the app (and, once signed in, reinstalling it). */
   loadBoardState(now = Date.now()): Record<string, unknown> {
@@ -275,7 +309,7 @@ export const APP = {
     const origin = zoneById(zoneId);
     const vibes = [...new Set(likes.flatMap((l) => VIBE_LIKES[l] ?? []))] as Ask['vibes'];
     const age = ageOn(more.birth);
-    const ctx: Ctx = { prefs: { zone: zoneId, likes: vibes }, origin, now: new Date(), history: [], minor: age !== null && age < 18 };
+    const ctx: Ctx = { prefs: { zone: zoneId, likes: vibes }, origin, now: new Date(), history: [], minor: age !== null && age < 18, weather: this.weather };
     const w = more.when ?? [];
     const when: When = w.includes('eve') || w.includes('late') ? 'diseara' : 'weekend';
     const who: Who = more.who === 'solo' ? '1' : more.who === 'duo' ? '2' : '34';

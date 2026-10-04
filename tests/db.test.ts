@@ -122,6 +122,9 @@ it('keeps every rule of the database', async () => {
   eq('receipt after check-in (as the service)', (await q(`select xp_bill($1, 'n1', (now() at time zone 'Europe/Bucharest')::date) r`, [U.bob])).rows[0].r.gain, 25);
   eq('receipt only once', (await q(`select xp_bill($1, 'n1', (now() at time zone 'Europe/Bucharest')::date) r`, [U.bob])).rows[0].r.gain, 0);
   eq('no receipt without check-in', (await q(`select xp_bill($1, 'n2', current_date) r`, [U.bob])).rows[0].r.gain, 0);
+  await expectFail('the app cannot read the Google key', () => as('bob', `select google_key()`));
+  eq('weather is readable', (await as('bob', `select count(*)::int n from weather`)).rows[0].n, 0);
+  await expectFail('the app cannot write the weather', () => as('bob', `insert into weather (data) values ('{}')`));
   await expectOk('save my phone token', () => as('bob', `insert into push_tokens (token) values ('tok-bob')`));
   await expectFail('a token for someone else', () => as('bob', `insert into push_tokens (token, user_id) values ('tok-x', $1)`, [U.cris]));
   eq('tokens are private', (await as('cris', `select count(*)::int n from push_tokens`)).rows[0].n, 0);

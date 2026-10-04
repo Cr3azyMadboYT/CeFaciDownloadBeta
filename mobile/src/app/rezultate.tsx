@@ -12,6 +12,7 @@ import { Big, Chip, H1, Muted, Press, T, Tag } from '../ui/kit';
 import { F, useTheme, type Theme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { VoteStart } from '../ui/VoteStart';
+import { useWeatherVersion } from '../lib/weather';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
@@ -33,7 +34,8 @@ export default function Rezultate() {
   const [sheet, setSheet] = useState(false);
   const [vote, setVote] = useState(false);
   const typed = useDeferredValue(sq); // the list follows the typing without slowing the keyboard
-  const all = useMemo(() => listFor(f, typed), [f, typed, prefs]);
+  const wxv = useWeatherVersion();
+  const all = useMemo(() => listFor(f, typed), [f, typed, prefs, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
   const page = page0 * 3 >= all.length ? 0 : page0;
   const items = all.slice(page * 3, page * 3 + 3);
   const nearest = items.length ? items.reduce((a, b) => (b.dist < a.dist ? b : a)) : null;

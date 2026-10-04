@@ -11,11 +11,12 @@ import { dropShared, going, moveShared, sharePlan, watchPlans, type Going } from
 import { SendTo, type Target } from '../../ui/SendTo';
 import { checkIn, sendBill } from '../../lib/outing';
 import { cancelReminders } from '../../lib/remind';
+import { useWeatherVersion } from '../../lib/weather';
 import { km } from '../../../../src/engine/core';
 import { toast } from '../../lib/toast';
 import { Avatar } from '../../ui/Avatar';
 import { Dashed } from '../../ui/Dashed';
-import { Icon } from '../../ui/Icon';
+import { Icon, I } from '../../ui/Icon';
 import { Big, Chip, H1, Muted, Press, Quiet, Sheet, T } from '../../ui/kit';
 import { savePrefs } from '../../lib/session';
 import { sb } from '../../lib/auth';
@@ -49,6 +50,7 @@ export default function Bilet() {
   const [via, setVia] = useState('telefon');
   const [shareOpen, setShareOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  useWeatherVersion(); // the warning follows a fresh forecast
   const [to, setTo] = useState<Target | null>(null);
   const [sending, setSending] = useState(false);
   const [who, setWho] = useState<Going[]>([]);
@@ -88,6 +90,7 @@ export default function Bilet() {
     Linking.openURL('https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(p.name) + '&dates=' + z(d) + '/' + z(end) + '&details=' + encodeURIComponent('Plan făcut în CeFaci') + '&location=' + encodeURIComponent(p.real.lat + ',' + p.real.lon)).catch(() => {});
   };
   const clash = all ? clashWith(pl, all) : null;
+  const wxWarn = pl.inAt ? null : APP.weatherWarn(p.id, pl.slot === 'acum' ? new Date() : startsAt(pl));
   // Plan B: the nearest place of the same kind, a short walk away, in case this one is full
   const planB = (() => {
     let best: { id: string; name: string; m: number } | null = null;
@@ -213,6 +216,9 @@ export default function Bilet() {
                 ))}
               </View>
             </View>
+          ) : null}
+          {wxWarn ? (
+            <Row icon={I.rain} bg={t.blueSoft} ink={t.blueInk} title="Vremea" sub={wxWarn} />
           ) : null}
           {clash && clashP ? (
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}

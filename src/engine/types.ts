@@ -55,6 +55,7 @@ export interface Ctx {
   minor?: boolean;     // under 18: no clubs, hookah or other 18+ places
   liked?: string[];    // venue ids the person said "da" to at sign-up
   disliked?: string[]; // venue ids the person said "nu prea" to
+  weather?: import('./weather').Weather | null; // the forecast (public.weather): rain or cold → a roof, sun → outside
 }
 
 export interface Scored {

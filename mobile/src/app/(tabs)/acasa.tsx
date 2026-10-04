@@ -18,6 +18,7 @@ import { Sky, SKY_BG } from '../../ui/Sky';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { useBackTwiceToExit } from '../../lib/backTwice';
+import { useWeatherVersion } from '../../lib/weather';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -69,6 +70,8 @@ export default function Acasa() {
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
   const { f } = useFilters();
+  const wxv = useWeatherVersion();
+  const wx = useMemo(() => APP.weatherFor(f.when), [f.when, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
   const prefs = useApp((s) => s.prefs);
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
   const now = useClock();
@@ -133,6 +136,7 @@ export default function Acasa() {
             <Pill icon={phase === 'morning' || phase === 'day' ? 'sun' : 'moon'} text={APP.todayText()} />
             <Pill icon="clock" text={clock} />
             <Pill dot text={APP.count.toLocaleString('ro-RO') + ' de locuri reale'} />
+            {wx ? <Pill icon={wx.icon as never} text={wx.line + (wx.wet ? ' · alegem la adăpost' : wx.nice ? ' · merge afară' : '')} /> : null}
           </View>
           </TourTarget>
           <T accessibilityRole="header" style={{ marginTop: 22, color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 48 : 62, lineHeight: (word.length > 10 ? 48 : 62) * 0.95, letterSpacing: -1.8 }}>
@@ -241,7 +245,7 @@ export default function Acasa() {
   );
 }
 
-function Pill({ icon, text, dot }: { icon?: 'sun' | 'moon' | 'clock'; text: string; dot?: boolean }) {
+function Pill({ icon, text, dot }: { icon?: 'sun' | 'moon' | 'clock' | 'cloud' | 'rain' | 'snow' | 'storm'; text: string; dot?: boolean }) {
   return (
     <View style={{ minHeight: 28, paddingVertical: 3, paddingHorizontal: 10, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       {dot ? <View style={{ width: 7, height: 7, borderRadius: 99, backgroundColor: '#FF6A4D' }} /> : <Icon name={icon} size={14} color="#FFFFFF" />}

@@ -1,6 +1,7 @@
 import opening_hours from 'opening_hours';
 import { CUISINES, KINDS, NAME_ALIASES, NUMBERS, PLACES, STOP, TOPICS, VIBES, ZONES } from './catalog';
 import type { Place } from './catalog';
+import { exposure, wxAt, wxScore } from './weather';
 import type { Ask, Cat, Ctx, OpenInfo, Scored, Venue, Vibe, When, Who } from './types';
 
 // ---------- text ----------
@@ -158,9 +159,12 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   // a court or a park is a good idea for those who like sport or the outdoors; for the others it comes after a place to sit
   const niche = (k.cat === 'sport' || k.cat === 'natura') && !want.some((w) => w === 'Competitiv' || w === 'Aer liber') ? -8 : 0;
 
+  const wx = wxScore(v, wxAt(ctx.weather, t));
+
   const parts = { gust, ocazie, calitate, aproape, nou, gasca };
-  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said + niche;
+  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said + niche + wx.pts;
   const reasons: string[] = [];
+  if (wx.why) reasons.push(wx.why);
   const hits = want.filter((w) => vibes.includes(w));
   if (hits.length) reasons.push('Se potrivește cu ' + hits.slice(0, 2).join(' și '));
   const liked = likes.find((l) => v.cuisines.includes(l) || kindKeyOf(v) === l);
@@ -614,6 +618,9 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       const likes = ctx.prefs.likes;
       if (likes.some((l) => v.cuisines.includes(l) || v.k === l || (vibes as string[]).includes(l))) sc += 3;
       if (ctx.history.includes(v.id)) sc -= 2;
+      // the weather: full weight for "ceva diseară"; asked for a park by name, the rain only nudges it down
+      const wx = wxScore(v, wxAt(ctx.weather, t));
+      sc += wantsSomething ? (wx.pts < 0 ? wx.pts / 3 : wx.pts / 2) : wx.pts;
       res.push({ v, sc, d, t, known: st.known, fit, price });
     }
     return res.sort((a, b) => b.sc - a.sc);
@@ -672,7 +679,12 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
     reasons.push(label(c.d) + nearWhat);
     if (p.budget !== undefined) reasons.push('Cam ' + c.price + ' lei de persoană (estimat)');
     if (n && n >= 3) reasons.push('Bun pentru ' + n + ' persoane');
+    const wx = wxScore(c.v, wxAt(ctx.weather, c.t));
+    if (wx.why) reasons.splice(1, 0, wx.why);
     return { v: c.v, score: c.sc, km: c.d, open: o, reasons: reasons.slice(0, 3), parts: empty };
   });
+  // asked for something outside while it will rain: say so once
+  const wet = top.slice(0, 3).map((c) => ({ c, w: wxAt(ctx.weather, c.t) })).find(({ c, w }) => w?.wet && exposure(c.v) === 'out');
+  if (wet) p.note = (p.note ? p.note + ' ' : '') + 'Atenție: la ora aia e ' + wet.w!.text + '. Ia umbrela sau alege ceva la adăpost.';
   return { results: [...named, ...results].slice(0, limit), parsed: p };
 }

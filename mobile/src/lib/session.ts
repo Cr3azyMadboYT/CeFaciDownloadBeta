@@ -9,6 +9,7 @@ import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
 import { forgetPush, registerPush } from './push';
+import { loadWeather } from './weather';
 import { deleteAccountEverywhere, emailStart, emailVerify, sb, signInWithGoogle, signOutEverywhere, watchAuth, type Who } from './auth';
 
 export { APP };
@@ -205,7 +206,7 @@ async function connect(who: Who) {
     if (r.known) resetFilters();
     if (known && !r.known) APP.saveBoardState(snap.board as Record<string, unknown>); // first upload of the phone's data
     trouble('');
-    if (known) { void pullXp(who.id); void registerPush(); }
+    if (known) { void pullXp(who.id); void registerPush(); void loadWeather(true); }
     last = { who, known };
     signInListeners.forEach((f) => f(who, known));
   } catch {
