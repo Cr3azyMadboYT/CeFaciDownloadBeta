@@ -1,0 +1,7 @@
+{
+  "name": "cefaci-insets",
+  "version": "0.1.0",
+  "description": "The real height of the phone's navigation bar (Android), for CeFaci's bottom bar",
+  "main": "index.ts",
+  "private": true
+}
