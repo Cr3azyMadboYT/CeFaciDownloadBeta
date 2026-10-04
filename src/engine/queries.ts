@@ -44,7 +44,7 @@ export const QUERIES: Case[] = [
   C('mexican', { food: 'mexican' }),
   C('grecesc', { food: 'grecesc' }),
   C('libanez', { food: 'libanez' }),
-  C('vegan', { food: 'vegan', n: 2 }),
+  C('vegan', { food: 'vegan', n: 1 }), // 04.10: the other vegan places are closed (Google Maps check)
   C('steak', { food: 'steak' }),
   C('peste si fructe de mare', { food: 'peste' }),
   C('restaurnt', { kinds: ['restaurant'] }),
@@ -93,7 +93,7 @@ export const QUERIES: Case[] = [
   C('bowling sector 4', { cats: ['activitate'], note: true }),
   C('escape room pt 4', { kinds: ['escape_game'], people: 4 }),
   C('escape', { kinds: ['escape_game'] }),
-  C('patinoar', { kinds: ['ice_rink'] }),
+  C('patinoar', { kinds: ['ice_rink'], n: 2 }), // outdoor rinks open in winter (closed for now)
   C('aquapark', { kinds: ['water_park', 'beach_resort'] }),
   C('zoo', { kinds: ['zoo'], n: 2 }),
   C('ceva cu copiii', { notKinds: ['bar', 'pub', 'nightclub', 'biergarten'] }),

@@ -38,7 +38,7 @@ jobs:
         run: |
           if [ -z "$PLACES_API_KEY" ]; then echo "Lipsește secretul PLACES_API_KEY" >> "$GITHUB_STEP_SUMMARY"; exit 1; fi
           node scripts/verify-places.mjs ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }}
-          cat verificare.md >> "$GITHUB_STEP_SUMMARY"
+          cat docs/verificare-locuri.md >> "$GITHUB_STEP_SUMMARY"
       - name: Localurile fără cele închise
         run: |
           node scripts/import-osm.mjs data-raw/osm-bucuresti-ilfov.json
@@ -52,14 +52,14 @@ jobs:
         with:
           name: verificare-${{ github.run_number }}
           path: |
-            verificare.md
+            docs/verificare-locuri.md
             src/data/checked.json
       - name: Salvează în repo
         if: steps.tests.outcome == 'success'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/data/checked.json src/data/venues.json src/data/gone.json
+          git add src/data/checked.json src/data/venues.json src/data/gone.json docs/verificare-locuri.md
           if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
           git commit -m "Locuri verificate pe Google Maps ($(date -u +%F)): scoase cele închise"
           for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0; sleep 10; done

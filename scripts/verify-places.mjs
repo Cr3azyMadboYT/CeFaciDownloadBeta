@@ -61,5 +61,5 @@ for (const k of ['closed', 'temporary', 'notFound']) out[k].sort();
 fs.writeFileSync('src/data/checked.json', JSON.stringify(out, null, 1));
 const name = new Map(venues.map((v) => [v.id, v.name + ' (' + v.kind + ', ' + v.zone + ')']));
 const lines = ['## Verificarea locurilor (' + out.checkedAt + ')', '', `Verificate: ${out.total}. Închise definitiv: **${out.closed.length}**. Închise temporar: **${out.temporary.length}**. Negăsite pe Google: ${out.notFound.length}. Erori: ${out.errors}.`, '', '### Închise definitiv (scoase din aplicație)', ...out.closed.map((id) => '- ' + name.get(id)), '', '### Închise temporar (ascunse până la următoarea verificare)', ...out.temporary.map((id) => '- ' + name.get(id))];
-fs.writeFileSync('verificare.md', lines.join('\n'));
+fs.writeFileSync('docs/verificare-locuri.md', lines.join('\n'));
 console.log(lines.slice(0, 3).join('\n'));
