@@ -87,6 +87,7 @@ export default function Rezultate() {
         <Muted style={{ marginTop: 6 }}>{sub}</Muted>
         {tweaks.length || changed ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 6 }}>
+            {!searching ? <Chip small label="Seara completă" icon={'sparkle' as never} onPress={() => router.push('/seara')} /> : null}
             {tweaks.map((x) => (
               <Chip key={x.id} small label={x.label} icon={x.icon as never} onPress={() => { if (x.apply.q !== undefined) setSearch(x.apply.q); if (x.apply.f) setFilters(x.apply.f); }} />
             ))}

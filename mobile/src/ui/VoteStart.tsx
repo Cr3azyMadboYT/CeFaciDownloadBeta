@@ -16,7 +16,11 @@ function momentFor(p: Place, when: string) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, m);
 }
 
-export function VoteStart({ open, onClose, places, f }: { open: boolean; onClose: () => void; places: Place[]; f: Filters }) {
+/** A whole evening as one vote option (Seara completă). */
+export interface VoteRoute { label: string; sub: string; price: number; from: string; steps: { place: Place; at: Date; slot: string }[] }
+
+export function VoteStart({ open, onClose, places, f, routes }: { open: boolean; onClose: () => void; places: Place[]; f: Filters; routes?: VoteRoute[] }) {
+  const n = routes ? routes.length : places.length;
   const { t } = useTheme();
   const [to, setTo] = useState<Target | null>(null);
   const [dl, setDl] = useState('1h');
@@ -28,7 +32,12 @@ export function VoteStart({ open, onClose, places, f }: { open: boolean; onClose
     setBusy(true); setErr('');
     const r = await startVote({
       crewId: to.crewId ?? null, friendIds: to.friendIds, minutes: DEADLINES.find((d) => d[0] === dl)![2],
-      options: places.map((p) => { const at = momentFor(p, f.when); return { venueId: p.id, name: p.name, details: { title: p.title, price: p.price, dist: p.dist, starts_at: at.toISOString(), slot: hhmm(at) } }; }),
+      options: routes
+        ? routes.map((r) => ({
+          venueId: r.steps[0].place.id, name: r.label + ': ' + r.steps.map((s) => s.place.name).join(' → '),
+          details: { title: r.sub, price: r.price, slot: r.from, starts_at: r.steps[0].at.toISOString(), route: r.steps.map((s) => ({ id: s.place.id, name: s.place.name, slot: s.slot, starts_at: s.at.toISOString() })) },
+        }))
+        : places.map((p) => { const at = momentFor(p, f.when); return { venueId: p.id, name: p.name, details: { title: p.title, price: p.price, dist: p.dist, starts_at: at.toISOString(), slot: hhmm(at) } }; }),
     });
     setBusy(false);
     if (r.err) { setErr(r.err); return; }
@@ -38,16 +47,16 @@ export function VoteStart({ open, onClose, places, f }: { open: boolean; onClose
   return (
     <Sheet open={open} onClose={onClose}>
       <H1 style={{ fontSize: 26 }}>Votul cu gașca</H1>
-      <Muted style={{ marginTop: 6, fontSize: 15, lineHeight: 21 }}>{'Trimiți ' + (places.length === 1 ? 'locul ăsta' : 'cele ' + places.length + ' locuri') + '. Fiecare votează din telefonul lui: Da, Nu sau Super (o dată). Câștigă cel cu cele mai multe voturi.'}</Muted>
+      <Muted style={{ marginTop: 6, fontSize: 15, lineHeight: 21 }}>{'Trimiți ' + (routes ? (n === 1 ? 'seara asta' : 'cele ' + n + ' variante de seară') : n === 1 ? 'locul ăsta' : 'cele ' + n + ' locuri') + '. Fiecare votează din telefonul lui: Da, Nu sau Super (o dată). Câștigă cel cu cele mai multe voturi.'}</Muted>
       <View style={{ marginTop: 14 }}>{open ? <SendTo onChange={onTo} /> : null}</View>
       <Lbl style={{ marginTop: 16, marginBottom: 8 }}>Votul se închide în</Lbl>
       <View style={{ flexDirection: 'row', gap: 6 }}>
         {DEADLINES.map(([k, label]) => <Seg key={k} label={label} on={dl === k} onPress={() => setDl(k)} />)}
       </View>
-      {places.length < 2 ? <View style={{ marginTop: 12 }}><Note kind="err">Votul are nevoie de cel puțin 2 locuri. Caută mai larg.</Note></View> : null}
+      {n < 2 ? <View style={{ marginTop: 12 }}><Note kind="err">{routes ? 'Votul are nevoie de cel puțin 2 variante de seară.' : 'Votul are nevoie de cel puțin 2 locuri. Caută mai larg.'}</Note></View> : null}
       {err ? <View style={{ marginTop: 12 }}><Note kind="err">{err}</Note></View> : null}
       <View style={{ marginTop: 16, gap: 8 }}>
-        <Big label={busy ? 'Pornesc votul…' : to ? 'Pornește votul cu ' + to.label : 'Alege pe cine chemi'} disabled={!to || busy || places.length < 2} onPress={go} />
+        <Big label={busy ? 'Pornesc votul…' : to ? 'Pornește votul cu ' + to.label : 'Alege pe cine chemi'} disabled={!to || busy || n < 2} onPress={go} />
         <Big label="Mai târziu" color={t.s2} ink={t.ink} onPress={onClose} />
       </View>
     </Sheet>

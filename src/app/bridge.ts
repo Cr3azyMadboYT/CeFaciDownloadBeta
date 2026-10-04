@@ -5,6 +5,7 @@ import { KINDS, ZONES } from '../engine/catalog';
 import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
 import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
 import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
+import { evenings, type TemplateId } from '../engine/evening';
 
 const VENUES = venuesJson as Venue[];
 // places that left the map (closed): never recommended, but old plans and stamps still find them
@@ -280,6 +281,18 @@ export const APP = {
     return list;
   },
   reason(id: string) { return this.reasons.get(id); },
+  /** "Seara completă": evenings of 2–3 places for the filters, as cards. `skip` asks for another variant of a route. */
+  evenings(f: { who: string; when: string; budget: string; vibes: string[]; dist: string }, skip: Partial<Record<TemplateId, number>> = {}) {
+    const moves = (this.prefs.moves as string[] | undefined) ?? ['walk'];
+    const walkKm = moves.includes('walk') || moves.length === 0 ? 1.2 : 3;
+    const ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: budgetRange(f.budget).max, maxKm: this.kmFor(f.dist), walkKm, vibes: f.vibes as Ask['vibes'] };
+    const hh = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    return evenings(VENUES, ask, this.ctx(), skip).map((r) => ({
+      id: r.id, label: r.label, sub: r.sub, note: r.note, price: r.price, drive: !!r.drive,
+      from: hh(r.steps[0].at), to: hh(r.steps[r.steps.length - 1].until),
+      steps: r.steps.map((s) => ({ place: toPlace(s.v, this.origin()), at: s.at, slot: hh(s.at), until: hh(s.until), walk: s.walk, why: s.why, reason: s.reasons.slice(0, 2).join(' · ') })),
+    }));
+  },
   /** Free-text search, same card shape. */
   search(q: string): Place[] {
     const r = search(VENUES, q, this.ctx(), 30);

@@ -14,6 +14,7 @@ export interface Plan {
   owner?: boolean;   // false when someone else made the shared plan
   remind?: string[]; // the scheduled receipt reminders (cancelled when the receipt is in)
   rated?: 'yes' | 'no'; // "Cum a fost?" after the outing
+  route?: string;    // the steps of one "Seara completă" share this id (they follow each other, no clash)
 }
 /** One shared empty list, so screens reading "no plans" get the same value every time. */
 export const NO_PLANS: Plan[] = [];
@@ -95,7 +96,7 @@ export function createPlanAt(placeId: string, at: Date, people: number, extra: P
 /** Two plans closer than 2 hours on the same day: the second one would clash. */
 export function clashWith(pl: Plan, list: Plan[]): Plan | null {
   const a = startsAt(pl).getTime();
-  return upcoming(list).find((x) => x.pid !== pl.pid && Math.abs(startsAt(x).getTime() - a) < 2 * 3600e3) ?? null;
+  return upcoming(list).find((x) => x.pid !== pl.pid && !(pl.route && x.route === pl.route) && Math.abs(startsAt(x).getTime() - a) < 2 * 3600e3) ?? null;
 }
 export function updPlan(pid: number, patch: Partial<Plan>) {
   setBoard((b) => ({ plans: ((b.plans as Plan[] | undefined) ?? []).map((x) => (x.pid === pid ? { ...x, ...patch } : x)) }));

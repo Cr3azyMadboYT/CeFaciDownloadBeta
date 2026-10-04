@@ -7,7 +7,9 @@ import type { Person } from './friends';
 const db = () => sb() as any;
 
 export type Ballot = 'da' | 'nu' | 'super';
-export interface VoteOption { id: string; venueId: string; name: string; details: { title?: string; price?: number; dist?: number; starts_at?: string; slot?: string } }
+export interface VoteOption { id: string; venueId: string; name: string; details: { title?: string; price?: number; dist?: number; starts_at?: string; slot?: string; route?: RouteStepRef[] } }
+/** One step of a "Seara completă" put to the vote. */
+export interface RouteStepRef { id: string; name: string; slot: string; starts_at: string }
 export interface VoteRow { id: string; title: string; crewId: string | null; crewName?: string; closesAt: string; createdBy: string | null; planId: string | null }
 export interface VoteFull extends VoteRow {
   options: VoteOption[];

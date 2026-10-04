@@ -79,6 +79,15 @@ export default function Vot() {
     if (r.err) { setErr(r.err); return; }
     if (!APP.byId(r.venueId!)) { toast('Planul e făcut, dar locul nu mai e în lista noastră.'); back(); return; }
     void comeTo(r.planId!, me);
+    const opt = v.options.find((o) => o.venueId === r.venueId) ?? win;
+    const route = opt.details.route;
+    if (route && route.length > 1) {
+      // a whole evening won: a ticket for every step, the first one is the shared plan
+      route.forEach((s, i) => { if (APP.byId(s.id)) createPlanAt(s.id, new Date(s.starts_at), v.voters.length, { route: r.planId, ...(i === 0 ? { sid: r.planId, owner: r.ownerId === me } : {}) }); });
+      toast('Gata! Seara e în Planuri, pas cu pas.');
+      router.replace('/planuri');
+      return;
+    }
     const pid = createPlanAt(r.venueId!, new Date(r.startsAt!), v.voters.length, { sid: r.planId, owner: r.ownerId === me });
     toast('Gata! Toți din vot au primit planul în Planuri.');
     router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pid) } });
@@ -123,6 +132,7 @@ export default function Vot() {
                 <View style={{ gap: 2 }}>
                   <T style={{ fontFamily: F.b, fontSize: 17 }}>{o.name}</T>
                   <Muted>{[o.details.title, o.details.price ? '~' + o.details.price + ' lei' : o.details.price === 0 ? 'gratuit' : '', o.details.slot ? 'la ' + o.details.slot : ''].filter(Boolean).join(' · ')}</Muted>
+                  {o.details.route ? o.details.route.map((s) => <Muted key={s.id + s.slot}>{s.slot + '  ' + s.name}</Muted>) : null}
                 </View>
                 <View style={{ height: 8, borderRadius: 4, backgroundColor: t.s2, overflow: 'hidden' }}>
                   <View style={{ width: `${(Math.max(0, s.score) / max) * 100}%`, height: 8, borderRadius: 4, backgroundColor: isWin ? '#FFD43B' : t.blue }} />
