@@ -38,7 +38,7 @@ export default function PlanDeschis() {
   const wx = APP.dayWeather(p.steps[0].at);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
 
-  const make = () => makeTickets(p, people);
+  const make = () => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? 'voastră' } : undefined);
   const open = (url: string) => { WebBrowser.openBrowserAsync(url).catch(() => void Linking.openURL(url)); };
   const alt = (k: number) => { if (!setPlan(idx, APP.altPlan(idx, k))) toast('Nu mai am altă variantă bună în apropiere.'); };
 

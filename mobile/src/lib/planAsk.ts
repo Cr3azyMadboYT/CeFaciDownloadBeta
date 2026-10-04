@@ -8,6 +8,8 @@ import { useSyncExternalStore } from 'react';
 import type { PlanAsk } from '../../../src/app/bridge';
 import { addDays, dateShort, eveningOf, eveningWord, isoDay, momentOf, whenWords } from '../../../src/engine/time';
 import { APP } from './session';
+import { crewTaste } from './crews';
+import type { Taste } from '../../../src/engine/types';
 
 export type Made = ReturnType<typeof APP.makePlans>;
 export type Shown = Made['plans'][number];
@@ -20,7 +22,9 @@ export interface Draft {
   budget: [number, number]; // lei per person; BUDGET_TOP = any
   vibes: string[];
   crewId?: string;
+  crewName?: string;        // the crew chosen at "Câți sunteți?": its taste goes into the plans
   extra?: Pick<PlanAsk, 'outdoor' | 'needs' | 'near'>; // from "Mai vrei ceva?"
+  strict?: boolean;         // only within their radius ("Doar până la 10 km")
 }
 
 export const BUDGET_TOP = 300; // the bar's right end: 300 means "300+", any price
@@ -34,7 +38,7 @@ export const atOf = (d: Pick<Draft, 'evening' | 'hour'>, now = new Date()) => (d
 export const isPast = (d: Pick<Draft, 'evening' | 'hour'>, now = new Date()) => d.hour !== 'acum' && momentOf(d.evening, d.hour).getTime() < now.getTime() - 10 * 60e3;
 export function askOf(d: Draft, now = new Date()): PlanAsk {
   const nowish = d.hour === 'acum' || isPast(d, now);
-  return { mode: d.mode, at: nowish ? soon(now) : atOf(d, now), now: nowish, people: d.people, budget: [d.budget[0], d.budget[1] >= BUDGET_TOP ? Infinity : d.budget[1]], vibes: d.vibes, ...d.extra };
+  return { mode: d.mode, at: nowish ? soon(now) : atOf(d, now), now: nowish, people: d.people, budget: [d.budget[0], d.budget[1] >= BUDGET_TOP ? Infinity : d.budget[1]], vibes: d.vibes, strict: d.strict, ...d.extra };
 }
 
 // ---------- when ----------
@@ -87,7 +91,7 @@ export function loadLast(): Draft | null {
     return d;
   } catch { return null; }
 }
-export function saveLast(d: Draft) { try { localStorage.setItem(KEY, JSON.stringify({ ...d, extra: undefined })); } catch { /* storage blocked */ } }
+export function saveLast(d: Draft) { try { localStorage.setItem(KEY, JSON.stringify({ ...d, extra: undefined, strict: undefined })); } catch { /* storage blocked */ } }
 
 /** "Creează plan": last time's answers (or the sign-up's), for tonight — from 19:00 on, for now. */
 export function firstDraft(now = new Date()): Draft {
@@ -126,8 +130,8 @@ export function surpriseDraft(now = new Date()): Draft {
 export const moodDraft = (vibe: string, now = new Date()): Draft => ({ ...firstDraft(now), vibes: [vibe] });
 
 // ---------- the plans on screen ----------
-type S = { draft: Draft | null; plans: Shown[]; chips: string[]; note?: string; empty?: string; notice?: Notice; loading: boolean; madeAt: number; pick: number; seen: string[] };
-let s: S = { draft: null, plans: [], chips: [], loading: false, madeAt: 0, pick: 0, seen: [] };
+type S = { draft: Draft | null; plans: Shown[]; chips: string[]; note?: string; empty?: string; notice?: Notice; loading: boolean; madeAt: number; pick: number; seen: string[]; wider: boolean };
+let s: S = { draft: null, plans: [], chips: [], loading: false, madeAt: 0, pick: 0, seen: [], wider: false };
 const subs = new Set<() => void>();
 const emit = () => subs.forEach((f) => f());
 export const usePlans = () => useSyncExternalStore((f) => { subs.add(f); return () => { subs.delete(f); }; }, () => s, () => s);
@@ -139,15 +143,19 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
   saveLast(d);
   s = { ...s, draft: d, chips: o.chips ?? [], notice: o.notice, loading: true, seen: o.avoid ?? [] };
   emit();
-  return new Promise((done) => setTimeout(() => {
-    const r = APP.makePlans(askOf(d), o.avoid ?? []);
+  // the crew's taste (its votes after outings), when the plan is for a crew; quickly, or without it
+  const taste: Promise<Taste | undefined> = d.crewId
+    ? Promise.race([crewTaste(d.crewId).then((rows) => (rows.length ? APP.tasteOf(d.crewName ?? 'voastră', rows) : undefined)), new Promise<undefined>((ok) => setTimeout(() => ok(undefined), 2500))]).catch(() => undefined)
+    : Promise.resolve(undefined);
+  return new Promise((done) => void taste.then((tt) => setTimeout(() => {
+    const r = APP.makePlans(askOf(d), o.avoid ?? [], tt);
     // a surprise: the best plan most of the time, sometimes the second or third
     const roll = Math.random();
     const pick = o.surprise && r.plans.length ? Math.min(r.plans.length - 1, roll < 0.55 ? 0 : roll < 0.85 ? 1 : 2) : 0;
-    s = { ...s, plans: r.plans, note: r.note, empty: r.empty, loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...(o.surprise && r.plans[pick] ? r.plans[pick].steps.map((x) => x.place.id) : [])] };
+    s = { ...s, plans: r.plans, note: r.note, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...(o.surprise && r.plans[pick] ? r.plans[pick].steps.map((x) => x.place.id) : [])] };
     emit();
     done(s);
-  }, 30));
+  }, 30)));
 }
 /** "Altă surpriză": the next plan of the three, then three new ones without the places already shown. */
 export function nextSurprise(): Promise<S> | null {
@@ -172,7 +180,7 @@ export function setPlan(i: number, p: Shown | null) {
 export function runPlace(id: string, d: Draft) {
   const i = APP.planForPlace(id, askOf(d));
   if (i < 0) return false;
-  s = { draft: d, plans: [APP.showPlan(APP.lastPlans[0])], chips: [], loading: false, madeAt: Date.now(), pick: 0, seen: [] };
+  s = { draft: d, plans: [APP.showPlan(APP.lastPlans[0])], chips: [], loading: false, madeAt: Date.now(), pick: 0, seen: [], wider: false };
   emit();
   return true;
 }

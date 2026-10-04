@@ -3,7 +3,7 @@ import venuesJson from '../data/venues.json';
 import goneJson from '../data/gone.json';
 import { KINDS, ZONES } from '../engine/catalog';
 import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, parseQuery, priceOf, recommend, search, targetTime, vibesOf, zoneById, type Need } from '../engine/core';
-import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
+import type { Ask, Ctx, Scored, Taste, Venue, When, Who } from '../engine/types';
 import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
 import { evenings, type TemplateId } from '../engine/evening';
 import { altStep, makePlans, planForPlace, previewNames, suggest, swapStep, vibeCounts, type MadePlan, type PlanReq, type PlanSet } from '../engine/planner';
@@ -27,7 +27,17 @@ export interface Prefs {
   google?: string;                // Supabase user id, when signed in with Google
   here?: { lat: number; lon: number; at: number }; // the phone's location, when the person chose "Folosește locația mea"
   prefsAt?: number;               // when the answers last changed (the newer copy, phone or account, wins)
+  home?: Home;                    // where they usually set off from (sign-up: their location, or a sector / an Ilfov town, the pin moved)
+  radiusKm?: number;              // how far they would go, km (5–40)
+  live?: boolean;                 // count from where the phone is (chosen "Folosește locația mea"), else from home
 }
+/** Where someone usually sets off from: a point, its name and whether it is in București or Ilfov. */
+export interface Home { lat: number; lon: number; name: string; area: 'București' | 'Ilfov' }
+/** The radius choices (decision Cornel, 04.10: „5, 10, 20, 30, 40 km”). */
+export const RADII = [5, 10, 20, 30, 40];
+// Ilfov places besides the zones, for "Unde mai exact?": their centre is where the map's places with that town in their
+// address are (real data, kept up to date by the OSM import; a town with no place on the map is not offered)
+const ILFOV_MORE = ['Balotești', 'Cernica', 'Domnești', 'Berceni', 'Brănești', 'Ciolpani', '1 Decembrie', 'Jilava', 'Ciorogârla', 'Moara Vlăsiei', 'Afumați', 'Cornetu', 'Ștefăneștii de Jos', 'Dobroești', 'Dragomirești-Vale'];
 const PKEY = 'cefaci.prefs';
 const SKEY = 'cefaci.state';
 // what the main board keeps between launches: plans, XP and stamps, theme, the tour seen, the Plus free week
@@ -112,7 +122,8 @@ export interface PlanAsk {
   people: number;
   budget: [number, number];       // lei per person, for the whole outing; max Infinity = any
   vibes: string[];
-  outdoor?: boolean; needs?: Need[]; near?: boolean; // from "Spune-i lui Bilu"
+  outdoor?: boolean; needs?: Need[]; near?: boolean; // from "Mai vrei ceva?"
+  strict?: boolean;               // only within their radius: Bilu does not look further
 }
 const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 
@@ -193,10 +204,50 @@ export const APP = {
     try { localStorage.setItem(PKEY, JSON.stringify(this.prefs)); } catch { /* ignore */ }
     this.rebuild();
   },
-  // where distances start: the phone's location if asked for in the last 6 hours, else the chosen zone
+  // where distances start: the phone's location from the last 6 hours, else where they usually set off from, else the zone
   hasHere() { const h = this.prefs.here; return !!h && Date.now() - h.at < 6 * 3600e3; },
-  origin(): { lat: number; lon: number } { return this.hasHere() ? { lat: this.prefs.here!.lat, lon: this.prefs.here!.lon } : zoneById(this.prefs.zone); },
-  zoneName() { return this.hasHere() ? 'Lângă tine' : zoneById(this.prefs.zone).name; },
+  origin(): { lat: number; lon: number } {
+    if (this.hasHere()) return { lat: this.prefs.here!.lat, lon: this.prefs.here!.lon };
+    if (this.prefs.home) return { lat: this.prefs.home.lat, lon: this.prefs.home.lon };
+    return zoneById(this.prefs.zone);
+  },
+  zoneName() { return this.hasHere() ? 'Lângă tine' : this.prefs.home?.name ?? zoneById(this.prefs.zone).name; },
+  /** How far they would go (km): what they chose, else the old answer in minutes turned into km. */
+  radiusKm(): number {
+    if (this.prefs.radiusKm) return this.prefs.radiusKm;
+    const km = this.kmFor(this.prefs.dist || '20');
+    return RADII.find((r) => r >= km) ?? 40;
+  },
+  /** The places to pick from for "Unde mai exact?": București's sectors, or Ilfov's towns (A–Z). */
+  homes(area: 'București' | 'Ilfov'): Home[] {
+    if (area === 'București') return ZONES.filter((z) => z.area === 'București' && /^s\d$/.test(z.id)).map((z) => ({ lat: z.lat, lon: z.lon, name: z.name, area }));
+    const towns: Home[] = ZONES.filter((z) => z.area === 'Ilfov').map((z) => ({ lat: z.lat, lon: z.lon, name: z.name, area }));
+    for (const name of ILFOV_MORE) {
+      const at = VENUES.filter((v) => v.city === name);
+      if (at.length) towns.push({ lat: +(at.reduce((a, v) => a + v.lat, 0) / at.length).toFixed(4), lon: +(at.reduce((a, v) => a + v.lon, 0) / at.length).toFixed(4), name, area });
+    }
+    return towns.sort((a, b) => a.name.localeCompare(b.name, 'ro'));
+  },
+  /** A point (the phone's location, a moved pin) as a Home: named after the nearest sector or town. */
+  homeAt(p: { lat: number; lon: number }, name?: string): Home {
+    const z = nearestZone(p);
+    const area = z.area as Home['area'];
+    const near = name ?? [...this.homes('București'), ...this.homes('Ilfov')].reduce((b, h) => (km(p, h) < km(p, b) ? h : b)).name;
+    return { lat: +p.lat.toFixed(5), lon: +p.lon.toFixed(5), name: near, area };
+  },
+  /** How many places, and of how many kinds, are within `r` km of a point (for the circle on the map). */
+  circle(p: { lat: number; lon: number }, r: number): { count: number; kinds: number } {
+    let count = 0;
+    const kinds = new Set<string>();
+    for (const v of VENUES) if (km(p, v) <= r) { count++; kinds.add(v.cat); }
+    return { count, kinds: kinds.size };
+  },
+  /** Bilu's radius: the smallest one with at least 150 places of at least 6 kinds (on foot only: at most 5 km). */
+  bestRadius(p: { lat: number; lon: number }, moves?: string[]): number {
+    const onFoot = !!moves && moves.length > 0 && moves.every((m) => m === 'walk');
+    for (const r of RADII) { const c = this.circle(p, r); if (c.count >= 150 && c.kinds >= 6) return onFoot ? Math.min(r, 5) : r; }
+    return onFoot ? 5 : 40;
+  },
   useHere(): Promise<string | null> {
     return new Promise((done) => {
       if (typeof navigator === 'undefined' || !navigator.geolocation) { done('Telefonul nu ne dă locația. Alege zona din listă.'); return; }
@@ -285,7 +336,7 @@ export const APP = {
     const budget = p.budget === '0' || p.budget === '50' || p.budget === '100' || p.budget === 'any' ? p.budget : '100';
     const fromLikes = [...new Set(p.likes.flatMap((l) => VIBE_LIKES[l] ?? []))];
     const vibes = p.mood === 'chill' ? ['Chill'] : p.mood === 'party' ? ['Party'] : fromLikes.slice(0, 2);
-    return { who, when, dur: '23', budget, vibes, dist: p.dist || '20' };
+    return { who, when, dur: '23', budget, vibes, dist: p.dist || '20', km: this.radiusKm() };
   },
   pickVotes: new Map<string, string>(),
   notePick(id: string | undefined, vote: string) { if (id) this.pickVotes.set(id, vote); },
@@ -297,12 +348,12 @@ export const APP = {
   },
   /** The design's matches(f): real ranking from the engine, as PLACES entries. */
   /** `where`: 'in' only places with a roof (rain), 'out' only outside or with a terrace. */
-  matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string; where?: 'in' | 'out' }): Place[] {
+  matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string; km?: number; where?: 'in' | 'out' }): Place[] {
     const key = JSON.stringify(f) + this.prefs.zone + new Date().getHours();
     const hit = this.cache.get(key);
     if (hit) return hit;
     const b = budgetRange(f.budget);
-    const ask: Ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: b.max, budgetMin: b.min || undefined, maxKm: this.kmFor(f.dist), vibes: f.vibes as Ask['vibes'] };
+    const ask: Ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: b.max, budgetMin: b.min || undefined, maxKm: f.km ?? this.kmFor(f.dist), vibes: f.vibes as Ask['vibes'] };
     const r = recommend(VENUES, ask, this.ctx(), 0, 200);
     const list = r.picks.filter((s) => info(s.v).hours <= (DUR_MAX[f.dur] ?? 99) && (!f.where || (f.where === 'in') === (exposure(s.v) === 'in'))).map((s) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
     this.cache.set(key, list);
@@ -345,11 +396,11 @@ export const APP = {
   },
   pickMemo: new Map<string, { id: string; name: string; tag: string; sub: string; bg: string; fg: string; dot: string; like: string }[]>(),
   /** Real places for the sign-up "Da / Poate / Nu" cards, near the chosen zone and matched to the chosen likes. */
-  picksFor(likes: string[], zoneId: string, more: { budget?: string; when?: string[]; birth?: string; who?: string } = {}) {
+  picksFor(likes: string[], zoneId: string, more: { budget?: string; when?: string[]; birth?: string; who?: string; at?: { lat: number; lon: number } } = {}) {
     const key = likes.join(',') + '@' + zoneId + JSON.stringify(more);
     const hit = this.pickMemo.get(key);
     if (hit) return hit;
-    const origin = zoneById(zoneId);
+    const origin = more.at ?? zoneById(zoneId);
     const vibes = [...new Set(likes.flatMap((l) => VIBE_LIKES[l] ?? []))] as Ask['vibes'];
     const age = ageOn(more.birth);
     const ctx: Ctx = { prefs: { zone: zoneId, likes: vibes }, origin, now: new Date(), history: [], minor: age !== null && age < 18, weather: this.weather };
@@ -379,18 +430,30 @@ export const APP = {
   planReq(a: PlanAsk): PlanReq {
     const moves = (this.prefs.moves as string[] | undefined) ?? ['walk', 'car'];
     const walkKm = moves.includes('walk') || moves.length === 0 ? 1.2 : 3;
-    const maxKm = Math.max(10, this.kmFor(this.prefs.dist || '20'));
-    return { mode: a.mode, at: a.at, now: a.now, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near };
+    const maxKm = this.radiusKm();
+    return { mode: a.mode, at: a.at, now: a.now, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near, strict: a.strict };
   },
   lastPlans: [] as MadePlan[],
   lastReq: null as PlanReq | null,
   /** Three plans ready to go, with Bilu's note on what he had to change (further away, over the budget…) or why there
    * is nothing. `avoid`: places to leave out ("Altă surpriză" after the three shown). */
-  makePlans(a: PlanAsk, avoid: string[] = []) {
-    const ctx = this.ctx();
-    const set: PlanSet = makePlans(VENUES, this.planReq(a), avoid.length ? { ...ctx, history: [...ctx.history, ...avoid] } : ctx);
+  makePlans(a: PlanAsk, avoid: string[] = [], taste?: Taste) {
+    const ctx0 = this.ctx();
+    const ctx = { ...ctx0, taste, history: avoid.length ? [...ctx0.history, ...avoid] : ctx0.history };
+    const set: PlanSet = makePlans(VENUES, this.planReq(a), ctx);
     this.lastPlans = set.plans; this.lastReq = set.req; this.altSeen.clear();
     return { plans: set.plans.map((p) => this.showPlan(p)), note: set.note, empty: set.empty, relaxed: set.relaxed };
+  },
+  /** A crew's votes (crew_taste rows) as a taste: per place, and per kind of place for the places it went to. */
+  tasteOf(name: string, rows: { venue_id: string; score: number }[]): Taste {
+    const venues: Record<string, number> = {};
+    const kinds: Record<string, number> = {};
+    for (const r of rows) {
+      venues[r.venue_id] = r.score;
+      const v = BY_ID.get(r.venue_id);
+      if (v) kinds[v.k] = (kinds[v.k] ?? 0) + Math.sign(r.score);
+    }
+    return { name, venues, kinds };
   },
   /** One place as the only plan (a suggestion on Acasă): returns its index in lastPlans. */
   planForPlace(id: string, a: PlanAsk) {

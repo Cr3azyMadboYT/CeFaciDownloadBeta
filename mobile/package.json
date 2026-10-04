@@ -1,7 +1,7 @@
 {
   "name": "cefaci-mobile",
   "version": "0.3.0",
-  "main": "expo-router/entry",
+  "main": "./index.js",
   "dependencies": {
     "@expo-google-fonts/bricolage-grotesque": "^0.4.1",
     "@expo-google-fonts/caveat": "^0.4.2",

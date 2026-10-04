@@ -92,6 +92,21 @@ if [ "$MODE" = "e2e" ]; then
   tap '^Surprinde-mă' && shot surpriza 8
   go acasa; sleep 3
   tap '^Ca data trecută' && shot ca-data-trecuta 8
+  # where you set off from (from Acasă), then the sign-up's new steps
+  go zona; sleep 4; shot zona 2
+  tap '^București$' && shot zona-bucuresti 2
+  adb shell input keyevent 4; sleep 2
+  go cont; sleep 3
+  tap '^Continuă cu email' && sleep 2
+  tap '^Prenumele' && adb shell input text Test && sleep 1
+  tap '^Username' && adb shell input text test_e2e && sleep 1
+  tap '^Data nașterii' && adb shell input text 05051998 && sleep 1
+  adb shell input keyevent 4; sleep 1
+  tap '^Mai departe' && sleep 2
+  tap '^Da, e corectă' && shot cont-unde 3
+  tap '^Ilfov$' && shot cont-ilfov 2
+  tap '^Buftea$' && shot cont-raza 6
+  tap '^20 km' && shot cont-raza-20 3
   adb logcat -d -s ReactNativeJS:V | grep -E "E2E|Error|error|Warning" | tail -30
 fi
 echo "DONE $MODE $CLOCK"

@@ -8,7 +8,9 @@ import { Redirect, router, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 import { setFilters, useFilters } from '../lib/filters';
 import { BUDGET_TOP, askOf, budgetLabel, refreshIfStale, runPlans, setPlan, usePlans, wholeLabel, whenText, type Draft, type Shown } from '../lib/planAsk';
-import { createPlanAt } from '../lib/plans';
+import { createPlanAt, type Plan } from '../lib/plans';
+import { sharePlan } from '../lib/together';
+import { getApp } from '../lib/session';
 import { APP } from '../lib/session';
 import { toast } from '../lib/toast';
 import { addDays, eveningOf } from '../../../src/engine/time';
@@ -20,10 +22,21 @@ import { TopShade } from '../ui/TopShade';
 import { VoteStart } from '../ui/VoteStart';
 import { Checks, StepRow } from '../ui/PlanBits';
 
-/** Makes the tickets for a plan (every step) and opens the first one. */
-export function makeTickets(p: Shown, people: number) {
+/** Makes the tickets for a plan (every step) and opens the first one. With a crew chosen at "Câți sunteți?", the plan
+ *  goes to the crew too (Vin / Nu pot), so that after the outing everyone's vote teaches the crew. */
+export function makeTickets(p: Shown, people: number, crew?: { id: string; name: string }) {
   const route = p.steps.length > 1 ? 'r' + Date.now() : undefined;
   const pids = p.steps.map((s) => createPlanAt(s.place.id, s.at, people, route ? { route } : {}));
+  const me = getApp().who?.id;
+  if (crew && me) {
+    void (async () => {
+      for (const pid of pids) {
+        const pl = ((getApp().board.plans as Plan[] | undefined) ?? []).find((x) => x.pid === pid);
+        if (pl) { const err = await sharePlan(pl, me, { crewId: crew.id }); if (err) { toast(err); return; } }
+      }
+      toast('Am trimis planul gășcii ' + crew.name + ': fiecare răspunde Vin sau Nu pot.');
+    })();
+  }
   toast(p.steps.length > 1 ? 'Gata! Seara e în Planuri, cu un bilet pentru fiecare loc.' : 'Gata! Planul e în Planuri.');
   router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pids[0]) } });
 }
@@ -109,6 +122,11 @@ export default function PlanuriGata() {
               {st.notice.label && st.notice.patch ? <Press onPress={() => redo(st.notice!.patch!)} style={{ minHeight: 36, justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: t.blueInk }}>{st.notice.label}</T></Press> : null}
             </View>
           ) : null}
+          {!loading && st.wider && !draft.strict ? (
+            <Press onPress={() => redo({ strict: true })} style={{ marginTop: 6, minHeight: 40, justifyContent: 'center' }}>
+              <T style={{ fontFamily: F.b, fontSize: 13, color: t.blueInk }}>{'Nu, vreau doar până la ' + APP.radiusKm() + ' km'}</T>
+            </Press>
+          ) : null}
           {!loading && !plans.length ? (
             <View style={{ marginTop: 6, gap: 8 }}>
               {(() => { const h = new Date().getHours(); const tom = h >= 19 || h < 5; return <Big label={(tom ? 'Mâine' : 'Diseară') + ' la 20:00'} color="#0E1440" onPress={() => redo({ evening: tom ? addDays(eveningOf(new Date()), h < 5 ? 0 : 1) : e0, hour: '20:00' })} />; })()}
@@ -141,7 +159,7 @@ export default function PlanuriGata() {
                 </View>
               ) : null}
               <View style={{ marginTop: 12, flexDirection: 'row', gap: 8 }}>
-                <Big label="Facem așa" color={i === 0 ? '#FFD43B' : t.s2} ink="#0E1440" style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people)} />
+                <Big label="Facem așa" color={i === 0 ? '#FFD43B' : t.s2} ink="#0E1440" style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? 'voastră' } : undefined)} />
                 <Big label="Vezi pe hartă" color={t.bg} ink={t.ink} style={{ minHeight: 46, paddingHorizontal: 14 }} onPress={() => router.push({ pathname: '/plan/[i]', params: { i: String(i) } })} />
               </View>
             </Press>

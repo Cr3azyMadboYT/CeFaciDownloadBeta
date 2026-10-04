@@ -4,7 +4,7 @@ import { ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
 import { APP, useApp } from '../lib/session';
-import { WHEN, WHO, fmtDur, listFor, setFilters, setPage, setSearch, summaryOf, useFilters, type Place } from '../lib/filters';
+import { DIST, WHEN, WHO, fmtDur, listFor, matchesOf, setFilters, setPage, setSearch, summaryOf, useFilters, type Place } from '../lib/filters';
 import { createPlan } from '../lib/plans';
 import { FilterSheet } from '../ui/FilterSheet';
 import { Icon } from '../ui/Icon';
@@ -50,6 +50,15 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
   const stamps = useApp((s) => s.board.stamps as { id: string }[] | undefined);
   const tried = useMemo(() => new Set((stamps ?? []).flatMap((x) => { const v = APP.byId(x.id); return v ? [v.real.cat as string] : []; })), [stamps]);
   const searching = sq.trim().length > 1;
+  // few places within the radius: offer to look further (decision Cornel, 04.10: „caut pe o rază mai extinsă? da/nu”)
+  const [noFurther, setNoFurther] = useState(false);
+  const further = useMemo(() => {
+    if (searching || all.length >= 6) return null;
+    const km = [10, 20, 30, 40].find((k) => k > (DIST[f.dist]?.max ?? 40));
+    if (!km) return null;
+    const n = matchesOf({ ...f, dist: String(km) }).length;
+    return n > all.length ? { km, n } : null;
+  }, [searching, all, f]);
   const priceNote = useMemo(() => APP.priceNote(sq, f.budget), [sq, f.budget]);
   const remaining = all.length - (page * 3 + items.length);
   const title = searching ? (all.length ? 'Uite ce am găsit.' : 'N-am găsit nimic.') : items.length ? 'Am găsit ' + WORDS[Math.min(3, items.length)] + '.' : 'N-am găsit nimic.';
@@ -98,6 +107,15 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
         ) : null}
         <H1 style={{ marginTop: 14, fontSize: 38, lineHeight: 38 }}>{title}</H1>
         <Muted style={{ marginTop: 6 }}>{sub}</Muted>
+        {further && !noFurther ? (
+          <View style={{ marginTop: 10, padding: 14, gap: 10, borderRadius: 18, backgroundColor: t.yellowSoft }}>
+            <T style={{ fontFamily: F.sb, fontSize: 14, lineHeight: 20 }}>{'Până la ' + (DIST[f.dist]?.max ?? '') + ' km am găsit ' + (all.length === 1 ? 'doar un loc' : 'doar ' + all.length + ' locuri') + '. Până la ' + further.km + ' km mai sunt ' + (further.n - all.length) + '. Caut și acolo?'}</T>
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              <Big label="Da, caută" color="#0E1440" style={{ flex: 1, minHeight: 44 }} onPress={() => setFilters({ dist: String(further.km) })} />
+              <Big label="Nu, e ok" color={t.s1} ink={t.ink} style={{ flex: 1, minHeight: 44 }} onPress={() => setNoFurther(true)} />
+            </View>
+          </View>
+        ) : null}
         {tweaks.length || changed ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 6 }}>
             {!searching ? <Chip small label="Fă-mi un plan pe toată seara" icon={'sparkle' as never} onPress={() => { void runPlans({ ...firstDraft(), mode: 'seara', vibes: f.vibes }); router.push('/planuri-gata'); }} /> : null}
@@ -161,7 +179,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
                 <Chip label="Orice vibe" onPress={() => setFilters({ vibes: [] })} />
                 <Chip label="Orice buget" onPress={() => setFilters({ budget: 'any' })} />
-                <Chip label="Până la 30 min" onPress={() => setFilters({ dist: '30' })} />
+                {f.dist !== '40' ? <Chip label="Până la 40 km" onPress={() => setFilters({ dist: '40' })} /> : null}
               </View>
             ) : null}
           </View>

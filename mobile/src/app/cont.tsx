@@ -6,6 +6,10 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
 import Svg, { Path, Rect } from 'react-native-svg';
 import { APP, finishSignup, getApp, lastSignIn, onSignedIn, onSyncTrouble, useApp, usernameFree } from '../lib/session';
+import type { Home } from '../../../src/app/bridge';
+import { nearestZone } from '../../../src/engine/core';
+import { E2E } from '../lib/e2e';
+import { RadiusChooser, WhereChooser } from '../ui/WherePick';
 import type { Who } from '../lib/auth';
 import { signOutEverywhere } from '../lib/auth';
 import { LIKES } from '../lib/answers';
@@ -15,7 +19,7 @@ import { Icon } from '../ui/Icon';
 import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 
-const STEPS = ['start', 'name', 'zone', 'likes', 'style', 'picks', 'friends', 'done'] as const;
+const STEPS = ['start', 'name', 'zone', 'radius', 'likes', 'style', 'picks', 'friends', 'done'] as const;
 type Step = (typeof STEPS)[number] | 'email';
 const clean = (x: string) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9._-]/g, '').slice(0, 20);
 
@@ -31,7 +35,7 @@ function StepScreen({ k, onBack, children, foot }: { k: number; onBack: () => vo
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
   const w = useRef(new Animated.Value(0)).current;
-  useEffect(() => { Animated.timing(w, { toValue: Math.max(0, k - 1) / 6, duration: 500, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: false }).start(); }, [k, w]);
+  useEffect(() => { Animated.timing(w, { toValue: Math.max(0, k - 1) / 7, duration: 500, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: false }).start(); }, [k, w]);
   return (
     <View style={{ flex: 1, backgroundColor: t.bgCont }}>
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 16, height: ins.top + 60, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -41,7 +45,7 @@ function StepScreen({ k, onBack, children, foot }: { k: number; onBack: () => vo
         <View style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: t.s3, overflow: 'hidden' }}>
           <Animated.View style={{ height: 6, borderRadius: 99, backgroundColor: t.blue, width: w.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }} />
         </View>
-        <Lbl style={{ fontFamily: F.b }}>{Math.max(1, k) + ' din 6'}</Lbl>
+        <Lbl style={{ fontFamily: F.b }}>{Math.max(1, k) + ' din 7'}</Lbl>
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: 20 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         {children}
@@ -72,6 +76,27 @@ const MailIcon = () => (
   </Svg>
 );
 
+/** The first screen's background (decision Cornel, 04.10: „întrebările în background, ca pe WhatsApp”, no animation,
+ *  nothing that eats battery): the questions every group chat asks before going out, faint behind the text. */
+const CHAT: [string, 'l' | 'r', number, number][] = [
+  ['Ieșim diseară?', 'l', 0.06, 0.04], ['Ce facem? 🤔', 'r', 0.13, 0.52], ['La cât?', 'l', 0.21, 0.08], ['Și dacă plouă? ☔', 'r', 0.29, 0.40],
+  ['Cine mai vine?', 'l', 0.37, 0.05], ['Eu zic bowling 🎳', 'r', 0.45, 0.45], ['Pizza? 🍕', 'l', 0.53, 0.10], ['Sâmbătă la 8?', 'r', 0.61, 0.50],
+  ['Rezervă tu?', 'l', 0.69, 0.06], ['Vin și eu! 🙌', 'r', 0.77, 0.48], ['Unde mergem?', 'l', 0.85, 0.12],
+];
+function ChatBg() {
+  const { width, height } = useWindowDimensions();
+  return (
+    <View pointerEvents="none" importantForAccessibility="no-hide-descendants" style={{ position: 'absolute', left: 0, right: 0, top: 0, height }}>
+      {CHAT.map(([text, side, y, x]) => (
+        <View key={text} style={{ position: 'absolute', top: y * height, left: x * width, maxWidth: width * 0.5, paddingHorizontal: 12, paddingVertical: 7, borderRadius: 16,
+          borderBottomLeftRadius: side === 'l' ? 4 : 16, borderBottomRightRadius: side === 'r' ? 4 : 16, backgroundColor: side === 'l' ? 'rgba(255,255,255,0.07)' : 'rgba(47,91,255,0.16)' }}>
+          <T style={{ fontFamily: F.sb, fontSize: 14, color: 'rgba(255,255,255,0.28)' }}>{text}</T>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 /** The navy glow behind Bilu on the dark screens. */
 const Glow = ({ top }: { top: number }) => (
   <View pointerEvents="none" style={{ position: 'absolute', top, alignSelf: 'center', width: 280, height: 280, borderRadius: 140, backgroundColor: 'rgba(47,91,255,0.06)' }} />
@@ -94,8 +119,12 @@ export default function Cont() {
   const [birth, setBirth] = useState('');
   const [ageAsk, setAgeAsk] = useState(false);
   const [birthIso, setBirthIso] = useState('');
-  const [zoneId, setZoneId] = useState(prefs.zone || 'centru');
-  const [dist, setDist] = useState('20');
+  const [home, setHome] = useState<Home | undefined>(prefs.home);
+  const [live, setLive] = useState(!!prefs.live);
+  const [radius, setRadius] = useState<number | null>(prefs.radiusKm ?? null);
+  const dist = '20';
+  const zoneId = home ? nearestZone(home).id : prefs.zone || 'centru';
+  const km = radius ?? (home ? APP.bestRadius(home, undefined) : 20);
   const [moves, setMoves] = useState<string[]>(['walk', 'car']);
   const [likes, setLikes] = useState<string[]>([]);
   const [budget, setBudget] = useState('100');
@@ -165,7 +194,7 @@ export default function Cont() {
   };
 
   // ---------- picks: five real places near the chosen zone ----------
-  const real = useMemo(() => (step === 'picks' ? APP.picksFor(likes, zoneId, { budget, when, who, birth: birthIso }) : []), [step, likes, zoneId, budget, when, who, birthIso]);
+  const real = useMemo(() => (step === 'picks' ? APP.picksFor(likes, zoneId, { budget, when, who, birth: birthIso, at: home }) : []), [step, likes, zoneId, budget, when, who, birthIso]);
   const pick = votes.length;
   const card = real[Math.min(pick, real.length - 1)];
   const yes = votes.filter(([, v]) => v === 'yes').length;
@@ -179,7 +208,8 @@ export default function Cont() {
   const say: Partial<Record<Step, [Mood, string]>> = {
     email: ['hi', sent ? 'Ți-am trimis un cod pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod, ca să știu că ești tu.'],
     name: ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
-    zone: ['up', 'Spune-mi de unde pleci și cât de departe ești dispus să mergi pentru o seară bună.'],
+    zone: ['up', 'De unde pleci de obicei? Cel mai simplu: folosește locația ta. Sau alege tu orașul ori sectorul.'],
+    radius: ['wink', 'Cât de departe ai merge pentru o seară bună? Ți-am pus raza în care ai destule locuri. O schimbi oricând de pe Acasă.'],
     likes: ['hi', likes.length >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
     style: ['wink', 'Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.'],
     picks: ['up', pick === 0 ? 'Aproape gata: ' + (real.length || 5) + ' locuri reale din zona ta. Zi-mi repede dacă ai merge.' : votes[votes.length - 1][1] === 'yes' ? 'Notat! Îmi place cum gândești.' : votes[votes.length - 1][1] === 'no' ? 'Ok, pe ăsta nu ți-l mai arăt des.' : 'Hmm, bine. Îl las pe „poate”.'],
@@ -191,7 +221,7 @@ export default function Cont() {
   const startPicks = () => { setVotes([]); go('picks'); };
   const enter = async () => {
     setBusy(true);
-    const err = await finishSignup({ first, user: u, birthIso, zoneId, dist, moves, likes, budget, who, when, mood, votes });
+    const err = await finishSignup({ first, user: u, birthIso, zoneId, dist, moves, likes, budget, who, when, mood, votes, home, radiusKm: km, live });
     setBusy(false);
     if (err) { setSaveErr(err); go('name'); return; }
     router.replace('/acasa');
@@ -206,6 +236,7 @@ export default function Cont() {
     return (
       <Slide k="start">
         <ScrollView style={{ flex: 1, backgroundColor: '#0E1440' }} contentContainerStyle={{ flexGrow: 1, paddingTop: ins.top }} bounces={false} showsVerticalScrollIndicator={false}>
+          <ChatBg />
           <Glow top={ins.top + 70} />
           <View style={{ paddingTop: 16, paddingHorizontal: 24, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Logo />
@@ -226,7 +257,7 @@ export default function Cont() {
               <GoogleG />
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#0E1440' }}>{busy ? 'O clipă…' : 'Continuă cu Google'}</T>
             </Press>
-            <Press disabled={busy} onPress={() => { setAuthErr(''); setSent(false); setCode(''); go('email'); }}
+            <Press disabled={busy} onPress={() => { setAuthErr(''); setSent(false); setCode(''); go(E2E ? 'name' : 'email'); }}
               style={{ height: 56, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.06)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <MailIcon />
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>Continuă cu email</T>
@@ -241,7 +272,7 @@ export default function Cont() {
 
   if (step === 'done') {
     const BUDGET_TXT: Record<string, string> = { '0': 'gratis', '50': '≤ 50 lei', '100': '≤ 100 lei', any: 'orice buget' };
-    const summary = likes.slice(0, 3).map((key) => LIKES.find((l) => l[0] === key)![1]).concat(['până la ' + dist + ' min', BUDGET_TXT[budget], yes + ' din ' + votes.length + ' locuri pe listă']);
+    const summary = likes.slice(0, 3).map((key) => LIKES.find((l) => l[0] === key)![1]).concat([(home ? home.name + ', ' : '') + 'până la ' + km + ' km', BUDGET_TXT[budget], yes + ' din ' + votes.length + ' locuri pe listă']);
     return (
       <Slide k="done">
         <ScrollView style={{ flex: 1, backgroundColor: '#0E1440' }} contentContainerStyle={{ flexGrow: 1, paddingTop: ins.top }} bounces={false} showsVerticalScrollIndicator={false}>
@@ -348,23 +379,28 @@ export default function Cont() {
   }
 
   if (step === 'zone') {
-    const groups = ['București', 'Ilfov'].map((area) => ({ area, zones: APP.zones().filter((z) => z.area === area) }));
     return (
       <Slide k="zone">
-        <StepScreen k={2} onBack={back} foot={<Big label="Mai departe" disabled={moves.length === 0} onPress={() => go('likes')} />}>
+        <StepScreen k={2} onBack={back} foot={<Big label="Mai departe" disabled={!home} onPress={() => go('radius')} />}>
           {bubble}
-          <H1>De unde pleci de obicei?</H1>
-          {groups.map((g) => (
-            <View key={g.area} style={{ marginTop: 14 }}>
-              <Lbl style={{ marginBottom: 8 }}>{g.area}</Lbl>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {g.zones.map((z) => <Chip key={z.id} label={z.name} on={zoneId === z.id} onPress={() => setZoneId(z.id)} />)}
-              </View>
-            </View>
-          ))}
-          <Lbl style={{ marginTop: 16, marginBottom: 8 }}>Cât de departe mergi?</Lbl>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            {[['10', '10 min'], ['20', '20 min'], ['30', '30 min']].map(([key, label]) => <Seg key={key} label={label} on={dist === key} onPress={() => setDist(key)} />)}
+          <H1>De unde pleci?</H1>
+          <View style={{ marginTop: 14 }}>
+            <WhereChooser value={home} live={live} onPick={(h, l) => { setHome(h); setLive(l); setRadius(null); setTimeout(() => go('radius'), 350); }} />
+          </View>
+        </StepScreen>
+      </Slide>
+    );
+  }
+
+  if (step === 'radius' && home) {
+    return (
+      <Slide k="radius">
+        <StepScreen k={3} onBack={back} foot={<Big label="Mai departe" disabled={moves.length === 0} onPress={() => go('likes')} />}>
+          {bubble}
+          <H1>Cât de departe?</H1>
+          <Muted style={{ marginTop: 4 }}>{'Pleci din ' + home.name + (live ? ' (locația ta)' : '') + '.'}</Muted>
+          <View style={{ marginTop: 12 }}>
+            <RadiusChooser home={home} km={km} moves={moves} onKm={setRadius} onMove={setHome} />
           </View>
           <Lbl style={{ marginTop: 16, marginBottom: 8 }}>Cum ajungi? <T style={{ fontFamily: F.m, fontSize: 13, color: t.ink3 }}>Oricâte</T></Lbl>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -379,7 +415,7 @@ export default function Cont() {
     const n = likes.length;
     return (
       <Slide k="likes">
-        <StepScreen k={3} onBack={back} foot={<Big label={n < 3 ? 'Alege încă ' + (3 - n) : 'Mai departe'} disabled={n < 3} onPress={() => go('style')} />}>
+        <StepScreen k={4} onBack={back} foot={<Big label={n < 3 ? 'Alege încă ' + (3 - n) : 'Mai departe'} disabled={n < 3} onPress={() => go('style')} />}>
           {bubble}
           <H1>Ce-ți place?</H1>
           <Lead style={{ marginTop: 6 }}>{n === 0 ? 'Alege măcar 3. Poți schimba oricând.' : n < 3 ? 'Mai alege ' + (3 - n) + '.' : n + ' alese. Bun început!'}</Lead>
@@ -416,7 +452,7 @@ export default function Cont() {
     ];
     return (
       <Slide k="style">
-        <StepScreen k={4} onBack={back} foot={<Big label="Mai departe" disabled={when.length === 0} onPress={startPicks} />}>
+        <StepScreen k={5} onBack={back} foot={<Big label="Mai departe" disabled={when.length === 0} onPress={startPicks} />}>
           {bubble}
           <H1>Cum ieși tu?</H1>
           {rows.map(([id, label, val, set, opts, multi]) => (
@@ -437,7 +473,7 @@ export default function Cont() {
     const like = card ? LIKES.find((l) => l[0] === card.like) ?? LIKES[5] : LIKES[5];
     return (
       <Slide k="picks">
-        <StepScreen k={5} onBack={back} foot={
+        <StepScreen k={6} onBack={back} foot={
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Press onPress={() => vote('no')} disabled={!card || pick >= total} style={{ flex: 1, height: 60, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               <Icon name="close" color={t.ink} /><T style={{ fontFamily: F.b, fontSize: 16 }}>Nu prea</T>
@@ -465,7 +501,7 @@ export default function Cont() {
   // friends
   return (
     <Slide k="friends">
-      <StepScreen k={6} onBack={back} foot={<Big label="Gata" onPress={() => go('done')} />}>
+      <StepScreen k={7} onBack={back} foot={<Big label="Gata" onPress={() => go('done')} />}>
         {bubble}
         <H1>Cu cine ieși?</H1>
         <Lead style={{ marginTop: 6 }}>Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile le faci din Planuri și votați împreună unde mergeți.</Lead>

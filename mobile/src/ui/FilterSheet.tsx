@@ -3,8 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useModalInsets } from './insets';
-import { APP } from '../../../src/app/bridge';
-import { BUDGET, DIST, DUR, VIBES, WHEN, WHO, type Filters } from '../lib/filters';
+import { BUDGET, DIST, DIST_KEYS, DUR, VIBES, WHEN, WHO, matchesOf, type Filters } from '../lib/filters';
 import { Icon } from './Icon';
 import { Big, H1, Lbl, Muted, Press, T, tap } from './kit';
 import { F, useTheme } from './theme';
@@ -25,7 +24,7 @@ export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; 
   const [d, setD] = useState<Filters>(value);
   useEffect(() => { if (open) setD(value); }, [open, value]);
   const set = (p: Partial<Filters>) => setD((x) => ({ ...x, ...p }));
-  const count = useMemo(() => (open ? APP.matches(d).length : 0), [open, d]);
+  const count = useMemo(() => (open ? matchesOf(d).length : 0), [open, d]);
   const r = /^(\d*)-(\d*)$/.exec(d.budget);
   const [lo, hi] = r ? [r[1], r[2]] : ['', ''];
   const putRange = (a: string, b: string) => {
@@ -36,7 +35,7 @@ export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; 
     ['Cine vine?', 'who', WHO, ['1', '2', '34', '5'], true],
     ['Când?', 'when', WHEN, ['now', 'eve', 'tom', 'we'], true],
     ['Cât timp aveți?', 'dur', DUR, ['1', '23', '4'], true],
-    ['Cât de departe?', 'dist', DIST, ['10', '20', '30'], true],
+    ['Cât de departe?', 'dist', DIST, DIST_KEYS, true],
     ['Buget de persoană, în lei', 'budget', BUDGET, ['0', '50', '100', '200', 'any'], false],
   ];
   const field = (val: string, ph: string, label: string, onChange: (x: string) => void) => (

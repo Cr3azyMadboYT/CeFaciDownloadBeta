@@ -28,6 +28,7 @@ export interface PlanReq {
   outdoor?: boolean;        // "cu terasă"
   needs?: Need[];           // "fără fum", "wifi"…
   near?: boolean;           // "aproape"
+  strict?: boolean;         // only within maxKm: no looking further
 }
 export type Way = 'walk' | 'car';
 export interface PlanStep { v: Venue; at: Date; until: Date; travel: number; by: Way; why: string; price: number; open: OpenInfo; sure: boolean; reasons: string[] }
@@ -305,12 +306,12 @@ export function makePlans(all: Venue[], req0: PlanReq, ctx: Ctx): PlanSet {
   // keeps them out — "aproape", "cu terasă", the budget (twice it, then any), then 40 km. Each step keeps the ones
   // before it, and Bilu says the ones that were needed.
   const ladder: [Relax, (r: PlanReq) => PlanReq | null][] = [
-    ['far', (r) => (!r.near && r.maxKm < 25 ? { ...r, maxKm: 25 } : null)],
+    ['far', (r) => (!r.near && !r.strict && r.maxKm < 40 ? { ...r, maxKm: [10, 20, 30, 40].find((k) => k >= r.maxKm * 2) ?? 40 } : null)],
     ['near', (r) => (r.near ? { ...r, near: false, maxKm: Math.max(r.maxKm, 10) } : null)],
     ['needs', (r) => (r.outdoor || r.needs?.length ? { ...r, outdoor: undefined, needs: undefined } : null)],
     ['budget', (r) => (r.budgetMax !== Infinity && r.budgetMax < Math.max(50, req0.budgetMax * 2) ? { ...r, budgetMin: 0, budgetMax: Math.max(50, req0.budgetMax * 2) } : r.budgetMin > 0 ? { ...r, budgetMin: 0 } : null)],
     ['budget', (r) => (r.budgetMax !== Infinity ? { ...r, budgetMin: 0, budgetMax: Infinity } : null)],
-    ['wider', (r) => (r.maxKm < 40 ? { ...r, near: false, maxKm: 40 } : null)],
+    ['wider', (r) => (!r.strict && r.maxKm < 40 ? { ...r, near: false, maxKm: 40 } : null)],
   ];
   let cur = req0;
   const chain: Relax[] = [];

@@ -2,13 +2,14 @@
 // one big button, "Creează plan" (five quick questions, then three plans ready to go); "Surprinde-mă" and "Ca data
 // trecută" make a plan in one tap. Below: the next plan, "Bilu îți sugerează" (ideas without asking anything),
 // "Ai chef de…" and Live Drops. Everything is real places from the engine.
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, ScrollView, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { phaseOfHour, type Phase } from '../../lib/filters';
 import { NO_PLANS, dayWord, sortPlans, type Plan } from '../../lib/plans';
+import { rateOuting, toRate } from '../../lib/rate';
 import { againDraft, askOf, firstDraft, loadLast, moodDraft, runPlace, runPlans, surpriseDraft } from '../../lib/planAsk';
 import { eveningOf } from '../../../../src/engine/time';
 import { Bilu } from '../../ui/Bilu';
@@ -99,7 +100,13 @@ export default function Acasa() {
   const next = soon[0];
   const nextPlace = next ? APP.byId(next.placeId) : undefined;
   const clock = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-  const last = useMemo(() => loadLast(), [plans, ideas]); // eslint-disable-line react-hooks/exhaustive-deps
+  // last time's answers, read again each time Acasă comes back (a plan was just made)
+  const [seen, setSeen] = useState(0);
+  useFocusEffect(useCallback(() => { setSeen((x) => x + 1); }, []));
+  const last = useMemo(() => loadLast(), [plans, ideas, seen]); // eslint-disable-line react-hooks/exhaustive-deps
+  // after an outing: one tap to say how it was (it teaches Bilu, and the crew when the plan was with them)
+  const rate = useMemo(() => toRate((plans as Plan[]) ?? [], now), [plans, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
+  const ratePlace = rate ? APP.byId(rate.placeId) : undefined; // eslint-disable-line react-hooks/exhaustive-deps
 
   // one tap: Bilu makes three outings and opens one of them; "Altă surpriză" is on it
   const surprise = () => { void runPlans(surpriseDraft(), { surprise: true }); router.push({ pathname: '/plan/[i]', params: { i: 's' } }); };
@@ -117,10 +124,10 @@ export default function Acasa() {
           <Sky phase={phase} />
           <TourTarget id="pills">
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
-            <Press onPress={() => router.push('/zona')} accessibilityLabel={'Zona ta: ' + APP.zoneName() + '. Schimbă zona'}
+            <Press onPress={() => router.push('/zona')} accessibilityLabel={'Pleci din ' + APP.zoneName() + ', până la ' + APP.radiusKm() + ' km. Schimbă'}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 44, marginLeft: -10, paddingLeft: 10, paddingRight: 12, borderRadius: 14 }}>
               <Icon name="pin" size={16} color="#FFD43B" />
-              <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>{APP.zoneName()}</T>
+              <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF', maxWidth: 230 }}>{APP.zoneName() + ' · ' + APP.radiusKm() + ' km'}</T>
               <View style={{ opacity: 0.7 }}><Icon name="down" size={16} color="#FFFFFF" /></View>
             </Press>
             <Press onPress={() => router.push('/profil')} accessibilityLabel="Profilul tău" style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
@@ -188,6 +195,24 @@ export default function Acasa() {
               </T>
               <Icon name="next" size={16} color="#0E1440" />
             </Press>
+          ) : null}
+
+          {rate && ratePlace ? (
+            <View style={{ marginTop: 14, padding: 14, gap: 10, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Bilu size={34} mood="wink" shadow={false} still />
+                <T style={{ flex: 1, fontFamily: F.b, fontSize: 15 }}>{'Cum a fost la ' + ratePlace.name + '?'}</T>
+              </View>
+              {rate.sid ? <Muted>Votul tău învață și gașca: data viitoare vă fac planuri mai pe gustul vostru.</Muted> : null}
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                {([['super', 'Super!'], ['yes', 'Mi-a plăcut'], ['no', 'Nu prea']] as const).map(([k, label]) => (
+                  <Press key={k} onPress={() => rateOuting(rate, k)} accessibilityLabel={label + ' la ' + ratePlace.name}
+                    style={{ flex: 1, minHeight: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: k === 'super' ? '#FFD43B' : k === 'yes' ? t.blue : t.s2 }}>
+                    <T style={{ fontFamily: F.b, fontSize: 14, color: k === 'yes' ? '#FFFFFF' : k === 'super' ? '#0E1440' : t.ink }}>{label}</T>
+                  </Press>
+                ))}
+              </View>
+            </View>
           ) : null}
 
           {ideas.length ? (

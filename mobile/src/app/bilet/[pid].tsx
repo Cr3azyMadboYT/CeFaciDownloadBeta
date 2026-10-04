@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Linking, ScrollView, Share, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { rateOuting } from '../../lib/rate';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
@@ -201,18 +202,13 @@ export default function Bilet() {
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
               title={p.name + ' pare închis'} sub="A dispărut de pe hartă la ultima actualizare. Sună înainte sau alege altceva." btn="Altceva" onPress={() => router.navigate('/exploreaza')} />
           ) : null}
-          {pl.inAt && !pl.rated ? (
+          {(pl.inAt || startsAt(pl).getTime() + 2 * 3600e3 <= Date.now()) && !pl.rated ? (
             <View style={{ padding: 14, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
               <T style={{ fontFamily: F.b, fontSize: 15 }}>{'Cum a fost la ' + p.name + '?'}</T>
+              {pl.sid ? <Muted>Votul tău învață și gașca: data viitoare vă fac planuri mai pe gustul vostru.</Muted> : null}
               <View style={{ flexDirection: 'row', gap: 8 }}>
-                {([['yes', 'Mi-a plăcut'], ['no', 'Nu prea']] as const).map(([k, label]) => (
-                  <Big key={k} style={{ flex: 1 }} label={label} color={k === 'yes' ? t.blue : t.s2} ink={k === 'yes' ? '#FFFFFF' : t.ink} onPress={() => {
-                    const liked = ((APP.prefs.liked as string[] | undefined) ?? []).filter((x) => x !== p.id);
-                    const disliked = ((APP.prefs.disliked as string[] | undefined) ?? []).filter((x) => x !== p.id);
-                    savePrefs(k === 'yes' ? { liked: [...liked, p.id], disliked } : { liked, disliked: [...disliked, p.id] });
-                    updPlan(pl.pid, { rated: k });
-                    toast(k === 'yes' ? 'Notat! Îți arătăm mai des locuri ca ăsta.' : 'Notat. Îți arătăm altceva data viitoare.');
-                  }} />
+                {([['super', 'Super!'], ['yes', 'Mi-a plăcut'], ['no', 'Nu prea']] as const).map(([k, label]) => (
+                  <Big key={k} style={{ flex: 1, paddingHorizontal: 6 }} label={label} color={k === 'super' ? '#FFD43B' : k === 'yes' ? t.blue : t.s2} ink={k === 'yes' ? '#FFFFFF' : k === 'super' ? '#0E1440' : t.ink} onPress={() => rateOuting(pl, k)} />
                 ))}
               </View>
             </View>

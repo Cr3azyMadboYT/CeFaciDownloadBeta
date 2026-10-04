@@ -147,7 +147,7 @@ export default function PlanNou() {
                 const on = n === 6 ? d.people >= 6 : d.people === n && !d.crewId;
                 return (
                   <View key={n} style={{ alignItems: 'center', gap: 6 }}>
-                    <Press onPress={() => (n === 6 ? set({ people: Math.max(6, d.people), crewId: undefined }) : auto({ people: n, crewId: undefined }))} accessibilityLabel={n === 6 ? '6 sau mai mulți' : n + (n === 1 ? ', singur' : ' persoane')} accessibilityState={{ selected: on }}
+                    <Press onPress={() => (n === 6 ? set({ people: Math.max(6, d.people), crewId: undefined, crewName: undefined }) : auto({ people: n, crewId: undefined, crewName: undefined }))} accessibilityLabel={n === 6 ? '6 sau mai mulți' : n + (n === 1 ? ', singur' : ' persoane')} accessibilityState={{ selected: on }}
                       style={{ width: 52, height: 52, borderRadius: 99, borderWidth: 2, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center' }}>
                       <T style={{ fontFamily: F.display, fontSize: n === 6 ? 18 : 22, color: on ? t.bg : t.ink }}>{n === 6 ? '6+' : String(n)}</T>
                     </Press>
@@ -170,7 +170,7 @@ export default function PlanNou() {
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                   {crews.map((c) => {
                     const n = Math.max(2, c.members.filter((m) => m.status === 'member').length);
-                    return <Chip key={c.id} label={c.name + ' · ' + n} on={d.crewId === c.id} onPress={() => auto({ people: n, crewId: c.id })} />;
+                    return <Chip key={c.id} label={c.name + ' · ' + n} on={d.crewId === c.id} onPress={() => auto({ people: n, crewId: c.id, crewName: c.name })} />;
                   })}
                 </View>
               </>

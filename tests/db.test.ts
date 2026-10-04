@@ -103,6 +103,17 @@ it('keeps every rule of the database', async () => {
   eq('bob asked to the plan', (await as('bob', `select answer from plan_members where plan_id = $1 and user_id = $2`, [pv, U.bob])).rows[0]?.answer, 'pending');
   await expectFail('a non-voter cannot make the plan', () => as('ana', `select plan_from_vote($1)`, [vs]));
   eq('voters see each other', (await as('teen', `select count(*)::int n from profiles where id = $1`, [U.cris])).rows[0].n, 1);
+  // the crew learns: votes after the outing (and the votes before it) make the crew's taste
+  await expectFail('no vote before the outing', () => as('bob', `insert into outing_votes (plan_id, vote) values ($1, 1)`, [pv]));
+  await db.exec(`update plans set starts_at = now() - interval '3 hours' where id = '${pv}'`);
+  await expectOk('bob: mi-a plăcut', () => as('bob', `insert into outing_votes (plan_id, vote) values ($1, 1)`, [pv]));
+  await expectOk('bob changes to super', () => as('bob', `update outing_votes set vote = 2 where plan_id = $1`, [pv]));
+  await expectFail('a vote for someone else', () => as('bob', `insert into outing_votes (plan_id, user_id, vote) values ($1, $2, 1)`, [pv, U.cris]));
+  await expectFail('ana was not at the outing', () => as('ana', `insert into outing_votes (plan_id, vote) values ($1, 1)`, [pv]));
+  await expectFail('a vote outside the scale', () => as('cris', `insert into outing_votes (plan_id, vote) values ($1, 5)`, [pv]));
+  eq('crew taste for a member', (await as('bob', `select venue_id, score, outings from crew_taste($1) order by venue_id`, [crew])).rows.map((r) => r.venue_id + ':' + r.score + '/' + r.outings), ['n1:4/1', 'n2:1/0']);
+  eq('crew taste hidden from others', (await as('ana', `select count(*)::int n from crew_taste($1)`, [crew])).rows[0].n, 0);
+  eq('votes are private', (await as('cris', `select count(*)::int n from outing_votes`)).rows[0].n, 0);
   await expectOk('report a closed place', () => as('bob', `insert into reports (venue_id, kind) values ('n1', 'inchis')`));
   await expectFail('report as someone else', () => as('bob', `insert into reports (user_id, venue_id, kind) values ($1, 'n1', 'inchis')`, [U.cris]));
   eq('reports are not readable', (await as('bob', `select count(*)::int n from reports`)).rows[0].n, 0);

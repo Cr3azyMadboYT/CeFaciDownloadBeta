@@ -22,7 +22,7 @@ export function tweaksFor(f: Filters, sq: string, shown: Place[]): Tweak[] {
     const cap = Math.max(10, Math.min(...prices) - 5);
     out.push({ id: 'cheap', label: 'Mai ieftin', icon: 'wallet', apply: { f: { budget: '-' + cap } } });
   }
-  if (f.dist !== '10') out.push({ id: 'near', label: 'Mai aproape', icon: 'pin', apply: { f: { dist: f.dist === '30' ? '20' : '10' } } });
+  if (f.dist !== '5') out.push({ id: 'near', label: 'Mai aproape', icon: 'pin', apply: { f: { dist: f.dist === '40' ? '20' : f.dist === '30' ? '20' : f.dist === '20' ? '10' : '5' } } });
   if (f.when !== 'now') out.push({ id: 'open', label: 'Deschis acum', icon: 'clock', apply: { f: { when: 'now' } } });
   if (wx?.wet && f.where !== 'in') out.push({ id: 'roof', label: 'La adăpost', icon: 'rain', apply: { f: { where: 'in' } } });
   else if (!wx?.wet && f.where !== 'out') out.push({ id: 'out', label: wx?.nice ? 'Afară, e frumos' : 'Afară sau terasă', icon: 'sun', apply: { f: { where: 'out' } } });

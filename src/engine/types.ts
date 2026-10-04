@@ -62,7 +62,11 @@ export interface Ctx {
   liked?: string[];    // venue ids the person said "da" to at sign-up
   disliked?: string[]; // venue ids the person said "nu prea" to
   weather?: import('./weather').Weather | null; // the forecast (public.weather): rain or cold → a roof, sun → outside
+  taste?: Taste;       // what the crew the plan is for liked (votes after outings and before them)
 }
+
+/** A crew's taste, from its votes: per place and per kind of place (positive: liked, negative: not). */
+export interface Taste { name: string; venues: Record<string, number>; kinds: Record<string, number> }
 
 export interface Scored {
   v: Venue;

@@ -273,10 +273,16 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const niche = (k.cat === 'sport' || k.cat === 'natura') && !want.some((w) => w === 'Competitiv' || w === 'Aer liber') ? -8 : 0;
 
   const wx = wxScore(v, wxAt(ctx.weather, t));
+  // the crew the plan is for: the places it voted up after going there, the kinds it keeps liking
+  const tv = ctx.taste?.venues[v.id] ?? 0;
+  const tk = ctx.taste?.kinds[v.k] ?? 0;
+  const crew = Math.max(-25, Math.min(12, tv * 5)) + Math.max(-8, Math.min(8, tk * 2));
 
   const parts = { gust, ocazie, calitate, aproape, nou, gasca };
-  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said + niche + wx.pts;
+  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said + niche + wx.pts + crew;
   const reasons: string[] = [];
+  if (tv > 0) reasons.push('Gașcii ' + ctx.taste!.name + ' i-a plăcut aici');
+  else if (tk >= 2) reasons.push('Gașca ' + ctx.taste!.name + ' iubește ' + (k.label === 'Bowling' || k.label === 'Biliard' ? k.label.toLowerCase() + 'ul' : k.label.toLowerCase()));
   if (wx.why) reasons.push(wx.why);
   const hits = want.filter((w) => vibes.includes(w));
   if (hits.length) reasons.push('Se potrivește cu ' + hits.slice(0, 2).join(' și '));

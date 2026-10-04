@@ -4,7 +4,7 @@
 import { useSyncExternalStore } from 'react';
 import { AppState } from 'react-native';
 import * as Location from 'expo-location';
-import { APP, initBridge, type Prefs } from '../../../src/app/bridge';
+import { APP, initBridge, type Home, type Prefs } from '../../../src/app/bridge';
 import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
@@ -74,6 +74,7 @@ export function savePrefs(p: Partial<Prefs>) {
 // ---------- sign-up ----------
 export interface SignupAnswers {
   first: string; user: string; birthIso: string; zoneId: string; dist: string; moves: string[]; likes: string[];
+  home?: Home; radiusKm?: number; live?: boolean;
   budget: string; who: string; when: string[]; mood: string; votes: [string | undefined, string][];
 }
 const DEFAULT_PREFS: Prefs = { zone: 'centru', likes: [], dist: '20', moves: ['walk', 'car'] };
@@ -95,7 +96,7 @@ export async function usernameFree(u: string): Promise<boolean | null> {
 export async function finishSignup(a: SignupAnswers): Promise<string | null> {
   const liked = a.votes.filter(([id, v]) => id && v === 'yes').map(([id]) => id!);
   const disliked = a.votes.filter(([id, v]) => id && v === 'no').map(([id]) => id!);
-  savePrefs({ zone: a.zoneId, likes: a.likes, dist: a.dist, moves: a.moves, name: a.first.trim(), user: a.user, birth: a.birthIso, budget: a.budget, who: a.who, when: a.when, mood: a.mood, liked, disliked });
+  savePrefs({ zone: a.zoneId, likes: a.likes, dist: a.dist, moves: a.moves, name: a.first.trim(), user: a.user, birth: a.birthIso, budget: a.budget, who: a.who, when: a.when, mood: a.mood, liked, disliked, home: a.home, radiusKm: a.radiusKm, live: a.live } as Partial<Prefs>);
   if (snap.who && !snap.known) {
     const err = await createAccount(sb(), { username: a.user, first: a.first.trim(), birth: a.birthIso, prefs: answersOf() });
     if (err) return err;
@@ -134,22 +135,50 @@ export async function startOver(deleteAccount: boolean): Promise<string | null> 
 
 // ---------- the bridge's phone-only parts ----------
 const within = <T,>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<never>((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
-async function useHere(): Promise<string | null> {
+/** The phone's location (asking for it the first time), or what to say when there is none. */
+export async function locate(): Promise<{ lat: number; lon: number } | string> {
   try {
     const perm = await Location.requestForegroundPermissionsAsync();
-    if (perm.status !== 'granted') return 'N-am primit locația. Poți s-o permiți din setări sau alegi zona din listă.';
+    if (perm.status !== 'granted') return 'N-am primit locația. Poți s-o permiți din setări sau alegi tu de mai jos.';
     const p = await within(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }), 12000)
       .catch(() => Location.getLastKnownPositionAsync({ maxAge: 30 * 60e3 }));
-    if (!p) return 'Telefonul nu ne dă locația acum. Încearcă afară sau alege zona din listă.';
-    const here = { lat: p.coords.latitude, lon: p.coords.longitude, at: Date.now() };
-    const z = nearestZone(here);
-    if (km(here, z) > 40) return 'Ești în afara Bucureștiului și Ilfovului. Alege zona din listă.';
-    savePrefs({ here, zone: z.id });
-    return null;
+    if (!p) return 'Telefonul nu ne dă locația acum. Încearcă afară sau alege tu de mai jos.';
+    const here = { lat: p.coords.latitude, lon: p.coords.longitude };
+    if (km(here, nearestZone(here)) > 40) return 'Ești în afara Bucureștiului și Ilfovului. Alege tu de mai jos.';
+    return here;
   } catch {
-    return 'Telefonul nu ne dă locația. Alege zona din listă.';
+    return 'Telefonul nu ne dă locația. Alege tu de mai jos.';
   }
 }
+async function useHere(): Promise<string | null> {
+  const p = await locate();
+  if (typeof p === 'string') return p;
+  savePrefs({ here: { ...p, at: Date.now() }, zone: nearestZone(p).id, live: true } as Partial<Prefs>);
+  return null;
+}
+/** "Folosește locația mea" was chosen: each time the app comes to the front, Bilu counts from where the phone is
+ *  (without asking again; quiet if the location is off). */
+let lastLive = 0;
+async function refreshLive() {
+  if (!(APP.prefs as Prefs & { live?: boolean }).live || Date.now() - lastLive < 10 * 60e3) return;
+  lastLive = Date.now();
+  try {
+    const perm = await Location.getForegroundPermissionsAsync();
+    if (perm.status !== 'granted') return;
+    const p = await Location.getLastKnownPositionAsync({ maxAge: 15 * 60e3 })
+      ?? await within(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }), 10000).catch(() => null);
+    if (!p) return;
+    const here = { lat: p.coords.latitude, lon: p.coords.longitude, at: Date.now() };
+    if (km(here, nearestZone(here)) > 40) return;
+    const was = APP.prefs.here;
+    if (was && km(was, here) < 0.3 && Date.now() - was.at < 3 * 3600e3) return;
+    APP.savePrefs({ here, zone: nearestZone(here).id }); // not the account's "updated" time: only where the phone is
+    snap = { ...snap, prefs: { ...APP.prefs } };
+    emit();
+  } catch { /* location off: the usual place */ }
+}
+AppState.addEventListener('change', (st) => { if (st === 'active') void refreshLive(); });
+setTimeout(() => { void refreshLive(); }, 1500);
 initBridge({
   google: signInWithGoogle, emailStart, emailVerify, useHere,
   deleteAccount: () => startOver(true),

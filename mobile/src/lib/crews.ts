@@ -81,3 +81,20 @@ export async function crewOutings(crewId: string): Promise<{ id: string; venueId
   const { data } = await db().from('plans').select('id, venue_id, venue_name, starts_at, status').eq('crew_id', crewId).neq('status', 'cancelled').lt('starts_at', new Date().toISOString()).order('starts_at', { ascending: false }).limit(30);
   return ((data ?? []) as { id: string; venue_id: string; venue_name: string; starts_at: string }[]).map((p) => ({ id: p.id, venueId: p.venue_id, name: p.venue_name, at: p.starts_at }));
 }
+
+// ---------- the crew learns (decision Cornel, 04.10: „aplicația să învețe ce-i place unui grup votând după fiecare ieșire”) ----------
+/** After an outing planned together: how it was (−1 nu prea, 1 mi-a plăcut, 2 super), on the server. */
+export async function voteOuting(planId: string, vote: -1 | 1 | 2): Promise<boolean> {
+  const { error } = await db().from('outing_votes').upsert({ plan_id: planId, vote }, { onConflict: 'plan_id,user_id' });
+  return !error;
+}
+const tasteMemo = new Map<string, { at: number; rows: { venue_id: string; score: number }[] }>();
+/** The crew's votes, per place (after outings and in the votes before them); cached for 10 minutes. */
+export async function crewTaste(crewId: string): Promise<{ venue_id: string; score: number }[]> {
+  const hit = tasteMemo.get(crewId);
+  if (hit && Date.now() - hit.at < 10 * 60e3) return hit.rows;
+  const { data, error } = await db().rpc('crew_taste', { p_crew: crewId });
+  const rows = error ? [] : ((data ?? []) as { venue_id: string; score: number }[]);
+  tasteMemo.set(crewId, { at: Date.now(), rows });
+  return rows;
+}

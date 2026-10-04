@@ -13,7 +13,7 @@ export interface Plan {
   sid?: string;      // the shared plan on the server (sent to a crew or friends, or made from a vote)
   owner?: boolean;   // false when someone else made the shared plan
   remind?: string[]; // the scheduled receipt reminders (cancelled when the receipt is in)
-  rated?: 'yes' | 'no'; // "Cum a fost?" after the outing
+  rated?: 'super' | 'yes' | 'no'; // "Cum a fost?" after the outing (the vote also teaches the crew, for a shared plan)
   route?: string;    // the steps of one "Seara completă" share this id (they follow each other, no clash)
 }
 /** One shared empty list, so screens reading "no plans" get the same value every time. */
