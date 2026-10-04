@@ -36,19 +36,21 @@ jobs:
         env:
           PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
         run: |
-          if [ -z "$PLACES_API_KEY" ]; then echo "Lipsește secretul PLACES_API_KEY" >> "$GITHUB_STEP_SUMMARY"; exit 1; fi
+          if [ -z "$PLACES_API_KEY" ]; then echo "Lipsește secretul PLACES_API_KEY: verificarea n-a rulat (locurile rămân ca înainte)." >> "$GITHUB_STEP_SUMMARY"; echo "skip=1" >> "$GITHUB_ENV"; exit 0; fi
           node scripts/verify-places.mjs ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }}
           cat docs/verificare-locuri.md >> "$GITHUB_STEP_SUMMARY"
       - name: Localurile fără cele închise
+        if: env.skip != '1'
         run: |
           node scripts/import-osm.mjs data-raw/osm-bucuresti-ilfov.json
           TZ=Europe/Bucharest node scripts/build-hours.mjs
       - name: Testele
         id: tests
+        if: env.skip != '1'
         continue-on-error: true
         run: npx vitest run
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && env.skip != '1'
         with:
           name: verificare-${{ github.run_number }}
           path: |
@@ -65,5 +67,5 @@ jobs:
           for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0; sleep 10; done
           exit 1
       - name: Testele au picat
-        if: steps.tests.outcome != 'success'
+        if: env.skip != '1' && steps.tests.outcome != 'success'
         run: echo "**Testele au picat cu locurile scoase.** Datele nu s-au salvat; lista e în Artifacts." >> "$GITHUB_STEP_SUMMARY"

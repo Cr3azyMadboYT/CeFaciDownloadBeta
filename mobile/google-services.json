@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "24422666615",
+    "project_id": "cefaci2-51793",
+    "storage_bucket": "cefaci2-51793.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:24422666615:android:41cfca38b8c1507c109172",
+        "android_client_info": {
+          "package_name": "ro.cefaci.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6IswLgUwJLxOzpPFGGvmkGjAOaWkki1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

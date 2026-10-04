@@ -1,5 +1,6 @@
-// app.json plus what depends on the build: Firebase (notifications from friends) is turned on only when the build
-// has google-services.json (GitHub writes it from the secret GOOGLE_SERVICES_JSON; it is never in git).
+// app.json plus what depends on the build: Firebase (notifications from friends) is on when google-services.json is
+// there. It is in git (decision Cornel, 04.10): it only names the Firebase project and its key works only for the
+// app ro.cefaci.app; the secret GOOGLE_SERVICES_JSON, if set, replaces it in the build.
 const fs = require('fs');
 const path = require('path');
 
