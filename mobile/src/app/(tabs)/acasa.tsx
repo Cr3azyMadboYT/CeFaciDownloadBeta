@@ -1,19 +1,22 @@
-// Acasă: the sky card with "Ce facem în seara asta?", who comes, the filters and the big button; below, the next
-// plan, "Ai chef de…" and Live Drops. Everything counts real places from the engine.
+// Acasă (decision Cornel, 04.10): the sky card with the weather, the day and the hour, "Ce facem în seara asta?" and
+// one big button, "Creează plan" (five quick questions, then three plans ready to go); "Surprinde-mă" and "Ca data
+// trecută" make a plan in one tap. Below: the next plan, "Bilu îți sugerează" (ideas without asking anything),
+// "Ai chef de…" and Live Drops. Everything is real places from the engine.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
-import { WHO, phaseOfHour, setFilters, summaryOf, useFilters, type Phase } from '../../lib/filters';
-import { NO_PLANS, createPlan, dayWord, sortPlans, type Plan } from '../../lib/plans';
+import { phaseOfHour, setFilters, useFilters, type Phase } from '../../lib/filters';
+import { NO_PLANS, dayWord, sortPlans, type Plan } from '../../lib/plans';
+import { firstDraft, loadLast, runPlace, runPlans } from '../../lib/planAsk';
+import { Bilu } from '../../ui/Bilu';
 import { Avatar } from '../../ui/Avatar';
 import { TourTarget } from '../../ui/TourTarget';
 import { shouldStartTour, startTour } from '../../lib/tour';
 import { useLightBar } from '../../ui/bar';
-import { FilterSheet } from '../../ui/FilterSheet';
 import { Icon, I } from '../../ui/Icon';
-import { Big, H1, Muted, Press, Sheet, T } from '../../ui/kit';
+import { Muted, Press, T } from '../../ui/kit';
 import { Sky, SKY_BG } from '../../ui/Sky';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
@@ -71,7 +74,6 @@ export default function Acasa() {
   const ins = useSafeAreaInsets();
   const { f } = useFilters();
   const wxv = useWeatherVersion();
-  const wx = useMemo(() => APP.weatherFor(f.when), [f.when, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
   const prefs = useApp((s) => s.prefs);
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
   const now = useClock();
@@ -79,12 +81,13 @@ export default function Acasa() {
   // a new account gets Bilu's tour once, after Acasă has settled
   useEffect(() => { const id = setTimeout(() => { if (shouldStartTour()) startTour(); }, 900); return () => clearTimeout(id); }, []);
   const phase = phaseOfHour(now.getHours());
-  const [sheet, setSheet] = useState(false);
-  const [crewOpen, setCrewOpen] = useState(false);
+  const nowWx = useMemo(() => APP.dayWeather(new Date()), [wxv, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
+  const tonight = useMemo(() => (now.getHours() < 18 ? APP.weatherFor('eve') : null), [wxv, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const all = useMemo(() => APP.matches(f), [f, prefs, wxv]);
-  // the counts under "Ai chef de…" are counted after the screen is shown, one by one, so Acasă opens at once
+  // the counts under "Ai chef de…" and Bilu's ideas are worked out after the screen is shown, so Acasă opens at once
   const [counts, setCounts] = useState<Record<string, number>>({});
+  const [ideas, setIdeas] = useState<ReturnType<typeof APP.suggestions>>([]);
+  useEffect(() => { const h = setTimeout(() => setIdeas(APP.suggestions()), 250); return () => clearTimeout(h); }, [prefs, wxv]);
   useEffect(() => {
     let i = 0;
     let stop = false;
@@ -97,28 +100,30 @@ export default function Acasa() {
       setTimeout(step, 0);
     };
     // (not InteractionManager: Bilu's and the sky's endless animations would keep it waiting forever)
-    const h = setTimeout(step, 350);
+    const h = setTimeout(step, 450);
     return () => { stop = true; clearTimeout(h); };
   }, [f, prefs]);
   const moods = MOODS.map((m) => ({ m, n: counts[m[0]] }));
-  const word = f.when === 'now' ? FLIP[phase].word : ({ eve: 'în seara asta?', tom: 'mâine?', we: 'în weekend?' } as Record<string, string>)[f.when];
+  const word = FLIP[phase].word;
   const soon = sortPlans(plans);
   const next = soon[0];
   const nextPlace = next ? APP.byId(next.placeId) : undefined;
   const clock = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  const last = useMemo(() => loadLast(), [plans]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // one tap: three plans from today's usual answers, one of them opened at random
   const surprise = () => {
-    const pool = all.length ? all : APP.places;
-    const pick = pool[Math.floor(Math.random() * pool.length)];
-    if (!pick) return;
-    const pid = createPlan(pick.id, f);
-    router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } });
+    const made = runPlans(firstDraft());
+    if (!made.length) { router.push('/plan-nou'); return; }
+    router.push({ pathname: '/plan/[i]', params: { i: String(Math.floor(Math.random() * made.length)) } });
   };
+  const again = () => { if (!last) { router.push('/plan-nou'); return; } runPlans(firstDraft()); router.push('/planuri-gata'); };
+  const openIdea = (id: string) => { if (runPlace(id, firstDraft())) router.push({ pathname: '/plan/[i]', params: { i: '0' } }); };
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
-        <View style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 86, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
+        <View style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 96, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
           <Sky phase={phase} />
           <TourTarget id="pills">
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
@@ -132,68 +137,51 @@ export default function Acasa() {
               <Avatar size={34} />
             </Press>
           </View>
-          <View style={{ marginTop: 6, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-            <Pill icon={phase === 'morning' || phase === 'day' ? 'sun' : 'moon'} text={APP.todayText()} />
-            <Pill icon="clock" text={clock} />
-            <Pill dot text={APP.count.toLocaleString('ro-RO') + ' de locuri reale'} />
-            {wx ? <Pill icon={wx.icon as never} text={wx.line + (wx.wet ? ' · alegem la adăpost' : wx.nice ? ' · merge afară' : '')} /> : null}
-          </View>
-          </TourTarget>
-          <T accessibilityRole="header" style={{ marginTop: 22, color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 48 : 62, lineHeight: (word.length > 10 ? 48 : 62) * 0.95, letterSpacing: -1.8 }}>
-            {'Ce facem\n' + word}
-          </T>
-          <FlipWords words={FLIP[phase].flip} />
-          <TourTarget id="who">
-          <T style={{ marginTop: 16, fontFamily: F.sb, fontSize: 15, color: 'rgba(255,255,255,0.85)' }}>Cine vine?</T>
-          <View style={{ marginTop: 10, flexDirection: 'row', gap: 8 }}>
-            {['1', '2', '34', '5'].map((k) => {
-              const on = f.who === k;
-              return (
-                <Press key={k} onPress={() => setFilters({ who: k })} accessibilityState={{ selected: on }}
-                  style={{ flex: 1, height: 46, borderRadius: 999, borderWidth: 1, borderColor: on ? '#FFFFFF' : 'rgba(255,255,255,0.28)', backgroundColor: on ? '#FFFFFF' : 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' }}>
-                  <T style={{ fontFamily: F.sb, fontSize: 15, color: on ? '#0E1440' : '#FFFFFF' }}>{WHO[k].label}</T>
-                </Press>
-              );
-            })}
-          </View>
-          {f.who !== '1' ? (
-            <Press onPress={() => setCrewOpen(true)} style={{ marginTop: 10, minHeight: 54, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderStyle: 'dashed', borderColor: 'rgba(255,255,255,0.35)' }}>
-              <View style={{ width: 34, height: 34, borderRadius: 99, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center' }}><Icon name="userPlus" size={16} color="#0E1440" /></View>
-              <View style={{ flex: 1, gap: 3 }}>
-                <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Alege cu cine ieși</T>
-                <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>alegi locurile, apoi votați împreună</T>
-              </View>
-              <Icon name="next" size={16} color="#FFD43B" />
-            </Press>
-          ) : null}
-          </TourTarget>
-          <Press onPress={() => setSheet(true)} style={{ marginTop: 10, minHeight: 46, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
-            <T style={{ flex: 1, fontFamily: F.m, fontSize: 14, lineHeight: 18, color: 'rgba(255,255,255,0.9)' }}>{summaryOf(f)}</T>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Icon d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" size={16} color="#FFD43B" />
-              <T style={{ fontFamily: F.b, fontSize: 14, color: '#FFD43B' }}>Filtre</T>
-            </View>
-          </Press>
-          <TourTarget id="cta" style={{ marginTop: 12 }}>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Press onPress={() => { setFilters({}, {}); router.push('/rezultate'); }}
-              style={{ flex: 1, height: 58, borderRadius: 18, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center', shadowColor: '#FFD43B', shadowOpacity: 0.25, shadowRadius: 12, shadowOffset: { width: 0, height: 10 }, elevation: 6 }}>
-              <T style={{ fontFamily: F.b, fontSize: 17, color: '#0E1440' }}>{all.length ? 'Arată variante (' + all.length + ')' : 'Arată variante'}</T>
-            </Press>
-            <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ width: 58, height: 58, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name="dice" size={24} color="#FFFFFF" />
-            </Press>
-          </View>
-          </TourTarget>
-          <Press onPress={() => router.push('/seara')} accessibilityLabel="Seara completă"
-            style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 52, paddingHorizontal: 14, borderRadius: 16, backgroundColor: '#0E1440', borderWidth: 1, borderColor: 'rgba(255,212,59,0.55)', zIndex: 2 }}>
-            <Icon name="sparkle" size={18} color="#FFD43B" />
+          <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
+            <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={40} color="#FFD43B" />
             <View style={{ flex: 1 }}>
-              <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Seara completă</T>
-              <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>cină, bar, club: pas cu pas, cu ore și drum</T>
+              <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+                {nowWx ? <T style={{ fontFamily: F.display, fontSize: 32, lineHeight: 36, color: '#FFFFFF' }}>{nowWx.temp + '°'}</T> : null}
+                <T style={{ fontFamily: F.sb, fontSize: nowWx ? 15 : 22, color: '#FFFFFF' }}>{nowWx ? nowWx.text.charAt(0).toUpperCase() + nowWx.text.slice(1) : clock}</T>
+              </View>
+              <T style={{ fontFamily: F.m, fontSize: 13.5, color: 'rgba(255,255,255,0.9)' }}>{APP.todayText() + (nowWx ? ' · ' + clock : '')}</T>
             </View>
-            <Icon name="next" size={16} color="#FFD43B" />
-          </Press>
+            {tonight ? (
+              <View style={{ alignItems: 'flex-end', maxWidth: 130 }}>
+                <T style={{ fontFamily: F.sb, fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>Diseară</T>
+                <T style={{ fontFamily: F.b, fontSize: 14, color: '#FFFFFF', textAlign: 'right' }}>{tonight.line.replace(/^Diseară /, '')}</T>
+              </View>
+            ) : null}
+          </View>
+          </TourTarget>
+          <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'flex-end' }}>
+            <View style={{ flex: 1 }}>
+              <T accessibilityRole="header" style={{ color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 44 : 56, lineHeight: (word.length > 10 ? 44 : 56) * 0.95, letterSpacing: -1.6 }}>
+                {'Ce facem\n' + word}
+              </T>
+              <FlipWords words={FLIP[phase].flip} />
+            </View>
+            <View style={{ marginBottom: 6 }}><Bilu size={84} mood="hi" shadow={false} /></View>
+          </View>
+          <TourTarget id="cta" style={{ marginTop: 16 }}>
+            <Press onPress={() => router.push('/plan-nou')} accessibilityLabel="Creează plan"
+              style={{ minHeight: 84, borderRadius: 24, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 18, shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
+              <View style={{ width: 50, height: 50, borderRadius: 16, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={26} color="#FFD43B" width={2.6} /></View>
+              <View style={{ flex: 1 }}>
+                <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#0E1440' }}>Creează plan</T>
+                <T style={{ fontFamily: F.sb, fontSize: 13.5, color: 'rgba(14,20,64,0.75)' }}>5 întrebări, sub un minut</T>
+              </View>
+              <Icon name="next" size={22} color="#0E1440" />
+            </Press>
+            <View style={{ marginTop: 10, flexDirection: 'row', gap: 10 }}>
+              <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <Icon name="dice" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Surprinde-mă</T>
+              </Press>
+              <Press onPress={again} accessibilityLabel={last ? 'Ca data trecută' : 'Creează plan'} style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <Icon d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>{last ? 'Ca data trecută' : 'Pas cu pas'}</T>
+              </Press>
+            </View>
+          </TourTarget>
         </View>
 
         <View style={{ paddingHorizontal: 20 }}>
@@ -208,6 +196,29 @@ export default function Acasa() {
               </T>
               <Icon name="next" size={16} color="#0E1440" />
             </Press>
+          ) : null}
+
+          {ideas.length ? (
+            <>
+              <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <Bilu size={34} mood="wink" shadow={false} still />
+                <T accessibilityRole="header" style={{ flex: 1, fontFamily: F.display, fontSize: 21 }}>Bilu îți sugerează</T>
+                <Muted>{now.getHours() >= 17 || now.getHours() < 5 ? 'diseară' : 'azi'}</Muted>
+              </View>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}>
+                {ideas.map((x) => (
+                  <Press key={x.place.id} onPress={() => openIdea(x.place.id)} accessibilityLabel={x.tag + ': ' + x.line}
+                    style={{ width: 262, flexDirection: 'row', gap: 10, padding: 12, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
+                    <View style={{ width: 52, height: 52, borderRadius: 14, backgroundColor: x.place.bg, alignItems: 'center', justifyContent: 'center' }}><Icon name={x.place.icon as never} size={24} color={x.place.fg} /></View>
+                    <View style={{ flex: 1 }}>
+                      <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 12, color: t.blueInk }}>{x.tag}</T>
+                      <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 15 }}>{x.line}</T>
+                      <Muted numberOfLines={1}>{x.place.km.toFixed(1).replace('.', ',') + ' km · ' + (APP.openLabel(x.place.id, 'eve', x.at) || x.place.title) + (x.place.price ? ' · ~' + x.place.price + ' lei' : '')}</Muted>
+                    </View>
+                  </Press>
+                ))}
+              </ScrollView>
+            </>
           ) : null}
 
           <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
@@ -238,17 +249,6 @@ export default function Acasa() {
           </View>
         </View>
       </ScrollView>
-
-      <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); router.push('/rezultate'); }} />
-      <Sheet open={crewOpen} onClose={() => setCrewOpen(false)}>
-        <H1 style={{ fontSize: 26 }}>Cu cine ieși?</H1>
-        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Apasă „Arată variante”, apoi „Trimite gășcii la vot”: fiecare votează din telefonul lui și câștigă locul cu cele mai multe voturi. Sau trimiți direct biletul și ei răspund cu Vin sau Nu pot.</Muted>
-        <View style={{ marginTop: 16, gap: 8 }}>
-          <Big label="Arată variante" onPress={() => { setCrewOpen(false); router.push('/rezultate'); }} />
-          <Big label="Adaugă prieteni" color={t.s2} ink={t.ink} onPress={() => { setCrewOpen(false); router.push('/prieteni'); }} />
-          <Big label={'Mergem ' + WHO[f.who].text.toLowerCase() + ', fără invitații'} color={t.s2} ink={t.ink} onPress={() => setCrewOpen(false)} />
-        </View>
-      </Sheet>
       <TopShade color={SKY_BG[phase]} />
     </View>
   );

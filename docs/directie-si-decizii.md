@@ -407,3 +407,12 @@ Ideile de la care am pornit:
 - **Seara completă:** 6 feluri de seară (Cină și un pahar, Seara lungă, Spectacol și cină, Joacă apoi masă, Ziua afară, Ceva dulce și un film). Fiecare loc e deschis la ora lui și la câteva minute pe jos de cel dinainte (în orașele mici, cu mașina). „Facem așa” face un bilet pentru fiecare pas, iar serile se pot trimite gășcii la vot.
 - **Harta** rezultatelor și a serii complete (MapLibre + OpenFreeMap, gratuit, fără cheie).
 - **Notificări de la prieteni** (vot, plan, gașcă) prin Firebase; **XP pe server**; dublu „Înapoi” pe Acasă ca să ieși.
+
+## Acasă nouă și „Creează plan” (decizie Cornel, 04.10 seara)
+
+- Acasă devine simplă: vremea reală, ziua și ora, „Ce facem în seara asta?”, un singur buton mare **Creează plan**, plus **Surprinde-mă** (un plan dintr-un tap) și **Ca data trecută** (aceleași răspunsuri, fără întrebări). Sub ele: **Bilu îți sugerează** (idei fără să întrebi nimic: după vreme, lângă tine, pe gustul tău), apoi „Ai chef de…” și Live Drops. Au dispărut de pe Acasă: „Cine vine?”, rândul cu filtre, „Arată variante”, butonul „Seara completă”.
+- **Creează plan**, o întrebare pe ecran, cu Bilu: un singur loc sau toată seara → când (oricare din următoarele 7 zile, cu vremea, sau din calendar; apoi ora) → câți sunteți (1–5, 6+ cu „− 8 +”, sau gașca) → bugetul de persoană pe toată ieșirea (bara cu două buline + Gratis / Ieftin / Normal / Oricât) → vibe. Răspunsurile cu o singură alegere trec singure mai departe; „Arată-mi acum” sare peste rest; data viitoare răspunsurile sunt deja bifate.
+- Rezultatul nu mai e o listă de 183 de locuri, ci **3 planuri gata**, fiecare cu ce a verificat Bilu: deschis la ora lui, distanța, bugetul („+35 peste buget” când e cazul, cu sfatul „Cu X în loc de Y: ~N lei”), vremea. Planul deschis are harta, Rezervă / Drum / „Alt bar”, costul pe persoană și pentru toți, „Facem așa” (bilete) și „La vot” (gașca votează între planuri întregi).
+- **Spune-i lui Bilu**: scrii „cu terasă, după 22”, „mai ieftin”, „fără fum”, „aproape”; Bilu arată ce a înțeles și reface cele 3 planuri.
+- Reparații de motor: ora exactă a planului (nu mai apare o cafenea închisă la 17:00 „pentru diseară”), un pas din seară se termină cel târziu la închiderea localului, bugetul serii e pe toată seara, „aproape / lângă mine” înțeles în căutare.
+- Etapa 2: „O construiesc eu” (alegi vibe-ul pentru fiecare parte a serii, Bilu caută lângă locul de dinainte).

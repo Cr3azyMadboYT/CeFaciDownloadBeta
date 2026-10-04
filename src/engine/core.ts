@@ -92,6 +92,21 @@ export function openAt(v: Venue, t: Date): OpenInfo {
   } catch { return { known: false, open: true, label: 'Program necunoscut' }; }
 }
 
+/** When an open place closes, seen from `t` (within two days); null when closed at `t`, open around the clock or unknown. */
+export function closesAt(v: Venue, t: Date): Date | null {
+  if (v.wk) {
+    if (!wkOpen(v.wk, t)) return null;
+    const left = wkNext(v.wk, t);
+    return left === null ? null : new Date(t.getTime() + left * 60000);
+  }
+  const o = oh(v);
+  if (!o) return null;
+  try {
+    if (!o.getState(t)) return null;
+    return o.getNextChange(t, new Date(t.getTime() + 2 * 864e5)) ?? null;
+  } catch { return null; }
+}
+
 /** The moment a plan is for: now, tonight, tomorrow evening, or next Saturday. Daytime kinds look at the afternoon. */
 export function targetTime(when: When, night: number, now: Date): Date {
   const t = new Date(now.getTime());
@@ -133,7 +148,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   if (ask.budgetMin && price < ask.budgetMin) return null;
   const n = WHO_N[ask.who];
   if (n > k.max) return null;
-  const t = targetTime(ask.when, k.night, ctx.now);
+  const t = ask.at ?? targetTime(ask.when, k.night, ctx.now);
   if (dayOnly(v, t)) return null;
   const open = openAt(v, t);
   if (open.known && !open.open) return null;
@@ -202,7 +217,7 @@ export type Need = 'wifi' | 'nosmoke' | 'smoke' | 'wheel' | 'ac';
 const NEED_SAY: Record<Need, string> = { wifi: 'Are wifi', nosmoke: 'Nefumători', smoke: 'Se poate fuma', wheel: 'Accesibil cu scaun cu rotile', ac: 'Are aer condiționat' };
 const NEED_WORD: Record<Need, string> = { wifi: 'wifi', nosmoke: 'nefumători', smoke: 'loc de fumat', wheel: 'acces cu scaun cu rotile', ac: 'aer condiționat' };
 /** How well a place answers one need: points, and whether the map says so. */
-function needFit(v: Venue, n: Need): { pts: number; ok: boolean; no?: boolean } {
+export function needFit(v: Venue, n: Need): { pts: number; ok: boolean; no?: boolean } {
   if (n === 'wifi') return v.wifi ? { pts: 14, ok: true } : { pts: -3, ok: false };
   if (n === 'ac') return v.ac ? { pts: 12, ok: true } : { pts: -2, ok: false };
   if (n === 'wheel') return v.wheelchair ? { pts: 16, ok: true } : v.wheelLimited ? { pts: 6, ok: true } : { pts: -6, ok: false };
@@ -215,6 +230,7 @@ export interface Parsed {
   topics: string[];     // TOPICS ids
   kinds: string[]; cuisines: string[]; cats: Cat[]; vibes: Vibe[];
   outdoor: boolean; openNow: boolean; cheap: boolean;
+  near: boolean;        // "aproape", "lângă mine": the closest first
   zone?: string;        // zone id when the place is a zone (sector, Ilfov town)
   place?: Place;
   street?: string;      // "strada X" / "calea X"
@@ -296,7 +312,7 @@ function placeOf(w: string): Place | null {
 }
 
 export function parseQuery(q: string): Parsed {
-  const p: Parsed = { raw: [], words: [], topics: [], kinds: [], cuisines: [], cats: [], vibes: [], needs: [], outdoor: false, openNow: false, cheap: false, fancy: false, family: false, romantic: false, fixes: [], fuzzy: {}, note: '' };
+  const p: Parsed = { raw: [], words: [], topics: [], kinds: [], cuisines: [], cats: [], vibes: [], needs: [], outdoor: false, openNow: false, cheap: false, near: false, fancy: false, family: false, romantic: false, fixes: [], fuzzy: {}, note: '' };
   let s = ' ' + fold(q).replace(/(\d{1,2})[:.](\d{2})/g, '$1h$2').replace(/['’`´]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ') + ' ';
   for (const [k, v] of Object.entries(NAME_ALIASES)) s = s.replace(' ' + k + ' ', ' ' + v + ' ');
   const take = (re: RegExp, fn: (m: RegExpMatchArray) => void) => { const m = s.match(re); if (m) { fn(m); s = s.replace(re, ' '); return true; } return false; };
@@ -317,6 +333,8 @@ export function parseQuery(q: string): Parsed {
     [/ (?:cu )?(?:aer conditionat|aerul conditionat|racoare|climatizat|cu clima|cu ac) /, 'ac'],
   ];
   for (const [re, n] of needs) while (take(re, () => {})) if (!p.needs.includes(n)) p.needs.push(n);
+  // close by: "aproape", "mai aproape", "lângă mine" (not "aproape de Unirii": that is a place)
+  if (take(/ (?:cat mai |mai |foarte )?(?:aproape(?: de (?:mine|noi|casa|acasa))?(?! de )|langa mine|langa noi|in apropiere|prin apropiere|pe aproape|prin preajma|in preajma|in zona mea|nu departe|nu prea departe) /, () => {})) p.near = true;
   // budget
   const PER = '(?: (?:de )?(?:persoana|pers|om|cap))?';
   take(new RegExp(' (?:intre|de la) ' + NUMW + ' (?:si|la|pana la) ' + NUMW + ' (?:de )?(?:lei|ron)?' + PER + ' '), (m) => { p.budgetMin = num(m[1]); p.budget = num(m[2]); });
@@ -583,7 +601,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
   const food = topics.filter((id) => FOOD_TOPICS.has(id));
   const venueTopics = topics.filter((id) => !FOOD_TOPICS.has(id));
   const wantsSomething = topics.length > 0;
-  const anyModifier = !!(p.place || p.time || p.budget !== undefined || n || p.outdoor || p.family || p.romantic || p.fancy || p.street || p.vibes.length || p.needs.length);
+  const anyModifier = !!(p.near || p.place || p.time || p.budget !== undefined || n || p.outdoor || p.family || p.romantic || p.fancy || p.street || p.vibes.length || p.needs.length);
   if (nameIntent && !wantsSomething) return { results: named.slice(0, limit), parsed: p };
   if (!wantsSomething && !anyModifier && !nameIntent) {
     // nothing understood: loose name matches, so the person still sees something
@@ -616,7 +634,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       // where
       const d = km(origin, v);
       if (p.place && d > radius) continue;
-      if (!p.place && d > 30) continue;
+      if (!p.place && d > (p.near ? 12 : 30)) continue;
       if (p.street && !fold(v.street ?? '').includes(p.street)) continue;
       // how many, how much, with whom
       if (n && (n > k.max || (n > 1 && n < k.min))) continue;
@@ -643,6 +661,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (chain) sc -= p.fancy ? 30 : 20;
       if (v.fast && (p.romantic || p.fancy || venueTopics.includes('restaurant') || (!wantsSomething && !p.cheap))) sc -= 8;
       sc += p.place ? 22 * Math.max(0, 1 - d / (radius * 1.15)) : 14 * Math.max(0, 1 - d / 12);
+      if (p.near && !p.place) sc += 22 * Math.max(0, 1 - d / 5);
       // closed now (no time asked): still shown, lower; a park without hours on the map is simply open by day
       sc += !st.known ? (v.cat === 'natura' ? 10 : p.time ? 3 : 5) : st.open ? 12 : -12;
       if (p.time && !wantsSomething) sc += 14 * nightFit;

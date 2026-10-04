@@ -49,6 +49,7 @@ export interface Ask {
   budgetMin?: number;  // min lei per person ("de la 50 la 120 lei")
   maxKm: number;
   vibes: Vibe[];
+  at?: Date;           // the exact moment of the plan ("Creează plan": a day and an hour); else `when` decides
 }
 
 export interface Ctx {

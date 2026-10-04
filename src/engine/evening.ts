@@ -3,7 +3,7 @@
 // scored by the same engine as single ideas (taste, open, the weather at that hour), with the previous place as the
 // starting point.
 import { KINDS } from './catalog';
-import { adultOnly, km, priceOf, scoreVenue } from './core';
+import { adultOnly, closesAt, km, priceOf, scoreVenue } from './core';
 import { wxAt } from './weather';
 import type { Ask, Cat, Ctx, Venue, Vibe, When, Who } from './types';
 
@@ -29,10 +29,12 @@ export const TEMPLATES: Template[] = [
     steps: [{ kinds: ['ice_cream', 'cafe'], min: 60, why: 'Ceva dulce' }, { kinds: ['cinema'], min: 140, why: 'Filmul' }] },
 ];
 
-export interface RouteStep { v: Venue; at: Date; until: Date; walk: number; why: string; price: number; reasons: string[] }
+export interface RouteStep { v: Venue; at: Date; until: Date; walk: number; why: string; price: number; reasons: string[]; closes?: Date }
 /** `drive`: the places are too far apart to walk (a small town): minutes between them are by car. */
-export interface Route { id: TemplateId; label: string; sub: string; steps: RouteStep[]; price: number; score: number; note?: string; drive?: boolean }
-export interface EveningAsk { who: Who; when: When; budget: number; maxKm: number; walkKm: number; vibes: Vibe[] }
+export interface Route { id: TemplateId; label: string; sub: string; steps: RouteStep[]; price: number; score: number; note?: string; drive?: boolean; over?: number }
+/** `at`: the exact start ("Creează plan"); `total`: the budget is for the whole evening, per person (a route may go up
+ * to a third over it, and says by how much). */
+export interface EveningAsk { who: Who; when: When; budget: number; maxKm: number; walkKm: number; vibes: Vibe[]; at?: Date; total?: boolean }
 
 const roundUp15 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 15) * 15); return t; };
 /** When the evening starts: now (rounded up), or the template's usual hour on the chosen day. */
@@ -52,11 +54,11 @@ const inKinds = (v: Venue, s: StepSpec) => (s.kinds ? s.kinds.includes(v.k) : fa
 /** One route for a template, or null when some step finds nothing open and near. `skip` makes other variants. */
 export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ctx, skip = 0, drive = false): Route | null {
   if (tpl.adult && ctx.minor) return null;
-  let at = startOf(ask.when, tpl.start, ctx.now);
+  let at = ask.at ? new Date(ask.at.getTime()) : startOf(ask.when, tpl.start, ctx.now);
   // a night out does not start at 4 in the afternoon, a walk in the park not at midnight
   const h = at.getHours() + at.getMinutes() / 60 + (at.getHours() < 5 ? 24 : 0);
   if (h > tpl.latest || h < (tpl.earliest ?? 0)) return null;
-  if ((ask.when === 'diseara' || ask.when === 'maine') && tpl.latest < 18) return null; // "diseară" is not a walk in the park at noon
+  if (!ask.at && (ask.when === 'diseara' || ask.when === 'maine') && tpl.latest < 18) return null; // "diseară" is not a walk in the park at noon
   let from = ctx.origin;
   const used = new Set<string>();
   const steps: RouteStep[] = [];
@@ -65,11 +67,13 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
     const spec = tpl.steps[i];
     const radius = i === 0 ? ask.maxKm : ask.walkKm;
     const stepCtx: Ctx = { ...ctx, now: at, origin: from };
-    const stepAsk: Ask = { who: ask.who, when: 'acum', budget: ask.budget, maxKm: radius, vibes: tpl.vibes.length ? tpl.vibes : ask.vibes };
+    const stepAsk: Ask = { who: ask.who, when: 'acum', budget: ask.budget, maxKm: radius, vibes: tpl.vibes.length ? tpl.vibes : ask.vibes, at };
     const ranked = all
       .filter((v) => inKinds(v, spec) && !used.has(v.id) && !(ctx.minor && adultOnly(v)))
       .map((v) => scoreVenue(v, stepAsk, stepCtx))
       .filter((s): s is NonNullable<typeof s> => !!s && (s.open.known ? s.open.open : true))
+      // open long enough to be worth going: at least 45 minutes after you arrive
+      .filter((s) => { const c = closesAt(s.v, at); return !c || c.getTime() - at.getTime() >= 45 * 60e3; })
       // the next place close by matters more than in a single idea: a short walk keeps the group together
       .map((s) => ({ s, rank: s.score + (i > 0 ? 12 * (1 - s.km / Math.max(radius, 0.1)) : 0) }))
       .sort((a, b) => b.rank - a.rank);
@@ -79,21 +83,25 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
     const d = km(from, v);
     const walk = i === 0 ? 0 : drive ? Math.max(5, Math.round(3 + d * 2.4)) : walkMin(d);
     if (i > 0) at = new Date(at.getTime() + walk * 60e3);
-    const until = new Date(at.getTime() + spec.min * 60e3);
+    // the step ends when the place closes, if that comes first (a pub closing at 23:00 is not a 23:35 plan)
+    const closes = closesAt(v, at);
+    if (closes && closes.getTime() - at.getTime() < 45 * 60e3) return null;
+    const until = new Date(Math.min(at.getTime() + spec.min * 60e3, closes ? closes.getTime() : Infinity));
     const price = priceOf(v);
     total += price;
-    steps.push({ v, at, until, walk, why: spec.why, price, reasons: pick.reasons });
+    steps.push({ v, at, until, walk, why: spec.why, price, reasons: pick.reasons, closes: closes ?? undefined });
     used.add(v.id);
     from = v;
     at = until;
   }
-  if (total > ask.budget * Math.max(1, steps.length) && ask.budget !== Infinity) return null;
+  if (ask.budget !== Infinity && total > (ask.total ? ask.budget * 1.35 : ask.budget * Math.max(1, steps.length))) return null;
+  const over = ask.total && ask.budget !== Infinity && total > ask.budget ? total - ask.budget : undefined;
   const score = steps.reduce((a, s) => a + s.reasons.length, 0);
   let note: string | undefined;
   const wet = steps.find((s) => wxAt(ctx.weather, s.at)?.wet && (tpl.outdoor || s.v.outdoor));
   if (wet) note = 'Pe la ' + String(wet.at.getHours()).padStart(2, '0') + ':00 plouă: stați înăuntru.';
   if (drive && !note) note = 'Locurile sunt mai departe unul de altul: între ele mergeți cu mașina sau cu taxiul.';
-  return { id: tpl.id, label: tpl.label, sub: tpl.sub, steps, price: total, score, note, drive };
+  return { id: tpl.id, label: tpl.label, sub: tpl.sub, steps, price: total, score, note, drive, over };
 }
 
 /** The evenings that work for this ask, the best fitting first (time of day, taste, weather). */
@@ -106,12 +114,14 @@ export function evenings(all: Venue[], ask: EveningAsk, ctx: Ctx, skip: Partial<
     let fit = 0;
     const likes = [...ask.vibes, ...(ctx.prefs.likes as string[])];
     fit += tpl.vibes.filter((v) => likes.includes(v)).length * 3;
+    if (ask.vibes.length && !tpl.vibes.some((v) => ask.vibes.includes(v))) fit -= 6; // asked for party: a film is not first
     const wx = wxAt(ctx.weather, r.steps[0].at);
     if (tpl.outdoor) fit += wx?.nice ? 6 : wx && (wx.wet || wx.cold) ? -20 : 0;
     if (ask.who === '1' && tpl.id === 'noaptea') fit -= 4;
     if ((ask.who === '34' || ask.who === '5') && (tpl.id === 'activ' || tpl.id === 'noaptea')) fit += 3;
     if (ask.who === '2' && (tpl.id === 'cina-bar' || tpl.id === 'cultura' || tpl.id === 'dulce')) fit += 3;
     if (r.drive) fit -= 2;
+    if (r.over) fit -= 4 + r.over / 10; // over the budget: after the ones that fit
     out.push({ r, fit: fit + r.score * 0.2 });
   }
   return out.sort((a, b) => b.fit - a.fit).map((x) => x.r);

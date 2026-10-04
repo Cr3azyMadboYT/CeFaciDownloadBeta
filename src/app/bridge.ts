@@ -2,10 +2,11 @@
 import venuesJson from '../data/venues.json';
 import goneJson from '../data/gone.json';
 import { KINDS, ZONES } from '../engine/catalog';
-import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
+import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, parseQuery, priceOf, recommend, search, targetTime, vibesOf, zoneById, type Need } from '../engine/core';
 import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
 import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
 import { evenings, type TemplateId } from '../engine/evening';
+import { altStep, makePlans, planForPlace, previewNames, suggest, swapStep, type MadePlan, type PlanReq } from '../engine/planner';
 
 const VENUES = venuesJson as Venue[];
 // places that left the map (closed): never recommended, but old plans and stamps still find them
@@ -100,6 +101,17 @@ function toPlace(v: Venue, origin: { lat: number; lon: number }) {
   };
 }
 type Place = ReturnType<typeof toPlace>;
+
+/** What the "Creează plan" steps ask (decision Cornel, 04.10). */
+export interface PlanAsk {
+  mode: 'loc' | 'seara';
+  at: Date;
+  people: number;
+  budget: [number, number];       // lei per person, for the whole outing; max Infinity = any
+  vibes: string[];
+  outdoor?: boolean; needs?: Need[]; near?: boolean; // from "Spune-i lui Bilu"
+}
+const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 
 const WHEN_MAP: Record<string, When> = { now: 'acum', eve: 'diseara', tom: 'maine', we: 'weekend' };
 const WHO_MAP: Record<string, Who> = { 1: '1', 2: '2', 34: '34', 5: '5' };
@@ -345,6 +357,93 @@ export const APP = {
     if (WHEN.eve) WHEN.eve.date = 'Azi, ' + fmt(now);
     if (WHEN.tom) WHEN.tom.date = 'Mâine, ' + fmt(tom);
     if (WHEN.we) WHEN.we.date = 'Sâmbătă, ' + fmt(sat);
+  },
+  /** The PlanAsk as the planner's request: how far comes from the sign-up answers (at least 10 km, Ilfov is wide). */
+  planReq(a: PlanAsk, wider = false): PlanReq {
+    const moves = (this.prefs.moves as string[] | undefined) ?? ['walk', 'car'];
+    const walkKm = moves.includes('walk') || moves.length === 0 ? 1.2 : 3;
+    const maxKm = wider ? 25 : Math.max(10, this.kmFor(this.prefs.dist || '20'));
+    return { mode: a.mode, at: a.at, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near };
+  },
+  lastPlans: [] as MadePlan[],
+  lastReq: null as PlanReq | null,
+  /** Three plans ready to go; when the zone is thin, Bilu looks further (25 km) before giving fewer. */
+  makePlans(a: PlanAsk) {
+    let req = this.planReq(a);
+    let plans = makePlans(VENUES, req, this.ctx());
+    if (plans.length < 3 && !a.near) { const wide = this.planReq(a, true); const more = makePlans(VENUES, wide, this.ctx()); if (more.length > plans.length) { plans = more; req = wide; } }
+    this.lastPlans = plans; this.lastReq = req; this.altSeen.clear();
+    return plans.map((p) => this.showPlan(p));
+  },
+  /** One place as the only plan (a suggestion on Acasă): returns its index in lastPlans. */
+  planForPlace(id: string, a: PlanAsk) {
+    const v = BY_ID.get(id); if (!v) return -1;
+    const req = this.planReq(a);
+    this.lastPlans = [planForPlace(v, req, this.ctx())]; this.lastReq = req; this.altSeen.clear();
+    return 0;
+  },
+  altSeen: new Set<string>(),
+  /** "Alt bar": another place for one step of plan i; null when there is no other. */
+  altPlan(i: number, step: number) {
+    const p = this.lastPlans[i];
+    if (!p || !this.lastReq) return null;
+    this.altSeen.add(p.steps[step].v.id);
+    const v = altStep(p, step, VENUES, this.lastReq, this.ctx(), this.altSeen);
+    if (!v) return null;
+    this.lastPlans[i] = swapStep(p, step, v, this.lastReq, this.ctx());
+    return this.showPlan(this.lastPlans[i]);
+  },
+  /** The first names that fit so far (under each question). */
+  preview(a: PlanAsk) { return previewNames(VENUES, this.planReq(a), this.ctx()); },
+  /** Puts another place in one step of the last plans (the tip "Cu X în loc de Y"). */
+  swapPlan(i: number, step: number, id: string) {
+    const p = this.lastPlans[i]; const v = BY_ID.get(id);
+    if (!p || !v || !this.lastReq) return null;
+    this.lastPlans[i] = swapStep(p, step, v, this.lastReq, this.ctx());
+    return this.showPlan(this.lastPlans[i]);
+  },
+  showPlan(p: MadePlan) {
+    const o = this.origin();
+    return {
+      id: p.id, title: p.title, sub: p.sub, price: p.price, over: p.over, drive: p.drive, checks: p.checks,
+      tip: p.tip ? { text: p.tip.text, step: p.tip.step, id: p.tip.v.id } : undefined,
+      from: hhmm(p.steps[0].at), to: hhmm(p.steps[p.steps.length - 1].until),
+      steps: p.steps.map((s) => ({ place: this.byIdMap.get(s.v.id) ?? toPlace(s.v, o), at: s.at, slot: hhmm(s.at), until: hhmm(s.until), travel: s.travel, why: s.why, open: s.open.label, reason: s.reasons.slice(0, 2).join(' · ') })),
+    };
+  },
+  /** "Bilu îți sugerează": ideas for tonight (or now, by day) from the sign-up answers, the weather and the zone. */
+  suggestions() {
+    const d = this.homeDefaults();
+    const now = new Date();
+    const at = new Date(now.getTime());
+    if (now.getHours() >= 5 && now.getHours() < 19) at.setHours(Math.max(now.getHours() + 1, 20), 0, 0, 0); else at.setMinutes(Math.ceil(now.getMinutes() / 15) * 15, 0, 0);
+    const people = d.who === '1' ? 1 : d.who === '2' ? 2 : 4;
+    const req = this.planReq({ mode: 'loc', at, people, budget: [0, budgetRange(d.budget).max], vibes: d.vibes });
+    return suggest(VENUES, req, this.ctx()).map((s) => ({ place: this.byIdMap.get(s.v.id)!, tag: s.tag, line: s.line, at: s.at })).filter((s) => s.place);
+  },
+  /** The weather on a day at an hour, for the "Când ieșiți?" cards; null if there is no forecast that far. */
+  dayWeather(at: Date) {
+    const w = wxAt(this.weather, at);
+    return w ? { temp: w.temp, text: w.text, icon: w.icon, wet: w.wet, nice: w.nice } : null;
+  },
+  /** "Spune-i lui Bilu": what the words change in the plan, and the chips that say so. */
+  refine(text: string, a: PlanAsk): { ask: PlanAsk; chips: string[] } {
+    const p = parseQuery(text);
+    const next: PlanAsk = { ...a, budget: [...a.budget] as [number, number], vibes: [...a.vibes] };
+    const chips: string[] = [];
+    if (p.outdoor) { next.outdoor = true; chips.push('Cu terasă'); }
+    if (p.needs.length) { next.needs = [...new Set([...(a.needs ?? []), ...p.needs])]; chips.push(...p.needs.map((n) => ({ wifi: 'Wifi', nosmoke: 'Fără fum', smoke: 'Se poate fuma', wheel: 'Scaun cu rotile', ac: 'Aer condiționat' })[n])); }
+    if (p.near) { next.near = true; chips.push('Aproape'); }
+    if (p.budget !== undefined || p.cheap) { const max = p.budget ?? Math.max(30, Math.round(a.budget[1] === Infinity ? 60 : a.budget[1] * 0.6)); next.budget = [p.budgetMin ?? 0, max]; chips.push('Până în ' + max + ' lei'); }
+    if (p.time?.hour !== undefined) {
+      const at = new Date(a.at.getTime()); at.setHours(p.time.hour, p.time.min ?? 0, 0, 0);
+      if (p.time.hour < 5 && a.at.getHours() >= 5) at.setDate(at.getDate() + 1);
+      next.at = at; chips.push((p.time.after ? 'De la ' : 'La ') + hhmm(at));
+    }
+    if (p.people) { next.people = p.people; chips.push(p.people + (p.people === 1 ? ' persoană' : ' persoane')); }
+    const vibes = p.vibes.filter((v) => !next.vibes.includes(v));
+    if (vibes.length) { next.vibes.push(...vibes); chips.push(...vibes); }
+    return { ask: next, chips };
   },
   count: VENUES.length,
   todayText() {

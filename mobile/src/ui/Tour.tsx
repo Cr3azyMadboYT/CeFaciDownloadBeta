@@ -14,9 +14,8 @@ interface Step { id?: string; mood: Mood; text: string; oops?: string; hot?: 'pr
 const STEPS: Step[] = [
   { mood: 'hi', text: 'Salutare! Bine ai venit în CeFaci. Sperăm să te scăpăm de plictiseală și să te distrezi cu vârf și îndesat!' },
   { mood: 'wink', text: 'Înainte de toate, un mic tur prin aplicație. Durează jumătate de minut, promit.' },
-  { id: 'pills', mood: 'up', text: 'Sus vezi de unde pleci, ziua, ora și câte locuri reale am adunat. Apasă pe zonă ca s-o schimbi.' },
-  { id: 'who', mood: 'up', text: 'Aici spui cu cine ieși. Gășcile le faci din Planuri și votați împreună unde mergeți.' },
-  { id: 'cta', mood: 'down', text: 'Butonul magic. Apeși și primești 3 variante pe gustul tău, nu 300. Zarul din dreapta e pentru curajoși: Surprinde-mă.' },
+  { id: 'pills', mood: 'up', text: 'Sus vezi de unde pleci, vremea, ziua și ora. Apasă pe zonă ca s-o schimbi.' },
+  { id: 'cta', mood: 'up', text: 'Butonul magic: Creează plan. Îmi răspunzi la 5 întrebări rapide și primești 3 planuri gata, verificate. Surprinde-mă e pentru curajoși.' },
   { id: 'tab-planuri', mood: 'down', text: 'În Planuri ai tot ce ai stabilit: biletele serii, rezervările și gășcile tale.' },
   { id: 'tab-profil', mood: 'down', hot: 'profil', text: 'Acum apasă tu pe Profil. Acolo sunt carnetul, prietenii și ștampilele tale.', oops: 'Aproape! Profil e al patrulea de jos, unde e lumină.' },
   { mood: 'yay', final: 'xp', text: 'Ăsta e carnetul tău: fă check-in când ajungi la local și primești ștampile și XP, iar poza bonului îți mai aduce 25 XP. Și ca să nu pleci cu mâna goală, ai deja 150 XP de bun venit!' },
@@ -31,7 +30,7 @@ export function Tour() {
   const tour = useTour();
   const { width: W, height: H } = useWindowDimensions();
   const ins = useModalInsets();
-  const steps = tour.replay ? STEPS.slice(0, 8) : STEPS;
+  const steps = tour.replay ? STEPS.slice(0, 7) : STEPS;
   const st = steps[Math.min(tour.step, steps.length - 1)];
   const r: Rect | undefined = st?.id ? tour.rects[st.id] : undefined;
   const fade = useRef(new Animated.Value(0)).current;
