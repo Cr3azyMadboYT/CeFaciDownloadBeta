@@ -8,7 +8,7 @@ import { listFriends } from '../../lib/friends';
 import { startTour } from '../../lib/tour';
 import { Bilu } from '../../ui/Bilu';
 import { NO_STAMPS, type Stamp } from '../../lib/outing';
-import { startOver, useApp } from '../../lib/session';
+import { startOver, useApp, setBoard } from '../../lib/session';
 import { Portrait } from '../../ui/Avatar';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, Note, Press, Seg, Sheet, T } from '../../ui/kit';
@@ -21,7 +21,8 @@ const ROTS = ['-6deg', '5deg', '-3deg', '7deg'];
 const fmt = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
 export default function Profil() {
-  const { t, name: theme, set } = useTheme();
+  const { t, set } = useTheme();
+  const mode = useApp((s) => s.board.theme ?? 'zi');
   const ins = useSafeAreaInsets();
   const prefs = useApp((s) => s.prefs);
   const who = useApp((s) => s.who);
@@ -48,7 +49,12 @@ export default function Profil() {
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
-      <View style={{ height: 44, justifyContent: 'center' }}><H1 style={{ fontSize: 28 }}>{'@' + (prefs.user || 'tu')}</H1></View>
+      <View style={{ height: 44, flexDirection: 'row', alignItems: 'center' }}>
+        <H1 style={{ flex: 1, fontSize: 28 }}>{'@' + (prefs.user || 'tu')}</H1>
+        <Press onPress={() => router.push('/setari')} accessibilityLabel="Setări" style={{ width: 44, height: 44, marginRight: -8, alignItems: 'center', justifyContent: 'center', borderRadius: 14 }}>
+          <Icon name="gear" color={t.ink} />
+        </Press>
+      </View>
       <View style={{ marginTop: 10, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 24, backgroundColor: '#2F5BFF' }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 18 }}>
           <Press onPress={() => setPhotoOpen(true)} accessibilityLabel="Schimbă poza de profil"
@@ -88,8 +94,9 @@ export default function Profil() {
         <View style={{ paddingTop: 12, paddingHorizontal: 16, paddingBottom: 14, borderTopWidth: 1, borderTopColor: t.line }}>
           <T style={{ marginBottom: 10, fontFamily: F.sb, fontSize: 15 }}>Temă</T>
           <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Seg label="Zi" on={theme === 'zi'} onPress={() => set('zi')} />
-            <Seg label="Noapte" on={theme === 'noapte'} onPress={() => set('noapte')} />
+            <Seg label="Zi" on={mode === 'zi'} onPress={() => set('zi')} />
+            <Seg label="Noapte" on={mode === 'noapte'} onPress={() => set('noapte')} />
+            <Seg label="Ca telefonul" on={mode === 'auto'} onPress={() => setBoard({ theme: 'auto' })} />
           </View>
         </View>
         <Press onPress={() => router.push('/preferinte')} style={{ minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: t.line }}>

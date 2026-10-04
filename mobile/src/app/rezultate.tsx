@@ -18,9 +18,10 @@ const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea de
 const CAR = 'M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2M9 17h6M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0M15 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0';
 const WALLET = 'M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4';
 
-function role(t: Theme, i: number, page: number, p: Place, nearest: Place | null, used: { near: boolean }): [string, string, string] {
+function role(t: Theme, i: number, page: number, p: Place, nearest: Place | null, used: { near: boolean; fresh: boolean }, tried: Set<string>): [string, string, string] {
   if (i === 0 && page === 0) return ['Pariu sigur', t.blueSoft, t.blueInk];
   if (p === nearest && !used.near) { used.near = true; return ['Cel mai la îndemână', t.yellowSoft, t.yellowInk]; }
+  if (tried.size && !tried.has(p.real.cat) && !used.fresh) { used.fresh = true; return ['Ceva nou pentru voi', t.greenSoft, t.greenInk]; }
   return ['Tot pe gustul vostru', t.s2, t.ink];
 }
 
@@ -36,7 +37,9 @@ export default function Rezultate() {
   const page = page0 * 3 >= all.length ? 0 : page0;
   const items = all.slice(page * 3, page * 3 + 3);
   const nearest = items.length ? items.reduce((a, b) => (b.dist < a.dist ? b : a)) : null;
-  const used = { near: false };
+  const used = { near: false, fresh: false };
+  const stamps = useApp((s) => s.board.stamps as { id: string }[] | undefined);
+  const tried = useMemo(() => new Set((stamps ?? []).flatMap((x) => { const v = APP.byId(x.id); return v ? [v.real.cat as string] : []; })), [stamps]);
   const searching = sq.trim().length > 1;
   const priceNote = useMemo(() => APP.priceNote(sq, f.budget), [sq, f.budget]);
   const remaining = all.length - (page * 3 + items.length);
@@ -80,7 +83,7 @@ export default function Rezultate() {
         {items.length ? (
           <View style={{ marginTop: 14, gap: 10 }}>
             {items.map((p, i) => {
-              const r = role(t, i, page, p, nearest, used);
+              const r = role(t, i, page, p, nearest, used, tried);
               return (
                 <View key={p.id} style={{ padding: 12, flexDirection: 'row', gap: 12, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
                   <View style={{ width: 74, borderRadius: 14, backgroundColor: p.bg, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>

@@ -1,6 +1,7 @@
 // Bilu, the yellow ticket, with the poses from the design (rest, hi, up, down, left, wink, yay, oops, magic).
 import { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, View } from 'react-native';
+import { useCalm } from '../lib/motion';
 import Svg, { Circle, Ellipse, G, Path } from 'react-native-svg';
 
 export type Mood = 'rest' | 'hi' | 'up' | 'down' | 'left' | 'wink' | 'yay' | 'oops' | 'magic';
@@ -108,8 +109,9 @@ const Eyes = memo(function Eyes({ W, H, p, shut }: { W: number; H: number; p: Po
 });
 
 /** Bilu at `size` px wide (the drawing is 120×144). Moves a little: bobs, blinks, waves when saying hi. */
-export function Bilu({ size = 120, mood = 'rest', look = 'c', still = false, shadow = true }: { size?: number; mood?: Mood; look?: Look; still?: boolean; shadow?: boolean }) {
+export function Bilu({ size = 120, mood = 'rest', look = 'c', still: stillAsked = false, shadow = true }: { size?: number; mood?: Mood; look?: Look; still?: boolean; shadow?: boolean }) {
   const p = useMemo(() => pose(mood, look), [mood, look]);
+  const still = useCalm() || stillAsked;
   const bob = useRef(new Animated.Value(0)).current;
   const wave = useRef(new Animated.Value(0)).current;
   const blink = useRef(new Animated.Value(0)).current;

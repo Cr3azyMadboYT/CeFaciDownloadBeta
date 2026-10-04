@@ -1,5 +1,6 @@
 import '../lib/boot';
 import { useEffect, useMemo } from 'react';
+import { useColorScheme } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -12,12 +13,15 @@ import { Caveat_700Bold } from '@expo-google-fonts/caveat';
 import { noapte, ThemeCtx, zi } from '../ui/theme';
 import { setBoard, useApp } from '../lib/session';
 import { Toast } from '../ui/Toast';
+import { LevelUp } from '../ui/LevelUp';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function Root() {
   const [loaded] = useFonts({ BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold, InstrumentSans_400Regular, InstrumentSans_500Medium, InstrumentSans_600SemiBold, InstrumentSans_700Bold, Caveat_700Bold });
-  const name = useApp((s) => (s.board.theme === 'noapte' ? 'noapte' : 'zi')) as 'zi' | 'noapte';
+  const mode = useApp((s) => s.board.theme ?? 'zi');
+  const sys = useColorScheme();
+  const name: 'zi' | 'noapte' = mode === 'noapte' || (mode === 'auto' && sys === 'dark') ? 'noapte' : 'zi';
   const t = name === 'noapte' ? noapte : zi;
   const ctx = useMemo(() => ({ t, name, set: (n: 'zi' | 'noapte') => setBoard({ theme: n }) }), [t, name]);
   useEffect(() => { if (loaded) SplashScreen.hideAsync().catch(() => {}); }, [loaded]);
@@ -33,6 +37,7 @@ export default function Root() {
           <Stack.Screen name="zona" options={{ animation: 'slide_from_bottom' }} />
         </Stack>
         <Toast />
+        <LevelUp />
       </ThemeCtx.Provider>
     </SafeAreaProvider>
   );

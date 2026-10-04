@@ -8,6 +8,8 @@ import { km } from '../../../src/engine/core';
 import { sb } from './auth';
 import { getApp, setBoard } from './session';
 import { planDay, updPlan, type Plan } from './plans';
+import { cancelReminders, remindBill } from './remind';
+import { levelOf } from './levels';
 
 export interface Stamp { id: string; name: string; icon: string; bg: string; at: number }
 export interface Bill { placeId: string; total: number; people: number; at: number }
@@ -16,8 +18,17 @@ export const NO_STAMPS: Stamp[] = [];
 const XP_OUTING = 100; // „Ieșire bifată”
 const XP_NEW = 50;     // „Loc nou pentru tine”
 const XP_BILL = 25;    // poza bonului
+const XP_KIND = 75;    // „Categorie nouă”: the first park, the first museum, the first club…
+
+/** Adds XP; crossing into a new level shows the "Nivel nou" card (LevelUp, in the root layout). */
+export function gainXp(n: number, extra: Record<string, unknown> = {}) {
+  const before = (getApp().board.xp as number | undefined) ?? 0;
+  const after = before + n;
+  setBoard({ xp: after, ...extra, ...(levelOf(after) > levelOf(before) ? { levelUp: levelOf(after) } : {}) });
+}
 const NEAR_M = 250;    // how close counts as "at the place"
 
+const CAT_WORD: Record<string, string> = { mancare: 'restaurant', cafea: 'cafenea', desert: 'desert', bar: 'bar', club: 'club', film: 'film', teatru: 'teatru', cultura: 'muzeu', activitate: 'o activitate', natura: 'aer liber', sport: 'sport' };
 const within = <T,>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<never>((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
 const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -43,13 +54,13 @@ export async function checkIn(pl: Plan): Promise<{ ok: boolean; msg: string }> {
   const now = new Date();
   const stamps = (getApp().board.stamps as Stamp[] | undefined) ?? [];
   const isNew = !stamps.some((s) => s.id === p.id);
-  const gain = XP_OUTING + (isNew ? XP_NEW : 0);
+  const newKind = !stamps.some((s) => APP.byId(s.id)?.real.cat === p.real.cat);
+  const gain = XP_OUTING + (isNew ? XP_NEW : 0) + (newKind ? XP_KIND : 0);
   updPlan(pl.pid, { inAt: hhmm(now) });
-  setBoard((b) => ({
-    xp: ((b.xp as number | undefined) ?? 0) + gain,
-    stamps: isNew ? [...((b.stamps as Stamp[] | undefined) ?? []), { id: p.id, name: p.name, icon: p.icon, bg: p.bg, at: now.getTime() }] : b.stamps,
-  }));
-  return { ok: true, msg: '+' + gain + ' XP' + (isNew ? '. Ștampila de la ' + p.name + ' e în carnet.' : '. Ieșire bifată.') + ' Păstrează bonul la final, îți mai aduce 25 XP.' };
+  if (getApp().board.billRemind !== false) void remindBill(p.name, now).then((ids) => { if (ids.length) updPlan(pl.pid, { remind: ids }); });
+  gainXp(gain, { stamps: isNew ? [...stamps, { id: p.id, name: p.name, icon: p.icon, bg: p.bg, at: now.getTime() }] : stamps });
+  const kindWord = CAT_WORD[p.real.cat];
+  return { ok: true, msg: '+' + gain + ' XP' + (isNew ? '. Ștampila de la ' + p.name + ' e în carnet.' : '. Ieșire bifată.') + (newKind && kindWord ? ' Prima ta ieșire la ' + kindWord + ': +75 XP.' : '') + ' Păstrează bonul la final, îți mai aduce 25 XP.' };
 }
 
 /** The receipt photo: camera (or gallery), read on the server, checked against the place's day, +25 XP. */
@@ -73,11 +84,12 @@ export async function sendBill(pl: Plan, from: 'camera' | 'gallery'): Promise<{ 
   const isoNext = next.getFullYear() + '-' + String(next.getMonth() + 1).padStart(2, '0') + '-' + String(next.getDate()).padStart(2, '0');
   if (!bon.total) return { ok: false, msg: 'Nu văd totalul pe bon. Fă poza mai de aproape, cu tot bonul în cadru.' };
   if (bon.date && bon.date !== iso && bon.date !== isoNext) return { ok: false, msg: 'Bonul e din altă zi (' + bon.date.split('-').reverse().join('.') + '). Pune bonul de la ieșirea asta.' };
-  updPlan(pl.pid, { bonDone: true });
-  setBoard((b) => ({
-    xp: ((b.xp as number | undefined) ?? 0) + XP_BILL,
+  updPlan(pl.pid, { bonDone: true, remind: [] });
+  void cancelReminders(pl.remind);
+  const b = getApp().board;
+  gainXp(XP_BILL, {
     billXp: ((b.billXp as number | undefined) ?? 0) + XP_BILL,
     bills: [...((b.bills as Bill[] | undefined) ?? []), { placeId: pl.placeId, total: bon.total!, people: pl.people, at: Date.now() }],
-  }));
+  });
   return { ok: true, msg: '+25 XP. Bonul de ' + bon.total.toFixed(2).replace('.', ',') + ' lei e confirmat. Mersi că ne ajuți cu prețurile reale!' };
 }

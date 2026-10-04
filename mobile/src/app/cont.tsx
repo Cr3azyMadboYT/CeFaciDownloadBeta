@@ -1,5 +1,5 @@
 // Sign-up, as in design/canvas/client/Cont: start → (email code) → name, username, birth date → zone → likes →
-// style → five real places → friends → done. Google or email make an account; "Continuă fără cont" keeps it on the phone.
+// style → five real places → friends → done. An account is needed: Google or an email code (decision Cornel, 04.10: no "Continuă fără cont").
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Animated, BackHandler, Easing, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions, View } from 'react-native';
 import { router } from 'expo-router';
@@ -231,9 +231,8 @@ export default function Cont() {
               <MailIcon />
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>Continuă cu email</T>
             </Press>
-            <Quiet label="Continuă fără cont" color="#FFFFFF" underline onPress={() => go('name')} />
             {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
-            <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ai deja cont? Intră la fel, cu Google sau cu emailul. · Fără cont, profilul rămâne doar pe telefonul ăsta. Continuând, accepți Termenii și Politica de confidențialitate.</T>
+            <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ai deja cont? Intră la fel, cu Google sau cu emailul. Continuând, accepți Termenii și Politica de confidențialitate.</T>
           </View>
         </ScrollView>
       </Slide>

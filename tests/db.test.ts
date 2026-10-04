@@ -98,6 +98,9 @@ it('keeps every rule of the database', async () => {
   eq('bob asked to the plan', (await as('bob', `select answer from plan_members where plan_id = $1 and user_id = $2`, [pv, U.bob])).rows[0]?.answer, 'pending');
   await expectFail('a non-voter cannot make the plan', () => as('ana', `select plan_from_vote($1)`, [vs]));
   eq('voters see each other', (await as('teen', `select count(*)::int n from profiles where id = $1`, [U.cris])).rows[0].n, 1);
+  await expectOk('report a closed place', () => as('bob', `insert into reports (venue_id, kind) values ('n1', 'inchis')`));
+  await expectFail('report as someone else', () => as('bob', `insert into reports (user_id, venue_id, kind) values ($1, 'n1', 'inchis')`, [U.cris]));
+  eq('reports are not readable', (await as('bob', `select count(*)::int n from reports`)).rows[0].n, 0);
   await expectOk('own xp shown to friends', () => as('bob', `update profiles set xp = 250, stamps = 3 where id = $1`, [U.bob]));
   
   // saved state and the Plus week

@@ -15,7 +15,9 @@ export type { Prefs };
 
 // ---------- a tiny store ----------
 export interface Board {
-  theme?: 'zi' | 'noapte';
+  theme?: 'zi' | 'noapte' | 'auto';
+  calm?: boolean;      // fewer animations (Setări)
+  billRemind?: boolean; // false = no receipt reminders (Setări)
   plans?: unknown[];
   xp?: number;
   welcomeXp?: boolean;

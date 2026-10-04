@@ -64,6 +64,12 @@
           "microphonePermission": false
         }
       ],
+      [
+        "expo-notifications",
+        {
+          "color": "#FFD43B"
+        }
+      ],
       "./plugins/withSigning"
     ],
     "experiments": {

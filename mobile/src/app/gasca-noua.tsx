@@ -31,6 +31,8 @@ export default function GascaNoua() {
     if (!who || !known) { setFriends([]); return; }
     void listFriends(who.id).then((r) => setFriends(r.filter((x) => x.status === 'accepted').map((x) => x.person)));
   }, [who, known]);
+  // someone from a vote who is not your friend cannot be invited: keep only friends
+  useEffect(() => { if (friends) setPicked((p) => p.filter((x) => friends.some((f) => f.id === x))); }, [friends]);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/planuri'));
   const names = friends?.filter((f) => picked.includes(f.id)).map((f) => f.first_name) ?? [];
   const auto = names.length >= 2 ? 'Tu, ' + names.slice(0, 2).join(' și ') + (names.length > 2 ? ' și încă ' + (names.length - 2) : '') : 'ex: Gașca de vineri';

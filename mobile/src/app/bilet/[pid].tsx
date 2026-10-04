@@ -6,19 +6,36 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
-import { clashWith, dateText, dayWord, planDay, removePlan, updPlan, type Plan } from '../../lib/plans';
+import { clashWith, createPlanAt, dateText, dayWord, planDay, removePlan, startsAt, updPlan, type Plan } from '../../lib/plans';
 import { dropShared, going, sharePlan, watchPlans, type Going } from '../../lib/together';
 import { SendTo, type Target } from '../../ui/SendTo';
 import { checkIn, sendBill } from '../../lib/outing';
+import { cancelReminders } from '../../lib/remind';
+import { km } from '../../../../src/engine/core';
 import { toast } from '../../lib/toast';
 import { Avatar } from '../../ui/Avatar';
 import { Dashed } from '../../ui/Dashed';
 import { Icon } from '../../ui/Icon';
-import { Big, H1, Muted, Press, Quiet, Sheet, T } from '../../ui/kit';
+import { Big, Chip, H1, Muted, Press, Quiet, Sheet, T } from '../../ui/kit';
+import { savePrefs } from '../../lib/session';
+import { sb } from '../../lib/auth';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 
 const pad = (n: number) => String(n).padStart(2, '0');
+/** The chosen time and the half hours around it, for the booking. */
+function slotsAround(slot: string) {
+  const [h, m] = slot.split(':').map(Number);
+  const base = h * 60 + m;
+  return [-60, -30, 0, 30, 60, 90].map((d) => base + d).filter((x) => x >= 8 * 60 && x <= 23 * 60 + 30).map((x) => pad(Math.floor(x / 60)) + ':' + pad(x % 60));
+}
+/** A Romanian mobile number in the international form WhatsApp wants (4074…), or null for landlines. */
+function waNumber(phone: string) {
+  const d = phone.replace(/[^\d]/g, '').replace(/^00/, '');
+  const n = d.startsWith('40') ? d : d.startsWith('0') ? '4' + d : d;
+  return /^407\d{8}$/.test(n) ? n : null;
+}
+const REPORTS: [string, string][] = [['inchis', 'S-a închis definitiv'], ['program', 'Programul e greșit'], ['telefon', 'Telefonul sau site-ul e greșit'], ['pret', 'Prețul e mult diferit'], ['altceva', 'Altceva']];
 
 export default function Bilet() {
   const { t } = useTheme();
@@ -31,6 +48,7 @@ export default function Bilet() {
   const [bonPick, setBonPick] = useState(false);
   const [via, setVia] = useState('telefon');
   const [shareOpen, setShareOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const [to, setTo] = useState<Target | null>(null);
   const [sending, setSending] = useState(false);
   const [who, setWho] = useState<Going[]>([]);
@@ -70,8 +88,18 @@ export default function Bilet() {
     Linking.openURL('https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(p.name) + '&dates=' + z(d) + '/' + z(end) + '&details=' + encodeURIComponent('Plan făcut în CeFaci') + '&location=' + encodeURIComponent(p.real.lat + ',' + p.real.lon)).catch(() => {});
   };
   const clash = all ? clashWith(pl, all) : null;
+  // Plan B: the nearest place of the same kind, a short walk away, in case this one is full
+  const planB = (() => {
+    let best: { id: string; name: string; m: number } | null = null;
+    for (const x of APP.places) {
+      if (x.id === p.id || x.real.cat !== p.real.cat) continue;
+      const m = km(p.real, x.real) * 1000;
+      if (m < 1500 && (!best || m < best.m)) best = { id: x.id, name: x.name, m };
+    }
+    return best;
+  })();
   const clashP = clash ? APP.byId(clash.placeId) : undefined;
-  const drop = () => { if (pl.sid && me) void dropShared(pl, me.id); removePlan(pl.pid); toast('Ai renunțat la ' + p.name + (pl.sid ? '. I-am anunțat și pe ceilalți.' : '.')); close(); };
+  const drop = () => { void cancelReminders(pl.remind); if (pl.sid && me) void dropShared(pl, me.id); removePlan(pl.pid); toast('Ai renunțat la ' + p.name + (pl.sid ? '. I-am anunțat și pe ceilalți.' : '.')); close(); };
   const shareToCrew = async () => {
     if (!to || !me) return;
     setSending(true);
@@ -166,6 +194,22 @@ export default function Bilet() {
             }
             return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="+25 XP în carnet. Mersi că ții CeFaci corect." />;
           })()}
+          {pl.inAt && !pl.rated ? (
+            <View style={{ padding: 14, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
+              <T style={{ fontFamily: F.b, fontSize: 15 }}>{'Cum a fost la ' + p.name + '?'}</T>
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                {([['yes', 'Mi-a plăcut'], ['no', 'Nu prea']] as const).map(([k, label]) => (
+                  <Big key={k} style={{ flex: 1 }} label={label} color={k === 'yes' ? t.blue : t.s2} ink={k === 'yes' ? '#FFFFFF' : t.ink} onPress={() => {
+                    const liked = ((APP.prefs.liked as string[] | undefined) ?? []).filter((x) => x !== p.id);
+                    const disliked = ((APP.prefs.disliked as string[] | undefined) ?? []).filter((x) => x !== p.id);
+                    savePrefs(k === 'yes' ? { liked: [...liked, p.id], disliked } : { liked, disliked: [...disliked, p.id] });
+                    updPlan(pl.pid, { rated: k });
+                    toast(k === 'yes' ? 'Notat! Îți arătăm mai des locuri ca ăsta.' : 'Notat. Îți arătăm altceva data viitoare.');
+                  }} />
+                ))}
+              </View>
+            </View>
+          ) : null}
           {clash && clashP ? (
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
               title={'Se suprapune cu ' + clashP.name} sub={'Ai și planul ăla ' + dayWord(clash) + ' la ' + clash.slot + '. Păstrezi amândouă?'} btn="Vezi" onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(clash.pid) } })} />
@@ -184,6 +228,14 @@ export default function Bilet() {
               </View>
             </View>
           ) : null}
+          {planB && !pl.inAt ? (
+            <Press onPress={() => { const pid = createPlanAt(planB.id, startsAt(pl), pl.people); router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); }}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 10, paddingHorizontal: 14, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
+              <T style={{ fontFamily: F.b, fontSize: 13, color: t.ink2 }}>PLAN B</T>
+              <T numberOfLines={1} style={{ flex: 1, fontFamily: F.sb, fontSize: 14 }}>{planB.name + ' · la ' + (planB.m < 1000 ? Math.round(planB.m / 10) * 10 + ' m' : (planB.m / 1000).toFixed(1).replace('.', ',') + ' km')}</T>
+              <Icon name="next" size={16} color={t.ink3} />
+            </Press>
+          ) : null}
           {open ? <Muted style={{ paddingHorizontal: 4 }}>{open + (p.real.street ? ' · ' + p.real.street : '')}</Muted> : null}
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Action icon="M3 11 22 2l-9 19-2-8z" label="Navighează" primary onPress={() => Linking.openURL(navUrl).catch(() => {})} />
@@ -192,6 +244,7 @@ export default function Bilet() {
           </View>
           <View style={{ alignItems: 'center', marginTop: 6 }}>
             <Quiet label="Renunț la plan" color={t.ink2} onPress={drop} />
+            <Quiet label="Ceva nu e bun la locul ăsta?" color={t.ink3} onPress={() => setReportOpen(true)} />
           </View>
         </View>
       </ScrollView>
@@ -203,6 +256,22 @@ export default function Bilet() {
         <View style={{ marginTop: 16, gap: 8 }}>
           <Big label={sending ? 'Trimit…' : to ? 'Trimite la ' + to.label : 'Alege pe cine chemi'} disabled={!to || sending} onPress={shareToCrew} />
           <Big label="Trimite pe WhatsApp sau altundeva" color={t.s2} ink={t.ink} onPress={() => { setShareOpen(false); send(); }} />
+        </View>
+      </Sheet>
+      <Sheet open={reportOpen} onClose={() => setReportOpen(false)}>
+        <H1 style={{ fontSize: 26 }}>Ce nu e bun?</H1>
+        <Muted style={{ marginTop: 6, marginBottom: 12, fontSize: 15, lineHeight: 21 }}>{'Ne ajuți să ținem harta corectă. Verificăm și reparăm la următoarea actualizare.'}</Muted>
+        <View style={{ gap: 8 }}>
+          {REPORTS.map(([k, label]) => (
+            <Big key={k} label={label} color={t.s2} ink={t.ink} onPress={async () => {
+              setReportOpen(false);
+              if (k === 'inchis') { const d = (APP.prefs.disliked as string[] | undefined) ?? []; if (!d.includes(p.id)) savePrefs({ disliked: [...d, p.id] }); }
+              if (!me) { toast('Mersi! Nu ți-l mai arătăm.'); return; }
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const { error } = await (sb() as any).from('reports').insert({ venue_id: p.id, kind: k });
+              toast(error ? 'Nu am putut trimite acum. Încearcă mai târziu.' : 'Mersi! Am notat.' + (k === 'inchis' ? ' Nu ți-l mai arătăm.' : ''));
+            }} />
+          ))}
         </View>
       </Sheet>
       <Sheet open={bonPick} onClose={() => setBonPick(false)}>
@@ -220,7 +289,23 @@ export default function Bilet() {
           <View style={{ gap: 10 }}>
             <H1 style={{ fontSize: 26 }}>Rezervă la {p.name}</H1>
             <Muted style={{ fontSize: 15, lineHeight: 21 }}>{p.name} nu primește încă rezervări prin CeFaci. Rezervi direct la ei, apoi o notezi aici.</Muted>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+              <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>Câte persoane</T>
+              <Press onPress={() => updPlan(pl.pid, { people: Math.max(1, pl.people - 1) })} accessibilityLabel="Mai puține persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>−</T></Press>
+              <T style={{ minWidth: 28, textAlign: 'center', fontFamily: F.display, fontSize: 22 }}>{pl.people}</T>
+              <Press onPress={() => updPlan(pl.pid, { people: Math.min(30, pl.people + 1) })} accessibilityLabel="Mai multe persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>+</T></Press>
+            </View>
+            {pl.slot !== 'acum' ? (
+              <View style={{ gap: 8 }}>
+                <T style={{ fontFamily: F.sb, fontSize: 15 }}>La ce oră</T>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={() => updPlan(pl.pid, { slot: s })} />)}
+                </View>
+              </View>
+            ) : null}
             {ct?.phone ? <Big label={'Sună · ' + ct.phone} icon={<Icon name="phone" color="#FFFFFF" />} onPress={() => go('tel:' + ct.phone.replace(/[^\d+]/g, ''), 'telefon')} /> : null}
+            {ct?.phone && waNumber(ct.phone) ? <Big label="Scrie-le pe WhatsApp" color="#25D366" ink="#0E1440" icon={<Icon d="M3 21l1.65-4.8A9 9 0 1 1 8 20.2zM9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" color="#0E1440" />}
+              onPress={() => go('https://wa.me/' + waNumber(ct.phone) + '?text=' + encodeURIComponent(script), 'WhatsApp')} /> : null}
             {ct?.site ? <Big label="Rezervă pe site-ul lor" color={t.violet} ink="#0E1440" icon={<Icon name="globe" color="#0E1440" />} onPress={() => go(/^https?:/.test(ct.site) ? ct.site : 'https://' + ct.site, 'site')} /> : null}
             {!ct?.phone && !ct?.site ? <Muted>Nu avem încă telefonul sau site-ul lor. Treceți pe acolo sau încercați fără rezervare.</Muted> : null}
             <View style={{ padding: 12, borderRadius: 14, backgroundColor: t.s2 }}>
