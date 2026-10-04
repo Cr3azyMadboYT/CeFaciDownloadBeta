@@ -50,6 +50,7 @@ export interface Ask {
   maxKm: number;
   vibes: Vibe[];
   at?: Date;           // the exact moment of the plan ("Creează plan": a day and an hour); else `when` decides
+  people?: number;     // how many exactly ("Câți sunteți?"); else `who` decides
 }
 
 export interface Ctx {

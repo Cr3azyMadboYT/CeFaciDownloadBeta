@@ -3,10 +3,11 @@
 import { describe, expect, it } from 'vitest';
 import { APP } from '../src/app/bridge';
 import { closesAt, openAt, parseQuery } from '../src/engine/core';
+import { isoDay } from '../src/engine/time';
 
 const at = (dayAdd: number, h: number, m = 0) => { const d = new Date(); d.setDate(d.getDate() + dayAdd); d.setHours(h, m, 0, 0); return d; };
 
-function checkOpen(plans: ReturnType<typeof APP.makePlans>) {
+function checkOpen(plans: ReturnType<typeof APP.makePlans>['plans']) {
   for (const p of plans) for (const s of p.steps) {
     const v = s.place.real;
     const o = openAt(v, s.at);
@@ -19,7 +20,7 @@ function checkOpen(plans: ReturnType<typeof APP.makePlans>) {
 describe('Creează plan', () => {
   it('toată seara din Buftea, la 20:00, 4 persoane, 30–120 lei: 3 planuri, toate deschise', () => {
     APP.savePrefs({ zone: 'buftea', dist: '20', moves: ['walk', 'car'], here: undefined } as never);
-    const plans = APP.makePlans({ mode: 'seara', at: at(0, 20), people: 4, budget: [30, 120], vibes: ['Mâncare bună', 'Party'] });
+    const plans = APP.makePlans({ mode: 'seara', at: at(0, 20), people: 4, budget: [30, 120], vibes: ['Mâncare bună', 'Party'] }).plans;
     expect(plans.length).toBe(3);
     checkOpen(plans);
     for (const p of plans) {
@@ -32,7 +33,7 @@ describe('Creează plan', () => {
   it('un pas nu trece de ora de închidere a localului', () => {
     APP.savePrefs({ zone: 'buftea' } as never);
     for (const h of [19, 20, 21, 22]) {
-      const plans = APP.makePlans({ mode: 'seara', at: at(0, h), people: 4, budget: [0, 300], vibes: [] });
+      const plans = APP.makePlans({ mode: 'seara', at: at(0, h), people: 4, budget: [0, 300], vibes: [] }).plans;
       for (const p of plans) for (const s of p.steps) {
         const c = closesAt(s.place.real, s.at);
         if (!c) continue;
@@ -45,7 +46,7 @@ describe('Creează plan', () => {
 
   it('„pentru diseară” nu dă o cafenea care se închide la 17:00 (bug Trofic)', () => {
     APP.savePrefs({ zone: 'centru' } as never);
-    const plans = APP.makePlans({ mode: 'loc', at: at(0, 20), people: 4, budget: [30, 120], vibes: ['Mâncare bună', 'Party'] });
+    const plans = APP.makePlans({ mode: 'loc', at: at(0, 20), people: 4, budget: [30, 120], vibes: ['Mâncare bună', 'Party'] }).plans;
     expect(plans.length).toBe(3);
     checkOpen(plans);
   });
@@ -53,7 +54,7 @@ describe('Creează plan', () => {
   it('orice zi a săptămânii: planul e chiar în ziua aleasă', () => {
     APP.savePrefs({ zone: 's2' } as never);
     const when = at(4, 19, 30);
-    const plans = APP.makePlans({ mode: 'seara', at: when, people: 2, budget: [0, 300], vibes: ['Cultură'] });
+    const plans = APP.makePlans({ mode: 'seara', at: when, people: 2, budget: [0, 300], vibes: ['Cultură'] }).plans;
     expect(plans.length).toBeGreaterThan(0);
     for (const p of plans) expect(new Date(p.steps[0].at).toDateString()).toBe(when.toDateString());
     checkOpen(plans);
@@ -61,7 +62,7 @@ describe('Creează plan', () => {
 
   it('un singur loc: 3 locuri diferite, „Altceva” chiar e alt fel de ieșire', () => {
     APP.savePrefs({ zone: 's1' } as never);
-    const plans = APP.makePlans({ mode: 'loc', at: at(1, 20), people: 2, budget: [0, 300], vibes: [] });
+    const plans = APP.makePlans({ mode: 'loc', at: at(1, 20), people: 2, budget: [0, 300], vibes: [] }).plans;
     expect(plans.map((p) => p.steps.length)).toEqual([1, 1, 1]);
     expect(new Set(plans.map((p) => p.steps[0].place.id)).size).toBe(3);
     expect(plans[1].steps[0].place.real.cat === plans[0].steps[0].place.real.cat && plans[1].title === 'Altceva').toBe(false);
@@ -69,7 +70,7 @@ describe('Creează plan', () => {
 
   it('sfatul „Cu X în loc de Y” chiar iese mai ieftin', () => {
     APP.savePrefs({ zone: 'buftea' } as never);
-    const plans = APP.makePlans({ mode: 'seara', at: at(0, 20), people: 4, budget: [30, 120], vibes: ['Mâncare bună', 'Party'] });
+    const plans = APP.makePlans({ mode: 'seara', at: at(0, 20), people: 4, budget: [30, 120], vibes: ['Mâncare bună', 'Party'] }).plans;
     const i = plans.findIndex((p) => p.tip);
     if (i < 0) return;
     const before = plans[i].price;
@@ -80,7 +81,7 @@ describe('Creează plan', () => {
 
   it('„Alt bar” dă alt loc de același fel, deschis', () => {
     APP.savePrefs({ zone: 'centru' } as never);
-    const plans = APP.makePlans({ mode: 'seara', at: at(1, 20), people: 4, budget: [0, 300], vibes: ['Party'] });
+    const plans = APP.makePlans({ mode: 'seara', at: at(1, 20), people: 4, budget: [0, 300], vibes: ['Party'] }).plans;
     const p = plans.find((x) => x.steps.length > 1)!;
     const i = plans.indexOf(p);
     const old = p.steps[1].place;
@@ -92,11 +93,13 @@ describe('Creează plan', () => {
   });
 
   it('Spune-i lui Bilu: „cu terasă, după 22, mai aproape și ieftin”', () => {
-    const r = APP.refine('cu terasa, dupa 22, mai aproape si ieftin', { mode: 'seara', at: at(0, 20), people: 4, budget: [30, 120], vibes: [] });
+    const now = at(0, 15);
+    const r = APP.refine('cu terasa, dupa 22, mai aproape si ieftin', { mode: 'seara', at: at(0, 20), people: 4, budget: [30, 120], vibes: [] }, { evening: isoDay(now), hour: '20:00' }, now);
     expect(r.ask.outdoor).toBe(true);
     expect(r.ask.near).toBe(true);
     expect(r.ask.budget[1]).toBeLessThanOrEqual(50);
     expect(new Date(r.ask.at).getHours()).toBe(22);
+    expect(r.slot.hour).toBe('22:00');
     expect(r.chips).toEqual(expect.arrayContaining(['Cu terasă', 'Aproape']));
   });
 

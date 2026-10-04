@@ -6,7 +6,8 @@ import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, parseQue
 import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
 import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
 import { evenings, type TemplateId } from '../engine/evening';
-import { altStep, makePlans, planForPlace, previewNames, suggest, swapStep, type MadePlan, type PlanReq } from '../engine/planner';
+import { altStep, makePlans, planForPlace, previewNames, suggest, swapStep, vibeCounts, type MadePlan, type PlanReq, type PlanSet } from '../engine/planner';
+import { addDays, dayFromIso, eveningOf, isoDay, momentOf, whenWords } from '../engine/time';
 
 const VENUES = venuesJson as Venue[];
 // places that left the map (closed): never recommended, but old plans and stamps still find them
@@ -102,10 +103,12 @@ function toPlace(v: Venue, origin: { lat: number; lon: number }) {
 }
 type Place = ReturnType<typeof toPlace>;
 
-/** What the "Creează plan" steps ask (decision Cornel, 04.10). */
+/** What the "Creează plan" steps ask (decision Cornel, 04.10). `at`: when you meet at the first place; with `now`
+ * ("Acum"), when you set off — each place is then reached after the way there. */
 export interface PlanAsk {
   mode: 'loc' | 'seara';
   at: Date;
+  now?: boolean;
   people: number;
   budget: [number, number];       // lei per person, for the whole outing; max Infinity = any
   vibes: string[];
@@ -218,7 +221,19 @@ export const APP = {
   byId(id: string) { return this.byIdMap.get(id); },
   ctx(): Ctx {
     const likes = this.prefs.likes.flatMap((l) => VIBE_LIKES[l] ?? [l]);
-    return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: [], minor: this.isMinor(), liked: this.prefs.liked, disliked: this.prefs.disliked, weather: this.weather };
+    return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: this.history(), minor: this.isMinor(), liked: this.prefs.liked, disliked: this.prefs.disliked, weather: this.weather };
+  },
+  histMemo: null as string[] | null,
+  /** The places already planned or stamped: "N-ai mai fost" counts, and a surprise is somewhere new. */
+  history(): string[] {
+    if (this.histMemo) return this.histMemo;
+    let saved: { plans?: { placeId?: string }[]; stamps?: { id?: string }[] } = {};
+    try { saved = JSON.parse(localStorage.getItem(SKEY) || '{}'); } catch { saved = {}; }
+    const ids = new Set<string>();
+    for (const p of Array.isArray(saved.plans) ? saved.plans : []) if (p?.placeId) ids.add(p.placeId);
+    for (const st of Array.isArray(saved.stamps) ? saved.stamps : []) if (st?.id) ids.add(st.id);
+    this.histMemo = [...ids];
+    return this.histMemo;
   },
   /** The main board's state that must survive closing the app (and, once signed in, reinstalling it). */
   loadBoardState(now = Date.now()): Record<string, unknown> {
@@ -244,6 +259,7 @@ export const APP = {
     if (st.plus === 'trial' && !prev.plusStart) next.plusStart = now;
     next.savedAt = now;
     try { localStorage.setItem(SKEY, JSON.stringify(next)); } catch { /* storage blocked */ }
+    this.histMemo = null;
     this.onSaved(next);
   },
   onSaved: (_state: Record<string, unknown>) => {},
@@ -305,9 +321,10 @@ export const APP = {
       steps: r.steps.map((s) => ({ place: toPlace(s.v, this.origin()), at: s.at, slot: hh(s.at), until: hh(s.until), walk: s.walk, why: s.why, reason: s.reasons.slice(0, 2).join(' · ') })),
     }));
   },
-  /** Free-text search, same card shape. */
-  search(q: string): Place[] {
-    const r = search(VENUES, q, this.ctx(), 30);
+  /** Free-text search, same card shape; `at`: as if it were then (the plan's moment). */
+  search(q: string, at?: Date): Place[] {
+    const ctx = this.ctx();
+    const r = search(VENUES, q, at ? { ...ctx, now: at } : ctx, 30);
     return r.results.map((s: Scored) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
   },
   searchNote(q: string) {
@@ -359,21 +376,21 @@ export const APP = {
     if (WHEN.we) WHEN.we.date = 'Sâmbătă, ' + fmt(sat);
   },
   /** The PlanAsk as the planner's request: how far comes from the sign-up answers (at least 10 km, Ilfov is wide). */
-  planReq(a: PlanAsk, wider = false): PlanReq {
+  planReq(a: PlanAsk): PlanReq {
     const moves = (this.prefs.moves as string[] | undefined) ?? ['walk', 'car'];
     const walkKm = moves.includes('walk') || moves.length === 0 ? 1.2 : 3;
-    const maxKm = wider ? 25 : Math.max(10, this.kmFor(this.prefs.dist || '20'));
-    return { mode: a.mode, at: a.at, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near };
+    const maxKm = Math.max(10, this.kmFor(this.prefs.dist || '20'));
+    return { mode: a.mode, at: a.at, now: a.now, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near };
   },
   lastPlans: [] as MadePlan[],
   lastReq: null as PlanReq | null,
-  /** Three plans ready to go; when the zone is thin, Bilu looks further (25 km) before giving fewer. */
-  makePlans(a: PlanAsk) {
-    let req = this.planReq(a);
-    let plans = makePlans(VENUES, req, this.ctx());
-    if (plans.length < 3 && !a.near) { const wide = this.planReq(a, true); const more = makePlans(VENUES, wide, this.ctx()); if (more.length > plans.length) { plans = more; req = wide; } }
-    this.lastPlans = plans; this.lastReq = req; this.altSeen.clear();
-    return plans.map((p) => this.showPlan(p));
+  /** Three plans ready to go, with Bilu's note on what he had to change (further away, over the budget…) or why there
+   * is nothing. `avoid`: places to leave out ("Altă surpriză" after the three shown). */
+  makePlans(a: PlanAsk, avoid: string[] = []) {
+    const ctx = this.ctx();
+    const set: PlanSet = makePlans(VENUES, this.planReq(a), avoid.length ? { ...ctx, history: [...ctx.history, ...avoid] } : ctx);
+    this.lastPlans = set.plans; this.lastReq = set.req; this.altSeen.clear();
+    return { plans: set.plans.map((p) => this.showPlan(p)), note: set.note, empty: set.empty, relaxed: set.relaxed };
   },
   /** One place as the only plan (a suggestion on Acasă): returns its index in lastPlans. */
   planForPlace(id: string, a: PlanAsk) {
@@ -387,7 +404,7 @@ export const APP = {
   altPlan(i: number, step: number) {
     const p = this.lastPlans[i];
     if (!p || !this.lastReq) return null;
-    this.altSeen.add(p.steps[step].v.id);
+    for (const s of this.lastPlans.flatMap((x) => x.steps)) this.altSeen.add(s.v.id); // not a place of another plan either
     const v = altStep(p, step, VENUES, this.lastReq, this.ctx(), this.altSeen);
     if (!v) return null;
     this.lastPlans[i] = swapStep(p, step, v, this.lastReq, this.ctx());
@@ -395,6 +412,8 @@ export const APP = {
   },
   /** The first names that fit so far (under each question). */
   preview(a: PlanAsk) { return previewNames(VENUES, this.planReq(a), this.ctx()); },
+  /** How many places fit each vibe at that moment ("Ai chef de…"). */
+  vibeCounts(a: PlanAsk) { return vibeCounts(VENUES, this.planReq(a), this.ctx()); },
   /** Puts another place in one step of the last plans (the tip "Cu X în loc de Y"). */
   swapPlan(i: number, step: number, id: string) {
     const p = this.lastPlans[i]; const v = BY_ID.get(id);
@@ -405,29 +424,35 @@ export const APP = {
   showPlan(p: MadePlan) {
     const o = this.origin();
     return {
-      id: p.id, title: p.title, sub: p.sub, price: p.price, over: p.over, drive: p.drive, checks: p.checks,
+      id: p.id, title: p.title, sub: p.sub, price: p.price, over: p.over, drive: p.drive, checks: p.checks, family: p.family, fits: p.fits, note: p.note,
       tip: p.tip ? { text: p.tip.text, step: p.tip.step, id: p.tip.v.id } : undefined,
       from: hhmm(p.steps[0].at), to: hhmm(p.steps[p.steps.length - 1].until),
-      steps: p.steps.map((s) => ({ place: this.byIdMap.get(s.v.id) ?? toPlace(s.v, o), at: s.at, slot: hhmm(s.at), until: hhmm(s.until), travel: s.travel, why: s.why, open: s.open.label, reason: s.reasons.slice(0, 2).join(' · ') })),
+      steps: p.steps.map((s) => ({ place: this.byIdMap.get(s.v.id) ?? toPlace(s.v, o), at: s.at, slot: hhmm(s.at), until: hhmm(s.until), travel: s.travel, by: s.by, sure: s.sure, why: s.why, open: s.open.label, reason: s.reasons.slice(0, 2).join(' · ') })),
     };
   },
-  /** "Bilu îți sugerează": ideas for tonight (or now, by day) from the sign-up answers, the weather and the zone. */
+  /** When "Bilu îți sugerează" looks: tonight at 20:00 in the late afternoon (dinner is what people plan then), else
+   * now — by day a coffee or a park, by night what is still open. */
+  ideasAt(now = new Date()): { at: Date; now: boolean } {
+    const h = now.getHours();
+    if (h >= 16 && h < 19) { const at = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 0); return { at, now: false }; }
+    return { at: new Date(now.getTime() + 5 * 60e3), now: true };
+  },
+  /** "Bilu îți sugerează": ideas from the sign-up answers, the weather and the zone, open when you would get there. */
   suggestions() {
     const d = this.homeDefaults();
-    const now = new Date();
-    const at = new Date(now.getTime());
-    if (now.getHours() >= 5 && now.getHours() < 19) at.setHours(Math.max(now.getHours() + 1, 20), 0, 0, 0); else at.setMinutes(Math.ceil(now.getMinutes() / 15) * 15, 0, 0);
+    const when = this.ideasAt();
     const people = d.who === '1' ? 1 : d.who === '2' ? 2 : 4;
-    const req = this.planReq({ mode: 'loc', at, people, budget: [0, budgetRange(d.budget).max], vibes: d.vibes });
-    return suggest(VENUES, req, this.ctx()).map((s) => ({ place: this.byIdMap.get(s.v.id)!, tag: s.tag, line: s.line, at: s.at })).filter((s) => s.place);
+    const req = this.planReq({ mode: 'loc', at: when.at, now: when.now, people, budget: [0, budgetRange(d.budget).max], vibes: d.vibes });
+    return suggest(VENUES, req, this.ctx()).map((s) => ({ place: this.byIdMap.get(s.v.id)!, tag: s.tag, line: s.line, at: s.at, now: when.now })).filter((s) => s.place);
   },
   /** The weather on a day at an hour, for the "Când ieșiți?" cards; null if there is no forecast that far. */
   dayWeather(at: Date) {
     const w = wxAt(this.weather, at);
     return w ? { temp: w.temp, text: w.text, icon: w.icon, wet: w.wet, nice: w.nice } : null;
   },
-  /** "Spune-i lui Bilu": what the words change in the plan, and the chips that say so. */
-  refine(text: string, a: PlanAsk): { ask: PlanAsk; chips: string[] } {
+  /** "Spune-i lui Bilu": what the words change in the plan, and the chips that say so. `slot` is the plan's evening
+   * (yyyy-mm-dd) and hour ("acum" or "21:00"); the words may move it ("mâine la 9", "după 22", "acum"). */
+  refine(text: string, a: PlanAsk, slot: { evening: string; hour: string }, now = new Date()): { ask: PlanAsk; chips: string[]; slot: { evening: string; hour: string } } {
     const p = parseQuery(text);
     const next: PlanAsk = { ...a, budget: [...a.budget] as [number, number], vibes: [...a.vibes] };
     const chips: string[] = [];
@@ -435,15 +460,31 @@ export const APP = {
     if (p.needs.length) { next.needs = [...new Set([...(a.needs ?? []), ...p.needs])]; chips.push(...p.needs.map((n) => ({ wifi: 'Wifi', nosmoke: 'Fără fum', smoke: 'Se poate fuma', wheel: 'Scaun cu rotile', ac: 'Aer condiționat' })[n])); }
     if (p.near) { next.near = true; chips.push('Aproape'); }
     if (p.budget !== undefined || p.cheap) { const max = p.budget ?? (a.budget[1] === 0 ? 0 : Math.max(30, Math.round(a.budget[1] === Infinity ? 60 : a.budget[1] * 0.6))); next.budget = [p.budgetMin ?? 0, max]; chips.push('Până în ' + max + ' lei'); }
-    if (p.time?.hour !== undefined) {
-      const at = new Date(a.at.getTime()); at.setHours(p.time.hour, p.time.min ?? 0, 0, 0);
-      if (p.time.hour < 5 && a.at.getHours() >= 5) at.setDate(at.getDate() + 1);
-      next.at = at; chips.push((p.time.after ? 'De la ' : 'La ') + hhmm(at));
+    let { evening, hour } = slot;
+    const t = p.time;
+    if (t?.now) { evening = eveningOf(now); hour = 'acum'; chips.push('Acum'); }
+    else if (t && (t.day !== undefined || t.hour !== undefined)) {
+      const today = isoDay(now);
+      if (t.day === -1) evening = eveningOf(now);
+      else if (t.day === -2) evening = addDays(today, 1);
+      else if (t.day === -3) evening = addDays(today, 2);
+      else if (t.day !== undefined && t.day >= 0) evening = addDays(today, (t.day - dayFromIso(today).getDay() + 7) % 7);
+      if (t.hour !== undefined) hour = String(t.hour).padStart(2, '0') + ':' + String(t.min ?? 0).padStart(2, '0');
+      else if (hour === 'acum') hour = '20:00'; // a day without an hour: the evening
+      // an hour already gone today: now, if it was a little while ago; else the next evening
+      const m = momentOf(evening, hour);
+      if (m.getTime() < now.getTime() - 10 * 60e3) {
+        if (t.day === undefined && now.getTime() - m.getTime() < 3 * 3600e3) { evening = eveningOf(now); hour = 'acum'; }
+        else if (t.day === undefined || t.day === -1) evening = addDays(evening, 1);
+      }
+      chips.push(hour === 'acum' ? 'Acum' : (t.after ? 'De la ' : '') + whenWords(evening, hour, now));
     }
+    next.now = hour === 'acum';
+    next.at = hour === 'acum' ? new Date(now.getTime() + 5 * 60e3) : momentOf(evening, hour);
     if (p.people) { next.people = p.people; chips.push(p.people + (p.people === 1 ? ' persoană' : ' persoane')); }
     const vibes = p.vibes.filter((v) => !next.vibes.includes(v));
     if (vibes.length) { next.vibes.push(...vibes); chips.push(...vibes); }
-    return { ask: next, chips };
+    return { ask: next, chips, slot: { evening, hour } };
   },
   count: VENUES.length,
   todayText() {

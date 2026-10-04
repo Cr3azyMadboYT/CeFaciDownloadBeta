@@ -19,6 +19,7 @@ const ZONES = JSON.parse(fs.readFileSync(new URL('../src/data/zones.json', impor
 const km = (a, b) => { const r = Math.PI / 180, dl = (b.lat - a.lat) * r, dn = (b.lon - a.lon) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dn / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); };
 
 const clean = (s) => (s ?? '').replace(/\s+/g, ' ').trim();
+const AIRPORT = { lat: 44.5711, lon: 26.085 }; // Henri Coandă, the terminal
 const BAD_NAME = /^(bar|restaurant|cafenea|cafe|pub|fast ?food|terasa|bistro|test|parc|park|scuar|teren(ul|uri)?( de)?( \S+){0,2}|baz[aă] sportiv[aă]|piscin[aă]|bazin(ul)?( de)? [iî]not|\?|-)$/i;
 // size of a mapped area (km, corner to corner), from Overpass "out bb"
 const spanKm = (b) => (b ? km({ lat: b.minlat, lon: b.minlon }, { lat: b.maxlat, lon: b.maxlon }) : 0);
@@ -58,6 +59,8 @@ for (const e of els) {
   const zone = ZONES.reduce((b, z) => (km(p, z) < km(p, b) ? z : b), ZONES[0]);
   if (km(p, zone) > 11) { skipped.outside = (skipped.outside || 0) + 1; continue; } // bounding box spills into neighbouring counties
   if (kind.cityOnlyIfSight && zone.area === 'București') { skipped.kind++; continue; }
+  // the cafés and bars inside Otopeni airport (open 24/7, most of them after security) are not a night out
+  if (km(p, AIRPORT) < 0.8) { skipped.airport = (skipped.airport || 0) + 1; continue; }
   const cuisines = (t.cuisine ?? '').split(/[;,]/).map((c) => c.trim().toLowerCase()).filter(Boolean).slice(0, 4);
   const street = clean([t['addr:street'], t['addr:housenumber']].filter(Boolean).join(' '));
   const v = { id: e.type[0] + e.id, name, cat, kind: kind.label, k: key, cuisines, lat: p.lat, lon: p.lon, zone: zone.id };

@@ -4,7 +4,7 @@ import { useSyncExternalStore } from 'react';
 import type { PlanAsk } from '../../../src/app/bridge';
 import { APP } from './session';
 
-export type Shown = ReturnType<typeof APP.makePlans>[number];
+export type Shown = ReturnType<typeof APP.makePlans>['plans'][number];
 /** The answers as the screens hold them: a day (0 = today) and an hour ("acum" or "20:00"). */
 export interface Draft { mode: 'loc' | 'seara'; day: number; hour: string; people: number; budget: [number, number]; vibes: string[]; crewId?: string; extra?: Pick<PlanAsk, 'outdoor' | 'needs' | 'near'> }
 
@@ -48,7 +48,7 @@ export const getPlans = () => s;
 /** Makes the three plans for the draft and keeps them for the screens that follow. */
 export function runPlans(d: Draft, chips: string[] = []) {
   saveLast(d);
-  s = { draft: d, plans: APP.makePlans(askOf(d)), chips };
+  s = { draft: d, plans: APP.makePlans(askOf(d)).plans, chips };
   emit();
   return s.plans;
 }

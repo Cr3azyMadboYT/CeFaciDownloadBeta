@@ -3,6 +3,7 @@ import { CUISINES, KINDS, NAME_ALIASES, NUMBERS, PLACES, STOP, TOPICS, VIBES, ZO
 import type { Place } from './catalog';
 import { exposure, wxAt, wxScore } from './weather';
 import type { Ask, Cat, Ctx, OpenInfo, Scored, Venue, Vibe, When, Who } from './types';
+import { isDark, sunOf } from './time';
 
 // ---------- text ----------
 export const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[șş]/g, 's').replace(/[țţ]/g, 't').toLowerCase();
@@ -111,6 +112,8 @@ export function closesAt(v: Venue, t: Date): Date | null {
 export function targetTime(when: When, night: number, now: Date): Date {
   const t = new Date(now.getTime());
   if (when === 'acum') return t;
+  // after midnight "diseară" is the night still going (decision Cornel, 04.10): now, not the next evening
+  if (when === 'diseara' && now.getHours() < 5) return t;
   const hour = night === 0 ? 15 : night === 1 ? 20 : 23;
   const min = night === 2 ? 30 : 0;
   if (when === 'maine') t.setDate(t.getDate() + 1);
@@ -120,11 +123,105 @@ export function targetTime(when: When, night: number, now: Date): Date {
   return t;
 }
 
+// ---------- will it be open when you get there? ----------
+// Half of the places have their hours on the map. For the others the engine does not guess "open": it learns from the
+// places of the same kind that do have hours (at 22:00 on a Friday only half of the restaurants are still open, at
+// 20:00 half of the cafés are closed) and keeps a place only when most of its kind would be open (decision Cornel,
+// 04.10: after 20:00 no closed restaurants, no cafés at midnight). Parks, palaces and lakes need daylight.
+
+/** Kinds that are only a plan by daylight, whatever their hours say (a park "open 24/7" at 23:00 is dark). */
+export const DAYLIGHT_KINDS = new Set(['park', 'nature_reserve', 'botanical_garden', 'beach_resort', 'zoo', 'golf_course', 'horse_riding', 'theme_park', 'castle', 'palace', 'manor', 'monastery', 'paintball', 'water_park', 'miniature_golf']);
+/** For kinds with too few places with hours on the map: when they are usually open [from, to) — hours, after midnight > 24. */
+const USUAL: Record<string, [number, number]> = {
+  arts_centre: [10, 21], biergarten: [12, 24], horse_riding: [9, 18], golf_course: [8, 19], theme_park: [10, 20], paintball: [10, 18],
+  planetarium: [10, 18], aquarium: [10, 19], water_park: [10, 19], trampoline_park: [10, 21], karting: [10, 22], billiards: [12, 26],
+  bowling_alley: [12, 25], ice_rink: [10, 22], padel: [8, 23], squash: [8, 22], climbing: [10, 22], escape_game: [10, 23],
+  swimming: [7, 21], tennis: [8, 22], soccer: [9, 23],
+  amusement_arcade: [10, 23], castle: [9, 18], palace: [9, 18], manor: [9, 18], monastery: [8, 19], zoo: [9, 18], nature_reserve: [7, 20],
+};
+const NIGHT_USUAL: [number, number][] = [[9, 19], [11, 23], [22, 29]]; // by KINDS.night: day things, evening things, night things
+let learnedFrom: Venue[] | null = null;
+const shareOf = new Map<string, Float32Array>(); // kind (or 'cat:' + category) → share open per weekday × hour
+
+/** Learns from the places with hours on the map how many of each kind are open at each hour of each weekday. */
+export function learnHours(all: Venue[]) {
+  if (learnedFrom === all) return;
+  learnedFrom = all;
+  shareOf.clear();
+  const acc = new Map<string, { n: number; open: Uint16Array }>();
+  for (const v of all) {
+    if (!v.wk) continue;
+    for (const key of [v.k, 'cat:' + v.cat]) {
+      let a = acc.get(key);
+      if (!a) { a = { n: 0, open: new Uint16Array(168) }; acc.set(key, a); }
+      a.n++;
+      for (let d = 0; d < 7; d++) for (let h = 0; h < 24; h++) { const m = h * 60 + 30; if (v.wk[d].some(([x, y]) => x <= m && m < y)) a.open[d * 24 + h]++; }
+    }
+  }
+  for (const [key, a] of acc) if (a.n >= 6) shareOf.set(key, Float32Array.from(a.open, (x) => x / a.n));
+}
+
+/** How likely the place is open at `t`: 1 or 0 when its hours are on the map, else what its kind usually does. */
+export function openChance(v: Venue, t: Date): number {
+  if (DAYLIGHT_KINDS.has(v.k) && isDark(t)) return 0;
+  if (v.wk || v.hours) { const o = openAt(v, t); if (o.known) return o.open ? 1 : 0; }
+  const h = t.getHours() + t.getMinutes() / 60;
+  // a theatre is a show: it starts in the early evening (or a weekend matinee)
+  if (v.k === 'theatre') return h >= 17.5 && h <= 20.25 ? 0.8 : (t.getDay() === 0 || t.getDay() === 6) && h >= 11 && h <= 12.5 ? 0.5 : 0.05;
+  // a club without hours on the map is a night out: before 21:30 nobody goes dancing (some on the map open as a bar)
+  if (v.k === 'nightclub' && h >= 5 && h < 21.5) return 0.3;
+  const slot = t.getDay() * 24 + t.getHours();
+  const kind = shareOf.get(v.k);
+  if (kind) return kind[slot];
+  const usual = USUAL[v.k];
+  const nh = h + (h < 5 ? 24 : 0);
+  if (usual) return nh >= usual[0] && nh < usual[1] ? 0.75 : 0.05;
+  const cat = shareOf.get('cat:' + v.cat);
+  if (cat) return cat[slot];
+  const [a, b] = NIGHT_USUAL[info(v).night] ?? NIGHT_USUAL[1];
+  return nh >= a && nh < b ? 0.7 : 0.05;
+}
+
+/** Sure enough to send people there: open (or very likely open) when you arrive. */
+export const LIKELY = 0.6;
+
+/** Whether a place works from `at` for about `minutes`: open when you arrive and still open a good while (most of the
+ * time you planned, at least 45 minutes); `until` is when you leave (earlier if it closes), `sure` when its hours are known. */
+export function stayAt(v: Venue, at: Date, minutes: number): { ok: boolean; until: Date; sure: boolean; chance: number; closes: Date | null } {
+  const end = new Date(at.getTime() + minutes * 60e3);
+  const no = { ok: false, until: at, sure: false, chance: 0, closes: null };
+  const first = openChance(v, at);
+  if (first < LIKELY) return no;
+  let until = end;
+  let closes: Date | null = null;
+  // a park is open by day, hours on the map or not
+  const sure = (first === 1 && !!(v.wk || v.hours)) || ((v.k === 'park' || v.k === 'nature_reserve') && !isDark(at));
+  if (sure) {
+    closes = closesAt(v, at);
+    if (closes && closes.getTime() < until.getTime()) until = closes;
+  } else if (v.k !== 'theatre') {
+    // not on the map: the place must still be likely open around the middle of the stay (a theatre is a show: once it
+    // starts, it goes on to the end)
+    const mid = openChance(v, new Date(at.getTime() + minutes * 0.6 * 60e3));
+    if (mid < LIKELY - 0.1) return no;
+  }
+  // a park or a palace: back before it gets dark (20 minutes after sunset)
+  if (DAYLIGHT_KINDS.has(v.k)) {
+    const dark = new Date(at.getFullYear(), at.getMonth(), at.getDate(), 0, sunOf(at)[1] + 20, 0, 0);
+    if (dark.getTime() > at.getTime() && dark.getTime() < until.getTime()) until = dark;
+  }
+  const stay = (until.getTime() - at.getTime()) / 60e3;
+  return { ok: stay >= Math.min(45, minutes), until, sure, chance: first, closes };
+}
+
 /** A daytime place (park, museum, court) with no hours on the map is not offered late at night: it is likely closed or dark. */
 export const dayOnly = (v: Venue, t: Date) => !v.wk && !v.hours && info(v).night === 0 && (t.getHours() >= 22 || t.getHours() < 7);
 
 // ---------- scoring ----------
 export const WHO_N: Record<Who, number> = { '1': 1, '2': 2, '34': 4, '5': 6 };
+/** Places a big group still fits in, with a call ahead (15 at a restaurant, a club, a cinema); a court or an escape
+ * room has a real limit of people. */
+const ROOMY = new Set(['restaurant', 'fast_food', 'cafe', 'ice_cream', 'bar', 'pub', 'biergarten', 'nightclub', 'cinema', 'theatre', 'arts_centre', 'museum', 'gallery', 'bowling_alley', 'amusement_arcade', 'trampoline_park', 'ice_rink', 'karting', 'billiards', 'park', 'nature_reserve', 'botanical_garden', 'beach_resort', 'zoo', 'aquarium', 'water_park', 'theme_park', 'castle', 'palace', 'manor', 'monastery', 'planetarium', 'miniature_golf']);
 
 /**
  * score = 35 gust + 20 ocazie + 15 calitate + 10 aproape + 10 nou + 10 gașcă
@@ -146,12 +243,13 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const price = priceOf(v);
   if (price > ask.budget) return null;
   if (ask.budgetMin && price < ask.budgetMin) return null;
-  const n = WHO_N[ask.who];
-  if (n > k.max) return null;
+  const n = ask.people ?? WHO_N[ask.who];
+  if (n > k.max && !ROOMY.has(v.k)) return null;
   const t = ask.at ?? targetTime(ask.when, k.night, ctx.now);
-  if (dayOnly(v, t)) return null;
+  // open when you get there, or very likely so (its kind at that hour); parks and palaces only by daylight
+  const chance = openChance(v, t);
+  if (chance < LIKELY) return null;
   const open = openAt(v, t);
-  if (open.known && !open.open) return null;
 
   const vibes = vibesOf(v);
   const likes = ctx.prefs.likes;
@@ -162,7 +260,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
 
   const hourNow = t.getHours() + (t.getHours() < 5 ? 24 : 0);
   const nightFit = k.night === 0 ? (hourNow <= 19 ? 1 : 0.3) : k.night === 2 ? (hourNow >= 22 ? 1 : 0.35) : (hourNow >= 17 ? 1 : 0.6);
-  const ocazie = 20 * (0.55 * nightFit + 0.45 * (open.known ? 1 : 0.6));
+  const ocazie = 20 * (0.55 * nightFit + 0.45 * (open.known ? 1 : chance * 0.75));
 
   const complete = Math.min(1, [v.hours, v.website || v.phone, v.street, v.famous].filter(Boolean).length / 3);
   const calitate = 15 * (0.4 + 0.6 * complete) * (v.brand ? 0.7 : 1) * (v.fast ? 0.75 : 1);
@@ -194,6 +292,7 @@ const kindKeyOf = (v: Venue) => v.k;
 
 /** Three different ideas, not three pizzerias: the best, then the best of other categories. */
 export function recommend(all: Venue[], ask: Ask, ctx: Ctx, page = 0, per = 3): { picks: Scored[]; total: number } {
+  learnHours(all);
   const ranked = all.map((v) => scoreVenue(v, ask, ctx)).filter((x): x is Scored => !!x).sort((a, b) => b.score - a.score);
   const ordered: Scored[] = [];
   const pool = ranked.slice();

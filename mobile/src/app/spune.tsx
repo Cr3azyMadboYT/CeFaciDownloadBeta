@@ -18,7 +18,7 @@ export default function Spune() {
   const { draft } = usePlans();
   const [q, setQ] = useState(params.q ?? '');
   const [text, setText] = useState(params.q ?? '');
-  const r = useMemo(() => (draft && text.trim().length > 1 ? APP.refine(text, askOf(draft)) : null), [text, draft]);
+  const r = useMemo(() => (draft && text.trim().length > 1 ? APP.refine(text, askOf(draft), { evening: new Date().toISOString().slice(0, 10), hour: draft.hour }) : null), [text, draft]);
   const found = useMemo(() => (text.trim().length > 1 ? APP.search(text).slice(0, 4) : []), [text]);
   if (!draft) return <Redirect href="/acasa" />;
   const back = () => (router.canGoBack() ? router.back() : router.replace('/planuri-gata'));
