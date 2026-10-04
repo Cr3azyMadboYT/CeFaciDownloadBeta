@@ -7,6 +7,7 @@ import { Bilu } from '../../ui/Bilu';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
+import { TopShade } from '../../ui/TopShade';
 
 const PERKS: [string, string, string][] = [
   ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reducere de 10–20% la partenerii CeFaci', 'De fiecare dată când ieși, nu doar la Live Drops.'],
@@ -80,6 +81,7 @@ export default function Plus() {
         </View>
       ) : null}
 
+      <TopShade />
     </View>
   );
 }

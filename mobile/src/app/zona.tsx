@@ -8,6 +8,7 @@ import { toast } from '../lib/toast';
 import { Icon } from '../ui/Icon';
 import { Chip, H1, Lbl, Muted, Press, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
+import { TopShade } from '../ui/TopShade';
 
 export default function Zona() {
   const { t } = useTheme();
@@ -17,7 +18,8 @@ export default function Zona() {
   const here = APP.hasHere();
   const back = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: Math.max(ins.bottom, 12) + 24, gap: 14 }}>
+    <View style={{ flex: 1, backgroundColor: t.bg }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: Math.max(ins.bottom, 12) + 24, gap: 14 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
         <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
       </View>
@@ -40,5 +42,7 @@ export default function Zona() {
         </View>
       ))}
     </ScrollView>
+    <TopShade />
+    </View>
   );
 }

@@ -11,6 +11,7 @@ import { Dashed } from '../../ui/Dashed';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Lbl, Muted, Press, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
+import { TopShade } from '../../ui/TopShade';
 
 
 export default function Planuri() {
@@ -22,7 +23,8 @@ export default function Planuri() {
   const [crews, setCrews] = useState<Crew[] | null>(null);
   useFocusEffect(useCallback(() => { if (who && known) void listCrews(who.id).then(setCrews); else setCrews(null); }, [who, known]));
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
+    <View style={{ flex: 1, backgroundColor: t.bg }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
       <View style={{ height: 44, justifyContent: 'center' }}><H1>Planuri</H1></View>
       {plans.length ? (
         <View>
@@ -91,5 +93,7 @@ export default function Planuri() {
         </View>
       )}
     </ScrollView>
+    <TopShade />
+    </View>
   );
 }

@@ -10,6 +10,7 @@ import { Icon } from '../ui/Icon';
 import { SignIn } from '../ui/SignIn';
 import { Big, Field, H1, Lbl, Muted, Note, Press, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
+import { TopShade } from '../ui/TopShade';
 
 const COLORS = ['#8C6CFF', '#FF6A4D', '#FFD43B', '#5FD39A', '#8EA6FF', '#FF8A73'];
 const colorOf = (s: string) => COLORS[[...s].reduce((a, c) => a + c.charCodeAt(0), 0) % COLORS.length];
@@ -119,6 +120,7 @@ export default function Prieteni() {
         </View>
       )}
     </ScrollView>
+      <TopShade />
     </KeyboardAvoidingView>
   );
 }

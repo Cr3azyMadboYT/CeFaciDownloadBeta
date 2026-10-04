@@ -10,6 +10,7 @@ import { FilterSheet } from '../ui/FilterSheet';
 import { Icon } from '../ui/Icon';
 import { Big, Chip, H1, Muted, Press, Sheet, T, Tag } from '../ui/kit';
 import { F, useTheme, type Theme } from '../ui/theme';
+import { TopShade } from '../ui/TopShade';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
@@ -140,6 +141,7 @@ export default function Rezultate() {
           <Big label="Mai târziu" color={t.s2} ink={t.ink} onPress={() => setVote(false)} />
         </View>
       </Sheet>
+      <TopShade />
     </View>
   );
 }

@@ -10,6 +10,7 @@ import { toast } from '../lib/toast';
 import { Icon } from '../ui/Icon';
 import { Big, Chip, H1, Lbl, Muted, Press, Seg } from '../ui/kit';
 import { useTheme } from '../ui/theme';
+import { TopShade } from '../ui/TopShade';
 
 export default function Preferinte() {
   const { t } = useTheme();
@@ -66,6 +67,7 @@ export default function Preferinte() {
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: Math.max(ins.bottom, 12) + 14, borderTopWidth: 1, borderTopColor: t.line }}>
         <Big label={ok ? 'Salvează' : 'Alege măcar câte unul'} disabled={!ok} onPress={save} />
       </View>
+      <TopShade />
     </View>
   );
 }

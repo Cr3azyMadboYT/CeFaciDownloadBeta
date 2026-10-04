@@ -8,12 +8,15 @@ import { APP, useApp } from '../../lib/session';
 import { WHO, phaseOfHour, setFilters, summaryOf, useFilters, type Phase } from '../../lib/filters';
 import { NO_PLANS, createPlan, dayWord, sortPlans, type Plan } from '../../lib/plans';
 import { Avatar } from '../../ui/Avatar';
+import { TourTarget } from '../../ui/TourTarget';
+import { shouldStartTour, startTour } from '../../lib/tour';
 import { useLightBar } from '../../ui/bar';
 import { FilterSheet } from '../../ui/FilterSheet';
 import { Icon, I } from '../../ui/Icon';
 import { Big, H1, Muted, Press, Sheet, T } from '../../ui/kit';
 import { Sky, SKY_BG } from '../../ui/Sky';
 import { F, useTheme } from '../../ui/theme';
+import { TopShade } from '../../ui/TopShade';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -68,6 +71,8 @@ export default function Acasa() {
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
   const now = useClock();
   useLightBar();
+  // a new account gets Bilu's tour once, after Acasă has settled
+  useEffect(() => { const id = setTimeout(() => { if (shouldStartTour()) startTour(); }, 900); return () => clearTimeout(id); }, []);
   const phase = phaseOfHour(now.getHours());
   const [sheet, setSheet] = useState(false);
   const [crewOpen, setCrewOpen] = useState(false);
@@ -110,6 +115,7 @@ export default function Acasa() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 86, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
           <Sky phase={phase} />
+          <TourTarget id="pills">
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
             <Press onPress={() => router.push('/zona')} accessibilityLabel={'Zona ta: ' + APP.zoneName() + '. Schimbă zona'}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 44, marginLeft: -10, paddingLeft: 10, paddingRight: 12, borderRadius: 14 }}>
@@ -126,10 +132,12 @@ export default function Acasa() {
             <Pill icon="clock" text={clock} />
             <Pill dot text={APP.count.toLocaleString('ro-RO') + ' de locuri reale'} />
           </View>
+          </TourTarget>
           <T accessibilityRole="header" style={{ marginTop: 22, color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 48 : 62, lineHeight: (word.length > 10 ? 48 : 62) * 0.95, letterSpacing: -1.8 }}>
             {'Ce facem\n' + word}
           </T>
           <FlipWords words={FLIP[phase].flip} />
+          <TourTarget id="who">
           <T style={{ marginTop: 16, fontFamily: F.sb, fontSize: 15, color: 'rgba(255,255,255,0.85)' }}>Cine vine?</T>
           <View style={{ marginTop: 10, flexDirection: 'row', gap: 8 }}>
             {['1', '2', '34', '5'].map((k) => {
@@ -152,6 +160,7 @@ export default function Acasa() {
               <Icon name="next" size={16} color="#FFD43B" />
             </Press>
           ) : null}
+          </TourTarget>
           <Press onPress={() => setSheet(true)} style={{ marginTop: 10, minHeight: 46, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
             <T style={{ flex: 1, fontFamily: F.m, fontSize: 14, lineHeight: 18, color: 'rgba(255,255,255,0.9)' }}>{summaryOf(f)}</T>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -159,7 +168,8 @@ export default function Acasa() {
               <T style={{ fontFamily: F.b, fontSize: 14, color: '#FFD43B' }}>Filtre</T>
             </View>
           </Press>
-          <View style={{ marginTop: 12, flexDirection: 'row', gap: 8 }}>
+          <TourTarget id="cta" style={{ marginTop: 12 }}>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
             <Press onPress={() => { setFilters({}, {}); router.push('/rezultate'); }}
               style={{ flex: 1, height: 58, borderRadius: 18, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center', shadowColor: '#FFD43B', shadowOpacity: 0.25, shadowRadius: 12, shadowOffset: { width: 0, height: 10 }, elevation: 6 }}>
               <T style={{ fontFamily: F.b, fontSize: 17, color: '#0E1440' }}>{all.length ? 'Arată variante (' + all.length + ')' : 'Arată variante'}</T>
@@ -168,6 +178,7 @@ export default function Acasa() {
               <Icon name="dice" size={24} color="#FFFFFF" />
             </Press>
           </View>
+          </TourTarget>
         </View>
 
         <View style={{ paddingHorizontal: 20 }}>
@@ -222,6 +233,7 @@ export default function Acasa() {
           <Big label={'Mergem ' + WHO[f.who].text.toLowerCase() + ', fără invitații'} color={t.s2} ink={t.ink} onPress={() => setCrewOpen(false)} />
         </View>
       </Sheet>
+      <TopShade color={SKY_BG[phase]} />
     </View>
   );
 }

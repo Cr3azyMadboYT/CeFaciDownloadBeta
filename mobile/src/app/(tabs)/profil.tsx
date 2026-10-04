@@ -3,13 +3,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { pickAvatar, removeAvatar } from '../../lib/avatar';
 import { listFriends } from '../../lib/friends';
+import { startTour } from '../../lib/tour';
+import { Bilu } from '../../ui/Bilu';
 import { NO_STAMPS, type Stamp } from '../../lib/outing';
 import { startOver, useApp } from '../../lib/session';
 import { Portrait } from '../../ui/Avatar';
 import { Icon } from '../../ui/Icon';
-import { Big, H1, Muted, Note, Press, Seg, T } from '../../ui/kit';
+import { Big, H1, Muted, Note, Press, Seg, Sheet, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
+import { TopShade } from '../../ui/TopShade';
 
 const LEVELS = ['', 'Boboc', 'Scânteie', 'Radar', 'Busolă', 'Motorul găștii', 'Legenda orașului'];
 const LEVEL_XP = [0, 100, 400, 900, 1500, 2500, 4000];
@@ -26,6 +30,8 @@ export default function Profil() {
   const known = useApp((s) => s.known);
   const stamps = useApp((s) => (s.board.stamps as Stamp[] | undefined) ?? NO_STAMPS);
   const [arm, setArm] = useState(false);
+  const [photoOpen, setPhotoOpen] = useState(false);
+  const hasPhoto = useApp((s) => !!s.board.avatar);
   const [busy, setBusy] = useState<'' | 'out' | 'del'>('');
   const [err, setErr] = useState('');
   const [friends, setFriends] = useState<number | null>(null);
@@ -41,13 +47,18 @@ export default function Profil() {
   const founder = String(prefs.user || '').toLowerCase() === 'cornacidev';
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
+    <View style={{ flex: 1, backgroundColor: t.bg }}>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
       <View style={{ height: 44, justifyContent: 'center' }}><H1 style={{ fontSize: 28 }}>{'@' + (prefs.user || 'tu')}</H1></View>
       <View style={{ marginTop: 10, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 24, backgroundColor: '#2F5BFF' }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 18 }}>
-          <View style={{ width: 88, height: 108, padding: 4, borderRadius: 14, backgroundColor: '#FFFFFF', transform: [{ rotate: '-3deg' }], shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 8 }, elevation: 6, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+          <Press onPress={() => setPhotoOpen(true)} accessibilityLabel="Schimbă poza de profil"
+            style={{ width: 88, height: 108, padding: 4, borderRadius: 14, backgroundColor: '#FFFFFF', transform: [{ rotate: '-3deg' }], shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 8 }, elevation: 6, alignItems: 'center', justifyContent: 'center' }}>
             <Portrait />
-          </View>
+            <View style={{ position: 'absolute', right: -8, bottom: -8, width: 30, height: 30, borderRadius: 99, backgroundColor: '#FFD43B', borderWidth: 2, borderColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3zM12 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6" size={15} color="#0E1440" />
+            </View>
+          </Press>
           <View style={{ flex: 1 }}>
             <T style={{ fontFamily: F.b, fontSize: 17, color: '#FFFFFF' }}>{prefs.name || 'Tu'}</T>
             {founder ? (
@@ -116,6 +127,15 @@ export default function Profil() {
       </View>
       {stamps.length === 0 ? <Muted style={{ marginTop: 10 }}>Când ajungi la un local din planuri, apasă „Sunt aici” pe bilet: primești ștampila și XP, iar poza bonului îți mai aduce 25 XP.</Muted> : null}
 
+      <Press onPress={() => { router.navigate('/acasa'); setTimeout(() => startTour(true), 600); }}
+        style={{ marginTop: 16, minHeight: 60, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, paddingLeft: 8, paddingRight: 14, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
+        <Bilu size={44} mood="wink" still shadow={false} />
+        <View style={{ flex: 1, gap: 3 }}>
+          <T style={{ fontFamily: F.sb, fontSize: 15 }}>Revezi turul cu Bilu</T>
+          <Muted>Jumătate de minut, cu tot cu glume.</Muted>
+        </View>
+        <Icon name="next" size={16} color={t.ink3} />
+      </Press>
       {err ? <View style={{ marginTop: 14 }}><Note kind="err">{err}</Note></View> : null}
       <View style={{ marginTop: 20, gap: 10 }}>
         {who ? (
@@ -139,6 +159,19 @@ export default function Profil() {
         <T style={{ fontFamily: F.m, fontSize: 13, color: t.ink2, textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://www.openstreetmap.org/copyright')}>OpenStreetMap</T>
         {', licența ODbL.'}
       </Muted>
+      <Sheet open={photoOpen} onClose={() => setPhotoOpen(false)}>
+        <View style={{ gap: 10 }}>
+          <H1 style={{ fontSize: 26 }}>Poza de profil</H1>
+          <Muted style={{ fontSize: 15, lineHeight: 21 }}>O vezi în Profil, pe Acasă și pe bilete. O pătrățică, micșorată, ca să încapă oriunde.</Muted>
+          {(['camera', 'gallery'] as const).map((from) => (
+            <Big key={from} label={from === 'camera' ? 'Fă o poză' : 'Alege din galerie'} color={from === 'camera' ? t.blue : t.s2} ink={from === 'camera' ? '#FFFFFF' : t.ink}
+              onPress={async () => { setPhotoOpen(false); const e = await pickAvatar(from); if (e) setErr(e); }} />
+          ))}
+          {hasPhoto ? <Big label="Scoate poza" color={t.s1} ink={t.coralInk} style={{ borderWidth: 1, borderColor: t.line }} onPress={() => { removeAvatar(); setPhotoOpen(false); }} /> : null}
+        </View>
+      </Sheet>
     </ScrollView>
+    <TopShade />
+    </View>
   );
 }

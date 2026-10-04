@@ -10,6 +10,7 @@ import { CrewMark } from '../../ui/CrewMark';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Lbl, Muted, Note, Press, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
+import { TopShade } from '../../ui/TopShade';
 
 export default function GascaView() {
   const { t } = useTheme();
@@ -77,6 +78,7 @@ export default function GascaView() {
           </>
         )}
       </ScrollView>
+      <TopShade />
     </View>
   );
 }

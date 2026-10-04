@@ -6,6 +6,8 @@ import type { ComponentProps } from 'react';
 import { useApp } from '../../lib/session';
 import { Icon } from '../../ui/Icon';
 import { PlusNotice } from '../../ui/PlusNotice';
+import { Tour } from '../../ui/Tour';
+import { TourTarget } from '../../ui/TourTarget';
 import { Press, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 
@@ -31,7 +33,8 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         const isPlus = r.name === 'plus';
         const color = isPlus ? '#E0A800' : on ? t.blueInk : t.ink3;
         return (
-          <Press key={r.key} style={{ flex: 1, minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4, opacity: isPlus && veiled ? 0.55 : 1 }}
+          <TourTarget key={r.key} id={'tab-' + r.name} style={{ flex: 1 }}>
+          <Press style={{ flex: 1, minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4, opacity: isPlus && veiled ? 0.55 : 1 }}
             accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? 'CeFaci Plus, oprit' : 'Plus: un cadou de la Bilu') : 'CeFaci Plus') : LABEL[r.name]}
             accessibilityState={{ selected: on }}
             onPress={() => {
@@ -42,6 +45,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
             <Icon d={TAB_ICON[r.name]} color={color} />
             <T style={{ fontFamily: F.sb, fontSize: 12, color: on ? t.ink : t.ink3 }}>{LABEL[r.name]}</T>
           </Press>
+          </TourTarget>
         );
       })}
     </View>
@@ -60,6 +64,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="plus" />
     </Tabs>
     <PlusNotice />
+    <Tour />
     </>
   );
 }

@@ -11,6 +11,7 @@ import { CrewMark } from '../ui/CrewMark';
 import { Icon } from '../ui/Icon';
 import { Big, Field, H1, Lbl, Muted, Note, Press, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
+import { TopShade } from '../ui/TopShade';
 
 export default function GascaNoua() {
   const { t } = useTheme();
@@ -98,6 +99,7 @@ export default function GascaNoua() {
           <Big label={busy ? 'O clipă…' : picked.length < 2 ? 'Alege cel puțin 2 prieteni' : 'Trimite ' + picked.length + ' invitații'} disabled={busy || picked.length < 2} onPress={create} />
         </View>
       ) : null}
+      <TopShade />
     </KeyboardAvoidingView>
   );
 }

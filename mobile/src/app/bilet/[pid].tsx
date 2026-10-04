@@ -14,6 +14,7 @@ import { Dashed } from '../../ui/Dashed';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, Press, Quiet, Sheet, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
+import { TopShade } from '../../ui/TopShade';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -184,6 +185,7 @@ export default function Bilet() {
           </View>
         )}
       </Sheet>
+      <TopShade />
     </View>
   );
 }
