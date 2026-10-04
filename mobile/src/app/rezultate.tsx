@@ -2,7 +2,7 @@
 import { useDeferredValue, useMemo, useState } from 'react';
 import { ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../ui/insets';
 import { APP, useApp } from '../lib/session';
 import { WHEN, WHO, fmtDur, listFor, setFilters, setPage, setSearch, summaryOf, useFilters, type Place } from '../lib/filters';
 import { createPlan } from '../lib/plans';

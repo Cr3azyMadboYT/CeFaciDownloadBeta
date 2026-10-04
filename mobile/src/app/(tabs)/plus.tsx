@@ -1,7 +1,7 @@
 // CeFaci Plus: a closed gift from Bilu at first (7 free days, no card), then the trial, then "oprit".
 // Paying is not live yet (it goes through Google Play); nothing is charged.
 import { ScrollView, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import { setBoard, useApp } from '../../lib/session';
 import { Bilu } from '../../ui/Bilu';
 import { Icon } from '../../ui/Icon';

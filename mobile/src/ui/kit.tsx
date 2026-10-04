@@ -2,7 +2,7 @@
 import { forwardRef, type ReactNode } from 'react';
 import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View, type PressableProps, type StyleProp, type TextInputProps, type TextProps, type TextStyle, type ViewStyle } from 'react-native';
 import { useRef } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from './insets';
 import * as Haptics from 'expo-haptics';
 import { Bilu, type Mood } from './Bilu';
 import { Icon, type IconName } from './Icon';

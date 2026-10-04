@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../ui/insets';
 import { BUDGETS, DISTS, LIKES, MOODS, MOVES, WHENS, WHOS } from '../lib/answers';
 import { resetFilters } from '../lib/filters';
 import { savePrefs, useApp } from '../lib/session';

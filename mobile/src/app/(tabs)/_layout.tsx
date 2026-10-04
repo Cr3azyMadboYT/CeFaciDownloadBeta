@@ -1,7 +1,7 @@
 // The bottom bar from the design: Acasă, Explorează, Planuri, Profil, Plus (blurred while Plus is a closed gift).
 import { Tabs, router } from 'expo-router';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import type { ComponentProps } from 'react';
 import { useApp } from '../../lib/session';
 import { Icon } from '../../ui/Icon';

@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, Share, View } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../ui/insets';
 import { useApp } from '../lib/session';
 import { accept, addByCode, ask, findUser, listFriends, myCode, remove, type FriendRow, type Person } from '../lib/friends';
 import { toast } from '../lib/toast';

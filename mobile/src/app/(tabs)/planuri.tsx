@@ -2,7 +2,7 @@
 import { ScrollView, View } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
 import { router, useFocusEffect } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { NO_PLANS, dayShort, sortPlans, type Plan } from '../../lib/plans';
 import { joinWithCode, listCrews, type Crew } from '../../lib/crews';

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../ui/insets';
 import { APP, savePrefs, useApp } from '../lib/session';
 import { toast } from '../lib/toast';
 import { Icon } from '../ui/Icon';

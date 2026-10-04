@@ -17,6 +17,9 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 - Data nașterii se scrie de mână (ZZ.LL.AAAA), apoi „Sigur e data corectă?”. Sub 16 nu intră; 16–17 nu văd cluburi, narghilea, locuri 18+ (`adultOnly` în core.ts, `ctx.minor`).
 - Răspunsurile de la cont (buget, cu cine, când, chill/party, cum ajunge, „da/nu prea” la locuri) se salvează în `cefaci.prefs` și pornesc filtrele de pe Acasă (`APP.homeDefaults`).
 - Filtre: buget cu interval „de la – până la” + avertisment că prețurile sunt estimate. Patch-uri noi: `scripts/board-patches-cont.mjs`, `scripts/board-patches-budget.mjs`.
+- XP-ul e pe server (04.10): `xp_log` + RPC `xp_check_in`, `xp_welcome`; bonul +25 îl scrie funcția `citeste-bon` (`xp_bill`); `profiles.xp/stamps` nu se pot schimba din aplicație. `public.venues` se umple din workflow-ul OSM dacă există secretul `SUPABASE_SERVICE_ROLE_KEY` (altfel serverul folosește poziția trimisă de aplicație). Locurile dispărute din OSM: `src/data/gone.json` (6 luni).
+- Notificări de la prieteni: `push_tokens` + triggeri → funcția `trimite-notificare` (FCM v1, secretul Supabase `FCM_SERVICE_ACCOUNT`); în build, `google-services.json` din secretul GitHub `GOOGLE_SERVICES_JSON` (`mobile/app.config.js`). Telefonul: `mobile/src/lib/push.ts`.
+- Bara de jos: `mobile/src/ui/insets.ts` (pe unele Samsung insetul de jos vine 0).
 - Pe telefon merg pe Supabase: prieteni, gășci (cod 7 zile, carnet), votul în timp real (`mobile/src/lib/votes.ts`, `plan_from_vote`), planuri trimise cu Vin/Nu pot (`together.ts`), nivel nou (`ui/LevelUp.tsx`), Setări, amintirea pentru bon (`lib/remind.ts`, expo-notifications), semnalări (`reports`). Încă de făcut: „Invită prieteni” cu link spre magazin (după Google Play).
 
 ## Priorități

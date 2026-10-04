@@ -1,6 +1,8 @@
 // Edge Function "citeste-bon": the app sends the photo of a fiscal receipt, Google Vision reads the text,
 // and the function answers with the CUI, date, time and total. The photo is not stored.
 // Needs the secret VISION_API_KEY (Supabase → Edge Functions → Secrets). Only signed-in people can call it.
+// With `venue` and `day` (the outing's day, yyyy-mm-dd) it also writes the +25 XP on the server (xp_bill), only for a
+// receipt from that day or the next, after a check-in at that place.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { parseBon } from './bon.ts';
 
@@ -23,8 +25,8 @@ Deno.serve(async (req) => {
   const key = Deno.env.get('VISION_API_KEY');
   if (!key) return json({ error: 'Citirea bonurilor nu e pornită încă.' }, 503);
 
-  let image = '';
-  try { image = String((await req.json()).image ?? ''); } catch { /* bad body */ }
+  let image = '', venue = '', day = '';
+  try { const b = await req.json(); image = String(b.image ?? ''); venue = String(b.venue ?? '').slice(0, 40); day = /^\d{4}-\d{2}-\d{2}$/.test(String(b.day ?? '')) ? String(b.day) : ''; } catch { /* bad body */ }
   image = image.replace(/^data:image\/\w+;base64,/, '');
   if (!image || image.length > 8_000_000) return json({ error: 'Poza lipsește sau e prea mare.' }, 400);
 
@@ -38,5 +40,11 @@ Deno.serve(async (req) => {
   const text: string = data?.responses?.[0]?.fullTextAnnotation?.text ?? '';
   if (!text) return json({ error: 'Nu se vede niciun text. Fă poza mai de aproape, cu lumină.' }, 422);
 
-  return json({ bon: parseBon(text) });
+  const bon = parseBon(text);
+  if (!venue || !day || !bon.total) return json({ bon });
+  const next = new Date(Date.parse(day + 'T12:00:00Z') + 864e5).toISOString().slice(0, 10);
+  if (bon.date && bon.date !== day && bon.date !== next) return json({ bon, xp: { gain: 0, error: 'Bonul e din altă zi.' } });
+  const admin = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+  const { data: xp, error } = await admin.rpc('xp_bill', { p_user: user.id, p_venue: venue, p_day: day });
+  return json({ bon, xp: error ? { gain: 0, error: 'Nu am putut scrie XP-ul acum.' } : xp });
 });

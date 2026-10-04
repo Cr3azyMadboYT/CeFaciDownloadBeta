@@ -76,6 +76,17 @@ for (const e of els) {
 const parks = out.filter((v) => v.k === 'water_park');
 for (let i = out.length - 1; i >= 0; i--) if (out[i].k === 'swimming' && parks.some((w) => km(w, out[i]) < 0.6)) { out.splice(i, 1); skipped.dupe++; }
 out.sort((a, b) => a.name.localeCompare(b.name, 'ro'));
+// Places that vanished from the map since the last import go to gone.json (kept 6 months), so plans and stamps made
+// for them still open and say the place looks closed; a place that comes back leaves gone.json.
+const goneFile = new URL('../src/data/gone.json', import.meta.url);
+const today = new Date().toISOString().slice(0, 10);
+const keep = new Date(Date.now() - 183 * 864e5).toISOString().slice(0, 10);
+const before = fs.existsSync(outFile) ? JSON.parse(fs.readFileSync(outFile, 'utf8')) : [];
+const ids = new Set(out.map((v) => v.id));
+const gone = (fs.existsSync(goneFile) ? JSON.parse(fs.readFileSync(goneFile, 'utf8')) : []).filter((v) => !ids.has(v.id) && v.gone >= keep);
+const goneIds = new Set(gone.map((v) => v.id));
+for (const v of before) if (!ids.has(v.id) && !goneIds.has(v.id)) { const { wk, hours, ...rest } = v; void wk; void hours; gone.push({ ...rest, gone: today }); }
+fs.writeFileSync(goneFile, JSON.stringify(gone));
 fs.writeFileSync(outFile, JSON.stringify(out));
 const byCat = out.reduce((m, v) => ((m[v.cat] = (m[v.cat] || 0) + 1), m), {});
-console.log(JSON.stringify({ in: els.length, kept: out.length, skipped, byCat, withHours: out.filter((v) => v.hours).length, bytes: fs.statSync(outFile).size }, null, 1));
+console.log(JSON.stringify({ in: els.length, kept: out.length, gone: gone.length, skipped, byCat, withHours: out.filter((v) => v.hours).length, bytes: fs.statSync(outFile).size }, null, 1));

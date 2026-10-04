@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from './insets';
 import { useTheme } from './theme';
 
 /** A strip of background under the status bar, so scrolled content never runs under the clock and battery. */

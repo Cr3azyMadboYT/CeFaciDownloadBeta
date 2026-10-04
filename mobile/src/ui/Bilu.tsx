@@ -151,15 +151,22 @@ export function Bilu({ size = 120, mood = 'rest', look = 'c', still: stillAsked 
   }, [still, blink]);
 
   const lift = bob.interpolate({ inputRange: [0, 1], outputRange: [0, mood === 'yay' ? -10 : -4] });
-  const amp = mood === 'hi' || mood === 'yay' ? 14 : mood === 'magic' ? 10 : 6;
-  const rot = wave.interpolate({ inputRange: [0, 1], outputRange: ['0deg', -amp + 'deg'] });
-  const rotL = wave.interpolate({ inputRange: [0, 1], outputRange: ['0deg', (mood === 'yay' ? amp : 0) + 'deg'] });
+  // the arms are drawn with the body (separate turning arm layers flickered on some Android phones):
+  // a wave rocks the whole of Bilu a little, around his feet
+  const amp = mood === 'hi' || mood === 'yay' ? 5 : mood === 'magic' ? 4 : 2;
+  const rock = wave.interpolate({ inputRange: [0, 1], outputRange: ['0deg', amp + 'deg'] });
   const W = size;
   const H = size * 1.2;
-  // each arm is its own layer, turned around its shoulder by the native driver
   const layer = { position: 'absolute' as const, left: 0, top: 0, width: W, height: H };
-  const shoulder = (x: number) => `${(x / 120) * 100}% ${(88 / 144) * 100}%`;
   const open = blink.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
+  // "oops": hands on the cheeks, in front of the body; the other poses keep the arms behind it
+  const front = mood === 'oops';
+  const arms = (
+    <>
+      <View style={layer}><ArmL W={W} H={H} d={p.armL} x={p.hLx} y={p.hLy} /></View>
+      <View style={layer}><ArmR W={W} H={H} d={p.armR} x={p.hRx} y={p.hRy} wand={p.wand} /></View>
+    </>
+  );
 
   return (
     <View style={{ width: W, height: H }}>
@@ -168,17 +175,13 @@ export function Bilu({ size = 120, mood = 'rest', look = 'c', still: stillAsked 
           <Ellipse cx={60} cy={137} rx={28} ry={5} fill="rgba(0,0,0,0.28)" />
         </Svg>
       )}
-      <Animated.View style={[layer, { transform: [{ translateY: lift }] }]}>
+      <Animated.View style={[layer, { transformOrigin: '50% 92%', transform: [{ translateY: lift }, { rotate: rock }] }]}>
         <Legs W={W} H={H} />
-        <Animated.View renderToHardwareTextureAndroid style={[layer, { transformOrigin: shoulder(24), transform: [{ rotate: rotL }] }]}>
-          <ArmL W={W} H={H} d={p.armL} x={p.hLx} y={p.hLy} />
-        </Animated.View>
-        <Animated.View renderToHardwareTextureAndroid style={[layer, { transformOrigin: shoulder(96), transform: [{ rotate: rot }] }]}>
-          <ArmR W={W} H={H} d={p.armR} x={p.hRx} y={p.hRy} wand={p.wand} />
-        </Animated.View>
+        {front ? null : arms}
         <Body W={W} H={H} p={p} />
         <Animated.View style={[layer, { opacity: open }]}><Eyes W={W} H={H} p={p} /></Animated.View>
         <Animated.View style={[layer, { opacity: blink }]}><Eyes W={W} H={H} p={p} shut /></Animated.View>
+        {front ? arms : null}
       </Animated.View>
     </View>
   );

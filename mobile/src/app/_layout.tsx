@@ -26,7 +26,7 @@ export default function Root() {
   const t = name === 'noapte' ? noapte : zi;
   const ctx = useMemo(() => ({ t, name, set: (n: 'zi' | 'noapte') => setBoard({ theme: n }) }), [t, name]);
   useEffect(() => { if (loaded) SplashScreen.hideAsync().catch(() => {}); }, [loaded]);
-  useEffect(() => onReminderTap((pid) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } })), []);
+  useEffect(() => onReminderTap((pid) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }), (url) => router.push(url as never)), []);
   useEffect(() => { SystemUI.setBackgroundColorAsync(t.bg).catch(() => {}); }, [t.bg]);
   if (!loaded) return null;
   return (

@@ -78,12 +78,19 @@ jobs:
           path: |
             src/data/venues.json
             data-raw/osm-bucuresti-ilfov.json
+      - name: Locurile în Supabase (pentru verificarea check-in-ului)
+        if: steps.tests.outcome == 'success'
+        env:
+          SUPABASE_URL: https://vqrmwuarjjntusfbqprx.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/push-venues.mjs
       - name: Salvează în repo
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           if [ "${{ steps.tests.outcome }}" != success ]; then git checkout -- src/data/venues.json; fi
-          git add data-raw/osm-bucuresti-ilfov.json src/data/venues.json
+          if [ "${{ steps.tests.outcome }}" != success ]; then git checkout -- src/data/gone.json 2>/dev/null || true; fi
+          git add data-raw/osm-bucuresti-ilfov.json src/data/venues.json src/data/gone.json
           if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
           msg="Date OSM noi ($(date -u +%F))"
           [ "${{ steps.tests.outcome }}" = success ] || msg="$msg: doar descărcarea, testele au picat"

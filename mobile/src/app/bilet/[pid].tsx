@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Linking, ScrollView, Share, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
 import { clashWith, createPlanAt, dateText, dayWord, planDay, removePlan, startsAt, updPlan, type Plan } from '../../lib/plans';
@@ -76,7 +76,7 @@ export default function Bilet() {
   const atSlot = pl.slot === 'acum' ? 'acum' : day + ' la ' + pl.slot;
   const people = pl.people + (pl.people === 1 ? ' persoană' : ' persoane');
   const script = 'Bună ziua! Aș vrea ' + (ct?.unit ?? 'o masă') + ' pentru ' + people + ', ' + atSlot + ', pe numele ' + (name || 'meu') + '.';
-  const open = APP.openLabel(p.id, pl.when);
+  const open = APP.openLabel(p.id, pl.when, pl.slot === 'acum' ? undefined : startsAt(pl));
   const go = (url: string, how: string) => { setVia(how); setExt('back'); Linking.openURL(url).catch(() => toast('Nu am putut deschide ' + how + '.')); };
   const navUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.real.lat + ',' + p.real.lon);
   const calendar = () => {
@@ -194,6 +194,10 @@ export default function Bilet() {
             }
             return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="+25 XP în carnet. Mersi că ții CeFaci corect." />;
           })()}
+          {p.real.gone ? (
+            <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
+              title={p.name + ' pare închis'} sub="A dispărut de pe hartă la ultima actualizare. Sună înainte sau alege altceva." btn="Altceva" onPress={() => router.push('/rezultate')} />
+          ) : null}
           {pl.inAt && !pl.rated ? (
             <View style={{ padding: 14, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
               <T style={{ fontFamily: F.b, fontSize: 15 }}>{'Cum a fost la ' + p.name + '?'}</T>

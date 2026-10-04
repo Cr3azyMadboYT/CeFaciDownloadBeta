@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { WHO, phaseOfHour, setFilters, summaryOf, useFilters, type Phase } from '../../lib/filters';
 import { NO_PLANS, createPlan, dayWord, sortPlans, type Plan } from '../../lib/plans';

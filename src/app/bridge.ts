@@ -1,11 +1,14 @@
 // The bridge between the design boards' logic and the real app: real venues, the engine, saved preferences.
 import venuesJson from '../data/venues.json';
+import goneJson from '../data/gone.json';
 import { KINDS, ZONES } from '../engine/catalog';
 import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, priceOf, recommend, search, targetTime, vibesOf, zoneById } from '../engine/core';
 import type { Ask, Ctx, Scored, Venue, When, Who } from '../engine/types';
 
 const VENUES = venuesJson as Venue[];
-const BY_ID = new Map(VENUES.map((v) => [v.id, v]));
+// places that left the map (closed): never recommended, but old plans and stamps still find them
+const GONE = goneJson as Venue[];
+const BY_ID = new Map([...GONE, ...VENUES].map((v) => [v.id, v]));
 
 /** Everything the sign-up asked, kept on the phone (accounts with Supabase come in etapa 2). */
 export interface Prefs {
@@ -162,6 +165,7 @@ export const APP = {
     const minor = this.isMinor();
     for (const v of VENUES) if (!(minor && adultOnly(v))) this.places.push(toPlace(v, o)); // under 18: no clubs, hookah, 18+
     this.byIdMap = new Map(this.places.map((p) => [p.id, p]));
+    for (const v of GONE) if (!this.byIdMap.has(v.id)) this.byIdMap.set(v.id, toPlace(v, o));
     this.cache.clear();
   },
   byId(id: string) { return this.byIdMap.get(id); },
@@ -250,10 +254,11 @@ export const APP = {
     const n = fold(q).trim();
     return n ? '' : '';
   },
-  openLabel(id: string, when: string) {
+  /** Open or closed at the plan's moment: `at` (the plan's real day and time), else the "când" choice. */
+  openLabel(id: string, when: string, at?: Date) {
     const p = this.byIdMap.get(id);
     if (!p) return '';
-    const t = targetTime(WHEN_MAP[when] ?? 'acum', KINDS[p.real.k]?.night ?? 1, new Date());
+    const t = at ?? targetTime(WHEN_MAP[when] ?? 'acum', KINDS[p.real.k]?.night ?? 1, new Date());
     return openAt(p.real, t).label;
   },
   /** Five real places for the "Da / Poate / Nu" step of sign-up, matched to what the person likes. */

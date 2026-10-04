@@ -37,6 +37,12 @@ jobs:
         run: |
           npm ci
           npx tsc --noEmit
+      - name: Firebase (notificările de la prieteni, din secretul GOOGLE_SERVICES_JSON)
+        working-directory: mobile
+        env:
+          GS: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GS" ]; then printf '%s' "$GS" > google-services.json; echo "Firebase: da"; else echo "Firebase: încă nu (fără notificări de la prieteni)"; fi
       - name: Proiectul Android nativ
         working-directory: mobile
         env:

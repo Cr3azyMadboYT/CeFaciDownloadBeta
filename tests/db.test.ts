@@ -104,7 +104,28 @@ it('keeps every rule of the database', async () => {
   await expectOk('report a closed place', () => as('bob', `insert into reports (venue_id, kind) values ('n1', 'inchis')`));
   await expectFail('report as someone else', () => as('bob', `insert into reports (user_id, venue_id, kind) values ($1, 'n1', 'inchis')`, [U.cris]));
   eq('reports are not readable', (await as('bob', `select count(*)::int n from reports`)).rows[0].n, 0);
-  await expectOk('own xp shown to friends', () => as('bob', `update profiles set xp = 250, stamps = 3 where id = $1`, [U.bob]));
+  // XP on the server
+  await q(`insert into venues (id, name, cat, lat, lon) values ('n1', 'Caru', 'mancare', 44.4312, 26.1010), ('n2', 'Muzeu', 'cultura', 44.4320, 26.1020), ('n3', 'Bistro', 'mancare', 44.4330, 26.1030)`);
+  await as('bob', `update profiles set xp = 99999, stamps = 999 where id = $1`, [U.bob]);
+  eq('xp cannot be set by hand', (await as('bob', `select xp, stamps from profiles where id = $1`, [U.bob])).rows[0], { xp: 0, stamps: 0 });
+  eq('welcome +150', (await as('bob', `select xp_welcome() x`)).rows[0].x, 150);
+  eq('welcome only once', (await as('bob', `select xp_welcome() x`)).rows[0].x, 150);
+  await expectFail('check-in from far away', () => as('bob', `select xp_check_in('n1', 44.50, 26.10, 20)`), /departe/);
+  const c1 = (await as('bob', `select xp_check_in('n1', 44.4313, 26.1011, 20) r`)).rows[0].r;
+  eq('first check-in: +100 +50 new place +75 new kind', [c1.gain, c1.total], [225, 375]);
+  eq('same place same day: nothing more', (await as('bob', `select xp_check_in('n1', 44.4313, 26.1011, 20) r`)).rows[0].r.gain, 0);
+  await expectFail('two places within 20 minutes', () => as('bob', `select xp_check_in('n2', 44.4320, 26.1020, 10)`), /câteva minute/);
+  await q(`update xp_log set created_at = now() - interval '1 hour' where user_id = $1`, [U.bob]);
+  eq('new place, same kind: +150', (await as('bob', `select xp_check_in('n3', 44.4330, 26.1030, 10) r`)).rows[0].r.gain, 150);
+  eq('stamps follow', (await as('bob', `select stamps from profiles where id = $1`, [U.bob])).rows[0].stamps, 2);
+  await expectFail('the app cannot give itself the receipt XP', () => as('bob', `select xp_bill($1, 'n1', current_date)`, [U.bob]));
+  eq('receipt after check-in (as the service)', (await q(`select xp_bill($1, 'n1', (now() at time zone 'Europe/Bucharest')::date) r`, [U.bob])).rows[0].r.gain, 25);
+  eq('receipt only once', (await q(`select xp_bill($1, 'n1', (now() at time zone 'Europe/Bucharest')::date) r`, [U.bob])).rows[0].r.gain, 0);
+  eq('no receipt without check-in', (await q(`select xp_bill($1, 'n2', current_date) r`, [U.bob])).rows[0].r.gain, 0);
+  await expectOk('save my phone token', () => as('bob', `insert into push_tokens (token) values ('tok-bob')`));
+  await expectFail('a token for someone else', () => as('bob', `insert into push_tokens (token, user_id) values ('tok-x', $1)`, [U.cris]));
+  eq('tokens are private', (await as('cris', `select count(*)::int n from push_tokens`)).rows[0].n, 0);
+  await expectFail('nobody writes the log directly', () => as('bob', `insert into xp_log (user_id, kind, amount) values ($1, 'carry', 5000)`, [U.bob]));
   
   // saved state and the Plus week
   await expectOk('save app state', () => as('bob', `update profile_private set app_state = '{"xp":150}'::jsonb where id = $1`, [U.bob]));

@@ -2,7 +2,7 @@
 // before applying.
 import { useEffect, useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Pressable, ScrollView, TextInput, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from './insets';
 import { APP } from '../../../src/app/bridge';
 import { BUDGET, DIST, DUR, VIBES, WHEN, WHO, type Filters } from '../lib/filters';
 import { Icon } from './Icon';

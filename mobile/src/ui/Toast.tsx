@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Animated, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from './insets';
 import { useToast } from '../lib/toast';
 import { T } from './kit';
 import { F } from './theme';

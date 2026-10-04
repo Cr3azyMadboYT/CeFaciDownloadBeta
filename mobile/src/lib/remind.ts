@@ -42,11 +42,16 @@ export async function cancelReminders(ids: string[] | undefined) {
 }
 
 /** Tapping a receipt reminder opens that ticket. Returns a stop function. */
-export function onReminderTap(open: (pid: number) => void) {
+export function onReminderTap(open: (pid: number) => void, go?: (url: string) => void) {
   if (Platform.OS === 'web') return () => {};
-  const sub = Notifications.addNotificationResponseReceivedListener((r) => {
-    const pid = Number((r.notification.request.content.data as { pid?: number } | undefined)?.pid);
+  const handle = (r: Notifications.NotificationResponse) => {
+    const data = r.notification.request.content.data as { pid?: number; url?: string } | undefined;
+    const pid = Number(data?.pid);
     if (pid) open(pid);
-  });
+    else if (data?.url && go) go(data.url); // a friend's vote, plan or crew invitation
+  };
+  // the app was closed and opened by tapping the notification
+  Notifications.getLastNotificationResponseAsync().then((r) => { if (r) setTimeout(() => handle(r), 600); }).catch(() => {});
+  const sub = Notifications.addNotificationResponseReceivedListener(handle);
   return () => sub.remove();
 }

@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import { inviteToCrew, listCrews, type Crew } from '../../lib/crews';
 import { mutual, profileOf, remove, type Person, type Profile } from '../../lib/friends';
 import { LEVELS, levelOf } from '../../lib/levels';

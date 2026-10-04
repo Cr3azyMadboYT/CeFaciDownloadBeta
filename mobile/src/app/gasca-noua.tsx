@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../ui/insets';
 import { STAMP_COLORS, STAMP_ICONS, createCrew } from '../lib/crews';
 import { listFriends, type Person } from '../lib/friends';
 import { useApp } from '../lib/session';

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { createPlanAt } from '../../lib/plans';
 import { comeTo } from '../../lib/together';

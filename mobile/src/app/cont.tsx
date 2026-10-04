@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Animated, BackHandler, Easing, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions, View } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../ui/insets';
 import Svg, { Path, Rect } from 'react-native-svg';
 import { APP, finishSignup, getApp, lastSignIn, onSignedIn, onSyncTrouble, useApp, usernameFree } from '../lib/session';
 import type { Who } from '../lib/auth';

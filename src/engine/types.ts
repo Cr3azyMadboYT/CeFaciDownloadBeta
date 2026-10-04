@@ -25,7 +25,8 @@ export interface Venue {
   phone?: string;
   brand?: string;      // set for chains
   wheelchair?: boolean;
-  famous?: boolean;    // has a Wikidata entry (OSM wikidata=*): a known place
+  famous?: boolean;
+  gone?: string;       // yyyy-mm-dd: dropped from the map then (src/data/gone.json); kept so old plans and stamps still open    // has a Wikidata entry (OSM wikidata=*): a known place
   fast?: boolean;      // fast food
   minAge?: number;     // the place asks for ID at the door (OSM min_age)
 }

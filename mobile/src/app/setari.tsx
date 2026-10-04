@@ -1,7 +1,7 @@
 // Setări: theme (Zi / Noapte / Ca telefonul), fewer animations, the receipt reminders, the account and the legal bits.
 import { Linking, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../ui/insets';
 import { setBoard, useApp } from '../lib/session';
 import { Icon } from '../ui/Icon';
 import { H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';

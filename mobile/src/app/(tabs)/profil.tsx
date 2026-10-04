@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from '../../ui/insets';
 import { pickAvatar, removeAvatar } from '../../lib/avatar';
 import { listFriends } from '../../lib/friends';
 import { startTour } from '../../lib/tour';

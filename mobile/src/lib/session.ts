@@ -8,6 +8,7 @@ import { APP, initBridge, type Prefs } from '../../../src/app/bridge';
 import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
+import { forgetPush, registerPush } from './push';
 import { deleteAccountEverywhere, emailStart, emailVerify, sb, signInWithGoogle, signOutEverywhere, watchAuth, type Who } from './auth';
 
 export { APP };
@@ -54,20 +55,13 @@ export function setBoard(patch: Partial<Board> | ((b: Board) => Partial<Board>))
   snap = { ...snap, board: { ...snap.board, ...p } };
   emit();
   clearTimeout(saveT);
-  saveT = setTimeout(() => { APP.saveBoardState(snap.board as Record<string, unknown>); publishStats(); }, 300);
+  saveT = setTimeout(() => APP.saveBoardState(snap.board as Record<string, unknown>), 300);
 }
-// what friends see on your profile: XP and how many stamps (profiles.xp, profiles.stamps)
-let lastPublic = '';
-function publishStats() {
-  const w = snap.who;
-  if (!w || !snap.known) return;
-  const xp = Math.max(0, Math.round(Number(snap.board.xp ?? 0)));
-  const stamps = (snap.board.stamps as unknown[] | undefined)?.length ?? 0;
-  const key = w.id + '/' + xp + '/' + stamps;
-  if (key === lastPublic) return;
-  lastPublic = key;
+// XP lives on the server (xp_log → profiles.xp): with an account, the phone shows the server's number
+async function pullXp(id: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (sb() as any).from('profiles').update({ xp, stamps }).eq('id', w.id).then((r: { error?: unknown }) => { if (r.error) lastPublic = ''; }, () => { lastPublic = ''; });
+  const { data } = await (sb() as any).from('profiles').select('xp').eq('id', id).maybeSingle();
+  if (data && typeof data.xp === 'number' && data.xp !== snap.board.xp) setBoard({ xp: data.xp });
 }
 export function savePrefs(p: Partial<Prefs>) {
   APP.savePrefs({ ...p, prefsAt: Date.now() } as Partial<Prefs>); // the newer copy (phone or account) wins on restore
@@ -105,9 +99,15 @@ export async function finishSignup(a: SignupAnswers): Promise<string | null> {
     const err = await createAccount(sb(), { username: a.user, first: a.first.trim(), birth: a.birthIso, prefs: answersOf() });
     if (err) return err;
     snap = { ...snap, known: true };
+    void registerPush();
   }
   try { localStorage.setItem('cefaci.onboarded', '1'); } catch { /* storage blocked */ }
-  if (!snap.board.welcomeXp) setBoard((b) => ({ welcomeXp: true, xp: (b.xp ?? 0) + 150 })); // Bilu's welcome, once
+  if (!snap.board.welcomeXp) {
+    // Bilu's welcome, once: on the server with an account (it says the total), else on the phone
+    setBoard((b) => ({ welcomeXp: true, xp: (b.xp ?? 0) + 150 }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (snap.known) void (sb() as any).rpc('xp_welcome').then((r: { data?: number }) => { if (typeof r.data === 'number') setBoard({ xp: r.data }); });
+  }
   snap = { ...snap, onboarded: true };
   resetFilters();
   emit();
@@ -118,7 +118,7 @@ export async function finishSignup(a: SignupAnswers): Promise<string | null> {
  *  Deleting stops with a message if the server did not confirm, so nothing is left behind by mistake. */
 export async function startOver(deleteAccount: boolean): Promise<string | null> {
   if (deleteAccount) { const err = await deleteAccountEverywhere(); if (err) return err; }
-  else await signOutEverywhere();
+  else { await Promise.race([forgetPush(), new Promise((ok) => setTimeout(ok, 3000))]); await signOutEverywhere(); }
   try { localStorage.clear(); } catch { /* storage blocked */ }
   APP.prefs = { ...DEFAULT_PREFS };
   APP.pickVotes.clear(); APP.pickMemo.clear();
@@ -205,7 +205,7 @@ async function connect(who: Who) {
     if (r.known) resetFilters();
     if (known && !r.known) APP.saveBoardState(snap.board as Record<string, unknown>); // first upload of the phone's data
     trouble('');
-    publishStats();
+    if (known) { void pullXp(who.id); void registerPush(); }
     last = { who, known };
     signInListeners.forEach((f) => f(who, known));
   } catch {

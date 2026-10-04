@@ -8,6 +8,7 @@ import { endTour, tourNext, tourOops, useTour, type Rect } from '../lib/tour';
 import { Bilu, type Mood } from './Bilu';
 import { Big, T } from './kit';
 import { F } from './theme';
+import { useSafeAreaInsets } from './insets';
 
 interface Step { id?: string; mood: Mood; text: string; oops?: string; hot?: 'profil' | 'plus'; final?: 'xp' | 'gift'; magic?: boolean }
 const STEPS: Step[] = [
@@ -29,6 +30,7 @@ const DIM = 'rgba(4,7,24,0.78)';
 export function Tour() {
   const tour = useTour();
   const { width: W, height: H } = useWindowDimensions();
+  const ins = useSafeAreaInsets();
   const steps = tour.replay ? STEPS.slice(0, 8) : STEPS;
   const st = steps[Math.min(tour.step, steps.length - 1)];
   const r: Rect | undefined = st?.id ? tour.rects[st.id] : undefined;
@@ -119,7 +121,7 @@ export function Tour() {
             <T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>Sari peste</T>
           </Pressable>
         ) : null}
-        <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: 28, flexDirection: 'row', justifyContent: 'center', gap: 6, opacity: hole && !below ? 0 : 1 }}>
+        <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: ins.bottom + 16, flexDirection: 'row', justifyContent: 'center', gap: 6, opacity: hole && !below ? 0 : 1 }}>
           {steps.map((_, i) => <View key={i} style={{ width: i === tour.step ? 18 : 6, height: 6, borderRadius: 3, backgroundColor: i === tour.step ? '#FFD43B' : 'rgba(255,255,255,0.35)' }} />)}
         </View>
         <View style={{ width: W, height: 0 }} />
