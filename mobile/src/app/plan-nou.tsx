@@ -6,7 +6,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { BackHandler, ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { listCrews, type Crew } from '../lib/crews';
-import { BUDGET_TOP, askOf, budgetLabel, dayName, firstDraft, getPlans, runPlans, whenText, type Draft } from '../lib/planAsk';
+import { BUDGET_TOP, askOf, budgetLabel, dayCard, eveningsFrom, firstDraft, getPlans, hourFor, hoursFor, runPlans, wholeLabel, whenText, type Draft } from '../lib/planAsk';
+import { addDays, momentOf } from '../../../src/engine/time';
 import { APP, useApp } from '../lib/session';
 import { useWeatherVersion } from '../lib/weather';
 import { Icon, type IconName } from '../ui/Icon';
@@ -18,7 +19,6 @@ import type { Mood } from '../ui/Bilu';
 
 const STEPS = ['ce', 'cand', 'cati', 'buget', 'vibe'] as const;
 type Step = (typeof STEPS)[number];
-const HOURS = ['17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
 const VIBE_TILES: [string, IconName, string][] = [
   ['Mâncare bună', 'burger', '#FF6A4D'], ['Party', 'club', '#FFD43B'], ['Chill', 'coffee', '#B7A3FF'], ['Fun', 'dice', '#8EA6FF'],
   ['Competitiv', 'target', '#5FD39A'], ['Cultură', 'landmark', '#F5B3C8'], ['Aer liber', 'tree', '#BFE3A0'],
@@ -46,7 +46,7 @@ export default function PlanNou() {
   useEffect(() => { const id = setTimeout(() => setNames(APP.preview(askOf(d))), 60); return () => clearTimeout(id); }, [d, wxv]);
 
   // changing one answer from the plans screen: back to it; else on to it
-  const finish = (x = d) => { runPlans(x); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata'); };
+  const finish = (x = d) => { void runPlans(x); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata'); };
   const next = (x = d) => { if (k >= STEPS.length - 1) finish(x); else setK(k + 1); };
   const auto = (p: Partial<Draft>) => { const x = { ...d, ...p }; setD(x); setTimeout(() => next(x), 220); };
   const back = () => (k > 0 ? setK(k - 1) : router.canGoBack() ? router.back() : router.replace('/acasa'));
@@ -54,18 +54,16 @@ export default function PlanNou() {
 
   // the weather on each day at the chosen hour, and the warmest nice day of the week
   const now = new Date();
-  const hourFor = d.hour === 'acum' ? '20:00' : d.hour;
-  const days = useMemo(() => Array.from({ length: 7 }, (_, day) => {
-    const [h, m] = hourFor.split(':').map(Number);
-    return { day, wx: APP.dayWeather(new Date(now.getFullYear(), now.getMonth(), now.getDate() + day, h, m)) };
-  }), [hourFor, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
-  const best = days.filter((x) => x.wx?.nice).sort((a, b) => b.wx!.temp - a.wx!.temp)[0]?.day;
+  const evenings = useMemo(() => eveningsFrom(now), [now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
+  const days = useMemo(() => evenings.map((e) => ({ e, wx: APP.dayWeather(momentOf(e, hourFor(e, d.hour, now) === 'acum' ? '20:00' : hourFor(e, d.hour, now))) })), [evenings, d.hour, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
+  const best = days.filter((x, i) => i > 0 && x.wx?.nice).sort((a, b) => b.wx!.temp - a.wx!.temp)[0]?.e;
   const nowWx = APP.dayWeather(now);
-  const lateNow = now.getHours() * 60 + now.getMinutes();
+  const rows = d.hour === 'acum' ? [] : hoursFor(d.evening, now);
+  const pickDay = (e: string) => set({ evening: e, hour: hourFor(e, d.hour, now) });
 
   const say: Record<Step, [Mood, string]> = {
     ce: ['hi', 'Hai să-ți fac planul! Întâi: vrei un singur loc sau toată seara, pas cu pas?'],
-    cand: ['up', 'Alege ziua și ora. Lângă fiecare zi îți pun vremea' + (best !== undefined && best > 0 ? ': cea mai frumoasă e ' + dayName(best).word.toLowerCase() + '.' : '.')],
+    cand: ['up', 'Acum sau altă zi? Lângă fiecare zi îți pun vremea' + (best ? ': cea mai frumoasă e ' + dayCard(best, now).word.toLowerCase() + '.' : '.')],
     cati: ['wink', 'Câți sunteți, cu tot cu tine? Sau alege gașca și știu singur.'],
     buget: ['up', 'Cât vrea să dea fiecare' + (d.mode === 'seara' ? ', pe toată seara' : '') + '? Trage de bulinele de pe bară.'],
     vibe: ['hi', 'Ultima: ce chef aveți? Alege câte vrei.'],
@@ -100,7 +98,7 @@ export default function PlanNou() {
         {step === 'ce' ? (
           <View style={{ gap: 12 }}>
             <H1 style={{ fontSize: 32, lineHeight: 33 }}>Ce plan vrei?</H1>
-            {([['loc', 'Un singur loc', 'Un restaurant, un bar, un film… unul și gata.', 'pin', '#FFD43B'], ['seara', 'Toată seara', 'Mai multe locuri pe rând, cu ore și drum.', 'sparkle', '#2F5BFF']] as const).map(([key, title, sub, icon, bg]) => {
+            {([['loc', 'Un singur loc', 'Un restaurant, un bar, un film… unul și gata.', 'pin', '#FFD43B'], ['seara', wholeLabel(d), 'Mai multe locuri pe rând, cu ore și drum.', 'sparkle', '#2F5BFF']] as const).map(([key, title, sub, icon, bg]) => {
               const on = d.mode === key;
               return (
                 <Press key={key} onPress={() => auto({ mode: key })} accessibilityState={{ selected: on }}
@@ -121,26 +119,23 @@ export default function PlanNou() {
           <View>
             <H1 style={{ fontSize: 32, lineHeight: 33 }}>Când ieșiți?</H1>
             <View style={{ marginTop: 16, flexDirection: 'row', flexWrap: 'wrap', gap: 8, rowGap: 14 }}>
-              <DayCard label="Acum" sub={String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')} on={d.hour === 'acum'} wx={nowWx} onPress={() => auto({ day: 0, hour: 'acum' })} />
-              {days.map(({ day, wx }) => {
-                const n = dayName(day);
-                const word = day === 0 ? (now.getHours() >= 16 ? 'Diseară' : 'Azi') : n.word;
-                return <DayCard key={day} label={word} sub={n.date} on={d.hour !== 'acum' && d.day === day} wx={wx} badge={best === day && day > 0 ? 'cea mai caldă' : undefined}
-                  onPress={() => set({ day, hour: d.hour === 'acum' || (day === 0 && Number(d.hour.split(':')[0]) * 60 < lateNow) ? HOURS.find((h) => day > 0 || Number(h.split(':')[0]) * 60 > lateNow + 15) ?? 'acum' : d.hour })} />;
+              <DayCard label="Acum" sub={String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')} on={d.hour === 'acum'} wx={nowWx} onPress={() => auto({ evening: evenings[0], hour: 'acum' })} />
+              {days.map(({ e, wx }) => {
+                const c = dayCard(e, now, d.hour === 'acum' ? undefined : d.hour);
+                return <DayCard key={e} label={c.word} sub={c.date.replace(/ \S+$/, '')} on={d.hour !== 'acum' && d.evening === e} wx={wx} badge={best === e ? 'cea mai caldă' : undefined} onPress={() => pickDay(e)} />;
               })}
             </View>
             <Press onPress={() => setMore(true)} style={{ marginTop: 10, minHeight: 46, borderRadius: 14, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}>
-              <Icon name="calendar" size={18} color={t.blueInk} /><T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>{d.day > 6 ? whenText(d) : 'Altă dată, din calendar'}</T>
+              <Icon name="calendar" size={18} color={t.blueInk} /><T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>{d.hour !== 'acum' && !evenings.includes(d.evening) ? whenText(d) : 'Altă dată, din calendar'}</T>
             </Press>
-            {d.hour !== 'acum' ? (
-              <>
-                <Lbl style={{ marginTop: 18, marginBottom: 8 }}>Pe la ce oră?</Lbl>
+            {rows.map(([part, hs]) => (
+              <View key={part}>
+                <Lbl style={{ marginTop: 16, marginBottom: 8 }}>{part}</Lbl>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                  {HOURS.filter((h) => d.day > 0 || Number(h.split(':')[0]) * 60 > lateNow + 15).map((h) => <Chip key={h} label={h} on={d.hour === h} onPress={() => auto({ hour: h })} />)}
-                  {d.day === 0 && HOURS.every((h) => Number(h.split(':')[0]) * 60 <= lateNow + 15) ? <Muted>E târziu pentru azi: alege „Acum” sau mâine.</Muted> : null}
+                  {hs.map((h) => <Chip key={h} label={h} on={d.hour === h} onPress={() => auto({ hour: h })} />)}
                 </View>
-              </>
-            ) : null}
+              </View>
+            ))}
           </View>
         ) : null}
 
@@ -169,23 +164,17 @@ export default function PlanNou() {
                 <Press onPress={() => set({ people: Math.min(40, d.people + 1) })} accessibilityLabel="Mai mulți" style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22, color: '#FFFFFF' }}>+</T></Press>
               </View>
             ) : null}
-            <Lbl style={{ marginTop: 22, marginBottom: 8 }}>Sau alege gașca</Lbl>
             {crews.length ? (
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {crews.map((c) => {
-                  const n = Math.max(2, c.members.filter((m) => m.status === 'member').length);
-                  return <Chip key={c.id} label={c.name + ' · ' + n} on={d.crewId === c.id} onPress={() => auto({ people: n, crewId: c.id })} />;
-                })}
-              </View>
-            ) : (
-              <View style={{ padding: 14, borderRadius: 18, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, flexDirection: 'row', gap: 12, alignItems: 'center' }}>
-                <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s3, alignItems: 'center', justifyContent: 'center' }}><Icon name="users" color={t.ink} /></View>
-                <View style={{ flex: 1, gap: 2 }}>
-                  <T style={{ fontFamily: F.b, fontSize: 15 }}>Gășcile tale apar aici</T>
-                  <Muted>Alegi gașca și știu singur câți sunteți și cui să trimit planul. Le faci din Planuri.</Muted>
+              <>
+                <Lbl style={{ marginTop: 22, marginBottom: 8 }}>Sau alege gașca</Lbl>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                  {crews.map((c) => {
+                    const n = Math.max(2, c.members.filter((m) => m.status === 'member').length);
+                    return <Chip key={c.id} label={c.name + ' · ' + n} on={d.crewId === c.id} onPress={() => auto({ people: n, crewId: c.id })} />;
+                  })}
                 </View>
-              </View>
-            )}
+              </>
+            ) : null}
           </View>
         ) : null}
 
@@ -246,7 +235,7 @@ export default function PlanNou() {
         <H1 style={{ fontSize: 26 }}>Altă zi</H1>
         <Muted style={{ marginTop: 6 }}>Pentru zilele de după o săptămână nu am încă vremea.</Muted>
         <View style={{ marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-          {Array.from({ length: 24 }, (_, i) => i + 7).map((day) => { const n = dayName(day); return <Chip key={day} small label={n.word.slice(0, 3) + '. ' + n.date} on={d.day === day} onPress={() => { set({ day, hour: d.hour === 'acum' ? '20:00' : d.hour }); setMore(false); }} />; })}
+          {Array.from({ length: 24 }, (_, i) => addDays(evenings[0], i + 7)).map((e) => { const c = dayCard(e, now); return <Chip key={e} small label={c.date} on={d.evening === e && d.hour !== 'acum'} onPress={() => { set({ evening: e, hour: hourFor(e, d.hour === 'acum' ? '20:00' : d.hour, now) }); setMore(false); }} />; })}
         </View>
       </Sheet>
     </View>

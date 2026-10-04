@@ -199,7 +199,7 @@ export default function Bilet() {
           })()}
           {p.real.gone ? (
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
-              title={p.name + ' pare închis'} sub="A dispărut de pe hartă la ultima actualizare. Sună înainte sau alege altceva." btn="Altceva" onPress={() => router.push('/rezultate')} />
+              title={p.name + ' pare închis'} sub="A dispărut de pe hartă la ultima actualizare. Sună înainte sau alege altceva." btn="Altceva" onPress={() => router.navigate('/exploreaza')} />
           ) : null}
           {pl.inAt && !pl.rated ? (
             <View style={{ padding: 14, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
@@ -327,7 +327,7 @@ export default function Bilet() {
             <H1 style={{ fontSize: 26 }}>Ai rezervat?</H1>
             <Muted style={{ fontSize: 15, lineHeight: 21 }}>O notăm pe bilet, ca s-o ai la îndemână.</Muted>
             <Big label="Da, notează rezervarea" onPress={() => { updPlan(pl.pid, { res: 'noted', resVia: via }); setExt('closed'); toast('Am notat rezervarea pe bilet.'); }} />
-            <Big label="Nu mai au loc" color={t.s2} ink={t.ink} onPress={() => { setExt('closed'); removePlan(pl.pid); toast('Am scos ' + p.name + ' din planuri. Uite ce se mai potrivește.'); router.replace('/rezultate'); }} />
+            <Big label="Nu mai au loc" color={t.s2} ink={t.ink} onPress={() => { setExt('closed'); removePlan(pl.pid); toast('Am scos ' + p.name + ' din planuri. Uite ce se mai potrivește.'); router.navigate('/exploreaza'); }} />
             <Quiet label="Mai târziu" onPress={() => setExt('closed')} />
           </View>
         )}

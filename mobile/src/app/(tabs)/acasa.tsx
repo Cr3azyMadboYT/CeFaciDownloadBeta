@@ -7,9 +7,10 @@ import { Animated, Easing, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
-import { phaseOfHour, setFilters, useFilters, type Phase } from '../../lib/filters';
+import { phaseOfHour, type Phase } from '../../lib/filters';
 import { NO_PLANS, dayWord, sortPlans, type Plan } from '../../lib/plans';
-import { firstDraft, loadLast, runPlace, runPlans } from '../../lib/planAsk';
+import { againDraft, askOf, firstDraft, loadLast, moodDraft, runPlace, runPlans, surpriseDraft } from '../../lib/planAsk';
+import { eveningOf } from '../../../../src/engine/time';
 import { Bilu } from '../../ui/Bilu';
 import { Avatar } from '../../ui/Avatar';
 import { TourTarget } from '../../ui/TourTarget';
@@ -72,7 +73,6 @@ export default function Acasa() {
   useBackTwiceToExit();
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
-  const { f } = useFilters();
   const wxv = useWeatherVersion();
   const prefs = useApp((s) => s.prefs);
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
@@ -84,45 +84,30 @@ export default function Acasa() {
   const nowWx = useMemo(() => APP.dayWeather(new Date()), [wxv, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
   const tonight = useMemo(() => (now.getHours() < 18 ? APP.weatherFor('eve') : null), [wxv, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // the counts under "Ai chef de…" and Bilu's ideas are worked out after the screen is shown, so Acasă opens at once
+  // the counts under "Ai chef de…" (places open at that moment) and Bilu's ideas come after the screen is shown
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [ideas, setIdeas] = useState<ReturnType<typeof APP.suggestions>>([]);
-  useEffect(() => { const h = setTimeout(() => setIdeas(APP.suggestions()), 250); return () => clearTimeout(h); }, [prefs, wxv]);
+  useEffect(() => { const h = setTimeout(() => { setIdeas(APP.suggestions()); }, 250); return () => clearTimeout(h); }, [prefs, wxv, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    let i = 0;
-    let stop = false;
-    setCounts({});
-    const step = () => {
-      if (stop || i >= MOODS.length) return;
-      const label = MOODS[i++][0];
-      const n = APP.matches({ ...f, vibes: [label] }).length;
-      setCounts((c) => ({ ...c, [label]: n }));
-      setTimeout(step, 0);
-    };
     // (not InteractionManager: Bilu's and the sky's endless animations would keep it waiting forever)
-    const h = setTimeout(step, 450);
-    return () => { stop = true; clearTimeout(h); };
-  }, [f, prefs]);
+    const h = setTimeout(() => setCounts(APP.vibeCounts(askOf({ ...firstDraft(), mode: 'loc' }))), 450);
+    return () => clearTimeout(h);
+  }, [prefs, wxv, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
   const moods = MOODS.map((m) => ({ m, n: counts[m[0]] }));
   const word = FLIP[phase].word;
   const soon = sortPlans(plans);
   const next = soon[0];
   const nextPlace = next ? APP.byId(next.placeId) : undefined;
   const clock = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-  const last = useMemo(() => loadLast(), [plans]); // eslint-disable-line react-hooks/exhaustive-deps
+  const last = useMemo(() => loadLast(), [plans, ideas]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // one tap: three plans from today's usual answers, one of them opened at random
-  const surprise = () => {
-    const made = runPlans(firstDraft());
-    if (!made.length) { router.push('/plan-nou'); return; }
-    router.push({ pathname: '/plan/[i]', params: { i: String(Math.floor(Math.random() * made.length)) } });
-  };
-  const again = () => { if (!last) { router.push('/plan-nou'); return; } runPlans(firstDraft()); router.push('/planuri-gata'); };
-  const openIdea = (id: string, at: Date) => {
-    // the plan is for the hour Bilu checked the idea for (now, or tonight at 20:00)
-    const soonish = at.getTime() - Date.now() < 30 * 60e3;
+  // one tap: Bilu makes three outings and opens one of them; "Altă surpriză" is on it
+  const surprise = () => { void runPlans(surpriseDraft(), { surprise: true }); router.push({ pathname: '/plan/[i]', params: { i: 's' } }); };
+  const again = () => { const a = againDraft(); if (!a) { router.push('/plan-nou'); return; } void runPlans(a.draft, { notice: a.notice }); router.push('/planuri-gata'); };
+  const mood = (vibe: string) => { void runPlans(moodDraft(vibe)); router.push('/planuri-gata'); };
+  const openIdea = (id: string, soonish: boolean, at: Date) => {
     const hour = soonish ? 'acum' : String(at.getHours()).padStart(2, '0') + ':' + String(at.getMinutes()).padStart(2, '0');
-    if (runPlace(id, { ...firstDraft(), mode: 'loc', day: 0, hour })) router.push({ pathname: '/plan/[i]', params: { i: '0' } });
+    if (runPlace(id, { ...firstDraft(), mode: 'loc', evening: eveningOf(new Date()), hour })) router.push({ pathname: '/plan/[i]', params: { i: '0' } });
   };
 
   return (
@@ -182,9 +167,11 @@ export default function Acasa() {
               <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 <Icon name="dice" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Surprinde-mă</T>
               </Press>
-              <Press onPress={again} accessibilityLabel={last ? 'Ca data trecută' : 'Creează plan'} style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                <Icon d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>{last ? 'Ca data trecută' : 'Pas cu pas'}</T>
-              </Press>
+              {last ? (
+                <Press onPress={again} accessibilityLabel="Ca data trecută" style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <Icon d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Ca data trecută</T>
+                </Press>
+              ) : null}
             </View>
           </TourTarget>
         </View>
@@ -208,17 +195,17 @@ export default function Acasa() {
               <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Bilu size={34} mood="wink" shadow={false} still />
                 <T accessibilityRole="header" style={{ flex: 1, fontFamily: F.display, fontSize: 21 }}>Bilu îți sugerează</T>
-                <Muted>{now.getHours() >= 17 || now.getHours() < 5 ? 'diseară' : 'azi'}</Muted>
+                <Muted>{ideas[0]?.now ? 'acum' : 'diseară, la 20:00'}</Muted>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}>
                 {ideas.map((x) => (
-                  <Press key={x.place.id} onPress={() => openIdea(x.place.id, x.at)} accessibilityLabel={x.tag + ': ' + x.line}
+                  <Press key={x.place.id} onPress={() => openIdea(x.place.id, x.now, x.at)} accessibilityLabel={x.tag + ': ' + x.line}
                     style={{ width: 262, flexDirection: 'row', gap: 10, padding: 12, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
                     <View style={{ width: 52, height: 52, borderRadius: 14, backgroundColor: x.place.bg, alignItems: 'center', justifyContent: 'center' }}><Icon name={x.place.icon as never} size={24} color={x.place.fg} /></View>
                     <View style={{ flex: 1 }}>
                       <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 12, color: t.blueInk }}>{x.tag}</T>
                       <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 15 }}>{x.line}</T>
-                      <Muted numberOfLines={1}>{x.place.km.toFixed(1).replace('.', ',') + ' km · ' + (APP.openLabel(x.place.id, 'eve', x.at) || x.place.title) + (x.place.price ? ' · ~' + x.place.price + ' lei' : '')}</Muted>
+                      <Muted numberOfLines={1}>{x.place.km.toFixed(1).replace('.', ',') + ' km · ' + (APP.openLabel(x.place.id, 'now', x.at) || x.place.title) + (x.place.price ? ' · ~' + x.place.price + ' lei' : '')}</Muted>
                     </View>
                   </Press>
                 ))}
@@ -228,30 +215,22 @@ export default function Acasa() {
 
           <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>Ai chef de…</T>
-            <Muted>un tap și vezi variante</Muted>
+            <Muted>un tap și ai 3 planuri</Muted>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 12, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10, paddingBottom: 4 }} snapToInterval={126} decelerationRate="fast">
             {moods.map(({ m: [label, icon, bg, fg, dot], n }) => (
-              <Press key={label} onPress={() => { setFilters({ vibes: [label] }); router.push('/rezultate'); }} accessibilityLabel={label + (n === undefined ? '' : ', ' + n + ' locuri')}
+              <Press key={label} onPress={() => mood(label)} accessibilityLabel={label + (n === undefined ? '' : ', ' + n + ' locuri deschise')}
                 style={{ width: 116, minHeight: 132, padding: 12, borderRadius: 22, backgroundColor: bg, justifyContent: 'space-between', overflow: 'hidden' }}>
                 <View style={{ position: 'absolute', right: -18, top: -18, width: 64, height: 64, borderRadius: 99, backgroundColor: dot }} />
                 <Icon name={icon} size={30} color={fg} />
                 <View style={{ gap: 4 }}>
                   <T style={{ fontFamily: F.b, fontSize: 16, lineHeight: 18, color: fg }}>{label}</T>
-                  <T style={{ fontFamily: F.sb, fontSize: 12, color: fg }}>{n === undefined ? ' ' : n === 1 ? '1 loc' : n + ' locuri'}</T>
+                  <T style={{ fontFamily: F.sb, fontSize: 12, color: fg }}>{n === undefined ? ' ' : n === 0 ? 'nimic deschis' : n === 1 ? '1 deschis' : n + ' deschise'}</T>
                 </View>
               </Press>
             ))}
           </ScrollView>
 
-          <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View style={{ width: 8, height: 8, borderRadius: 99, backgroundColor: t.coral }} />
-            <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 20 }}>Live Drops</T>
-          </View>
-          <View style={{ marginTop: 10, padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, gap: 4 }}>
-            <T style={{ fontFamily: F.sb, fontSize: 15 }}>Încă nu sunt Live Drops.</T>
-            <Muted>Reducerile fulger apar aici când primele localuri partenere intră în CeFaci.</Muted>
-          </View>
         </View>
       </ScrollView>
       <TopShade color={SKY_BG[phase]} />

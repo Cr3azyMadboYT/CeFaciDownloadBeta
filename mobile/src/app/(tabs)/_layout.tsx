@@ -1,5 +1,5 @@
 // The bottom bar from the design: Acasă, Explorează, Planuri, Profil, Plus (blurred while Plus is a closed gift).
-import { Tabs, router } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from '../../ui/insets';
 import type { ComponentProps } from 'react';
@@ -29,7 +29,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
   return (
     <View style={{ flexDirection: 'row', paddingTop: 8, paddingHorizontal: 12, paddingBottom: Math.max(ins.bottom, 8) + 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
       {state.routes.map((r, i) => {
-        const on = state.index === i && r.name !== 'exploreaza';
+        const on = state.index === i;
         const isPlus = r.name === 'plus';
         const color = isPlus ? '#E0A800' : on ? t.blueInk : t.ink3;
         return (
@@ -38,7 +38,6 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
             accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? 'CeFaci Plus, oprit' : 'Plus: un cadou de la Bilu') : 'CeFaci Plus') : LABEL[r.name]}
             accessibilityState={{ selected: on }}
             onPress={() => {
-              if (r.name === 'exploreaza') { router.push('/rezultate'); return; }
               const ev = navigation.emit({ type: 'tabPress', target: r.key, canPreventDefault: true });
               if (!ev.defaultPrevented) navigation.navigate(r.name);
             }}>

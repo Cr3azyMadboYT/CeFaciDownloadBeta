@@ -1,12 +1,13 @@
 // One plan, opened: the map with the way between the places, each step with Rezervă / Drum / "Alt bar", what it costs
 // per person and for everyone, the weather. "Facem așa" makes a ticket for every step; "La vot" sends the plans to
 // the crew, this one first.
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
-import { Redirect, router, useLocalSearchParams } from 'expo-router';
+import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { useFilters } from '../../lib/filters';
-import { setPlan, usePlans } from '../../lib/planAsk';
-import { createPlanAt } from '../../lib/plans';
+import { nextSurprise, refreshIfStale, setPlan, usePlans } from '../../lib/planAsk';
+import { Checking, makeTickets } from '../planuri-gata';
 import { APP } from '../../lib/session';
 import { toast } from '../../lib/toast';
 import { Icon } from '../../ui/Icon';
@@ -24,21 +25,21 @@ export default function PlanDeschis() {
   const ins = useSafeAreaInsets();
   const { f } = useFilters();
   const { i } = useLocalSearchParams<{ i: string }>();
-  const idx = Number(i) || 0;
-  const { draft, plans } = usePlans();
+  const st = usePlans();
+  const surprise = i === 's';
+  const idx = surprise ? st.pick : Number(i) || 0;
+  const { draft, plans } = st;
   const [vote, setVote] = useState(false);
+  useFocusEffect(useCallback(() => { refreshIfStale(); }, []));
   const p = plans[idx];
-  if (!draft || !p) return <Redirect href="/acasa" />;
+  if (draft && st.loading) return <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 20, paddingHorizontal: 20 }}><Checking draft={draft} /></View>;
+  if (!draft || !p) return <Redirect href={draft && surprise ? '/planuri-gata' : '/acasa'} />;
   const people = draft.people;
   const wx = APP.dayWeather(p.steps[0].at);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
 
-  const make = () => {
-    const route = p.steps.length > 1 ? 'r' + Date.now() : undefined;
-    const pids = p.steps.map((s) => createPlanAt(s.place.id, s.at, people, route ? { route } : {}));
-    toast(p.steps.length > 1 ? 'Gata! Seara e în Planuri, cu un bilet pentru fiecare loc.' : 'Gata! Planul e în Planuri.');
-    router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pids[0]) } });
-  };
+  const make = () => makeTickets(p, people);
+  const open = (url: string) => { WebBrowser.openBrowserAsync(url).catch(() => void Linking.openURL(url)); };
   const alt = (k: number) => { if (!setPlan(idx, APP.altPlan(idx, k))) toast('Nu mai am altă variantă bună în apropiere.'); };
 
   return (
@@ -67,13 +68,13 @@ export default function PlanDeschis() {
                   {k > 0 ? (
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 34 }}>
                       <View style={{ width: 2, height: 34, backgroundColor: t.line, marginLeft: 79 }} />
-                      <T style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{(p.drive ? '🚗 ' : '🚶 ') + s.travel + ' min până aici'}</T>
+                      <T style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : '🚶 ') + s.travel + ' min până aici'}</T>
                     </View>
                   ) : null}
                   <StepRow s={s} />
                   {s.reason ? <Muted numberOfLines={2} style={{ marginLeft: 58, marginTop: 4 }}>{s.reason}</Muted> : null}
                   <View style={{ marginLeft: 58, marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {c ? <Pill icon={c.site ? 'globe' : 'phone'} label={c.site ? 'Rezervă' : 'Sună'} onPress={() => void Linking.openURL(c.site ? (c.site.startsWith('http') ? c.site : 'https://' + c.site) : 'tel:' + c.phone.replace(/\s/g, ''))} /> : null}
+                    {c ? <Pill icon={c.site ? 'globe' : 'phone'} label={c.site ? 'Rezervă' : 'Sună'} onPress={() => (c.site ? open(c.site.startsWith('http') ? c.site : 'https://' + c.site) : void Linking.openURL('tel:' + c.phone.replace(/\s/g, '')))} /> : null}
                     <Pill icon="map" label="Drum" onPress={() => void Linking.openURL(nav)} />
                     <Pill icon="dice" label={OTHER[s.place.real.cat] ?? 'Altceva'} onPress={() => alt(k)} />
                   </View>
@@ -91,6 +92,7 @@ export default function PlanDeschis() {
         </View>
       </ScrollView>
       <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
+        {surprise ? <Big label="Altă surpriză" color={t.s2} ink={t.ink} icon={<Icon name="dice" color={t.ink} />} style={{ paddingHorizontal: 16 }} onPress={() => { void nextSurprise(); }} /> : null}
         <Big label="Facem așa" color="#FFD43B" ink="#0E1440" style={{ flex: 1 }} onPress={make} />
         {people >= 2 ? <Big label="La vot" color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} style={{ paddingHorizontal: 18 }} onPress={() => setVote(true)} /> : null}
       </View>

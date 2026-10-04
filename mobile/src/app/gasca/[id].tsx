@@ -74,7 +74,7 @@ export default function GascaView() {
             <Muted style={{ marginTop: 4 }}>{admin ? 'Gașca rămâne până o ștergi tu sau până ies toți. Dacă ieși, adminul trece la cel mai vechi membru.' : 'Dacă ieși, gașca rămâne pentru ceilalți.'}</Muted>
             {crew.mine === 'member' ? (
               <View style={{ gap: 8, marginTop: 4 }}>
-                <Big label="Pornește un vot" icon={<Icon name="users" color="#FFFFFF" />} onPress={() => { toast('Alege locurile, apoi „Trimite gășcii la vot” și alege ' + crew.name + '.'); router.push('/rezultate'); }} />
+                <Big label="Pornește un vot" icon={<Icon name="users" color="#FFFFFF" />} onPress={() => { toast('Alege locurile, apoi „Trimite gășcii la vot” și alege ' + crew.name + '.'); router.navigate('/exploreaza'); }} />
                 <Big label="Adaugă prieteni în gașcă" color={t.s2} ink={t.ink} onPress={() => { setPicked([]); setAdding(true); }} />
                 {code ? (
                   <View style={{ padding: 14, gap: 6, borderRadius: 18, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>

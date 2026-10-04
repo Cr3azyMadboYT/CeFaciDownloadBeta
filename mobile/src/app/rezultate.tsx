@@ -13,6 +13,7 @@ import { F, useTheme, type Theme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { VoteStart } from '../ui/VoteStart';
 import { tweaksFor } from '../lib/tweaks';
+import { firstDraft, runPlans } from '../lib/planAsk';
 import { PlacesMap } from '../ui/PlacesMap';
 import { useWeatherVersion } from '../lib/weather';
 
@@ -28,7 +29,10 @@ function role(t: Theme, i: number, page: number, p: Place, nearest: Place | null
   return ['Tot pe gustul vostru', t.s2, t.ink];
 }
 
-export default function Rezultate() {
+export default function Rezultate() { return <Results />; }
+
+/** The list; inside the Explorează tab (`inTab`) the bottom bar stays and there is no back arrow. */
+export function Results({ inTab = false }: { inTab?: boolean }) {
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
   const { f, sq, page: page0 } = useFilters();
@@ -65,9 +69,11 @@ export default function Rezultate() {
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 44 }}>
-          <Press onPress={() => (router.canGoBack() ? router.back() : router.replace('/acasa'))} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center', borderRadius: 14 }}>
-            <Icon name="back" color={t.ink} />
-          </Press>
+          {!inTab ? (
+            <Press onPress={() => (router.canGoBack() ? router.back() : router.replace('/acasa'))} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center', borderRadius: 14 }}>
+              <Icon name="back" color={t.ink} />
+            </Press>
+          ) : null}
           <Press onPress={() => setSheet(true)} accessibilityLabel="Filtre" style={{ flex: 1, height: 40, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <T numberOfLines={1} style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: t.ink2 }}>{WHO[f.who].label + ', ' + WHEN[f.when].label.toLowerCase() + ', ' + summaryOf(f)}</T>
             <Icon d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" size={16} color={t.blueInk} />
@@ -94,7 +100,7 @@ export default function Rezultate() {
         <Muted style={{ marginTop: 6 }}>{sub}</Muted>
         {tweaks.length || changed ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 6 }}>
-            {!searching ? <Chip small label="Seara completă" icon={'sparkle' as never} onPress={() => router.push('/seara')} /> : null}
+            {!searching ? <Chip small label="Fă-mi un plan pe toată seara" icon={'sparkle' as never} onPress={() => { void runPlans({ ...firstDraft(), mode: 'seara', vibes: f.vibes }); router.push('/planuri-gata'); }} /> : null}
             {tweaks.map((x) => (
               <Chip key={x.id} small label={x.label} icon={x.icon as never} onPress={() => { if (x.apply.q !== undefined) setSearch(x.apply.q); if (x.apply.f) setFilters(x.apply.f); }} />
             ))}

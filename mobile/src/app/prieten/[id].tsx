@@ -68,7 +68,7 @@ export default function Prieten() {
         </View>
 
         <View style={{ gap: 8 }}>
-          <Big label="Faceți un plan" icon={<Icon name="ticket" color="#FFFFFF" />} onPress={() => { toast('Alege locurile, apoi „Trimite gășcii la vot” sau trimite biletul lui ' + p.first_name + '.'); router.push('/rezultate'); }} />
+          <Big label="Faceți un plan" icon={<Icon name="ticket" color="#FFFFFF" />} onPress={() => { toast('Alege locurile, apoi „Trimite gășcii la vot” sau trimite biletul lui ' + p.first_name + '.'); router.navigate('/exploreaza'); }} />
           <Big label="Invită în gașcă" color={t.s2} ink={t.ink} disabled={!canInvite.length} onPress={() => setPick(true)} />
           {!canInvite.length ? <Muted>{crews.length ? 'E deja în toate gășcile tale.' : 'Încă n-ai nicio gașcă. Fă una din Planuri.'}</Muted> : null}
         </View>

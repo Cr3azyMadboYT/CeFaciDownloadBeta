@@ -14,6 +14,7 @@ adb root >/dev/null 2>&1; sleep 3; adb wait-for-device
 # the 3 buttons at the bottom, like on Cornel's Samsung
 adb shell cmd overlay enable com.android.internal.systemui.navbar.threebutton || true
 adb shell cmd overlay disable com.android.internal.systemui.navbar.gestural || true
+adb shell settings put global hide_error_dialogs 1 || true
 adb shell settings put global auto_time 0 || true
 adb shell settings put global auto_time_zone 0 || true
 adb shell setprop persist.sys.timezone Europe/Bucharest || true
@@ -51,6 +52,11 @@ shot() {
 tap() {
   # tap the first element whose text or description matches (a regex), e.g. tap 'Creează plan'
   local xy
+  # a system "isn't responding" box from the emulator would take the tap: wait it out
+  adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+  adb pull /sdcard/ui.xml shots/tap.xml >/dev/null 2>&1
+  xy=$(python3 .github/e2e/ui.py shots/tap.xml 0 tap "^Wait$")
+  [ -n "$xy" ] && { echo "ANR dismissed"; adb shell input tap $xy; sleep 2; }
   adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
   adb pull /sdcard/ui.xml shots/tap.xml >/dev/null 2>&1
   xy=$(python3 .github/e2e/ui.py shots/tap.xml 0 tap "$1")
@@ -61,7 +67,7 @@ tap() {
 go() { adb shell am start -W -a android.intent.action.VIEW -d "cefaci:///$1" "$PKG" >/dev/null 2>&1; }
 
 adb shell am start -W -n "$PKG/.MainActivity" >/dev/null 2>&1
-sleep 25
+sleep 40
 navbar
 adb shell wm size; adb shell wm density
 shot start 1
@@ -81,7 +87,7 @@ if [ "$MODE" = "e2e" ]; then
   tap '^4( |$)' && shot pas-4
   tap '^(Mai departe|Gata)' && shot pas-5
   tap '^(Gata, fă-mi planul|Arată-mi planurile|Fă-mi planurile)' && shot planuri 8
-  tap '^(Alegem asta|Deschide)' && shot plan 3
+  tap '^Vezi pe hartă' && shot plan 3; adb shell input keyevent 4; sleep 2; tap '^(mai aproape|cu terasă)' && shot mai-vrei 8
   go acasa; sleep 3
   tap '^Surprinde-mă' && shot surpriza 8
   go acasa; sleep 3

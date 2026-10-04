@@ -82,12 +82,12 @@ export function Tour() {
         <View style={{ alignSelf: 'stretch', gap: 8 }}>
           {st.final === 'xp' ? (
             tour.replay
-              ? <Big label="Hai să vedem ce faci diseară!" color="#FFD43B" ink="#0E1440" onPress={() => finish('/rezultate')} />
+              ? <Big label="Hai să vedem ce faci diseară!" color="#FFD43B" ink="#0E1440" onPress={() => finish('/plan-nou')} />
               : <Big label="Mai departe" color="#FFD43B" ink="#0E1440" onPress={() => tourNext()} />
           ) : (
             <>
               <Big label="Arată-mi Plus" color="#FFD43B" ink="#0E1440" onPress={() => finish('/plus')} />
-              <Big label="Hai să vedem ce faci diseară!" color="rgba(255,255,255,0.14)" onPress={() => finish('/rezultate')} />
+              <Big label="Hai să vedem ce faci diseară!" color="rgba(255,255,255,0.14)" onPress={() => finish('/plan-nou')} />
             </>
           )}
         </View>
