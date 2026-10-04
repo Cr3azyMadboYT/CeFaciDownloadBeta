@@ -40,7 +40,7 @@ export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; 
     ['Buget de persoană, în lei', 'budget', BUDGET, ['0', '50', '100', '200', 'any'], false],
   ];
   const field = (val: string, ph: string, label: string, onChange: (x: string) => void) => (
-    <TextInput value={val} onChangeText={onChange} placeholder={ph} accessibilityLabel={label} keyboardType="number-pad" maxLength={4} placeholderTextColor={t.ink3}
+    <TextInput maxFontSizeMultiplier={1.15} value={val} onChangeText={onChange} placeholder={ph} accessibilityLabel={label} keyboardType="number-pad" maxLength={4} placeholderTextColor={t.ink3}
       style={{ flex: 1, minWidth: 0, height: 42, borderRadius: 999, borderWidth: 1, borderColor: val ? t.ink : t.line, backgroundColor: val ? t.ink : t.s1, color: val ? t.bg : t.ink, textAlign: 'center', fontFamily: F.sb, fontSize: 14, padding: 0 }} />
   );
   return (

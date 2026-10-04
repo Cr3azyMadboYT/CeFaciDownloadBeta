@@ -85,7 +85,7 @@ class Component extends DCLogic {
     const on = (x) => (x ? 'press chip on' : 'press chip');
     const seg = (x) => (x ? 'press seg on' : 'press seg');
     const SAY = {
-      phone: ['hi', s.sent ? 'Ți-am trimis un cod de 6 cifre pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod de 6 cifre, ca să știu că ești tu.'],
+      phone: ['hi', s.sent ? 'Ți-am trimis un cod pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod, ca să știu că ești tu.'],
       name: s.ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
       zone: ['up', 'Spune-mi de unde pleci și cât de departe ești dispus să mergi pentru o seară bună.'],
       likes: ['hi', likesN >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
@@ -113,9 +113,9 @@ class Component extends DCLogic {
     const mailOk = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(mail);
     v.phone = s.phone; v.onPhone = (e) => set({ phone: e && e.target ? String(e.target.value).slice(0, 80) : '', sent: false, code: '', authErr: '' });
     v.codeOpen = s.sent; v.code = s.code; v.codeBad = s.codeBad;
-    v.onCode = (e) => set({ code: e && e.target ? String(e.target.value).replace(/\D/g, '').slice(0, 6) : '', codeBad: false });
+    v.onCode = (e) => set({ code: e && e.target ? String(e.target.value).replace(/\D/g, '').slice(0, 10) : '', codeBad: false }); // Supabase sends 6 to 10 digits
     v.resend = () => { set({ authErr: '', code: '' }); APP.emailStart(mail).then((err) => set({ authErr: err || '' })); };
-    v.phoneOff = !!s.busy || (s.sent ? s.code.length !== 6 : !mailOk);
+    v.phoneOff = !!s.busy || (s.sent ? s.code.length < 6 : !mailOk);
     v.phoneBtn = s.busy ? 'O clipă…' : (s.sent ? 'Confirmă codul' : 'Trimite-mi codul');
     v.phoneNext = () => {
       set({ busy: true, authErr: '' });

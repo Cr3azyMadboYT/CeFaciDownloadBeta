@@ -41,7 +41,9 @@ export function Press({ style, children, onPress, disabled, haptic = true, ...re
 type TP = TextProps & { style?: StyleProp<TextStyle>; children?: ReactNode; color?: string };
 export function T({ style, color, ...p }: TP) {
   const { t } = useTheme();
-  return <Text {...p} style={[{ fontFamily: F.m, fontSize: 15, color: color ?? t.ink }, style]} />;
+  // the phone's own text size may grow body text a little, never the big titles (they would push buttons off screen)
+  const size = (StyleSheet.flatten(style)?.fontSize as number | undefined) ?? 15;
+  return <Text maxFontSizeMultiplier={size >= 24 ? 1 : 1.15} {...p} style={[{ fontFamily: F.m, fontSize: 15, color: color ?? t.ink }, style]} />;
 }
 export const H1 = ({ style, ...p }: TP) => <T accessibilityRole="header" {...p} style={[{ fontFamily: F.display, fontSize: 30, lineHeight: 31, letterSpacing: -0.6 }, style]} />;
 export const Lead = ({ style, ...p }: TP) => { const { t } = useTheme(); return <T {...p} style={[{ fontFamily: F.m, fontSize: 15, lineHeight: 22, color: t.ink2 }, style]} />; };
@@ -99,7 +101,7 @@ export const Field = forwardRef<TextInput, TextInputProps & { prefix?: string; b
   return (
     <View style={{ minHeight: 54, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, borderRadius: 14, backgroundColor: t.s1, borderWidth: 1.5, borderColor: p.focused ? t.blue : t.line }}>
       {prefix ? <T style={{ fontFamily: F.b, fontSize: 17, color: t.ink2 }}>{prefix}</T> : null}
-      <TextInput ref={ref} placeholderTextColor={t.ink3} {...p}
+      <TextInput ref={ref} placeholderTextColor={t.ink3} maxFontSizeMultiplier={1.15} {...p}
         style={[{ flex: 1, minHeight: 50, color: t.ink, ...(Platform.OS === 'web' ? { outlineStyle: 'none' } as object : null), fontFamily: big ? F.b : F.sb, fontSize: big ? 26 : 17, letterSpacing: big ? 8 : 0, padding: 0 }, style]} />
     </View>
   );

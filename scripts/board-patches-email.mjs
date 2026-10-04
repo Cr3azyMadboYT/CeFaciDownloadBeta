@@ -29,7 +29,7 @@ export const CONT_EMAIL = [
  [
   "code",
   "phone: ['hi', 'Salut! Întâi numărul tău. Îți trimit un cod, ca să știu că ești tu.'],",
-  "phone: ['hi', s.sent ? 'Ți-am trimis un cod de 6 cifre pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod de 6 cifre, ca să știu că ești tu.'],"
+  "phone: ['hi', s.sent ? 'Ți-am trimis un cod pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod, ca să știu că ești tu.'],"
  ],
  [
   "code",
@@ -49,7 +49,7 @@ export const CONT_EMAIL = [
  [
   "code",
   "    v.phoneOff = s.sent ? s.code.length !== 6 : digits.length < 9;",
-  "    v.phoneOff = !!s.busy || (s.sent ? s.code.length !== 6 : !mailOk);"
+  "    v.phoneOff = !!s.busy || (s.sent ? s.code.length < 6 : !mailOk);"
  ],
  [
   "code",
@@ -65,5 +65,15 @@ export const CONT_EMAIL = [
   "code",
   "      goLocal: () => this.go('name'),",
   "      goEmail: () => this.setState({ step: 'phone', sent: false, code: '', authErr: '' }), goLocal: () => this.go('name'),"
+ ],
+ [
+  "code",
+  "    v.onCode = (e) => set({ code: e && e.target ? String(e.target.value).replace(/\\D/g, '').slice(0, 6) : '', codeBad: false });",
+  "    v.onCode = (e) => set({ code: e && e.target ? String(e.target.value).replace(/\\D/g, '').slice(0, 10) : '', codeBad: false }); // Supabase sends 6 to 10 digits"
+ ],
+ [
+  "tpl",
+  "autocomplete=\"one-time-code\" maxlength=\"6\"",
+  "autocomplete=\"one-time-code\" maxlength=\"10\""
  ]
 ];

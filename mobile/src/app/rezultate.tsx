@@ -60,7 +60,7 @@ export default function Rezultate() {
         </View>
         <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 10, height: 50, paddingLeft: 14, paddingRight: 4, borderRadius: 16, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
           <Icon name="search" size={16} color={t.ink2} />
-          <TextInput value={sq} onChangeText={(x) => setSearch(x.slice(0, 60))} placeholder="Caută: un nume, „pizza sector 2”, „bar cu terasă”" placeholderTextColor={t.ink3}
+          <TextInput maxFontSizeMultiplier={1.15} value={sq} onChangeText={(x) => setSearch(x.slice(0, 60))} placeholder="Caută: un nume, „pizza sector 2”, „bar cu terasă”" placeholderTextColor={t.ink3}
             accessibilityLabel="Caută un loc" returnKeyType="search" autoCorrect={false}
             style={{ flex: 1, height: 46, padding: 0, color: t.ink, fontFamily: F.sb, fontSize: 15 }} />
           {sq ? <Press onPress={() => setSearch('')} accessibilityLabel="Șterge căutarea" style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={16} color={t.ink2} /></Press> : null}

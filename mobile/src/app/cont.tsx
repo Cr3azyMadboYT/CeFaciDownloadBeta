@@ -1,11 +1,12 @@
 // Sign-up, as in design/canvas/client/Cont: start → (email code) → name, username, birth date → zone → likes →
 // style → five real places → friends → done. Google or email make an account; "Continuă fără cont" keeps it on the phone.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Animated, BackHandler, Easing, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Animated, BackHandler, Easing, KeyboardAvoidingView, Platform, ScrollView, useWindowDimensions, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Rect } from 'react-native-svg';
 import { APP, finishSignup, onSignedIn, useApp } from '../lib/session';
+import { useLightBar } from '../ui/bar';
 import { Bilu, type Mood } from '../ui/Bilu';
 import { Icon } from '../ui/Icon';
 import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, Sheet, T } from '../ui/kit';
@@ -91,6 +92,7 @@ const Glow = ({ top }: { top: number }) => (
 export default function Cont() {
   const { t, name: themeName, set: setTheme } = useTheme();
   const ins = useSafeAreaInsets();
+  const short = useWindowDimensions().height < 760; // small phones: a smaller Bilu, so the buttons stay on screen
   const prefs = useApp((s) => s.prefs);
   const [step, setStep] = useState<Step>('start');
   const [authErr, setAuthErr] = useState('');
@@ -117,6 +119,7 @@ export default function Cont() {
   const [focus, setFocus] = useState('');
   const [saveErr, setSaveErr] = useState('');
 
+  useLightBar(step === 'start' || step === 'done');
   const k = STEPS.indexOf(step as (typeof STEPS)[number]);
   const go = (s: Step) => setStep(s);
   const back = () => { if (step === 'email') go('start'); else go(STEPS[Math.max(0, k - 1)]); };
@@ -173,7 +176,7 @@ export default function Cont() {
   };
 
   const say: Partial<Record<Step, [Mood, string]>> = {
-    email: ['hi', sent ? 'Ți-am trimis un cod de 6 cifre pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod de 6 cifre, ca să știu că ești tu.'],
+    email: ['hi', sent ? 'Ți-am trimis un cod pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod, ca să știu că ești tu.'],
     name: ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
     zone: ['up', 'Spune-mi de unde pleci și cât de departe ești dispus să mergi pentru o seară bună.'],
     likes: ['hi', likes.length >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
@@ -199,7 +202,7 @@ export default function Cont() {
   if (step === 'start') {
     return (
       <Slide k="start">
-        <View style={{ flex: 1, backgroundColor: '#0E1440', paddingTop: ins.top }}>
+        <ScrollView style={{ flex: 1, backgroundColor: '#0E1440' }} contentContainerStyle={{ flexGrow: 1, paddingTop: ins.top }} bounces={false} showsVerticalScrollIndicator={false}>
           <Glow top={ins.top + 70} />
           <View style={{ paddingTop: 16, paddingHorizontal: 24, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Logo />
@@ -210,10 +213,10 @@ export default function Cont() {
               <Icon name={themeName === 'noapte' ? 'sun' : 'moon'} size={16} color="#FFFFFF" />
             </Press>
           </View>
-          <View style={{ alignItems: 'center', marginTop: 34 }}><Bilu size={170} mood="hi" /></View>
+          <View style={{ alignItems: 'center', marginTop: short ? 12 : 34 }}><Bilu size={short ? 120 : 170} mood="hi" /></View>
           <T accessibilityRole="header" style={{ marginTop: 18, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: 38, lineHeight: 39, letterSpacing: -1.1, color: '#FFFFFF' }}>{'Nu mai stai acasă\nfără să vrei.'}</T>
           <T style={{ marginTop: 12, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: 16, lineHeight: 23, color: '#C9CEE6' }}>Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.</T>
-          <View style={{ flex: 1 }} />
+          <View style={{ flex: 1, minHeight: 24 }} />
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 10 }}>
             <Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else setTimeout(() => setBusy(false), 8000); }}
               style={{ height: 56, borderRadius: 18, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
@@ -229,7 +232,7 @@ export default function Cont() {
             {authErr ? <Note kind="err">{authErr}</Note> : null}
             <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ai deja cont? Intră la fel, cu Google sau cu emailul. · Fără cont, profilul rămâne doar pe telefonul ăsta. Continuând, accepți Termenii și Politica de confidențialitate.</T>
           </View>
-        </View>
+        </ScrollView>
       </Slide>
     );
   }
@@ -239,9 +242,9 @@ export default function Cont() {
     const summary = likes.slice(0, 3).map((key) => LIKES.find((l) => l[0] === key)![1]).concat(['până la ' + dist + ' min', BUDGET_TXT[budget], yes + ' din ' + votes.length + ' locuri pe listă']);
     return (
       <Slide k="done">
-        <View style={{ flex: 1, backgroundColor: '#0E1440', paddingTop: ins.top }}>
+        <ScrollView style={{ flex: 1, backgroundColor: '#0E1440' }} contentContainerStyle={{ flexGrow: 1, paddingTop: ins.top }} bounces={false} showsVerticalScrollIndicator={false}>
           <Glow top={ins.top + 40} />
-          <View style={{ alignItems: 'center', marginTop: 56 }}><Bilu size={150} mood="yay" /></View>
+          <View style={{ alignItems: 'center', marginTop: short ? 20 : 56 }}><Bilu size={short ? 110 : 150} mood="yay" /></View>
           <T accessibilityRole="header" style={{ marginTop: 16, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: 34, lineHeight: 35, letterSpacing: -0.7, color: '#FFFFFF' }}>{'Gata' + (first.trim() ? ', ' + first.trim() : '') + '! Acum te cunosc puțin.'}</T>
           <T style={{ marginTop: 10, marginHorizontal: 30, textAlign: 'center', fontFamily: F.m, fontSize: 15, lineHeight: 22, color: '#C9CEE6' }}>Cu cât ieși mai mult și îmi spui cum a fost, cu atât te nimeresc mai bine.</T>
           <View style={{ marginTop: 18, marginHorizontal: 24, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 6 }}>
@@ -257,7 +260,7 @@ export default function Cont() {
             <Big label={busy ? 'O clipă…' : 'Intră în aplicație'} color="#FFD43B" ink="#0E1440" onPress={enter} disabled={busy} />
             <Quiet label="Ia-o de la capăt" color="#FFFFFF" onPress={restart} />
           </View>
-        </View>
+        </ScrollView>
       </Slide>
     );
   }
@@ -265,7 +268,8 @@ export default function Cont() {
   const bubble = sayNow ? <Say mood={sayNow[0]} text={sayNow[1]} /> : null;
 
   if (step === 'email') {
-    const off = busy || (sent ? code.length !== 6 : !mailOk);
+    // Supabase sends 6 to 10 digits, depending on the project setting: take whatever came
+    const off = busy || (sent ? code.length < 6 : !mailOk);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Slide k="email">
@@ -280,8 +284,8 @@ export default function Cont() {
               {sent ? (
                 <View style={{ marginTop: 10, gap: 8 }}>
                   <Lbl>Codul din email</Lbl>
-                  <Field big value={code} onChangeText={(x) => { setCode(x.replace(/\D/g, '').slice(0, 6)); setCodeBad(false); }} placeholder="••••••" accessibilityLabel="Codul din email"
-                    keyboardType="number-pad" autoComplete="one-time-code" textContentType="oneTimeCode" maxLength={6} autoFocus
+                  <Field big value={code} onChangeText={(x) => { setCode(x.replace(/\D/g, '').slice(0, 10)); setCodeBad(false); }} placeholder="cod" accessibilityLabel="Codul din email"
+                    keyboardType="number-pad" autoComplete="one-time-code" textContentType="oneTimeCode" maxLength={10} autoFocus
                     focused={focus === 'code'} onFocus={() => setFocus('code')} onBlur={() => setFocus('')} />
                   {codeBad ? <Note kind="err">Codul nu e bun. Mai încearcă.</Note> : null}
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

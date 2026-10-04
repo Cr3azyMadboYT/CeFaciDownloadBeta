@@ -8,6 +8,7 @@ import { APP, useApp } from '../../lib/session';
 import { WHO, phaseOfHour, setFilters, summaryOf, useFilters, type Phase } from '../../lib/filters';
 import { NO_PLANS, DAYKEY, createPlan, sortPlans, type Plan } from '../../lib/plans';
 import { Avatar } from '../../ui/Avatar';
+import { useLightBar } from '../../ui/bar';
 import { FilterSheet } from '../../ui/FilterSheet';
 import { Icon, I } from '../../ui/Icon';
 import { Big, H1, Muted, Press, Sheet, T } from '../../ui/kit';
@@ -46,7 +47,7 @@ function FlipWords({ words }: { words: string[] }) {
   }, [words, a]);
   return (
     <View style={{ height: 38, marginTop: 4 }} accessibilityLiveRegion="polite">
-      <Animated.Text style={{ fontFamily: F.hand, fontSize: 30, lineHeight: 38, color: '#FFD43B', opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }] }}>
+      <Animated.Text maxFontSizeMultiplier={1} style={{ fontFamily: F.hand, fontSize: 30, lineHeight: 38, color: '#FFD43B', opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }] }}>
         {words[i % words.length]}
       </Animated.Text>
     </View>
@@ -66,6 +67,7 @@ export default function Acasa() {
   const prefs = useApp((s) => s.prefs);
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
   const now = useClock();
+  useLightBar();
   const phase = phaseOfHour(now.getHours());
   const [sheet, setSheet] = useState(false);
   const [crewOpen, setCrewOpen] = useState(false);
