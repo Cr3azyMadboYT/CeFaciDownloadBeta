@@ -14,9 +14,8 @@ import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, Note, Press, Seg, Sheet, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
+import { LEVELS, LEVEL_XP, levelOf } from '../../lib/levels';
 
-const LEVELS = ['', 'Boboc', 'Scânteie', 'Radar', 'Busolă', 'Motorul găștii', 'Legenda orașului'];
-const LEVEL_XP = [0, 100, 400, 900, 1500, 2500, 4000];
 const INKS = ['#2F5BFF', '#FF6A4D', '#E0A800', '#8C6CFF'];
 const ROTS = ['-6deg', '5deg', '-3deg', '7deg'];
 const fmt = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -40,7 +39,7 @@ export default function Profil() {
     void listFriends(who.id).then((r) => setFriends(r.filter((x) => x.status === 'accepted').length));
   }, [who, known]));
   useEffect(() => { if (!arm) return; const id = setTimeout(() => setArm(false), 5000); return () => clearTimeout(id); }, [arm]);
-  const lv = LEVEL_XP.reduce((acc, need, i) => (i && xp >= need ? i : acc), 0);
+  const lv = levelOf(xp);
   const top = lv >= LEVEL_XP.length - 1;
   const cap = top ? LEVEL_XP[LEVEL_XP.length - 1] : LEVEL_XP[lv + 1];
   const pct = Math.min(100, (xp / cap) * 100);

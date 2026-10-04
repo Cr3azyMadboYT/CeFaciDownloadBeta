@@ -53,3 +53,31 @@ export async function deleteCrew(crewId: string) {
   const { error } = await db().from('crews').delete().eq('id', crewId);
   return error ? 'Nu am putut șterge gașca. Încearcă iar.' : null;
 }
+
+/** Invites friends into a crew I am in (they show as "Invitat" until they accept). */
+export async function inviteToCrew(crewId: string, me: string, ids: string[]) {
+  if (!ids.length) return null;
+  const { error } = await db().from('crew_members').insert(ids.map((user_id) => ({ crew_id: crewId, user_id, status: 'invited', invited_by: me })));
+  if (!error) return null;
+  return /15/.test(error.message ?? '') ? 'O gașcă are maximum 15 oameni.' : /duplicate|unique/i.test(error.message ?? '') ? 'E deja în gașcă sau invitat.' : 'Nu am putut trimite invitația. Încearcă iar.';
+}
+/** The crew's invite code (valid 7 days); the admin can make a new one, which stops the old one. */
+export async function crewCode(crewId: string): Promise<{ code: string; until: string } | null> {
+  const { data } = await db().from('crews').select('invite_token, invite_expires_at').eq('id', crewId).maybeSingle();
+  return data ? { code: data.invite_token as string, until: data.invite_expires_at as string } : null;
+}
+export async function newCrewCode(crewId: string): Promise<string | null> {
+  const { data, error } = await db().rpc('reset_crew_link', { p_crew: crewId });
+  return error ? null : (data as string);
+}
+/** Joins a crew with the code someone sent. Returns the crew id or an error to show. */
+export async function joinWithCode(code: string): Promise<{ id?: string; err?: string }> {
+  const { data, error } = await db().rpc('join_crew', { p_token: code.trim().toLowerCase() });
+  if (error) return { err: /expirat/i.test(error.message ?? '') ? 'Codul a expirat sau nu e bun. Cere unul nou.' : /15/.test(error.message ?? '') ? 'Gașca e plină (15 oameni).' : 'Nu am putut intra. Verifică codul.' };
+  return { id: data as string };
+}
+/** The crew's carnet: the outings planned together, newest first. */
+export async function crewOutings(crewId: string): Promise<{ id: string; venueId: string; name: string; at: string }[]> {
+  const { data } = await db().from('plans').select('id, venue_id, venue_name, starts_at, status').eq('crew_id', crewId).neq('status', 'cancelled').lt('starts_at', new Date().toISOString()).order('starts_at', { ascending: false }).limit(30);
+  return ((data ?? []) as { id: string; venue_id: string; venue_name: string; starts_at: string }[]).map((p) => ({ id: p.id, venueId: p.venue_id, name: p.venue_name, at: p.starts_at }));
+}

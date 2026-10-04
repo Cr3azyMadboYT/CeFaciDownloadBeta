@@ -49,3 +49,14 @@ export async function accept(me: string, them: string) {
 export async function remove(me: string, them: string) {
   await db().from('friendships').delete().or(`and(requester.eq.${me},addressee.eq.${them}),and(requester.eq.${them},addressee.eq.${me})`);
 }
+
+export interface Profile extends Person { xp: number; stamps: number }
+/** A friend's card: name, level (XP) and stamps; null if we may not see them. */
+export async function profileOf(id: string): Promise<Profile | null> {
+  const { data } = await db().from('profiles').select('id, username, first_name, xp, stamps').eq('id', id).maybeSingle();
+  return (data as Profile | null) ?? null;
+}
+export async function mutual(id: string): Promise<Person[]> {
+  const { data } = await db().rpc('mutual_friends', { p_other: id });
+  return (data as Person[] | null) ?? [];
+}

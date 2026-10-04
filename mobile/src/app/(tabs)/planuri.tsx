@@ -5,14 +5,14 @@ import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { NO_PLANS, dayShort, sortPlans, type Plan } from '../../lib/plans';
-import { listCrews, type Crew } from '../../lib/crews';
+import { joinWithCode, listCrews, type Crew } from '../../lib/crews';
 import { toast } from '../../lib/toast';
 import { answer, listInvites, watchPlans, type Invite } from '../../lib/together';
 import { listVotes, type VoteRow } from '../../lib/votes';
 import { CrewMark } from '../../ui/CrewMark';
 import { Dashed } from '../../ui/Dashed';
 import { Icon } from '../../ui/Icon';
-import { Big, H1, Lbl, Muted, Press, T } from '../../ui/kit';
+import { Big, Field, H1, Lbl, Muted, Note, Press, Sheet, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 
@@ -45,6 +45,18 @@ export default function Planuri() {
     refresh();
   };
   const fresh = invites.filter((i) => i.answer === 'pending');
+  const [joinOpen, setJoinOpen] = useState(false);
+  const [joinCode, setJoinCode] = useState('');
+  const [joinErr, setJoinErr] = useState('');
+  const join = async () => {
+    setBusy('join'); setJoinErr('');
+    const r = await joinWithCode(joinCode);
+    setBusy('');
+    if (r.err) { setJoinErr(r.err); return; }
+    setJoinOpen(false); setJoinCode('');
+    toast('Ai intrat în gașcă!');
+    router.push({ pathname: '/gasca/[id]', params: { id: r.id! } });
+  };
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
@@ -129,7 +141,10 @@ export default function Planuri() {
         </View>
       )}
       <View style={{ marginTop: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Lbl>Gășcile tale</Lbl>
+        <Lbl style={{ flex: 1 }}>Gășcile tale</Lbl>
+        {known ? <Press onPress={() => { setJoinErr(''); setJoinOpen(true); }} style={{ height: 40, paddingHorizontal: 12, marginRight: 6, borderRadius: 999, borderWidth: 1, borderColor: t.line, justifyContent: 'center' }}>
+          <T style={{ fontFamily: F.sb, fontSize: 14 }}>Intră cu un cod</T>
+        </Press> : null}
         <Press onPress={() => router.push('/gasca-noua')} style={{ height: 40, paddingLeft: 10, paddingRight: 14, borderRadius: 999, backgroundColor: t.blueSoft, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Icon name="plus" size={16} color={t.blueInk} width={2.4} />
           <T style={{ fontFamily: F.sb, fontSize: 14, color: t.blueInk }}>Gașcă nouă</T>
@@ -159,6 +174,13 @@ export default function Planuri() {
         </View>
       )}
     </ScrollView>
+    <Sheet open={joinOpen} onClose={() => setJoinOpen(false)}>
+      <H1 style={{ fontSize: 26 }}>Intră într-o gașcă</H1>
+      <Muted style={{ marginTop: 6, marginBottom: 12, fontSize: 15, lineHeight: 21 }}>Scrie codul primit de la cineva din gașcă (12 caractere).</Muted>
+      <Field value={joinCode} onChangeText={(x) => setJoinCode(x.replace(/\s/g, '').slice(0, 12))} placeholder="ex: abcd2345efgh" autoCapitalize="none" autoCorrect={false} />
+      {joinErr ? <View style={{ marginTop: 10 }}><Note kind="err">{joinErr}</Note></View> : null}
+      <Big style={{ marginTop: 14 }} label={busy === 'join' ? 'Intru…' : 'Intră'} disabled={joinCode.length < 12 || busy === 'join'} onPress={join} />
+    </Sheet>
     <TopShade />
     </View>
   );

@@ -145,6 +145,10 @@ export default function Vot() {
         {over && win ? (
           <View style={{ marginTop: 16, gap: 8 }}>
             <Big label={busy === 'plan' ? 'Fac planul…' : v.planId ? 'Deschide planul' : 'Facem planul'} disabled={busy === 'plan'} onPress={makePlan} />
+            {!v.crewId && v.voters.length >= 3 ? (
+              <Big label="Păstrați gașca? Faceți una din voi" color={t.s2} ink={t.ink}
+                onPress={() => router.push({ pathname: '/gasca-noua', params: { pre: v.voters.filter((x) => x.id !== me).map((x) => x.id).join(',') } })} />
+            ) : null}
           </View>
         ) : null}
       </ScrollView>

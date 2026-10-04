@@ -1,7 +1,7 @@
 // Gașcă nouă: name, stamp, colour, at least 2 friends. Friends get an invitation and join when they accept.
 import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { STAMP_COLORS, STAMP_ICONS, createCrew } from '../lib/crews';
 import { listFriends, type Person } from '../lib/friends';
@@ -22,7 +22,8 @@ export default function GascaNoua() {
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('star');
   const [color, setColor] = useState(STAMP_COLORS[0][0]);
-  const [picked, setPicked] = useState<string[]>([]);
+  const { pre } = useLocalSearchParams<{ pre?: string }>();
+  const [picked, setPicked] = useState<string[]>(() => (pre ? pre.split(',').filter(Boolean) : []));
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const [focus, setFocus] = useState(false);
@@ -35,7 +36,7 @@ export default function GascaNoua() {
   const auto = names.length >= 2 ? 'Tu, ' + names.slice(0, 2).join(' și ') + (names.length > 2 ? ' și încă ' + (names.length - 2) : '') : 'ex: Gașca de vineri';
   const create = async () => {
     setBusy(true); setErr('');
-    const r = await createCrew((name.trim() || auto).slice(0, 40), icon, color, picked);
+    const r = await createCrew((name.trim() || auto).slice(0, 40), icon, color, picked.filter((x) => friends?.some((f) => f.id === x)));
     setBusy(false);
     if (r.err) { setErr(r.err); return; }
     toast('Invitațiile au plecat. Intră în gașcă doar cine acceptă.');

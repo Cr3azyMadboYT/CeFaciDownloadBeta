@@ -114,7 +114,7 @@ export default function Prieteni() {
             } />
           ))}
           <Lbl style={{ marginTop: 10 }}>{friends.length ? 'Prietenii tăi (' + friends.length + ')' : 'Prietenii tăi'}</Lbl>
-          {friends.length ? friends.map((r) => <Row key={r.person.id} p={r.person} />) : <Muted>Încă n-ai prieteni în CeFaci. Caută-i mai sus sau trimite-le codul tău.</Muted>}
+          {friends.length ? friends.map((r) => <Press key={r.person.id} onPress={() => router.push({ pathname: '/prieten/[id]', params: { id: r.person.id } })} accessibilityLabel={'Profil: ' + r.person.first_name}><Row p={r.person} right={<Icon name="next" size={16} color={t.ink3} />} /></Press>) : <Muted>Încă n-ai prieteni în CeFaci. Caută-i mai sus sau trimite-le codul tău.</Muted>}
           {sent.length ? <Lbl style={{ marginTop: 10 }}>Așteaptă răspuns</Lbl> : null}
           {sent.map((r) => <Row key={r.person.id} p={r.person} right={<Muted>trimisă</Muted>} />)}
         </View>
