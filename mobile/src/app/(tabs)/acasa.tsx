@@ -82,7 +82,7 @@ export default function Acasa() {
   const [sheet, setSheet] = useState(false);
   const [crewOpen, setCrewOpen] = useState(false);
 
-  const all = useMemo(() => APP.matches(f), [f, prefs]);
+  const all = useMemo(() => APP.matches(f), [f, prefs, wxv]);
   // the counts under "Ai chef de…" are counted after the screen is shown, one by one, so Acasă opens at once
   const [counts, setCounts] = useState<Record<string, number>>({});
   useEffect(() => {

@@ -79,7 +79,8 @@ export default function Vot() {
     if (r.err) { setErr(r.err); return; }
     if (!APP.byId(r.venueId!)) { toast('Planul e făcut, dar locul nu mai e în lista noastră.'); back(); return; }
     void comeTo(r.planId!, me);
-    const opt = v.options.find((o) => o.venueId === r.venueId) ?? win;
+    // two evenings can start at the same restaurant: the winner is the option this vote picked
+    const opt = win.venueId === r.venueId ? win : v.options.find((o) => o.venueId === r.venueId) ?? win;
     const route = opt.details.route;
     if (route && route.length > 1) {
       // a whole evening won: a ticket for every step, the first one is the shared plan

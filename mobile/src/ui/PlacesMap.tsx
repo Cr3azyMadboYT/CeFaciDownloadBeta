@@ -2,7 +2,7 @@
 // key and nothing to pay. Numbered pins for the places, a dot for where you start, and for "Seara completă" a line
 // through the steps in order. Tapping a pin opens its card; "Asta!" on the card picks the place.
 import { useMemo } from 'react';
-import { Platform, View } from 'react-native';
+import { Linking, Platform, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Muted } from './kit';
 import { useTheme } from './theme';
@@ -67,6 +67,8 @@ export function PlacesMap({ pins, origin, line = false, height = 360, onPick }: 
         javaScriptEnabled
         nestedScrollEnabled
         setSupportMultipleWindows={false}
+        // only the map itself loads here; a link (the map's credits) opens in the browser
+        onShouldStartLoadWithRequest={(req) => { if (/^(about:|data:)/.test(req.url)) return true; Linking.openURL(req.url).catch(() => {}); return false; }}
         onMessage={(e) => { try { const m = JSON.parse(e.nativeEvent.data); if (m.pick && onPick) onPick(m.pick); } catch { /* ignore */ } }}
         style={{ backgroundColor: t.bg }}
       />

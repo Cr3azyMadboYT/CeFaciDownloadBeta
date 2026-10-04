@@ -34,13 +34,14 @@ Deno.serve(async (req) => {
   }
   const dres = await fetch(`https://weather.googleapis.com/v1/forecast/days:lookup?key=${key}&${AT}&days=7&pageSize=7`);
   if (!dres.ok) return json({ error: 'Google: ' + dres.status }, 502);
-  const days = ((await dres.json()).forecastDays ?? []).map((d: Record<string, any>) => ({
+  const days = ((await dres.json()).forecastDays ?? []).filter((d: Record<string, any>) => d?.displayDate).map((d: Record<string, any>) => ({
     d: `${d.displayDate.year}-${String(d.displayDate.month).padStart(2, '0')}-${String(d.displayDate.day).padStart(2, '0')}`,
     max: r1(d.maxTemperature?.degrees), min: r1(d.minTemperature?.degrees),
     cd: d.daytimeForecast?.weatherCondition?.type ?? 'CLEAR', cn: d.nighttimeForecast?.weatherCondition?.type ?? 'CLEAR',
     rd: d.daytimeForecast?.precipitation?.probability?.percent ?? 0, rn: d.nighttimeForecast?.precipitation?.probability?.percent ?? 0,
   }));
   const data = { at: new Date().toISOString(), hours, days };
-  await db.from('weather').upsert({ id: 1, updated_at: data.at, data });
+  const { error } = await db.from('weather').upsert({ id: 1, updated_at: data.at, data });
+  if (error) return json({ error: 'Nu am putut salva vremea.' }, 500);
   return json({ fresh: false, hours: hours.length, days: days.length });
 });

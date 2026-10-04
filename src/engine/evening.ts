@@ -56,6 +56,7 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
   // a night out does not start at 4 in the afternoon, a walk in the park not at midnight
   const h = at.getHours() + at.getMinutes() / 60 + (at.getHours() < 5 ? 24 : 0);
   if (h > tpl.latest || h < (tpl.earliest ?? 0)) return null;
+  if ((ask.when === 'diseara' || ask.when === 'maine') && tpl.latest < 18) return null; // "diseară" is not a walk in the park at noon
   let from = ctx.origin;
   const used = new Set<string>();
   const steps: RouteStep[] = [];

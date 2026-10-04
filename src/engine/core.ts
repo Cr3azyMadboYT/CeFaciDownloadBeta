@@ -311,7 +311,7 @@ export function parseQuery(q: string): Parsed {
   // what the place should have
   const needs: [RegExp, Need][] = [
     [/ (?:cu )?(?:wi ?fi|internet|net bun|sa (?:pot )?lucra|sa lucrez|de lucru|cu laptopul|laptopul|laptop|remote) /, 'wifi'],
-    [/ (?:fara fumat|nefumatori|pentru nefumatori|sa nu se fumeze|fara tigari|smoke free|non smoking|unde nu se fumeaza) /, 'nosmoke'],
+    [/ (?:fara fumat|fara fum|nefumatori|pentru nefumatori|sa nu se fumeze|fara tigari|smoke free|non smoking|(?:unde |in care )?nu se fumeaza|nu (?:vreau|suport|imi place) (?:fumul|fum|fumat|tigari)) /, 'nosmoke'],
     [/ (?:unde se fumeaza|se fumeaza|cu fumat|fumatori|pentru fumatori|pot fuma|sa pot fuma|sa se poata fuma|fumat) /, 'smoke'],
     [/ (?:accesibil |acces )?(?:pentru |cu )?(?:scaun cu rotile|scaun rulant|carucior|caruciorul|dizabilitati|handicap|fara trepte|wheelchair) /, 'wheel'],
     [/ (?:cu )?(?:aer conditionat|aerul conditionat|racoare|climatizat|cu clima|cu ac) /, 'ac'],
@@ -345,17 +345,17 @@ export function parseQuery(q: string): Parsed {
   };
   const hm = (h: number, m: number) => String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
   const PART = '(?: (seara|noaptea|dimineata|pranz|dupa amiaza))?';
-  take(new RegExp(' dupa (?:ora )?(\\d{1,2})(?:h(\\d{2}))?' + PART + ' '), (m) => {
+  take(new RegExp(' dupa (?:ora )?(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete)\\b)' + PART + ' '), (m) => {
     const h = Number(m[1]); if (h > 24) return;
     t.hour = clock(h, m[3]); t.min = m[2] ? Number(m[2]) : 0; t.after = true; t.label = 'după ' + hm(t.hour, t.min);
   });
-  take(new RegExp(' (?:inainte de|inainte sa fie|pana la|pana in) (?:ora )?(\\d{1,2})(?:h(\\d{2}))?' + PART + ' '), (m) => {
+  take(new RegExp(' (?:inainte de|inainte sa fie|pana la|pana in) (?:ora )?(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete)\\b)' + PART + ' '), (m) => {
     const h = Number(m[1]); if (h > 24) return;
     const end = clock(h, m[3]) * 60 + (m[2] ? Number(m[2]) : 0);
     const at = Math.max(0, end - 60);
     t.hour = Math.floor(at / 60); t.min = at % 60; t.before = true; t.label = 'înainte de ' + hm(Math.floor(end / 60) % 24, end % 60);
   });
-  take(new RegExp(' (?:la |pe la |pela |ora |la ora |in jur de |pe la ora )(\\d{1,2})(?:h(\\d{2}))?' + PART + ' '), (m) => {
+  take(new RegExp(' (?:la |pe la |pela |ora |la ora |in jur de |pe la ora )(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete)\\b)' + PART + ' '), (m) => {
     const h = Number(m[1]); if (h > 24) return;
     t.hour = clock(h, m[3]); t.min = m[2] ? Number(m[2]) : 0; t.label = 'la ' + hm(t.hour, t.min);
   });

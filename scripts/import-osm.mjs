@@ -72,7 +72,7 @@ for (const e of els) {
   if (t.brand || t['brand:wikidata']) v.brand = t.brand || name;
   if (t.wheelchair === 'yes') v.wheelchair = true;
   else if (t.wheelchair === 'limited') v.wheelLimited = true;
-  if (/^(wlan|yes|wifi|public)$/.test(t.internet_access ?? '') || t['internet_access:fee'] === 'no' && t.internet_access) v.wifi = true;
+  if (/^(wlan|yes|wifi|public)$/.test(t.internet_access ?? '')) v.wifi = true;
   const smoke = t.smoking ?? '';
   if (smoke === 'no') v.smoke = 'no'; else if (smoke === 'outside') v.smoke = 'outside'; else if (/^(yes|separated|isolated|dedicated)$/.test(smoke)) v.smoke = 'yes';
   if (t.air_conditioning === 'yes') v.ac = true;

@@ -35,3 +35,15 @@ describe('needs', () => {
     expect(search(all, 'bar fără fumat', ctx).results.some((x) => x.v.smoke === 'yes')).toBe(false);
   });
 });
+
+describe('things the review caught', () => {
+  it('"la 4 persoane" is four people, not 16:00', () => {
+    const p = parseQuery('masă la 4 persoane');
+    expect(p.people).toBe(4);
+    expect(p.time).toBeUndefined();
+  });
+  it('"la 8h" is the evening', () => expect(time('bar la 8h')).toEqual([20, 0]));
+  it.each(['cafenea în care nu se fumează', 'restaurant nu vreau fumat', 'bar fără fum'])('%s → nefumători', (q) => {
+    expect(parseQuery(q).needs).toEqual(['nosmoke']);
+  });
+});
