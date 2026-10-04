@@ -6,22 +6,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
-import { removePlan, updPlan, type Plan } from '../../lib/plans';
+import { dateText, dayWord, planDay, removePlan, updPlan, type Plan } from '../../lib/plans';
 import { toast } from '../../lib/toast';
 import { Avatar } from '../../ui/Avatar';
+import { Dashed } from '../../ui/Dashed';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, Press, Quiet, Sheet, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 
-const MONTHS = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
-function dayOf(when: string) {
-  const d = new Date();
-  if (when === 'tom') d.setDate(d.getDate() + 1);
-  if (when === 'we') d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7));
-  return d;
-}
-const dateText = (when: string) => { const d = dayOf(when); return (when === 'tom' ? 'Mâine, ' : when === 'we' ? 'Sâmbătă, ' : when === 'now' ? 'Azi, acum' : 'Azi, ') + (when === 'now' ? '' : d.getDate() + ' ' + MONTHS[d.getMonth()]); };
-const dayLong: Record<string, string> = { now: 'azi', eve: 'azi', tom: 'mâine', we: 'sâmbătă' };
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export default function Bilet() {
@@ -46,14 +38,15 @@ export default function Bilet() {
   const needsRes = p.res !== 'none';
   const noted = pl.res === 'noted';
   const ct = p.contact;
-  const atSlot = pl.slot === 'acum' ? 'acum' : dayLong[pl.when] + ' la ' + pl.slot;
+  const day = dayWord(pl);
+  const atSlot = pl.slot === 'acum' ? 'acum' : day + ' la ' + pl.slot;
   const people = pl.people + (pl.people === 1 ? ' persoană' : ' persoane');
   const script = 'Bună ziua! Aș vrea ' + (ct?.unit ?? 'o masă') + ' pentru ' + people + ', ' + atSlot + ', pe numele ' + (name || 'meu') + '.';
   const open = APP.openLabel(p.id, pl.when);
   const go = (url: string, how: string) => { setVia(how); setExt('back'); Linking.openURL(url).catch(() => toast('Nu am putut deschide ' + how + '.')); };
   const navUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.real.lat + ',' + p.real.lon);
   const calendar = () => {
-    const d = dayOf(pl.when);
+    const d = planDay(pl);
     const [h, m] = pl.slot === 'acum' ? [new Date().getHours(), new Date().getMinutes()] : pl.slot.split(':').map(Number);
     d.setHours(h, m, 0, 0);
     const end = new Date(d.getTime() + Math.max(1, p.dur) * 3600e3);
@@ -81,7 +74,7 @@ export default function Bilet() {
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', gap: 8, height: ins.top + 52 }}>
         <Press onPress={close} accessibilityLabel="Închide" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="close" color={t.ink} /></Press>
-        <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15, color: t.ink2 }}>Plan confirmat</T>
+        <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15, color: t.ink2 }}>Planul tău</T>
       </View>
       <ScrollView contentContainerStyle={{ paddingBottom: Math.max(ins.bottom, 12) + 24 }} showsVerticalScrollIndicator={false}>
         <View style={{ marginHorizontal: 10, height: 12, borderRadius: 99, backgroundColor: t.dark ? '#000000' : '#0E1440', zIndex: 2 }} />
@@ -93,7 +86,7 @@ export default function Bilet() {
             </View>
             <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 58, lineHeight: 54, letterSpacing: -2.3, color: '#0E1440' }}>Asta facem.</T>
             <View style={{ marginTop: 18, flexDirection: 'row', gap: 12 }}>
-              <Cell label="Când" value={dateText(pl.when)} />
+              <Cell label="Când" value={pl.slot === 'acum' ? 'Azi, acum' : dateText(pl)} />
               <Cell label="Cu cine" value={pl.people === 1 ? 'Doar tu' : pl.people + ' persoane'} />
             </View>
             <View style={{ marginTop: 16, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -109,7 +102,7 @@ export default function Bilet() {
           <View style={{ height: 24 }}>
             <View style={{ position: 'absolute', left: -12, top: 0, width: 24, height: 24, borderRadius: 99, backgroundColor: t.bg }} />
             <View style={{ position: 'absolute', right: -12, top: 0, width: 24, height: 24, borderRadius: 99, backgroundColor: t.bg }} />
-            <View style={{ position: 'absolute', left: 20, right: 20, top: 11, borderTopWidth: 2, borderStyle: 'dashed', borderColor: 'rgba(14,20,64,0.35)' }} />
+            <Dashed color="rgba(14,20,64,0.35)" style={{ position: 'absolute', left: 20, right: 20, top: 11 }} />
           </View>
           <View style={{ paddingTop: 10, paddingLeft: 20, paddingRight: 16, paddingBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 76 }}>
             <Cell label="Cost de persoană" value={p.price === 0 ? 'Gratuit' : '~' + p.price + ' lei'} />
@@ -124,7 +117,7 @@ export default function Bilet() {
           ) : null}
           {noted ? (
             <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M9 12l2 2 4-4" bg={t.blueSoft} ink={t.blueInk} title={'Rezervat prin ' + (pl.resVia ?? 'telefon') + ' la ' + p.name}
-              sub={dayLong[pl.when].charAt(0).toUpperCase() + dayLong[pl.when].slice(1) + ', ' + pl.slot + ', ' + people + ', pe numele ' + (name || 'tău') + '.'} btn="Anulează"
+              sub={day.charAt(0).toUpperCase() + day.slice(1) + ', ' + pl.slot + ', ' + people + ', pe numele ' + (name || 'tău') + '.'} btn="Anulează"
               onPress={() => { updPlan(pl.pid, { res: 'none', resVia: undefined }); toast('Am scos rezervarea de pe bilet. Anunță-i și pe ei' + (ct?.phone ? ': ' + ct.phone : '') + '.'); }} />
           ) : null}
           {open ? <Muted style={{ paddingHorizontal: 4 }}>{open + (p.real.street ? ' · ' + p.real.street : '')}</Muted> : null}
@@ -154,7 +147,7 @@ export default function Bilet() {
         ) : (
           <View style={{ gap: 10 }}>
             <H1 style={{ fontSize: 26 }}>Ai rezervat?</H1>
-            <Muted style={{ fontSize: 15, lineHeight: 21 }}>O notăm pe bilet, ca s-o vadă și cine vine cu tine.</Muted>
+            <Muted style={{ fontSize: 15, lineHeight: 21 }}>O notăm pe bilet, ca s-o ai la îndemână.</Muted>
             <Big label="Da, notează rezervarea" onPress={() => { updPlan(pl.pid, { res: 'noted', resVia: via }); setExt('closed'); toast('Am notat rezervarea pe bilet.'); }} />
             <Big label="Nu mai au loc" color={t.s2} ink={t.ink} onPress={() => { setExt('closed'); removePlan(pl.pid); toast('Am scos ' + p.name + ' din planuri. Uite ce se mai potrivește.'); router.replace('/rezultate'); }} />
             <Quiet label="Mai târziu" onPress={() => setExt('closed')} />

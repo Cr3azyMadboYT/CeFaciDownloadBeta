@@ -36,6 +36,15 @@ describe('cloud sync', () => {
     await restore(db, 'u1');
     expect(JSON.parse(mem.get('cefaci.state')!).xp).toBe(400);
   });
+  it('keeps the newer answers: a zone changed on the phone survives, an older phone copy gives way', async () => {
+    mem.set('cefaci.prefs', JSON.stringify({ zone: 's3', prefsAt: 9 }));
+    const rows = { profiles: { username: 'a', first_name: 'A' }, profile_private: { birth_date: '2000-01-01', prefs: { zone: 's1', prefsAt: 5 }, app_state: {} } };
+    await restore(fake(rows).db, 'u1');
+    expect(JSON.parse(mem.get('cefaci.prefs')!).zone).toBe('s3');
+    mem.set('cefaci.prefs', JSON.stringify({ zone: 's3', prefsAt: 2 }));
+    await restore(fake(rows).db, 'u1');
+    expect(JSON.parse(mem.get('cefaci.prefs')!).zone).toBe('s1');
+  });
   it('says when the account is new', async () => {
     expect((await restore(fake({}).db, 'u1')).known).toBe(false);
   });

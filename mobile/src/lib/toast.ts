@@ -9,4 +9,5 @@ export function toast(m: string) {
   clearTimeout(t);
   t = setTimeout(() => { msg = ''; subs.forEach((f) => f()); }, 4200);
 }
-export const useToast = () => useSyncExternalStore((f) => { subs.add(f); return () => { subs.delete(f); }; }, () => msg, () => msg);
+const subscribe = (f: () => void) => { subs.add(f); return () => { subs.delete(f); }; };
+export const useToast = () => useSyncExternalStore(subscribe, () => msg, () => msg);

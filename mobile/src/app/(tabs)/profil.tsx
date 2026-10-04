@@ -1,12 +1,13 @@
 // Profil: the passport card (name, level, XP), friends, theme, stamps from real outings, and deleting the account.
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { listFriends } from '../../lib/friends';
 import { startOver, useApp } from '../../lib/session';
 import { Portrait } from '../../ui/Avatar';
 import { Icon } from '../../ui/Icon';
-import { H1, Muted, Press, Quiet, Seg, T } from '../../ui/kit';
+import { H1, Muted, Note, Press, Quiet, Seg, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 
 const LEVELS = ['', 'Boboc', 'Scânteie', 'Radar', 'Busolă', 'Motorul găștii', 'Legenda orașului'];
@@ -19,7 +20,15 @@ export default function Profil() {
   const prefs = useApp((s) => s.prefs);
   const who = useApp((s) => s.who);
   const xp = useApp((s) => (s.board.xp as number | undefined) ?? 0);
+  const known = useApp((s) => s.known);
   const [arm, setArm] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const [friends, setFriends] = useState<number | null>(null);
+  useFocusEffect(useCallback(() => {
+    if (!who || !known) { setFriends(null); return; }
+    void listFriends(who.id).then((r) => setFriends(r.filter((x) => x.status === 'accepted').length));
+  }, [who, known]));
   useEffect(() => { if (!arm) return; const id = setTimeout(() => setArm(false), 5000); return () => clearTimeout(id); }, [arm]);
   const lv = LEVEL_XP.reduce((acc, need, i) => (i && xp >= need ? i : acc), 0);
   const top = lv >= LEVEL_XP.length - 1;
@@ -60,7 +69,7 @@ export default function Profil() {
         <Press onPress={() => router.push('/prieteni')} style={{ minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16 }}>
           <Icon name="users" color={t.blueInk} />
           <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>Prieteni</T>
-          <Muted>0 prieteni</Muted>
+          <Muted>{friends === null ? (known ? '' : 'cu cont') : friends === 1 ? '1 prieten' : friends + ' prieteni'}</Muted>
         </Press>
         <View style={{ paddingTop: 12, paddingHorizontal: 16, paddingBottom: 14, borderTopWidth: 1, borderTopColor: t.line }}>
           <T style={{ marginBottom: 10, fontFamily: F.sb, fontSize: 15 }}>Temă</T>
@@ -69,6 +78,11 @@ export default function Profil() {
             <Seg label="Noapte" on={theme === 'noapte'} onPress={() => set('noapte')} />
           </View>
         </View>
+        <Press onPress={() => router.push('/preferinte')} style={{ minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: t.line }}>
+          <Icon name="heart" color={t.blueInk} />
+          <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>Ce-ți place</T>
+          <Icon name="next" size={16} color={t.ink3} />
+        </Press>
         <Press onPress={() => router.push('/zona')} style={{ minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, borderTopWidth: 1, borderTopColor: t.line }}>
           <Icon name="pin" color={t.blueInk} />
           <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>De unde pleci</T>
@@ -84,13 +98,21 @@ export default function Profil() {
         <View style={{ width: 52, height: 52, borderRadius: 999, borderWidth: 2.5, borderStyle: 'dashed', borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="plus" color={t.line} />
         </View>
-        <Muted style={{ flex: 1 }}>Primești o ștampilă la fiecare ieșire reală, iar poza bonului îți mai aduce 25 XP.</Muted>
+        <Muted style={{ flex: 1 }}>Ștampilele vin din ieșirile confirmate la local. Check-in-ul și bonul intră în aplicație curând.</Muted>
       </View>
 
-      {who ? <View style={{ marginTop: 18, alignItems: 'center' }}><Quiet label={'Ieși din cont (' + (who.email ?? 'Google') + ')'} color={t.ink2} onPress={() => { void startOver(false); router.replace('/cont'); }} /></View> : null}
-      <Press onPress={() => { if (!arm) { setArm(true); return; } void startOver(true).then(() => router.replace('/cont')); }}
+      {err ? <View style={{ marginTop: 14 }}><Note kind="err">{err}</Note></View> : null}
+      {who ? <View style={{ marginTop: 18, alignItems: 'center' }}><Quiet label={'Ieși din cont (' + (who.email ?? 'Google') + ')'} color={t.ink2} onPress={() => { if (busy) return; setBusy(true); void startOver(false).then(() => router.replace('/cont')); }} /></View> : null}
+      <Press disabled={busy} onPress={async () => {
+        if (!arm) { setArm(true); setErr(''); return; }
+        setBusy(true);
+        const e = await startOver(true);
+        setBusy(false); setArm(false);
+        if (e) { setErr(e); return; }
+        router.replace('/cont');
+      }}
         style={{ marginTop: who ? 4 : 18, alignSelf: 'center', height: 44, paddingHorizontal: 16, borderRadius: 999, backgroundColor: arm ? t.coralSoft : 'transparent', justifyContent: 'center' }}>
-        <T style={{ fontFamily: F.sb, fontSize: 14, color: arm ? t.coralInk : t.ink2 }}>{arm ? 'Apasă din nou: șterg tot, definitiv' : 'Șterge-mi contul'}</T>
+        <T style={{ fontFamily: F.sb, fontSize: 14, color: arm ? t.coralInk : t.ink2 }}>{busy ? 'Șterg…' : arm ? 'Apasă din nou: șterg tot, definitiv' : 'Șterge-mi contul'}</T>
       </Press>
       <Muted style={{ marginTop: 14, textAlign: 'center' }}>
         {'Datele localurilor: © contribuitorii '}

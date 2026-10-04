@@ -5,30 +5,18 @@ import { Animated, BackHandler, Easing, KeyboardAvoidingView, Platform, ScrollVi
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Rect } from 'react-native-svg';
-import { APP, finishSignup, onSignedIn, useApp } from '../lib/session';
+import { APP, finishSignup, getApp, lastSignIn, onSignedIn, onSyncTrouble, useApp, usernameFree } from '../lib/session';
+import type { Who } from '../lib/auth';
+import { signOutEverywhere } from '../lib/auth';
+import { LIKES } from '../lib/answers';
 import { useLightBar } from '../ui/bar';
 import { Bilu, type Mood } from '../ui/Bilu';
 import { Icon } from '../ui/Icon';
 import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 
-const LIKES: [string, string, string, string][] = [
-  ['bowl', 'Bowling și jocuri', '#8EA6FF', 'M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M9 8h.01M13 7h.01M11 11h.01'],
-  ['escape', 'Escape room', '#B7A3FF', 'M15 7a5 5 0 1 0-4.9 6H8v3H6v3h5v-4.1A5 5 0 0 0 15 7zM15 7h.01'],
-  ['film', 'Film', '#FFE58A', 'M4 4h16v16H4zM4 9h16M4 15h16M9 4v16M15 4v16'],
-  ['party', 'Club și party', '#FF8A73', 'M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0M21 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0'],
-  ['karaoke', 'Karaoke', '#FFD43B', 'M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3M19 10v2a7 7 0 0 1-14 0v-2M12 19v3'],
-  ['food', 'Mâncare bună', '#FF8A73', 'M3 11h18M5 11a7 7 0 0 0 14 0M12 4v3M8 5l1 2M16 5l-1 2'],
-  ['cafe', 'Cafenele și deserturi', '#FFE58A', 'M17 8h1a4 4 0 0 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4zM6 2v2M10 2v2M14 2v2'],
-  ['sport', 'Sport: padel, fotbal', '#5FD39A', 'M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20M12 2v20M2 12h20'],
-  ['nature', 'Natură și plimbări', '#5FD39A', 'M12 22V12M5 12l7-10 7 10zM8 17l4-5 4 5'],
-  ['culture', 'Muzee și teatru', '#B7A3FF', 'M3 21h18M5 21V10M19 21V10M9 21V10M15 21V10M2 10l10-7 10 7z'],
-  ['board', 'Board games', '#8EA6FF', 'M4 4h16v16H4zM8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01'],
-  ['standup', 'Stand-up', '#FFD43B', 'M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3M8 22h8M12 16v6'],
-];
 const STEPS = ['start', 'name', 'zone', 'likes', 'style', 'picks', 'friends', 'done'] as const;
 type Step = (typeof STEPS)[number] | 'email';
-const TAKEN = ['cornel', 'andrei', 'maria', 'ana', 'radu', 'ioana'];
 const clean = (x: string) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9._]/g, '').slice(0, 20);
 
 /** Steps slide in from the right, like the design's `.scr`. */
@@ -115,7 +103,6 @@ export default function Cont() {
   const [when, setWhen] = useState<string[]>(['eve', 'we']);
   const [mood, setMood] = useState('mix');
   const [votes, setVotes] = useState<[string | undefined, string][]>([]);
-  const [synced, setSynced] = useState(false);
   const [focus, setFocus] = useState('');
   const [saveErr, setSaveErr] = useState('');
 
@@ -131,17 +118,31 @@ export default function Cont() {
   });
 
   // Google / email worked: an existing account goes straight in, a new one continues with the name step
-  useEffect(() => onSignedIn((w, known) => {
+  // (also when the sign-in happened before this screen opened, e.g. the app was closed at the name step)
+  const signedInDone = (w: Who, known: boolean) => {
     setBusy(false);
     if (known) { router.replace('/acasa'); return; }
     setFirst((f) => f || w.first);
     setStep((s) => (s === 'start' || s === 'email' ? 'name' : s));
-  }), []);
+  };
+  useEffect(() => onSignedIn(signedInDone), []);
+  /** Google or the code worked; if it was the account already signed in, nothing new fires, so continue here. */
+  const afterAuth = () => { const l = lastSignIn(); if (l) signedInDone(l.who, l.known); };
+  const [netErr, setNetErr] = useState('');
+  useEffect(() => onSyncTrouble(setNetErr), []);
 
   // ---------- name ----------
   const u = clean(user);
-  const userTaken = u.length >= 3 && TAKEN.includes(u);
-  const userOk = u.length >= 3 && !userTaken;
+  // with an account the username is checked on the server as you type; without one it only has to look right
+  const [free, setFree] = useState<Record<string, boolean>>({});
+  const signedIn = useApp((s) => !!s.who);
+  useEffect(() => {
+    if (!signedIn || u.length < 3 || free[u] !== undefined) return;
+    const id = setTimeout(() => { void usernameFree(u).then((ok) => { if (ok !== null) setFree((f) => ({ ...f, [u]: ok })); }); }, 400);
+    return () => clearTimeout(id);
+  }, [u, signedIn, free]);
+  const userTaken = u.length >= 3 && free[u] === false;
+  const userOk = u.length >= 3 && !userTaken && (!signedIn || free[u] === true);
   const bM = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(birth);
   const bIso = bM ? bM[3] + '-' + bM[2] + '-' + bM[1] : '';
   const bDt = bM ? new Date(Number(bM[3]), Number(bM[2]) - 1, Number(bM[1])) : null;
@@ -159,8 +160,8 @@ export default function Cont() {
     setBusy(true); setAuthErr('');
     if (!sent) { const err = await APP.emailStart(mailN); setBusy(false); if (err) setAuthErr(err); else setSent(true); return; }
     const err = await APP.emailVerify(mailN, code);
-    if (err) { setBusy(false); setCodeBad(true); }
-    // success continues in onSignedIn
+    if (err) { setBusy(false); setCodeBad(true); return; }
+    afterAuth(); // otherwise it continues in onSignedIn
   };
 
   // ---------- picks: five real places near the chosen zone ----------
@@ -182,11 +183,12 @@ export default function Cont() {
     likes: ['hi', likes.length >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
     style: ['wink', 'Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.'],
     picks: ['up', pick === 0 ? 'Aproape gata: ' + (real.length || 5) + ' locuri reale din zona ta. Zi-mi repede dacă ai merge.' : votes[votes.length - 1][1] === 'yes' ? 'Notat! Îmi place cum gândești.' : votes[votes.length - 1][1] === 'no' ? 'Ok, pe ăsta nu ți-l mai arăt des.' : 'Hmm, bine. Îl las pe „poate”.'],
-    friends: ['hi', synced ? 'Când vin prietenii tăi, îi adaugi după @username și votați împreună.' : 'Cu prietenii e mai distractiv. Îi adaugi după @username, din Profil.'],
+    friends: ['hi', 'Cu prietenii e mai distractiv. Îi adaugi după @username, din Profil.'],
   };
   const sayNow = say[step];
 
   const toggle = (list: string[], set: (x: string[]) => void, v: string) => set(list.includes(v) ? list.filter((x) => x !== v) : list.concat([v]));
+  const startPicks = () => { setVotes([]); go('picks'); };
   const enter = async () => {
     setBusy(true);
     const err = await finishSignup({ first, user: u, birthIso, zoneId, dist, moves, likes, budget, who, when, mood, votes });
@@ -195,7 +197,8 @@ export default function Cont() {
     router.replace('/acasa');
   };
   const restart = () => {
-    setStep('start'); setFirst(''); setUser(''); setBirth(''); setBirthIso(''); setLikes([]); setVotes([]); setSynced(false); setSent(false); setCode(''); setMail('');
+    if (getApp().who) void signOutEverywhere(); // from the very beginning: sign in again, with any account
+    setStep('start'); setFirst(''); setUser(''); setBirth(''); setBirthIso(''); setLikes([]); setVotes([]); setSent(false); setCode(''); setMail('');
   };
 
   // ---------- screens ----------
@@ -218,18 +221,18 @@ export default function Cont() {
           <T style={{ marginTop: 12, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: 16, lineHeight: 23, color: '#C9CEE6' }}>Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.</T>
           <View style={{ flex: 1, minHeight: 24 }} />
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 10 }}>
-            <Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else setTimeout(() => setBusy(false), 8000); }}
+            <Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}
               style={{ height: 56, borderRadius: 18, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <GoogleG />
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#0E1440' }}>{busy ? 'O clipă…' : 'Continuă cu Google'}</T>
             </Press>
-            <Press onPress={() => { setAuthErr(''); setSent(false); setCode(''); go('email'); }}
+            <Press disabled={busy} onPress={() => { setAuthErr(''); setSent(false); setCode(''); go('email'); }}
               style={{ height: 56, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.06)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <MailIcon />
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>Continuă cu email</T>
             </Press>
             <Quiet label="Continuă fără cont" color="#FFFFFF" underline onPress={() => go('name')} />
-            {authErr ? <Note kind="err">{authErr}</Note> : null}
+            {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
             <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ai deja cont? Intră la fel, cu Google sau cu emailul. · Fără cont, profilul rămâne doar pe telefonul ăsta. Continuând, accepți Termenii și Politica de confidențialitate.</T>
           </View>
         </ScrollView>
@@ -254,7 +257,7 @@ export default function Cont() {
               </View>
             ))}
           </View>
-          <T style={{ marginTop: 16, marginHorizontal: 30, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ce-mi spui folosesc doar ca să-ți recomand locuri. Nu vindem date și nu arătăm reclame. Schimbi oricând din Profil → Preferințe.</T>
+          <T style={{ marginTop: 16, marginHorizontal: 30, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ce-mi spui folosesc doar ca să-ți recomand locuri. Nu vindem date și nu arătăm reclame. Schimbi oricând din Profil → Ce-ți place.</T>
           <View style={{ flex: 1 }} />
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 8 }}>
             <Big label={busy ? 'O clipă…' : 'Intră în aplicație'} color="#FFD43B" ink="#0E1440" onPress={enter} disabled={busy} />
@@ -271,7 +274,7 @@ export default function Cont() {
     // Supabase sends 6 to 10 digits, depending on the project setting: take whatever came
     const off = busy || (sent ? code.length < 6 : !mailOk);
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Slide k="email">
           <StepScreen k={1} onBack={back} foot={<Big label={busy ? 'O clipă…' : sent ? 'Confirmă codul' : 'Trimite-mi codul'} disabled={off} onPress={sendOrVerify} />}>
             {bubble}
@@ -280,12 +283,12 @@ export default function Cont() {
               <Field value={mail} onChangeText={(x) => { setMail(x.slice(0, 80)); setSent(false); setCode(''); setAuthErr(''); }} placeholder="nume@exemplu.ro" accessibilityLabel="Adresa de email"
                 keyboardType="email-address" autoCapitalize="none" autoComplete="email" autoCorrect={false} textContentType="emailAddress" returnKeyType="send"
                 onSubmitEditing={() => { if (!off) sendOrVerify(); }} focused={focus === 'mail'} onFocus={() => setFocus('mail')} onBlur={() => setFocus('')} />
-              {authErr ? <Note kind="err">{authErr}</Note> : null}
+              {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
               {sent ? (
                 <View style={{ marginTop: 10, gap: 8 }}>
                   <Lbl>Codul din email</Lbl>
                   <Field big value={code} onChangeText={(x) => { setCode(x.replace(/\D/g, '').slice(0, 10)); setCodeBad(false); }} placeholder="cod" accessibilityLabel="Codul din email"
-                    keyboardType="number-pad" autoComplete="one-time-code" textContentType="oneTimeCode" maxLength={10} autoFocus
+                    keyboardType="number-pad" returnKeyType="done" onSubmitEditing={() => { if (!off) void sendOrVerify(); }} autoComplete="one-time-code" textContentType="oneTimeCode" maxLength={10} autoFocus
                     focused={focus === 'code'} onFocus={() => setFocus('code')} onBlur={() => setFocus('')} />
                   {codeBad ? <Note kind="err">Codul nu e bun. Mai încearcă.</Note> : null}
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -303,7 +306,7 @@ export default function Cont() {
 
   if (step === 'name') {
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Slide k="name">
           <StepScreen k={1} onBack={back} foot={<Big label="Mai departe" disabled={nameOff} onPress={() => setAgeAsk(true)} />}>
             {bubble}
@@ -324,7 +327,7 @@ export default function Cont() {
                     {[u + '.ies', u + '_cf', u + (bM ? bM[3].slice(2) : '23')].map((s) => <Chip key={s} small label={'@' + s} onPress={() => setUser(s)} />)}
                   </View>
                 </View>
-              ) : userOk ? <Note kind="ok">{'@' + u + ' e liber.'}</Note> : null}
+              ) : userOk && signedIn ? <Note kind="ok">{'@' + u + ' e liber.'}</Note> : signedIn && u.length >= 3 ? <Muted>Verific dacă e liber…</Muted> : null}
               <Lbl style={{ marginTop: 8 }}>Data nașterii</Lbl>
               <Field value={birth} onChangeText={onBirth} placeholder="ZZ.LL.AAAA, ex: 14.05.2004" accessibilityLabel="Data nașterii" keyboardType="number-pad" maxLength={10}
                 focused={focus === 'bd'} onFocus={() => setFocus('bd')} onBlur={() => setFocus('')} />
@@ -414,7 +417,7 @@ export default function Cont() {
     ];
     return (
       <Slide k="style">
-        <StepScreen k={4} onBack={back} foot={<Big label="Mai departe" disabled={when.length === 0} onPress={() => go('picks')} />}>
+        <StepScreen k={4} onBack={back} foot={<Big label="Mai departe" disabled={when.length === 0} onPress={startPicks} />}>
           {bubble}
           <H1>Cum ieși tu?</H1>
           {rows.map(([id, label, val, set, opts, multi]) => (
@@ -454,7 +457,7 @@ export default function Cont() {
           {card ? <PickCard key={card.id + pick} odd={pick % 2 === 1} bg={card.bg} fg={card.fg} dot={card.dot} icon={like[3]} tag={card.tag} title={card.name} sub={card.sub} /> : (
             <Note kind="err">Nu am găsit locuri aproape de zona aleasă. Mergi mai departe, le vezi în aplicație.</Note>
           )}
-          {!card ? <View style={{ marginTop: 12 }}><Big label="Mai departe" onPress={() => go('friends')} /></View> : null}
+          {!card || pick >= total ? <View style={{ marginTop: 12 }}><Big label="Mai departe" onPress={() => go('friends')} /></View> : null}
         </StepScreen>
       </Slide>
     );
@@ -463,16 +466,10 @@ export default function Cont() {
   // friends
   return (
     <Slide k="friends">
-      <StepScreen k={6} onBack={back} foot={synced ? <Big label="Gata" onPress={() => go('done')} /> : undefined}>
+      <StepScreen k={6} onBack={back} foot={<Big label="Gata" onPress={() => go('done')} />}>
         {bubble}
         <H1>Cu cine ieși?</H1>
-        <Lead style={{ marginTop: 6 }}>Cu prietenii în aplicație votați împreună unde mergeți. Îi adaugi după @username sau le trimiți codul tău, din Profil.</Lead>
-        {!synced ? (
-          <View style={{ marginTop: 16, gap: 8 }}>
-            <Big label="Am înțeles" onPress={() => setSynced(true)} />
-            <Quiet label="Mai târziu" onPress={() => go('done')} />
-          </View>
-        ) : null}
+        <Lead style={{ marginTop: 6 }}>Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile și votul împreună vin curând.</Lead>
       </StepScreen>
     </Slide>
   );
@@ -484,7 +481,7 @@ function PickCard({ odd, bg, fg, dot, icon, tag, title, sub }: { odd: boolean; b
   useEffect(() => { Animated.spring(a, { toValue: 1, useNativeDriver: true, speed: 14, bounciness: 9 }).start(); }, [a]);
   return (
     <Animated.View style={{
-      height: 340, borderRadius: 26, overflow: 'hidden', backgroundColor: bg, padding: 20, justifyContent: 'flex-end',
+      minHeight: 320, borderRadius: 26, overflow: 'hidden', backgroundColor: bg, padding: 20, justifyContent: 'flex-end',
       shadowColor: '#0E1440', shadowOpacity: 0.25, shadowRadius: 18, shadowOffset: { width: 0, height: 16 }, elevation: 10,
       opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }, { rotate: a.interpolate({ inputRange: [0, 1], outputRange: [odd ? '2deg' : '-2deg', '0deg'] }) }, { scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }],
     }}>

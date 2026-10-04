@@ -21,7 +21,10 @@ export async function restore(db: CloudClient, userId: string): Promise<Restored
   const { data: prof } = await db.from('profiles').select('username, first_name').eq('id', userId).maybeSingle();
   if (!prof) return { known: false };
   const { data: priv } = await db.from('profile_private').select('birth_date, prefs, app_state, plus_trial_started_at').eq('id', userId).maybeSingle();
-  const prefs = { ...read(PKEY), ...(priv?.prefs ?? {}), name: prof.first_name, user: prof.username, birth: priv?.birth_date ?? undefined, google: userId };
+  const localP = read(PKEY);
+  const remoteP = priv?.prefs ?? {};
+  const answers = (localP.prefsAt ?? 0) > (remoteP.prefsAt ?? 0) ? { ...remoteP, ...localP } : { ...localP, ...remoteP }; // the newer answers win
+  const prefs = { ...answers, name: prof.first_name, user: prof.username, birth: priv?.birth_date ?? undefined, google: userId };
   write(PKEY, prefs);
   const local = read(SKEY);
   const remote = priv?.app_state ?? {};

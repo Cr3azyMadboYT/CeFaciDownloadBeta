@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { WHO, phaseOfHour, setFilters, summaryOf, useFilters, type Phase } from '../../lib/filters';
-import { NO_PLANS, DAYKEY, createPlan, sortPlans, type Plan } from '../../lib/plans';
+import { NO_PLANS, createPlan, dayWord, sortPlans, type Plan } from '../../lib/plans';
 import { Avatar } from '../../ui/Avatar';
 import { useLightBar } from '../../ui/bar';
 import { FilterSheet } from '../../ui/FilterSheet';
@@ -46,7 +46,7 @@ function FlipWords({ words }: { words: string[] }) {
     return () => clearInterval(id);
   }, [words, a]);
   return (
-    <View style={{ height: 38, marginTop: 4 }} accessibilityLiveRegion="polite">
+    <View style={{ minHeight: 38, marginTop: 4 }} accessibilityLiveRegion="polite">
       <Animated.Text maxFontSizeMultiplier={1} style={{ fontFamily: F.hand, fontSize: 30, lineHeight: 38, color: '#FFD43B', opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }] }}>
         {words[i % words.length]}
       </Animated.Text>
@@ -75,7 +75,8 @@ export default function Acasa() {
   const all = useMemo(() => APP.matches(f), [f, prefs]);
   const moods = useMemo(() => MOODS.map((m) => ({ m, n: APP.matches({ ...f, vibes: [m[0]] }).length })), [f, prefs]);
   const word = f.when === 'now' ? FLIP[phase].word : ({ eve: 'în seara asta?', tom: 'mâine?', we: 'în weekend?' } as Record<string, string>)[f.when];
-  const next = sortPlans(plans)[0];
+  const soon = sortPlans(plans);
+  const next = soon[0];
   const nextPlace = next ? APP.byId(next.placeId) : undefined;
   const clock = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
 
@@ -129,7 +130,7 @@ export default function Acasa() {
               <View style={{ width: 34, height: 34, borderRadius: 99, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center' }}><Icon name="userPlus" size={16} color="#0E1440" /></View>
               <View style={{ flex: 1, gap: 3 }}>
                 <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Alege cu cine ieși</T>
-                <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>o gașcă sau prieteni, primesc invitație</T>
+                <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>gășcile și votul vin curând</T>
               </View>
               <Icon name="next" size={16} color="#FFD43B" />
             </Press>
@@ -160,7 +161,7 @@ export default function Acasa() {
                 <T style={{ fontFamily: F.display, fontSize: 16, color: '#FFD43B' }}>{next.slot}</T>
               </View>
               <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15, color: '#0E1440' }}>
-                {(DAYKEY[next.when] === 'azi' ? 'Azi: ' : DAYKEY[next.when] === 'mâine' ? 'Mâine: ' : 'Sâmbătă: ') + nextPlace.name + (plans.length > 1 ? ' și încă ' + (plans.length - 1) : '')}
+                {dayWord(next).charAt(0).toUpperCase() + dayWord(next).slice(1) + ': ' + nextPlace.name + (soon.length > 1 ? ' și încă ' + (soon.length - 1) : '')}
               </T>
               <Icon name="next" size={16} color="#0E1440" />
             </Press>
@@ -173,7 +174,7 @@ export default function Acasa() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 12, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10, paddingBottom: 4 }} snapToInterval={126} decelerationRate="fast">
             {moods.map(({ m: [label, icon, bg, fg, dot], n }) => (
               <Press key={label} onPress={() => { setFilters({ vibes: [label] }); router.push('/rezultate'); }} accessibilityLabel={label + ', ' + n + ' locuri'}
-                style={{ width: 116, height: 132, padding: 12, borderRadius: 22, backgroundColor: bg, justifyContent: 'space-between', overflow: 'hidden' }}>
+                style={{ width: 116, minHeight: 132, padding: 12, borderRadius: 22, backgroundColor: bg, justifyContent: 'space-between', overflow: 'hidden' }}>
                 <View style={{ position: 'absolute', right: -18, top: -18, width: 64, height: 64, borderRadius: 99, backgroundColor: dot }} />
                 <Icon name={icon} size={30} color={fg} />
                 <View style={{ gap: 4 }}>
@@ -198,7 +199,7 @@ export default function Acasa() {
       <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); router.push('/rezultate'); }} />
       <Sheet open={crewOpen} onClose={() => setCrewOpen(false)}>
         <H1 style={{ fontSize: 26 }}>Cu cine ieși?</H1>
-        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Încă n-ai prieteni în CeFaci. Adaugă-i după @username și apoi faceți gașca și votați împreună unde mergeți.</Muted>
+        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Gășcile și votul împreună vin curând: o să alegi prietenii, ei primesc invitația și votați unde mergeți. Până atunci, adaugă-ți prietenii după @username.</Muted>
         <View style={{ marginTop: 16, gap: 8 }}>
           <Big label="Adaugă prieteni" onPress={() => { setCrewOpen(false); router.push('/prieteni'); }} />
           <Big label={'Mergem ' + WHO[f.who].text.toLowerCase() + ', fără invitații'} color={t.s2} ink={t.ink} onPress={() => setCrewOpen(false)} />
@@ -210,7 +211,7 @@ export default function Acasa() {
 
 function Pill({ icon, text, dot }: { icon?: 'sun' | 'moon' | 'clock'; text: string; dot?: boolean }) {
   return (
-    <View style={{ height: 28, paddingHorizontal: 10, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+    <View style={{ minHeight: 28, paddingVertical: 3, paddingHorizontal: 10, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       {dot ? <View style={{ width: 7, height: 7, borderRadius: 99, backgroundColor: '#FF6A4D' }} /> : <Icon name={icon} size={14} color="#FFFFFF" />}
       <T style={{ fontFamily: F.sb, fontSize: 13, color: '#FFFFFF' }}>{text}</T>
     </View>

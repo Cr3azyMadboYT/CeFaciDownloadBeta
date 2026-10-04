@@ -1,6 +1,6 @@
 // The design's building blocks as native pieces: text styles, the big button, chips, segments, fields, Bilu's bubble.
 import { forwardRef, type ReactNode } from 'react';
-import { Animated, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View, type PressableProps, type StyleProp, type TextInputProps, type TextProps, type TextStyle, type ViewStyle } from 'react-native';
+import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View, type PressableProps, type StyleProp, type TextInputProps, type TextProps, type TextStyle, type ViewStyle } from 'react-native';
 import { useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
@@ -55,9 +55,9 @@ export function Big({ label, onPress, disabled, icon, color, ink, style }: { lab
   const { t } = useTheme();
   return (
     <Press onPress={onPress} disabled={disabled} accessibilityLabel={label}
-      style={[{ height: 56, borderRadius: 18, backgroundColor: disabled ? t.s3 : color ?? t.blue, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }, style]}>
+      style={[{ minHeight: 56, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 18, backgroundColor: disabled ? t.s3 : color ?? t.blue, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }, style]}>
       {icon}
-      <T style={{ fontFamily: F.sb, fontSize: 17, color: disabled ? t.ink2 : ink ?? '#FFFFFF' }}>{label}</T>
+      <T style={{ flexShrink: 1, textAlign: 'center', fontFamily: F.sb, fontSize: 17, color: disabled ? t.ink2 : ink ?? '#FFFFFF' }}>{label}</T>
     </Press>
   );
 }
@@ -77,7 +77,7 @@ export function Chip({ label, on, onPress, icon, small }: { label: string; on?: 
   const { t } = useTheme();
   return (
     <Press onPress={onPress} accessibilityState={{ selected: !!on }}
-      style={{ height: small ? 34 : 42, paddingHorizontal: small ? 12 : 15, borderRadius: 999, borderWidth: 1, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+      style={{ minHeight: small ? 34 : 42, paddingVertical: 4, paddingHorizontal: small ? 12 : 15, borderRadius: 999, borderWidth: 1, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       {icon ? <Icon name={icon} size={16} color={on ? t.bg : t.ink} /> : null}
       <T style={{ fontFamily: F.sb, fontSize: small ? 13 : 14, color: on ? (t.dark ? '#121215' : '#EEF1FB') : t.ink }}>{label}</T>
     </Press>
@@ -139,16 +139,21 @@ export function RoundBtn({ icon, onPress, label, dark }: { icon: IconName; onPre
   );
 }
 
-/** A bottom sheet over a dimmed screen. */
+/** A bottom sheet over a dimmed screen; its content scrolls when it is taller than the screen (big text). */
 export function Sheet({ open, onClose, children }: { open: boolean; onClose: () => void; children: ReactNode }) {
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
   return (
     <Modal visible={open} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
-      <Pressable style={{ flex: 1, backgroundColor: t.scrim }} onPress={onClose} accessibilityLabel="Închide" />
-      <View style={{ backgroundColor: t.bgCont, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 24, paddingBottom: Math.max(ins.bottom, 12) + 16 }}>
-        {children}
-      </View>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <Pressable style={{ flex: 1, backgroundColor: t.scrim }} onPress={onClose} accessibilityLabel="Închide" />
+        <View style={{ maxHeight: height - ins.top - 24, backgroundColor: t.bgCont, borderTopLeftRadius: 28, borderTopRightRadius: 28 }}>
+          <ScrollView bounces={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 24, paddingBottom: Math.max(ins.bottom, 12) + 16 }}>
+            {children}
+          </ScrollView>
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -156,7 +161,7 @@ export function Sheet({ open, onClose, children }: { open: boolean; onClose: () 
 /** Small pill label (`.tag` / `.role`). */
 export function Tag({ text, bg, fg, big }: { text: string; bg: string; fg: string; big?: boolean }) {
   return (
-    <View style={{ height: big ? 24 : 22, paddingHorizontal: big ? 9 : 8, borderRadius: 999, backgroundColor: bg, justifyContent: 'center' }}>
+    <View style={{ minHeight: big ? 24 : 22, paddingVertical: 2, paddingHorizontal: big ? 9 : 8, borderRadius: 999, backgroundColor: bg, justifyContent: 'center' }}>
       <T style={{ fontFamily: F.b, fontSize: big ? 12 : 11, color: fg }}>{text}</T>
     </View>
   );

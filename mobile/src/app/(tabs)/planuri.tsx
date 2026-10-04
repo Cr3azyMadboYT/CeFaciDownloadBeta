@@ -3,12 +3,12 @@ import { ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
-import { NO_PLANS, DAYKEY, sortPlans, type Plan } from '../../lib/plans';
+import { NO_PLANS, dayShort, sortPlans, type Plan } from '../../lib/plans';
+import { Dashed } from '../../ui/Dashed';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Lbl, Muted, Press, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 
-const DAY: Record<string, string> = { now: 'azi', eve: 'azi', tom: 'mâine', we: 'sâm.' };
 
 export default function Planuri() {
   const { t } = useTheme();
@@ -32,10 +32,10 @@ export default function Planuri() {
                   <View style={{ position: 'absolute', left: -9, top: '50%', marginTop: -9, width: 18, height: 18, borderRadius: 99, backgroundColor: t.bg }} />
                   <View style={{ position: 'absolute', right: -9, top: '50%', marginTop: -9, width: 18, height: 18, borderRadius: 99, backgroundColor: t.bg }} />
                   <View style={{ width: 58, height: 58, borderRadius: 14, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-                    <T style={{ fontFamily: F.b, fontSize: 11, color: '#FFD43B' }}>{DAY[x.when] ?? DAYKEY[x.when]}</T>
+                    <T style={{ fontFamily: F.b, fontSize: 11, color: '#FFD43B' }}>{dayShort(x)}</T>
                     <T style={{ fontFamily: F.display, fontSize: 18, color: '#FFD43B' }}>{x.slot}</T>
                   </View>
-                  <View style={{ alignSelf: 'stretch', borderLeftWidth: 2, borderStyle: 'dashed', borderColor: 'rgba(14,20,64,0.3)' }} />
+                  <Dashed vertical color="rgba(14,20,64,0.3)" />
                   <View style={{ flex: 1, gap: 4 }}>
                     <T style={{ fontFamily: F.b, fontSize: 16, lineHeight: 19, color: '#0E1440' }}>{p.title}</T>
                     <T style={{ fontFamily: F.sb, fontSize: 13, color: '#2C3363' }}>{bits.join(', ')}</T>
@@ -57,11 +57,11 @@ export default function Planuri() {
         <Lbl>Gășcile tale</Lbl>
         <Press onPress={() => router.push('/prieteni')} style={{ height: 40, paddingLeft: 10, paddingRight: 14, borderRadius: 999, backgroundColor: t.blueSoft, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Icon name="plus" size={16} color={t.blueInk} width={2.4} />
-          <T style={{ fontFamily: F.sb, fontSize: 14, color: t.blueInk }}>Gașcă nouă</T>
+          <T style={{ fontFamily: F.sb, fontSize: 14, color: t.blueInk }}>Prieteni</T>
         </Press>
       </View>
       <View style={{ marginTop: 10, padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
-        <Muted style={{ fontSize: 14, lineHeight: 20 }}>Încă n-ai nicio gașcă. Adaugă-ți prietenii, apoi faceți gașca și votați împreună unde ieșiți.</Muted>
+        <Muted style={{ fontSize: 14, lineHeight: 20 }}>Gășcile și votul împreună vin curând. Până atunci, adaugă-ți prietenii din Profil → Prieteni.</Muted>
       </View>
     </ScrollView>
   );

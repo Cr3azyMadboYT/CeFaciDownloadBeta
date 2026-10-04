@@ -32,15 +32,21 @@ export function budgetText(key: string) {
 export const summaryOf = (f: Filters) => DUR[f.dur].text + ', ' + budgetText(f.budget) + ', ' + (f.vibes.length ? f.vibes.join(', ') : 'orice vibe') + ', max. ' + DIST[f.dist].max + ' min';
 
 type S = { f: Filters; sq: string; page: number };
-const ph = phaseOfHour(new Date().getHours());
-let s: S = { f: { ...APP.homeDefaults(), when: ph === 'dusk' || ph === 'night' ? 'eve' : APP.homeDefaults().when } as Filters, sq: '', page: 0 };
+/** The sign-up answers as filters; in the evening "când" starts at "diseară". */
+function initial(): Filters {
+  const d = APP.homeDefaults() as Filters;
+  const ph = phaseOfHour(new Date().getHours());
+  return { ...d, when: ph === 'dusk' || ph === 'night' ? 'eve' : d.when };
+}
+let s: S = { f: initial(), sq: '', page: 0 };
 const subs = new Set<() => void>();
-export const useFilters = () => useSyncExternalStore((f) => { subs.add(f); return () => { subs.delete(f); }; }, () => s, () => s);
+const subscribe = (f: () => void) => { subs.add(f); return () => { subs.delete(f); }; };
+export const useFilters = () => useSyncExternalStore(subscribe, () => s, () => s);
 export function setFilters(p: Partial<Filters>, extra: Partial<Omit<S, 'f'>> = {}) { s = { ...s, ...extra, f: { ...s.f, ...p }, page: extra.page ?? 0 }; subs.forEach((x) => x()); }
 export function setSearch(sq: string) { s = { ...s, sq, page: 0 }; subs.forEach((x) => x()); }
 export function setPage(page: number) { s = { ...s, page }; subs.forEach((x) => x()); }
 /** After the sign-up answers change (a new account restored, for example). */
-export function resetFilters() { s = { ...s, f: APP.homeDefaults() as Filters, page: 0 }; subs.forEach((x) => x()); }
+export function resetFilters() { s = { ...s, f: initial(), page: 0 }; subs.forEach((x) => x()); }
 
 /** What the results screen shows: the search when there is one, else the filters' ranking. */
 export function listFor(f: Filters, sq: string): Place[] {

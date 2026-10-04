@@ -67,11 +67,30 @@ export function watchAuth(cb: (who: Who | null) => void) {
   return () => data.subscription.unsubscribe();
 }
 
-/** GDPR: removes the account and all it holds on the server, then signs out. */
-export async function deleteAccountEverywhere(): Promise<void> {
+async function googleSignOut() {
+  if (Platform.OS === 'web') return;
+  try { const { GoogleSignin } = await import('@react-native-google-signin/google-signin'); await GoogleSignin.signOut(); } catch { /* not signed in with Google */ }
+}
+
+/** Signs out of the account and of Google (so the next sign-in asks which Google account). */
+export async function signOutEverywhere() {
+  await sb().auth.signOut().catch(() => null);
+  await googleSignOut();
+}
+
+/** GDPR: removes the account and all it holds on the server, then signs out. Returns a message if the server
+ *  did not confirm (offline, for example), so the phone is not wiped while the account still exists. */
+export async function deleteAccountEverywhere(): Promise<string | null> {
   try {
     const { data } = await sb().auth.getSession();
-    if (data.session) { await sb().rpc('delete_my_account'); await sb().auth.signOut(); }
-    if (Platform.OS !== 'web') { const { GoogleSignin } = await import('@react-native-google-signin/google-signin'); await GoogleSignin.signOut().catch(() => null); }
-  } catch { /* offline: the phone is still cleared */ }
+    if (data.session) {
+      const { error } = await sb().rpc('delete_my_account');
+      if (error) return 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
+      await sb().auth.signOut().catch(() => null);
+    }
+    await googleSignOut();
+    return null;
+  } catch {
+    return 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
+  }
 }

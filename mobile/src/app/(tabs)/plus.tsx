@@ -1,11 +1,9 @@
 // CeFaci Plus: a closed gift from Bilu at first (7 free days, no card), then the trial, then "oprit".
 // Paying is not live yet (it goes through Google Play); nothing is charged.
-import { useState } from 'react';
-import { Modal, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { setBoard, useApp } from '../../lib/session';
-import { toast } from '../../lib/toast';
-import { Bilu, type Mood } from '../../ui/Bilu';
+import { Bilu } from '../../ui/Bilu';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
@@ -25,22 +23,10 @@ export default function Plus() {
   const st = b.plus ?? 'locked';
   const day = b.plusDay ?? 1;
   const left = Math.max(1, 8 - day);
-  const [modal, setModal] = useState<string | null>((b.plusModal as string | undefined) ?? null);
   const veiled = st === 'locked' || st === 'off';
   const tag: [string, string, string] = st === 'trial' ? ['Probă · ' + left + (left === 1 ? ' zi' : ' zile'), '#FFD43B', '#0E1440'] : st === 'active' ? ['Activ', t.blueSoft, t.blueInk] : st === 'off' ? ['Oprit', t.s2, t.ink2] : ['Cadou', '#FFD43B', '#0E1440'];
-  const M: Record<string, [Mood, string, string, string | null]> = {
-    gift: ['yay', 'Poftim: 7 zile de CeFaci Plus, cadou de la mine! Când se termină, pagina se încețoșează iar, dar o reactivezi oricând.', 'Arată-mi Plus', null],
-    day5: ['wink', 'Mai ai 3 zile de Plus! Mai prinde o reducere până se termină.', 'Mersi, Bilu!', null],
-    expired: ['hi', 'Hei, săptămâna de probă a expirat! Vrei să continui sau ne oprim aici? Poți reveni oricând!', 'Continui cu Plus · 20 lei pe lună', 'Ne oprim aici'],
-    pay: ['wink', 'Plata pentru Plus vine curând, prin Google Play. Până atunci nu-ți luăm niciun ban.', 'Am înțeles', null],
-  };
-  const m = modal ? M[modal] : null;
-  const closeModal = (go: boolean) => {
-    const cur = modal;
-    setModal(null);
-    setBoard({ plusModal: undefined });
-    if (cur === 'expired') { if (go) setModal('pay'); else { setBoard({ plus: 'off' }); toast('Ne oprim aici. Poți reveni oricând din tab-ul Plus.'); } }
-  };
+  const setModal = (m: string) => setBoard({ plusModal: m });
+  const m = b.plusModal;
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -59,10 +45,13 @@ export default function Plus() {
             </View>
           ) : null}
           <T style={{ marginTop: 12, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>
-            {st === 'off' ? 'Poți reveni oricând. Reducerile te așteaptă.' : 'După probă, 20 lei pe lună. Nu-ți cerem cardul și nu-ți luăm nimic automat: te întreabă Bilu.'}
+            {st === 'off' ? 'Poți reveni oricând.' : 'Reducerile pornesc când intră primii parteneri. După probă, 20 lei pe lună; nu-ți cerem cardul și nu-ți luăm nimic automat.'}
           </T>
         </View>
-        <T accessibilityRole="header" style={{ marginTop: 22, fontFamily: F.display, fontSize: 22 }}>Ce primești</T>
+        <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>Ce primești</T>
+          <Tag text="cu primii parteneri" bg={t.yellowSoft} fg={t.yellowInk} />
+        </View>
         <View style={{ marginTop: 10, gap: 8 }}>
           {PERKS.map(([icon, title, sub]) => (
             <View key={title} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
@@ -84,27 +73,13 @@ export default function Plus() {
         <View style={{ position: 'absolute', left: 24, right: 24, top: ins.top + 120, padding: 20, paddingBottom: 22, borderRadius: 26, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', gap: 10, shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 25, shadowOffset: { width: 0, height: 20 }, elevation: 12 }}>
           <Bilu size={st === 'off' ? 104 : 112} mood={st === 'off' ? 'hi' : 'wink'} />
           <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 27, textAlign: 'center' }}>{st === 'off' ? 'Plus s-a oprit' : 'Aici e ascuns un cadou'}</T>
-          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? 'Reducerile de 10–20% la partenerii tăi te așteaptă.' : 'Bilu îl păzește de când ți-ai făcut cont. Apasă și vezi ce e.'}</Muted>
+          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? 'Poți reveni oricând, gratis până intră primii parteneri.' : 'Bilu îl păzește pentru tine. Apasă și vezi ce e.'}</Muted>
           <Big style={{ alignSelf: 'stretch', marginTop: 6 }} label={st === 'off' ? 'Reia Plus · 20 lei pe lună' : 'Deschide cadoul'}
             onPress={() => { if (st === 'off') { setModal('pay'); return; } setBoard({ plus: 'trial', plusDay: 1 }); setModal('gift'); }} />
           {st === 'off' ? <Muted>Poți reveni oricând, fără nicio penalizare.</Muted> : null}
         </View>
       ) : null}
 
-      <Modal visible={!!m} transparent animationType="fade" onRequestClose={() => closeModal(false)} statusBarTranslucent navigationBarTranslucent>
-        <View style={{ flex: 1, backgroundColor: 'rgba(4,7,24,0.84)', paddingHorizontal: 24, justifyContent: 'center', gap: 16 }}>
-          {m ? (
-            <>
-              <View style={{ alignItems: 'center' }}><Bilu size={150} mood={m[0]} /></View>
-              <View style={{ padding: 16, borderRadius: 20, backgroundColor: '#FFFFFF' }}>
-                <T style={{ fontFamily: F.sb, fontSize: 17, lineHeight: 24, color: '#0E1440' }}>{m[1]}</T>
-              </View>
-              <Big label={m[2]} color="#FFD43B" ink="#0E1440" onPress={() => closeModal(true)} />
-              {m[3] ? <Big label={m[3]} color="rgba(255,255,255,0.12)" onPress={() => closeModal(false)} /> : null}
-            </>
-          ) : null}
-        </View>
-      </Modal>
     </View>
   );
 }

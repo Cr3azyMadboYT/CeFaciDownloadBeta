@@ -37,7 +37,6 @@ function pose(mood: Mood, look: Look) {
 
 const N = '#0E1440';
 const Y = '#FFD43B';
-const AG = Animated.createAnimatedComponent(G);
 
 /** Bilu at `size` px wide (the drawing is 120×144). Moves a little: bobs, blinks, waves when saying hi. */
 export function Bilu({ size = 120, mood = 'rest', look = 'c', still = false, shadow = true }: { size?: number; mood?: Mood; look?: Look; still?: boolean; shadow?: boolean }) {
@@ -61,8 +60,8 @@ export function Bilu({ size = 120, mood = 'rest', look = 'c', still = false, sha
     if (still || !(mood === 'hi' || mood === 'yay' || mood === 'up' || mood === 'wink' || mood === 'magic')) { wave.setValue(0); return; }
     const d = mood === 'hi' ? 500 : mood === 'yay' ? 310 : mood === 'magic' ? 320 : 1200;
     const loop = Animated.loop(Animated.sequence([
-      Animated.timing(wave, { toValue: 1, duration: d, easing: Easing.inOut(Easing.sin), useNativeDriver: false }),
-      Animated.timing(wave, { toValue: 0, duration: d, easing: Easing.inOut(Easing.sin), useNativeDriver: false }),
+      Animated.timing(wave, { toValue: 1, duration: d, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+      Animated.timing(wave, { toValue: 0, duration: d, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
     ]));
     loop.start();
     return () => loop.stop();
@@ -78,27 +77,36 @@ export function Bilu({ size = 120, mood = 'rest', look = 'c', still = false, sha
 
   const lift = bob.interpolate({ inputRange: [0, 1], outputRange: [0, mood === 'yay' ? -10 : -4] });
   const amp = mood === 'hi' || mood === 'yay' ? 14 : mood === 'magic' ? 10 : 6;
-  const rot = wave.interpolate({ inputRange: [0, 1], outputRange: [0, -amp] });
-  const rotL = wave.interpolate({ inputRange: [0, 1], outputRange: [0, mood === 'yay' ? amp : 0] });
+  const rot = wave.interpolate({ inputRange: [0, 1], outputRange: ['0deg', -amp + 'deg'] });
+  const rotL = wave.interpolate({ inputRange: [0, 1], outputRange: ['0deg', (mood === 'yay' ? amp : 0) + 'deg'] });
   const eyeH = blink ? 1.5 : 11;
+  const W = size;
+  const H = size * 1.2;
+  // each arm is its own layer, turned around its shoulder by the native animation driver (smooth on Android too)
+  const layer = { position: 'absolute' as const, left: 0, top: 0, width: W, height: H };
+  const shoulder = (x: number) => `${(x / 120) * 100}% ${(88 / 144) * 100}%`;
 
   return (
-    <View style={{ width: size, height: size * 1.2 }}>
+    <View style={{ width: W, height: H }}>
       {shadow && (
-        <Svg width={size} height={size * 1.2} viewBox="0 0 120 144" style={{ position: 'absolute' }}>
+        <Svg width={W} height={H} viewBox="0 0 120 144" style={{ position: 'absolute' }}>
           <Ellipse cx={60} cy={137} rx={28} ry={5} fill="rgba(0,0,0,0.28)" />
         </Svg>
       )}
-      <Animated.View style={{ position: 'absolute', width: size, height: size * 1.2, transform: [{ translateY: lift }] }}>
-        <Svg width={size} height={size * 1.2} viewBox="0 0 120 144" style={{ overflow: 'visible' }}>
+      <Animated.View style={[layer, { transform: [{ translateY: lift }] }]}>
+        <Svg width={W} height={H} viewBox="0 0 120 144" style={layer}>
           <Path d="M48 110L46 127M72 110L74 127" fill="none" stroke={N} strokeWidth={6} strokeLinecap="round" />
           <Ellipse cx={44} cy={130} rx={8} ry={4.5} fill={N} />
           <Ellipse cx={76} cy={130} rx={8} ry={4.5} fill={N} />
-          <AG rotation={rotL as unknown as number} origin="24, 88">
+        </Svg>
+        <Animated.View style={[layer, { transformOrigin: shoulder(24), transform: [{ rotate: rotL }] }]}>
+          <Svg width={W} height={H} viewBox="0 0 120 144" style={{ overflow: 'visible' }}>
             <Path d={p.armL} fill="none" stroke={N} strokeWidth={6} strokeLinecap="round" />
             <Circle cx={p.hLx} cy={p.hLy} r={6.5} fill={Y} stroke={N} strokeWidth={3.5} />
-          </AG>
-          <AG rotation={rot as unknown as number} origin="96, 88">
+          </Svg>
+        </Animated.View>
+        <Animated.View style={[layer, { transformOrigin: shoulder(96), transform: [{ rotate: rot }] }]}>
+          <Svg width={W} height={H} viewBox="0 0 120 144" style={{ overflow: 'visible' }}>
             {p.wand ? (
               <G>
                 <Path d="M108 49L122 30" stroke={N} strokeWidth={4.5} strokeLinecap="round" />
@@ -107,7 +115,9 @@ export function Bilu({ size = 120, mood = 'rest', look = 'c', still = false, sha
             ) : null}
             <Path d={p.armR} fill="none" stroke={N} strokeWidth={6} strokeLinecap="round" />
             <Circle cx={p.hRx} cy={p.hRy} r={6.5} fill={Y} stroke={N} strokeWidth={3.5} />
-          </AG>
+          </Svg>
+        </Animated.View>
+        <Svg width={W} height={H} viewBox="0 0 120 144" style={layer}>
           <Path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill={Y} stroke={N} strokeWidth={4} strokeLinejoin="round" />
           <Path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" strokeWidth={3.5} strokeLinecap="round" opacity={0.55} />
           <Path d="M33 70H87" stroke={N} strokeWidth={3} strokeLinecap="round" strokeDasharray="4 6" opacity={0.35} />

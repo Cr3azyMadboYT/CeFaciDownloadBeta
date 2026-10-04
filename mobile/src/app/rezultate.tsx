@@ -1,5 +1,5 @@
 // Rezultate: three places at a time (a safe bet first), the search box, and the filters on top.
-import { useMemo, useState } from 'react';
+import { useDeferredValue, useMemo, useState } from 'react';
 import { ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,17 +29,19 @@ export default function Rezultate() {
   const prefs = useApp((s) => s.prefs);
   const [sheet, setSheet] = useState(false);
   const [vote, setVote] = useState(false);
-  const all = useMemo(() => listFor(f, sq), [f, sq, prefs]);
+  const typed = useDeferredValue(sq); // the list follows the typing without slowing the keyboard
+  const all = useMemo(() => listFor(f, typed), [f, typed, prefs]);
   const page = page0 * 3 >= all.length ? 0 : page0;
   const items = all.slice(page * 3, page * 3 + 3);
   const nearest = items.length ? items.reduce((a, b) => (b.dist < a.dist ? b : a)) : null;
   const used = { near: false };
   const searching = sq.trim().length > 1;
+  const priceNote = useMemo(() => APP.priceNote(sq, f.budget), [sq, f.budget]);
   const remaining = all.length - (page * 3 + items.length);
   const title = searching ? (all.length ? 'Uite ce am găsit.' : 'N-am găsit nimic.') : items.length ? 'Am găsit ' + WORDS[Math.min(3, items.length)] + '.' : 'N-am găsit nimic.';
   const sub = (searching
     ? (all.length ? all.length + (all.length === 1 ? ' loc' : all.length < 20 ? ' locuri' : ' de locuri') + ' pentru „' + sq.trim() + '”' + (page ? ', pagina ' + (page + 1) : '') : 'Încearcă un nume, „pizza”, „sector 2” sau „bar cu terasă”.')
-    : all.length ? all.length + ' locuri se potrivesc cu filtrele tale' + (page ? ', pagina ' + (page + 1) : '') : 'Niciun loc nu bifează tot ce ai ales.') + APP.priceNote(sq, f.budget);
+    : all.length ? all.length + ' locuri se potrivesc cu filtrele tale' + (page ? ', pagina ' + (page + 1) : '') : 'Niciun loc nu bifează tot ce ai ales.') + priceNote;
 
   const pick = (id: string) => {
     const pid = createPlan(id, f);
@@ -132,7 +134,7 @@ export default function Rezultate() {
       <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); }} />
       <Sheet open={vote} onClose={() => setVote(false)}>
         <H1 style={{ fontSize: 26 }}>Votul cu gașca</H1>
-        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Fiecare votează din telefonul lui, iar câștigă varianta cu cele mai multe voturi. Ca să pornești un vot, adaugă-ți întâi prietenii în CeFaci.</Muted>
+        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Votul cu gașca vine curând: fiecare va vota din telefonul lui și câștigă varianta cu cele mai multe voturi. Până atunci, adaugă-ți prietenii, ca să fiți gata.</Muted>
         <View style={{ marginTop: 16, gap: 8 }}>
           <Big label="Adaugă prieteni" onPress={() => { setVote(false); router.push('/prieteni'); }} />
           <Big label="Mai târziu" color={t.s2} ink={t.ink} onPress={() => setVote(false)} />

@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ComponentProps } from 'react';
 import { useApp } from '../../lib/session';
 import { Icon } from '../../ui/Icon';
+import { PlusNotice } from '../../ui/PlusNotice';
 import { Press, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 
@@ -30,7 +31,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         const isPlus = r.name === 'plus';
         const color = isPlus ? '#E0A800' : on ? t.blueInk : t.ink3;
         return (
-          <Press key={r.key} style={{ flex: 1, height: 52, alignItems: 'center', justifyContent: 'center', gap: 4, opacity: isPlus && veiled ? 0.55 : 1 }}
+          <Press key={r.key} style={{ flex: 1, minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4, opacity: isPlus && veiled ? 0.55 : 1 }}
             accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? 'CeFaci Plus, oprit' : 'Plus: un cadou de la Bilu') : 'CeFaci Plus') : LABEL[r.name]}
             accessibilityState={{ selected: on }}
             onPress={() => {
@@ -50,6 +51,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
 export default function TabsLayout() {
   const { t } = useTheme();
   return (
+    <>
     <Tabs tabBar={(p) => <TabBar {...p} />} screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: t.bg }, animation: 'fade' }}>
       <Tabs.Screen name="acasa" />
       <Tabs.Screen name="exploreaza" />
@@ -57,5 +59,7 @@ export default function TabsLayout() {
       <Tabs.Screen name="profil" />
       <Tabs.Screen name="plus" />
     </Tabs>
+    <PlusNotice />
+    </>
   );
 }

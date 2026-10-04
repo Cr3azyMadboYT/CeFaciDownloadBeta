@@ -1,7 +1,7 @@
 // "Filtre": who, when, how long, how far, budget (chips or a typed range), vibe. Shows how many places match
 // before applying.
 import { useEffect, useMemo, useState } from 'react';
-import { Modal, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Pressable, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP } from '../../../src/app/bridge';
 import { BUDGET, DIST, DUR, VIBES, WHEN, WHO, type Filters } from '../lib/filters';
@@ -13,7 +13,7 @@ function Opt({ label, on, onPress, grow = true }: { label: string; on: boolean; 
   const { t } = useTheme();
   return (
     <Press onPress={onPress} accessibilityState={{ selected: on }}
-      style={{ flexGrow: grow ? 1 : 0, flexBasis: grow ? 0 : 'auto', height: 42, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center' }}>
+      style={{ flexGrow: grow ? 1 : 0, flexBasis: grow ? 0 : 'auto', minHeight: 42, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center' }}>
       <T style={{ fontFamily: F.sb, fontSize: 14, color: on ? t.bg : t.ink }}>{label}</T>
     </Press>
   );
@@ -45,6 +45,7 @@ export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; 
   );
   return (
     <Modal visible={open} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <Pressable style={{ height: ins.top + 40, backgroundColor: t.scrim }} onPress={onClose} accessibilityLabel="Închide filtrele" />
       <View style={{ flex: 1, backgroundColor: t.s1, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingTop: 8 }}>
         <View style={{ alignSelf: 'center', width: 36, height: 5, borderRadius: 3, backgroundColor: t.line }} />
@@ -81,6 +82,7 @@ export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; 
           <Big label={count ? 'Arată ' + count + (count === 1 ? ' variantă' : ' variante') : 'Nimic nu se potrivește'} onPress={() => onApply(d)} />
         </View>
       </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

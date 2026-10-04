@@ -1,12 +1,13 @@
 // Prieteni: your code and @username, find friends by exact @username or by their code, requests, your list.
 import { useCallback, useEffect, useState } from 'react';
-import { ScrollView, Share, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, Share, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useApp } from '../lib/session';
 import { accept, addByCode, ask, findUser, listFriends, myCode, remove, type FriendRow, type Person } from '../lib/friends';
 import { toast } from '../lib/toast';
 import { Icon } from '../ui/Icon';
+import { SignIn } from '../ui/SignIn';
 import { Big, Field, H1, Lbl, Muted, Note, Press, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 
@@ -68,6 +69,7 @@ export default function Prieteni() {
   const friends = rows.filter((r) => r.status === 'accepted');
 
   return (
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: t.bg }} behavior="padding">
     <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: Math.max(ins.bottom, 12) + 24 }} keyboardShouldPersistTaps="handled">
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
         <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
@@ -75,8 +77,8 @@ export default function Prieteni() {
       <H1 style={{ fontSize: 34, lineHeight: 35 }}>Prieteni</H1>
       {!who || !known ? (
         <View style={{ marginTop: 14, gap: 12 }}>
-          <Muted style={{ fontSize: 15, lineHeight: 21 }}>Prietenii, gășcile și votul merg doar cu cont, ca să vă găsiți unii pe alții. Contul îl faci cu Google sau cu emailul, fără parolă.</Muted>
-          <Note kind="ok">{'Ești pe telefon fără cont' + (user ? ' (@' + user + ')' : '') + '. Ce ai acum rămâne doar aici.'}</Note>
+          <Muted style={{ fontSize: 15, lineHeight: 21 }}>Prietenii merg doar cu cont, ca să vă găsiți unii pe alții. Contul îl faci cu Google sau cu emailul, fără parolă, iar ce ai deja pe telefon (planuri, XP, ce-ți place) trece în cont.</Muted>
+          {who && !known ? <Note kind="ok">Leg contul de profilul tău…</Note> : <SignIn />}
         </View>
       ) : (
         <View style={{ marginTop: 14, gap: 12 }}>
@@ -117,5 +119,6 @@ export default function Prieteni() {
         </View>
       )}
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

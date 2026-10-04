@@ -19,6 +19,7 @@ export interface Prefs {
   liked?: string[]; disliked?: string[]; // venue ids from the "Ai merge aici?" cards
   google?: string;                // Supabase user id, when signed in with Google
   here?: { lat: number; lon: number; at: number }; // the phone's location, when the person chose "Folosește locația mea"
+  prefsAt?: number;               // when the answers last changed (the newer copy, phone or account, wins)
 }
 const PKEY = 'cefaci.prefs';
 const SKEY = 'cefaci.state';
