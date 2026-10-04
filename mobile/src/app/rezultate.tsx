@@ -1,5 +1,5 @@
 // Rezultate: three places at a time (a safe bet first), the search box, and the filters on top.
-import { useDeferredValue, useMemo, useState } from 'react';
+import { useDeferredValue, useMemo, useRef, useState } from 'react';
 import { ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
@@ -12,6 +12,7 @@ import { Big, Chip, H1, Muted, Press, T, Tag } from '../ui/kit';
 import { F, useTheme, type Theme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { VoteStart } from '../ui/VoteStart';
+import { tweaksFor } from '../lib/tweaks';
 import { useWeatherVersion } from '../lib/weather';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
@@ -50,6 +51,9 @@ export default function Rezultate() {
     ? (all.length ? all.length + (all.length === 1 ? ' loc' : all.length < 20 ? ' locuri' : ' de locuri') + ' pentru „' + sq.trim() + '”' + (page ? ', pagina ' + (page + 1) : '') : 'Încearcă un nume, „pizza”, „sector 2” sau „bar cu terasă”.')
     : all.length ? all.length + ' locuri se potrivesc cu filtrele tale' + (page ? ', pagina ' + (page + 1) : '') : 'Niciun loc nu bifează tot ce ai ales.') + priceNote;
 
+  const first = useRef({ f, sq });
+  const tweaks = useMemo(() => tweaksFor(f, sq, items), [f, sq, items, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
+  const changed = JSON.stringify(first.current) !== JSON.stringify({ f, sq });
   const pick = (id: string) => {
     const pid = createPlan(id, f);
     router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } });
@@ -81,6 +85,14 @@ export default function Rezultate() {
         ) : null}
         <H1 style={{ marginTop: 14, fontSize: 38, lineHeight: 38 }}>{title}</H1>
         <Muted style={{ marginTop: 6 }}>{sub}</Muted>
+        {tweaks.length || changed ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled" style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 6 }}>
+            {tweaks.map((x) => (
+              <Chip key={x.id} small label={x.label} icon={x.icon as never} onPress={() => { if (x.apply.q !== undefined) setSearch(x.apply.q); if (x.apply.f) setFilters(x.apply.f); }} />
+            ))}
+            {changed ? <Chip small label="Ca la început" icon={'back' as never} onPress={() => { setSearch(first.current.sq); setFilters({ ...first.current.f, where: first.current.f.where }); }} /> : null}
+          </ScrollView>
+        ) : null}
 
         {items.length ? (
           <View style={{ marginTop: 14, gap: 10 }}>

@@ -267,14 +267,15 @@ export const APP = {
     return asked ? ' · Atenție: prețurile sunt estimate și pot varia.' : '';
   },
   /** The design's matches(f): real ranking from the engine, as PLACES entries. */
-  matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string }): Place[] {
+  /** `where`: 'in' only places with a roof (rain), 'out' only outside or with a terrace. */
+  matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string; where?: 'in' | 'out' }): Place[] {
     const key = JSON.stringify(f) + this.prefs.zone + new Date().getHours();
     const hit = this.cache.get(key);
     if (hit) return hit;
     const b = budgetRange(f.budget);
     const ask: Ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: b.max, budgetMin: b.min || undefined, maxKm: this.kmFor(f.dist), vibes: f.vibes as Ask['vibes'] };
     const r = recommend(VENUES, ask, this.ctx(), 0, 200);
-    const list = r.picks.filter((s) => info(s.v).hours <= (DUR_MAX[f.dur] ?? 99)).map((s) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
+    const list = r.picks.filter((s) => info(s.v).hours <= (DUR_MAX[f.dur] ?? 99) && (!f.where || (f.where === 'in') === (exposure(s.v) === 'in'))).map((s) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
     this.cache.set(key, list);
     return list;
   },

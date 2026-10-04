@@ -10,7 +10,7 @@ export const BUDGET: Record<string, { label: string; text: string }> = { 0: { la
 export const DIST: Record<string, { label: string; max: number }> = { 10: { label: '10 min', max: 10 }, 20: { label: '20 min', max: 20 }, 30: { label: '30 min', max: 30 } };
 export const VIBES = ['Chill', 'Fun', 'Competitiv', 'Party', 'Aer liber', 'Mâncare bună', 'Cultură'];
 
-export interface Filters { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string }
+export interface Filters { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string; where?: 'in' | 'out' }
 export type Place = ReturnType<typeof APP.matches>[number];
 
 export type Phase = 'morning' | 'day' | 'dusk' | 'night' | 'late';
