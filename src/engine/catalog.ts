@@ -58,7 +58,7 @@ export const KINDS: Record<string, KindInfo> = {
   tennis: K('Tenis', 'sport', ['Competitiv'], 50, 1.5, 2, 4, 0),
   soccer: K('Fotbal', 'sport', ['Competitiv', 'Fun'], 30, 1.5, 2, 14, 1),
   squash: K('Squash', 'sport', ['Competitiv'], 50, 1, 2, 4, 1),
-  swimming: K('Piscină', 'sport', ['Fun', 'Chill'], 50, 2, 1, 12, 0),
+  swimming: K('Piscină', 'sport', ['Fun'], 50, 2, 1, 12, 0),
   climbing: K('Escaladă', 'sport', ['Competitiv', 'Fun'], 60, 2, 1, 8, 1),
   golf_course: K('Golf', 'sport', ['Competitiv', 'Aer liber'], 150, 3, 1, 4, 0),
   horse_riding: K('Călărie', 'sport', ['Aer liber', 'Fun'], 150, 1.5, 1, 6, 0),

@@ -91,6 +91,14 @@ it('keeps every rule of the database', async () => {
   await db.exec(`update vote_sessions set closes_at = now() - interval '1 minute', created_at = now() - interval '2 hours' where id = '${vs}'`);
   await expectFail('vote closed at deadline', () => as('teen', `insert into ballots (session_id, option_id, user_id, value) values ($1, $2, $3, 'da')`, [vs, o[0], U.teen]));
   eq('closed flag', (await as('cris', `select closed from vote_results($1) limit 1`, [vs])).rows[0].closed, true);
+  // the vote becomes one plan for everyone who voted
+  const pv = (await as('cris', `select plan_from_vote($1) id`, [vs])).rows[0].id;
+  eq('vote plan made once', (await as('bob', `select plan_from_vote($1) id`, [vs])).rows[0].id, pv);
+  eq('winner is the plan', (await as('bob', `select venue_name from plans where id = $1`, [pv])).rows[0]?.venue_name, 'A');
+  eq('bob asked to the plan', (await as('bob', `select answer from plan_members where plan_id = $1 and user_id = $2`, [pv, U.bob])).rows[0]?.answer, 'pending');
+  await expectFail('a non-voter cannot make the plan', () => as('ana', `select plan_from_vote($1)`, [vs]));
+  eq('voters see each other', (await as('teen', `select count(*)::int n from profiles where id = $1`, [U.cris])).rows[0].n, 1);
+  await expectOk('own xp shown to friends', () => as('bob', `update profiles set xp = 250, stamps = 3 where id = $1`, [U.bob]));
   
   // saved state and the Plus week
   await expectOk('save app state', () => as('bob', `update profile_private set app_state = '{"xp":150}'::jsonb where id = $1`, [U.bob]));

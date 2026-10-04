@@ -19,7 +19,7 @@ const ZONES = JSON.parse(fs.readFileSync(new URL('../src/data/zones.json', impor
 const km = (a, b) => { const r = Math.PI / 180, dl = (b.lat - a.lat) * r, dn = (b.lon - a.lon) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dn / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); };
 
 const clean = (s) => (s ?? '').replace(/\s+/g, ' ').trim();
-const BAD_NAME = /^(bar|restaurant|cafenea|cafe|pub|fast ?food|terasa|bistro|test|parc|park|scuar|teren( de (sport|fotbal|tenis|baschet|padel))?|baza sportiva|piscina|\?|-)$/i;
+const BAD_NAME = /^(bar|restaurant|cafenea|cafe|pub|fast ?food|terasa|bistro|test|parc|park|scuar|teren(ul|uri)?( de)?( \S+){0,2}|baz[aă] sportiv[aă]|piscin[aă]|bazin(ul)?( de)? [iî]not|\?|-)$/i;
 // size of a mapped area (km, corner to corner), from Overpass "out bb"
 const spanKm = (b) => (b ? km({ lat: b.minlat, lon: b.minlon }, { lat: b.maxlat, lon: b.maxlon }) : 0);
 const out = [];
@@ -32,9 +32,10 @@ for (const e of els) {
   const name = clean(t['name:ro'] || t.name);
   if (!name) { skipped.noName++; continue; }
   if (BAD_NAME.test(name)) { skipped.generic++; continue; }
-  if (t['disused:amenity'] || t.disused === 'yes' || t['was:amenity'] || /closed|inchis definitiv/i.test(t.note ?? '')) { skipped.closed++; continue; }
+  if (t['disused:amenity'] || t.disused === 'yes' || t['was:amenity'] || /closed|inchis definitiv/i.test(t.note ?? '') || /^fost(a|ul)?\b|scoase? din uz|dezafectat|abandonat/i.test(name)) { skipped.closed++; continue; }
   const kind = classify(t);
   if (!kind) { skipped.kind++; continue; }
+  if (kind.k === 'soccer' && /^stadion/i.test(name)) { skipped.kind++; continue; } // a club's stadium: nobody rents it for a game
   const key = kind.k, cat = kind.cat;
   const uid = e.type + e.id;
   if (seenId.has(uid)) { skipped.dupe++; continue; }
@@ -51,6 +52,7 @@ for (const e of els) {
   seen.set(dk, (prev ?? []).concat([p]));
   const zone = ZONES.reduce((b, z) => (km(p, z) < km(p, b) ? z : b), ZONES[0]);
   if (km(p, zone) > 11) { skipped.outside = (skipped.outside || 0) + 1; continue; } // bounding box spills into neighbouring counties
+  if (kind.cityOnlyIfSight && zone.area === 'București') { skipped.kind++; continue; }
   const cuisines = (t.cuisine ?? '').split(/[;,]/).map((c) => c.trim().toLowerCase()).filter(Boolean).slice(0, 4);
   const street = clean([t['addr:street'], t['addr:housenumber']].filter(Boolean).join(' '));
   const v = { id: e.type[0] + e.id, name, cat, kind: kind.label, k: key, cuisines, lat: p.lat, lon: p.lon, zone: zone.id };
@@ -64,11 +66,15 @@ for (const e of els) {
   if (phone) v.phone = phone.split(';')[0].trim();
   if (t.brand || t['brand:wikidata']) v.brand = t.brand || name;
   if (t.wheelchair === 'yes') v.wheelchair = true;
+  if (t.wikidata) v.famous = true; // has its own Wikipedia/Wikidata page: a known place even when the map lacks hours
   const minAge = parseInt(t.min_age || t['age:min'] || '', 10); // a place that asks for ID at the door
   if (minAge >= 16) v.minAge = minAge;
   if (key === 'fast_food') v.fast = true;
   out.push(v);
 }
+// pools inside an aqua park (Therme maps each one) are the aqua park itself
+const parks = out.filter((v) => v.k === 'water_park');
+for (let i = out.length - 1; i >= 0; i--) if (out[i].k === 'swimming' && parks.some((w) => km(w, out[i]) < 0.6)) { out.splice(i, 1); skipped.dupe++; }
 out.sort((a, b) => a.name.localeCompare(b.name, 'ro'));
 fs.writeFileSync(outFile, JSON.stringify(out));
 const byCat = out.reduce((m, v) => ((m[v.cat] = (m[v.cat] || 0) + 1), m), {});

@@ -102,17 +102,29 @@ const BUDGET_MAX: Record<string, number> = { 0: 0, 50: 50, 100: 100, 200: 200, a
 const DUR_MAX: Record<string, number> = { 1: 1.5, 23: 3, 4: 99 };
 const VIBE_LIKES: Record<string, string[]> = { bowl: ['Fun', 'Competitiv'], escape: ['Fun', 'Competitiv'], film: ['Cultură', 'Chill'], party: ['Party'], karaoke: ['Fun', 'Party'], food: ['Mâncare bună'], cafe: ['Chill'], sport: ['Competitiv'], nature: ['Aer liber'], culture: ['Cultură'], board: ['Fun'], standup: ['Cultură', 'Fun'] };
 
-// A small town may have only restaurants and cafés nearby: then look further (up to 22 km) until at least two of the five
-// ideas are something else than eating or a coffee (a park, a court, a museum, a bar).
-const FOODISH = new Set(['mancare', 'cafea', 'desert']);
-function variedPicks(ask: Ask, ctx: Ctx) {
-  let r = recommend(VENUES, ask, ctx, 0, 5);
-  for (const maxKm of [14, 22]) {
-    if (maxKm <= ask.maxKm || r.picks.filter((s) => !FOODISH.has(s.v.cat)).length >= 2) continue;
-    const wider = recommend(VENUES, { ...ask, maxKm }, ctx, 0, 5);
-    if (wider.picks.filter((s) => !FOODISH.has(s.v.cat)).length > r.picks.filter((s) => !FOODISH.has(s.v.cat)).length) r = wider;
+// Sign-up and "for you" picks: one idea from each kind of outing first (eat, drink, culture, play, outdoors), best
+// first, then the next best. A small town may have only restaurants and cafés nearby: then look further (14, 22 km)
+// until there are at least three kinds.
+const GROUP: Record<string, string> = { mancare: 'food', cafea: 'food', desert: 'food', bar: 'night', club: 'night', film: 'culture', teatru: 'culture', cultura: 'culture', activitate: 'play', sport: 'play', natura: 'out' };
+function variedPicks(ask: Ask, ctx: Ctx, n = 5): { picks: Scored[] } {
+  let picks: Scored[] = [];
+  for (const maxKm of [ask.maxKm, 14, 22]) {
+    if (maxKm < ask.maxKm) continue;
+    const ranked = recommend(VENUES, { ...ask, maxKm }, ctx, 0, 1e5).picks.sort((a, b) => b.score - a.score);
+    const out: Scored[] = [];
+    const used = new Set<string>();
+    for (const s of ranked) { const g = GROUP[s.v.cat] ?? s.v.cat; if (!used.has(g) && out.length < n) { used.add(g); out.push(s); } }
+    // then the next best, at most two of a kind (not four ice-cream shops) and never the same kind twice in a row
+    for (const s of ranked) {
+      if (out.length >= n) break;
+      if (out.includes(s) || out.filter((x) => x.v.k === s.v.k).length >= 2 || out[out.length - 1]?.v.k === s.v.k) continue;
+      out.push(s);
+    }
+    for (const s of ranked) { if (out.length >= n) break; if (!out.includes(s)) out.push(s); }
+    picks = out;
+    if (used.size >= 3) break;
   }
-  return r;
+  return { picks };
 }
 
 export const APP = {

@@ -27,8 +27,12 @@ const SPORT_KEY = { golf: 'golf_course', equestrian: 'horse_riding' };
 
 const pick = (k, [cat, label]) => ({ k, cat, label });
 const sportOf = (t) => (t.sport ?? '').split(';').map((s) => s.trim()).find((s) => SPORT[s]);
-// a historic building counts only when people can visit it: the map says it is a sight, a museum, or has a site
-const visitable = (t) => !!(t.tourism || t.wikidata || t.website || t['contact:website'] || t.opening_hours);
+// A historic building counts only when people can visit it. In the city most "palaces" are banks, offices or
+// hotels, so there the map must say it is a sight or give opening hours (strict); in Ilfov a known palace or manor
+// (Mogoșoaia, Știrbey, Snagov) is the outing itself. The import applies the strict rule by zone.
+const visitable = (t) => t.tourism !== 'hotel' && !/^(office|apartments|residential|retail|hotel|commercial)$/.test(t.building ?? '')
+  && !!(t.tourism || t.wikidata || t.website || t['contact:website'] || t.opening_hours);
+const sight = (t) => /^(attraction|museum)$/.test(t.tourism ?? '') || !!t.opening_hours;
 
 export function classify(t) {
   if (AMENITY[t.amenity]) return pick(t.amenity, AMENITY[t.amenity]);
@@ -43,7 +47,7 @@ export function classify(t) {
     return pick(SPORT_KEY[s] ?? s, SPORT[s]);
   }
   if (TOURISM[t.tourism]) return pick(t.tourism, TOURISM[t.tourism]);
-  if (HISTORIC[t.historic] && visitable(t)) return pick(t.historic, HISTORIC[t.historic]);
+  if (HISTORIC[t.historic] && visitable(t)) return { ...pick(t.historic, HISTORIC[t.historic]), cityOnlyIfSight: t.historic !== 'monastery' && !sight(t) };
   return null;
 }
 

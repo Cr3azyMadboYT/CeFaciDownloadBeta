@@ -148,15 +148,18 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const nightFit = k.night === 0 ? (hourNow <= 19 ? 1 : 0.3) : k.night === 2 ? (hourNow >= 22 ? 1 : 0.35) : (hourNow >= 17 ? 1 : 0.6);
   const ocazie = 20 * (0.55 * nightFit + 0.45 * (open.known ? 1 : 0.6));
 
-  const complete = [v.hours, v.website || v.phone, v.street].filter(Boolean).length / 3;
+  const complete = Math.min(1, [v.hours, v.website || v.phone, v.street, v.famous].filter(Boolean).length / 3);
   const calitate = 15 * (0.4 + 0.6 * complete) * (v.brand ? 0.7 : 1) * (v.fast ? 0.75 : 1);
   const aproape = 10 * Math.max(0, 1 - d / Math.max(ask.maxKm, 1));
   const nou = ctx.history.includes(v.id) ? 0 : 10;
   const said = ctx.liked?.includes(v.id) ? 6 : ctx.disliked?.includes(v.id) ? -15 : 0;
   const gasca = 10 * (n >= k.min && n <= k.max ? (n >= 3 && (k.cat === 'activitate' || k.cat === 'sport' || k.cat === 'bar') ? 1 : 0.8) : 0.3);
 
+  // a court or a park is a good idea for those who like sport or the outdoors; for the others it comes after a place to sit
+  const niche = (k.cat === 'sport' || k.cat === 'natura') && !want.some((w) => w === 'Competitiv' || w === 'Aer liber') ? -8 : 0;
+
   const parts = { gust, ocazie, calitate, aproape, nou, gasca };
-  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said;
+  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said + niche;
   const reasons: string[] = [];
   const hits = want.filter((w) => vibes.includes(w));
   if (hits.length) reasons.push('Se potrivește cu ' + hits.slice(0, 2).join(' și '));
@@ -582,7 +585,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (p.time?.nonstop && !relaxOpen && !/24\/7|00:00-24:00|00:00\+/.test(v.hours ?? '')) continue;
 
       const chain = isChain(v, all) && FOODISH.has(v.cat) && !brandAsked(v);
-      const complete = [v.hours, v.website || v.phone, v.street].filter(Boolean).length / 3;
+      const complete = Math.min(1, [v.hours, v.website || v.phone, v.street, v.famous].filter(Boolean).length / 3);
       const hourNow = t.getHours() + (t.getHours() < 5 ? 24 : 0);
       const nightFit = k.night === 0 ? (hourNow <= 19 ? 1 : 0.3) : k.night === 2 ? (hourNow >= 22 ? 1 : 0.35) : (hourNow >= 17 ? 1 : 0.6);
       let sc = 40 * Math.min(fit, 1.2);
