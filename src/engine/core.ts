@@ -196,7 +196,19 @@ export function recommend(all: Venue[], ask: Ask, ctx: Ctx, page = 0, per = 3): 
 // A query is read in two passes: first the modifiers (where, when, how many, how much), then what is left is matched
 // against topics ("pizza", "bar", "escape room") and against venue names ("caru cu bere", "mc donalds").
 
-export interface TimeAsk { label: string; now?: boolean; day?: number; hour?: number; min?: number; nonstop?: boolean }
+export interface TimeAsk { label: string; now?: boolean; day?: number; hour?: number; min?: number; nonstop?: boolean; after?: boolean; before?: boolean }
+/** Things a place should have, said in the search: wifi, no smoking / smoking, wheelchair access, air conditioning. */
+export type Need = 'wifi' | 'nosmoke' | 'smoke' | 'wheel' | 'ac';
+const NEED_SAY: Record<Need, string> = { wifi: 'Are wifi', nosmoke: 'Nefumători', smoke: 'Se poate fuma', wheel: 'Accesibil cu scaun cu rotile', ac: 'Are aer condiționat' };
+const NEED_WORD: Record<Need, string> = { wifi: 'wifi', nosmoke: 'nefumători', smoke: 'loc de fumat', wheel: 'acces cu scaun cu rotile', ac: 'aer condiționat' };
+/** How well a place answers one need: points, and whether the map says so. */
+function needFit(v: Venue, n: Need): { pts: number; ok: boolean; no?: boolean } {
+  if (n === 'wifi') return v.wifi ? { pts: 14, ok: true } : { pts: -3, ok: false };
+  if (n === 'ac') return v.ac ? { pts: 12, ok: true } : { pts: -2, ok: false };
+  if (n === 'wheel') return v.wheelchair ? { pts: 16, ok: true } : v.wheelLimited ? { pts: 6, ok: true } : { pts: -6, ok: false };
+  if (n === 'nosmoke') return v.smoke === 'yes' || v.cuisines.includes('shisha') ? { pts: 0, ok: false, no: true } : v.smoke === 'no' ? { pts: 12, ok: true } : { pts: 0, ok: false };
+  return v.smoke === 'no' ? { pts: 0, ok: false, no: true } : v.smoke === 'yes' || v.cuisines.includes('shisha') ? { pts: 14, ok: true } : v.smoke === 'outside' || v.outdoor ? { pts: 6, ok: true } : { pts: 0, ok: false };
+}
 export interface Parsed {
   raw: string[];        // content words, folded, in order (topics and names)
   words: string[];      // content words that are not a known topic (names, streets)
@@ -210,6 +222,7 @@ export interface Parsed {
   budget?: number;      // max lei per person
   budgetMin?: number;   // min lei per person, for a range
   people?: number;
+  needs: Need[];        // wifi, nefumători, scaun cu rotile…
   fancy: boolean; family: boolean; romantic: boolean;
   fixes: string[];      // typo corrections, e.g. "bowlng → bowling"
   fuzzy: Record<string, string>; // typed word -> topic id, when the topic was guessed from a typo
@@ -283,7 +296,7 @@ function placeOf(w: string): Place | null {
 }
 
 export function parseQuery(q: string): Parsed {
-  const p: Parsed = { raw: [], words: [], topics: [], kinds: [], cuisines: [], cats: [], vibes: [], outdoor: false, openNow: false, cheap: false, fancy: false, family: false, romantic: false, fixes: [], fuzzy: {}, note: '' };
+  const p: Parsed = { raw: [], words: [], topics: [], kinds: [], cuisines: [], cats: [], vibes: [], needs: [], outdoor: false, openNow: false, cheap: false, fancy: false, family: false, romantic: false, fixes: [], fuzzy: {}, note: '' };
   let s = ' ' + fold(q).replace(/(\d{1,2})[:.](\d{2})/g, '$1h$2').replace(/['’`´]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ') + ' ';
   for (const [k, v] of Object.entries(NAME_ALIASES)) s = s.replace(' ' + k + ' ', ' ' + v + ' ');
   const take = (re: RegExp, fn: (m: RegExpMatchArray) => void) => { const m = s.match(re); if (m) { fn(m); s = s.replace(re, ' '); return true; } return false; };
@@ -295,6 +308,15 @@ export function parseQuery(q: string): Parsed {
     const known = PLACE_PHRASES.find(([w]) => w === m[1] || w === m[1].split(' ')[0] || m[0].trim() === w);
     if (known) { p.place = known[1]; } else p.street = m[1].split(' ')[0];
   });
+  // what the place should have
+  const needs: [RegExp, Need][] = [
+    [/ (?:cu )?(?:wi ?fi|internet|net bun|sa (?:pot )?lucra|sa lucrez|de lucru|cu laptopul|laptopul|laptop|remote) /, 'wifi'],
+    [/ (?:fara fumat|nefumatori|pentru nefumatori|sa nu se fumeze|fara tigari|smoke free|non smoking|unde nu se fumeaza) /, 'nosmoke'],
+    [/ (?:unde se fumeaza|se fumeaza|cu fumat|fumatori|pentru fumatori|pot fuma|sa pot fuma|sa se poata fuma|fumat) /, 'smoke'],
+    [/ (?:accesibil |acces )?(?:pentru |cu )?(?:scaun cu rotile|scaun rulant|carucior|caruciorul|dizabilitati|handicap|fara trepte|wheelchair) /, 'wheel'],
+    [/ (?:cu )?(?:aer conditionat|aerul conditionat|racoare|climatizat|cu clima|cu ac) /, 'ac'],
+  ];
+  for (const [re, n] of needs) while (take(re, () => {})) if (!p.needs.includes(n)) p.needs.push(n);
   // budget
   const PER = '(?: (?:de )?(?:persoana|pers|om|cap))?';
   take(new RegExp(' (?:intre|de la) ' + NUMW + ' (?:si|la|pana la) ' + NUMW + ' (?:de )?(?:lei|ron)?' + PER + ' '), (m) => { p.budgetMin = num(m[1]); p.budget = num(m[2]); });
@@ -302,9 +324,41 @@ export function parseQuery(q: string): Parsed {
   take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana (?:in|la)) ' + NUMW + ' (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budget = num(m[1]); });
   take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana in) (\\d{2,4})' + PER + ' '), (m) => { p.budget = num(m[1]); }); // "sub 50": lei is implied
   take(new RegExp(' ' + NUMW + ' (?:de )?(?:lei|ron)(?: (?:de )?(?:persoana|pers|om|cap))? '), (m) => { p.budget = num(m[1]); });
-  if (take(/ (ieftin|ieftina|ieftine|ieftini|ieftinut|ieftinica|buget|low cost|lowcost|studentesc|studenteasca|accesibil|nu prea scump|nu scump|pe buget|pe bani putini|economic) /, () => {})) { p.cheap = true; p.budget = Math.min(p.budget ?? 50, 50); }
+  if (take(/ (ieftin|ieftina|ieftine|ieftini|ieftinut|ieftinica|buget|low cost|lowcost|studentesc|studenteasca|accesibil|accesibile|preturi accesibile|preturi mici|preturi bune|nu prea scump|nu scump|pe buget|pe bani putini|economic) /, () => {})) { p.cheap = true; p.budget = Math.min(p.budget ?? 50, 50); }
   if (take(/ (scump|scumpa|lux|luxos|luxoasa|elegant|eleganta|fancy|fine dining|gourmet|de fite|select|exclusivist) /, () => {})) p.fancy = true;
   if (p.budget !== undefined && p.budget < 50) p.cheap = true;
+
+  // clock times, before people ("înainte de 9" is a time, not nine people) and with the right half of the day:
+  // "la 8" is the evening for a bar, "la 10" the morning for brunch, "la 1 noaptea" is 01:00
+  const t: TimeAsk = { label: '' };
+  const daytime = /brunch|mic dejun|micul dejun|cafea|cafenea|cafele|muzeu|muzee|parc|plimbare|zoo|gradina|dimineata|pranz|copii|tenis|padel|piscina/.test(s);
+  const nightlife = /club|party|petrecere|disco|shisha|narghil|noaptea|la noapte|dupa miezul/.test(s);
+  const clock = (h: number, part?: string) => {
+    if (part === 'noaptea') return h === 12 ? 0 : h <= 5 ? h : h < 12 ? h + 12 : h;
+    if (part === 'dimineata') return h % 12;
+    if (part === 'seara') return h < 12 ? h + 12 : h;
+    if (part === 'pranz' || part === 'dupa amiaza') return h <= 6 ? h + 12 : h;
+    if (h >= 12) return h % 24;
+    if (h === 0) return 0;
+    if (h <= 5) return nightlife ? h : h + 12;
+    return daytime ? h : h + 12;
+  };
+  const hm = (h: number, m: number) => String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+  const PART = '(?: (seara|noaptea|dimineata|pranz|dupa amiaza))?';
+  take(new RegExp(' dupa (?:ora )?(\\d{1,2})(?:h(\\d{2}))?' + PART + ' '), (m) => {
+    const h = Number(m[1]); if (h > 24) return;
+    t.hour = clock(h, m[3]); t.min = m[2] ? Number(m[2]) : 0; t.after = true; t.label = 'după ' + hm(t.hour, t.min);
+  });
+  take(new RegExp(' (?:inainte de|inainte sa fie|pana la|pana in) (?:ora )?(\\d{1,2})(?:h(\\d{2}))?' + PART + ' '), (m) => {
+    const h = Number(m[1]); if (h > 24) return;
+    const end = clock(h, m[3]) * 60 + (m[2] ? Number(m[2]) : 0);
+    const at = Math.max(0, end - 60);
+    t.hour = Math.floor(at / 60); t.min = at % 60; t.before = true; t.label = 'înainte de ' + hm(Math.floor(end / 60) % 24, end % 60);
+  });
+  take(new RegExp(' (?:la |pe la |pela |ora |la ora |in jur de |pe la ora )(\\d{1,2})(?:h(\\d{2}))?' + PART + ' '), (m) => {
+    const h = Number(m[1]); if (h > 24) return;
+    t.hour = clock(h, m[3]); t.min = m[2] ? Number(m[2]) : 0; t.label = 'la ' + hm(t.hour, t.min);
+  });
 
   // people
   const setPeople = (n: number) => { if (n >= 1 && n <= 40) p.people = n; };
@@ -317,30 +371,22 @@ export function parseQuery(q: string): Parsed {
   if (take(/ (cu gasca|gasca|grup|grupul|cu prietenii|prietenii|cu baietii|cu fetele|colegii|cu colegii|echipa) /, () => {})) p.people ??= 5;
 
   // time
-  const t: TimeAsk = { label: '' };
   if (take(/ (non ?stop|24 ?7|24 din 24|deschis toata noaptea) /, () => {})) { t.now = true; t.nonstop = true; t.label = 'non-stop'; }
   if (take(/ (deschis acum|deschisa acum|deschise acum|deschisi acum|chiar acum|acum|in momentul asta|imediat|open now|open) /, () => {})) { t.now = true; t.label ||= 'acum'; }
   if (take(/ (azi|astazi|azi seara) /, () => {})) { t.day = -1; }
   if (take(/ (poimaine) /, () => {})) t.day = -3;
   else if (take(/ (maine|mâine|mine seara) /, () => {})) t.day = -2;
-  for (const [w, d] of Object.entries(DAYS)) if (take(new RegExp(' ' + w + '(a|ea)? '), () => {})) { t.day = d; t.label = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'][d]; }
+  for (const [w, d] of Object.entries(DAYS)) if (take(new RegExp(' ' + w + '(a|ea)? '), () => {})) { t.day = d; t.label = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'][d] + (t.label ? ' ' + t.label : ''); }
   if (take(/ (in )?(weekend|weekendul|week end|wekend|weekend asta|weekendul asta) /, () => {})) { t.day = 6; t.label = 'în weekend'; }
-  take(/ dupa (?:ora )?(\d{1,2}) (?:noaptea|dimineata) /, (m) => { t.hour = Number(m[1]); t.min = 0; t.label = 'după ' + m[1] + ' noaptea'; if (t.day === undefined) t.day = -1; });
   for (const [re, h, mm, label] of PARTS) {
     const was = s;
     if (take(re, () => {})) {
-      if (t.hour === undefined) { t.hour = h; t.min = mm; }
-      t.label = (t.label ? t.label + ' ' : '') + label;
+      if (t.hour === undefined) { t.hour = h; t.min = mm; t.label = (t.label ? t.label + ' ' : '') + label; }
+      else if (!/^(la|după|înainte)/.test(t.label)) t.label = (t.label ? t.label + ' ' : '') + label;
       if (/diseara|deseara|disara|seara asta|la noapte/.test(was) && t.day === undefined) t.day = -1;
       break;
     }
   }
-  take(/ (?:la |pe la |pela |ora |la ora |in jur de )(\d{1,2})(?:h(\d{2})?)?(?: (?:seara|noaptea))? /, (m) => {
-    let h = Number(m[1]); const min = m[2] ? Number(m[2]) : 0;
-    if (h > 24) return;
-    if (h >= 1 && h <= 11 && !(t.hour !== undefined && t.hour < 12)) h += 12; // "la 8" means the evening when going out
-    t.hour = h % 24; t.min = min; t.label = (t.label && !/^(seara|noaptea)$/.test(t.label) ? t.label + ' ' : '') + 'la ' + String(t.hour).padStart(2, '0') + ':' + String(min).padStart(2, '0');
-  });
   take(/ (\d{1,2})h(\d{2})? /, (m) => { t.hour = Number(m[1]) % 24; t.min = m[2] ? Number(m[2]) : 0; t.label ||= 'la ' + m[1] + ':' + (m[2] ?? '00'); });
   if (take(/ (deschis|deschisa|deschise|deschisi|deschide) /, () => {})) { if (t.day === undefined && t.hour === undefined) { t.now = true; t.label ||= 'acum'; } else t.label ||= 'deschis'; }
   if (t.day === -1 && !t.label) t.label = 'azi';
@@ -537,7 +583,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
   const food = topics.filter((id) => FOOD_TOPICS.has(id));
   const venueTopics = topics.filter((id) => !FOOD_TOPICS.has(id));
   const wantsSomething = topics.length > 0;
-  const anyModifier = !!(p.place || p.time || p.budget !== undefined || n || p.outdoor || p.family || p.romantic || p.fancy || p.street || p.vibes.length);
+  const anyModifier = !!(p.place || p.time || p.budget !== undefined || n || p.outdoor || p.family || p.romantic || p.fancy || p.street || p.vibes.length || p.needs.length);
   if (nameIntent && !wantsSomething) return { results: named.slice(0, limit), parsed: p };
   if (!wantsSomething && !anyModifier && !nameIntent) {
     // nothing understood: loose name matches, so the person still sees something
@@ -618,6 +664,10 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       const likes = ctx.prefs.likes;
       if (likes.some((l) => v.cuisines.includes(l) || v.k === l || (vibes as string[]).includes(l))) sc += 3;
       if (ctx.history.includes(v.id)) sc -= 2;
+      // wifi, no smoking, wheelchair…: a place the map says has it goes up; one that says the opposite is left out
+      let refused = false;
+      for (const need of p.needs) { const nf = needFit(v, need); if (nf.no) refused = true; sc += nf.pts; }
+      if (refused) continue;
       // the weather: full weight for "ceva diseară"; asked for a park by name, the rain only nudges it down
       const wx = wxScore(v, wxAt(ctx.weather, t));
       sc += wantsSomething ? (wx.pts < 0 ? wx.pts / 3 : wx.pts / 2) : wx.pts;
@@ -681,8 +731,13 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
     if (n && n >= 3) reasons.push('Bun pentru ' + n + ' persoane');
     const wx = wxScore(c.v, wxAt(ctx.weather, c.t));
     if (wx.why) reasons.splice(1, 0, wx.why);
+    const met = p.needs.filter((need) => needFit(c.v, need).ok);
+    if (met.length) reasons.splice(hit ? 1 : 0, 0, met.map((need) => NEED_SAY[need]).join(', '));
     return { v: c.v, score: c.sc, km: c.d, open: o, reasons: reasons.slice(0, 3), parts: empty };
   });
+  // the map knows wifi, smoking and access only for some places: say so when the top ones cannot promise it
+  const unsure = p.needs.filter((need) => top.slice(0, 3).filter((c) => needFit(c.v, need).ok).length < Math.min(2, top.length));
+  if (unsure.length) p.note = (p.note ? p.note + ' ' : '') + 'Puține localuri au trecut pe hartă ' + unsure.map((need) => NEED_WORD[need]).join(' și ') + ': sună înainte să pleci.';
   // asked for something outside while it will rain: say so once
   const wet = top.slice(0, 3).map((c) => ({ c, w: wxAt(ctx.weather, c.t) })).find(({ c, w }) => w?.wet && exposure(c.v) === 'out');
   if (wet) p.note = (p.note ? p.note + ' ' : '') + 'Atenție: la ora aia e ' + wet.w!.text + '. Ia umbrela sau alege ceva la adăpost.';

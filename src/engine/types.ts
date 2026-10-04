@@ -25,6 +25,10 @@ export interface Venue {
   phone?: string;
   brand?: string;      // set for chains
   wheelchair?: boolean;
+  wheelLimited?: boolean; // partly accessible (OSM wheelchair=limited)
+  wifi?: boolean;      // OSM internet_access
+  smoke?: 'no' | 'outside' | 'yes'; // OSM smoking
+  ac?: boolean;        // OSM air_conditioning
   famous?: boolean;
   gone?: string;       // yyyy-mm-dd: dropped from the map then (src/data/gone.json); kept so old plans and stamps still open    // has a Wikidata entry (OSM wikidata=*): a known place
   fast?: boolean;      // fast food

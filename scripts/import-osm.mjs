@@ -71,6 +71,12 @@ for (const e of els) {
   if (phone) v.phone = phone.split(';')[0].trim();
   if (t.brand || t['brand:wikidata']) v.brand = t.brand || name;
   if (t.wheelchair === 'yes') v.wheelchair = true;
+  else if (t.wheelchair === 'limited') v.wheelLimited = true;
+  if (/^(wlan|yes|wifi|public)$/.test(t.internet_access ?? '') || t['internet_access:fee'] === 'no' && t.internet_access) v.wifi = true;
+  const smoke = t.smoking ?? '';
+  if (smoke === 'no') v.smoke = 'no'; else if (smoke === 'outside') v.smoke = 'outside'; else if (/^(yes|separated|isolated|dedicated)$/.test(smoke)) v.smoke = 'yes';
+  if (t.air_conditioning === 'yes') v.ac = true;
+  for (const d of ['vegan', 'vegetarian', 'gluten_free']) if (/^(yes|only)$/.test(t['diet:' + d] ?? '') && !v.cuisines.includes(d)) v.cuisines.push(d);
   if (t.wikidata) v.famous = true; // has its own Wikipedia/Wikidata page: a known place even when the map lacks hours
   const minAge = parseInt(t.min_age || t['age:min'] || '', 10); // a place that asks for ID at the door
   if (minAge >= 16) v.minAge = minAge;
