@@ -1,0 +1,69 @@
+# Checks every place against Google Maps (Places API) and leaves out the ones closed for good or for a while.
+# Runs by hand (Actions → "Verifică locurile" → Run workflow) and every month on the 2nd, after the OSM update.
+# Needs the repository secret PLACES_API_KEY (a Google Cloud key with "Places API (New)" on). The list of what was
+# found is on the run's page; the data is saved only if the tests pass.
+name: Verifică locurile
+
+on:
+  schedule:
+    - cron: '17 4 2 * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Câte locuri (gol = toate)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: osm-data
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verificarea pe Google Maps
+        env:
+          PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
+        run: |
+          if [ -z "$PLACES_API_KEY" ]; then echo "Lipsește secretul PLACES_API_KEY" >> "$GITHUB_STEP_SUMMARY"; exit 1; fi
+          node scripts/verify-places.mjs ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }}
+          cat verificare.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Localurile fără cele închise
+        run: |
+          node scripts/import-osm.mjs data-raw/osm-bucuresti-ilfov.json
+          TZ=Europe/Bucharest node scripts/build-hours.mjs
+      - name: Testele
+        id: tests
+        continue-on-error: true
+        run: npx vitest run
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verificare-${{ github.run_number }}
+          path: |
+            verificare.md
+            src/data/checked.json
+      - name: Salvează în repo
+        if: steps.tests.outcome == 'success'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/data/checked.json src/data/venues.json src/data/gone.json
+          if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
+          git commit -m "Locuri verificate pe Google Maps ($(date -u +%F)): scoase cele închise"
+          for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0; sleep 10; done
+          exit 1
+      - name: Testele au picat
+        if: steps.tests.outcome != 'success'
+        run: echo "**Testele au picat cu locurile scoase.** Datele nu s-au salvat; lista e în Artifacts." >> "$GITHUB_STEP_SUMMARY"

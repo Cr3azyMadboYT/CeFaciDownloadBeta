@@ -17,6 +17,7 @@ import { Big, H1, Muted, Press, Sheet, T } from '../../ui/kit';
 import { Sky, SKY_BG } from '../../ui/Sky';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
+import { useBackTwiceToExit } from '../../lib/backTwice';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -64,6 +65,7 @@ function useClock() {
 }
 
 export default function Acasa() {
+  useBackTwiceToExit();
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
   const { f } = useFilters();

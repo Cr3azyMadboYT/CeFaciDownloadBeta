@@ -22,6 +22,10 @@ const clean = (s) => (s ?? '').replace(/\s+/g, ' ').trim();
 const BAD_NAME = /^(bar|restaurant|cafenea|cafe|pub|fast ?food|terasa|bistro|test|parc|park|scuar|teren(ul|uri)?( de)?( \S+){0,2}|baz[aă] sportiv[aă]|piscin[aă]|bazin(ul)?( de)? [iî]not|\?|-)$/i;
 // size of a mapped area (km, corner to corner), from Overpass "out bb"
 const spanKm = (b) => (b ? km({ lat: b.minlat, lon: b.minlon }, { lat: b.maxlat, lon: b.maxlon }) : 0);
+// places Google Maps says closed (scripts/verify-places.mjs): left out, so they go to gone.json
+const checkedFile = new URL('../src/data/checked.json', import.meta.url);
+const checked = fs.existsSync(checkedFile) ? JSON.parse(fs.readFileSync(checkedFile, 'utf8')) : {};
+const shut = new Set([...(checked.closed ?? []), ...(checked.temporary ?? [])]);
 const out = [];
 const seen = new Map();
 let skipped = { noName: 0, noPos: 0, generic: 0, closed: 0, dupe: 0, kind: 0, small: 0 };
@@ -33,6 +37,7 @@ for (const e of els) {
   if (!name) { skipped.noName++; continue; }
   if (BAD_NAME.test(name)) { skipped.generic++; continue; }
   if (t['disused:amenity'] || t.disused === 'yes' || t['was:amenity'] || /closed|inchis definitiv/i.test(t.note ?? '') || /^fost(a|ul)?\b|scoase? din uz|dezafectat|abandonat/i.test(name)) { skipped.closed++; continue; }
+  if (shut.has(e.type[0] + e.id)) { skipped.shut = (skipped.shut || 0) + 1; continue; }
   const kind = classify(t);
   if (!kind) { skipped.kind++; continue; }
   if (kind.k === 'soccer' && /^stadion/i.test(name)) { skipped.kind++; continue; } // a club's stadium: nobody rents it for a game
