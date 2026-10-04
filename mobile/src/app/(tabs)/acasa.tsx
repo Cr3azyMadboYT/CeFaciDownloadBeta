@@ -155,7 +155,7 @@ export default function Acasa() {
               <View style={{ width: 34, height: 34, borderRadius: 99, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center' }}><Icon name="userPlus" size={16} color="#0E1440" /></View>
               <View style={{ flex: 1, gap: 3 }}>
                 <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Alege cu cine ieși</T>
-                <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>invitațiile și votul vin curând</T>
+                <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>alegi locurile, apoi votați împreună</T>
               </View>
               <Icon name="next" size={16} color="#FFD43B" />
             </Press>
@@ -227,9 +227,10 @@ export default function Acasa() {
       <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); router.push('/rezultate'); }} />
       <Sheet open={crewOpen} onClose={() => setCrewOpen(false)}>
         <H1 style={{ fontSize: 26 }}>Cu cine ieși?</H1>
-        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Prietenii îi adaugi după @username, iar gășcile le faci din Planuri. Invitațiile la plan și votul împreună vin curând.</Muted>
+        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Apasă „Arată variante”, apoi „Trimite gășcii la vot”: fiecare votează din telefonul lui și câștigă locul cu cele mai multe voturi. Sau trimiți direct biletul și ei răspund cu Vin sau Nu pot.</Muted>
         <View style={{ marginTop: 16, gap: 8 }}>
-          <Big label="Adaugă prieteni" onPress={() => { setCrewOpen(false); router.push('/prieteni'); }} />
+          <Big label="Arată variante" onPress={() => { setCrewOpen(false); router.push('/rezultate'); }} />
+          <Big label="Adaugă prieteni" color={t.s2} ink={t.ink} onPress={() => { setCrewOpen(false); router.push('/prieteni'); }} />
           <Big label={'Mergem ' + WHO[f.who].text.toLowerCase() + ', fără invitații'} color={t.s2} ink={t.ink} onPress={() => setCrewOpen(false)} />
         </View>
       </Sheet>

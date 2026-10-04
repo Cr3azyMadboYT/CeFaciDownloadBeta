@@ -48,7 +48,7 @@ export default function Setari() {
           <Seg label="Nu" on={!remind} onPress={() => setBoard({ billRemind: false })} />
         </Group>
         <Lbl style={{ marginTop: 8 }}>Contul</Lbl>
-        <Muted style={{ fontSize: 14 }}>{who ? 'Intrat cu ' + (who.email ?? 'Google') + '. Ieșirea din cont și ștergerea sunt jos în Profil.' : 'Nu ești în cont.'}</Muted>
+        <Muted style={{ fontSize: 14 }}>{who ? 'Contul: ' + (who.email ?? 'Google') + '. Ieșirea din cont și ștergerea sunt jos în Profil.' : 'Nu ești în cont.'}</Muted>
         <Lbl style={{ marginTop: 8 }}>Despre</Lbl>
         <Muted style={{ fontSize: 14 }}>
           {'Datele localurilor: © contribuitorii '}

@@ -109,17 +109,24 @@ export async function cast(v: VoteFull, me: string, optionId: string, value: Bal
 
 /** Live updates for one vote: every change of a ballot or of the vote itself calls `cb`. Returns a stop function. */
 export function watchVote(id: string, cb: () => void) {
-  const ch = sb().channel('vote-' + id)
-    .on('postgres_changes' as never, { event: '*', schema: 'public', table: 'ballots', filter: 'session_id=eq.' + id } as never, cb)
+  // a fresh channel name each time: reopening the same vote quickly must not reuse a channel that is still closing
+  const ch = sb().channel('vote-' + id + '-' + Math.random().toString(36).slice(2))
+    .on('postgres_changes' as never, { event: 'INSERT', schema: 'public', table: 'ballots', filter: 'session_id=eq.' + id } as never, cb)
+    .on('postgres_changes' as never, { event: 'UPDATE', schema: 'public', table: 'ballots', filter: 'session_id=eq.' + id } as never, cb)
+    // deletes cannot be filtered on the server: check the vote here
+    .on('postgres_changes' as never, { event: 'DELETE', schema: 'public', table: 'ballots' } as never, (e: { old?: { session_id?: string } }) => { if (!e.old?.session_id || e.old.session_id === id) cb(); })
     .on('postgres_changes' as never, { event: 'UPDATE', schema: 'public', table: 'vote_sessions', filter: 'id=eq.' + id } as never, cb)
     .subscribe();
   const poll = setInterval(cb, 15000); // in case the live channel drops (a phone on the move)
   return () => { clearInterval(poll); void sb().removeChannel(ch); };
 }
 
-/** Turns the winner into one plan for everyone in the vote (made once, whoever asks first). Returns the plan id. */
-export async function planFromVote(id: string): Promise<{ planId?: string; err?: string }> {
+/** Turns the winner into one plan for everyone in the vote (made once, whoever asks first, and it closes the vote).
+ *  Returns the plan as the server has it, so every phone gets the same place and time. */
+export async function planFromVote(id: string): Promise<{ planId?: string; venueId?: string; startsAt?: string; ownerId?: string; err?: string }> {
   const { data, error } = await db().rpc('plan_from_vote', { p_session: id });
-  if (error) return { err: 'Nu am putut face planul. Încearcă iar.' };
-  return { planId: data as string };
+  if (error) return { err: /terminat/.test(error.message ?? '') ? 'Votul nu s-a terminat încă: mai așteptăm voturi.' : 'Nu am putut face planul. Încearcă iar.' };
+  const { data: pl } = await db().from('plans').select('id, venue_id, starts_at, owner_id').eq('id', data).maybeSingle();
+  if (!pl) return { err: 'Planul e făcut, dar nu-l pot citi acum. Încearcă iar.' };
+  return { planId: pl.id, venueId: pl.venue_id, startsAt: pl.starts_at, ownerId: pl.owner_id };
 }

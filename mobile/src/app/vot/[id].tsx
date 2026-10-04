@@ -32,10 +32,19 @@ export default function Vot() {
   const [busy, setBusy] = useState('');
   const [err, setErr] = useState('');
   const load = useCallback(() => { if (id) void getVote(id).then(setV); }, [id]);
-  useEffect(() => { load(); if (!id) return; return watchVote(id, load); }, [id, load]);
+  useEffect(() => { if (!id || !who) return; load(); return watchVote(id, load); }, [id, who, load]);
   useEffect(() => { const k = setInterval(() => setNow(Date.now()), 20000); return () => clearInterval(k); }, []);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/planuri'));
 
+  if (!who) {
+    return (
+      <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20, gap: 12 }}>
+        <H1>Votul merge cu cont.</H1>
+        <Muted>Intră din Profil → Prieteni, apoi deschide votul din Planuri.</Muted>
+        <Big label="Înapoi" onPress={back} />
+      </View>
+    );
+  }
   if (v === undefined) return <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20 }}><Muted>Încarc votul…</Muted></View>;
   if (!v || !who) {
     return (
@@ -68,10 +77,9 @@ export default function Vot() {
     const r = await planFromVote(v.id);
     setBusy('');
     if (r.err) { setErr(r.err); return; }
-    const at = win.details.starts_at ? new Date(win.details.starts_at) : new Date(Date.now() + 2 * 3600e3);
-    if (!APP.byId(win.venueId)) { toast('Planul e făcut, dar locul nu mai e în lista noastră.'); back(); return; }
+    if (!APP.byId(r.venueId!)) { toast('Planul e făcut, dar locul nu mai e în lista noastră.'); back(); return; }
     void comeTo(r.planId!, me);
-    const pid = createPlanAt(win.venueId, at, v.voters.length, { sid: r.planId });
+    const pid = createPlanAt(r.venueId!, new Date(r.startsAt!), v.voters.length, { sid: r.planId, owner: r.ownerId === me });
     toast('Gata! Toți din vot au primit planul în Planuri.');
     router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pid) } });
   };

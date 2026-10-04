@@ -141,13 +141,13 @@ Bilu e mascota: biletul galben din logo, cu ochi, mâini și picioare. Are câte
 ## Contul nou și preferințele
 
 Pe canvasul de client, înainte de Demo, e un ecran conectat în care Bilu te duce prin 7 pași:
-1. **Telefonul:** cod prin SMS; Google și Apple merg ca alternative.
+1. **Intrarea:** Google sau email (cod primit pe mail). Fără SMS și fără „Continuă fără cont” (decizia lui Cornel, 04.10). Apple e ascuns deocamdată.
 2. **Numele:** prenumele, username-ul (cu sugestii dacă e luat) și anul nașterii. Sub 16 ani nu se poate intra, iar la 16–17 ani locurile 18+ sunt ascunse.
 3. **Zona:** Buftea, cât de departe mergi și cum ajungi.
 4. **Ce-ți place:** 12 plăci, minimum 3 alese.
 5. **Cum ieși:** buget, cu cine, când, chill sau party.
 6. **„Ai merge aici?”:** 5 locuri reale, cu Da, Poate sau Nu prea.
-7. **Prietenii din agendă**, sau „Mai târziu”.
+7. **Prietenii:** după @username sau cu codul de prieten, din Profil → Prieteni (nu din agendă). „Invită prieteni” cu link spre magazin vine după ce aplicația e pe Google Play.
 
 La final apare un rezumat, explicația despre date („nu vindem date, nu arătăm reclame”) și intrarea în aplicație, unde pornește turul. Din aceste răspunsuri pornește motorul de recomandări (vezi documentul Versiunea 1).
 
@@ -199,12 +199,12 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
 - **Localurile fondatoare (15–20):** 0% în primele 3 luni, apoi 4% pe viață în loc de 5%, plus insigna „Partener fondator”. Totul e scris în contract din prima zi.
 - **Buget minim:** fără salarii, fără SMS la înscriere (Apple, Google sau email), hărți gratuite, fără Plus în primele 3–6 luni, marketing din conținut propriu și ambasadori. Estimare: ~1.700 lei o singură dată și ~550 lei pe lună, deci ~6.000–7.000 lei pentru 6 luni fără venit.
 - **Persoană fizică la început:** e ok cât nu se încasează niciun ban. SRL-ul se face înainte de primul leu încasat, adică înainte să se termine perioada gratuită a fondatorilor.
-- **Dovada ieșirii:** clientul o face, nu ospătarul. La local e un singur cod QR CeFaci, la bar sau la intrare. Clientul îl scanează când ajunge („Am ajuns”), iar dacă nu găsește codul, confirmă cu locația. Oferta sau reducerea Plus apare pe ecranul lui. La plecare pune poza bonului fiscal, iar aplicația citește CUI-ul, ora și totalul. XP-ul vine doar după bon. Scannerul personalului rămâne opțional. În Business, codul e în Profilul localului („Descarcă pentru print”, „Vreau un stand gratuit”), iar mesele apar „Confirmat cu bonul”. Rezervările nu mai au cod QR arătat la intrare.
+- **Dovada ieșirii:** clientul o face, nu ospătarul. La local e un singur cod QR CeFaci, la bar sau la intrare. Clientul îl scanează când ajunge („Am ajuns”), iar dacă nu găsește codul, confirmă cu locația. Oferta sau reducerea Plus apare pe ecranul lui. La plecare pune poza bonului fiscal, iar aplicația citește CUI-ul, ora și totalul. (Schimbat pe 03.10: la nepartenere XP-ul vine la check-in cu locația, iar bonul aduce +25 XP în plus; vezi „Bonul și check-in-ul”.) Scannerul personalului rămâne opțional. În Business, codul e în Profilul localului („Descarcă pentru print”, „Vreau un stand gratuit”), iar mesele apar „Confirmat cu bonul”. Rezervările nu mai au cod QR arătat la intrare.
 
 ## Aplicația funcțională (29 septembrie seara)
 
-- **Etapa 1 e gata:** ecranele din canvas (Cont + Demo, cu Bilu, turul, biletul, Plus) rulează pe 3.250 de localuri reale din București și Ilfov (OpenStreetMap, 29.09.2026), cu motorul de recomandări și căutare. Codul e în `cefaci-app` (runtime pentru ecranele din canvas, puntea cu datele reale, teste). Există și APK Android 0.1.0 (WebView), semnat cu cheia `cefaci-android-release.jks`, pe care Cornel o păstrează.
-- **Încă de exemplu:** prietenii, gășcile și votul (etapa 2), nivelul și XP-ul (etapa 3), codul SMS de test. Live Drops și reducerile Plus sunt goale până apar parteneri reali.
+- **Etapa 1 e gata:** ecranele din canvas (Cont + Demo, cu Bilu, turul, biletul, Plus) rulează pe localuri reale din București și Ilfov (OpenStreetMap), cu motorul de recomandări și căutare. (Istoric: prima variantă a fost un APK WebView; din 03.10 aplicația e scrisă nativ, vezi mai jos.)
+- **Live Drops și reducerile Plus** sunt goale până apar parteneri reali.
 - **Prioritatea numărul 1 (când Cornel are PC):** motorul de căutare trebuie să fie impecabil, iar întrebările de la crearea contului, inclusiv designul lor, la fel. Sunt lucrul cel mai important de lustruit înainte de lansare.
 
 ## Banii și taxele (propunere, de verificat cu contabilul)
@@ -381,3 +381,19 @@ Ideile de la care am pornit:
   - statistici pe care le arătăm localului când îi propunem parteneriatul („luna trecută au venit 43 de oameni prin CeFaci”).
 - Amintirea „Nu uita de bon” (la 40 de minute) merge la toată lumea, cu aceeași motivație de XP.
 - Google Cloud: proba gratuită (300 $) se termină pe 10.11.2026. Pe 3.11 Cornel trece pe cont plătit și pune un buget de 10 $ cu alertă (amintirea e programată).
+
+## Starea la 4 octombrie
+
+- **Aplicația de telefon e nativă** (React Native + Expo, folderul `mobile/`), decizia lui Cornel din 03.10. APK-ul îl face GitHub la fiecare push, semnat cu cheia reală (secretele `CEFACI_KEYSTORE_*`).
+- **Contul:** doar Google sau email. Fără „Continuă fără cont”.
+- **Locurile:** 3.412 din OpenStreetMap, cu categorii noi: **Natură** (parcuri, rezervații, grădina botanică, plajă) și **Sport** (padel, tenis, fotbal, piscină, escaladă, squash, golf, călărie), plus karting, paintball, biliard, acvariu, planetariu, palate, conace, castele și mănăstiri. La palate și castele din oraș intră doar cele care se pot vizita (multe „palate” sunt bănci sau birouri).
+- **Actualizare lunară automată:** GitHub descarcă datele OSM pe 1 ale lunii (Actions → „Date OSM”), refăcând localurile și programul, și le salvează doar dacă trec testele. Pe pagina rulării apare un rezumat pe zone.
+- **Variație în orașele mici (problema din Buftea):** la cont, cele 5 locuri sunt câte unul din fiecare fel de ieșire (mâncare, băut, cultură, joacă, aer liber), apoi următoarele. Dacă în zonă sunt doar restaurante, căutăm până la 22 km. Testat pe toate cele 19 zone.
+- **Votul cu gașca merge:** din Rezultate, „Trimite gășcii la vot” (o gașcă sau prieteni aleși), cu termen de 30 min până a doua zi. Fiecare votează Da, Nu sau Super (un singur Super), rezultatele se văd în timp real, iar la final „Facem planul” îl trimite tuturor. Planul se face doar când votul s-a terminat și atunci votul se închide.
+- **Planul trimis gășcii:** de pe bilet îl trimiți unei gășci sau unor prieteni; ei răspund cu Vin sau Nu pot în Planuri, iar tu vezi pe bilet cine vine. Dacă cel care l-a făcut îl anulează sau îi schimbă ora, ceilalți primesc schimbarea.
+- **Prieteni și gășci:** profilul prietenului (nivel, XP, ștampile, prieteni comuni, invită în gașcă, elimină), codul gășcii (7 zile, adminul face unul nou), „Intră cu un cod” în Planuri, membri noi, carnetul gășcii cu ieșirile făcute împreună, „Păstrați gașca?” după un vot cu prieteni aleși unul câte unul.
+- **Nivelul:** check-in +100, loc nou +50, categorie nouă +75, bon +25, bun venit +150 (o dată). La un nivel nou apare ștampila „NIVEL NOU”, cu confetti și Bilu.
+- **Setări** (rotița din Profil): temă Zi / Noapte / Ca telefonul, „Mai puține animații” (pornește singur dacă telefonul are reducerea mișcării), amintirea pentru bon.
+- **Amintirea pentru bon:** notificare la 40 de minute după check-in și, dacă tot lipsește bonul, a doua zi la prânz. Maximum două, oprite când pui bonul. Biletul de ieri rămâne în Planuri până pui bonul.
+- **Biletul:** câte persoane și ora pentru rezervare, WhatsApp pentru numerele de mobil, „Cum a fost?”, Plan B aproape, avertisment pentru planuri suprapuse, „Ceva nu e bun la locul ăsta?” (semnalările ajung în tabelul `reports`).
+- **Încă de făcut:** „Invită prieteni” cu link spre magazin (după Google Play), codul QR de la bar pentru parteneri, plata Plus prin Google Play.

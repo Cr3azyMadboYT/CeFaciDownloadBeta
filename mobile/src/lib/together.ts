@@ -3,7 +3,8 @@
 import { APP } from '../../../src/app/bridge';
 import { sb } from './auth';
 import type { Person } from './friends';
-import { createPlanAt, startsAt, updPlan, type Plan } from './plans';
+import { createPlanAt, hhmm, removePlan, startsAt, updPlan, type Plan } from './plans';
+import { getApp } from './session';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = () => sb() as any;
@@ -82,8 +83,9 @@ export async function going(sid: string): Promise<Going[]> {
 
 /** Live: someone answered to a plan of mine, or called me to one. */
 export function watchPlans(me: string, cb: () => void) {
-  const ch = sb().channel('plans-' + me)
+  const ch = sb().channel('plans-' + me + '-' + Math.random().toString(36).slice(2))
     .on('postgres_changes' as never, { event: '*', schema: 'public', table: 'plan_members' } as never, cb)
+    .on('postgres_changes' as never, { event: 'UPDATE', schema: 'public', table: 'plans' } as never, cb)
     .subscribe();
   return () => { void sb().removeChannel(ch); };
 }
@@ -94,4 +96,30 @@ export async function dropShared(pl: Plan, me: string) {
   // each only changes what the database lets that person change: the maker cancels, the others answer "Nu pot"
   await db().from('plan_members').update({ answer: 'nu_pot', answered_at: new Date().toISOString() }).eq('plan_id', pl.sid).eq('user_id', me);
   if (pl.owner !== false) await db().from('plans').update({ status: 'cancelled' }).eq('id', pl.sid).eq('owner_id', me);
+}
+
+const isoDay = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+/** Brings the shared plans on this phone in step with the server: a plan the maker cancelled goes away, a new time
+ *  is copied. Returns the names of the cancelled ones (to tell the person). */
+export async function syncShared(): Promise<string[]> {
+  const mine = ((getApp().board.plans as Plan[] | undefined) ?? []).filter((x) => x.sid && x.owner === false);
+  if (!mine.length) return [];
+  const { data } = await db().from('plans').select('id, status, starts_at, venue_name').in('id', mine.map((x) => x.sid));
+  const rows = (data ?? []) as { id: string; status: string; starts_at: string; venue_name: string }[];
+  const gone: string[] = [];
+  for (const pl of mine) {
+    const r = rows.find((x) => x.id === pl.sid);
+    if (!r) continue;
+    if (r.status === 'cancelled') { removePlan(pl.pid); gone.push(r.venue_name); continue; }
+    const at = new Date(r.starts_at);
+    if (hhmm(at) !== pl.slot || isoDay(at) !== pl.date) updPlan(pl.pid, { slot: hhmm(at), date: isoDay(at) });
+  }
+  return gone;
+}
+
+/** The maker changed the time on the ticket: everyone called to it gets the new time. */
+export async function moveShared(pl: Plan, slot: string) {
+  if (!pl.sid || pl.owner === false) return;
+  await db().from('plans').update({ starts_at: startsAt({ ...pl, slot }).toISOString() }).eq('id', pl.sid);
 }

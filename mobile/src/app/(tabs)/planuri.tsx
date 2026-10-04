@@ -7,7 +7,7 @@ import { APP, useApp } from '../../lib/session';
 import { NO_PLANS, dayShort, sortPlans, type Plan } from '../../lib/plans';
 import { joinWithCode, listCrews, type Crew } from '../../lib/crews';
 import { toast } from '../../lib/toast';
-import { answer, listInvites, watchPlans, type Invite } from '../../lib/together';
+import { answer, listInvites, syncShared, watchPlans, type Invite } from '../../lib/together';
 import { listVotes, type VoteRow } from '../../lib/votes';
 import { CrewMark } from '../../ui/CrewMark';
 import { Dashed } from '../../ui/Dashed';
@@ -32,6 +32,7 @@ export default function Planuri() {
     void listCrews(who.id).then(setCrews);
     void listVotes().then(setVotes);
     void listInvites(who.id).then(setInvites);
+    void syncShared().then((gone) => { if (gone.length) toast('S-a anulat planul de la ' + gone.join(', ') + '.'); });
   }, [who, known]);
   useFocusEffect(refresh);
   useEffect(() => (who && known ? watchPlans(who.id, refresh) : undefined), [who, known, refresh]);

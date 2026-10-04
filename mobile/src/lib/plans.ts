@@ -38,18 +38,21 @@ export function planDay(pl: Plan) {
 /** "azi", "mâine" or the weekday, as people say it. */
 export function dayWord(pl: Plan, now = new Date()) {
   const diff = Math.round((planDay(pl).getTime() - startOfDay(now).getTime()) / 864e5);
-  return diff <= 0 ? 'azi' : diff === 1 ? 'mâine' : DAYS[planDay(pl).getDay()];
+  return diff < 0 ? 'ieri' : diff === 0 ? 'azi' : diff === 1 ? 'mâine' : DAYS[planDay(pl).getDay()];
 }
 /** "azi", "mâine", "sâm.": short, for the little day box. */
-export function dayShort(pl: Plan, now = new Date()) { const w = dayWord(pl, now); return w === 'azi' || w === 'mâine' ? w : w.slice(0, 3) + '.'; }
+export function dayShort(pl: Plan, now = new Date()) { const w = dayWord(pl, now); return w === 'azi' || w === 'mâine' || w === 'ieri' ? w : w.slice(0, 3) + '.'; }
 /** "Azi, 4 oct.", "Mâine, 5 oct.", "Sâmbătă, 10 oct." */
 export function dateText(pl: Plan, now = new Date()) {
   const d = planDay(pl);
   const w = dayWord(pl, now);
   return w.charAt(0).toUpperCase() + w.slice(1) + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
 }
-/** Plans whose day has not passed. */
-export const upcoming = (list: Plan[], now = new Date()) => list.filter((pl) => planDay(pl).getTime() >= startOfDay(now).getTime());
+/** Plans whose day has not passed, plus yesterday's outing while its receipt can still be added (until tonight). */
+export const upcoming = (list: Plan[], now = new Date()) => list.filter((pl) => {
+  const day = planDay(pl).getTime(), today = startOfDay(now).getTime();
+  return day >= today || (!!pl.inAt && !pl.bonDone && day >= today - 864e5);
+});
 
 const plans = () => ((getApp().board.plans as unknown as Plan[] | undefined) ?? []);
 
@@ -84,8 +87,8 @@ export function createPlanAt(placeId: string, at: Date, people: number, extra: P
   const same = plans().find((x) => (extra.sid && x.sid === extra.sid) || (x.placeId === placeId && iso(planDay(x)) === date));
   if (same) { if (extra.sid && !same.sid) updPlan(same.pid, extra); return same.pid; }
   const pid = Math.max(0, ...plans().map((x) => x.pid)) + 1;
-  const today = iso(new Date()) === date;
-  const pl: Plan = { pid, placeId, when: today ? 'eve' : 'we', date, slot: hhmm(at), people, res: 'none', createdAt: Date.now(), ...extra };
+  const diff = Math.round((startOfDay(at).getTime() - startOfDay(new Date()).getTime()) / 864e5);
+  const pl: Plan = { pid, placeId, when: diff <= 0 ? 'eve' : diff === 1 ? 'tom' : 'we', date, slot: hhmm(at), people, res: 'none', createdAt: Date.now(), ...extra };
   setBoard((b) => ({ plans: [...upcoming((b.plans as Plan[] | undefined) ?? []), pl] }));
   return pid;
 }

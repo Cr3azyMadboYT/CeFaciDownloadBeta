@@ -1,7 +1,7 @@
 import '../lib/boot';
 import { useEffect, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
@@ -14,6 +14,7 @@ import { noapte, ThemeCtx, zi } from '../ui/theme';
 import { setBoard, useApp } from '../lib/session';
 import { Toast } from '../ui/Toast';
 import { LevelUp } from '../ui/LevelUp';
+import { onReminderTap } from '../lib/remind';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -25,6 +26,7 @@ export default function Root() {
   const t = name === 'noapte' ? noapte : zi;
   const ctx = useMemo(() => ({ t, name, set: (n: 'zi' | 'noapte') => setBoard({ theme: n }) }), [t, name]);
   useEffect(() => { if (loaded) SplashScreen.hideAsync().catch(() => {}); }, [loaded]);
+  useEffect(() => onReminderTap((pid) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } })), []);
   useEffect(() => { SystemUI.setBackgroundColorAsync(t.bg).catch(() => {}); }, [t.bg]);
   if (!loaded) return null;
   return (

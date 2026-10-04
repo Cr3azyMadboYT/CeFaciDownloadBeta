@@ -158,7 +158,7 @@ export default function Profil() {
             if (e) { setErr(e); return; }
             router.replace('/cont');
           }} />
-        {who ? <Muted style={{ textAlign: 'center' }}>{'Intrat cu ' + (who.email ?? 'Google')}</Muted> : null}
+        {who ? <Muted style={{ textAlign: 'center' }}>{'Contul: ' + (who.email ?? 'Google')}</Muted> : null}
       </View>
       <Muted style={{ marginTop: 14, textAlign: 'center' }}>
         {'Datele localurilor: © contribuitorii '}

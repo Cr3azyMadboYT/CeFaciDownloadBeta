@@ -57,7 +57,7 @@ export async function checkIn(pl: Plan): Promise<{ ok: boolean; msg: string }> {
   const newKind = !stamps.some((s) => APP.byId(s.id)?.real.cat === p.real.cat);
   const gain = XP_OUTING + (isNew ? XP_NEW : 0) + (newKind ? XP_KIND : 0);
   updPlan(pl.pid, { inAt: hhmm(now) });
-  if (getApp().board.billRemind !== false) void remindBill(p.name, now).then((ids) => { if (ids.length) updPlan(pl.pid, { remind: ids }); });
+  if (getApp().board.billRemind !== false) void remindBill(p.name, now, pl.pid).then((ids) => { if (ids.length) updPlan(pl.pid, { remind: ids }); });
   gainXp(gain, { stamps: isNew ? [...stamps, { id: p.id, name: p.name, icon: p.icon, bg: p.bg, at: now.getTime() }] : stamps });
   const kindWord = CAT_WORD[p.real.cat];
   return { ok: true, msg: '+' + gain + ' XP' + (isNew ? '. Ștampila de la ' + p.name + ' e în carnet.' : '. Ieșire bifată.') + (newKind && kindWord ? ' Prima ta ieșire la ' + kindWord + ': +75 XP.' : '') + ' Păstrează bonul la final, îți mai aduce 25 XP.' };

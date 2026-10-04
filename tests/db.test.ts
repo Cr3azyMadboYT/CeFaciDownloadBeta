@@ -91,6 +91,9 @@ it('keeps every rule of the database', async () => {
   await db.exec(`update vote_sessions set closes_at = now() - interval '1 minute', created_at = now() - interval '2 hours' where id = '${vs}'`);
   await expectFail('vote closed at deadline', () => as('teen', `insert into ballots (session_id, option_id, user_id, value) values ($1, $2, $3, 'da')`, [vs, o[0], U.teen]));
   eq('closed flag', (await as('cris', `select closed from vote_results($1) limit 1`, [vs])).rows[0].closed, true);
+  // a vote still open, where not everyone answered, cannot become a plan yet
+  const vs2 = (await as('bob', `select start_vote($1, null, $2::jsonb, now() + interval '1 hour') id`, [crew, opts])).rows[0].id;
+  await expectFail('no plan while the vote is open', () => as('bob', `select plan_from_vote($1)`, [vs2]), /nu s-a terminat/);
   // the vote becomes one plan for everyone who voted
   const pv = (await as('cris', `select plan_from_vote($1) id`, [vs])).rows[0].id;
   eq('vote plan made once', (await as('bob', `select plan_from_vote($1) id`, [vs])).rows[0].id, pv);

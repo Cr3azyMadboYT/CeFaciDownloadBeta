@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
 import { clashWith, createPlanAt, dateText, dayWord, planDay, removePlan, startsAt, updPlan, type Plan } from '../../lib/plans';
-import { dropShared, going, sharePlan, watchPlans, type Going } from '../../lib/together';
+import { dropShared, going, moveShared, sharePlan, watchPlans, type Going } from '../../lib/together';
 import { SendTo, type Target } from '../../ui/SendTo';
 import { checkIn, sendBill } from '../../lib/outing';
 import { cancelReminders } from '../../lib/remind';
@@ -26,8 +26,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 /** The chosen time and the half hours around it, for the booking. */
 function slotsAround(slot: string) {
   const [h, m] = slot.split(':').map(Number);
-  const base = h * 60 + m;
-  return [-60, -30, 0, 30, 60, 90].map((d) => base + d).filter((x) => x >= 8 * 60 && x <= 23 * 60 + 30).map((x) => pad(Math.floor(x / 60)) + ':' + pad(x % 60));
+  const base = (h < 5 ? h + 24 : h) * 60 + m; // 00:30 is the same night, after 23:30
+  return [-60, -30, 0, 30, 60, 90].map((d) => base + d).filter((x) => x >= 8 * 60 && x <= 28 * 60).map((x) => pad(Math.floor(x / 60) % 24) + ':' + pad(x % 60));
 }
 /** A Romanian mobile number in the international form WhatsApp wants (4074…), or null for landlines. */
 function waNumber(phone: string) {
@@ -168,7 +168,7 @@ export default function Bilet() {
         </View>
 
         <View style={{ marginTop: 12, marginHorizontal: 20, gap: 10 }}>
-          {needsRes && !noted ? (
+          {needsRes && !noted && !pl.inAt ? (
             <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M12 8v4M12 16h.01" bg={p.res === 'required' ? t.coralSoft : t.yellowSoft} ink={p.res === 'required' ? t.coralInk : t.yellowInk}
               title={p.res === 'required' ? p.name + ' cere rezervare' : 'Se umple repede la ' + p.name} sub="Faceți o rezervare ca să vă asigurați locul." btn="Rezervă" onPress={() => setExt('pick')} />
           ) : null}
@@ -252,9 +252,9 @@ export default function Bilet() {
       <Sheet open={shareOpen} onClose={() => setShareOpen(false)}>
         <H1 style={{ fontSize: 26 }}>Trimite planul</H1>
         <Muted style={{ marginTop: 6, marginBottom: 14, fontSize: 15, lineHeight: 21 }}>Îl primesc în Planuri și răspund cu Vin sau Nu pot. Tu vezi pe bilet cine vine.</Muted>
-        {shareOpen ? <SendTo onChange={onTo} /> : null}
+        {pl.owner === false ? <Muted style={{ fontSize: 15, lineHeight: 21 }}>Planul ăsta l-a făcut altcineva, așa că doar cine l-a făcut cheamă oameni în CeFaci. Tu îl poți trimite pe WhatsApp.</Muted> : shareOpen ? <SendTo onChange={onTo} /> : null}
         <View style={{ marginTop: 16, gap: 8 }}>
-          <Big label={sending ? 'Trimit…' : to ? 'Trimite la ' + to.label : 'Alege pe cine chemi'} disabled={!to || sending} onPress={shareToCrew} />
+          {pl.owner !== false ? <Big label={sending ? 'Trimit…' : to ? 'Trimite la ' + to.label : 'Alege pe cine chemi'} disabled={!to || sending} onPress={shareToCrew} /> : null}
           <Big label="Trimite pe WhatsApp sau altundeva" color={t.s2} ink={t.ink} onPress={() => { setShareOpen(false); send(); }} />
         </View>
       </Sheet>
@@ -266,7 +266,7 @@ export default function Bilet() {
             <Big key={k} label={label} color={t.s2} ink={t.ink} onPress={async () => {
               setReportOpen(false);
               if (k === 'inchis') { const d = (APP.prefs.disliked as string[] | undefined) ?? []; if (!d.includes(p.id)) savePrefs({ disliked: [...d, p.id] }); }
-              if (!me) { toast('Mersi! Nu ți-l mai arătăm.'); return; }
+              if (!me) { toast(k === 'inchis' ? 'Notat: nu ți-l mai arătăm.' : 'Ca să ne trimiți asta, intră în cont din Profil → Prieteni.'); return; }
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const { error } = await (sb() as any).from('reports').insert({ venue_id: p.id, kind: k });
               toast(error ? 'Nu am putut trimite acum. Încearcă mai târziu.' : 'Mersi! Am notat.' + (k === 'inchis' ? ' Nu ți-l mai arătăm.' : ''));
@@ -299,7 +299,7 @@ export default function Bilet() {
               <View style={{ gap: 8 }}>
                 <T style={{ fontFamily: F.sb, fontSize: 15 }}>La ce oră</T>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={() => updPlan(pl.pid, { slot: s })} />)}
+                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={() => { updPlan(pl.pid, { slot: s }); void moveShared(pl, s); }} />)}
                 </View>
               </View>
             ) : null}

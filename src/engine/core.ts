@@ -593,7 +593,8 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (chain) sc -= p.fancy ? 30 : 20;
       if (v.fast && (p.romantic || p.fancy || venueTopics.includes('restaurant') || (!wantsSomething && !p.cheap))) sc -= 8;
       sc += p.place ? 22 * Math.max(0, 1 - d / (radius * 1.15)) : 14 * Math.max(0, 1 - d / 12);
-      sc += !st.known ? (p.time ? 3 : 5) : st.open ? 12 : -12; // closed now (no time asked): still shown, lower
+      // closed now (no time asked): still shown, lower; a park without hours on the map is simply open by day
+      sc += !st.known ? (v.cat === 'natura' ? 10 : p.time ? 3 : 5) : st.open ? 12 : -12;
       if (p.time && !wantsSomething) sc += 14 * nightFit;
       if (p.cheap) sc += 6 * Math.max(0, 1 - price / 60);
       if (p.fancy) sc += Math.min(8, price / 15);

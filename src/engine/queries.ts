@@ -94,7 +94,7 @@ export const QUERIES: Case[] = [
   C('escape room pt 4', { kinds: ['escape_game'], people: 4 }),
   C('escape', { kinds: ['escape_game'] }),
   C('patinoar', { kinds: ['ice_rink'] }),
-  C('aquapark', { kinds: ['water_park'] }),
+  C('aquapark', { kinds: ['water_park', 'beach_resort'] }),
   C('zoo', { kinds: ['zoo'], n: 2 }),
   C('ceva cu copiii', { notKinds: ['bar', 'pub', 'nightclub', 'biergarten'] }),
   // people, budget, mood

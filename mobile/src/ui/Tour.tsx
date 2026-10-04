@@ -14,7 +14,7 @@ const STEPS: Step[] = [
   { mood: 'hi', text: 'Salutare! Bine ai venit în CeFaci. Sperăm să te scăpăm de plictiseală și să te distrezi cu vârf și îndesat!' },
   { mood: 'wink', text: 'Înainte de toate, un mic tur prin aplicație. Durează jumătate de minut, promit.' },
   { id: 'pills', mood: 'up', text: 'Sus vezi de unde pleci, ziua, ora și câte locuri reale am adunat. Apasă pe zonă ca s-o schimbi.' },
-  { id: 'who', mood: 'up', text: 'Aici spui cu cine ieși. Gășcile le faci din Planuri, iar votul împreună vine curând.' },
+  { id: 'who', mood: 'up', text: 'Aici spui cu cine ieși. Gășcile le faci din Planuri și votați împreună unde mergeți.' },
   { id: 'cta', mood: 'down', text: 'Butonul magic. Apeși și primești 3 variante pe gustul tău, nu 300. Zarul din dreapta e pentru curajoși: Surprinde-mă.' },
   { id: 'tab-planuri', mood: 'down', text: 'În Planuri ai tot ce ai stabilit: biletele serii, rezervările și gășcile tale.' },
   { id: 'tab-profil', mood: 'down', hot: 'profil', text: 'Acum apasă tu pe Profil. Acolo sunt carnetul, prietenii și ștampilele tale.', oops: 'Aproape! Profil e al patrulea de jos, unde e lumină.' },

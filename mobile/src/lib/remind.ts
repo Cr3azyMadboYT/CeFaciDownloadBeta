@@ -19,16 +19,16 @@ async function allowed() {
 }
 
 /** Schedules the two reminders after a check-in. Returns their ids (to cancel), or [] if notifications are off. */
-export async function remindBill(placeName: string, at = new Date()): Promise<string[]> {
+export async function remindBill(placeName: string, at = new Date(), pid?: number): Promise<string[]> {
   try {
     if (!(await allowed())) return [];
     const first = await Notifications.scheduleNotificationAsync({
-      content: { title: 'Bilu de la CeFaci', body: 'Nu uita de bon, ne ajută și pe noi și pe tine :)', data: { kind: 'bon' } },
+      content: { title: 'Bilu de la CeFaci', body: 'Nu uita de bon, ne ajută și pe noi și pe tine :)', data: { kind: 'bon', pid } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 40 * 60, channelId: 'bon' },
     });
     const noon = new Date(at.getFullYear(), at.getMonth(), at.getDate() + 1, 12, 0);
     const second = await Notifications.scheduleNotificationAsync({
-      content: { title: 'Bilu de la CeFaci', body: 'Ai uitat bonul de aseară de la ' + placeName + '? Îl mai poți pune până diseară: +25 XP.', data: { kind: 'bon' } },
+      content: { title: 'Bilu de la CeFaci', body: 'Ai uitat bonul de ' + (at.getHours() >= 17 || at.getHours() < 5 ? 'aseară' : 'ieri') + ' de la ' + placeName + '? Îl mai poți pune până diseară: +25 XP.', data: { kind: 'bon', pid } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: noon, channelId: 'bon' },
     });
     return [first, second];
@@ -39,4 +39,14 @@ export async function remindBill(placeName: string, at = new Date()): Promise<st
 
 export async function cancelReminders(ids: string[] | undefined) {
   for (const id of ids ?? []) await Notifications.cancelScheduledNotificationAsync(id).catch(() => {});
+}
+
+/** Tapping a receipt reminder opens that ticket. Returns a stop function. */
+export function onReminderTap(open: (pid: number) => void) {
+  if (Platform.OS === 'web') return () => {};
+  const sub = Notifications.addNotificationResponseReceivedListener((r) => {
+    const pid = Number((r.notification.request.content.data as { pid?: number } | undefined)?.pid);
+    if (pid) open(pid);
+  });
+  return () => sub.remove();
 }
