@@ -10,6 +10,8 @@ export interface Plan {
   date?: string; // yyyy-mm-dd, the real day of the outing
   inAt?: string;  // check-in time at the place ("20:04")
   bonDone?: boolean; // the receipt photo was confirmed
+  sid?: string;      // the shared plan on the server (sent to a crew or friends, or made from a vote)
+  owner?: boolean;   // false when someone else made the shared plan
 }
 /** One shared empty list, so screens reading "no plans" get the same value every time. */
 export const NO_PLANS: Plan[] = [];
@@ -64,6 +66,31 @@ export function createPlan(placeId: string, f: Filters): number {
   const pl: Plan = { pid, placeId, when: f.when, date, slot: slotFor(placeId, f.when), people: WHO[f.who]?.n ?? 2, res: 'none', createdAt: Date.now() };
   setBoard((b) => ({ plans: [...upcoming((b.plans as Plan[] | undefined) ?? []), pl] }));
   return pid;
+}
+/** When a plan starts, as a real moment (for the shared copy on the server and for overlapping plans). */
+export function startsAt(pl: Pick<Plan, 'slot'> & Partial<Plan>, now = new Date()) {
+  if (pl.slot === 'acum') return pl.createdAt ? new Date(pl.createdAt) : now;
+  const d = pl.date || pl.when ? planDay(pl as Plan) : startOfDay(now);
+  const [h, m] = pl.slot.split(':').map(Number);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), h || 20, m || 0);
+}
+/** "20:00" for a moment, local time. */
+export const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+/** A plan for a set moment (a shared plan someone else made, or a vote's winner). Opens the existing one if any. */
+export function createPlanAt(placeId: string, at: Date, people: number, extra: Partial<Plan> = {}): number {
+  const date = iso(at);
+  const same = plans().find((x) => (extra.sid && x.sid === extra.sid) || (x.placeId === placeId && iso(planDay(x)) === date));
+  if (same) { if (extra.sid && !same.sid) updPlan(same.pid, extra); return same.pid; }
+  const pid = Math.max(0, ...plans().map((x) => x.pid)) + 1;
+  const today = iso(new Date()) === date;
+  const pl: Plan = { pid, placeId, when: today ? 'eve' : 'we', date, slot: hhmm(at), people, res: 'none', createdAt: Date.now(), ...extra };
+  setBoard((b) => ({ plans: [...upcoming((b.plans as Plan[] | undefined) ?? []), pl] }));
+  return pid;
+}
+/** Two plans closer than 2 hours on the same day: the second one would clash. */
+export function clashWith(pl: Plan, list: Plan[]): Plan | null {
+  const a = startsAt(pl).getTime();
+  return upcoming(list).find((x) => x.pid !== pl.pid && Math.abs(startsAt(x).getTime() - a) < 2 * 3600e3) ?? null;
 }
 export function updPlan(pid: number, patch: Partial<Plan>) {
   setBoard((b) => ({ plans: ((b.plans as Plan[] | undefined) ?? []).map((x) => (x.pid === pid ? { ...x, ...patch } : x)) }));

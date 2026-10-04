@@ -1,12 +1,14 @@
 // "Biletul serii": the plan as a yellow ticket, then what's left to do (book a table directly with the place),
 // directions, calendar, sending it to friends.
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Linking, ScrollView, Share, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
-import { dateText, dayWord, planDay, removePlan, updPlan, type Plan } from '../../lib/plans';
+import { clashWith, dateText, dayWord, planDay, removePlan, updPlan, type Plan } from '../../lib/plans';
+import { dropShared, going, sharePlan, watchPlans, type Going } from '../../lib/together';
+import { SendTo, type Target } from '../../ui/SendTo';
 import { checkIn, sendBill } from '../../lib/outing';
 import { toast } from '../../lib/toast';
 import { Avatar } from '../../ui/Avatar';
@@ -28,6 +30,16 @@ export default function Bilet() {
   const [busyIn, setBusyIn] = useState<'' | 'in' | 'bon'>('');
   const [bonPick, setBonPick] = useState(false);
   const [via, setVia] = useState('telefon');
+  const [shareOpen, setShareOpen] = useState(false);
+  const [to, setTo] = useState<Target | null>(null);
+  const [sending, setSending] = useState(false);
+  const [who, setWho] = useState<Going[]>([]);
+  const me = useApp((s) => s.who);
+  const all = useApp((s) => (s.board.plans as Plan[] | undefined));
+  const onTo = useCallback((x: Target | null) => setTo(x), []);
+  const sid = pl?.sid;
+  const loadWho = useCallback(() => { if (sid) void going(sid).then(setWho); }, [sid]);
+  useEffect(() => { loadWho(); if (!sid || !me) return; return watchPlans(me.id + '-' + sid, loadWho); }, [sid, me, loadWho]);
   const p = pl ? APP.byId(pl.placeId) : undefined;
   const close = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
 
@@ -56,6 +68,19 @@ export default function Bilet() {
     const end = new Date(d.getTime() + Math.max(1, p.dur) * 3600e3);
     const z = (x: Date) => x.getUTCFullYear() + pad(x.getUTCMonth() + 1) + pad(x.getUTCDate()) + 'T' + pad(x.getUTCHours()) + pad(x.getUTCMinutes()) + '00Z';
     Linking.openURL('https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(p.name) + '&dates=' + z(d) + '/' + z(end) + '&details=' + encodeURIComponent('Plan făcut în CeFaci') + '&location=' + encodeURIComponent(p.real.lat + ',' + p.real.lon)).catch(() => {});
+  };
+  const clash = all ? clashWith(pl, all) : null;
+  const clashP = clash ? APP.byId(clash.placeId) : undefined;
+  const drop = () => { if (pl.sid && me) void dropShared(pl, me.id); removePlan(pl.pid); toast('Ai renunțat la ' + p.name + (pl.sid ? '. I-am anunțat și pe ceilalți.' : '.')); close(); };
+  const shareToCrew = async () => {
+    if (!to || !me) return;
+    setSending(true);
+    const e = await sharePlan(pl, me.id, { crewId: to.crewId, friendIds: to.friendIds });
+    setSending(false);
+    if (e) { toast(e); return; }
+    setShareOpen(false);
+    toast('Trimis! ' + to.label + ' răspund cu Vin sau Nu pot.');
+    loadWho();
   };
   const send = () => Share.share({ message: 'Hai la ' + p.name + ' (' + p.title.toLowerCase() + '), ' + atSlot + '. ' + navUrl }).catch(() => {});
 
@@ -141,18 +166,45 @@ export default function Bilet() {
             }
             return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="+25 XP în carnet. Mersi că ții CeFaci corect." />;
           })()}
+          {clash && clashP ? (
+            <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
+              title={'Se suprapune cu ' + clashP.name} sub={'Ai și planul ăla ' + dayWord(clash) + ' la ' + clash.slot + '. Păstrezi amândouă?'} btn="Vezi" onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(clash.pid) } })} />
+          ) : null}
+          {who.length ? (
+            <View style={{ padding: 14, gap: 8, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
+              <T style={{ fontFamily: F.b, fontSize: 15 }}>{'Cine vine (' + who.filter((g) => g.answer === 'vin').length + ' din ' + who.length + ')'}</T>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                {who.map((g) => (
+                  <View key={g.person.id} style={{ height: 30, paddingHorizontal: 10, borderRadius: 999, justifyContent: 'center', backgroundColor: g.answer === 'vin' ? t.blueSoft : g.answer === 'nu_pot' ? t.coralSoft : t.s2 }}>
+                    <T style={{ fontFamily: F.sb, fontSize: 13, color: g.answer === 'vin' ? t.blueInk : g.answer === 'nu_pot' ? t.coralInk : t.ink2 }}>
+                      {(g.person.id === me?.id ? 'Tu' : g.person.first_name) + (g.answer === 'vin' ? ' · vine' : g.answer === 'nu_pot' ? ' · nu poate' : ' · n-a zis')}
+                    </T>
+                  </View>
+                ))}
+              </View>
+            </View>
+          ) : null}
           {open ? <Muted style={{ paddingHorizontal: 4 }}>{open + (p.real.street ? ' · ' + p.real.street : '')}</Muted> : null}
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Action icon="M3 11 22 2l-9 19-2-8z" label="Navighează" primary onPress={() => Linking.openURL(navUrl).catch(() => {})} />
             <Action icon="M8 2v4M16 2v4M3 10h18M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M19 16v6M16 19h6" label="În calendar" onPress={calendar} />
-            <Action icon="M18 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6M6 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6M18 16a3 3 0 1 0 0 6 3 3 0 0 0 0-6M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" label="Trimite gășcii" onPress={send} />
+            <Action icon="M18 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6M6 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6M18 16a3 3 0 1 0 0 6 3 3 0 0 0 0-6M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" label="Trimite gășcii" onPress={() => setShareOpen(true)} />
           </View>
           <View style={{ alignItems: 'center', marginTop: 6 }}>
-            <Quiet label="Renunț la plan" color={t.ink2} onPress={() => { removePlan(pl.pid); toast('Ai renunțat la ' + p.name + '.'); close(); }} />
+            <Quiet label="Renunț la plan" color={t.ink2} onPress={drop} />
           </View>
         </View>
       </ScrollView>
 
+      <Sheet open={shareOpen} onClose={() => setShareOpen(false)}>
+        <H1 style={{ fontSize: 26 }}>Trimite planul</H1>
+        <Muted style={{ marginTop: 6, marginBottom: 14, fontSize: 15, lineHeight: 21 }}>Îl primesc în Planuri și răspund cu Vin sau Nu pot. Tu vezi pe bilet cine vine.</Muted>
+        {shareOpen ? <SendTo onChange={onTo} /> : null}
+        <View style={{ marginTop: 16, gap: 8 }}>
+          <Big label={sending ? 'Trimit…' : to ? 'Trimite la ' + to.label : 'Alege pe cine chemi'} disabled={!to || sending} onPress={shareToCrew} />
+          <Big label="Trimite pe WhatsApp sau altundeva" color={t.s2} ink={t.ink} onPress={() => { setShareOpen(false); send(); }} />
+        </View>
+      </Sheet>
       <Sheet open={bonPick} onClose={() => setBonPick(false)}>
         <View style={{ gap: 10 }}>
           <H1 style={{ fontSize: 26 }}>Poza bonului</H1>

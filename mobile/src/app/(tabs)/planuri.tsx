@@ -1,11 +1,14 @@
 // Planuri: the tickets you made, soonest first, and your crews (Supabase).
 import { ScrollView, View } from 'react-native';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { NO_PLANS, dayShort, sortPlans, type Plan } from '../../lib/plans';
 import { listCrews, type Crew } from '../../lib/crews';
+import { toast } from '../../lib/toast';
+import { answer, listInvites, watchPlans, type Invite } from '../../lib/together';
+import { listVotes, type VoteRow } from '../../lib/votes';
 import { CrewMark } from '../../ui/CrewMark';
 import { Dashed } from '../../ui/Dashed';
 import { Icon } from '../../ui/Icon';
@@ -21,11 +24,74 @@ export default function Planuri() {
   const who = useApp((s) => s.who);
   const known = useApp((s) => s.known);
   const [crews, setCrews] = useState<Crew[] | null>(null);
-  useFocusEffect(useCallback(() => { if (who && known) void listCrews(who.id).then(setCrews); else setCrews(null); }, [who, known]));
+  const [votes, setVotes] = useState<VoteRow[]>([]);
+  const [invites, setInvites] = useState<Invite[]>([]);
+  const [busy, setBusy] = useState('');
+  const refresh = useCallback(() => {
+    if (!who || !known) { setCrews(null); setVotes([]); setInvites([]); return; }
+    void listCrews(who.id).then(setCrews);
+    void listVotes().then(setVotes);
+    void listInvites(who.id).then(setInvites);
+  }, [who, known]);
+  useFocusEffect(refresh);
+  useEffect(() => (who && known ? watchPlans(who.id, refresh) : undefined), [who, known, refresh]);
+  const reply = async (inv: Invite, a: 'vin' | 'nu_pot') => {
+    if (!who) return;
+    setBusy(inv.planId + a);
+    const e = await answer(inv, who.id, a);
+    setBusy('');
+    if (e) { toast(e); return; }
+    toast(a === 'vin' ? 'Super! ' + inv.owner.first_name + ' vede că vii.' : 'Am anunțat că nu poți.');
+    refresh();
+  };
+  const fresh = invites.filter((i) => i.answer === 'pending');
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
       <View style={{ height: 44, justifyContent: 'center' }}><H1>Planuri</H1></View>
+      {votes.length ? (
+        <View>
+          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{votes.length === 1 ? 'Un vot' : 'Voturi (' + votes.length + ')'}</Lbl>
+          <View style={{ gap: 10 }}>
+            {votes.map((v) => {
+              const open = new Date(v.closesAt).getTime() > Date.now();
+              return (
+                <Press key={v.id} onPress={() => router.push({ pathname: '/vot/[id]', params: { id: v.id } })}
+                  style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 20, backgroundColor: open ? t.blue : t.s1, borderWidth: open ? 0 : 1, borderColor: t.line }}>
+                  <Icon name="users" color={open ? '#FFFFFF' : t.ink} />
+                  <View style={{ flex: 1, gap: 2 }}>
+                    <T style={{ fontFamily: F.b, fontSize: 16, color: open ? '#FFFFFF' : t.ink }}>{v.title + (v.crewName ? ' · ' + v.crewName : '')}</T>
+                    <T style={{ fontFamily: F.sb, fontSize: 13, color: open ? 'rgba(255,255,255,0.85)' : t.ink2 }}>{open ? 'Votează până la ' + new Date(v.closesAt).toTimeString().slice(0, 5) : 'S-a închis. Vezi cine a câștigat.'}</T>
+                  </View>
+                  <Icon name="next" size={16} color={open ? '#FFFFFF' : t.ink3} />
+                </Press>
+              );
+            })}
+          </View>
+        </View>
+      ) : null}
+      {fresh.length ? (
+        <View>
+          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>Te-au chemat</Lbl>
+          <View style={{ gap: 10 }}>
+            {fresh.map((inv) => {
+              const d = new Date(inv.startsAt);
+              return (
+                <View key={inv.planId} style={{ padding: 14, gap: 10, borderRadius: 20, borderWidth: 1.5, borderColor: t.yellowInk, backgroundColor: t.s1 }}>
+                  <View style={{ gap: 2 }}>
+                    <T style={{ fontFamily: F.b, fontSize: 16 }}>{inv.venueName}</T>
+                    <Muted>{inv.owner.first_name + ' te cheamă · ' + d.toLocaleDateString('ro-RO', { weekday: 'long', day: 'numeric', month: 'short' }) + ', ' + d.toTimeString().slice(0, 5)}</Muted>
+                  </View>
+                  <View style={{ flexDirection: 'row', gap: 8 }}>
+                    <Big style={{ flex: 1 }} label={busy === inv.planId + 'vin' ? '…' : 'Vin'} disabled={!!busy} onPress={() => reply(inv, 'vin')} />
+                    <Big style={{ flex: 1 }} label={busy === inv.planId + 'nu_pot' ? '…' : 'Nu pot'} color={t.s2} ink={t.ink} disabled={!!busy} onPress={() => reply(inv, 'nu_pot')} />
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+        </View>
+      ) : null}
       {plans.length ? (
         <View>
           <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{'Urmează (' + plans.length + ')'}</Lbl>

@@ -8,9 +8,10 @@ import { WHEN, WHO, fmtDur, listFor, setFilters, setPage, setSearch, summaryOf, 
 import { createPlan } from '../lib/plans';
 import { FilterSheet } from '../ui/FilterSheet';
 import { Icon } from '../ui/Icon';
-import { Big, Chip, H1, Muted, Press, Sheet, T, Tag } from '../ui/kit';
+import { Big, Chip, H1, Muted, Press, T, Tag } from '../ui/kit';
 import { F, useTheme, type Theme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
+import { VoteStart } from '../ui/VoteStart';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
@@ -133,14 +134,7 @@ export default function Rezultate() {
         </Press>
       </View>
       <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); }} />
-      <Sheet open={vote} onClose={() => setVote(false)}>
-        <H1 style={{ fontSize: 26 }}>Votul cu gașca</H1>
-        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Votul cu gașca vine curând: fiecare va vota din telefonul lui și câștigă varianta cu cele mai multe voturi. Până atunci, adaugă-ți prietenii, ca să fiți gata.</Muted>
-        <View style={{ marginTop: 16, gap: 8 }}>
-          <Big label="Adaugă prieteni" onPress={() => { setVote(false); router.push('/prieteni'); }} />
-          <Big label="Mai târziu" color={t.s2} ink={t.ink} onPress={() => setVote(false)} />
-        </View>
-      </Sheet>
+      <VoteStart open={vote} onClose={() => setVote(false)} places={items} f={f} />
       <TopShade />
     </View>
   );
