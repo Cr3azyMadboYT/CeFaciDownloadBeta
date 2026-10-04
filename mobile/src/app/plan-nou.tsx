@@ -45,7 +45,8 @@ export default function PlanNou() {
   // the places that fit so far, worked out just after each answer so the tap stays instant
   useEffect(() => { const id = setTimeout(() => setNames(APP.preview(askOf(d))), 60); return () => clearTimeout(id); }, [d, wxv]);
 
-  const finish = (x = d) => { runPlans(x); router.replace('/planuri-gata'); };
+  // changing one answer from the plans screen: back to it; else on to it
+  const finish = (x = d) => { runPlans(x); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata'); };
   const next = (x = d) => { if (k >= STEPS.length - 1) finish(x); else setK(k + 1); };
   const auto = (p: Partial<Draft>) => { const x = { ...d, ...p }; setD(x); setTimeout(() => next(x), 220); };
   const back = () => (k > 0 ? setK(k - 1) : router.canGoBack() ? router.back() : router.replace('/acasa'));
@@ -125,7 +126,7 @@ export default function PlanNou() {
                 const n = dayName(day);
                 const word = day === 0 ? (now.getHours() >= 16 ? 'Diseară' : 'Azi') : n.word;
                 return <DayCard key={day} label={word} sub={n.date} on={d.hour !== 'acum' && d.day === day} wx={wx} badge={best === day && day > 0 ? 'cea mai caldă' : undefined}
-                  onPress={() => set({ day, hour: d.hour === 'acum' || (day === 0 && Number(d.hour.split(':')[0]) * 60 < lateNow) ? HOURS.find((h) => day > 0 || Number(h.split(':')[0]) * 60 > lateNow + 15) ?? '23:00' : d.hour })} />;
+                  onPress={() => set({ day, hour: d.hour === 'acum' || (day === 0 && Number(d.hour.split(':')[0]) * 60 < lateNow) ? HOURS.find((h) => day > 0 || Number(h.split(':')[0]) * 60 > lateNow + 15) ?? 'acum' : d.hour })} />;
               })}
             </View>
             <Press onPress={() => setMore(true)} style={{ marginTop: 10, minHeight: 46, borderRadius: 14, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}>

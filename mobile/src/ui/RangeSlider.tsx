@@ -23,7 +23,7 @@ export function RangeSlider({ min, max, step, value, onChange, label }: { min: n
     const move = (x: number) => {
       const [a, b] = val.current;
       const v = valueAt(x);
-      const next: [number, number] = which === 0 ? [Math.min(v, b - step), b] : [a, Math.max(v, a + step)];
+      const next: [number, number] = which === 0 ? [Math.max(min, Math.min(v, b - step)), b] : [a, Math.min(max, Math.max(v, a + step))];
       if (next[0] !== a || next[1] !== b) { cb.current(next); if (next[which] % (step * 5) === 0) tap(); }
     };
     return PanResponder.create({
@@ -36,7 +36,7 @@ export function RangeSlider({ min, max, step, value, onChange, label }: { min: n
         // the dot closer to the finger moves
         const pa = ((a - min) / (max - min)) * Math.max(0, width.current - THUMB) + THUMB / 2;
         const pb = ((b - min) / (max - min)) * Math.max(0, width.current - THUMB) + THUMB / 2;
-        which = Math.abs(x - pa) <= Math.abs(x - pb) && !(a === b - step && x > pb) ? 0 : 1;
+        which = a === b ? (x > pa ? 1 : 0) : Math.abs(x - pa) <= Math.abs(x - pb) && !(a === b - step && x > pb) ? 0 : 1;
         move(x);
       },
       onPanResponderMove: (e) => move(e.nativeEvent.locationX),

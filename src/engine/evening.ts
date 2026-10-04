@@ -3,7 +3,7 @@
 // scored by the same engine as single ideas (taste, open, the weather at that hour), with the previous place as the
 // starting point.
 import { KINDS } from './catalog';
-import { adultOnly, closesAt, km, priceOf, scoreVenue } from './core';
+import { adultOnly, closesAt, km, openAt, priceOf, scoreVenue } from './core';
 import { wxAt } from './weather';
 import type { Ask, Cat, Ctx, Venue, Vibe, When, Who } from './types';
 
@@ -77,15 +77,24 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
       // the next place close by matters more than in a single idea: a short walk keeps the group together
       .map((s) => ({ s, rank: s.score + (i > 0 ? 12 * (1 - s.km / Math.max(radius, 0.1)) : 0) }))
       .sort((a, b) => b.rank - a.rank);
-    const pick = ranked[i === 0 ? Math.min(skip, ranked.length - 1) : 0]?.s;
+    // the best one that is still open 45 minutes after you get there (the walk counts)
+    let pick: (typeof ranked)[number]['s'] | undefined;
+    let walk = 0;
+    let closes: Date | null = null;
+    for (const cand of ranked.slice(i === 0 ? Math.min(skip, ranked.length - 1) : 0)) {
+      const dd = km(from, cand.s.v);
+      const w = i === 0 ? 0 : drive ? Math.max(5, Math.round(3 + dd * 2.4)) : walkMin(dd);
+      const arrive = new Date(at.getTime() + w * 60e3);
+      const o = openAt(cand.s.v, arrive);
+      if (o.known && !o.open) continue;
+      const c = closesAt(cand.s.v, arrive);
+      if (c && c.getTime() - arrive.getTime() < 45 * 60e3) continue;
+      pick = cand.s; walk = w; closes = c; break;
+    }
     if (!pick) return null;
     const v = pick.v;
-    const d = km(from, v);
-    const walk = i === 0 ? 0 : drive ? Math.max(5, Math.round(3 + d * 2.4)) : walkMin(d);
     if (i > 0) at = new Date(at.getTime() + walk * 60e3);
     // the step ends when the place closes, if that comes first (a pub closing at 23:00 is not a 23:35 plan)
-    const closes = closesAt(v, at);
-    if (closes && closes.getTime() - at.getTime() < 45 * 60e3) return null;
     const until = new Date(Math.min(at.getTime() + spec.min * 60e3, closes ? closes.getTime() : Infinity));
     const price = priceOf(v);
     total += price;

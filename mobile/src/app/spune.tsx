@@ -26,14 +26,18 @@ export default function Spune() {
   const redo = () => {
     if (!r) return;
     const a = r.ask;
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    const at = new Date(a.at.getTime()); const day0 = new Date(at.getFullYear(), at.getMonth(), at.getDate());
-    const late = at.getHours() < 5;
-    const day = Math.round((day0.getTime() - today.getTime()) / 864e5) - (late ? 1 : 0);
-    const hour = draft.hour === 'acum' && a.at.getTime() === askOf(draft).at.getTime() ? 'acum' : String(at.getHours()).padStart(2, '0') + ':' + String(at.getMinutes()).padStart(2, '0');
-    const next: Draft = { ...draft, day: Math.max(0, day), hour, people: a.people, vibes: a.vibes, budget: [a.budget[0], a.budget[1] === Infinity ? BUDGET_TOP : Math.min(BUDGET_TOP, a.budget[1])], extra: { outdoor: a.outdoor, needs: a.needs, near: a.near } };
+    const timed = r.chips.some((c) => /^(La|De la) \d/.test(c));
+    let { day, hour } = draft;
+    if (timed) {
+      const at = new Date(a.at.getTime());
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const diff = Math.round((new Date(at.getFullYear(), at.getMonth(), at.getDate()).getTime() - today.getTime()) / 864e5);
+      day = diff - (at.getHours() < 5 ? 1 : 0); // atOf puts hours before 5 on the next day (-1: the early hours of today)
+      hour = String(at.getHours()).padStart(2, '0') + ':' + String(at.getMinutes()).padStart(2, '0');
+    }
+    const next: Draft = { ...draft, day, hour, people: a.people, vibes: a.vibes, budget: [a.budget[0], a.budget[1] === Infinity ? BUDGET_TOP : Math.min(BUDGET_TOP, a.budget[1])], extra: { outdoor: a.outdoor, needs: a.needs, near: a.near } };
     runPlans(next, r.chips);
-    router.replace('/planuri-gata');
+    if (router.canGoBack()) router.back(); else router.replace('/planuri-gata');
   };
 
   return (

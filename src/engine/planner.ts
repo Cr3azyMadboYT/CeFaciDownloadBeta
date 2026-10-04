@@ -98,7 +98,9 @@ function fromRoute(r: Route, req: PlanReq, ctx: Ctx): MadePlan {
 function finish(p: MadePlan, req: PlanReq, ctx: Ctx): MadePlan {
   const checks: Check[] = [];
   const unknown = p.steps.filter((s) => !s.v.wk && !s.v.hours);
-  if (!unknown.length) checks.push({ ok: true, text: p.steps.length > 1 ? 'Toate deschise la ora lor' : 'Deschis la ' + hh(p.steps[0].at) });
+  const shut = p.steps.find((s) => { const o = openAt(s.v, s.at); return o.known && !o.open; });
+  if (shut) checks.push({ ok: false, text: shut.v.name + ' e închis la ' + hh(shut.at) });
+  else if (!unknown.length) checks.push({ ok: true, text: p.steps.length > 1 ? 'Toate deschise la ora lor' : 'Deschis la ' + hh(p.steps[0].at) });
   else checks.push({ ok: false, text: 'Program necunoscut la ' + unknown[0].v.name + ': sună înainte' });
   const d = km(ctx.origin, p.steps[0].v);
   checks.push({ ok: true, text: kmText(d) + ', ~' + carMin(d) + ' min' });
@@ -149,7 +151,12 @@ export function swapStep(p: MadePlan, i: number, v: Venue, req: PlanReq, ctx: Ct
     const c = closesAt(v, s.at);
     const open = c ? { ...o, label: 'Deschis până la ' + hh(c) } : o;
     const until = c && c.getTime() < s.until.getTime() ? c : s.until;
-    return { ...s, v, until, open, price: priceOf(v), travel: k === 0 ? carMin(km(ctx.origin, v)) : s.travel, reasons: [] };
+    return { ...s, v, until, open, price: priceOf(v), reasons: [] };
+  }).map((s, k, all) => {
+    // the way to this place and to the next one changed with the swap
+    if (k !== i && k !== i + 1) return s;
+    const d = km(k === 0 ? ctx.origin : all[k - 1].v, s.v);
+    return { ...s, travel: k === 0 || p.drive ? carMin(d) : Math.max(2, Math.round((d * 1000) / 80)) };
   });
   const next = finish({ ...p, steps, tip: undefined }, req, ctx);
   return next;
@@ -220,10 +227,12 @@ export function altStep(p: MadePlan, i: number, all: Venue[], req: PlanReq, ctx:
   const from = i === 0 ? ctx.origin : p.steps[i - 1].v;
   const radius = i === 0 ? req.maxKm : p.drive ? 10 : Math.max(req.walkKm, 3);
   const used = new Set(p.steps.map((x) => x.v.id));
+  const after = p.steps[i + 1]?.v;
   const ask: Ask = { ...askOf(req), at: s.at, maxKm: radius, budget: req.budgetMax };
   let best: { v: Venue; score: number } | null = null;
   for (const v of all) {
     if (used.has(v.id) || seen.has(v.id) || groupOf(v) !== groupOf(s.v)) continue;
+    if (after && km(v, after) > radius) continue; // still close to the next place
     const sc = scoreVenue(v, ask, { ...ctx, origin: from });
     if (!sc || (sc.open.known && !sc.open.open) || extraFit(v, req) === null) continue;
     const c = closesAt(v, s.at);
@@ -237,7 +246,7 @@ export function altStep(p: MadePlan, i: number, all: Venue[], req: PlanReq, ctx:
 /** One place as a plan (a suggestion from Acasă, "Asta!" in the list). */
 export function planForPlace(v: Venue, req: PlanReq, ctx: Ctx): MadePlan {
   const s = scoreVenue(v, { ...askOf(req), maxKm: 999, budget: Infinity, budgetMin: undefined }, ctx);
-  const sc: Scored = s ?? { v, score: 0, km: km(ctx.origin, v), open: { known: false, open: true, label: 'Program necunoscut' }, reasons: [], parts: { gust: 0, ocazie: 0, calitate: 0, aproape: 0, nou: 0, gasca: 0 } };
+  const sc: Scored = s ?? { v, score: 0, km: km(ctx.origin, v), open: openAt(v, req.at), reasons: [], parts: { gust: 0, ocazie: 0, calitate: 0, aproape: 0, nou: 0, gasca: 0 } };
   return single(sc, req, ctx, 'Ideea lui Bilu', KINDS[v.k]?.label ?? v.kind, 'loc-' + v.id);
 }
 

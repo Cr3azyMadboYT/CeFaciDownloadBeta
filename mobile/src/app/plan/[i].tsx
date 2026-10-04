@@ -1,5 +1,6 @@
 // One plan, opened: the map with the way between the places, each step with Rezervă / Drum / "Alt bar", what it costs
-// per person and for everyone, the weather. "Facem așa" makes a ticket for every step; "La vot" sends it to the crew.
+// per person and for everyone, the weather. "Facem așa" makes a ticket for every step; "La vot" sends the plans to
+// the crew, this one first.
 import { useState } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
@@ -94,7 +95,7 @@ export default function PlanDeschis() {
         {people >= 2 ? <Big label="La vot" color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} style={{ paddingHorizontal: 18 }} onPress={() => setVote(true)} /> : null}
       </View>
       <VoteStart open={vote} onClose={() => setVote(false)} places={[]} f={f}
-        routes={plans.map((x) => ({ label: x.title, sub: x.steps.map((s) => s.place.name).join(' → '), price: x.price, from: x.from, steps: x.steps.map((s) => ({ place: s.place, at: s.at, slot: s.slot })) }))} />
+        routes={[p, ...plans.filter((x) => x !== p)].map((x) => ({ label: x.title, sub: x.steps.map((s) => s.place.name).join(' → '), price: x.price, from: x.from, steps: x.steps.map((s) => ({ place: s.place, at: s.at, slot: s.slot })) }))} />
     </View>
   );
 }

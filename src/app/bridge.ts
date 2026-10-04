@@ -434,7 +434,7 @@ export const APP = {
     if (p.outdoor) { next.outdoor = true; chips.push('Cu terasă'); }
     if (p.needs.length) { next.needs = [...new Set([...(a.needs ?? []), ...p.needs])]; chips.push(...p.needs.map((n) => ({ wifi: 'Wifi', nosmoke: 'Fără fum', smoke: 'Se poate fuma', wheel: 'Scaun cu rotile', ac: 'Aer condiționat' })[n])); }
     if (p.near) { next.near = true; chips.push('Aproape'); }
-    if (p.budget !== undefined || p.cheap) { const max = p.budget ?? Math.max(30, Math.round(a.budget[1] === Infinity ? 60 : a.budget[1] * 0.6)); next.budget = [p.budgetMin ?? 0, max]; chips.push('Până în ' + max + ' lei'); }
+    if (p.budget !== undefined || p.cheap) { const max = p.budget ?? (a.budget[1] === 0 ? 0 : Math.max(30, Math.round(a.budget[1] === Infinity ? 60 : a.budget[1] * 0.6))); next.budget = [p.budgetMin ?? 0, max]; chips.push('Până în ' + max + ' lei'); }
     if (p.time?.hour !== undefined) {
       const at = new Date(a.at.getTime()); at.setHours(p.time.hour, p.time.min ?? 0, 0, 0);
       if (p.time.hour < 5 && a.at.getHours() >= 5) at.setDate(at.getDate() + 1);

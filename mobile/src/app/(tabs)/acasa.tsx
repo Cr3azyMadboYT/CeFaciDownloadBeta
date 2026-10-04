@@ -118,7 +118,12 @@ export default function Acasa() {
     router.push({ pathname: '/plan/[i]', params: { i: String(Math.floor(Math.random() * made.length)) } });
   };
   const again = () => { if (!last) { router.push('/plan-nou'); return; } runPlans(firstDraft()); router.push('/planuri-gata'); };
-  const openIdea = (id: string) => { if (runPlace(id, firstDraft())) router.push({ pathname: '/plan/[i]', params: { i: '0' } }); };
+  const openIdea = (id: string, at: Date) => {
+    // the plan is for the hour Bilu checked the idea for (now, or tonight at 20:00)
+    const soonish = at.getTime() - Date.now() < 30 * 60e3;
+    const hour = soonish ? 'acum' : String(at.getHours()).padStart(2, '0') + ':' + String(at.getMinutes()).padStart(2, '0');
+    if (runPlace(id, { ...firstDraft(), mode: 'loc', day: 0, hour })) router.push({ pathname: '/plan/[i]', params: { i: '0' } });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -207,7 +212,7 @@ export default function Acasa() {
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}>
                 {ideas.map((x) => (
-                  <Press key={x.place.id} onPress={() => openIdea(x.place.id)} accessibilityLabel={x.tag + ': ' + x.line}
+                  <Press key={x.place.id} onPress={() => openIdea(x.place.id, x.at)} accessibilityLabel={x.tag + ': ' + x.line}
                     style={{ width: 262, flexDirection: 'row', gap: 10, padding: 12, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
                     <View style={{ width: 52, height: 52, borderRadius: 14, backgroundColor: x.place.bg, alignItems: 'center', justifyContent: 'center' }}><Icon name={x.place.icon as never} size={24} color={x.place.fg} /></View>
                     <View style={{ flex: 1 }}>
