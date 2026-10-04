@@ -19,6 +19,7 @@ export interface Venue {
   street?: string;     // "Strada Lipscani 12"
   city?: string;
   hours?: string;      // raw OSM opening_hours
+  wk?: number[][][];   // the same hours as a weekly table (scripts/build-hours.mjs): wk[day 0=Sun][i] = [fromMin, toMin]
   outdoor?: boolean;
   website?: string;
   phone?: string;

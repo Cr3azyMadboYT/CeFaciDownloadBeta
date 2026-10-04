@@ -4,14 +4,17 @@ import { Linking, ScrollView, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { listFriends } from '../../lib/friends';
+import { NO_STAMPS, type Stamp } from '../../lib/outing';
 import { startOver, useApp } from '../../lib/session';
 import { Portrait } from '../../ui/Avatar';
 import { Icon } from '../../ui/Icon';
-import { H1, Muted, Note, Press, Quiet, Seg, T } from '../../ui/kit';
+import { Big, H1, Muted, Note, Press, Seg, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 
 const LEVELS = ['', 'Boboc', 'Scânteie', 'Radar', 'Busolă', 'Motorul găștii', 'Legenda orașului'];
 const LEVEL_XP = [0, 100, 400, 900, 1500, 2500, 4000];
+const INKS = ['#2F5BFF', '#FF6A4D', '#E0A800', '#8C6CFF'];
+const ROTS = ['-6deg', '5deg', '-3deg', '7deg'];
 const fmt = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
 export default function Profil() {
@@ -21,8 +24,9 @@ export default function Profil() {
   const who = useApp((s) => s.who);
   const xp = useApp((s) => (s.board.xp as number | undefined) ?? 0);
   const known = useApp((s) => s.known);
+  const stamps = useApp((s) => (s.board.stamps as Stamp[] | undefined) ?? NO_STAMPS);
   const [arm, setArm] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState<'' | 'out' | 'del'>('');
   const [err, setErr] = useState('');
   const [friends, setFriends] = useState<number | null>(null);
   useFocusEffect(useCallback(() => {
@@ -69,7 +73,7 @@ export default function Profil() {
         <Press onPress={() => router.push('/prieteni')} style={{ minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16 }}>
           <Icon name="users" color={t.blueInk} />
           <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>Prieteni</T>
-          <Muted>{friends === null ? (known ? '' : 'cu cont') : friends === 1 ? '1 prieten' : friends + ' prieteni'}</Muted>
+          <Muted>{friends === null ? (known ? '' : 'intră în cont') : friends === 1 ? '1 prieten' : friends + ' prieteni'}</Muted>
         </Press>
         <View style={{ paddingTop: 12, paddingHorizontal: 16, paddingBottom: 14, borderTopWidth: 1, borderTopColor: t.line }}>
           <T style={{ marginBottom: 10, fontFamily: F.sb, fontSize: 15 }}>Temă</T>
@@ -92,28 +96,44 @@ export default function Profil() {
 
       <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
         <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>Ștampile</T>
-        <Muted>0 locuri încercate</Muted>
+        <Muted>{stamps.length === 1 ? '1 loc încercat' : stamps.length + ' locuri încercate'}</Muted>
       </View>
-      <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <View style={{ width: 52, height: 52, borderRadius: 999, borderWidth: 2.5, borderStyle: 'dashed', borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
-          <Icon name="plus" color={t.line} />
+      <View style={{ marginTop: 12, flexDirection: 'row', flexWrap: 'wrap', rowGap: 12 }}>
+        {stamps.map((st, k) => (
+          <View key={st.id} style={{ width: '20%', alignItems: 'center', gap: 5 }} accessibilityLabel={'Ștampilă: ' + st.name}>
+            <View style={{ width: 52, height: 52, borderRadius: 999, borderWidth: 2.5, borderColor: INKS[k % INKS.length], alignItems: 'center', justifyContent: 'center', transform: [{ rotate: ROTS[k % ROTS.length] }] }}>
+              <Icon name={st.icon as never} color={INKS[k % INKS.length]} />
+            </View>
+            <T numberOfLines={1} style={{ width: '100%', textAlign: 'center', fontFamily: F.sb, fontSize: 11, color: t.ink2 }}>{st.name}</T>
+          </View>
+        ))}
+        <View style={{ width: '20%', alignItems: 'center', gap: 5 }}>
+          <View style={{ width: 52, height: 52, borderRadius: 999, borderWidth: 2.5, borderStyle: 'dashed', borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="plus" color={t.line} />
+          </View>
+          <T style={{ fontFamily: F.sb, fontSize: 11, color: t.ink3 }}>Loc nou</T>
         </View>
-        <Muted style={{ flex: 1 }}>Ștampilele vin din ieșirile confirmate la local. Check-in-ul și bonul intră în aplicație curând.</Muted>
       </View>
+      {stamps.length === 0 ? <Muted style={{ marginTop: 10 }}>Când ajungi la un local din planuri, apasă „Sunt aici” pe bilet: primești ștampila și XP, iar poza bonului îți mai aduce 25 XP.</Muted> : null}
 
       {err ? <View style={{ marginTop: 14 }}><Note kind="err">{err}</Note></View> : null}
-      {who ? <View style={{ marginTop: 18, alignItems: 'center' }}><Quiet label={'Ieși din cont (' + (who.email ?? 'Google') + ')'} color={t.ink2} onPress={() => { if (busy) return; setBusy(true); void startOver(false).then(() => router.replace('/cont')); }} /></View> : null}
-      <Press disabled={busy} onPress={async () => {
-        if (!arm) { setArm(true); setErr(''); return; }
-        setBusy(true);
-        const e = await startOver(true);
-        setBusy(false); setArm(false);
-        if (e) { setErr(e); return; }
-        router.replace('/cont');
-      }}
-        style={{ marginTop: who ? 4 : 18, alignSelf: 'center', height: 44, paddingHorizontal: 16, borderRadius: 999, backgroundColor: arm ? t.coralSoft : 'transparent', justifyContent: 'center' }}>
-        <T style={{ fontFamily: F.sb, fontSize: 14, color: arm ? t.coralInk : t.ink2 }}>{busy ? 'Șterg…' : arm ? 'Apasă din nou: șterg tot, definitiv' : 'Șterge-mi contul'}</T>
-      </Press>
+      <View style={{ marginTop: 20, gap: 10 }}>
+        {who ? (
+          <Big label={busy === 'out' ? 'Ies din cont…' : 'Ieși din cont'} color={t.s1} ink={t.ink} disabled={!!busy}
+            style={{ borderWidth: 1, borderColor: t.line }}
+            onPress={async () => { setBusy('out'); setErr(''); await startOver(false); setBusy(''); router.replace('/cont'); }} />
+        ) : null}
+        <Big label={busy === 'del' ? 'Șterg contul…' : arm ? 'Apasă din nou: șterg tot, definitiv' : 'Șterge-mi contul'} color="#D93A1C" disabled={!!busy}
+          onPress={async () => {
+            if (!arm) { setArm(true); setErr(''); return; }
+            setBusy('del');
+            const e = await startOver(true);
+            setBusy(''); setArm(false);
+            if (e) { setErr(e); return; }
+            router.replace('/cont');
+          }} />
+        {who ? <Muted style={{ textAlign: 'center' }}>{'Intrat cu ' + (who.email ?? 'Google')}</Muted> : null}
+      </View>
       <Muted style={{ marginTop: 14, textAlign: 'center' }}>
         {'Datele localurilor: © contribuitorii '}
         <T style={{ fontFamily: F.m, fontSize: 13, color: t.ink2, textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://www.openstreetmap.org/copyright')}>OpenStreetMap</T>

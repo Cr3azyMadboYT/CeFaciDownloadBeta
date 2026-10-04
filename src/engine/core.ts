@@ -47,7 +47,38 @@ function oh(v: Venue): opening_hours | null {
 }
 const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 
+// The weekly table made at build time (wk): reading it is instant, even on a slow phone.
+const minuteOf = (t: Date) => t.getHours() * 60 + t.getMinutes();
+function wkOpen(wk: number[][][], t: Date) {
+  const m = minuteOf(t);
+  return wk[t.getDay()].some(([a, b]) => a <= m && m < b);
+}
+/** Minutes from `t` to the next change of state, within two days; null if it never changes (24/7, always closed). */
+function wkNext(wk: number[][][], t: Date): number | null {
+  const d = t.getDay();
+  const m = minuteOf(t);
+  const spans: [number, number][] = [];
+  for (let k = 0; k < 3; k++) for (const [a, b] of wk[(d + k) % 7]) spans.push([a + k * 1440, b + k * 1440]);
+  spans.sort((x, y) => x[0] - y[0]);
+  const merged: [number, number][] = [];
+  for (const sp of spans) { const l = merged[merged.length - 1]; if (l && sp[0] <= l[1]) l[1] = Math.max(l[1], sp[1]); else merged.push([sp[0], sp[1]]); }
+  for (const [a, b] of merged) {
+    if (a <= m && m < b) return b >= 3 * 1440 ? null : b - m; // open now: until the end of this stretch
+    if (a > m) return a - m;                                   // closed now: until the next opening
+  }
+  return null;
+}
+
 export function openAt(v: Venue, t: Date): OpenInfo {
+  if (v.wk) {
+    const open = wkOpen(v.wk, t);
+    const left = wkNext(v.wk, t);
+    const next = left === null ? null : new Date(t.getTime() + left * 60000);
+    const gap = left === null ? Infinity : left * 60000;
+    const sameDay = gap < 20 * 3600e3 && !(open && gap > 12 * 3600e3);
+    if (open) return { known: true, open: true, label: next && sameDay ? 'Deschis până la ' + hhmm(next) : 'Deschis' };
+    return { known: true, open: false, label: next && sameDay ? 'Se deschide la ' + hhmm(next) : 'Închis' };
+  }
   const o = oh(v);
   if (!o) return { known: false, open: true, label: 'Program necunoscut' };
   try {
@@ -410,6 +441,7 @@ function isChain(v: Venue, all: Venue[]): boolean {
 const stateCache = new Map<string, { known: boolean; open: boolean }>();
 export function openState(v: Venue, t: Date): { known: boolean; open: boolean } {
   if (!v.hours) return { known: false, open: true };
+  if (v.wk) return { known: true, open: wkOpen(v.wk, t) };
   const key = v.id + '@' + Math.floor(t.getTime() / 60000);
   let st = stateCache.get(key);
   if (!st) {

@@ -32,7 +32,9 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 - React Native + Expo (SDK 57), ecrane native refăcute după canvas (`mobile/src/app/*`, piese în `mobile/src/ui`). Pachet `ro.cefaci.app`.
 - Folosește direct `src/engine`, `src/data`, `src/app/bridge.ts` (APP) și `src/app/cloud.ts`; `localStorage` vine din SQLite (`expo-sqlite/localStorage`).
 - Ecranele web din `src/boards` (generate din `design/`) rămân referința vizuală și testele lor; UI-ul aplicației se schimbă acum în `mobile/`.
-- Prietenii merg pe Supabase (`mobile/src/lib/friends.ts`). Gășcile și votul în timp real: încă de legat.
+- Prietenii și gășcile merg pe Supabase (`mobile/src/lib/friends.ts`, `crews.ts`). Votul în timp real: încă de legat.
+- Ștampile: check-in cu locația pe bilet (≤250 m) + poza bonului prin `citeste-bon` (`mobile/src/lib/outing.ts`).
+- Programul localurilor: tabel săptămânal `wk` în venues.json (`TZ=Europe/Bucharest node scripts/build-hours.mjs`, de rulat la fiecare actualizare OSM); pe telefon `opening_hours` era prea lent (teste: `tests/hours.test.ts`).
 - Verificare: `cd mobile && npx tsc --noEmit`; previzualizare: `npx expo export --platform web` + Playwright la 412×915.
 - Istoric, nefolosit: `android-capacitor-v1/`, `android-webview-v0/`.
 

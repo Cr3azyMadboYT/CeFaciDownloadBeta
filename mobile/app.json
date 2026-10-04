@@ -15,8 +15,13 @@
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundColor": "#0E1440"
       },
-      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
-      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "softwareKeyboardLayoutMode": "resize",
       "predictiveBackGestureEnabled": false
     },
@@ -46,7 +51,17 @@
       [
         "expo-build-properties",
         {
-          "android": { "enableMinifyInReleaseBuilds": false }
+          "android": {
+            "enableMinifyInReleaseBuilds": false
+          }
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "CeFaci folosește camera doar când faci poza bonului, ca să-ți confirme ieșirea.",
+          "photosPermission": "CeFaci deschide pozele doar când alegi poza unui bon.",
+          "microphonePermission": false
         }
       ],
       "./plugins/withSigning"

@@ -73,7 +73,24 @@ export default function Acasa() {
   const [crewOpen, setCrewOpen] = useState(false);
 
   const all = useMemo(() => APP.matches(f), [f, prefs]);
-  const moods = useMemo(() => MOODS.map((m) => ({ m, n: APP.matches({ ...f, vibes: [m[0]] }).length })), [f, prefs]);
+  // the counts under "Ai chef de…" are counted after the screen is shown, one by one, so Acasă opens at once
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  useEffect(() => {
+    let i = 0;
+    let stop = false;
+    setCounts({});
+    const step = () => {
+      if (stop || i >= MOODS.length) return;
+      const label = MOODS[i++][0];
+      const n = APP.matches({ ...f, vibes: [label] }).length;
+      setCounts((c) => ({ ...c, [label]: n }));
+      setTimeout(step, 0);
+    };
+    // (not InteractionManager: Bilu's and the sky's endless animations would keep it waiting forever)
+    const h = setTimeout(step, 350);
+    return () => { stop = true; clearTimeout(h); };
+  }, [f, prefs]);
+  const moods = MOODS.map((m) => ({ m, n: counts[m[0]] }));
   const word = f.when === 'now' ? FLIP[phase].word : ({ eve: 'în seara asta?', tom: 'mâine?', we: 'în weekend?' } as Record<string, string>)[f.when];
   const soon = sortPlans(plans);
   const next = soon[0];
@@ -130,7 +147,7 @@ export default function Acasa() {
               <View style={{ width: 34, height: 34, borderRadius: 99, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center' }}><Icon name="userPlus" size={16} color="#0E1440" /></View>
               <View style={{ flex: 1, gap: 3 }}>
                 <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Alege cu cine ieși</T>
-                <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>gășcile și votul vin curând</T>
+                <T style={{ fontFamily: F.m, fontSize: 12, color: 'rgba(255,255,255,0.85)' }}>invitațiile și votul vin curând</T>
               </View>
               <Icon name="next" size={16} color="#FFD43B" />
             </Press>
@@ -173,13 +190,13 @@ export default function Acasa() {
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 12, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10, paddingBottom: 4 }} snapToInterval={126} decelerationRate="fast">
             {moods.map(({ m: [label, icon, bg, fg, dot], n }) => (
-              <Press key={label} onPress={() => { setFilters({ vibes: [label] }); router.push('/rezultate'); }} accessibilityLabel={label + ', ' + n + ' locuri'}
+              <Press key={label} onPress={() => { setFilters({ vibes: [label] }); router.push('/rezultate'); }} accessibilityLabel={label + (n === undefined ? '' : ', ' + n + ' locuri')}
                 style={{ width: 116, minHeight: 132, padding: 12, borderRadius: 22, backgroundColor: bg, justifyContent: 'space-between', overflow: 'hidden' }}>
                 <View style={{ position: 'absolute', right: -18, top: -18, width: 64, height: 64, borderRadius: 99, backgroundColor: dot }} />
                 <Icon name={icon} size={30} color={fg} />
                 <View style={{ gap: 4 }}>
                   <T style={{ fontFamily: F.b, fontSize: 16, lineHeight: 18, color: fg }}>{label}</T>
-                  <T style={{ fontFamily: F.sb, fontSize: 12, color: fg }}>{n === 1 ? '1 loc' : n + ' locuri'}</T>
+                  <T style={{ fontFamily: F.sb, fontSize: 12, color: fg }}>{n === undefined ? ' ' : n === 1 ? '1 loc' : n + ' locuri'}</T>
                 </View>
               </Press>
             ))}
@@ -199,7 +216,7 @@ export default function Acasa() {
       <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); router.push('/rezultate'); }} />
       <Sheet open={crewOpen} onClose={() => setCrewOpen(false)}>
         <H1 style={{ fontSize: 26 }}>Cu cine ieși?</H1>
-        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Gășcile și votul împreună vin curând: o să alegi prietenii, ei primesc invitația și votați unde mergeți. Până atunci, adaugă-ți prietenii după @username.</Muted>
+        <Muted style={{ marginTop: 8, fontSize: 15, lineHeight: 21 }}>Prietenii îi adaugi după @username, iar gășcile le faci din Planuri. Invitațiile la plan și votul împreună vin curând.</Muted>
         <View style={{ marginTop: 16, gap: 8 }}>
           <Big label="Adaugă prieteni" onPress={() => { setCrewOpen(false); router.push('/prieteni'); }} />
           <Big label={'Mergem ' + WHO[f.who].text.toLowerCase() + ', fără invitații'} color={t.s2} ink={t.ink} onPress={() => setCrewOpen(false)} />

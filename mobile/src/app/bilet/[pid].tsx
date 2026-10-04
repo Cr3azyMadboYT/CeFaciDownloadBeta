@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
 import { dateText, dayWord, planDay, removePlan, updPlan, type Plan } from '../../lib/plans';
+import { checkIn, sendBill } from '../../lib/outing';
 import { toast } from '../../lib/toast';
 import { Avatar } from '../../ui/Avatar';
 import { Dashed } from '../../ui/Dashed';
@@ -23,6 +24,8 @@ export default function Bilet() {
   const pl = useApp((s) => ((s.board.plans as Plan[] | undefined) ?? []).find((x) => String(x.pid) === String(pid)));
   const name = useApp((s) => s.prefs.name);
   const [ext, setExt] = useState<'closed' | 'pick' | 'back'>('closed');
+  const [busyIn, setBusyIn] = useState<'' | 'in' | 'bon'>('');
+  const [bonPick, setBonPick] = useState(false);
   const [via, setVia] = useState('telefon');
   const p = pl ? APP.byId(pl.placeId) : undefined;
   const close = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
@@ -120,6 +123,23 @@ export default function Bilet() {
               sub={day.charAt(0).toUpperCase() + day.slice(1) + ', ' + pl.slot + ', ' + people + ', pe numele ' + (name || 'tău') + '.'} btn="Anulează"
               onPress={() => { updPlan(pl.pid, { res: 'none', resVia: undefined }); toast('Am scos rezervarea de pe bilet. Anunță-i și pe ei' + (ct?.phone ? ': ' + ct.phone : '') + '.'); }} />
           ) : null}
+          {(() => {
+            // check-in at the place (today only), then the receipt photo
+            const today = planDay(pl).toDateString() === new Date().toDateString();
+            const SCAN = 'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10';
+            const BON = 'M5 2v20l2-1.5L9 22l2-1.5L13 22l2-1.5L17 22l2-1.5V2l-2 1.5L15 2l-2 1.5L11 2 9 3.5 7 2 5 3.5ZM9 8h6M9 12h6M9 16h4';
+            const OK = 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM8.5 12l2.5 2.5 4.5-5';
+            if (!pl.inAt) {
+              if (!today) return null;
+              return <Row icon={SCAN} bg={t.yellowSoft} ink={t.yellowInk} title={'Ai ajuns la ' + p.name + '?'} sub="Fă check-in când ești acolo: primești ștampila și XP."
+                btn={busyIn === 'in' ? 'Caut…' : 'Sunt aici'} onPress={async () => { if (busyIn) return; setBusyIn('in'); const r = await checkIn(pl); setBusyIn(''); toast(r.msg); }} />;
+            }
+            if (!pl.bonDone) {
+              return <Row icon={BON} bg={t.blueSoft} ink={t.blueInk} title={'Ești la ' + p.name + ' din ' + pl.inAt} sub="La plecare, pune poza bonului fiscal: +25 XP."
+                btn={busyIn === 'bon' ? 'Citesc…' : 'Pune bonul'} onPress={() => { if (!busyIn) setBonPick(true); }} />;
+            }
+            return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="+25 XP în carnet. Mersi că ții CeFaci corect." />;
+          })()}
           {open ? <Muted style={{ paddingHorizontal: 4 }}>{open + (p.real.street ? ' · ' + p.real.street : '')}</Muted> : null}
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Action icon="M3 11 22 2l-9 19-2-8z" label="Navighează" primary onPress={() => Linking.openURL(navUrl).catch(() => {})} />
@@ -132,6 +152,16 @@ export default function Bilet() {
         </View>
       </ScrollView>
 
+      <Sheet open={bonPick} onClose={() => setBonPick(false)}>
+        <View style={{ gap: 10 }}>
+          <H1 style={{ fontSize: 26 }}>Poza bonului</H1>
+          <Muted style={{ fontSize: 15, lineHeight: 21 }}>Citim doar localul, ora și totalul. Poza nu se păstrează.</Muted>
+          {(['camera', 'gallery'] as const).map((from) => (
+            <Big key={from} label={from === 'camera' ? 'Fă poza acum' : 'Alege din galerie'} color={from === 'camera' ? t.blue : t.s2} ink={from === 'camera' ? '#FFFFFF' : t.ink}
+              onPress={async () => { setBonPick(false); setBusyIn('bon'); const r = await sendBill(pl, from); setBusyIn(''); if (r) toast(r.msg); }} />
+          ))}
+        </View>
+      </Sheet>
       <Sheet open={ext !== 'closed'} onClose={() => setExt('closed')}>
         {ext === 'pick' ? (
           <View style={{ gap: 10 }}>

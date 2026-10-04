@@ -8,6 +8,8 @@ export interface Plan {
   pid: number; placeId: string; when: string; slot: string; people: number;
   res: 'none' | 'ext' | 'noted'; resVia?: string; createdAt: number;
   date?: string; // yyyy-mm-dd, the real day of the outing
+  inAt?: string;  // check-in time at the place ("20:04")
+  bonDone?: boolean; // the receipt photo was confirmed
 }
 /** One shared empty list, so screens reading "no plans" get the same value every time. */
 export const NO_PLANS: Plan[] = [];

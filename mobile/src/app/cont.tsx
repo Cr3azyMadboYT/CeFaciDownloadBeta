@@ -469,7 +469,7 @@ export default function Cont() {
       <StepScreen k={6} onBack={back} foot={<Big label="Gata" onPress={() => go('done')} />}>
         {bubble}
         <H1>Cu cine ieși?</H1>
-        <Lead style={{ marginTop: 6 }}>Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile și votul împreună vin curând.</Lead>
+        <Lead style={{ marginTop: 6 }}>Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile le faci din Planuri, iar votul împreună vine curând.</Lead>
       </StepScreen>
     </Slide>
   );

@@ -67,30 +67,37 @@ export function watchAuth(cb: (who: Who | null) => void) {
   return () => data.subscription.unsubscribe();
 }
 
+/** Never wait forever on the network or on Google: after `ms`, go on. */
+const within = <T,>(p: PromiseLike<T>, ms: number): Promise<T | 'timeout'> =>
+  Promise.race([Promise.resolve(p), new Promise<'timeout'>((ok) => setTimeout(() => ok('timeout'), ms))]);
+
 async function googleSignOut() {
   if (Platform.OS === 'web') return;
-  try { const { GoogleSignin } = await import('@react-native-google-signin/google-signin'); await GoogleSignin.signOut(); } catch { /* not signed in with Google */ }
+  try { const { GoogleSignin } = await import('@react-native-google-signin/google-signin'); await within(GoogleSignin.signOut(), 3000); } catch { /* not signed in with Google */ }
 }
 
-/** Signs out of the account and of Google (so the next sign-in asks which Google account). */
+/** Signs out of the account and of Google (so the next sign-in asks which Google account). Always finishes,
+ *  even offline: the session on the phone is dropped right away. */
 export async function signOutEverywhere() {
-  await sb().auth.signOut().catch(() => null);
+  const r = await within(sb().auth.signOut(), 4000).catch(() => 'timeout' as const);
+  if (r === 'timeout' || (r && typeof r === 'object' && 'error' in r && r.error)) await within(sb().auth.signOut({ scope: 'local' }), 2000).catch(() => null);
   await googleSignOut();
 }
 
 /** GDPR: removes the account and all it holds on the server, then signs out. Returns a message if the server
  *  did not confirm (offline, for example), so the phone is not wiped while the account still exists. */
 export async function deleteAccountEverywhere(): Promise<string | null> {
+  const fail = 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
   try {
     const { data } = await sb().auth.getSession();
     if (data.session) {
-      const { error } = await sb().rpc('delete_my_account');
-      if (error) return 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
-      await sb().auth.signOut().catch(() => null);
+      const r = await within(sb().rpc('delete_my_account'), 15000);
+      if (r === 'timeout' || r.error) return fail;
+      await within(sb().auth.signOut({ scope: 'local' }), 2000).catch(() => null);
     }
     await googleSignOut();
     return null;
   } catch {
-    return 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
+    return fail;
   }
 }
