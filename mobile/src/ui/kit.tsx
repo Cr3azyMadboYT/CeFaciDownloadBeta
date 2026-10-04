@@ -2,7 +2,7 @@
 import { forwardRef, type ReactNode } from 'react';
 import { Animated, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, useWindowDimensions, View, type PressableProps, type StyleProp, type TextInputProps, type TextProps, type TextStyle, type ViewStyle } from 'react-native';
 import { useRef } from 'react';
-import { useSafeAreaInsets } from './insets';
+import { useModalInsets } from './insets';
 import * as Haptics from 'expo-haptics';
 import { Bilu, type Mood } from './Bilu';
 import { Icon, type IconName } from './Icon';
@@ -142,7 +142,7 @@ export function RoundBtn({ icon, onPress, label, dark }: { icon: IconName; onPre
 /** A bottom sheet over a dimmed screen; its content scrolls when it is taller than the screen (big text). */
 export function Sheet({ open, onClose, children }: { open: boolean; onClose: () => void; children: ReactNode }) {
   const { t } = useTheme();
-  const ins = useSafeAreaInsets();
+  const ins = useModalInsets();
   const { height } = useWindowDimensions();
   return (
     <Modal visible={open} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>

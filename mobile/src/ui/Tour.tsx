@@ -8,7 +8,7 @@ import { endTour, tourNext, tourOops, useTour, type Rect } from '../lib/tour';
 import { Bilu, type Mood } from './Bilu';
 import { Big, T } from './kit';
 import { F } from './theme';
-import { useSafeAreaInsets } from './insets';
+import { useModalInsets } from './insets';
 
 interface Step { id?: string; mood: Mood; text: string; oops?: string; hot?: 'profil' | 'plus'; final?: 'xp' | 'gift'; magic?: boolean }
 const STEPS: Step[] = [
@@ -30,7 +30,7 @@ const DIM = 'rgba(4,7,24,0.78)';
 export function Tour() {
   const tour = useTour();
   const { width: W, height: H } = useWindowDimensions();
-  const ins = useSafeAreaInsets();
+  const ins = useModalInsets();
   const steps = tour.replay ? STEPS.slice(0, 8) : STEPS;
   const st = steps[Math.min(tour.step, steps.length - 1)];
   const r: Rect | undefined = st?.id ? tour.rects[st.id] : undefined;

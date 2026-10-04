@@ -2,7 +2,7 @@
 // before applying.
 import { useEffect, useMemo, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Pressable, ScrollView, TextInput, View } from 'react-native';
-import { useSafeAreaInsets } from './insets';
+import { useModalInsets } from './insets';
 import { APP } from '../../../src/app/bridge';
 import { BUDGET, DIST, DUR, VIBES, WHEN, WHO, type Filters } from '../lib/filters';
 import { Icon } from './Icon';
@@ -21,7 +21,7 @@ function Opt({ label, on, onPress, grow = true }: { label: string; on: boolean; 
 
 export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; value: Filters; onClose: () => void; onApply: (f: Filters) => void }) {
   const { t } = useTheme();
-  const ins = useSafeAreaInsets();
+  const ins = useModalInsets();
   const [d, setD] = useState<Filters>(value);
   useEffect(() => { if (open) setD(value); }, [open, value]);
   const set = (p: Partial<Filters>) => setD((x) => ({ ...x, ...p }));

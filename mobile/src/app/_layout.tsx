@@ -15,6 +15,7 @@ import { setBoard, useApp } from '../lib/session';
 import { Toast } from '../ui/Toast';
 import { LevelUp } from '../ui/LevelUp';
 import { onReminderTap } from '../lib/remind';
+import { fitNavBar } from '../../modules/cefaci-insets';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -28,6 +29,8 @@ export default function Root() {
   useEffect(() => { if (loaded) SplashScreen.hideAsync().catch(() => {}); }, [loaded]);
   useEffect(() => onReminderTap((pid) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }), (url) => router.push(url as never)), []);
   useEffect(() => { SystemUI.setBackgroundColorAsync(t.bg).catch(() => {}); }, [t.bg]);
+  // the app stops above the phone's buttons (like Instagram); the buttons dark on the light theme, light on the dark one
+  useEffect(() => { fitNavBar(!t.dark); }, [t.dark]);
   if (!loaded) return null;
   return (
     <SafeAreaProvider>
