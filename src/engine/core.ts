@@ -104,6 +104,9 @@ export function targetTime(when: When, night: number, now: Date): Date {
   return t;
 }
 
+/** A daytime place (park, museum, court) with no hours on the map is not offered late at night: it is likely closed or dark. */
+export const dayOnly = (v: Venue, t: Date) => !v.wk && !v.hours && info(v).night === 0 && (t.getHours() >= 22 || t.getHours() < 7);
+
 // ---------- scoring ----------
 export const WHO_N: Record<Who, number> = { '1': 1, '2': 2, '34': 4, '5': 6 };
 
@@ -130,6 +133,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const n = WHO_N[ask.who];
   if (n > k.max) return null;
   const t = targetTime(ask.when, k.night, ctx.now);
+  if (dayOnly(v, t)) return null;
   const open = openAt(v, t);
   if (open.known && !open.open) return null;
 
@@ -149,7 +153,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const aproape = 10 * Math.max(0, 1 - d / Math.max(ask.maxKm, 1));
   const nou = ctx.history.includes(v.id) ? 0 : 10;
   const said = ctx.liked?.includes(v.id) ? 6 : ctx.disliked?.includes(v.id) ? -15 : 0;
-  const gasca = 10 * (n >= k.min && n <= k.max ? (n >= 3 && (k.cat === 'activitate' || k.cat === 'bar') ? 1 : 0.8) : 0.3);
+  const gasca = 10 * (n >= k.min && n <= k.max ? (n >= 3 && (k.cat === 'activitate' || k.cat === 'sport' || k.cat === 'bar') ? 1 : 0.8) : 0.3);
 
   const parts = { gust, ocazie, calitate, aproape, nou, gasca };
   const score = Object.values(parts).reduce((a, b) => a + b, 0) + said;
@@ -555,6 +559,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
         if (!fit) continue;
         if (p.raw.some((w) => w.length >= 4 && toks(v).includes(w))) fit += 0.12; // "opera", "jazz", "bistro" in the name itself
       } else if (v.k === 'water_park' || v.k === 'zoo' || v.k === 'theme_park') fit = 0.45; // seasonal or day trips: not a default idea
+      else if (v.cat === 'natura' || v.cat === 'sport') fit = 0.5; // a walk or a game: an idea, but not ahead of a place to sit
       // where
       const d = km(origin, v);
       if (p.place && d > radius) continue;
@@ -566,10 +571,11 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (p.budget !== undefined && price > p.budget) continue;
       if (p.budgetMin !== undefined && price < p.budgetMin) continue;
       if (p.family && (v.cat === 'bar' || v.cat === 'club')) continue;
-      if (p.romantic && (v.fast || (v.cat === 'activitate' && v.k !== 'ice_rink'))) continue;
-      if (p.outdoor && !relaxOutdoor && !(v.outdoor || OUTDOOR_HINT.test(name) || ['biergarten', 'zoo', 'water_park', 'theme_park', 'miniature_golf'].includes(v.k))) continue;
+      if (p.romantic && (v.fast || v.cat === 'sport' || (v.cat === 'activitate' && v.k !== 'ice_rink'))) continue;
+      if (p.outdoor && !relaxOutdoor && !(v.outdoor || OUTDOOR_HINT.test(name) || k.vibes.includes('Aer liber'))) continue;
       // when
       const t = timeFor(v);
+      if (dayOnly(v, t)) continue;
       const st = openState(v, t);
       if (st.known && !st.open && p.time) continue;
       if (p.openNow && !st.known && !relaxOpen) continue;
@@ -588,7 +594,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (p.time && !wantsSomething) sc += 14 * nightFit;
       if (p.cheap) sc += 6 * Math.max(0, 1 - price / 60);
       if (p.fancy) sc += Math.min(8, price / 15);
-      if (n && n >= 5 && (v.cat === 'activitate' || v.cat === 'bar' || v.k === 'restaurant')) sc += 6;
+      if (n && n >= 5 && (v.cat === 'activitate' || v.cat === 'bar' || v.k === 'restaurant' || v.k === 'soccer')) sc += 6;
       if (n && n >= 5 && v.cat === 'cafea') sc -= 6;
       if (p.romantic) {
         if (v.k === 'restaurant' || v.k === 'bar') sc += 8;
@@ -597,7 +603,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
         if (NOT_ROMANTIC.test(name) || v.k === 'pub' || v.cuisines.some((c) => ['kebab', 'shawarma', 'burger', 'fast_food', 'chicken'].includes(c))) sc -= 10;
         if (v.k === 'ice_cream' || v.k === 'cafe') sc -= v.k === 'cafe' ? 3 : 10;
       }
-      if (p.family && (v.cat === 'activitate' || v.cat === 'desert' || v.k === 'museum' || v.k === 'cinema')) sc += 8;
+      if (p.family && (v.cat === 'activitate' || v.cat === 'natura' || v.cat === 'desert' || v.k === 'museum' || v.k === 'cinema')) sc += 8;
       const vibes = vibesOf(v);
       if (p.vibes.some((x) => vibes.includes(x))) sc += 5;
       if (p.outdoor && v.outdoor) sc += 3;

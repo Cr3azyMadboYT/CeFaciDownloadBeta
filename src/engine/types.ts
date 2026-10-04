@@ -1,6 +1,6 @@
 // Shared types for the CeFaci client and its recommendation/search engine.
 
-export type Cat = 'mancare' | 'cafea' | 'desert' | 'bar' | 'club' | 'film' | 'teatru' | 'cultura' | 'activitate';
+export type Cat = 'mancare' | 'cafea' | 'desert' | 'bar' | 'club' | 'film' | 'teatru' | 'cultura' | 'activitate' | 'natura' | 'sport';
 export type Vibe = 'Mâncare bună' | 'Chill' | 'Party' | 'Fun' | 'Competitiv' | 'Cultură' | 'Aer liber';
 export type When = 'acum' | 'diseara' | 'maine' | 'weekend';
 export type Who = '1' | '2' | '34' | '5';

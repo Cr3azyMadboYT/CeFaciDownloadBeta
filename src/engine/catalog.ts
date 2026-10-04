@@ -8,7 +8,7 @@ export const VIBES: Vibe[] = ['Mâncare bună', 'Chill', 'Party', 'Fun', 'Compet
 
 export const CAT_LABEL: Record<Cat, string> = {
   mancare: 'Mâncare', cafea: 'Cafea', desert: 'Desert', bar: 'Bar', club: 'Club',
-  film: 'Film', teatru: 'Teatru', cultura: 'Cultură', activitate: 'Activitate',
+  film: 'Film', teatru: 'Teatru', cultura: 'Cultură', activitate: 'Activitate', natura: 'Natură', sport: 'Sport',
 };
 
 /** Per-kind facts the map does not hold. Prices are estimates per person, in lei. */
@@ -39,6 +39,29 @@ export const KINDS: Record<string, KindInfo> = {
   water_park: K('Parc acvatic', 'activitate', ['Fun', 'Aer liber'], 130, 5, 1, 12, 0),
   theme_park: K('Parc de distracții', 'activitate', ['Fun', 'Aer liber'], 100, 4, 1, 12, 0),
   zoo: K('Grădină zoologică', 'activitate', ['Aer liber'], 20, 2.5, 1, 20, 0),
+  aquarium: K('Acvariu', 'activitate', ['Fun'], 40, 1.5, 1, 12, 0),
+  karting: K('Karting', 'activitate', ['Fun', 'Competitiv'], 80, 1, 1, 12, 1),
+  paintball: K('Paintball', 'activitate', ['Fun', 'Competitiv', 'Aer liber'], 100, 2, 4, 20, 0),
+  billiards: K('Biliard', 'activitate', ['Fun', 'Competitiv', 'Chill'], 30, 1.5, 2, 8, 1),
+  planetarium: K('Planetariu', 'cultura', ['Cultură'], 30, 1.5, 1, 12, 0),
+  castle: K('Castel', 'cultura', ['Cultură', 'Aer liber'], 25, 2, 1, 20, 0),
+  palace: K('Palat', 'cultura', ['Cultură'], 30, 1.5, 1, 20, 0),
+  manor: K('Conac', 'cultura', ['Cultură', 'Aer liber'], 15, 1.5, 1, 20, 0),
+  monastery: K('Mănăstire', 'cultura', ['Cultură', 'Aer liber'], 0, 1.5, 1, 20, 0),
+  // outdoors: parks are free; nobody needs a booking for a walk
+  park: K('Parc', 'natura', ['Aer liber', 'Chill'], 0, 1.5, 1, 30, 0),
+  nature_reserve: K('Rezervație naturală', 'natura', ['Aer liber'], 0, 2.5, 1, 20, 0),
+  botanical_garden: K('Grădină botanică', 'natura', ['Aer liber', 'Chill'], 15, 1.5, 1, 20, 0),
+  beach_resort: K('Plajă', 'natura', ['Aer liber', 'Chill'], 40, 4, 1, 20, 0),
+  // sport: prices are per person for a court shared the usual way (padel 4, football 10)
+  padel: K('Padel', 'sport', ['Competitiv', 'Fun'], 60, 1.5, 2, 4, 1),
+  tennis: K('Tenis', 'sport', ['Competitiv'], 50, 1.5, 2, 4, 0),
+  soccer: K('Fotbal', 'sport', ['Competitiv', 'Fun'], 30, 1.5, 2, 14, 1),
+  squash: K('Squash', 'sport', ['Competitiv'], 50, 1, 2, 4, 1),
+  swimming: K('Piscină', 'sport', ['Fun', 'Chill'], 50, 2, 1, 12, 0),
+  climbing: K('Escaladă', 'sport', ['Competitiv', 'Fun'], 60, 2, 1, 8, 1),
+  golf_course: K('Golf', 'sport', ['Competitiv', 'Aer liber'], 150, 3, 1, 4, 0),
+  horse_riding: K('Călărie', 'sport', ['Aer liber', 'Fun'], 150, 1.5, 1, 6, 0),
 };
 
 /** Cuisine keys we show, with the Romanian label. Other cuisine values are kept but not labelled. */
@@ -127,17 +150,36 @@ export const TOPICS: Record<string, Topic> = {
   // things to do
   bowling: T('Bowling', 'bowling,popice', { kinds: ['bowling_alley'], hint: 'bowling', related: ['amusement_arcade', 'escape_game', 'ice_rink'] }),
   escape: T('Escape room', 'escape,escape room,escaperoom,escape rooms,camera de evadare', { kinds: ['escape_game'], hint: 'escape' }),
-  arcade: T('Jocuri', 'arcade,jocuri,gaming,jocuri video,vr,realitate virtuala,laser tag,lasertag,laser,paintball', { kinds: ['amusement_arcade'], hint: 'laser|\\bvr\\b|game|arcade|play' }),
-  biliard: T('Biliard', 'biliard,snooker,darts,ping pong', { hint: 'biliard|snooker|darts|\\bpool\\b', related: ['pub', 'bar', 'amusement_arcade'] }),
+  arcade: T('Jocuri', 'arcade,jocuri,gaming,jocuri video,vr,realitate virtuala,laser tag,lasertag,laser', { kinds: ['amusement_arcade'], hint: 'laser|\\bvr\\b|game|arcade|play' }),
+  paintball: T('Paintball', 'paintball,airsoft', { kinds: ['paintball'], hint: 'paintball|airsoft', related: ['amusement_arcade', 'karting'] }),
+  biliard: T('Biliard', 'biliard,snooker,darts,ping pong', { kinds: ['billiards'], hint: 'biliard|snooker|darts|\\bpool\\b', related: ['pub', 'bar', 'amusement_arcade'] }),
   trambuline: T('Trambuline', 'trambuline,trambulina,trampoline', { kinds: ['trampoline_park'], hint: 'trambul|trampolin|jump', related: ['amusement_arcade', 'theme_park'] }),
-  minigolf: T('Minigolf', 'minigolf,mini golf,golf', { kinds: ['miniature_golf'], hint: 'golf', related: ['amusement_arcade'] }),
-  karting: T('Karting', 'karting,carting,kart', { hint: 'kart', related: ['amusement_arcade', 'theme_park'] }),
+  minigolf: T('Minigolf', 'minigolf,mini golf', { kinds: ['miniature_golf'], hint: 'mini ?golf', related: ['amusement_arcade'] }),
+  golf: T('Golf', 'golf,teren de golf', { kinds: ['golf_course', 'miniature_golf'], hint: 'golf' }),
+  karting: T('Karting', 'karting,carting,kart', { kinds: ['karting'], hint: 'kart', related: ['amusement_arcade', 'theme_park'] }),
   patinoar: T('Patinoar', 'patinoar,patinoare,patinaj,patine,skating', { kinds: ['ice_rink'] }),
-  aquapark: T('Ștrand', 'aquapark,acvapark,aqua park,parc acvatic,strand,stranduri,piscina,piscine,bazin,inot', { kinds: ['water_park'] }),
+  aquapark: T('Ștrand', 'aquapark,acvapark,aqua park,parc acvatic,strand,stranduri', { kinds: ['water_park', 'beach_resort'], related: ['swimming'] }),
+  piscina: T('Piscină', 'piscina,piscine,bazin,inot,inotat,swimming', { kinds: ['swimming', 'water_park'], hint: 'piscin|aqua|swim|inot' }),
   lunapark: T('Parc de distracții', 'parc de distractii,lunapark,luna park,carusel,parc tematic', { kinds: ['theme_park'] }),
   zoo: T('Zoo', 'zoo,gradina zoologica,animale', { kinds: ['zoo'] }),
+  acvariu: T('Acvariu', 'acvariu,acvarii,aquarium,pesti', { kinds: ['aquarium'], related: ['zoo', 'museum'] }),
+  padel: T('Padel', 'padel,paddle', { kinds: ['padel'], hint: 'padel', related: ['tennis', 'squash'] }),
+  tenis: T('Tenis', 'tenis,tennis,teren de tenis', { kinds: ['tennis'], hint: 'tenis|tennis', related: ['padel', 'squash'] }),
+  fotbal: T('Fotbal', 'fotbal,minifotbal,fotbal in 5,teren de fotbal,football,soccer', { kinds: ['soccer'], hint: 'fotbal|football|soccer|arena', related: ['padel', 'tennis'] }),
+  squash: T('Squash', 'squash', { kinds: ['squash'], hint: 'squash', related: ['padel', 'tennis'] }),
+  escalada: T('Escaladă', 'escalada,catarare,climbing,bouldering,perete de escalada', { kinds: ['climbing'], hint: 'climb|bouldering|escalad|catara', related: ['trampoline_park'] }),
+  calarie: T('Călărie', 'calarie,calarit,cai,echitatie,manej', { kinds: ['horse_riding'], hint: 'equestr|ecvestr|horse|cai\\b|calari|manej' }),
+  sport: T('Sport', 'sport,sporturi,miscare,teren,terenuri', { cats: ['sport'] }),
+  // outdoors and sights
+  parc: T('Parc', 'parc,parcuri,parcul,plimbare,plimbari,plimbam,promenada,park', { kinds: ['park', 'botanical_garden'] }),
+  natura: T('Natură', 'natura,padure,paduri,lac,lacuri,iarba,picnic', { cats: ['natura'] }),
+  plaja: T('Plajă', 'plaja,plaje,beach,sezlong', { kinds: ['beach_resort', 'water_park'], hint: 'beach|plaj' }),
+  gradinabotanica: T('Grădină botanică', 'gradina botanica,botanica,flori', { kinds: ['botanical_garden', 'park'] }),
+  castel: T('Castele și palate', 'castel,castele,palat,palate,palatul,conac,conace,cula,curte domneasca', { kinds: ['castle', 'palace', 'manor'], hint: 'castel|palat|conac|cula\\b' }),
+  manastire: T('Mănăstire', 'manastire,manastiri,manastirea,schit,schituri', { kinds: ['monastery'], hint: 'manastir|schit' }),
+  planetariu: T('Planetariu', 'planetariu,planetarium,stele,astronomie,observator', { kinds: ['planetarium'], related: ['museum'] }),
   boardgames: T('Jocuri de societate', 'board games,boardgames,jocuri de societate,board game', { hint: 'board|joc', related: ['cafe', 'pub'] }),
-  activitate: T('Activitate', 'activitate,activitati,distractie,distractii,ceva activ,sport,joaca', { cats: ['activitate'] }),
+  activitate: T('Activitate', 'activitate,activitati,distractie,distractii,ceva activ,joaca', { cats: ['activitate', 'sport'] }),
   // moods
   chill: T('Chill', 'chill,linistit,linistita,liniste,relaxant,relax', { vibe: 'Chill' }),
 };

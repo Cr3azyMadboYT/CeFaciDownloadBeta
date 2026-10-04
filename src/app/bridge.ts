@@ -60,12 +60,17 @@ const LOOK: Record<string, [string, string, string][]> = {
   teatru: [['#B7A3FF', '#0E1440', '#FFD43B']],
   cultura: [['#FFD43B', '#0E1440', '#8EA6FF'], ['#8EA6FF', '#0E1440', '#FFD43B']],
   activitate: [['#2F5BFF', '#FFFFFF', '#8EA6FF'], ['#B7A3FF', '#0E1440', '#FFD43B']],
+  natura: [['#5FD39A', '#0E1440', '#FFD43B'], ['#B8F0D2', '#0E1440', '#2F5BFF']],
+  sport: [['#5FD39A', '#0E1440', '#2F5BFF'], ['#2F5BFF', '#FFFFFF', '#5FD39A']],
 };
 const ICON_OF: Record<string, string> = {
   restaurant: 'fork', fast_food: 'burger', cafe: 'coffee', ice_cream: 'sweet', bar: 'cocktail', pub: 'beer', biergarten: 'beer',
   nightclub: 'club', cinema: 'film', theatre: 'smile', arts_centre: 'star', museum: 'landmark', gallery: 'star',
   bowling_alley: 'bowl', escape_game: 'key', amusement_arcade: 'dice', trampoline_park: 'bolt', miniature_golf: 'target',
-  ice_rink: 'bolt', water_park: 'waves', theme_park: 'star', zoo: 'heart',
+  ice_rink: 'bolt', water_park: 'waves', theme_park: 'star', zoo: 'heart', aquarium: 'waves', karting: 'bolt', paintball: 'target',
+  billiards: 'target', planetarium: 'star', castle: 'castle', palace: 'castle', manor: 'castle', monastery: 'landmark',
+  park: 'tree', nature_reserve: 'tree', botanical_garden: 'tree', beach_resort: 'waves',
+  padel: 'ball', tennis: 'ball', soccer: 'ball', squash: 'ball', swimming: 'waves', climbing: 'bolt', golf_course: 'target', horse_riding: 'heart',
 };
 const CUISINE_ICON: Record<string, string> = { pizza: 'pizza', burger: 'burger', coffee_shop: 'coffee', cake: 'sweet', dessert: 'sweet', ice_cream: 'sweet' };
 const hash = (s: string) => { let x = 0; for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) | 0; return Math.abs(x); };
@@ -80,13 +85,13 @@ function toPlace(v: Venue, origin: { lat: number; lon: number }) {
   const title = cl.length ? (v.k === 'restaurant' ? 'Restaurant, ' + cl.slice(0, 2).join(' și ').toLowerCase() : v.kind + ', ' + cl[0].toLowerCase()) : v.kind;
   const d = km(origin, v);
   const phone = v.phone ?? '';
-  const needsRes = v.k === 'escape_game' || v.k === 'bowling_alley' ? 'required' : v.k === 'restaurant' && (phone || v.website) ? 'recommended' : 'none';
+  const needsRes = v.k === 'escape_game' || v.k === 'bowling_alley' || v.k === 'padel' || v.k === 'tennis' || v.k === 'soccer' || v.k === 'squash' ? 'required' : v.k === 'restaurant' && (phone || v.website) ? 'recommended' : 'none';
   return {
     id: v.id, name: v.name, title, icon: CUISINE_ICON[v.cuisines[0]] ?? ICON_OF[v.k] ?? 'star', bg, fg, dot,
     price: priceOf(v), dur: k.hours, dist: Math.max(3, Math.round(3 + d * 2.4)), km: d, vibes: vibesOf(v), min: k.min, max: k.max,
     when: ['now', 'eve', 'tom', 'we'], res: phone || v.website ? needsRes : 'none', verified: false, partner: false,
     age: v.k === 'nightclub', t: SLOT[k.night], zone: zoneById(v.zone).name, real: v,
-    contact: phone || v.website ? { phone, wa: false, web: !!v.website, site: v.website ?? '', unit: v.cat === 'activitate' ? 'o rezervare' : 'o masă' } : undefined,
+    contact: phone || v.website ? { phone, wa: false, web: !!v.website, site: v.website ?? '', unit: v.cat === 'activitate' || v.cat === 'sport' ? (v.cat === 'sport' && v.k !== 'swimming' ? 'un teren' : 'o rezervare') : 'o masă' } : undefined,
   };
 }
 type Place = ReturnType<typeof toPlace>;
@@ -96,6 +101,19 @@ const WHO_MAP: Record<string, Who> = { 1: '1', 2: '2', 34: '34', 5: '5' };
 const BUDGET_MAX: Record<string, number> = { 0: 0, 50: 50, 100: 100, 200: 200, any: Infinity };
 const DUR_MAX: Record<string, number> = { 1: 1.5, 23: 3, 4: 99 };
 const VIBE_LIKES: Record<string, string[]> = { bowl: ['Fun', 'Competitiv'], escape: ['Fun', 'Competitiv'], film: ['Cultură', 'Chill'], party: ['Party'], karaoke: ['Fun', 'Party'], food: ['Mâncare bună'], cafe: ['Chill'], sport: ['Competitiv'], nature: ['Aer liber'], culture: ['Cultură'], board: ['Fun'], standup: ['Cultură', 'Fun'] };
+
+// A small town may have only restaurants and cafés nearby: then look further (up to 22 km) until at least two of the five
+// ideas are something else than eating or a coffee (a park, a court, a museum, a bar).
+const FOODISH = new Set(['mancare', 'cafea', 'desert']);
+function variedPicks(ask: Ask, ctx: Ctx) {
+  let r = recommend(VENUES, ask, ctx, 0, 5);
+  for (const maxKm of [14, 22]) {
+    if (maxKm <= ask.maxKm || r.picks.filter((s) => !FOODISH.has(s.v.cat)).length >= 2) continue;
+    const wider = recommend(VENUES, { ...ask, maxKm }, ctx, 0, 5);
+    if (wider.picks.filter((s) => !FOODISH.has(s.v.cat)).length > r.picks.filter((s) => !FOODISH.has(s.v.cat)).length) r = wider;
+  }
+  return r;
+}
 
 export const APP = {
   prefs: loadPrefs(),
@@ -229,7 +247,7 @@ export const APP = {
   /** Five real places for the "Da / Poate / Nu" step of sign-up, matched to what the person likes. */
   picks(likes: string[]) {
     const ask: Ask = { who: '34', when: 'weekend', budget: Infinity, maxKm: 12, vibes: [...new Set(likes.flatMap((l) => VIBE_LIKES[l] ?? []))] as Ask['vibes'] };
-    return recommend(VENUES, ask, this.ctx(), 0, 5).picks.map((s) => this.byIdMap.get(s.v.id)!);
+    return variedPicks(ask, this.ctx()).picks.map((s) => this.byIdMap.get(s.v.id)!);
   },
   pickMemo: new Map<string, { id: string; name: string; tag: string; sub: string; bg: string; fg: string; dot: string; like: string }[]>(),
   /** Real places for the sign-up "Da / Poate / Nu" cards, near the chosen zone and matched to the chosen likes. */
@@ -244,8 +262,8 @@ export const APP = {
     const w = more.when ?? [];
     const when: When = w.includes('eve') || w.includes('late') ? 'diseara' : 'weekend';
     const who: Who = more.who === 'solo' ? '1' : more.who === 'duo' ? '2' : '34';
-    const r = recommend(VENUES, { who, when, budget: budgetRange(more.budget ?? 'any').max, maxKm: 8, vibes }, ctx, 0, 5);
-    const LIKE_OF: Record<string, string> = { mancare: 'food', cafea: 'cafe', desert: 'cafe', bar: 'party', club: 'party', film: 'film', teatru: 'culture', cultura: 'culture', activitate: 'bowl' };
+    const r = variedPicks({ who, when, budget: budgetRange(more.budget ?? 'any').max, maxKm: 8, vibes }, ctx);
+    const LIKE_OF: Record<string, string> = { mancare: 'food', cafea: 'cafe', desert: 'cafe', bar: 'party', club: 'party', film: 'film', teatru: 'culture', cultura: 'culture', activitate: 'bowl', natura: 'nature', sport: 'sport' };
     const out = r.picks.map((s) => {
       const p = toPlace(s.v, origin);
       return { id: s.v.id, name: p.name, tag: s.v.kind + ' · ' + p.dist + ' min', sub: (p.title !== s.v.kind ? p.title + '. ' : '') + (p.price ? 'Cam ' + p.price + ' lei de persoană. ' : '') + (s.reasons[0] ?? ''), bg: p.bg, fg: p.fg, dot: p.dot, like: s.v.k === 'escape_game' ? 'escape' : LIKE_OF[s.v.cat] ?? 'food' };

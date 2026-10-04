@@ -1,6 +1,8 @@
 // Turns an Overpass JSON export (OpenStreetMap) into the compact venue list the app ships with.
 // Usage: node scripts/import-osm.mjs <overpass.json> [out=src/data/venues.json]
+// What is kept and how it is labelled: scripts/osm-kinds.mjs. The query: node scripts/osm-query.mjs.
 import fs from 'node:fs';
+import { classify } from './osm-kinds.mjs';
 
 const [, , inFile, outFile = 'src/data/venues.json'] = process.argv;
 const raw = JSON.parse(fs.readFileSync(inFile, 'utf8'));
@@ -12,22 +14,18 @@ const centre = (g) => {
 };
 const els = raw.elements ?? raw.features?.map((f) => { const [lat, lon] = centre(f.geometry); const [type, id] = (f.id || f.properties['@id'] || '').split('/'); return { type, id, tags: f.properties, lat, lon }; }) ?? [];
 
-const KIND = {
-  amenity: { restaurant: 'mancare', fast_food: 'mancare', cafe: 'cafea', ice_cream: 'desert', bar: 'bar', pub: 'bar', biergarten: 'bar', nightclub: 'club', cinema: 'film', theatre: 'teatru', arts_centre: 'cultura' },
-  leisure: { bowling_alley: 'activitate', escape_game: 'activitate', amusement_arcade: 'activitate', trampoline_park: 'activitate', water_park: 'activitate', miniature_golf: 'activitate', ice_rink: 'activitate' },
-  tourism: { museum: 'cultura', gallery: 'cultura', zoo: 'activitate', theme_park: 'activitate' },
-};
-const LABEL = { restaurant: 'Restaurant', fast_food: 'Fast food', cafe: 'Cafenea', ice_cream: 'Gelaterie', bar: 'Bar', pub: 'Pub', biergarten: 'Grădină de bere', nightclub: 'Club', cinema: 'Cinema', theatre: 'Teatru', arts_centre: 'Centru cultural', museum: 'Muzeu', gallery: 'Galerie', bowling_alley: 'Bowling', escape_game: 'Escape room', amusement_arcade: 'Jocuri arcade', trampoline_park: 'Trambuline', miniature_golf: 'Minigolf', ice_rink: 'Patinoar', water_park: 'Parc acvatic', theme_park: 'Parc de distracții', zoo: 'Grădină zoologică' };
-
 // Same zones as src/engine/catalog.ts (kept in sync by the test).
 const ZONES = JSON.parse(fs.readFileSync(new URL('../src/data/zones.json', import.meta.url), 'utf8'));
 const km = (a, b) => { const r = Math.PI / 180, dl = (b.lat - a.lat) * r, dn = (b.lon - a.lon) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dn / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); };
 
 const clean = (s) => (s ?? '').replace(/\s+/g, ' ').trim();
-const BAD_NAME = /^(bar|restaurant|cafenea|cafe|pub|fast ?food|terasa|bistro|test|\?|-)$/i;
+const BAD_NAME = /^(bar|restaurant|cafenea|cafe|pub|fast ?food|terasa|bistro|test|parc|park|scuar|teren( de (sport|fotbal|tenis|baschet|padel))?|baza sportiva|piscina|\?|-)$/i;
+// size of a mapped area (km, corner to corner), from Overpass "out bb"
+const spanKm = (b) => (b ? km({ lat: b.minlat, lon: b.minlon }, { lat: b.maxlat, lon: b.maxlon }) : 0);
 const out = [];
 const seen = new Map();
-let skipped = { noName: 0, noPos: 0, generic: 0, closed: 0, dupe: 0, kind: 0 };
+let skipped = { noName: 0, noPos: 0, generic: 0, closed: 0, dupe: 0, kind: 0, small: 0 };
+const seenId = new Set();
 
 for (const e of els) {
   const t = e.tags ?? {};
@@ -35,10 +33,16 @@ for (const e of els) {
   if (!name) { skipped.noName++; continue; }
   if (BAD_NAME.test(name)) { skipped.generic++; continue; }
   if (t['disused:amenity'] || t.disused === 'yes' || t['was:amenity'] || /closed|inchis definitiv/i.test(t.note ?? '')) { skipped.closed++; continue; }
-  let key = null, cat = null;
-  for (const k of ['amenity', 'leisure', 'tourism']) if (KIND[k][t[k]]) { key = t[k]; cat = KIND[k][t[k]]; break; }
-  if (!key) { skipped.kind++; continue; }
-  const lat = e.lat ?? e.center?.lat, lon = e.lon ?? e.center?.lon;
+  const kind = classify(t);
+  if (!kind) { skipped.kind++; continue; }
+  const key = kind.k, cat = kind.cat;
+  const uid = e.type + e.id;
+  if (seenId.has(uid)) { skipped.dupe++; continue; }
+  seenId.add(uid);
+  // a park is a place to go only when it is a real park, not a patch of grass between blocks (or it is well known)
+  if ((key === 'park' || key === 'nature_reserve') && !t.wikidata && spanKm(e.bounds) < 0.25) { skipped.small++; continue; }
+  const lat = e.lat ?? e.center?.lat ?? (e.bounds && (e.bounds.minlat + e.bounds.maxlat) / 2);
+  const lon = e.lon ?? e.center?.lon ?? (e.bounds && (e.bounds.minlon + e.bounds.maxlon) / 2);
   if (lat == null || lon == null) { skipped.noPos++; continue; }
   const p = { lat: +lat.toFixed(6), lon: +lon.toFixed(6) };
   const dk = name.toLowerCase();
@@ -49,7 +53,7 @@ for (const e of els) {
   if (km(p, zone) > 11) { skipped.outside = (skipped.outside || 0) + 1; continue; } // bounding box spills into neighbouring counties
   const cuisines = (t.cuisine ?? '').split(/[;,]/).map((c) => c.trim().toLowerCase()).filter(Boolean).slice(0, 4);
   const street = clean([t['addr:street'], t['addr:housenumber']].filter(Boolean).join(' '));
-  const v = { id: e.type[0] + e.id, name, cat, kind: LABEL[key], k: key, cuisines, lat: p.lat, lon: p.lon, zone: zone.id };
+  const v = { id: e.type[0] + e.id, name, cat, kind: kind.label, k: key, cuisines, lat: p.lat, lon: p.lon, zone: zone.id };
   if (street) v.street = street;
   if (t['addr:city']) v.city = clean(t['addr:city']);
   if (t.opening_hours) v.hours = t.opening_hours;

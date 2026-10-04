@@ -1,0 +1,92 @@
+# Fresh places from OpenStreetMap, once a month (and by hand from Actions → "Date OSM" → Run workflow).
+# Downloads București + Ilfov from Overpass (what scripts/osm-kinds.mjs keeps), rebuilds src/data/venues.json and the
+# weekly opening-hours table, runs the tests, and commits the new data only when the tests pass.
+# The raw download (data-raw/osm-bucuresti-ilfov.json) is committed either way, so a failure can be fixed locally.
+# The summary of each run (places per category and per zone) is on the run's page.
+name: Date OSM
+
+on:
+  schedule:
+    - cron: '17 3 1 * *'
+  workflow_dispatch:
+  push:
+    branches: [claude/new-session-hzbjtf]
+    paths: [scripts/osm-kinds.mjs, .github/workflows/osm.yml]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: osm-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Descarcă din OpenStreetMap (Overpass)
+        run: |
+          node scripts/osm-query.mjs > "$RUNNER_TEMP/q.txt"
+          ok=
+          for url in https://overpass-api.de/api/interpreter https://overpass.private.coffee/api/interpreter https://overpass.kumi.systems/api/interpreter; do
+            for try in 1 2; do
+              echo "Încerc $url ($try)"
+              if curl -sS --fail --max-time 900 -A 'CeFaci data update (github.com/Cr3azyMadboYT/CeFaciDownloadBeta)' \
+                   --data-urlencode "data@$RUNNER_TEMP/q.txt" "$url" -o "$RUNNER_TEMP/raw.json" \
+                 && node -e "const r=require('$RUNNER_TEMP/raw.json'); if(!(r.elements?.length>3000)) { console.error('prea puține:', r.elements?.length, r.remark); process.exit(1) }"; then
+                ok=1; break 2
+              fi
+              sleep 60
+            done
+          done
+          [ -n "$ok" ] || { echo "Overpass nu a răspuns"; exit 1; }
+          # keep only what the import reads (no node lists), so the file stays small
+          node -e "
+            const fs=require('fs'); const r=require('$RUNNER_TEMP/raw.json');
+            const els=r.elements.map(({type,id,lat,lon,center,bounds,tags})=>({type,id,lat,lon,center,bounds,tags}));
+            fs.writeFileSync('data-raw/osm-bucuresti-ilfov.json', JSON.stringify({osm3s:r.osm3s,elements:els}));
+            console.log('elemente:', els.length, 'data OSM:', r.osm3s?.timestamp_osm_base);"
+      - name: Localurile și programul
+        run: |
+          node scripts/import-osm.mjs data-raw/osm-bucuresti-ilfov.json
+          TZ=Europe/Bucharest node scripts/build-hours.mjs
+      - name: Testele
+        id: tests
+        continue-on-error: true
+        run: npx vitest run
+      - name: Rezumat
+        if: always()
+        run: |
+          {
+            echo "# Date OSM ($(date -u +%F))"
+            echo
+            if [ "${{ steps.tests.outcome }}" = success ]; then echo "Testele au trecut: localurile noi sunt salvate."; else echo "**Testele au picat:** am salvat doar descărcarea brută (data-raw), localurile rămân cele vechi."; fi
+            echo
+            node scripts/osm-summary.mjs
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: venues-${{ github.run_number }}
+          path: |
+            src/data/venues.json
+            data-raw/osm-bucuresti-ilfov.json
+      - name: Salvează în repo
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ "${{ steps.tests.outcome }}" != success ]; then git checkout -- src/data/venues.json; fi
+          git add data-raw/osm-bucuresti-ilfov.json src/data/venues.json
+          if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
+          msg="Date OSM noi ($(date -u +%F))"
+          [ "${{ steps.tests.outcome }}" = success ] || msg="$msg: doar descărcarea, testele au picat"
+          git commit -m "$msg"
+          for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0; sleep 10; done
+          exit 1
