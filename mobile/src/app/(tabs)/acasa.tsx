@@ -186,7 +186,7 @@ export default function Acasa() {
           </View>
           </TourTarget>
           <Press onPress={() => router.push('/seara')} accessibilityLabel="Seara completă"
-            style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 48, paddingHorizontal: 14, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' }}>
+            style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 52, paddingHorizontal: 14, borderRadius: 16, backgroundColor: '#0E1440', borderWidth: 1, borderColor: 'rgba(255,212,59,0.55)', zIndex: 2 }}>
             <Icon name="sparkle" size={18} color="#FFD43B" />
             <View style={{ flex: 1 }}>
               <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Seara completă</T>

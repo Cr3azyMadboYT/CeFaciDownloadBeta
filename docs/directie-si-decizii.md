@@ -397,3 +397,13 @@ Ideile de la care am pornit:
 - **Amintirea pentru bon:** notificare la 40 de minute după check-in și, dacă tot lipsește bonul, a doua zi la prânz. Maximum două, oprite când pui bonul. Biletul de ieri rămâne în Planuri până pui bonul.
 - **Biletul:** câte persoane și ora pentru rezervare, WhatsApp pentru numerele de mobil, „Cum a fost?”, Plan B aproape, avertisment pentru planuri suprapuse, „Ceva nu e bun la locul ăsta?” (semnalările ajung în tabelul `reports`).
 - **Încă de făcut:** „Invită prieteni” cu link spre magazin (după Google Play), codul QR de la bar pentru parteneri, plata Plus prin Google Play.
+
+## Ce s-a adăugat după-amiaza (4 octombrie)
+
+- **Locuri verificate pe Google Maps:** 188 închise definitiv și 63 închise temporar au ieșit din aplicație (rămân 3.163). Verificarea se repetă lunar; ștrandurile și patinoarele sezoniere revin singure.
+- **Vremea în recomandări:** prognoza Google (48 de ore și 7 zile), luată cel mult o dată pe oră. Pe ploaie sau frig urcă locurile la adăpost, pe soare terasele și parcurile. Pe Acasă e o pastilă cu vremea, iar pe bilet un avertisment dacă plouă la ora planului.
+- **Ajustări dintr-un tap** pe rezultate: Mai ieftin, Mai aproape, Deschis acum, La adăpost / Afară, Ca la început.
+- **Căutare mai deșteaptă:** orele cum le spun oamenii („după 22”, „înainte de 9”, „la 1 noaptea”, „brunch la 11”) și ce trebuie să aibă locul (wifi, nefumători, se poate fuma, scaun cu rotile, aer condiționat), din datele OpenStreetMap.
+- **Seara completă:** 6 feluri de seară (Cină și un pahar, Seara lungă, Spectacol și cină, Joacă apoi masă, Ziua afară, Ceva dulce și un film). Fiecare loc e deschis la ora lui și la câteva minute pe jos de cel dinainte (în orașele mici, cu mașina). „Facem așa” face un bilet pentru fiecare pas, iar serile se pot trimite gășcii la vot.
+- **Harta** rezultatelor și a serii complete (MapLibre + OpenFreeMap, gratuit, fără cheie).
+- **Notificări de la prieteni** (vot, plan, gașcă) prin Firebase; **XP pe server**; dublu „Înapoi” pe Acasă ca să ieși.

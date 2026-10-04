@@ -19,7 +19,11 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 - Filtre: buget cu interval „de la – până la” + avertisment că prețurile sunt estimate. Patch-uri noi: `scripts/board-patches-cont.mjs`, `scripts/board-patches-budget.mjs`.
 - XP-ul e pe server (04.10): `xp_log` + RPC `xp_check_in`, `xp_welcome`; bonul +25 îl scrie funcția `citeste-bon` (`xp_bill`); `profiles.xp/stamps` nu se pot schimba din aplicație. `public.venues` se umple din workflow-ul OSM dacă există secretul `SUPABASE_SERVICE_ROLE_KEY` (altfel serverul folosește poziția trimisă de aplicație). Locurile dispărute din OSM: `src/data/gone.json` (6 luni).
 - Notificări de la prieteni: `push_tokens` + triggeri → funcția `trimite-notificare` (FCM v1, secretul Supabase `FCM_SERVICE_ACCOUNT`); în build, `google-services.json` din secretul GitHub `GOOGLE_SERVICES_JSON` (`mobile/app.config.js`). Telefonul: `mobile/src/lib/push.ts`.
-- Bara de jos: `mobile/src/ui/insets.ts` (pe unele Samsung insetul de jos vine 0).
+- Bara de jos: `mobile/src/ui/insets.ts` + modulul nativ local `mobile/modules/cefaci-insets` (Android măsoară bara cu butoane; pe Samsung insetul primit era prea mic).
+- Vremea (04.10): funcția `vremea` (Google Weather, cheia în Vault `google_maps_key`) → `public.weather`; motorul: `src/engine/weather.ts` (ploaie/frig → la adăpost, soare → afară), `Ctx.weather`; pe telefon `mobile/src/lib/weather.ts`. Teste: `tests/weather.test.ts`.
+- Seara completă: `src/engine/evening.ts` (șabloane cină→bar→club etc., fiecare pas deschis la ora lui, ≤1,2 km pe jos sau cu mașina în orașele mici), ecranul `mobile/src/app/seara.tsx`. Teste: `tests/evening.test.ts`.
+- Căutare: ore („după 22”, „înainte de 9”, „la 1 noaptea”), nevoi (wifi, fumat, scaun cu rotile, aer condiționat; din OSM). Teste: `tests/vocab.test.ts`. Ajustări dintr-un tap: `mobile/src/lib/tweaks.ts`. Harta: `mobile/src/ui/PlacesMap.tsx` (WebView + MapLibre + OpenFreeMap, fără cheie).
+- Locurile verificate pe Google Maps (Places API): `scripts/verify-places.mjs` → `src/data/checked.json` (închise scoase la import); workflow „Verifică locurile” (lunar, secretul `PLACES_API_KEY`).
 - Pe telefon merg pe Supabase: prieteni, gășci (cod 7 zile, carnet), votul în timp real (`mobile/src/lib/votes.ts`, `plan_from_vote`), planuri trimise cu Vin/Nu pot (`together.ts`), nivel nou (`ui/LevelUp.tsx`), Setări, amintirea pentru bon (`lib/remind.ts`, expo-notifications), semnalări (`reports`). Încă de făcut: „Invită prieteni” cu link spre magazin (după Google Play).
 
 ## Priorități
