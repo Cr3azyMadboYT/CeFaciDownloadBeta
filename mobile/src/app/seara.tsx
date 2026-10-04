@@ -15,6 +15,7 @@ import { Big, H1, Muted, Note, Press, Seg, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { VoteStart } from '../ui/VoteStart';
+import { PlacesMap } from '../ui/PlacesMap';
 
 type Evening = ReturnType<typeof APP.evenings>[number];
 const WALK = 'M13 4a2 2 0 1 0 0-.01M10 22l2-7 3 3v6M8 12l2-4 4 1 3 4M7 22l3-9';
@@ -79,6 +80,11 @@ export default function Seara() {
               })}
             </ScrollView>
 
+            <View style={{ marginTop: 14 }}>
+              <PlacesMap height={220} line
+                pins={r.steps.map((s, i) => ({ id: s.place.id, lat: s.place.real.lat, lon: s.place.real.lon, name: s.slot + ' · ' + s.place.name, sub: s.why, bg: s.place.bg, fg: s.place.fg, n: i + 1 }))}
+                origin={{ ...APP.origin(), label: APP.zoneName() }} />
+            </View>
             <View style={{ marginTop: 18 }}>
               {r.steps.map((s, i) => (
                 <View key={s.place.id}>

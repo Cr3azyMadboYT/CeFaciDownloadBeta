@@ -13,6 +13,7 @@ import { F, useTheme, type Theme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { VoteStart } from '../ui/VoteStart';
 import { tweaksFor } from '../lib/tweaks';
+import { PlacesMap } from '../ui/PlacesMap';
 import { useWeatherVersion } from '../lib/weather';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
@@ -34,6 +35,7 @@ export default function Rezultate() {
   const prefs = useApp((s) => s.prefs);
   const [sheet, setSheet] = useState(false);
   const [vote, setVote] = useState(false);
+  const [onMap, setOnMap] = useState(false);
   const typed = useDeferredValue(sq); // the list follows the typing without slowing the keyboard
   const wxv = useWeatherVersion();
   const all = useMemo(() => listFor(f, typed), [f, typed, prefs, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -70,6 +72,11 @@ export default function Rezultate() {
             <T numberOfLines={1} style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: t.ink2 }}>{WHO[f.who].label + ', ' + WHEN[f.when].label.toLowerCase() + ', ' + summaryOf(f)}</T>
             <Icon d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" size={16} color={t.blueInk} />
           </Press>
+          <Press onPress={() => setOnMap((m) => !m)} accessibilityLabel={onMap ? 'Ascunde harta' : 'Pe hartă'} accessibilityState={{ selected: onMap }}
+            style={{ height: 40, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1, borderColor: onMap ? t.blue : t.line, backgroundColor: onMap ? t.blueSoft : t.s1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Icon name="map" size={16} color={onMap ? t.blueInk : t.ink} />
+            <T style={{ fontFamily: F.sb, fontSize: 13, color: onMap ? t.blueInk : t.ink }}>Hartă</T>
+          </Press>
         </View>
         <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 10, height: 50, paddingLeft: 14, paddingRight: 4, borderRadius: 16, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
           <Icon name="search" size={16} color={t.ink2} />
@@ -95,6 +102,16 @@ export default function Rezultate() {
           </ScrollView>
         ) : null}
 
+        {onMap && all.length ? (
+          <View style={{ marginTop: 14 }}>
+            <PlacesMap
+              pins={all.slice(0, 10).map((p, i) => ({ id: p.id, lat: p.real.lat, lon: p.real.lon, name: p.name, sub: p.title + (p.price ? ' · ~' + p.price + ' lei' : ''), bg: p.bg, fg: p.fg, n: i + 1, hot: items.includes(p) }))}
+              origin={{ ...APP.origin(), label: APP.zoneName() }}
+              onPick={pick}
+            />
+            <Muted style={{ marginTop: 6 }}>Primele 10 variante; cele mari sunt cele de mai jos. Hartă © OpenFreeMap, OpenStreetMap.</Muted>
+          </View>
+        ) : null}
         {items.length ? (
           <View style={{ marginTop: 14, gap: 10 }}>
             {items.map((p, i) => {
