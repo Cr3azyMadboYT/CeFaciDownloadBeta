@@ -35,6 +35,8 @@ it('keeps every rule of the database', async () => {
   await expectFail('taken username', () => as('eve', `select * from complete_signup('bob', 'Eva', '2000-01-01')`));
   eq('username stored lower', (await as('ana', `select username from profiles where id = $1`, [U.ana])).rows[0].username, 'ana.p');
   eq('available', (await as('ana', `select username_available('bob') a`)).rows[0].a, false);
+  eq('dash allowed', (await as('ana', `select username_available('ana-maria_1.x') a`)).rows[0].a, true);
+  eq('other signs refused', (await as('ana', `select username_available('ana+maria') a`)).rows[0].a, false);
   
   // privacy
   eq('cannot see strangers', (await as('ana', `select count(*)::int n from profiles`)).rows[0].n, 1);

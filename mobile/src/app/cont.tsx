@@ -17,7 +17,7 @@ import { F, useTheme } from '../ui/theme';
 
 const STEPS = ['start', 'name', 'zone', 'likes', 'style', 'picks', 'friends', 'done'] as const;
 type Step = (typeof STEPS)[number] | 'email';
-const clean = (x: string) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9._]/g, '').slice(0, 20);
+const clean = (x: string) => String(x || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9._-]/g, '').slice(0, 20);
 
 /** Steps slide in from the right, like the design's `.scr`. */
 function Slide({ k, children }: { k: string; children: ReactNode }) {
