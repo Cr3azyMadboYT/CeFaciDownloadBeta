@@ -160,6 +160,14 @@ Are un canvas separat, „CeFaci Admin — panoul aplicației”, cu un demo con
 - **Verificarea notelor:** diferențele, încrederea pe localuri, auditul cu Plus suspendat.
 - **Deconturi:** cât plătim sau încasăm de la fiecare local, cu decontul reținut în timpul auditului și export pentru contabil.
 
+**Locurile din aplicație (decizie Cornel, 06.10: „să pot primi cererile de locații, să văd toate locațiile, să le modific și să adaug unele noi”):**
+- **Cereri de locuri noi:** tot ce trimit clienții din Explorează → „Lipsește un loc? Spune-ne” (acum în tabelul `reports`, cu `venue_id = 'nou'` și textul „LOC NOU: nume · unde · de ce”). Pentru fiecare: Aprobă (locul intră în aplicație), Cere detalii, Respinge. La aprobare completezi felul, poziția pe hartă, povestea și programul.
+- **Semnalări de la clienți:** „E închis”, „Program greșit”, „Telefon greșit”, „Preț greșit” (tot din `reports`), grupate pe local, cu un buton de corectare.
+- **Toate locurile:** lista completă (cele alese, cele bine cotate, cele scoase), cu căutare și filtre (zonă, fel, nivel, fără program, cu semnalări). Pentru fiecare se pot modifica numele, felul, poziția, programul, prețul, povestea, „când e lume” și vibe-ul. Mai poate fi ascuns sau scos și trecut ca ales.
+- **Adaugă un loc:** formular cu poziția pe hartă (pin), felul, programul pe zile, prețul și povestea.
+- **De ce trebuie schimbată și aplicația clientului:** acum locurile vin în APK (`src/data/venues.json`), deci o modificare ar cere APK nou. Pentru admin, locurile trebuie ținute în Supabase (`public.venues` există deja) plus modificările făcute de mână (de exemplu un tabel `venue_edits`). Aplicația ia la pornire ce s-a schimbat, ca o corectură din admin să ajungă la toți în câteva minute, fără APK nou.
+- **Când:** după ce e gata aplicația clientului, odată cu Business (același web app, cu cont de admin).
+
 ## Versiunea 1
 
 Ce lansăm întâi, ce lăsăm pe V2 și V3, cum funcționează motorul de recomandări, planul de lansare, ce rezolvăm legal și tehnic înainte, cum o construim în Claude Code și ce cifre urmărim sunt în documentul „CeFaci — Versiunea 1: ce lansăm întâi”.
