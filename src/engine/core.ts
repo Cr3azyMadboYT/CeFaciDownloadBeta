@@ -277,7 +277,9 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
 
   const complete = Math.min(1, [v.hours, v.website || v.phone, v.street, v.famous].filter(Boolean).length / 3);
   // a place chosen by hand, with its story, counts as complete
-  const calitate = 15 * (0.4 + 0.6 * (v.story ? 1 : complete)) * (v.brand ? 0.7 : 1) * (v.fast && !v.story ? 0.75 : 1);
+  const calitate = 15 * (0.4 + 0.6 * (v.story ? 1 : v.rated ? Math.max(0.8, complete) : complete)) * (v.brand ? 0.7 : 1) * (v.fast && !v.story ? 0.75 : 1);
+  // the second level comes after the chosen places: it fills a town or a late hour, it does not push them out
+  const second = v.rated && !v.pick ? -9 : 0;
   const aproape = 10 * Math.max(0, 1 - d / Math.max(ask.maxKm, 1));
   const nou = ctx.history.includes(v.id) ? 0 : 10;
   const said = ctx.liked?.includes(v.id) ? 6 : ctx.disliked?.includes(v.id) ? -15 : 0;
@@ -294,7 +296,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const crew = Math.max(-25, Math.min(12, tv * 5)) + Math.max(-8, Math.min(8, tk * 2));
 
   const parts = { gust, ocazie, calitate, aproape, nou, gasca };
-  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said + niche + wx.pts + crew;
+  const score = Object.values(parts).reduce((a, b) => a + b, 0) + said + niche + wx.pts + crew + second;
   const reasons: string[] = [];
   if (tv > 0) reasons.push('Gașcii ' + ctx.taste!.name + ' i-a plăcut aici');
   else if (tk >= 2) reasons.push('Gașca ' + ctx.taste!.name + ' iubește ' + (k.label === 'Bowling' || k.label === 'Biliard' ? k.label.toLowerCase() + 'ul' : k.label.toLowerCase()));
@@ -303,6 +305,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   if (hits.length) reasons.push('Se potrivește cu ' + hits.slice(0, 2).join(' și '));
   const liked = likes.find((l) => v.cuisines.includes(l) || kindKeyOf(v) === l);
   if (liked) reasons.push(LIKE_SAY[liked] ? 'Ai zis că îți plac ' + LIKE_SAY[liked] : 'Ai zis că îți place ' + (CUISINES[liked] ?? k.label).toLowerCase());
+  if (v.rated && !v.pick && reasons.length < 2) reasons.push('Bine cotat de oameni');
   if (open.known) reasons.push(open.label);
   reasons.push(d < 1 ? 'La ' + Math.round(d * 1000) + ' m' : 'La ' + d.toFixed(1).replace('.', ',') + ' km');
   if (n >= 3 && k.cat === 'activitate') reasons.push('Bun pentru ' + n + ' persoane');

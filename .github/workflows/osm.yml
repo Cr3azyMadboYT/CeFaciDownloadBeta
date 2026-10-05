@@ -90,7 +90,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           if [ "${{ steps.tests.outcome }}" != success ]; then git checkout -- src/data/venues.json; fi
           if [ "${{ steps.tests.outcome }}" != success ]; then git checkout -- src/data/gone.json 2>/dev/null || true; fi
-          git add data-raw/osm-bucuresti-ilfov.json src/data/venues.json src/data/gone.json
+          git add data-raw/osm-bucuresti-ilfov.json data-raw/candidates.json src/data/venues.json src/data/gone.json
           if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
           msg="Date OSM noi ($(date -u +%F))"
           [ "${{ steps.tests.outcome }}" = success ] || msg="$msg: doar descărcarea, testele au picat"

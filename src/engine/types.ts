@@ -35,6 +35,7 @@ export interface Venue {
   story?: string;      // why go (src/data/curated.json, researched 05.10): one or two sentences, real facts
   crowd?: string;      // when people are there ("vineri–duminică seara")
   pick?: boolean;      // chosen by hand for CeFaci (curated.json): only these are shown
+  rated?: boolean;     // not chosen by hand, but people rate it well on Google Maps (src/data/rated.json): after the chosen ones
   vibes?: Vibe[];      // researched vibes, instead of the kind's usual ones
   price?: number;      // researched price per person, lei
   minAge?: number;     // the place asks for ID at the door (OSM min_age)

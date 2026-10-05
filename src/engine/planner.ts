@@ -344,10 +344,14 @@ export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
   for (const p of plans) p.tip = cheaperTip(p, all, req, ctx);
 
   const notes: string[] = [];
+  // a small town: Bilu says it as it is, rather than send them far without a word
+  const close = all.filter((v) => km(ctx.origin, v) <= 5).length;
+  const farFirst = plans.length && plans.every((p) => km(ctx.origin, p.steps[0].v) > 5);
+  if (close < 12 && farFirst) notes.push((close === 0 ? 'Pe 5 km în jurul tău n-am încă locuri bune' : 'Pe 5 km în jurul tău am doar ' + (close === 1 ? 'un loc bun' : close + ' locuri bune')) + ', așa că planurile sunt puțin mai departe. Știi un loc bun pe aproape? Spune-mi în Explorează → „Lipsește un loc?”.');
   if (relaxed.includes('needs')) notes.push('N-am găsit nimic ' + [...(req0.outdoor ? ['cu terasă'] : []), ...(req0.needs ?? []).map((n) => 'cu ' + NEED_TEXT[n])].join(', ').replace('cu fără', 'fără') + ' deschis atunci: uite ce e deschis.');
   if (relaxed.includes('budget')) notes.push(req0.budgetMax === 0 ? 'Gratis nu e nimic deschis la ora asta: uite ce e mai ieftin.' : req0.budgetMin > 0 && req0.budgetMax === Infinity ? 'De la ' + req0.budgetMin + ' lei în sus nu e nimic deschis la ora asta: uite ce e.' : 'Cu ' + req0.budgetMax + ' lei de persoană nu iese nimic la ora asta: uite ce e cel mai aproape de buget.');
   if (relaxed.includes('near')) notes.push('Chiar lângă tine nu e nimic deschis atunci, așa că m-am uitat puțin mai departe.');
-  else if (relaxed.includes('far') || relaxed.includes('wider')) notes.push('Prin apropiere n-am găsit destule la ora asta, așa că m-am uitat până la ' + req.maxKm + ' km.');
+  else if ((relaxed.includes('far') || relaxed.includes('wider')) && !(close < 12 && farFirst)) notes.push('Prin apropiere n-am găsit destule la ora asta, așa că m-am uitat până la ' + req.maxKm + ' km.');
   const lone = plans.filter((p) => p.id.startsWith('loc-')).length;
   const linked = plans.length - lone;
   if (req.mode === 'seara' && lone) notes.push(!linked ? 'La ora asta nu se leagă o ieșire cu mai multe locuri: îți dau locuri bune, câte unul.' : 'Doar ' + (linked === 1 ? 'o ieșire' : linked + ' ieșiri') + ' cu mai multe locuri se leagă la ora asta; ' + (lone === 1 ? 'al treilea plan e un singur loc.' : 'restul sunt câte un singur loc.'));

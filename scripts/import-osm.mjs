@@ -86,8 +86,15 @@ for (const e of els) {
   if (key === 'fast_food') v.fast = true;
   out.push(v);
 }
-// every place still on the map and open (closed ones were left out above), before the hand-picked list narrows it
+// every place still on the map and open (closed ones were left out above), before the hand-picked list narrows it;
+// kept in data-raw/candidates.json for scripts/rate-places.mjs (the places not chosen by hand, checked on Google)
 const onMap = new Set(out.map((v) => v.id));
+fs.writeFileSync(new URL('../data-raw/candidates.json', import.meta.url), JSON.stringify(out.map((v) => ({ id: v.id, name: v.name, k: v.k, cat: v.cat, kind: v.kind, lat: v.lat, lon: v.lon, zone: v.zone, ...(v.brand ? { brand: v.brand } : {}) }))));
+// the second level (decision Cornel, 05.10: "nu sunt cam puține locuri?"): places not chosen by hand that people rate
+// well on Google Maps (src/data/rated.json, only our verdict per id); they come after the chosen ones, so they fill
+// the towns and the late hours where the chosen ones are few
+const ratedFile = new URL('../src/data/rated.json', import.meta.url);
+const rated = new Set(fs.existsSync(ratedFile) ? JSON.parse(fs.readFileSync(ratedFile, 'utf8')).good ?? [] : []);
 // The hand-picked list (src/data/curated.json, scripts/curate.mjs, decision Cornel 05.10): only the map's places the
 // research kept stay (with their story), and the good places the map lacks are added. Without the file, all stay.
 const curatedFile = new URL('../src/data/curated.json', import.meta.url);
@@ -116,6 +123,7 @@ if (curated) {
   let dropped = 0;
   for (let i = out.length - 1; i >= 0; i--) {
     const f = picked[out[i].id];
+    if (!f && rated.has(out[i].id)) { out[i].rated = true; continue; }
     if (!f) { out.splice(i, 1); dropped++; continue; }
     const v = out[i];
     v.pick = true;
@@ -149,6 +157,7 @@ if (curated) {
     added++;
   }
   skipped.notPicked = dropped;
+  skipped.rated = out.filter((v) => v.rated).length;
   skipped.addedByHand = added;
 }
 // pools inside an aqua park (Therme maps each one) are the aqua park itself

@@ -13,17 +13,18 @@ const all = venues as Venue[];
 const cur = (fs.existsSync('src/data/curated.json') ? JSON.parse(fs.readFileSync('src/data/curated.json', 'utf8')) : null) as null | { keep: Record<string, { story?: string }>; add: { id: string; k: string; lat: number; lon: number; story?: string }[]; drop: Record<string, string> };
 
 describe.skipIf(!cur)('localurile alese', () => {
-  it('în aplicație sunt doar locurile alese, fiecare cu felul lui cunoscut', () => {
+  it('în aplicație sunt doar locurile alese (și cele bine cotate pe Google, nivelul 2), fiecare cu felul lui cunoscut', () => {
     for (const v of all) {
-      expect(v.pick, v.name).toBe(true);
+      expect(v.pick || v.rated, v.name).toBe(true);
       expect(KINDS[v.k], v.name + ' ' + v.k).toBeTruthy();
       expect(KINDS[v.k].cat, v.name).toBe(v.cat);
     }
   });
   it('aproape toate au povestea lor, iar parcurile sunt cele în care chiar merge lumea', () => {
-    const withStory = all.filter((v) => v.story && v.story.length > 30).length;
-    expect(withStory / all.length).toBeGreaterThan(0.8);
-    const parks = all.filter((v) => v.cat === 'natura');
+    const picks = all.filter((v) => v.pick);
+    const withStory = picks.filter((v) => v.story && v.story.length > 30).length;
+    expect(withStory / picks.length).toBeGreaterThan(0.8);
+    const parks = picks.filter((v) => v.cat === 'natura');
     expect(parks.length).toBeGreaterThan(10);
     for (const p of parks) expect(p.story, p.name).toBeTruthy();
   });
@@ -48,5 +49,16 @@ describe.skipIf(!cur)('localurile alese', () => {
       expect(KINDS[k], k).toBeTruthy();
       expect(KINDS[k].cat, k).toBe(cat);
     }
+  });
+  it('nivelul 2 vine după cele alese: un loc bine cotat nu trece peste unul ales la fel de bun', async () => {
+    const { scoreVenue } = await import('../src/engine/core');
+    const at = new Date(2026, 9, 9, 20);
+    const ask = { who: '2' as const, when: 'acum' as const, budget: Infinity, maxKm: 10, vibes: [], at };
+    const ctxOf = (v: Venue) => ({ prefs: { zone: 'centru', likes: [] }, origin: v, now: at, history: [] }) as never;
+    const v = all.find((x) => x.pick && x.k === 'restaurant' && scoreVenue(x, ask, ctxOf(x)))!;
+    const a = scoreVenue(v, ask, ctxOf(v))!;
+    const b = scoreVenue({ ...v, id: 'x', pick: false, rated: true, story: undefined }, ask, ctxOf(v))!;
+    expect(b.score).toBeLessThan(a.score);
+    expect(b.reasons).toContain('Bine cotat de oameni');
   });
 });

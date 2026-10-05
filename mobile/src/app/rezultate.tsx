@@ -17,6 +17,7 @@ import { firstDraft, runPlans } from '../lib/planAsk';
 import { PlacesMap } from '../ui/PlacesMap';
 import { useWeatherVersion } from '../lib/weather';
 import { Doodles } from '../ui/Doodles';
+import { MissingPlace } from '../ui/MissingPlace';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
@@ -41,6 +42,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
   const [sheet, setSheet] = useState(false);
   const [vote, setVote] = useState(false);
   const [onMap, setOnMap] = useState(false);
+  const [missing, setMissing] = useState(false);
   const typed = useDeferredValue(sq); // the list follows the typing without slowing the keyboard
   const wxv = useWeatherVersion();
   const all = useMemo(() => listFor(f, typed), [f, typed, prefs, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -186,6 +188,10 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
             ) : null}
           </View>
         )}
+        <Press onPress={() => setMissing(true)} accessibilityLabel="Lipsește un loc? Spune-ne" style={{ marginTop: 14, minHeight: 48, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <Icon name="pin" size={16} color={t.blueInk} />
+          <T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>{searching && !all.length ? 'Nu-l avem? Spune-ne de el' : 'Lipsește un loc? Spune-ne'}</T>
+        </Press>
       </ScrollView>
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: inTab ? 12 : Math.max(ins.bottom, 12) + 14, flexDirection: 'row', gap: 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
         <Big style={{ flex: 1 }} label="Trimite gășcii la vot" disabled={!items.length} icon={<Icon name="users" color={items.length ? '#FFFFFF' : t.ink2} />} onPress={() => setVote(true)} />
@@ -196,6 +202,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
       </View>
       <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); }} />
       <VoteStart open={vote} onClose={() => setVote(false)} places={items} f={f} />
+      <MissingPlace open={missing} onClose={() => setMissing(false)} where={searching && !all.length ? undefined : APP.zoneName() === 'Lângă tine' ? undefined : APP.zoneName()} />
       <TopShade />
     </View>
   );
