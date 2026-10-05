@@ -18,6 +18,7 @@ import { onReminderTap } from '../lib/remind';
 import { watchNavBar } from '../../modules/cefaci-insets';
 import { refreshNavFit } from '../ui/insets';
 import { E2E } from '../lib/e2e';
+import '../lib/places'; // the places changed from Admin (Supabase) come in at start
 import { E2EProbe } from '../ui/E2EProbe';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});

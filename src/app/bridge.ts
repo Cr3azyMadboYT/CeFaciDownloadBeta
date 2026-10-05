@@ -1,6 +1,8 @@
 // The bridge between the design boards' logic and the real app: real venues, the engine, saved preferences.
 import venuesJson from '../data/venues.json';
 import goneJson from '../data/gone.json';
+import venuesMeta from '../data/venues-meta.json';
+import { addRows, mergePlaces, type PlaceCache, type PlaceRow } from './places';
 import { KINDS, ZONES } from '../engine/catalog';
 import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, parseQuery, priceOf, recommend, search, targetTime, vibesOf, zoneById, type Need } from '../engine/core';
 import type { Ask, Ctx, Scored, Taste, Venue, When, Who } from '../engine/types';
@@ -9,10 +11,19 @@ import { evenings, type TemplateId } from '../engine/evening';
 import { altStep, makePlans, planForPlace, previewNames, suggest, swapStep, vibeCounts, type MadePlan, type PlanReq, type PlanSet } from '../engine/planner';
 import { addDays, dayFromIso, eveningOf, isoDay, momentOf, whenWords } from '../engine/time';
 
-const VENUES = venuesJson as Venue[];
+// the places: the copy in the app, with the changes from Supabase (Admin) kept on the phone put over it (places.ts)
+const BUNDLED = venuesJson as Venue[];
+const PLACES_KEY = 'cefaci.places';
+const BUILT_AT = (venuesMeta as { builtAt: string }).builtAt;
+function readPlaceCache(): PlaceCache {
+  try { const c = JSON.parse(localStorage.getItem(PLACES_KEY) || 'null') as PlaceCache | null; if (c && c.rows) return c; } catch { /* storage blocked */ }
+  return { at: '', rows: {} };
+}
+let placeCache = readPlaceCache();
+let VENUES = mergePlaces(BUNDLED, Object.values(placeCache.rows));
 // places that left the map (closed): never recommended, but old plans and stamps still find them
 const GONE = goneJson as Venue[];
-const BY_ID = new Map([...GONE, ...VENUES].map((v) => [v.id, v]));
+const BY_ID = new Map([...GONE, ...BUNDLED, ...VENUES].map((v) => [v.id, v]));
 
 /** Everything the sign-up asked, kept on the phone (accounts with Supabase come in etapa 2). */
 export interface Prefs {
@@ -576,7 +587,20 @@ export const APP = {
     if (vibes.length) { next.vibes.push(...vibes); chips.push(...vibes); }
     return { ask: next, chips, slot: { evening, hour } };
   },
-  count: VENUES.length,
+  get count() { return VENUES.length; },
+  /** Where to start asking Supabase for changes: after the last change kept, else (first time) everything changed by
+   *  hand plus what changed after the app's copy was made. */
+  placesSince(): { since: string; first: boolean; builtAt: string } { return { since: placeCache.at || BUILT_AT, first: !placeCache.at, builtAt: BUILT_AT }; },
+  /** New rows from public.venues: kept on the phone and put over the places at once. */
+  applyPlaces(rows: PlaceRow[]) {
+    if (!rows.length) { if (!placeCache.at) { placeCache = { at: BUILT_AT, rows: {} }; try { localStorage.setItem(PLACES_KEY, JSON.stringify(placeCache)); } catch { /* storage blocked */ } } return 0; }
+    placeCache = addRows(placeCache.at ? placeCache : { at: BUILT_AT, rows: {} }, rows);
+    try { localStorage.setItem(PLACES_KEY, JSON.stringify(placeCache)); } catch { /* storage blocked */ }
+    VENUES = mergePlaces(BUNDLED, Object.values(placeCache.rows));
+    for (const v of VENUES) BY_ID.set(v.id, v);
+    this.rebuild();
+    return rows.length;
+  },
   todayText() {
     const days = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
     const months = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];

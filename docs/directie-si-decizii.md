@@ -167,6 +167,17 @@ Are un canvas separat, „CeFaci Admin — panoul aplicației”, cu un demo con
 - **Adaugă un loc:** formular cu poziția pe hartă (pin), felul, programul pe zile, prețul și povestea.
 - **De ce trebuie schimbată și aplicația clientului:** acum locurile vin în APK (`src/data/venues.json`), deci o modificare ar cere APK nou. Pentru admin, locurile trebuie ținute în Supabase (`public.venues` există deja) plus modificările făcute de mână (de exemplu un tabel `venue_edits`). Aplicația ia la pornire ce s-a schimbat, ca o corectură din admin să ajungă la toți în câteva minute, fără APK nou.
 - **Când:** după ce e gata aplicația clientului, odată cu Business (același web app, cu cont de admin).
+- **Locurile sunt deja în Supabase (06.10):** `public.venues` are tot locul (`data` din import, `edit` cu ce s-a schimbat de mână, `status` on/hidden/gone). Aplicația are în ea copia de la build și ia la pornire doar ce s-a schimbat (`src/app/places.ts`, `mobile/src/lib/places.ts`). Importul hărții (`import_places`) nu atinge niciodată modificările de mână, locurile ascunse sau pe cele adăugate din Admin. Fiecare schimbare intră în jurnal (`venue_log`: cine, ce, înainte, după, de ce).
+- **Admin mai amănunțit (Cornel, 06.10):** pe lângă locuri, cereri și semnalări: echipa și rolurile, jurnalul a tot ce s-a schimbat (cu „anulează”), utilizatorii (căutare, blocare, conturi șterse), localurile partenere și cererile lor, dispute, deconturi, statistici (câți oameni, ce caută, ce zone au puține locuri).
+- **Rolurile (ca viitorii angajați să nu aibă puteri de fondator):**
+  - **fondator:** tot, inclusiv echipa și banii.
+  - **admin:** locuri, cereri, semnalări, parteneri, dispute. Adaugă în echipă doar editori, moderatori și suport și nu poate atinge un fondator sau alt admin.
+  - **editor:** locuri (modifică, adaugă, ascunde) și cererile de locuri noi.
+  - **moderator:** semnalări și cereri. Ascunde un loc, dar nu-l modifică.
+  - **suport:** vede, nu schimbă nimic.
+  - **contabil:** deconturi și plăți.
+
+  Nimeni nu-și schimbă singur rolul. Regulile sunt în baza de date (`private.can`, `staff_set`, `staff_remove`), deci nu se pot ocoli din aplicație. Sunt testate în `tests/db.test.ts`.
 
 ## Versiunea 1
 

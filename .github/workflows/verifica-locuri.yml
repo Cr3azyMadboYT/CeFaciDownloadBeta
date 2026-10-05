@@ -101,7 +101,7 @@ jobs:
             node scripts/import-osm.mjs data-raw/osm-bucuresti-ilfov.json
             TZ=Europe/Bucharest node scripts/build-hours.mjs
             npx vitest run > /tmp/tests.log 2>&1 || { tail -40 /tmp/tests.log; echo "**Testele au picat după actualizare.** Nu s-a salvat." >> "$GITHUB_STEP_SUMMARY"; exit 1; }
-            git add src/data/checked.json src/data/venues.json src/data/gone.json docs/verificare-locuri.md data-raw/candidates.json
+            git add src/data/checked.json src/data/venues.json src/data/venues-meta.json src/data/gone.json docs/verificare-locuri.md data-raw/candidates.json
             git add src/data/rated.json docs/locuri-bine-cotate.md 2>/dev/null || true
             if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
             git commit -q -m "Locuri verificate pe Google Maps ($(date -u +%F))"
@@ -109,6 +109,12 @@ jobs:
             sleep 15
           done
           exit 1
+      - name: Locurile în Supabase
+        if: steps.tests.outcome == 'success'
+        env:
+          SUPABASE_URL: https://vqrmwuarjjntusfbqprx.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: node scripts/push-venues.mjs
       - name: Testele au picat
         if: env.skip != '1' && steps.tests.outcome != 'success'
         run: echo "**Testele au picat cu locurile scoase.** Datele nu s-au salvat; lista e în Artifacts." >> "$GITHUB_STEP_SUMMARY"

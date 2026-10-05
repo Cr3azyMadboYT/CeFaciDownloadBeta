@@ -164,6 +164,44 @@ it('keeps every rule of the database', async () => {
   const bobPriv = (await as('bob', `select birth_date::text b, plus_trial_started_at t from profile_private`)).rows[0];
   eq('birth date locked', bobPriv.b, '1999-05-05'); eq('trial date locked', String(bobPriv.t), String(t1));
 
+  // places in Supabase, changed from Admin, with roles (decision Cornel, 06.10)
+  await q(`insert into public.staff (user_id, role) values ($1, 'fondator')`, [U.ana]);
+  await q(`select import_places($1::jsonb, now() - interval '1 day')`, [JSON.stringify([
+    { id: 'n1', name: 'Bar Unu', cat: 'bar', k: 'bar', lat: 44.43, lon: 26.1, pick: true, story: 'De ce merită.' },
+    { id: 'n2', name: 'Cafe Doi', cat: 'cafea', k: 'cafe', lat: 44.44, lon: 26.11, rated: true },
+  ])]);
+  eq('everyone reads places', (await as('bob', `select count(*)::int n from venues where status = 'on'`)).rows[0].n >= 2, true);
+  await expectFail('a client cannot change a place', () => as('bob', `select admin_place_save('n1', '{"name":"Hack"}')`), /Nu ai voie/);
+  await expectFail('a client cannot write the table', () => as('bob', `update venues set name = 'Hack' where id = 'n1' returning 1`).then((r) => { if (!r.rows.length) throw new Error('no rows'); }));
+  await expectFail('a client cannot make himself staff', () => as('bob', `select staff_set($1, 'fondator')`, [U.bob]), /Nu-ți poți|Nu ai voie/);
+  await expectOk('the founder makes bob an editor', () => as('ana', `select staff_set($1, 'editor')`, [U.bob]));
+  await expectFail('an editor cannot add staff', () => as('bob', `select staff_set($1, 'admin')`, [U.teen]), /Nu ai voie/);
+  await expectOk('the editor changes the story and the hours', () => as('bob', `select admin_place_save('n1', '{"story":"Altă poveste.","hours":"Mo-Su 18:00-02:00","secret":"x"}', 'corectat după telefon')`));
+  const n1 = (await q(`select data || edit m, edit from venues where id = 'n1'`)).rows[0];
+  eq('the change sits over the map data', [n1.m.story, n1.m.hours, n1.m.name], ['Altă poveste.', 'Mo-Su 18:00-02:00', 'Bar Unu']);
+  eq('only known fields are kept', n1.edit.secret, undefined);
+  eq('every change is logged', (await as('ana', `select count(*)::int n from venue_log where venue_id = 'n1'`)).rows[0].n, 1);
+  await q(`select import_places($1::jsonb, now())`, [JSON.stringify([{ id: 'n1', name: 'Bar Unu Nou', cat: 'bar', k: 'bar', lat: 44.43, lon: 26.1, pick: true, story: 'De ce merită.' }])]);
+  const after = (await q(`select (data || edit)->>'story' s, (data || edit)->>'name' nm, status from venues where id = 'n1'`)).rows[0];
+  eq('a new import keeps the change by hand', [after.s, after.nm], ['Altă poveste.', 'Bar Unu Nou']);
+  eq('a place gone from the map is marked gone', (await q(`select status from venues where id = 'n2'`)).rows[0].status, 'gone');
+  const nid = (await as('bob', `select admin_place_add('{"name":"Calul Bălan","k":"promenade","cat":"natura","lat":44.5657,"lon":25.9261,"story":"Pe malul lacului."}', 'din Lipsește un loc') id`)).rows[0].id;
+  eq('a place added by hand', (await q(`select source, status from venues where id = $1`, [nid])).rows[0], { source: 'admin', status: 'on' });
+  await q(`select import_places('[]'::jsonb, now())`);
+  eq('the import never removes a place added by hand', (await q(`select status from venues where id = $1`, [nid])).rows[0].status, 'on');
+  await expectOk('the founder makes cris a moderator', () => as('ana', `select staff_set($1, 'moderator')`, [U.cris]));
+  await expectFail('a moderator cannot change a place', () => as('cris', `select admin_place_save('n1', '{"name":"X"}')`), /Nu ai voie/);
+  await expectOk('a moderator hides a place', () => as('cris', `select admin_place_status('n1', true, 'închis definitiv')`));
+  eq('hidden', (await q(`select status from venues where id = 'n1'`)).rows[0].status, 'hidden');
+  await q(`select import_places($1::jsonb, now())`, [JSON.stringify([{ id: 'n1', name: 'Bar Unu Nou', cat: 'bar', k: 'bar', lat: 44.43, lon: 26.1 }])]);
+  eq('a new import keeps it hidden', (await q(`select status from venues where id = 'n1'`)).rows[0].status, 'hidden');
+  await expectOk('bob reports a missing place', () => as('bob', `insert into reports (venue_id, kind, note) values ('nou', 'altceva', 'LOC NOU: X · Buftea')`));
+  eq('a client does not see the reports', (await as('teen', `select count(*)::int n from reports`)).rows[0].n, 0);
+  eq('the moderator sees them', (await as('cris', `select count(*)::int n from reports`)).rows[0].n >= 1, true);
+  await expectFail('an admin cannot touch the founder', () => (async () => { await q(`update staff set role = 'admin' where user_id = $1`, [U.bob]); return as('bob', `select staff_remove($1)`, [U.ana]); })(), /Nu ai voie/);
+  await expectFail('nobody changes their own role', () => as('ana', `select staff_set($1, 'suport')`, [U.ana]), /singur/);
+  await q(`delete from staff where user_id in ($1, $2)`, [U.bob, U.cris]);
+
     // account deletion
   await expectOk('delete account', () => as('cris', `select delete_my_account()`));
   eq('cris gone', (await q(`select count(*)::int n from profiles where id = $1`, [U.cris])).rows[0].n, 0);

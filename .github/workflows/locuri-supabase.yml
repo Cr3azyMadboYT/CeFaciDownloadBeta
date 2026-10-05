@@ -1,0 +1,33 @@
+# Sends the places from the repo (src/data/venues.json) to Supabase's public.venues, where Admin changes them and the
+# app takes the changes from (decision Cornel, 06.10). Runs by hand (Actions → "Locurile în Supabase" → Run
+# workflow); the OSM and Google workflows do the same after every update. Needs the repository secret
+# SUPABASE_SERVICE_ROLE_KEY (Supabase → Project Settings → API → service_role) and the database migration
+# 20261006010000_cefaci_locuri_admin.sql applied.
+name: Locurile în Supabase
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: osm-data
+  cancel-in-progress: false
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Trimite locurile
+        env:
+          SUPABASE_URL: https://vqrmwuarjjntusfbqprx.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "Lipsește secretul SUPABASE_SERVICE_ROLE_KEY." >> "$GITHUB_STEP_SUMMARY"; exit 1; fi
+          node scripts/push-venues.mjs | tee -a "$GITHUB_STEP_SUMMARY"

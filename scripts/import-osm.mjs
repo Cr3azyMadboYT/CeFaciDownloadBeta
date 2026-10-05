@@ -178,5 +178,7 @@ const goneIds = new Set(gone.map((v) => v.id));
 for (const v of before) if (!ids.has(v.id) && !goneIds.has(v.id) && !unpicked(v.id)) { const { wk, hours, ...rest } = v; void wk; void hours; gone.push({ ...rest, gone: today }); }
 fs.writeFileSync(goneFile, JSON.stringify(gone));
 fs.writeFileSync(outFile, JSON.stringify(out));
+// when this copy was made: the app asks Supabase only for what changed after it (src/app/places.ts)
+fs.writeFileSync(new URL('../src/data/venues-meta.json', import.meta.url), JSON.stringify({ builtAt: new Date().toISOString() }));
 const byCat = out.reduce((m, v) => ((m[v.cat] = (m[v.cat] || 0) + 1), m), {});
 console.log(JSON.stringify({ in: els.length, kept: out.length, gone: gone.length, skipped, byCat, withHours: out.filter((v) => v.hours).length, bytes: fs.statSync(outFile).size }, null, 1));

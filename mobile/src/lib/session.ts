@@ -48,6 +48,8 @@ let snap: Snap = {
 };
 const subs = new Set<() => void>();
 const emit = () => subs.forEach((f) => f());
+/** The places changed (Supabase, places.ts): screens that read them draw again. */
+export function notify() { snap = { ...snap }; emit(); }
 const subscribe = (f: () => void) => { subs.add(f); return () => { subs.delete(f); }; };
 export const useApp = <S,>(pick: (s: Snap) => S): S => useSyncExternalStore(subscribe, () => pick(snap), () => pick(snap));
 export const getApp = () => snap;
