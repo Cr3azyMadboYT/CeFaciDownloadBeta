@@ -18,9 +18,14 @@ on:
         type: boolean
         required: false
         default: false
+      from_run:
+        description: 'Ia rezultatul unei rulări de dinainte (numărul ei), fără să mai întrebe Google'
+        required: false
+        default: ''
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: osm-data
@@ -37,7 +42,17 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Rezultatul de dinainte
+        if: inputs.from_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.from_run }}
+          github-token: ${{ github.token }}
+          pattern: verificare-*
+          merge-multiple: true
+          path: .
       - name: Verificarea pe Google Maps
+        if: inputs.from_run == ''
         env:
           PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
         run: |
@@ -45,7 +60,7 @@ jobs:
           node scripts/verify-places.mjs ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }}
           cat docs/verificare-locuri.md >> "$GITHUB_STEP_SUMMARY"
       - name: Locurile bine cotate (nivelul 2)
-        if: env.skip != '1' && inputs.rate
+        if: env.skip != '1' && inputs.rate && inputs.from_run == ''
         env:
           PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
         run: |
@@ -75,11 +90,24 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/data/checked.json src/data/venues.json src/data/gone.json docs/verificare-locuri.md data-raw/candidates.json
-          git add src/data/rated.json docs/locuri-bine-cotate.md 2>/dev/null || true
-          if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
-          git commit -m "Locuri verificate pe Google Maps ($(date -u +%F)): scoase cele închise"
-          for i in 1 2 3; do git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0; sleep 10; done
+          # the branch may have moved meanwhile (the OSM update rewrites the same files): start from the newest copy,
+          # put back only our verdicts, and make the places again from them
+          mkdir -p /tmp/keep && cp src/data/checked.json /tmp/keep/ && cp docs/verificare-locuri.md /tmp/keep/ 2>/dev/null || true
+          cp src/data/rated.json docs/locuri-bine-cotate.md /tmp/keep/ 2>/dev/null || true
+          for i in 1 2 3; do
+            git fetch -q origin "${GITHUB_REF_NAME}" && git reset -q --hard "origin/${GITHUB_REF_NAME}"
+            cp /tmp/keep/checked.json src/data/; cp /tmp/keep/verificare-locuri.md docs/ 2>/dev/null || true
+            [ -f /tmp/keep/rated.json ] && cp /tmp/keep/rated.json src/data/ && cp /tmp/keep/locuri-bine-cotate.md docs/ 2>/dev/null || true
+            node scripts/import-osm.mjs data-raw/osm-bucuresti-ilfov.json
+            TZ=Europe/Bucharest node scripts/build-hours.mjs
+            npx vitest run > /tmp/tests.log 2>&1 || { tail -40 /tmp/tests.log; echo "**Testele au picat după actualizare.** Nu s-a salvat." >> "$GITHUB_STEP_SUMMARY"; exit 1; }
+            git add src/data/checked.json src/data/venues.json src/data/gone.json docs/verificare-locuri.md data-raw/candidates.json
+            git add src/data/rated.json docs/locuri-bine-cotate.md 2>/dev/null || true
+            if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
+            git commit -q -m "Locuri verificate pe Google Maps ($(date -u +%F))"
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep 15
+          done
           exit 1
       - name: Testele au picat
         if: env.skip != '1' && steps.tests.outcome != 'success'
