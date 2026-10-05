@@ -1,8 +1,9 @@
 // The bottom bar from the design: Acasă, Explorează, Planuri, Profil, Plus (blurred while Plus is a closed gift).
 import { Tabs } from 'expo-router';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from '../../ui/insets';
+import { useBarBottom } from '../../ui/insets';
 import type { ComponentProps } from 'react';
+import { E2E } from '../../lib/e2e';
 import { useApp } from '../../lib/session';
 import { Icon } from '../../ui/Icon';
 import { PlusNotice } from '../../ui/PlusNotice';
@@ -20,14 +21,16 @@ const TAB_ICON: Record<string, string> = {
 };
 type BottomTabBarProps = Parameters<NonNullable<ComponentProps<typeof Tabs>['tabBar']>>[0];
 const LABEL: Record<string, string> = { acasa: 'Acasă', exploreaza: 'Explorează', planuri: 'Planuri', profil: 'Profil', plus: 'Plus' };
+// the test build writes where the bar ended up, next to where the phone's buttons start
+const logBar = E2E ? (m: { y: number; h: number; navTop: number; lift: number }) => console.log('E2E tabbar y=' + m.y.toFixed(0) + ' h=' + m.h.toFixed(0) + ' navTop=' + m.navTop.toFixed(0) + ' lift=' + m.lift) : undefined;
 
 export function TabBar({ state, navigation }: BottomTabBarProps) {
   const { t } = useTheme();
-  const ins = useSafeAreaInsets();
+  const bar = useBarBottom(logBar);
   const plus = useApp((s) => s.board.plus);
   const veiled = !plus || plus === 'locked' || plus === 'off';
   return (
-    <View style={{ flexDirection: 'row', paddingTop: 8, paddingHorizontal: 12, paddingBottom: Math.max(ins.bottom, 8) + 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
+    <View ref={bar.ref} onLayout={bar.onLayout} collapsable={false} style={{ flexDirection: 'row', paddingTop: 8, paddingHorizontal: 12, paddingBottom: Math.max(bar.bottom, 8) + 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
       {state.routes.map((r, i) => {
         const on = state.index === i;
         const isPlus = r.name === 'plus';

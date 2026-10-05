@@ -47,7 +47,7 @@ function StepScreen({ k, onBack, children, foot }: { k: number; onBack: () => vo
         </View>
         <Lbl style={{ fontFamily: F.b }}>{Math.max(1, k) + ' din 7'}</Lbl>
       </View>
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: 20 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: foot ? 20 : ins.bottom + 20 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         {children}
       </ScrollView>
       {foot ? <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: Math.max(ins.bottom, 12) + 18, backgroundColor: t.bgCont, borderTopWidth: 1, borderTopColor: t.line }}>{foot}</View> : null}

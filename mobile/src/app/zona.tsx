@@ -20,7 +20,8 @@ export default function Zona() {
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
   const prefs = useApp((s) => s.prefs) as Prefs;
-  const start = useMemo<Home>(() => (APP.hasHere() && prefs.here ? APP.homeAt(prefs.here) : prefs.home ?? APP.homeAt(APP.origin())), []); // eslint-disable-line react-hooks/exhaustive-deps
+  // where they set off from now: the phone's location, the place chosen before, or (accounts from before 04.10) the zone
+  const start = useMemo<Home>(() => (APP.hasHere() && prefs.here ? APP.homeAt(prefs.here) : prefs.home ?? APP.homeAt(APP.origin(), APP.zoneName())), []); // eslint-disable-line react-hooks/exhaustive-deps
   const [home, setHome] = useState<Home>(start);
   const [live, setLive] = useState(!!prefs.live && APP.hasHere());
   const [km, setKm] = useState(APP.radiusKm());

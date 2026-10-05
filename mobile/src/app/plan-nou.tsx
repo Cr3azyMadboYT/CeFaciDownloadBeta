@@ -74,7 +74,7 @@ export default function PlanNou() {
     <Press onPress={onPress} accessibilityState={{ selected: on }} accessibilityLabel={label + ', ' + sub + (wx ? ', ' + wx.temp + ' grade, ' + wx.text : '')}
       style={{ width: '23.5%', minHeight: 104, paddingVertical: 8, borderRadius: 18, borderWidth: 2, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center', gap: 2 }}>
       {badge ? <View style={{ position: 'absolute', top: -10, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 99, backgroundColor: '#FFD43B' }}><T style={{ fontFamily: F.b, fontSize: 10, color: '#0E1440' }}>{badge}</T></View> : null}
-      <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 14, color: on ? t.bg : t.ink }}>{label}</T>
+      <T numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75} style={{ paddingHorizontal: 4, fontFamily: F.b, fontSize: 14, color: on ? t.bg : t.ink }}>{label}</T>
       <T style={{ fontFamily: F.m, fontSize: 11, color: on ? t.bg : t.ink2 }}>{sub}</T>
       {wx ? <><Icon name={wxIcon(wx.icon)} size={22} color={on ? '#FFD43B' : wx.wet ? t.blue : '#E0A800'} /><T style={{ fontFamily: F.display, fontSize: 16, color: on ? t.bg : t.ink }}>{wx.temp + '°'}</T></> : <T style={{ fontFamily: F.m, fontSize: 11, color: on ? t.bg : t.ink3 }}>fără prognoză</T>}
     </Press>

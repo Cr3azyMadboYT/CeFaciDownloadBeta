@@ -185,7 +185,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
           </View>
         )}
       </ScrollView>
-      <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: Math.max(ins.bottom, 12) + 14, flexDirection: 'row', gap: 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
+      <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: inTab ? 12 : Math.max(ins.bottom, 12) + 14, flexDirection: 'row', gap: 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
         <Big style={{ flex: 1 }} label="Trimite gășcii la vot" disabled={!items.length} icon={<Icon name="users" color={items.length ? '#FFFFFF' : t.ink2} />} onPress={() => setVote(true)} />
         <Press onPress={() => setPage(page + 1)} disabled={all.length <= 3}
           style={{ height: 56, paddingHorizontal: 16, borderRadius: 18, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1, justifyContent: 'center', opacity: all.length <= 3 ? 0.5 : 1 }}>

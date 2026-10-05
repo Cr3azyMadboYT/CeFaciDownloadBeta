@@ -29,7 +29,7 @@ const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
   day: { word: 'astăzi?', flip: ['…Mogoșoaia?', '…un escape room?', '…un film?', '…jocuri de societate?', '…o pizza la cuptor?'] },
   dusk: { word: 'în seara asta?', flip: ['…poate un bowling?', '…sau karaoke?', '…un film bun?', '…un escape room?', '…o pizza la cuptor?', '…padel cu gașca?'] },
-  night: { word: 'în seara asta?', flip: ['…un club?', '…karaoke?', '…cocktailuri pe terasă?', '…stand-up?', '…un film târziu?'] },
+  night: { word: 'în seara asta?', flip: ['…un club?', '…karaoke?', '…un cocktail bun?', '…biliard sau darts?', '…o bere cu gașca?'] },
   late: { word: 'acum?', flip: ['…un club?', '…ceva deschis non-stop?', '…karaoke?', '…o plimbare cu gașca?'] },
 };
 const MOODS: [string, keyof typeof I, string, string, string][] = [
@@ -220,7 +220,7 @@ export default function Acasa() {
               <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Bilu size={34} mood="wink" shadow={false} still />
                 <T accessibilityRole="header" style={{ flex: 1, fontFamily: F.display, fontSize: 21 }}>Bilu îți sugerează</T>
-                <Muted>{ideas[0]?.now ? 'acum' : 'diseară, la 20:00'}</Muted>
+                <Muted>{ideas[0]?.now ? 'acum' : (ideas[0].at.getHours() >= 17 ? 'diseară' : 'azi') + ', la ' + String(ideas[0].at.getHours()).padStart(2, '0') + ':' + String(ideas[0].at.getMinutes()).padStart(2, '0')}</Muted>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}>
                 {ideas.map((x) => (

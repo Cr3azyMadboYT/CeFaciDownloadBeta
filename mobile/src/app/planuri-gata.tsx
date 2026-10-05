@@ -83,6 +83,7 @@ export default function PlanuriGata() {
     setQ('');
     redo({ evening: r.slot.evening, hour: r.slot.hour, people: a.people, vibes: a.vibes, budget: [a.budget[0], a.budget[1] === Infinity ? BUDGET_TOP : Math.min(BUDGET_TOP, a.budget[1])], extra: { outdoor: a.outdoor, needs: a.needs, near: a.near } }, [...st.chips, ...r.chips]);
   };
+  const footer = !loading && people >= 2 && plans.length >= 2; // „Trimite la vot” at the bottom
   const late = askOf(draft).at.getHours();
   const quick = [draft.budget[1] > 30 ? 'mai ieftin' : null, 'mai aproape', 'cu terasă', 'fără fum', late < 21 && late >= 10 ? 'după 22' : null].filter(Boolean) as string[];
   const chip = (label: string, step: string) => (
@@ -98,7 +99,7 @@ export default function PlanuriGata() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingBottom: 24 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingBottom: footer ? 24 : ins.bottom + 24 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <View style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
           <View style={{ flex: 1 }}>
@@ -190,7 +191,7 @@ export default function PlanuriGata() {
           {!loading && plans.some((p) => p.over) ? <View style={{ marginTop: 6 }}><Note kind="err">Unde scrie „peste buget”, prețurile sunt estimate: poate ieși și mai puțin.</Note></View> : null}
         </View>
       </ScrollView>
-      {!loading && people >= 2 && plans.length >= 2 ? (
+      {footer ? (
         <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
           <Big label={'Trimite cele ' + plans.length + ' planuri la vot'} color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} onPress={() => setVote(true)} />
         </View>

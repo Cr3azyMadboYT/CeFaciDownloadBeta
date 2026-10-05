@@ -113,8 +113,18 @@ describe('Creează plan', () => {
 
   it('Bilu îți sugerează: idei reale, fără să întrebi nimic', () => {
     APP.savePrefs({ zone: 'buftea', likes: ['food', 'party'] } as never);
-    const ideas = APP.suggestions();
+    const ideas = APP.suggestions(new Date(2026, 9, 9, 21, 0));
     expect(ideas.length).toBeGreaterThan(0);
+    expect(ideas.every((x) => x.now)).toBe(true);
     expect(new Set(ideas.map((x) => x.place.id)).size).toBe(ideas.length);
+  });
+
+  it('Bilu îți sugerează dimineața devreme: când nu e nimic deschis acum, idei pentru mai târziu', () => {
+    APP.savePrefs({ zone: 'buftea', likes: ['food', 'party'] } as never);
+    for (const h of [5, 6, 7]) {
+      const ideas = APP.suggestions(new Date(2026, 9, 9, h, 30));
+      expect(ideas.length, h + ':30').toBeGreaterThan(0);
+      for (const x of ideas) if (!x.now) expect(x.at.getHours()).toBeGreaterThanOrEqual(10);
+    }
   });
 });

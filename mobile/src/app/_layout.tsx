@@ -15,7 +15,7 @@ import { setBoard, useApp } from '../lib/session';
 import { Toast } from '../ui/Toast';
 import { LevelUp } from '../ui/LevelUp';
 import { onReminderTap } from '../lib/remind';
-import { fitNavBar } from '../../modules/cefaci-insets';
+import { watchNavBar } from '../../modules/cefaci-insets';
 import { refreshNavFit } from '../ui/insets';
 import { E2E } from '../lib/e2e';
 import { E2EProbe } from '../ui/E2EProbe';
@@ -32,8 +32,9 @@ export default function Root() {
   useEffect(() => { if (loaded) SplashScreen.hideAsync().catch(() => {}); }, [loaded]);
   useEffect(() => onReminderTap((pid) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }), (url) => router.push(url as never)), []);
   useEffect(() => { SystemUI.setBackgroundColorAsync(t.bg).catch(() => {}); }, [t.bg]);
-  // the app stops above the phone's buttons (like Instagram); the buttons dark on the light theme, light on the dark one
-  useEffect(() => { fitNavBar(!t.dark); const id = setTimeout(refreshNavFit, 400); return () => clearTimeout(id); }, [t.dark]);
+  // the phone's buttons on the app's own background (no grey layer), dark on the light theme, light on the dark one;
+  // the screens leave the bar's height free at the bottom (ui/insets.ts)
+  useEffect(() => { watchNavBar(!t.dark); const id = setTimeout(refreshNavFit, 400); return () => clearTimeout(id); }, [t.dark]);
   if (!loaded) return null;
   return (
     <SafeAreaProvider>

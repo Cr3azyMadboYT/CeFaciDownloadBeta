@@ -501,12 +501,20 @@ export const APP = {
     return { at: new Date(now.getTime() + 5 * 60e3), now: true };
   },
   /** "Bilu îți sugerează": ideas from the sign-up answers, the weather and the zone, open when you would get there. */
-  suggestions() {
+  suggestions(now = new Date()) {
     const d = this.homeDefaults();
-    const when = this.ideasAt();
     const people = d.who === '1' ? 1 : d.who === '2' ? 2 : 4;
-    const req = this.planReq({ mode: 'loc', at: when.at, now: when.now, people, budget: [0, budgetRange(d.budget).max], vibes: d.vibes });
-    return suggest(VENUES, req, this.ctx()).map((s) => ({ place: this.byIdMap.get(s.v.id)!, tag: s.tag, line: s.line, at: s.at, now: when.now })).filter((s) => s.place);
+    const run = (when: { at: Date; now: boolean }) => {
+      const req = this.planReq({ mode: 'loc', at: when.at, now: when.now, people, budget: [0, budgetRange(d.budget).max], vibes: d.vibes });
+      return suggest(VENUES, req, this.ctx()).map((s) => ({ place: this.byIdMap.get(s.v.id)!, tag: s.tag, line: s.line, at: s.at, now: when.now })).filter((s) => s.place);
+    };
+    const first = this.ideasAt(now);
+    const out = run(first);
+    if (out.length || !first.now) return out;
+    // nothing open on the way right now (the early morning, the last hours of the night): ideas for later today
+    const h = now.getHours();
+    const later = h < 5 || (h >= 10 && h < 20) ? 20 : h < 10 ? 10 : null;
+    return later === null ? out : run({ at: new Date(now.getFullYear(), now.getMonth(), now.getDate(), later, 0), now: false });
   },
   /** The weather on a day at an hour, for the "Când ieșiți?" cards; null if there is no forecast that far. */
   dayWeather(at: Date) {

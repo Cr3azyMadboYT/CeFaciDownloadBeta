@@ -1,12 +1,11 @@
-// Safe-area insets that never let the bottom bar sit under the phone's own buttons (decision Cornel, 04.10:
-// "ca la Instagram"). On Android the app's window is padded above the navigation bar natively
-// (modules/cefaci-insets, fitNavBar) and the native side says how much it padded. When it did, the screens add
-// nothing at the bottom; when it did not (the native part missing or Android not padding), the screens pad
-// themselves by the bar's height: the larger of what React Native reports and what Android measures, and 48 (the
-// 3-button bar) when both say nothing. The bottom sheets, which Android draws over the whole screen, always add the
-// bar's height (useModalInsets).
-import { useSyncExternalStore } from 'react';
-import { Platform } from 'react-native';
+// Safe-area insets that never let anything sit under the phone's own buttons (decision Cornel, 04.10: "ca la
+// Instagram"). The app is drawn down to the screen's edge (as React Native expects); whatever sits at the bottom
+// (the bottom bar, the buttons at the bottom of a screen, the sheets) leaves the navigation bar's height free. That
+// height is the larger of what React Native reports and what Android measures (modules/cefaci-insets), and 48 (the
+// 3-button bar) when both say nothing: some Samsung phones with 3 buttons report 0. The bottom bar also checks where
+// it really ended up on screen (useBarBottom).
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { Platform, type View } from 'react-native';
 import { useSafeAreaInsets as useRaw } from 'react-native-safe-area-context';
 import { hasNative, navFit, onNavFit, type NavFit } from '../../modules/cefaci-insets';
 
@@ -16,16 +15,17 @@ export function androidBottom(reported: number, measured: number | null) {
   return reported >= 16 ? reported : 48;
 }
 
-// what Android measured, kept up to date (the padding comes a moment after the app starts)
+// what Android measured, kept up to date (the first measure comes a moment after the app starts)
 let fit: NavFit = navFit();
 const subs = new Set<() => void>();
-if (hasNative) onNavFit((s) => { fit = { ...fit, ...s }; subs.forEach((f) => f()); });
+const same = (a: NavFit, b: NavFit) => a.nav === b.nav && a.navTop === b.navTop && a.fitted === b.fitted;
+if (hasNative) onNavFit((s) => { const n = { ...fit, ...s }; if (!same(n, fit)) { fit = n; subs.forEach((f) => f()); } });
 const subscribe = (f: () => void) => { subs.add(f); return () => { subs.delete(f); }; };
 const useFit = () => useSyncExternalStore(subscribe, () => fit, () => fit);
 /** Read once more (the first measure can come before the event listener). */
-export function refreshNavFit() { const s = navFit(); if (s.fitted !== fit.fitted || s.nav !== fit.nav) { fit = s; subs.forEach((f) => f()); } }
+export function refreshNavFit() { const s = navFit(); if (!same(s, fit)) { fit = { ...fit, ...s }; subs.forEach((f) => f()); } }
 
-/** The bottom inset a screen must leave free: 0 when Android already keeps the app above the bar. */
+/** The bottom inset a screen must leave free: the navigation bar's height (none if the app is padded above it). */
 export function bottomFor(reported: number, f: NavFit): number {
   if (f.fitted > 0) return 0;
   return androidBottom(reported, f.nav >= 0 ? f.nav : null);
@@ -47,6 +47,30 @@ export function useModalInsets() {
   if (Platform.OS !== 'android') return ins;
   const bottom = androidBottom(ins.bottom, f.nav > 0 ? f.nav : null);
   return bottom === ins.bottom ? ins : { ...ins, bottom };
+}
+
+/**
+ * For the bottom bar: the space to leave under it. The inset above, or more if the bar really ends lower on screen
+ * (measured): a screen laid out taller than the window would push it under the phone's buttons, and that must
+ * never show. `ref` and `onLayout` go on the bar.
+ */
+export function useBarBottom(onMeasure?: (m: { y: number; h: number; navTop: number; lift: number }) => void) {
+  const ins = useSafeAreaInsets();
+  const f = useFit();
+  const ref = useRef<View>(null);
+  const [lift, setLift] = useState(0);
+  const navTop = f.navTop ?? -1;
+  const measure = useCallback(() => {
+    if (Platform.OS !== 'android' || navTop <= 0) return;
+    ref.current?.measureInWindow((_x, y, _w, h) => {
+      if (!(h > 0)) return;
+      const l = Math.max(0, Math.ceil(y + h - navTop));
+      setLift(l);
+      onMeasure?.({ y, h, navTop, lift: l });
+    });
+  }, [navTop, onMeasure]);
+  useEffect(() => { const id = setTimeout(measure, 60); return () => clearTimeout(id); }, [measure]);
+  return { ref, onLayout: measure, bottom: Math.max(ins.bottom, lift) };
 }
 
 /** For the test build: what each side measured (shown on screen, so a screenshot says it all). */
