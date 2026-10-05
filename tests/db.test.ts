@@ -114,6 +114,17 @@ it('keeps every rule of the database', async () => {
   eq('crew taste for a member', (await as('bob', `select venue_id, score, outings from crew_taste($1) order by venue_id`, [crew])).rows.map((r) => r.venue_id + ':' + r.score + '/' + r.outings), ['n1:4/1', 'n2:1/0']);
   eq('crew taste hidden from others', (await as('ana', `select count(*)::int n from crew_taste($1)`, [crew])).rows[0].n, 0);
   eq('votes are private', (await as('cris', `select count(*)::int n from outing_votes`)).rows[0].n, 0);
+  const one = (r) => { if (!r.rows.length) throw new Error('none'); };
+  await expectFail('a vote cannot move to another plan', () => as('bob', `update outing_votes set plan_id = $1 where plan_id = $2 returning 1`, [plan, pv]).then(one));
+  const p3 = (await as('ana', `insert into plans (owner_id, venue_id, venue_name, starts_at) values ($1, 'n3', 'Bistro', now() - interval '2 hours') returning id`, [U.ana])).rows[0].id;
+  await expectOk('ana invites bob to p3', () => as('ana', `insert into plan_members (plan_id, user_id) values ($1, $2)`, [p3, U.bob]));
+  await expectOk('bob: nu pot', () => as('bob', `update plan_members set answer = 'nu_pot' where plan_id = $1 and user_id = $2`, [p3, U.bob]));
+  await expectFail('no vote for an outing you skipped', () => as('bob', `insert into outing_votes (plan_id, vote) values ($1, 1)`, [p3]));
+  await expectFail('no moving a vote onto an outing you skipped', () => as('bob', `update outing_votes set plan_id = $1 where plan_id = $2 returning 1`, [p3, pv]).then(one));
+  await expectOk('the organiser votes', () => as('ana', `insert into outing_votes (plan_id, vote) values ($1, -1)`, [p3]));
+  await expectFail('a plan cannot be sent to a crew you are not in', () => as('ana', `update plans set crew_id = $1 where id = $2 returning 1`, [crew, p3]).then(one), /găști din care faci parte/);
+  await expectOk('the organiser can still cancel', () => as('ana', `update plans set status = 'cancelled' where id = $1`, [p3]));
+  eq('crew taste unchanged by outsiders', (await as('bob', `select venue_id, score, outings from crew_taste($1) order by venue_id`, [crew])).rows.map((r) => r.venue_id + ':' + r.score + '/' + r.outings), ['n1:4/1', 'n2:1/0']);
   await expectOk('report a closed place', () => as('bob', `insert into reports (venue_id, kind) values ('n1', 'inchis')`));
   await expectFail('report as someone else', () => as('bob', `insert into reports (user_id, venue_id, kind) values ($1, 'n1', 'inchis')`, [U.cris]));
   eq('reports are not readable', (await as('bob', `select count(*)::int n from reports`)).rows[0].n, 0);

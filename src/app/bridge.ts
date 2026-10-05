@@ -431,7 +431,8 @@ export const APP = {
     const moves = (this.prefs.moves as string[] | undefined) ?? ['walk', 'car'];
     const walkKm = moves.includes('walk') || moves.length === 0 ? 1.2 : 3;
     const maxKm = this.radiusKm();
-    return { mode: a.mode, at: a.at, now: a.now, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near, strict: a.strict };
+    const car = !(moves.length > 0 && moves.every((m) => m === 'walk'));
+    return { mode: a.mode, at: a.at, now: a.now, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near, strict: a.strict, car };
   },
   lastPlans: [] as MadePlan[],
   lastReq: null as PlanReq | null,

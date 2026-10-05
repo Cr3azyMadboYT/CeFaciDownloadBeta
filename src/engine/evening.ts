@@ -68,7 +68,7 @@ export interface Route { id: TemplateId; label: string; sub: string; steps: Rout
  * `total`: the budget is for the whole evening, per person (a route may go up to a third over it, and says by how much);
  * `accept`: what else a place must have ("cu terasă", "fără fum", not already in another plan): null leaves it out,
  * a number adds to its score. */
-export interface EveningAsk { who: Who; when: When; budget: number; maxKm: number; walkKm: number; vibes: Vibe[]; at?: Date; now?: boolean; total?: boolean; people?: number; accept?: (v: Venue) => number | null }
+export interface EveningAsk { who: Who; when: When; budget: number; maxKm: number; walkKm: number; vibes: Vibe[]; at?: Date; now?: boolean; total?: boolean; people?: number; accept?: (v: Venue) => number | null; car?: boolean }
 
 const roundUp5 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 5) * 5); return t; };
 const roundUp15 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 15) * 15); return t; };
@@ -132,7 +132,7 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
       const extra = ask.accept ? ask.accept(v) : 0;
       if (extra === null) continue;
       // when you get there: the time asked for the first place (or now + the way there), after the way for the next ones
-      const travel = i === 0 ? (ask.now ? (d <= 1.2 ? walkMin(d) : carMin(d)) : 0) : drive ? carMin(d) : walkMin(d);
+      const travel = i === 0 ? (ask.now ? (d <= 1.2 || ask.car === false ? walkMin(d) : carMin(d)) : 0) : drive ? carMin(d) : walkMin(d);
       let arrive = i === 0 ? (ask.now ? roundUp5(new Date(start.getTime() + travel * 60e3)) : start) : new Date(clock.getTime() + travel * 60e3);
       let stretched = 0;
       if (!inWindow(slot, arrive)) {
@@ -218,11 +218,12 @@ function fitOf(tpl: Template, r: Route, ask: EveningAsk, ctx: Ctx): number {
 export interface EveningCand { tpl: Template; r: Route; fit: number }
 
 /** Builds one template for the ask: on foot first, then — a small town may have no bar a walk away from the
- * restaurant — the same evening by car. */
+ * restaurant — the same evening by car (not for those who only walk: `car: false`). The first place stays within
+ * `maxKm` either way: going further is the planner's call, said out loud. */
 export function buildEvening(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ctx, skip = 0): EveningCand | null {
   const start = ask.at ?? startOf(ask.when, tpl.ideal, ctx.now);
   if (!canStart(tpl, start, ask.now || !ask.at)) return null;
-  const r = buildRoute(all, tpl, ask, ctx, skip) ?? buildRoute(all, tpl, { ...ask, walkKm: Math.max(ask.walkKm, 10), maxKm: Math.max(ask.maxKm, 10) }, ctx, skip, true);
+  const r = buildRoute(all, tpl, ask, ctx, skip) ?? (ask.car === false ? null : buildRoute(all, tpl, { ...ask, walkKm: Math.max(ask.walkKm, 10) }, ctx, skip, true));
   return r ? { tpl, r, fit: fitOf(tpl, r, ask, ctx) } : null;
 }
 

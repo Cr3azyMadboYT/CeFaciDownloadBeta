@@ -40,6 +40,26 @@ describe('de unde pleci și cât de departe', () => {
     if (loose.relaxed.includes('far')) expect(loose.note).toMatch(/m-am uitat până la/);
     APP.savePrefs({ home: undefined, radiusKm: undefined, zone: 'centru' } as never);
   });
+  it('toată seara rămâne în rază (fără să spună, nu caută mai departe); pe jos nu urci în mașină', () => {
+    for (const [name, lat, lon] of [['Buftea', 44.568, 25.948], ['Snagov', 44.7, 26.17], ['Pantelimon', 44.453, 26.2], ['Sector 2', 44.4535, 26.137]] as const) {
+      const home = { lat, lon, name, area: 'Ilfov' as const };
+      for (const moves of [['walk'], ['walk', 'car']]) {
+        APP.savePrefs({ zone: 'buftea', home, radiusKm: 5, here: undefined, live: false, moves } as never);
+        for (const h of [19, 21, 23]) {
+          for (const strict of [false, true]) {
+            const r = APP.makePlans({ mode: 'seara', at: at(1, h), people: 2, budget: [0, Infinity], vibes: [], strict });
+            const far = r.relaxed.includes('far') || r.relaxed.includes('wider');
+            if (strict) expect(far, name + ' ' + h).toBe(false);
+            for (const p of r.plans) {
+              if (!far) expect(km(home, p.steps[0].place.real), name + ' ' + h + ' ' + p.title).toBeLessThanOrEqual(5.01);
+              if (moves.length === 1) for (const st of p.steps) expect(st.by, name + ' ' + h + ' ' + p.title).toBe('walk');
+            }
+          }
+        }
+      }
+    }
+    APP.savePrefs({ home: undefined, radiusKm: undefined, zone: 'centru', moves: ['walk', 'car'] } as never);
+  });
 });
 
 describe('gașca învață din voturi', () => {

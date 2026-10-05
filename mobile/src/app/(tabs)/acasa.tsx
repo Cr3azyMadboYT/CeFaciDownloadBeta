@@ -114,7 +114,8 @@ export default function Acasa() {
   const mood = (vibe: string) => { void runPlans(moodDraft(vibe)); router.push('/planuri-gata'); };
   const openIdea = (id: string, soonish: boolean, at: Date) => {
     const hour = soonish ? 'acum' : String(at.getHours()).padStart(2, '0') + ':' + String(at.getMinutes()).padStart(2, '0');
-    if (runPlace(id, { ...firstDraft(), mode: 'loc', evening: eveningOf(new Date()), hour })) router.push({ pathname: '/plan/[i]', params: { i: '0' } });
+    // the idea's own evening: at 02:30 an idea for 20:00 is today's, not last night's (which would turn it into "now")
+    if (runPlace(id, { ...firstDraft(), mode: 'loc', evening: eveningOf(soonish ? new Date() : at), hour })) router.push({ pathname: '/plan/[i]', params: { i: '0' } });
   };
 
   return (
@@ -206,7 +207,7 @@ export default function Acasa() {
               {rate.sid ? <Muted>Votul tău învață și gașca: data viitoare vă fac planuri mai pe gustul vostru.</Muted> : null}
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 {([['super', 'Super!'], ['yes', 'Mi-a plăcut'], ['no', 'Nu prea']] as const).map(([k, label]) => (
-                  <Press key={k} onPress={() => rateOuting(rate, k)} accessibilityLabel={label + ' la ' + ratePlace.name}
+                  <Press key={k} onPress={() => { void rateOuting(rate, k); }} accessibilityLabel={label + ' la ' + ratePlace.name}
                     style={{ flex: 1, minHeight: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: k === 'super' ? '#FFD43B' : k === 'yes' ? t.blue : t.s2 }}>
                     <T style={{ fontFamily: F.b, fontSize: 14, color: k === 'yes' ? '#FFFFFF' : k === 'super' ? '#0E1440' : t.ink }}>{label}</T>
                   </Press>

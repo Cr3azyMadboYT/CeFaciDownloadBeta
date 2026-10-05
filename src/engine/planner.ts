@@ -29,6 +29,7 @@ export interface PlanReq {
   needs?: Need[];           // "fără fum", "wifi"…
   near?: boolean;           // "aproape"
   strict?: boolean;         // only within maxKm: no looking further
+  car?: boolean;            // false: they only walk, so no driving between places
 }
 export type Way = 'walk' | 'car';
 export interface PlanStep { v: Venue; at: Date; until: Date; travel: number; by: Way; why: string; price: number; open: OpenInfo; sure: boolean; reasons: string[] }
@@ -55,7 +56,8 @@ export interface PlanSet { plans: MadePlan[]; req: PlanReq; relaxed: Relax[]; no
 export const whoOf = (n: number): Who => (n <= 1 ? '1' : n === 2 ? '2' : n <= 4 ? '34' : '5');
 export { carMin };
 /** On foot up to 1,2 km, else by car or taxi. */
-export const wayOf = (d: number): Way => (d <= 1.2 ? 'walk' : 'car');
+/** How they get to a place `d` km away: on foot when it is close, or always when they only walk (`car` false). */
+export const wayOf = (d: number, car = true): Way => (d <= 1.2 || !car ? 'walk' : 'car');
 export const minutesBy = (d: number, by: Way = wayOf(d)) => (by === 'walk' ? walkMin(d) : carMin(d));
 const roundUp5 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 5) * 5); return t; };
 const kmText = (d: number) => (d < 1 ? Math.max(50, Math.round((d * 1000) / 50) * 50) + ' m' : d.toFixed(d < 10 ? 1 : 0).replace('.', ',') + ' km');
@@ -82,7 +84,7 @@ function askOf(req: PlanReq): Ask {
 }
 
 /** When you get to a place `d` km away: the hour asked, or — leaving now — after the way there. */
-const arrival = (req: PlanReq, d: number) => (req.now ? roundUp5(new Date(req.at.getTime() + minutesBy(d) * 60e3)) : new Date(req.at.getTime()));
+const arrival = (req: PlanReq, d: number) => (req.now ? roundUp5(new Date(req.at.getTime() + minutesBy(d, wayOf(d, req.car !== false)) * 60e3)) : new Date(req.at.getTime()));
 
 /** "Deschis până la 23:00", "Deschis", or unknown hours. */
 function openInfo(v: Venue, at: Date): OpenInfo {
@@ -123,7 +125,7 @@ const vibeFit = (vibes: Vibe[], req: PlanReq) => !req.vibes.length || vibes.some
 
 function single(c: Cand, req: PlanReq, ctx: Ctx, title: string, sub: string, id: string): MadePlan {
   const v = c.s.v;
-  const by = wayOf(c.s.km);
+  const by = wayOf(c.s.km, req.car !== false);
   const step: PlanStep = { v, at: c.at, until: c.until, travel: minutesBy(c.s.km, by), by, why: KINDS[v.k]?.label ?? v.kind, price: priceOf(v), open: openInfo(v, c.at), sure: c.sure, reasons: c.s.reasons };
   return finish({ id, title, sub, steps: [step], price: step.price, drive: false, checks: [], family: groupOf(v), fits: vibeFit(vibesOf(v), req) }, req, ctx);
 }
@@ -132,7 +134,7 @@ function fromRoute(c: EveningCand, req: PlanReq, ctx: Ctx): MadePlan {
   const r = c.r;
   const steps: PlanStep[] = r.steps.map((s, i) => {
     const d = km(i === 0 ? ctx.origin : r.steps[i - 1].v, s.v);
-    const by: Way = i === 0 ? wayOf(d) : r.drive ? 'car' : 'walk';
+    const by: Way = i === 0 ? wayOf(d, req.car !== false) : r.drive ? 'car' : 'walk';
     return { v: s.v, at: s.at, until: s.until, travel: i === 0 ? minutesBy(d, by) : s.walk, by, why: s.why, price: s.price, open: openInfo(s.v, s.at), sure: s.sure, reasons: s.reasons };
   });
   return finish({ id: r.id, title: r.label, sub: r.sub, steps, price: r.price, over: r.over, drive: !!r.drive, checks: [], family: r.family, fits: vibeFit(r.vibes, req), note: r.note }, req, ctx);
@@ -219,7 +221,7 @@ export function swapStep(p: MadePlan, i: number, v: Venue, req: PlanReq, ctx: Ct
     // the way to this place and to the next one changed with the swap
     if (k !== i && k !== i + 1) return x;
     const d = km(k === 0 ? ctx.origin : list[k - 1].v, x.v);
-    const by: Way = k === 0 ? wayOf(d) : p.drive ? 'car' : 'walk';
+    const by: Way = k === 0 ? wayOf(d, req.car !== false) : p.drive ? 'car' : 'walk';
     return { ...x, by, travel: minutesBy(d, by) };
   });
   return finish({ ...p, steps, tip: undefined }, req, ctx);
@@ -263,7 +265,7 @@ function singles(ranked: Cand[], n: number, used: Set<string>, req: PlanReq, ctx
 /** Three evenings: the best fitting, then — when it costs little — other kinds of evening; never a place twice. */
 function eveningsFor(all: Venue[], req: PlanReq, ctx: Ctx): MadePlan[] {
   const accept = (v: Venue) => extraFit(v, req);
-  const eAsk: EveningAsk = { who: whoOf(req.people), when: 'acum', at: req.at, now: req.now, total: true, budget: req.budgetMax, maxKm: reach(req), walkKm: req.walkKm, vibes: req.vibes, people: req.people, accept };
+  const eAsk: EveningAsk = { who: whoOf(req.people), when: 'acum', at: req.at, now: req.now, total: true, budget: req.budgetMax, maxKm: reach(req), walkKm: req.walkKm, vibes: req.vibes, people: req.people, accept, car: req.car };
   const cands = eveningCands(all, eAsk, ctx);
   const picked: EveningCand[] = [];
   const used = new Set<string>();
@@ -307,7 +309,7 @@ export function makePlans(all: Venue[], req0: PlanReq, ctx: Ctx): PlanSet {
   // before it, and Bilu says the ones that were needed.
   const ladder: [Relax, (r: PlanReq) => PlanReq | null][] = [
     ['far', (r) => (!r.near && !r.strict && r.maxKm < 40 ? { ...r, maxKm: [10, 20, 30, 40].find((k) => k >= r.maxKm * 2) ?? 40 } : null)],
-    ['near', (r) => (r.near ? { ...r, near: false, maxKm: Math.max(r.maxKm, 10) } : null)],
+    ['near', (r) => (r.near ? { ...r, near: false, maxKm: r.strict ? r.maxKm : Math.max(r.maxKm, 10) } : null)],
     ['needs', (r) => (r.outdoor || r.needs?.length ? { ...r, outdoor: undefined, needs: undefined } : null)],
     ['budget', (r) => (r.budgetMax !== Infinity && r.budgetMax < Math.max(50, req0.budgetMax * 2) ? { ...r, budgetMin: 0, budgetMax: Math.max(50, req0.budgetMax * 2) } : r.budgetMin > 0 ? { ...r, budgetMin: 0 } : null)],
     ['budget', (r) => (r.budgetMax !== Infinity ? { ...r, budgetMin: 0, budgetMax: Infinity } : null)],

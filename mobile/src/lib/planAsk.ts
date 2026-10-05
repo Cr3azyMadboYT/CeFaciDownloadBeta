@@ -100,7 +100,9 @@ export function firstDraft(now = new Date()): Draft {
   const h = now.getHours();
   const late = h >= 19 || h < 5;
   const keep = base.hour !== 'acum' && momentOf(e0, base.hour).getTime() > now.getTime() + 30 * 60e3;
-  return { ...base, evening: e0, hour: late ? 'acum' : keep ? base.hour : hourFor(e0, '20:00', now), extra: undefined };
+  // never last time's crew: a plan "Facem așa" with a crew is sent to all of them, so the crew is picked each time at
+  // "Câți sunteți?" (Ai chef de…, Bilu's ideas and Explorează do not ask)
+  return { ...base, evening: e0, hour: late ? 'acum' : keep ? base.hour : hourFor(e0, '20:00', now), extra: undefined, crewId: undefined, crewName: undefined };
 }
 
 /** What Bilu says over the plans, with a one-tap change when it helps ("Vreau acum"). */
@@ -139,8 +141,10 @@ export const getPlans = () => s;
 
 /** Makes the three plans for the draft a moment after the tap (the screen shows Bilu checking meanwhile).
  *  `surprise`: one of them is picked to be opened; `avoid`: places already shown ("Altă surpriză"). */
+let runId = 0; // only the newest request may fill the screen (a crew's plans wait up to 2.5 s for its taste)
 export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surprise?: boolean; avoid?: string[] } = {}): Promise<S> {
   saveLast(d);
+  const id = ++runId;
   s = { ...s, draft: d, chips: o.chips ?? [], notice: o.notice, loading: true, seen: o.avoid ?? [] };
   emit();
   // the crew's taste (its votes after outings), when the plan is for a crew; quickly, or without it
@@ -148,6 +152,7 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
     ? Promise.race([crewTaste(d.crewId).then((rows) => (rows.length ? APP.tasteOf(d.crewName ?? 'voastră', rows) : undefined)), new Promise<undefined>((ok) => setTimeout(() => ok(undefined), 2500))]).catch(() => undefined)
     : Promise.resolve(undefined);
   return new Promise((done) => void taste.then((tt) => setTimeout(() => {
+    if (id !== runId) { done(s); return; } // a newer request is on its way: this one is dropped
     const r = APP.makePlans(askOf(d), o.avoid ?? [], tt);
     // a surprise: the best plan most of the time, sometimes the second or third
     const roll = Math.random();

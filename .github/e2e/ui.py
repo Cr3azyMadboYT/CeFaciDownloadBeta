@@ -23,7 +23,8 @@ nodes = []
 for n in root.iter('node'):
     label = (n.get('content-desc') or '').strip() or (n.get('text') or '').strip()
     b = box(n)
-    if b: nodes.append((label, b, n))
+    # a node scrolled out of its list comes with bounds turned inside out: not on screen
+    if b and b[2] > b[0] and b[3] > b[1]: nodes.append((label, b, n))
 
 if name == 'tap':
     rx = re.compile(sys.argv[4])

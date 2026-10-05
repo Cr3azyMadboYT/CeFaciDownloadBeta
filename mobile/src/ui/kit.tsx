@@ -21,7 +21,14 @@ export function Press({ style, children, onPress, disabled, haptic = true, ...re
   const outer: Record<string, unknown> = {};
   const inner: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(flat)) (OUTER.includes(k) ? outer : inner)[k] = v;
-  if (outer.flex !== undefined || outer.flexGrow !== undefined) inner.flexGrow = 1;
+  if (outer.flex !== undefined || outer.flexGrow !== undefined) {
+    inner.flexGrow = 1;
+    // on Android (Yoga) a `flex` child of a column whose height is not set starts from 0 and stays there — no floor at
+    // its content's height like on the web: the button's own height keeps it from shrinking to nothing (it could not be
+    // pressed, and Android would not see it; the bottom bar's tabs had this, 05.10)
+    const floor = inner.minHeight ?? inner.height;
+    if (typeof floor === 'number' && outer.minHeight === undefined) outer.minHeight = floor;
+  }
   return (
     <Pressable
       {...rest}

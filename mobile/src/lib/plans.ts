@@ -14,6 +14,7 @@ export interface Plan {
   owner?: boolean;   // false when someone else made the shared plan
   remind?: string[]; // the scheduled receipt reminders (cancelled when the receipt is in)
   rated?: 'super' | 'yes' | 'no'; // "Cum a fost?" after the outing (the vote also teaches the crew, for a shared plan)
+  voteDue?: -1 | 1 | 2; // that vote, not yet taken by the server (no internet): sent again later
   route?: string;    // the steps of one "Seara completă" share this id (they follow each other, no clash)
 }
 /** One shared empty list, so screens reading "no plans" get the same value every time. */

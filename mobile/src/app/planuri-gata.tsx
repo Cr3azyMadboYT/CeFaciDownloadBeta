@@ -110,7 +110,7 @@ export default function PlanuriGata() {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 12 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 6 }}>
           {chip(draft.mode === 'seara' ? wholeLabel(draft) : 'Un loc', 'ce')}
           {chip(askOf(draft).now ? 'Acum' : whenText(draft), 'cand')}
-          {chip(people + (people === 1 ? ' persoană' : ' persoane'), 'cati')}
+          {chip((draft.crewId ? 'Gașca ' + (draft.crewName ?? 'voastră') + ' · ' : '') + people + (people === 1 ? ' persoană' : ' persoane'), 'cati')}
           {chip(budgetLabel(draft.budget), 'buget')}
           {chip(draft.vibes.length ? draft.vibes.join(' · ') : 'orice vibe', 'vibe')}
         </ScrollView>

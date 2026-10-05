@@ -37,7 +37,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         const color = isPlus ? '#E0A800' : on ? t.blueInk : t.ink3;
         return (
           <TourTarget key={r.key} id={'tab-' + r.name} style={{ flex: 1 }}>
-          <Press style={{ flex: 1, minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4, opacity: isPlus && veiled ? 0.55 : 1 }}
+          <Press style={{ minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4, opacity: isPlus && veiled ? 0.55 : 1 }}
             accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? 'CeFaci Plus, oprit' : 'Plus: un cadou de la Bilu') : 'CeFaci Plus') : LABEL[r.name]}
             accessibilityState={{ selected: on }}
             onPress={() => {

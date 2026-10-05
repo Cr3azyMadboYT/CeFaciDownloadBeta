@@ -167,7 +167,8 @@ async function refreshLive() {
     if (perm.status !== 'granted') return;
     const p = await Location.getLastKnownPositionAsync({ maxAge: 15 * 60e3 })
       ?? await within(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }), 10000).catch(() => null);
-    if (!p) return;
+    // a place picked in "De unde pleci?" while the phone was looking wins: still on "my location"?
+    if (!p || !(APP.prefs as Prefs & { live?: boolean }).live) return;
     const here = { lat: p.coords.latitude, lon: p.coords.longitude, at: Date.now() };
     if (km(here, nearestZone(here)) > 40) return;
     const was = APP.prefs.here;

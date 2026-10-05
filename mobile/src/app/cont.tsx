@@ -124,8 +124,9 @@ export default function Cont() {
   const [radius, setRadius] = useState<number | null>(prefs.radiusKm ?? null);
   const dist = '20';
   const zoneId = home ? nearestZone(home).id : prefs.zone || 'centru';
-  const km = radius ?? (home ? APP.bestRadius(home, undefined) : 20);
   const [moves, setMoves] = useState<string[]>(['walk', 'car']);
+  // Bilu's radius until they pick one: follows "Cum ajungi?" (on foot: at most 5 km), like the badge on the map
+  const km = radius ?? (home ? APP.bestRadius(home, moves) : 20);
   const [likes, setLikes] = useState<string[]>([]);
   const [budget, setBudget] = useState('100');
   const [who, setWho] = useState('group');
@@ -400,7 +401,7 @@ export default function Cont() {
           <H1>Cât de departe?</H1>
           <Muted style={{ marginTop: 4 }}>{'Pleci din ' + home.name + (live ? ' (locația ta)' : '') + '.'}</Muted>
           <View style={{ marginTop: 12 }}>
-            <RadiusChooser home={home} km={km} moves={moves} onKm={setRadius} onMove={setHome} />
+            <RadiusChooser home={home} km={km} moves={moves} onKm={setRadius} onMove={(h) => { setHome(h); setLive(false); }} />
           </View>
           <Lbl style={{ marginTop: 16, marginBottom: 8 }}>Cum ajungi? <T style={{ fontFamily: F.m, fontSize: 13, color: t.ink3 }}>Oricâte</T></Lbl>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>

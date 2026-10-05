@@ -29,9 +29,10 @@ function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable
     return {type:'Feature',geometry:{type:'Polygon',coordinates:[pts]}};
   }
   function fit(){ var c=ring(D.p.lat,D.p.lon,D.r).geometry.coordinates[0], b=new maplibregl.LngLatBounds(); c.forEach(function(x){b.extend(x);}); map.fitBounds(b,{padding:24,duration:250}); }
-  function draw(){ if(!map.getSource('c')) return; map.getSource('c').setData(ring(D.p.lat,D.p.lon,D.r)); }
-  window.setR=function(km){ D.r=km; draw(); fit(); };
-  window.setP=function(lat,lon){ D.p={lat:lat,lon:lon}; marker.setLngLat([lon,lat]); draw(); fit(); };
+  function draw(){ if(!map||!map.getSource('c')) return; map.getSource('c').setData(ring(D.p.lat,D.p.lon,D.r)); }
+  // until the map is up these only remember the values; the app sends the latest ones again on "ready"
+  window.setR=function(km){ D.r=km; if(map&&map.getSource('c')){ draw(); fit(); } };
+  window.setP=function(lat,lon){ D.p={lat:lat,lon:lon}; if(marker) marker.setLngLat([lon,lat]); if(map&&map.getSource('c')){ draw(); fit(); } };
   function start(){
     if(!window.maplibregl){ document.body.innerHTML='<div class="err">Harta are nevoie de internet. Raza merge și fără ea.</div>'; return; }
     map=new maplibregl.Map({container:'m',style:'https://tiles.openfreemap.org/styles/liberty',center:[D.p.lon,D.p.lat],zoom:11,attributionControl:{compact:true}});
@@ -59,6 +60,15 @@ export function RadiusMap({ point, km, height = 260, movable = true, onMove }: {
   const first = useRef({ point, km });
   const page = useMemo(() => html(first.current.point, first.current.km, t.dark, movable), [t.dark, movable]);
   const shown = useRef(point);
+  // the latest values, sent again when the page says it is ready (changes made while the map was loading, or a
+  // page rebuilt for the theme, would otherwise show the first point and radius)
+  const latest = useRef({ point, km });
+  latest.current = { point, km };
+  const resend = () => {
+    const { point: p, km: r } = latest.current;
+    shown.current = p;
+    ref.current?.injectJavaScript('window.setP&&window.setP(' + Number(p.lat) + ',' + Number(p.lon) + ');window.setR&&window.setR(' + Number(r) + ');true;');
+  };
   useEffect(() => { ref.current?.injectJavaScript('window.setR&&window.setR(' + Number(km) + ');true;'); }, [km]);
   useEffect(() => {
     if (shown.current.lat === point.lat && shown.current.lon === point.lon) return;
@@ -78,7 +88,7 @@ export function RadiusMap({ point, km, height = 260, movable = true, onMove }: {
         nestedScrollEnabled
         setSupportMultipleWindows={false}
         onShouldStartLoadWithRequest={(req) => { if (/^(about:|data:)/.test(req.url)) return true; Linking.openURL(req.url).catch(() => {}); return false; }}
-        onMessage={(e) => { try { const m = JSON.parse(e.nativeEvent.data); if (m.moved && onMove) { shown.current = m.moved; onMove(m.moved); } } catch { /* ignore */ } }}
+        onMessage={(e) => { try { const m = JSON.parse(e.nativeEvent.data); if (m.ready) resend(); if (m.moved && onMove) { shown.current = m.moved; onMove(m.moved); } } catch { /* ignore */ } }}
         style={{ backgroundColor: t.bg }}
       />
     </View>

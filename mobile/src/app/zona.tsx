@@ -6,7 +6,7 @@ import { ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
 import { APP, savePrefs, useApp } from '../lib/session';
-import { resetFilters } from '../lib/filters';
+import { setFilters } from '../lib/filters';
 import { toast } from '../lib/toast';
 import { nearestZone } from '../../../src/engine/core';
 import type { Home, Prefs } from '../../../src/app/bridge';
@@ -28,7 +28,7 @@ export default function Zona() {
   const back = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
   const save = () => {
     savePrefs({ home, radiusKm: km, live, zone: nearestZone(home).id, here: live ? { lat: home.lat, lon: home.lon, at: Date.now() } : undefined } as Partial<Prefs>);
-    resetFilters();
+    setFilters({ dist: String(km) }); // the rest of the Explorează filters (vibe, budget) stay as they were
     toast('Pleci din ' + home.name + ', până la ' + km + ' km. Am refăcut recomandările.');
     back();
   };
