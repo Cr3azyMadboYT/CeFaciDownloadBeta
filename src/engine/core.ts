@@ -23,12 +23,13 @@ export const kindKey = (v: Venue) => v.k;
 export const info = (v: Venue) => KINDS[v.k] ?? KINDS.restaurant;
 
 export function vibesOf(v: Venue): Vibe[] {
-  const out = new Set<Vibe>(info(v).vibes);
+  const out = new Set<Vibe>(v.vibes?.length ? v.vibes : info(v).vibes);
   if (v.outdoor) out.add('Aer liber');
   if (v.cat === 'desert' || v.cuisines.some((c) => c === 'cake' || c === 'dessert')) out.add('Mâncare bună');
   return [...out];
 }
 export const priceOf = (v: Venue) => {
+  if (typeof v.price === 'number') return v.price; // researched (curated.json)
   const base = info(v).price;
   if (v.cat !== 'mancare') return base;
   if (v.cuisines.some((c) => c === 'steak_house' || c === 'seafood' || c === 'french' || c === 'japanese' || c === 'sushi')) return Math.round(base * 1.4);
@@ -136,7 +137,7 @@ const USUAL: Record<string, [number, number]> = {
   arts_centre: [10, 21], biergarten: [12, 24], horse_riding: [9, 18], golf_course: [8, 19], theme_park: [10, 20], paintball: [10, 18],
   planetarium: [10, 18], aquarium: [10, 19], water_park: [10, 19], trampoline_park: [10, 21], karting: [10, 22], billiards: [12, 26],
   bowling_alley: [12, 25], ice_rink: [10, 22], padel: [8, 23], squash: [8, 22], climbing: [10, 22], escape_game: [10, 23],
-  swimming: [7, 21], tennis: [8, 22], soccer: [9, 23],
+  swimming: [7, 21], tennis: [8, 22], soccer: [9, 23], square: [9, 24], promenade: [8, 23], food_market: [12, 23], event_space: [12, 24],
   amusement_arcade: [10, 23], castle: [9, 18], palace: [9, 18], manor: [9, 18], monastery: [8, 19], zoo: [9, 18], nature_reserve: [7, 20],
 };
 const NIGHT_USUAL: [number, number][] = [[9, 19], [11, 23], [22, 29]]; // by KINDS.night: day things, evening things, night things
@@ -221,7 +222,7 @@ export const dayOnly = (v: Venue, t: Date) => !v.wk && !v.hours && info(v).night
 export const WHO_N: Record<Who, number> = { '1': 1, '2': 2, '34': 4, '5': 6 };
 /** Places a big group still fits in, with a call ahead (15 at a restaurant, a club, a cinema); a court or an escape
  * room has a real limit of people. */
-const ROOMY = new Set(['restaurant', 'fast_food', 'cafe', 'ice_cream', 'bar', 'pub', 'biergarten', 'nightclub', 'cinema', 'theatre', 'arts_centre', 'museum', 'gallery', 'bowling_alley', 'amusement_arcade', 'trampoline_park', 'ice_rink', 'karting', 'billiards', 'park', 'nature_reserve', 'botanical_garden', 'beach_resort', 'zoo', 'aquarium', 'water_park', 'theme_park', 'castle', 'palace', 'manor', 'monastery', 'planetarium', 'miniature_golf']);
+const ROOMY = new Set(['square', 'promenade', 'food_market', 'event_space', 'restaurant', 'fast_food', 'cafe', 'ice_cream', 'bar', 'pub', 'biergarten', 'nightclub', 'cinema', 'theatre', 'arts_centre', 'museum', 'gallery', 'bowling_alley', 'amusement_arcade', 'trampoline_park', 'ice_rink', 'karting', 'billiards', 'park', 'nature_reserve', 'botanical_garden', 'beach_resort', 'zoo', 'aquarium', 'water_park', 'theme_park', 'castle', 'palace', 'manor', 'monastery', 'planetarium', 'miniature_golf']);
 
 /**
  * score = 35 gust + 20 ocazie + 15 calitate + 10 aproape + 10 nou + 10 gașcă
@@ -263,7 +264,8 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const ocazie = 20 * (0.55 * nightFit + 0.45 * (open.known ? 1 : chance * 0.75));
 
   const complete = Math.min(1, [v.hours, v.website || v.phone, v.street, v.famous].filter(Boolean).length / 3);
-  const calitate = 15 * (0.4 + 0.6 * complete) * (v.brand ? 0.7 : 1) * (v.fast ? 0.75 : 1);
+  // a place chosen by hand, with its story, counts as complete
+  const calitate = 15 * (0.4 + 0.6 * (v.story ? 1 : complete)) * (v.brand ? 0.7 : 1) * (v.fast && !v.story ? 0.75 : 1);
   const aproape = 10 * Math.max(0, 1 - d / Math.max(ask.maxKm, 1));
   const nou = ctx.history.includes(v.id) ? 0 : 10;
   const said = ctx.liked?.includes(v.id) ? 6 : ctx.disliked?.includes(v.id) ? -15 : 0;

@@ -150,6 +150,7 @@ export default function PlanuriGata() {
                   <View key={s.place.id}>
                     {k > 0 ? <T style={{ marginLeft: 58, marginVertical: 2, fontFamily: F.m, fontSize: 12, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : '🚶 ') + s.travel + ' min'}</T> : null}
                     <StepRow s={s} />
+                    {p.steps.length === 1 && s.place.story ? <T numberOfLines={2} style={{ marginLeft: 58, marginTop: 4, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: t.ink2 }}>{s.place.story}</T> : null}
                   </View>
                 ))}
               </View>

@@ -32,6 +32,11 @@ export interface Venue {
   famous?: boolean;
   gone?: string;       // yyyy-mm-dd: dropped from the map then (src/data/gone.json); kept so old plans and stamps still open    // has a Wikidata entry (OSM wikidata=*): a known place
   fast?: boolean;      // fast food
+  story?: string;      // why go (src/data/curated.json, researched 05.10): one or two sentences, real facts
+  crowd?: string;      // when people are there ("vineri–duminică seara")
+  pick?: boolean;      // chosen by hand for CeFaci (curated.json): only these are shown
+  vibes?: Vibe[];      // researched vibes, instead of the kind's usual ones
+  price?: number;      // researched price per person, lei
   minAge?: number;     // the place asks for ID at the door (OSM min_age)
 }
 

@@ -80,6 +80,8 @@ export default function PlanDeschis() {
                     </View>
                   ) : null}
                   <StepRow s={s} />
+                  {s.place.story ? <T style={{ marginLeft: 58, marginTop: 6, fontFamily: F.m, fontSize: 14, lineHeight: 20, color: t.ink }}>{s.place.story}</T> : null}
+                  {s.place.crowd ? <Muted numberOfLines={1} style={{ marginLeft: 58, marginTop: 3 }}>{'Lume: ' + s.place.crowd}</Muted> : null}
                   {s.reason ? <Muted numberOfLines={2} style={{ marginLeft: 58, marginTop: 4 }}>{s.reason}</Muted> : null}
                   <View style={{ marginLeft: 58, marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                     {c ? <Pill icon={c.site ? 'globe' : 'phone'} label={c.site ? 'Rezervă' : 'Sună'} onPress={() => (c.site ? open(c.site.startsWith('http') ? c.site : 'https://' + c.site) : void Linking.openURL('tel:' + c.phone.replace(/\s/g, '')))} /> : null}

@@ -87,6 +87,7 @@ const ICON_OF: Record<string, string> = {
   ice_rink: 'bolt', water_park: 'waves', theme_park: 'star', zoo: 'heart', aquarium: 'waves', karting: 'bolt', paintball: 'target',
   billiards: 'target', planetarium: 'star', castle: 'castle', palace: 'castle', manor: 'castle', monastery: 'landmark',
   park: 'tree', nature_reserve: 'tree', botanical_garden: 'tree', beach_resort: 'waves',
+  square: 'users', promenade: 'waves', food_market: 'fork', event_space: 'star',
   padel: 'ball', tennis: 'ball', soccer: 'ball', squash: 'ball', swimming: 'waves', climbing: 'bolt', golf_course: 'target', horse_riding: 'heart',
 };
 const CUISINE_ICON: Record<string, string> = { pizza: 'pizza', burger: 'burger', coffee_shop: 'coffee', cake: 'sweet', dessert: 'sweet', ice_cream: 'sweet' };
@@ -107,7 +108,7 @@ function toPlace(v: Venue, origin: { lat: number; lon: number }) {
     id: v.id, name: v.name, title, icon: CUISINE_ICON[v.cuisines[0]] ?? ICON_OF[v.k] ?? 'star', bg, fg, dot,
     price: priceOf(v), dur: k.hours, dist: Math.max(3, Math.round(3 + d * 2.4)), km: d, vibes: vibesOf(v), min: k.min, max: k.max,
     when: ['now', 'eve', 'tom', 'we'], res: phone || v.website ? needsRes : 'none', verified: false, partner: false,
-    age: v.k === 'nightclub', t: SLOT[k.night], zone: zoneById(v.zone).name, real: v,
+    age: v.k === 'nightclub', t: SLOT[k.night], zone: zoneById(v.zone).name, real: v, story: v.story, crowd: v.crowd,
     contact: phone || v.website ? { phone, wa: false, web: !!v.website, site: v.website ?? '', unit: v.cat === 'activitate' || v.cat === 'sport' ? (v.cat === 'sport' && v.k !== 'swimming' ? 'un teren' : 'o rezervare') : 'o masă' } : undefined,
   };
 }

@@ -86,6 +86,62 @@ for (const e of els) {
   if (key === 'fast_food') v.fast = true;
   out.push(v);
 }
+// The hand-picked list (src/data/curated.json, scripts/curate.mjs, decision Cornel 05.10): only the map's places the
+// research kept stay (with their story), and the good places the map lacks are added. Without the file, all stay.
+const curatedFile = new URL('../src/data/curated.json', import.meta.url);
+const curated = fs.existsSync(curatedFile) ? JSON.parse(fs.readFileSync(curatedFile, 'utf8')) : null;
+// the engine's kinds (src/engine/catalog.ts KINDS): category and label, for the added places (checked by a test)
+export const KIND_CAT = {
+  restaurant: ['mancare', 'Restaurant'], fast_food: ['mancare', 'Fast food'], food_market: ['mancare', 'Food market'], cafe: ['cafea', 'Cafenea'],
+  ice_cream: ['desert', 'Desert'], bar: ['bar', 'Bar'], pub: ['bar', 'Pub'], biergarten: ['bar', 'Grădină cu bere'], nightclub: ['club', 'Club'],
+  cinema: ['film', 'Cinema'], theatre: ['teatru', 'Teatru'], arts_centre: ['cultura', 'Centru cultural'], museum: ['cultura', 'Muzeu'],
+  gallery: ['cultura', 'Galerie'], event_space: ['cultura', 'Spațiu de evenimente'], planetarium: ['cultura', 'Planetariu'], castle: ['cultura', 'Castel'],
+  palace: ['cultura', 'Palat'], manor: ['cultura', 'Conac'], monastery: ['cultura', 'Mănăstire'], bowling_alley: ['activitate', 'Bowling'],
+  escape_game: ['activitate', 'Escape room'], amusement_arcade: ['activitate', 'Jocuri'], trampoline_park: ['activitate', 'Trambuline'],
+  miniature_golf: ['activitate', 'Minigolf'], ice_rink: ['activitate', 'Patinoar'], water_park: ['activitate', 'Parc acvatic'],
+  theme_park: ['activitate', 'Parc de distracții'], zoo: ['activitate', 'Grădină zoologică'], aquarium: ['activitate', 'Acvariu'],
+  karting: ['activitate', 'Karting'], paintball: ['activitate', 'Paintball'], billiards: ['activitate', 'Biliard'], park: ['natura', 'Parc'],
+  square: ['natura', 'Loc de întâlnire'], promenade: ['natura', 'Promenadă'], nature_reserve: ['natura', 'Rezervație naturală'],
+  botanical_garden: ['natura', 'Grădină botanică'], beach_resort: ['natura', 'Plajă'], padel: ['sport', 'Padel'], tennis: ['sport', 'Tenis'],
+  soccer: ['sport', 'Fotbal'], squash: ['sport', 'Squash'], swimming: ['sport', 'Piscină'], climbing: ['sport', 'Escaladă'],
+  golf_course: ['sport', 'Golf'], horse_riding: ['sport', 'Călărie'],
+};
+const CUISINE_WORDS = { 'pizza': 'pizza', 'burger': 'burger', 'sushi': 'sushi', 'japonez': 'japanese', 'italian': 'italian', 'românesc': 'romanian', 'romanesc': 'romanian', 'româneasc': 'romanian', 'grecesc': 'greek', 'grecească': 'greek', 'turcesc': 'turkish', 'libanez': 'lebanese', 'asiatic': 'asian', 'chinezesc': 'chinese', 'thai': 'thai', 'indian': 'indian', 'mexican': 'mexican', 'american': 'american', 'steak': 'steak_house', 'pește': 'seafood', 'peste': 'seafood', 'kebab': 'kebab', 'shaorma': 'shawarma', 'vegan': 'vegan', 'vegetarian': 'vegetarian', 'franțuz': 'french', 'francez': 'french', 'spaniol': 'spanish', 'cafea': 'coffee_shop', 'prăjitur': 'cake', 'desert': 'dessert', 'înghețat': 'ice_cream', 'gelato': 'ice_cream', 'grătar': 'grill', 'brunch': 'breakfast', 'mic dejun': 'breakfast', 'coreean': 'korean', 'vietnamez': 'vietnamese', 'oriental': 'middle_eastern' };
+if (curated) {
+  const picked = curated.keep ?? {};
+  let dropped = 0;
+  for (let i = out.length - 1; i >= 0; i--) {
+    const f = picked[out[i].id];
+    if (!f) { out.splice(i, 1); dropped++; continue; }
+    const v = out[i];
+    v.pick = true;
+    if (f.story) v.story = f.story;
+    if (f.crowd) v.crowd = f.crowd;
+    if (f.vibes?.length) v.vibes = f.vibes;
+    if (typeof f.price === 'number') v.price = f.price;
+  }
+  let added = 0;
+  for (const c of curated.add ?? []) {
+    const kc = KIND_CAT[c.k];
+    if (!kc) continue;
+    const p = { lat: c.lat, lon: c.lon };
+    const zone = ZONES.reduce((b, z) => (km(p, z) < km(p, b) ? z : b), ZONES[0]);
+    if (km(p, zone) > 25) continue;
+    const words = (c.cuisine ?? '').toLowerCase();
+    const cuisines = [...new Set(Object.entries(CUISINE_WORDS).filter(([w]) => words.includes(w)).map(([, k]) => k))].slice(0, 3);
+    const v = { id: c.id, name: c.name, cat: kc[0], kind: c.kind || kc[1], k: c.k, cuisines, lat: c.lat, lon: c.lon, zone: zone.id, pick: true };
+    if (c.city) v.city = c.city;
+    if (c.story) v.story = c.story;
+    if (c.crowd) v.crowd = c.crowd;
+    if (c.vibes?.length) v.vibes = c.vibes;
+    if (typeof c.price === 'number') v.price = c.price;
+    if (c.k === 'fast_food') v.fast = true;
+    out.push(v);
+    added++;
+  }
+  skipped.notPicked = dropped;
+  skipped.addedByHand = added;
+}
 // pools inside an aqua park (Therme maps each one) are the aqua park itself
 const parks = out.filter((v) => v.k === 'water_park');
 for (let i = out.length - 1; i >= 0; i--) if (out[i].k === 'swimming' && parks.some((w) => km(w, out[i]) < 0.6)) { out.splice(i, 1); skipped.dupe++; }

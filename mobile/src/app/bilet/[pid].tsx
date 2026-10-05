@@ -147,6 +147,13 @@ export default function Bilet() {
           }} />
         </View>
 
+        {p.story ? (
+          <View style={{ marginTop: 12, marginHorizontal: 20, padding: 14, borderRadius: 18, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, gap: 4 }}>
+            <T style={{ fontFamily: F.b, fontSize: 12, letterSpacing: 1.2, color: t.ink3 }}>DE CE MERITĂ</T>
+            <T style={{ fontFamily: F.m, fontSize: 15, lineHeight: 21 }}>{p.story}</T>
+            {p.crowd ? <T style={{ fontFamily: F.sb, fontSize: 13, color: t.ink2 }}>{'Când e lume: ' + p.crowd}</T> : null}
+          </View>
+        ) : null}
         <View style={{ marginTop: 12, marginHorizontal: 20, gap: 10 }}>
           {needsRes && !noted && !pl.inAt ? (
             <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M12 8v4M12 16h.01" bg={p.res === 'required' ? t.coralSoft : t.yellowSoft} ink={p.res === 'required' ? t.coralInk : t.yellowInk}

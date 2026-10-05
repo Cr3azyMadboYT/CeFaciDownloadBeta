@@ -22,7 +22,7 @@ interface Slot {
 }
 const PLAY = ['escape_game', 'amusement_arcade', 'bowling_alley', 'billiards', 'karting', 'trampoline_park', 'ice_rink', 'climbing', 'padel', 'tennis', 'soccer', 'squash', 'miniature_golf', 'paintball'];
 export const SLOTS: Record<SlotId, Slot> = {
-  masa: { kinds: ['restaurant'], min: 95, windows: [[12, 15.5], [17.5, 22.25]], why: (h) => (h < 16 ? 'Prânzul' : 'Cina') },
+  masa: { kinds: ['restaurant', 'food_market'], min: 95, windows: [[12, 15.5], [17.5, 22.25]], why: (h) => (h < 16 ? 'Prânzul' : 'Cina') },
   pahar: { kinds: ['bar', 'pub', 'biergarten'], min: 105, windows: [[16, 26]], why: () => 'Un pahar', adult: true, stretch: true },
   club: { kinds: ['nightclub'], min: 180, windows: [[22.5, 27.5]], why: () => 'Dansul', adult: true },
   joaca: { kinds: PLAY, min: 85, windows: [[10, 21.75]], why: () => 'Joacă', whole: 60 },
@@ -30,7 +30,7 @@ export const SLOTS: Record<SlotId, Slot> = {
   film: { kinds: ['cinema'], min: 130, windows: [[11, 22]], why: () => 'Filmul', whole: 120 },
   dulce: { kinds: ['ice_cream', 'cafe'], min: 50, windows: [[11, 21.5]], why: () => 'Ceva dulce' },
   cafea: { kinds: ['cafe'], min: 60, windows: [[8, 20]], why: () => 'O cafea' },
-  plimbare: { kinds: ['park', 'botanical_garden', 'nature_reserve'], min: 80, windows: [[8, 20]], why: () => 'Plimbarea' },
+  plimbare: { kinds: ['park', 'botanical_garden', 'nature_reserve', 'promenade', 'square'], min: 80, windows: [[8, 20]], why: () => 'Plimbarea' },
   cultura: { kinds: ['museum', 'gallery', 'planetarium', 'castle', 'palace', 'manor'], min: 90, windows: [[9.5, 17.5]], why: () => 'Muzeul' },
   gustare: { kinds: ['fast_food'], min: 35, windows: [[22, 29]], why: () => 'Ceva de mâncat' },
 };

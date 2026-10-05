@@ -50,6 +50,11 @@ export const KINDS: Record<string, KindInfo> = {
   monastery: K('Mănăstire', 'cultura', ['Cultură', 'Aer liber'], 0, 1.5, 1, 20, 0),
   // outdoors: parks are free; nobody needs a booking for a walk
   park: K('Parc', 'natura', ['Aer liber', 'Chill'], 0, 1.5, 1, 30, 0),
+  // where people gather (curated.json, 05.10): squares with events, promenades, food markets
+  square: K('Loc de întâlnire', 'natura', ['Aer liber', 'Chill', 'Party'], 0, 1.5, 1, 60, 1),
+  promenade: K('Promenadă', 'natura', ['Aer liber', 'Chill'], 0, 1.5, 1, 30, 1),
+  food_market: K('Food market', 'mancare', ['Mâncare bună', 'Chill', 'Fun'], 60, 1.5, 1, 20, 1),
+  event_space: K('Spațiu de evenimente', 'cultura', ['Cultură', 'Fun', 'Party'], 60, 2.5, 1, 50, 1),
   nature_reserve: K('Rezervație naturală', 'natura', ['Aer liber'], 0, 2.5, 1, 20, 0),
   botanical_garden: K('Grădină botanică', 'natura', ['Aer liber', 'Chill'], 15, 1.5, 1, 20, 0),
   beach_resort: K('Plajă', 'natura', ['Aer liber', 'Chill'], 40, 4, 1, 20, 0),

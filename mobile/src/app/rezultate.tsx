@@ -163,7 +163,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
                       <Fact d={CAR} text={p.dist + ' min'} />
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                      <T style={{ flex: 1, fontFamily: F.m, fontSize: 13, lineHeight: 17, color: t.ink3 }}>{APP.reason(p.id) ?? ''}</T>
+                      <T numberOfLines={3} style={{ flex: 1, fontFamily: F.m, fontSize: 13, lineHeight: 17, color: p.story ? t.ink2 : t.ink3 }}>{p.story ?? APP.reason(p.id) ?? ''}</T>
                       <Press onPress={() => pick(p.id)} accessibilityLabel={'Alege ' + p.name} style={{ height: 44, paddingHorizontal: 16, borderRadius: 14, backgroundColor: t.blue, justifyContent: 'center' }}>
                         <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Asta!</T>
                       </Press>
