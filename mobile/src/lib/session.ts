@@ -10,7 +10,7 @@ import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
 import { forgetPush, registerPush } from './push';
 import { loadWeather } from './weather';
-import { deleteAccountEverywhere, emailStart, emailVerify, sb, signInWithGoogle, signOutEverywhere, watchAuth, type Who } from './auth';
+import { deleteAccountEverywhere, emailStart, emailVerify, hasStoredSession, sb, signInWithGoogle, signOutEverywhere, watchAuth, type Who } from './auth';
 
 export { APP };
 export type { Prefs };
@@ -34,13 +34,17 @@ export interface Board {
   [k: string]: unknown;
 }
 
-type Snap = { board: Board; prefs: Prefs; who: Who | null; onboarded: boolean; known: boolean };
+// `account`: the phone is signed in to an account (a session is saved), known before the network answers. The app
+// works only with an account (decision Cornel, 04.10): a phone profile without one (an older version, or data Android
+// brought back after reinstalling) starts at the sign-in screen, and its data goes into the account.
+type Snap = { board: Board; prefs: Prefs; who: Who | null; onboarded: boolean; known: boolean; account: boolean };
 let snap: Snap = {
   board: APP.loadBoardState() as Board,
   prefs: APP.prefs,
   who: null,
   onboarded: readOnboarded(),
   known: false,
+  account: hasStoredSession(),
 };
 const subs = new Set<() => void>();
 const emit = () => subs.forEach((f) => f());
@@ -126,7 +130,7 @@ export async function startOver(deleteAccount: boolean): Promise<string | null> 
   APP.pickVotes.clear(); APP.pickMemo.clear();
   APP.rebuild();
   last = null; signedIn = '';
-  snap = { board: {}, prefs: APP.prefs, who: null, onboarded: false, known: false };
+  snap = { board: {}, prefs: APP.prefs, who: null, onboarded: false, known: false, account: false };
   setSearch('');
   resetFilters();
   emit();
@@ -248,11 +252,11 @@ async function connect(who: Who) {
 AppState.addEventListener('change', (st) => { if (st === 'active' && signedIn && !last && snap.who) void connect(snap.who); });
 
 watchAuth((who) => {
-  if (!who) { signedIn = ''; last = null; APP.onSaved = () => {}; snap = { ...snap, who: null, known: false }; emit(); return; }
+  if (!who) { signedIn = ''; last = null; APP.onSaved = () => {}; snap = { ...snap, who: null, known: false, account: hasStoredSession() }; emit(); return; }
   if (signedIn === who.id) return;
   signedIn = who.id;
   last = null;
-  snap = { ...snap, who };
+  snap = { ...snap, who, account: true };
   emit();
   void connect(who);
 });

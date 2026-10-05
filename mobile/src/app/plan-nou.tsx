@@ -16,6 +16,7 @@ import { Big, Chip, H1, Lbl, Muted, Press, Say, Sheet, T, tap } from '../ui/kit'
 import { RangeSlider } from '../ui/RangeSlider';
 import { F, useTheme } from '../ui/theme';
 import type { Mood } from '../ui/Bilu';
+import { Doodles } from '../ui/Doodles';
 
 const STEPS = ['ce', 'cand', 'cati', 'buget', 'vibe'] as const;
 type Step = (typeof STEPS)[number];
@@ -82,6 +83,7 @@ export default function PlanNou() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bgCont }}>
+      <Doodles />
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 16, height: ins.top + 60, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         <Press onPress={back} accessibilityLabel={k ? 'Înapoi' : 'Închide'} style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name={k ? 'back' : 'close'} color={t.ink} />

@@ -8,6 +8,12 @@ const KEY = 'sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O';
 // The "Web client" ID from Google Cloud → Credentials (the same one set in Supabase → Auth → Google).
 const GOOGLE_WEB_CLIENT_ID = '9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com';
 
+// where supabase-js keeps the session on the phone (sb-<project>-auth-token)
+const SESSION_KEY = 'sb-' + URL.replace(/^https?:\/\//, '').split('.')[0] + '-auth-token';
+/** Whether the phone holds a session (an account it signed in with), read at once, without the network: offline
+ *  the account still counts; a session the server refused is removed by supabase-js, and then this says no. */
+export function hasStoredSession() { try { return !!globalThis.localStorage?.getItem(SESSION_KEY); } catch { return false; } }
+
 let client: ReturnType<typeof createClient> | null = null;
 export const sb = () => (client ??= createClient(URL, KEY, {
   auth: { storage: globalThis.localStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },

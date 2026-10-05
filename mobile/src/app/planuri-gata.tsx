@@ -21,6 +21,7 @@ import { F, useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { VoteStart } from '../ui/VoteStart';
 import { Checks, StepRow } from '../ui/PlanBits';
+import { Doodles } from '../ui/Doodles';
 
 /** Makes the tickets for a plan (every step) and opens the first one. With a crew chosen at "Câți sunteți?", the plan
  *  goes to the crew too (Vin / Nu pot), so that after the outing everyone's vote teaches the crew. */
@@ -99,6 +100,7 @@ export default function PlanuriGata() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
+      <Doodles />
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingBottom: footer ? 24 : ins.bottom + 24 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <View style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>

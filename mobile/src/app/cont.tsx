@@ -18,6 +18,7 @@ import { Bilu, type Mood } from '../ui/Bilu';
 import { Icon } from '../ui/Icon';
 import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
+import { Doodles } from '../ui/Doodles';
 
 const STEPS = ['start', 'name', 'zone', 'radius', 'likes', 'style', 'picks', 'friends', 'done'] as const;
 type Step = (typeof STEPS)[number] | 'email';
@@ -38,6 +39,7 @@ function StepScreen({ k, onBack, children, foot }: { k: number; onBack: () => vo
   useEffect(() => { Animated.timing(w, { toValue: Math.max(0, k - 1) / 7, duration: 500, easing: Easing.bezier(0.23, 1, 0.32, 1), useNativeDriver: false }).start(); }, [k, w]);
   return (
     <View style={{ flex: 1, backgroundColor: t.bgCont }}>
+      <Doodles />
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 16, height: ins.top + 60, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <Press onPress={onBack} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="back" color={t.ink} />
@@ -166,6 +168,8 @@ export default function Cont() {
   // with an account the username is checked on the server as you type; without one it only has to look right
   const [free, setFree] = useState<Record<string, boolean>>({});
   const signedIn = useApp((s) => !!s.who);
+  // set up on this phone before, but without an account (an older version): only signing in is left
+  const returning = useApp((s) => s.onboarded && !s.account);
   useEffect(() => {
     if (!signedIn || u.length < 3 || free[u] !== undefined) return;
     const id = setTimeout(() => { void usernameFree(u).then((ok) => { if (ok !== null) setFree((f) => ({ ...f, [u]: ok })); }); }, 400);
@@ -250,7 +254,7 @@ export default function Cont() {
           </View>
           <View style={{ alignItems: 'center', marginTop: short ? 12 : 34 }}><Bilu size={short ? 120 : 170} mood="hi" /></View>
           <T accessibilityRole="header" style={{ marginTop: 18, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: 38, lineHeight: 39, letterSpacing: -1.1, color: '#FFFFFF' }}>{'Nu mai stai acasă\nfără să vrei.'}</T>
-          <T style={{ marginTop: 12, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: 16, lineHeight: 23, color: '#C9CEE6' }}>Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.</T>
+          <T style={{ marginTop: 12, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: 16, lineHeight: 23, color: '#C9CEE6' }}>{returning ? 'Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.' : 'Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.'}</T>
           <View style={{ flex: 1, minHeight: 24 }} />
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 10 }}>
             <Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}

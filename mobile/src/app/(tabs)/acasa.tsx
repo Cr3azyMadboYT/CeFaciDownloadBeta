@@ -24,6 +24,7 @@ import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { useBackTwiceToExit } from '../../lib/backTwice';
 import { useWeatherVersion } from '../../lib/weather';
+import { Doodles } from '../../ui/Doodles';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -120,6 +121,7 @@ export default function Acasa() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
+      <Doodles />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 96, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
           <Sky phase={phase} />

@@ -15,6 +15,7 @@ import { Big, H1, Muted, Note, Press, Seg, Sheet, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { LEVELS, LEVEL_XP, levelOf } from '../../lib/levels';
+import { Doodles } from '../../ui/Doodles';
 
 const INKS = ['#2F5BFF', '#FF6A4D', '#E0A800', '#8C6CFF'];
 const ROTS = ['-6deg', '5deg', '-3deg', '7deg'];
@@ -48,6 +49,7 @@ export default function Profil() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
+      <Doodles />
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
       <View style={{ height: 44, flexDirection: 'row', alignItems: 'center' }}>
         <H1 style={{ flex: 1, fontSize: 28 }}>{'@' + (prefs.user || 'tu')}</H1>

@@ -16,6 +16,7 @@ import { tweaksFor } from '../lib/tweaks';
 import { firstDraft, runPlans } from '../lib/planAsk';
 import { PlacesMap } from '../ui/PlacesMap';
 import { useWeatherVersion } from '../lib/weather';
+import { Doodles } from '../ui/Doodles';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
@@ -76,6 +77,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
+      <Doodles />
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 44 }}>
           {!inTab ? (
