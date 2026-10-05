@@ -18,6 +18,7 @@ import { PlacesMap } from '../ui/PlacesMap';
 import { useWeatherVersion } from '../lib/weather';
 import { Doodles } from '../ui/Doodles';
 import { MissingPlace } from '../ui/MissingPlace';
+import { openAt } from '../../../src/engine/core';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
@@ -156,6 +157,13 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
                       <Tag big text={r[0]} bg={r[1]} fg={r[2]} />
                       {p.res === 'required' ? <Tag text="Cere rezervare" bg={t.coralSoft} fg={t.coralInk} /> : null}
                       {p.age ? <Tag text="18+" bg={t.s2} fg={t.ink} /> : null}
+                      {(() => {
+                        // closed right now, or no hours on the map at night: said on the card, not found out at the door
+                        const now = new Date(); const o = openAt(p.real, now); const h = now.getHours();
+                        if (o.known && !o.open) return <Tag text="Închis acum" bg={t.coralSoft} fg={t.coralInk} />;
+                        if (!o.known && (h >= 22 || h < 7) && p.real.cat !== 'natura') return <Tag text="Program neconfirmat" bg={t.s2} fg={t.ink2} />;
+                        return null;
+                      })()}
                     </View>
                     <T style={{ fontFamily: F.b, fontSize: 17, lineHeight: 20 }}>{p.title}</T>
                     <T style={{ fontFamily: F.sb, fontSize: 14, color: t.ink2 }}>{p.name}</T>

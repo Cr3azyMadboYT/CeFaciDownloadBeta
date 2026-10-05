@@ -793,8 +793,10 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (v.fast && (p.romantic || p.fancy || venueTopics.includes('restaurant') || (!wantsSomething && !p.cheap))) sc -= 8;
       sc += p.place ? 22 * Math.max(0, 1 - d / (radius * 1.15)) : 14 * Math.max(0, 1 - d / 12);
       if (p.near && !p.place) sc += 22 * Math.max(0, 1 - d / 5);
-      // closed now (no time asked): still shown, lower; a park without hours on the map is simply open by day
-      sc += !st.known ? (v.cat === 'natura' ? 10 : p.time ? 3 : 5) : st.open ? 12 : -12;
+      // closed now (no time asked): still shown, but after every open place (decision Cornel, 06.10: "îmi arată să mă
+      // duc, însă e închis la ora asta"); without hours on the map, how often that kind of place is open at that hour
+      // decides (a café at 01:00 almost never is); a park without hours is simply open by day
+      sc += !st.known ? (v.cat === 'natura' ? 10 : openChance(v, t) >= LIKELY ? (p.time ? 3 : 4) : -30) : st.open ? 12 : -45;
       if (p.time && !wantsSomething) sc += 14 * nightFit;
       if (p.cheap) sc += 6 * Math.max(0, 1 - price / 60);
       if (p.fancy) sc += Math.min(8, price / 15);
