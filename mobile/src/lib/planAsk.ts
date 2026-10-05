@@ -8,7 +8,7 @@ import { useSyncExternalStore } from 'react';
 import type { PlanAsk } from '../../../src/app/bridge';
 import { addDays, dateShort, eveningOf, eveningWord, isoDay, momentOf, whenWords } from '../../../src/engine/time';
 import { APP } from './session';
-import { crewTaste } from './crews';
+import { crewHasMinor, crewTaste } from './crews';
 import type { Taste } from '../../../src/engine/types';
 
 export type Made = ReturnType<typeof APP.makePlans>;
@@ -168,19 +168,24 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
   const taste: Promise<Taste | undefined> = d.crewId
     ? Promise.race([crewTaste(d.crewId).then((rows) => (rows.length ? APP.tasteOf(d.crewName ?? 'voastră', rows) : undefined)), new Promise<undefined>((ok) => setTimeout(() => ok(undefined), 2500))]).catch(() => undefined)
     : Promise.resolve(undefined);
-  return new Promise((done) => void taste.then((tt) => setTimeout(() => {
+  // the crew has someone under 18 (only yes or no, from the server): the plans are for everyone
+  const minorQ: Promise<boolean> = d.crewId
+    ? Promise.race([crewHasMinor(d.crewId), new Promise<boolean>((ok) => setTimeout(() => ok(false), 2500))]).catch(() => false)
+    : Promise.resolve(false);
+  return new Promise((done) => void Promise.all([taste, minorQ]).then(([tt, crewMinor]) => setTimeout(() => {
     if (id !== runId) { done(s); return; } // a newer request is on its way: this one is dropped
     // a surprise leaves out the places of the last surprises (two days), as long as something is left
     const avoid = [...(o.avoid ?? []), ...(o.surprise ? recentSurprises() : [])];
-    let r = APP.makePlans(askOf(d), avoid, tt);
-    if (!r.plans.length && avoid.length) r = APP.makePlans(askOf(d), o.avoid ?? [], tt);
-    if (!r.plans.length && o.avoid?.length) r = APP.makePlans(askOf(d), [], tt);
+    let r = APP.makePlans(askOf(d), avoid, tt, crewMinor);
+    if (!r.plans.length && avoid.length) r = APP.makePlans(askOf(d), o.avoid ?? [], tt, crewMinor);
+    if (!r.plans.length && o.avoid?.length) r = APP.makePlans(askOf(d), [], tt, crewMinor);
+    const minorNote: Notice | undefined = crewMinor && !APP.isMinor() ? { text: 'În gașca ' + (d.crewName ?? 'voastră') + ' e cineva sub 18 ani, așa că v-am ales doar locuri unde puteți intra toți: fără cluburi, baruri sau narghilea.' } : undefined;
     // a surprise: any of the plans, the best a little more often
     const roll = Math.random();
     const pick = o.surprise && r.plans.length ? Math.min(r.plans.length - 1, roll < 0.45 ? 0 : roll < 0.75 ? 1 : 2) : 0;
     const opened = o.surprise && r.plans[pick] ? r.plans[pick].steps.map((x) => x.place.id) : [];
     if (opened.length) rememberSurprise(opened);
-    s = { ...s, plans: r.plans, note: r.note, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
+    s = { ...s, notice: o.notice ?? minorNote, plans: r.plans, note: r.note, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
     emit();
     done(s);
   }, 30)));

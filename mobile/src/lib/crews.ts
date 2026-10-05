@@ -16,6 +16,12 @@ export const iconOf = (key: string) => (STAMP_ICONS.find((x) => x[0] === key) ??
 export interface Member { person: Person; status: 'invited' | 'member' }
 export interface Crew { id: string; name: string; icon: string; color: string; adminId: string | null; mine: 'invited' | 'member'; members: Member[] }
 
+/** Whether someone in the crew is under 18 (the server says only yes or no). */
+export async function crewHasMinor(crewId: string): Promise<boolean> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data } = await (sb() as any).rpc('crew_has_minor', { p_crew: crewId });
+  return data === true;
+}
 export async function listCrews(me: string): Promise<Crew[]> {
   const { data: crews, error } = await db().from('crews').select('id, name, stamp_icon, stamp_color, admin_id, temporary');
   if (error || !crews?.length) return [];

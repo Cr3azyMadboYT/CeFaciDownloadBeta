@@ -173,4 +173,12 @@ describe('Creează plan', () => {
     const r = APP.makePlans({ mode: 'seara', at: at(1, 22), people: 1, budget: [0, 300], vibes: ['Party'] });
     expect(r.plans.some((p) => p.steps.some((s) => s.place.real.k === 'nightclub'))).toBe(true);
   });
+  it('o gașcă cu cineva sub 18 ani: planuri fără cluburi, baruri sau narghilea', async () => {
+    const { adultOnly } = await import('../src/engine/core');
+    APP.savePrefs({ zone: 'centru', dist: '20', moves: ['walk', 'car'], here: undefined } as never);
+    for (const mode of ['loc', 'seara'] as const) {
+      const r = APP.makePlans({ mode, at: at(1, 22), people: 4, budget: [0, 300], vibes: ['Party'] }, [], undefined, true);
+      for (const p of r.plans) for (const s of p.steps) expect(adultOnly(s.place.real), p.title + ': ' + s.place.name).toBe(false);
+    }
+  });
 });

@@ -66,6 +66,8 @@ it('keeps every rule of the database', async () => {
   eq('bob sees crew as invited', (await as('bob', `select status from crew_members where crew_id = $1 and user_id = $2`, [crew, U.bob])).rows[0].status, 'invited');
   await expectOk('bob accepts crew', () => as('bob', `update crew_members set status = 'member', joined_at = now() where crew_id = $1 and user_id = $2`, [crew, U.bob]));
   eq('cris (not in crew) sees nothing', (await as('cris', `select count(*)::int n from crews`)).rows[0].n, 0);
+  eq('the crew has someone under 18 (teen invited)', (await as('bob', `select crew_has_minor($1) m`, [crew])).rows[0].m, true);
+  eq('a stranger is not told', (await as('cris', `select crew_has_minor($1) m`, [crew])).rows[0].m, null);
   await expectFail('teen (invited) cannot invite', () => as('teen', `insert into crew_members (crew_id, user_id, invited_by) values ($1, $2, $3)`, [crew, U.cris, U.teen]));
   const tok = (await as('ana', `select invite_token from crews where id = $1`, [crew])).rows[0].invite_token;
   await expectOk('cris joins by link', () => as('cris', `select join_crew($1)`, [tok]));

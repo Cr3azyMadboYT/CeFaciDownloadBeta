@@ -30,4 +30,5 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "Lipsește secretul SUPABASE_SERVICE_ROLE_KEY." >> "$GITHUB_STEP_SUMMARY"; exit 1; fi
+          set -o pipefail
           node scripts/push-venues.mjs | tee -a "$GITHUB_STEP_SUMMARY"
