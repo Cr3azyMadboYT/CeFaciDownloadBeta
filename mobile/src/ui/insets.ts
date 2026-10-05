@@ -64,7 +64,7 @@ export function useBarBottom(onMeasure?: (m: { y: number; h: number; navTop: num
     if (Platform.OS !== 'android' || navTop <= 0) return;
     ref.current?.measureInWindow((_x, y, _w, h) => {
       if (!(h > 0)) return;
-      const l = Math.max(0, Math.ceil(y + h - navTop));
+      const l = Math.max(0, Math.round(y + h - navTop));
       setLift(l);
       onMeasure?.({ y, h, navTop, lift: l });
     });
