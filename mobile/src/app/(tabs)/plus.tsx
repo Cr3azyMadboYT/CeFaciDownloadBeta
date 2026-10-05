@@ -8,6 +8,8 @@ import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
+import { blurStyle, useEased } from '../../ui/Magic';
+import { useTour } from '../../lib/tour';
 
 const PERKS: [string, string, string][] = [
   ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reducere de 10–20% la partenerii CeFaci', 'De fiecare dată când ieși, nu doar la Live Drops.'],
@@ -28,10 +30,14 @@ export default function Plus() {
   const tag: [string, string, string] = st === 'trial' ? ['Probă · ' + left + (left === 1 ? ' zi' : ' zile'), '#FFD43B', '#0E1440'] : st === 'active' ? ['Activ', t.blueSoft, t.blueInk] : st === 'off' ? ['Oprit', t.s2, t.ink2] : ['Cadou', '#FFD43B', '#0E1440'];
   const setModal = (m: string) => setBoard({ plusModal: m });
   const m = b.plusModal;
+  const touring = useTour().on; // in Bilu's tour he opens the gift himself: no button to press meanwhile
+  // closed gift: the page is blurred; when it opens (Bilu's "Hocus… pocus!") the blur melts away in a second and a half
+  const blur = useEased(veiled ? 9 : 0, 1400);
+  const fade = useEased(veiled ? 0.6 : 1, 1400);
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }} style={{ opacity: veiled ? 0.25 : 1 }} scrollEnabled={!veiled} importantForAccessibility={veiled ? 'no-hide-descendants' : 'auto'}>
+      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }} style={[{ opacity: fade }, blurStyle(blur)]} scrollEnabled={!veiled} importantForAccessibility={veiled ? 'no-hide-descendants' : 'auto'}>
         <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <H1 style={{ fontSize: 28 }}>CeFaci Plus</H1>
           <Tag text={tag[0]} bg={tag[1]} fg={tag[2]} />
@@ -70,7 +76,7 @@ export default function Plus() {
         </View>
       </ScrollView>
 
-      {veiled && !m ? (
+      {veiled && !m && !touring ? (
         <View style={{ position: 'absolute', left: 24, right: 24, top: ins.top + 120, padding: 20, paddingBottom: 22, borderRadius: 26, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', gap: 10, shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 25, shadowOffset: { width: 0, height: 20 }, elevation: 12 }}>
           <Bilu size={st === 'off' ? 104 : 112} mood={st === 'off' ? 'hi' : 'wink'} />
           <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 27, textAlign: 'center' }}>{st === 'off' ? 'Plus s-a oprit' : 'Aici e ascuns un cadou'}</T>

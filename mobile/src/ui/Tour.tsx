@@ -1,7 +1,7 @@
 // Bilu's tour, drawn over the tabs: a dimmed screen with a lit window on the part being explained, Bilu and his
 // bubble next to it. Two steps want a real tap (Profil, Plus); the last one gives the free Plus week.
 import { useEffect, useRef } from 'react';
-import { Animated, Easing, Modal, Pressable, View, useWindowDimensions } from 'react-native';
+import { Animated, Easing, Modal, Pressable, View, useWindowDimensions, type GestureResponderEvent } from 'react-native';
 import { router } from 'expo-router';
 import { setBoard, getApp } from '../lib/session';
 import { endTour, tourNext, tourOops, useTour, type Rect } from '../lib/tour';
@@ -9,6 +9,8 @@ import { Bilu, type Mood } from './Bilu';
 import { Big, T } from './kit';
 import { F } from './theme';
 import { useModalInsets } from './insets';
+import { Confetti, Poof } from './Magic';
+import { Icon } from './Icon';
 
 interface Step { id?: string; mood: Mood; text: string; oops?: string; hot?: 'profil' | 'plus'; final?: 'xp' | 'gift'; magic?: boolean }
 const STEPS: Step[] = [
@@ -21,7 +23,7 @@ const STEPS: Step[] = [
   { mood: 'yay', final: 'xp', text: 'Ăsta e carnetul tău: fă check-in când ajungi la local și primești ștampile și XP, iar poza bonului îți mai aduce 25 XP. Și ca să nu pleci cu mâna goală, ai deja 150 XP de bun venit!' },
   { id: 'tab-plus', mood: 'down', hot: 'plus', text: 'Și încă ceva! Iconița încețoșată din dreapta jos ascunde un cadou. Apasă pe ea.', oops: 'Aproape! Iconița încețoșată, ultima din dreapta jos.' },
   { mood: 'magic', magic: true, text: 'Hocus… pocus!' },
-  { mood: 'yay', final: 'gift', text: 'Poftim: 7 zile de CeFaci Plus, cadou de la mine! Reducerile pornesc când intră primii parteneri. Când se termină, o reactivezi oricând.' },
+  { mood: 'yay', final: 'gift', text: 'Poftim, cadou de la mine! Reducerile pornesc când intră primii parteneri. Când se termină săptămâna, o reactivezi oricând.' },
 ];
 
 const DIM = 'rgba(4,7,24,0.78)';
@@ -39,8 +41,9 @@ export function Tour() {
   // the magic step opens the gift by itself after a moment
   useEffect(() => {
     if (!tour.on || !st?.magic) return;
-    const a = setTimeout(() => { if ((getApp().board.plus ?? 'locked') === 'locked') setBoard({ plus: 'trial', plusDay: 1 }); }, 900);
-    const b = setTimeout(() => tourNext(), 2600);
+    // as in the design: the gift opens just under a second in (the blur starts melting), the next step at 2.9 s
+    const a = setTimeout(() => { if ((getApp().board.plus ?? 'locked') === 'locked') setBoard({ plus: 'trial', plusDay: 1 }); }, 950);
+    const b = setTimeout(() => tourNext(), 2900);
     return () => { clearTimeout(a); clearTimeout(b); };
   }, [tour.on, st?.magic]);
 
@@ -50,9 +53,16 @@ export function Tour() {
   const below = hole ? hole.y + hole.h / 2 < H / 2 : false;
   const last = tour.step >= steps.length - 1;
 
-  const tap = () => {
+  const tap = (e?: GestureResponderEvent) => {
     if (st.final || st.magic) return;
-    if (st.hot) { tourOops(); return; }
+    if (st.hot) {
+      // a tap on the tab itself counts, even a little outside the lit window (a finger is not a pixel, and the
+      // bar may still be moving into place)
+      const x = e?.nativeEvent.pageX ?? -1, y = e?.nativeEvent.pageY ?? -1;
+      if (hole && x >= hole.x - 12 && x <= hole.x + hole.w + 12 && y >= hole.y - 40 && y <= hole.y + hole.h + 60) { hit(); return; }
+      tourOops();
+      return;
+    }
     tourNext();
   };
   const hit = () => {
@@ -64,7 +74,7 @@ export function Tour() {
 
   const bubble = (
     <Animated.View style={{ opacity: fade, transform: [{ translateY: fade.interpolate({ inputRange: [0, 1], outputRange: [8, 0] }) }], gap: 10, alignItems: 'center' }}>
-      <Bilu size={st.final || !hole ? 130 : 92} mood={tour.oops && st.hot ? 'oops' : st.mood} />
+      <Bilu size={st.final === 'gift' ? 96 : st.final || !hole ? 130 : 92} mood={tour.oops && st.hot ? 'oops' : st.mood} />
       <View style={{ alignSelf: 'stretch', padding: 16, borderRadius: 20, backgroundColor: '#FFFFFF' }}>
         <T style={{ fontFamily: st.magic ? F.display : F.sb, fontSize: st.magic ? 28 : 17, lineHeight: st.magic ? 30 : 24, color: '#0E1440', textAlign: st.magic ? 'center' : 'left' }}>
           {tour.oops && st.oops ? st.oops : st.text}
@@ -78,6 +88,7 @@ export function Tour() {
           <T style={{ fontFamily: F.sb, fontSize: 13, color: '#FFFFFF' }}>Abia ai ieșit din casă. Bine ai venit!</T>
         </View>
       ) : null}
+      {st.final === 'gift' ? <GiftCard /> : null}
       {st.final ? (
         <View style={{ alignSelf: 'stretch', gap: 8 }}>
           {st.final === 'xp' ? (
@@ -87,7 +98,7 @@ export function Tour() {
           ) : (
             <>
               <Big label="Arată-mi Plus" color="#FFD43B" ink="#0E1440" onPress={() => finish('/plus')} />
-              <Big label="Hai să vedem ce faci diseară!" color="rgba(255,255,255,0.14)" onPress={() => finish('/plan-nou')} />
+              <Big label="Hai să vedem ce faci diseară!" color="#2A3160" onPress={() => finish('/plan-nou')} />
             </>
           )}
         </View>
@@ -96,8 +107,8 @@ export function Tour() {
   );
 
   return (
-    <Modal visible transparent animationType="fade" statusBarTranslucent navigationBarTranslucent onRequestClose={() => (last ? finish() : tap())}>
-      <Pressable style={{ flex: 1 }} onPress={tap} accessibilityLabel={st.hot ? 'Apasă pe zona luminată' : 'Mai departe'}>
+    <Modal visible transparent animationType="fade" statusBarTranslucent navigationBarTranslucent onRequestClose={() => (last ? finish() : st.final ? undefined : tap())}>
+      <Pressable style={{ flex: 1 }} onPress={(e) => tap(e)} accessibilityLabel={st.hot ? 'Apasă pe zona luminată' : 'Mai departe'}>
         {hole ? (
           <>
             <View style={{ position: 'absolute', left: 0, right: 0, top: 0, height: Math.max(0, hole.y), backgroundColor: DIM }} />
@@ -111,7 +122,9 @@ export function Tour() {
             </View>
           </>
         ) : (
-          <View style={{ flex: 1, backgroundColor: st.magic ? 'rgba(4,7,24,0.35)' : DIM, justifyContent: 'center', paddingHorizontal: 24 }}>
+          <View style={{ flex: 1, backgroundColor: st.magic ? 'rgba(4,7,24,0.12)' : DIM, justifyContent: st.magic ? 'flex-end' : 'center', paddingHorizontal: 24, paddingBottom: st.magic ? ins.bottom + 120 : 0 }}>
+            {st.final === 'gift' ? <Confetti /> : null}
+            {st.magic ? <Poof x={W * 0.72 - 24} y={ins.top + 200} /> : null}
             {bubble}
           </View>
         )}
@@ -126,5 +139,29 @@ export function Tour() {
         <View style={{ width: W, height: 0 }} />
       </Pressable>
     </Modal>
+  );
+}
+
+/** Bilu's gift, as in the design: a yellow card with what the free week brings. */
+function GiftCard() {
+  const a = useRef(new Animated.Value(0)).current;
+  useEffect(() => { Animated.spring(a, { toValue: 1, delay: 200, speed: 12, bounciness: 10, useNativeDriver: true }).start(); }, [a]);
+  return (
+    <Animated.View accessibilityLabel="Cadoul lui Bilu: 7 zile gratis de CeFaci Plus" style={{
+      alignSelf: 'stretch', padding: 16, borderRadius: 22, backgroundColor: '#FFD43B',
+      opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [16, 0] }) }, { scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }],
+    }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ height: 28, paddingHorizontal: 11, borderRadius: 999, backgroundColor: '#0E1440', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: '#FFD43B' }}>CeFaci Plus</T></View>
+        <T style={{ fontFamily: F.b, fontSize: 13, color: '#0E1440' }}>Cadou</T>
+      </View>
+      <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 44, lineHeight: 44, letterSpacing: -1.2, color: '#0E1440' }}>7 zile gratis</T>
+      <View style={{ marginTop: 10, gap: 6 }}>
+        {['10–20% reducere la localurile partenere', 'Și pentru gașca ta, până la 4 la masă', 'Live Drops cu 10 minute mai devreme'].map((x) => (
+          <View key={x} style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><Icon name="check" size={16} color="#0E1440" width={2.6} /><T style={{ flex: 1, fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{x}</T></View>
+        ))}
+      </View>
+      <T style={{ marginTop: 10, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>Apoi 20 lei pe lună, doar dacă vrei. Nu-ți cerem cardul acum.</T>
+    </Animated.View>
   );
 }

@@ -9,6 +9,7 @@ import { Icon } from '../../ui/Icon';
 import { PlusNotice } from '../../ui/PlusNotice';
 import { Tour } from '../../ui/Tour';
 import { TourTarget } from '../../ui/TourTarget';
+import { blurStyle, useEased } from '../../ui/Magic';
 import { Press, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 
@@ -37,19 +38,35 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         const color = isPlus ? '#E0A800' : on ? t.blueInk : t.ink3;
         return (
           <TourTarget key={r.key} id={'tab-' + r.name} style={{ flex: 1 }}>
-          <Press style={{ minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4, opacity: isPlus && veiled ? 0.55 : 1 }}
+          <Press style={{ minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4 }}
             accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? 'CeFaci Plus, oprit' : 'Plus: un cadou de la Bilu') : 'CeFaci Plus') : LABEL[r.name]}
             accessibilityState={{ selected: on }}
             onPress={() => {
               const ev = navigation.emit({ type: 'tabPress', target: r.key, canPreventDefault: true });
               if (!ev.defaultPrevented) navigation.navigate(r.name);
             }}>
-            <Icon d={TAB_ICON[r.name]} color={color} />
-            <T style={{ fontFamily: F.sb, fontSize: 12, color: on ? t.ink : t.ink3 }}>{LABEL[r.name]}</T>
+            {isPlus ? <PlusTab veiled={veiled} color={color} label={LABEL[r.name]} ink={on ? t.ink : t.ink3} /> : (
+              <>
+                <Icon d={TAB_ICON[r.name]} color={color} />
+                <T style={{ fontFamily: F.sb, fontSize: 12, color: on ? t.ink : t.ink3 }}>{LABEL[r.name]}</T>
+              </>
+            )}
           </Press>
           </TourTarget>
         );
       })}
+    </View>
+  );
+}
+
+/** The Plus tab: blurred while Bilu's gift is closed ("iconița încețoșată"), clearing slowly when it opens. */
+function PlusTab({ veiled, color, label, ink }: { veiled: boolean; color: string; label: string; ink: string }) {
+  const blur = useEased(veiled ? 3.5 : 0, 1200);
+  const fade = useEased(veiled ? 0.7 : 1, 1200);
+  return (
+    <View style={[{ alignItems: 'center', gap: 4, opacity: fade }, blurStyle(blur)]}>
+      <Icon d={TAB_ICON.plus} color={color} />
+      <T style={{ fontFamily: F.sb, fontSize: 12, color: ink }}>{label}</T>
     </View>
   );
 }
