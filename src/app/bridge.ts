@@ -477,12 +477,12 @@ export const APP = {
     return { plans: set.plans.map((p) => this.showPlan(p)), note: set.note, empty: set.empty, relaxed: set.relaxed };
   },
   // ---------- "O construiesc eu" (decision Cornel, 06.10): the evening step by step ----------
-  built: { req: null as PlanReq | null, steps: [] as PlanStep[], minor: false },
+  built: { req: null as PlanReq | null, steps: [] as PlanStep[], parts: [] as string[], minor: false },
   /** Starts building for these answers (when, how many, the budget). */
-  buildStart(a: PlanAsk, crewMinor = false) { this.built = { req: this.planReq({ ...a, mode: 'loc' }), steps: [], minor: crewMinor }; },
+  buildStart(a: PlanAsk, crewMinor = false) { this.built = { req: this.planReq({ ...a, mode: 'loc' }), steps: [], parts: [], minor: crewMinor }; },
   buildCtx() { const c = this.ctx(); return { ...c, minor: c.minor || this.built.minor }; },
   /** The steps so far, as cards. */
-  buildSteps() { const o = this.origin(); return this.built.steps.map((x) => ({ place: this.byIdMap.get(x.v.id) ?? toPlace(x.v, o), slot: hhmm(x.at), until: hhmm(x.until), why: x.why, travel: x.travel, by: x.by, price: x.price, open: x.open.label })); },
+  buildSteps() { const o = this.origin(); return this.built.steps.map((x, i) => ({ part: this.built.parts[i] ?? 'masa', place: this.byIdMap.get(x.v.id) ?? toPlace(x.v, o), slot: hhmm(x.at), until: hhmm(x.until), why: x.why, travel: x.travel, by: x.by, price: x.price, open: x.open.label })); },
   /** What can come next, and whether anything of it is open then (the chips). */
   buildParts() {
     const req = this.built.req; if (!req) return [];
@@ -508,10 +508,11 @@ export const APP = {
     const b = buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, this.built.steps.map((x) => x.v.id), 400).find((x) => x.step.v.id === id);
     if (!b) return false;
     this.built.steps.push(b.step);
+    this.built.parts.push(part);
     return true;
   },
   /** Takes out the step at `i` and the ones after it (they followed from it). */
-  buildCut(i: number) { this.built.steps = this.built.steps.slice(0, Math.max(0, i)); },
+  buildCut(i: number) { this.built.steps = this.built.steps.slice(0, Math.max(0, i)); this.built.parts = this.built.parts.slice(0, Math.max(0, i)); },
   /** The steps as a plan, ready for the plan screens (tickets, vote, map). */
   buildPlan() {
     const req = this.built.req; if (!req || !this.built.steps.length) return null;
