@@ -16,7 +16,7 @@ export type Made = ReturnType<typeof APP.makePlans>;
 export type Shown = Made['plans'][number];
 /** The answers as the screens hold them. */
 export interface Draft {
-  mode: 'loc' | 'seara';
+  mode: 'loc' | 'seara' | 'eu';  // eu: "O construiesc eu", step by step
   evening: string;          // yyyy-mm-dd: the evening; 01:00 belongs to the evening before
   hour: string;             // 'acum' or 'HH:MM'
   people: number;
@@ -49,7 +49,7 @@ export const atOf = (d: Pick<Draft, 'evening' | 'hour'>, now = new Date()) => (d
 export const isPast = (d: Pick<Draft, 'evening' | 'hour'>, now = new Date()) => d.hour !== 'acum' && momentOf(d.evening, d.hour).getTime() < now.getTime() - 10 * 60e3;
 export function askOf(d: Draft, now = new Date()): PlanAsk {
   const nowish = d.hour === 'acum' || isPast(d, now);
-  return { mode: d.mode, at: nowish ? soon(now) : atOf(d, now), now: nowish, people: d.people, budget: [d.budget[0], d.budget[1] >= BUDGET_TOP ? Infinity : d.budget[1]], vibes: d.vibes, strict: d.strict, ...d.extra };
+  return { mode: d.mode === 'eu' ? 'loc' : d.mode, at: nowish ? soon(now) : atOf(d, now), now: nowish, people: d.people, budget: [d.budget[0], d.budget[1] >= BUDGET_TOP ? Infinity : d.budget[1]], vibes: d.vibes, strict: d.strict, ...d.extra };
 }
 
 // ---------- when ----------
@@ -201,7 +201,7 @@ function untilOf(at: Date, until: string): Date {
   return u;
 }
 /** The plans with what Google said: "Verificat acum pe Google: deschis până la 02:00" instead of Bilu's guess. */
-function withLive(plans: Shown[], live: Record<string, Live>): Shown[] {
+export function withLive(plans: Shown[], live: Record<string, Live>): Shown[] {
   return plans.map((p) => {
     const asked = p.steps.filter((x) => needsCheck(x.place.real.k, x.place.real.cat));
     if (!asked.length || !asked.every((x) => live[x.place.id]?.open === true)) return p;
@@ -234,6 +234,23 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
     s = { ...s, plans: r.plans, note: said + (r.note ? ' ' + r.note : ''), empty: r.empty, pick: Math.min(s.pick, Math.max(0, r.plans.length - 1)) };
     emit();
   }
+}
+/** "O construiesc eu": starts building for the answers (a crew with someone under 18 gets places for everyone). */
+export async function startBuild(d: Draft) {
+  s = { ...s, draft: d };
+  APP.buildStart(askOf(d));
+  if (d.crewId) {
+    const minor = await Promise.race([crewHasMinor(d.crewId), new Promise<boolean>((ok) => setTimeout(() => ok(false), 2500))]).catch(() => false);
+    if (minor) APP.built.minor = true;
+    return minor;
+  }
+  return false;
+}
+/** "O construiesc eu": the evening they built, as the plan on screen (already checked on Google). */
+export function runBuilt(plan: Shown) {
+  ++runId;
+  s = { ...s, plans: [plan], chips: [], note: undefined, empty: undefined, notice: undefined, loading: false, madeAt: Date.now(), pick: 0, seen: [], wider: false };
+  emit();
 }
 /** "Altă surpriză": the next plan of the three, then three new ones without the places already shown. */
 export function nextSurprise(): Promise<S> | null {

@@ -10,7 +10,7 @@
 //   what he changed; when there is really nothing (04:30), he says why instead of an empty screen.
 import { KINDS } from './catalog';
 import { closesAt, info, km, learnHours, needFit, openAt, priceOf, scoreVenue, stayAt, vibesOf, type Need } from './core';
-import { buildEvening, carMin, eveningCands, walkMin, type EveningAsk, type EveningCand } from './evening';
+import { SLOTS, buildEvening, carMin, eveningCands, walkMin, type EveningAsk, type EveningCand, type SlotId } from './evening';
 import { hhmm, nightHour } from './time';
 import { exposure, wxAt } from './weather';
 import type { Ask, Ctx, OpenInfo, Scored, Venue, Vibe, Who } from './types';
@@ -415,4 +415,59 @@ export function vibeCounts(all: Venue[], req: PlanReq, ctx: Ctx): Record<string,
   const out: Record<string, number> = {};
   for (const c of rankAt(all, { ...req, vibes: [] }, ctx)) for (const x of vibesOf(c.s.v)) out[x] = (out[x] ?? 0) + 1;
   return out;
+}
+
+// ---------- "O construiesc eu" (decision Cornel, 06.10) ----------
+// The evening built step by step by the person: they choose what comes next, Bilu shows a few places of that kind
+// open at the time it would start and for long enough, close to the place before (a walk, or a short drive in a small
+// town), and the steps make a plan like the others (checked, with tickets, a vote, the map).
+
+/** What can come next, in the words people use. */
+export const PARTS: { id: SlotId; label: string; icon: string }[] = [
+  { id: 'masa', label: 'Mâncare', icon: 'burger' }, { id: 'pahar', label: 'Un pahar', icon: 'beer' }, { id: 'club', label: 'Club', icon: 'club' },
+  { id: 'film', label: 'Film', icon: 'film' }, { id: 'spectacol', label: 'Spectacol', icon: 'ticket' }, { id: 'desert', label: 'Desert sau cafea', icon: 'coffee' },
+  { id: 'joaca', label: 'Joacă', icon: 'dice' }, { id: 'promenada', label: 'Plimbare', icon: 'tree' }, { id: 'cultura', label: 'Muzeu', icon: 'landmark' },
+  { id: 'gustare', label: 'Ceva de mâncat, târziu', icon: 'pizza' },
+];
+export interface BuildOption { step: PlanStep; score: number; km: number }
+
+/** A few places for the next part: open from the time it starts (after the place before, plus the way there) for as
+ *  long as that part usually takes, near the place before, best first. */
+export function buildOptions(all: Venue[], req: PlanReq, ctx: Ctx, prev: PlanStep | null, part: SlotId, skip: string[] = [], n = 3, spent = 0): BuildOption[] {
+  learnHours(all);
+  const slot = SLOTS[part];
+  // by day a walk is in a park; in the evening where people are (a square, a promenade)
+  const kinds = part === 'promenada' ? [...slot.kinds, ...SLOTS.plimbare.kinds] : part === 'desert' ? [...new Set([...slot.kinds, 'cafe'])] : slot.kinds;
+  const from = prev ? prev.v : ctx.origin;
+  const near = prev ? (req.car === false ? Math.max(req.walkKm, 1.5) : 8) : reach(req);
+  const out: BuildOption[] = [];
+  for (const v of all) {
+    if (!kinds.includes(v.k) || skip.includes(v.id) || req.avoid?.includes(v.id)) continue;
+    const d = km(from, v);
+    if (d > near || (prev && km(ctx.origin, v) > reach(req) + 2)) continue;
+    const by: Way = prev ? (d <= 1.2 || req.car === false ? 'walk' : req.go ?? 'car') : wayFor(req, d);
+    const travel = minutesBy(d, by);
+    const at = prev ? roundUp5(new Date(prev.until.getTime() + travel * 60e3)) : arrival(req, d);
+    const stay = stayAt(v, at, slot.min);
+    if (!stay.ok) continue;
+    const minutes = (stay.until.getTime() - at.getTime()) / 60e3;
+    if (minutes < (slot.whole ?? Math.min(45, slot.min))) continue;
+    const sc = scoreVenue(v, { ...askOf(req), at, maxKm: Infinity }, { ...ctx, origin: from });
+    if (!sc) continue;
+    const extra = extraFit(v, req);
+    if (extra === null) continue;
+    const step: PlanStep = { v, at, until: stay.until, travel, by, why: slot.why(nightHour(at)), price: priceOf(v), open: openInfo(v, at), sure: stay.sure, reasons: sc.reasons };
+    // what is left of the budget for the whole evening: a place that fits comes first
+    const over = req.budgetMax !== Infinity && spent + step.price > req.budgetMax ? -20 : 0;
+    out.push({ step, km: d, score: sc.score + extra + over + (stay.sure ? 8 : 0) + (prev ? 14 * (1 - d / near) : 0) });
+  }
+  return out.sort((a, b) => b.score - a.score).slice(0, n);
+}
+
+/** The steps chosen, as a plan like the others ("Seara ta"): checked, with the price and the way between them. */
+export function builtPlan(steps: PlanStep[], req: PlanReq, ctx: Ctx): MadePlan {
+  const drive = steps.some((x, i) => i > 0 && x.by !== 'walk');
+  const sub = steps.map((x) => x.why.toLowerCase()).join(', apoi ');
+  const p: MadePlan = { id: 'eu-' + steps.map((x) => x.v.id).join('-'), title: steps.length === 1 ? 'Locul tău' : 'Seara ta', sub, steps, price: steps.reduce((a, x) => a + x.price, 0), drive, checks: [], family: 'food', fits: true };
+  return finish(p, req, ctx);
 }

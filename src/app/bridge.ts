@@ -8,7 +8,8 @@ import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, parseQue
 import type { Ask, Ctx, Scored, Taste, Venue, When, Who } from '../engine/types';
 import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
 import { evenings, type TemplateId } from '../engine/evening';
-import { altStep, makePlans, planForPlace, previewNames, suggest, swapStep, vibeCounts, type MadePlan, type PlanReq, type PlanSet } from '../engine/planner';
+import { PARTS, altStep, buildOptions, builtPlan, makePlans, planForPlace, previewNames, suggest, swapStep, vibeCounts, type MadePlan, type PlanReq, type PlanSet, type PlanStep } from '../engine/planner';
+import type { SlotId } from '../engine/evening';
 import { addDays, dayFromIso, eveningOf, isoDay, momentOf, whenWords } from '../engine/time';
 
 // the places: the copy in the app, with the changes from Supabase (Admin) kept on the phone put over it (places.ts)
@@ -474,6 +475,49 @@ export const APP = {
     const set: PlanSet = makePlans(VENUES, { ...this.planReq(a), avoid: avoid.length ? avoid : undefined }, ctx);
     this.lastPlans = set.plans; this.lastReq = set.req; this.altSeen.clear();
     return { plans: set.plans.map((p) => this.showPlan(p)), note: set.note, empty: set.empty, relaxed: set.relaxed };
+  },
+  // ---------- "O construiesc eu" (decision Cornel, 06.10): the evening step by step ----------
+  built: { req: null as PlanReq | null, steps: [] as PlanStep[], minor: false },
+  /** Starts building for these answers (when, how many, the budget). */
+  buildStart(a: PlanAsk, crewMinor = false) { this.built = { req: this.planReq({ ...a, mode: 'loc' }), steps: [], minor: crewMinor }; },
+  buildCtx() { const c = this.ctx(); return { ...c, minor: c.minor || this.built.minor }; },
+  /** The steps so far, as cards. */
+  buildSteps() { const o = this.origin(); return this.built.steps.map((x) => ({ place: this.byIdMap.get(x.v.id) ?? toPlace(x.v, o), slot: hhmm(x.at), until: hhmm(x.until), why: x.why, travel: x.travel, by: x.by, price: x.price, open: x.open.label })); },
+  /** What can come next, and whether anything of it is open then (the chips). */
+  buildParts() {
+    const req = this.built.req; if (!req) return [];
+    const prev = this.built.steps[this.built.steps.length - 1] ?? null;
+    const used = this.built.steps.map((x) => x.v.id);
+    return PARTS.map((p) => ({ ...p, ok: buildOptions(VENUES, req, this.buildCtx(), prev, p.id, used, 1).length > 0 }));
+  },
+  /** A few places for the next part (`skip`: the ones already shown, for "Altele"). */
+  buildOptions(part: string, skip: string[] = []) {
+    const req = this.built.req; if (!req) return [];
+    const prev = this.built.steps[this.built.steps.length - 1] ?? null;
+    const used = [...this.built.steps.map((x) => x.v.id), ...skip];
+    const o = this.origin();
+    const spent = this.built.steps.reduce((a, x) => a + x.price, 0);
+    return buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, used, 3, spent).map((b) => ({
+      place: this.byIdMap.get(b.step.v.id) ?? toPlace(b.step.v, o), slot: hhmm(b.step.at), until: hhmm(b.step.until), travel: b.step.travel, by: b.step.by,
+      price: b.step.price, open: b.step.open.label, why: b.step.why, km: b.km, reason: b.step.reasons.slice(0, 2).join(' · '),
+    }));
+  },
+  buildAdd(part: string, id: string) {
+    const req = this.built.req; if (!req) return false;
+    const prev = this.built.steps[this.built.steps.length - 1] ?? null;
+    const b = buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, this.built.steps.map((x) => x.v.id), 400).find((x) => x.step.v.id === id);
+    if (!b) return false;
+    this.built.steps.push(b.step);
+    return true;
+  },
+  /** Takes out the step at `i` and the ones after it (they followed from it). */
+  buildCut(i: number) { this.built.steps = this.built.steps.slice(0, Math.max(0, i)); },
+  /** The steps as a plan, ready for the plan screens (tickets, vote, map). */
+  buildPlan() {
+    const req = this.built.req; if (!req || !this.built.steps.length) return null;
+    const p = builtPlan(this.built.steps, req, this.buildCtx());
+    this.lastPlans = [p]; this.lastReq = req; this.altSeen.clear();
+    return this.showPlan(p);
   },
   /** A crew's votes (crew_taste rows) as a taste: per place, and per kind of place for the places it went to. */
   tasteOf(name: string, rows: { venue_id: string; score: number }[]): Taste {

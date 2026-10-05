@@ -7,7 +7,7 @@ import { ActivityIndicator, ScrollView, TextInput, View } from 'react-native';
 import { Redirect, router, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 import { setFilters, useFilters } from '../lib/filters';
-import { BUDGET_TOP, askOf, budgetLabel, refreshIfStale, runPlans, setPlan, usePlans, wholeLabel, whenText, type Draft, type Shown } from '../lib/planAsk';
+import { BUDGET_TOP, askOf, budgetLabel, refreshIfStale, runPlans, setPlan, usePlans, wholeLabel, whenText, type Draft, type Shown, startBuild } from '../lib/planAsk';
 import { createPlanAt, type Plan } from '../lib/plans';
 import { sharePlan } from '../lib/together';
 import { getApp } from '../lib/session';
@@ -168,6 +168,13 @@ export default function PlanuriGata() {
               </View>
             </Press>
           ))}
+          {!loading && plans.length ? (
+            <Press onPress={() => { void startBuild({ ...draft, mode: 'eu' }); router.push('/construiesc'); }} accessibilityLabel="Niciunul nu-mi place, o construiesc eu"
+              style={{ marginTop: 14, minHeight: 48, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <Icon name="dice" size={16} color={t.blueInk} />
+              <T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>Niciunul nu-mi place? O construiesc eu</T>
+            </Press>
+          ) : null}
 
           {!loading ? (
             <View style={{ marginTop: 18, padding: 14, borderRadius: 22, backgroundColor: '#0E1440', gap: 10 }}>

@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BackHandler, ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { listCrews, type Crew } from '../lib/crews';
-import { BUDGET_TOP, askOf, budgetLabel, dayCard, eveningsFrom, firstDraft, getPlans, hourFor, hoursFor, runPlans, wholeLabel, whenText, type Draft } from '../lib/planAsk';
+import { BUDGET_TOP, askOf, budgetLabel, dayCard, eveningsFrom, firstDraft, getPlans, hourFor, hoursFor, runPlans, startBuild, wholeLabel, whenText, type Draft } from '../lib/planAsk';
 import { addDays, momentOf } from '../../../src/engine/time';
 import { APP, useApp } from '../lib/session';
 import { useWeatherVersion } from '../lib/weather';
@@ -47,8 +47,13 @@ export default function PlanNou() {
   useEffect(() => { const id = setTimeout(() => setNames(APP.preview(askOf(d))), 60); return () => clearTimeout(id); }, [d, wxv]);
 
   // changing one answer from the plans screen: back to it; else on to it
-  const finish = (x = d) => { void runPlans(x, { save: true }); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata'); };
-  const next = (x = d) => { if (k >= STEPS.length - 1) finish(x); else setK(k + 1); };
+  // "O construiesc eu": no vibe question (they choose each place), on to building the evening
+  const last = d.mode === 'eu' ? STEPS.indexOf('buget') : STEPS.length - 1;
+  const finish = (x = d) => {
+    if (x.mode === 'eu') { void startBuild(x); router.replace('/construiesc'); return; }
+    void runPlans(x, { save: true }); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata');
+  };
+  const next = (x = d) => { if (k >= (x.mode === 'eu' ? STEPS.indexOf('buget') : STEPS.length - 1)) finish(x); else setK(k + 1); };
   const auto = (p: Partial<Draft>) => { const x = { ...d, ...p }; setD(x); setTimeout(() => next(x), 220); };
   const back = () => (k > 0 ? setK(k - 1) : router.canGoBack() ? router.back() : router.replace('/acasa'));
   useEffect(() => { const h = BackHandler.addEventListener('hardwareBackPress', () => { back(); return true; }); return () => h.remove(); });
@@ -63,7 +68,7 @@ export default function PlanNou() {
   const pickDay = (e: string) => set({ evening: e, hour: hourFor(e, d.hour, now) });
 
   const say: Record<Step, [Mood, string]> = {
-    ce: ['hi', 'Hai să-ți fac planul! Întâi: vrei un singur loc sau toată seara, pas cu pas?'],
+    ce: ['hi', 'Hai să-ți fac planul! Un singur loc, toată seara făcută de mine, sau o construiești tu, loc cu loc?'],
     cand: ['up', 'Acum sau altă zi? Lângă fiecare zi îți pun vremea' + (best ? ': cea mai frumoasă e ' + dayCard(best, now).word.toLowerCase() + '.' : '.')],
     cati: ['wink', 'Câți sunteți, cu tot cu tine? Sau alege gașca și știu singur.'],
     buget: ['up', 'Cât vrea să dea fiecare' + (d.mode === 'seara' ? ', pe toată seara' : '') + '? Trage de bulinele de pe bară.'],
@@ -89,7 +94,7 @@ export default function PlanNou() {
           <Icon name={k ? 'back' : 'close'} color={t.ink} />
         </Press>
         <View style={{ flex: 1, flexDirection: 'row', gap: 5 }}>
-          {STEPS.map((s, i) => <View key={s} style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: i <= k ? t.blue : t.s3 }} />)}
+          {STEPS.slice(0, last + 1).map((s, i) => <View key={s} style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: i <= k ? t.blue : t.s3 }} />)}
         </View>
         <Press onPress={() => finish()} style={{ minHeight: 44, justifyContent: 'center', paddingLeft: 4 }}><T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>Arată-mi acum</T></Press>
       </View>
@@ -100,12 +105,12 @@ export default function PlanNou() {
         {step === 'ce' ? (
           <View style={{ gap: 12 }}>
             <H1 style={{ fontSize: 32, lineHeight: 33 }}>Ce plan vrei?</H1>
-            {([['loc', 'Un singur loc', 'Un restaurant, un bar, un film… unul și gata.', 'pin', '#FFD43B'], ['seara', wholeLabel(d), 'Mai multe locuri pe rând, cu ore și drum.', 'sparkle', '#2F5BFF']] as const).map(([key, title, sub, icon, bg]) => {
+            {([['loc', 'Un singur loc', 'Un restaurant, un bar, un film… unul și gata.', 'pin', '#FFD43B'], ['seara', wholeLabel(d), 'Bilu face toată seara: mai multe locuri pe rând, cu ore și drum.', 'sparkle', '#2F5BFF'], ['eu', 'O construiesc eu', 'Aleg eu fiecare loc, pe rând. Bilu îmi arată ce e deschis aproape.', 'dice', '#5FD39A']] as const).map(([key, title, sub, icon, bg]) => {
               const on = d.mode === key;
               return (
                 <Press key={key} onPress={() => auto({ mode: key })} accessibilityState={{ selected: on }}
                   style={{ padding: 16, borderRadius: 24, borderWidth: 2, borderColor: on ? t.ink : t.line, backgroundColor: on ? '#0E1440' : t.s1, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-                  <View style={{ width: 58, height: 58, borderRadius: 18, backgroundColor: bg, alignItems: 'center', justifyContent: 'center' }}><Icon name={icon} size={28} color={key === 'loc' ? '#0E1440' : '#FFD43B'} /></View>
+                  <View style={{ width: 58, height: 58, borderRadius: 18, backgroundColor: bg, alignItems: 'center', justifyContent: 'center' }}><Icon name={icon} size={28} color={key === 'seara' ? '#FFD43B' : '#0E1440'} /></View>
                   <View style={{ flex: 1, gap: 3 }}>
                     <T style={{ fontFamily: F.display, fontSize: 22, color: on ? '#FFFFFF' : t.ink }}>{title}</T>
                     <T style={{ fontFamily: F.m, fontSize: 14, lineHeight: 19, color: on ? '#C9CEE6' : t.ink2 }}>{sub}</T>
@@ -230,7 +235,7 @@ export default function PlanNou() {
           {(step === 'cand' ? whenText(d) + ' · ' : step === 'buget' ? budgetLabel(d.budget) + ' · ' : '') + (names.length ? 'Se potrivesc: ' : 'Caut…')}
           <T style={{ fontFamily: F.b, fontSize: 13 }}>{names.join(' · ')}</T>
         </T>
-        <Big label={k === STEPS.length - 1 ? 'Gata, fă-mi planul' : 'Mai departe'} color={k === STEPS.length - 1 ? '#0E1440' : undefined} onPress={() => next()} />
+        <Big label={k === last ? (d.mode === 'eu' ? 'Hai să construim' : 'Gata, fă-mi planul') : 'Mai departe'} color={k === last ? '#0E1440' : undefined} onPress={() => next()} />
       </View>
 
       <Sheet open={more} onClose={() => setMore(false)}>
