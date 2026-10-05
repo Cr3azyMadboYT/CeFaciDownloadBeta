@@ -25,6 +25,7 @@ describe('search on real venues', () => {
       const n = e.n ?? (e.first ? 1 : 3);
       const top = results.slice(0, n);
       const show = top.map((r) => r.v.name + ' [' + r.v.k + ' ' + r.km.toFixed(1) + 'km ' + r.v.cuisines.join('/') + ']').join(' | ');
+      if (e.absent) for (const r of results) expect(r.v.name, show).not.toMatch(e.absent);
       expect(top.length, 'too few results: ' + show).toBe(n);
       if (e.first) expect(top[0].v.name, show).toMatch(e.first);
       for (const r of top) {

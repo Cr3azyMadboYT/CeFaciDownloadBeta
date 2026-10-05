@@ -79,8 +79,11 @@ describe('answers feed the app', () => {
     expect(search(V, 'club', ctx).results.some((r) => adultOnly(r.v))).toBe(false);
     expect(search(V, 'shisha', ctx).results.some((r) => adultOnly(r.v))).toBe(false);
     expect(search(V, 'bar cu terasa', ctx).results.some((r) => ['bar', 'pub', 'biergarten'].includes(r.v.k))).toBe(false);
-    expect(search(V, 'sip bucharest', ctx).results.some((r) => r.v.minAge === 18)).toBe(false); // marked 18+ on the map
-    expect(search(V, 'sip bucharest', { ...ctx, minor: false }).results[0].v.minAge).toBe(18);
+    // a place marked 18+ on the map (none of the chosen ones is, so one is made up from a café)
+    const cafe = V.find((v) => v.k === 'cafe')!;
+    const adult = [...V, { ...cafe, id: 'x-18', name: 'Zzyzx Lounge', minAge: 18 }];
+    expect(search(adult, 'zzyzx lounge', ctx).results.some((r) => r.v.minAge === 18)).toBe(false);
+    expect(search(adult, 'zzyzx lounge', { ...ctx, minor: false }).results[0].v.minAge).toBe(18);
     const r = recommend(V, { who: '34', when: 'diseara', budget: Infinity, maxKm: 10, vibes: ['Party'] }, ctx, 0, 60);
     expect(r.picks.some((p) => adultOnly(p.v))).toBe(false);
     expect(search(V, 'club', { ...ctx, minor: false }).results.some((x) => adultOnly(x.v))).toBe(true);

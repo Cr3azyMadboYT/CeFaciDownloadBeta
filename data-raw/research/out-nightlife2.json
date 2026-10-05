@@ -1,0 +1,1618 @@
+{
+ "decisions": [
+  {
+   "osm_id": "n6988464016",
+   "name": "18 Lounge",
+   "decision": "keep",
+   "why": "verificat: rooftop lounge & restaurant"
+  },
+  {
+   "osm_id": "n3414081989",
+   "name": "1974 Niște Domni și Fiii",
+   "decision": "keep",
+   "why": "verificat: bar"
+  },
+  {
+   "osm_id": "n11638271659",
+   "name": "1UP Gamers Pub",
+   "decision": "keep",
+   "why": "verificat: pub cu jocuri"
+  },
+  {
+   "osm_id": "n1904529821",
+   "name": "Adior Cafe lounge",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n628640533",
+   "name": "Argentin",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n1726036430",
+   "name": "ATIPICO",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11892243882",
+   "name": "BAR TON",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11096639769",
+   "name": "Bar Ubuntu",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n14059905001",
+   "name": "Bartini",
+   "decision": "drop",
+   "why": "am găsit doar adresa, nimic de spus despre loc"
+  },
+  {
+   "osm_id": "w954952572",
+   "name": "Beat Bar Umanist",
+   "decision": "keep",
+   "why": "verificat: bar cu jazz live"
+  },
+  {
+   "osm_id": "n7613023091",
+   "name": "Beluga Music & Cocktails",
+   "decision": "drop",
+   "why": "închis definitiv (restaurantguru)"
+  },
+  {
+   "osm_id": "n1487149127",
+   "name": "Bemolle Cafe",
+   "decision": "drop",
+   "why": "neverificat (în pasaj am păstrat Valea Regilor, Ganesha, Hugo, Trio)"
+  },
+  {
+   "osm_id": "n9366184117",
+   "name": "Boogie Bar",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10775253369",
+   "name": "Buddha Lounge",
+   "decision": "drop",
+   "why": "negăsit pe Google, neverificat"
+  },
+  {
+   "osm_id": "n11300087946",
+   "name": "Check-in Lounge",
+   "decision": "drop",
+   "why": "doar o pagină de Facebook, nimic de spus"
+  },
+  {
+   "osm_id": "n9422684494",
+   "name": "Club Mono",
+   "decision": "keep",
+   "why": "verificat: club"
+  },
+  {
+   "osm_id": "n2569444845",
+   "name": "Club Șurubelnița",
+   "decision": "keep",
+   "why": "verificat: club / pub"
+  },
+  {
+   "osm_id": "n3118882252",
+   "name": "Club XS",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4548620589",
+   "name": "DanDana",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2027805090",
+   "name": "Dianei Patru",
+   "decision": "drop",
+   "why": "semnalat închis definitiv (restaurantguru), neconfirmat deschis"
+  },
+  {
+   "osm_id": "n11543760229",
+   "name": "Echoes Bar",
+   "decision": "drop",
+   "why": "am găsit doar adresa (Dianei 11), nimic de spus"
+  },
+  {
+   "osm_id": "w1548651660",
+   "name": "Egoist Resto&Lounge",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3211314261",
+   "name": "El Comandante Grande",
+   "decision": "drop",
+   "why": "am găsit doar adresa (Blănari 21), nimic de spus"
+  },
+  {
+   "osm_id": "n4735277122",
+   "name": "Exense Pub",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w787816882",
+   "name": "Exotique Lounge",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w247015087",
+   "name": "Fabrica Grivița",
+   "decision": "drop",
+   "why": "neverificat (nu e clar că e bar)"
+  },
+  {
+   "osm_id": "w202689090",
+   "name": "Face Club",
+   "decision": "keep",
+   "why": "verificat: club"
+  },
+  {
+   "osm_id": "n11186371908",
+   "name": "Flair Angel",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5290479714",
+   "name": "Fratelli Lounge & Club",
+   "decision": "drop",
+   "why": "neconfirmat că mai merge în 2026 (surse vechi)"
+  },
+  {
+   "osm_id": "n1487149124",
+   "name": "Ganesha Caffe",
+   "decision": "keep",
+   "why": "verificat: lounge cu narghilea"
+  },
+  {
+   "osm_id": "n10775260907",
+   "name": "Geek Hub",
+   "decision": "drop",
+   "why": "pub de gaming de nișă; am păstrat 1UP și Nexus"
+  },
+  {
+   "osm_id": "n11694509495",
+   "name": "Gradina Mantuleasa",
+   "decision": "keep",
+   "why": "verificat: grădină cu bere artizanală"
+  },
+  {
+   "osm_id": "n7608946002",
+   "name": "Happy Pub",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3147680991",
+   "name": "Hidden - The Social Space",
+   "decision": "keep",
+   "why": "verificat: bar & spațiu cultural"
+  },
+  {
+   "osm_id": "n4319290092",
+   "name": "High Class Cafe & Lounge",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2486324774",
+   "name": "Hugo - Bar & Lounge",
+   "decision": "keep",
+   "why": "verificat: lounge cu narghilea"
+  },
+  {
+   "osm_id": "n13725012936",
+   "name": "Inpresso Lounge Herastrau",
+   "decision": "drop",
+   "why": "cafenea, nu loc de ieșit seara; neverificat"
+  },
+  {
+   "osm_id": "w693861084",
+   "name": "Jo Lounge",
+   "decision": "keep",
+   "why": "verificat: lounge cu narghilea"
+  },
+  {
+   "osm_id": "n2526169547",
+   "name": "Komodo Lounge",
+   "decision": "keep",
+   "why": "verificat: lounge cu narghilea"
+  },
+  {
+   "osm_id": "n2099385677",
+   "name": "La Brasserie Bistro & Lounge",
+   "decision": "drop",
+   "why": "restaurant, neverificat"
+  },
+  {
+   "osm_id": "n3707388579",
+   "name": "Lokal",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3453182059",
+   "name": "Lolly Pop Lounge Cafe",
+   "decision": "drop",
+   "why": "la aceeași adresă (Decebal 13) e acum Duman; neverificat"
+  },
+  {
+   "osm_id": "n4395232476",
+   "name": "Manasia Hub",
+   "decision": "keep",
+   "why": "verificat: bar & spațiu cultural"
+  },
+  {
+   "osm_id": "w1301952601",
+   "name": "Miva Pub & Lounge",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w693861079",
+   "name": "Moon",
+   "decision": "drop",
+   "why": "neclar (Moon Brasserie, Bd. Unirii 32?), neverificat"
+  },
+  {
+   "osm_id": "n7623037421",
+   "name": "Motiv",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11068954279",
+   "name": "Nativ",
+   "decision": "keep",
+   "why": "verificat: cocktail bar"
+  },
+  {
+   "osm_id": "n3067078344",
+   "name": "Nexus Gamers Pub",
+   "decision": "keep",
+   "why": "verificat: pub cu jocuri"
+  },
+  {
+   "osm_id": "n9017905949",
+   "name": "Nova",
+   "decision": "keep",
+   "why": "verificat: lounge cu narghilea"
+  },
+  {
+   "osm_id": "n7057805151",
+   "name": "Old Jack PUB",
+   "decision": "drop",
+   "why": "am găsit doar adresa, nimic de spus"
+  },
+  {
+   "osm_id": "w153452101",
+   "name": "One Club",
+   "decision": "keep",
+   "why": "verificat: club"
+  },
+  {
+   "osm_id": "n4729809761",
+   "name": "Panik & Pub",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n1416520165",
+   "name": "Pe baricade",
+   "decision": "drop",
+   "why": "surse doar vechi, nimic recent"
+  },
+  {
+   "osm_id": "n6464450486",
+   "name": "Point",
+   "decision": "keep",
+   "why": "verificat: bar & teatru"
+  },
+  {
+   "osm_id": "n7613023127",
+   "name": "Private Hell Rock Club",
+   "decision": "keep",
+   "why": "verificat: bar rock & metal"
+  },
+  {
+   "osm_id": "n13308353074",
+   "name": "Q Club",
+   "decision": "drop",
+   "why": "am găsit doar adresa, nimic de spus"
+  },
+  {
+   "osm_id": "n2570329815",
+   "name": "QP Pub",
+   "decision": "keep",
+   "why": "verificat: pub"
+  },
+  {
+   "osm_id": "n11795229276",
+   "name": "Sexy Smash",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n7057819083",
+   "name": "Sing Tagma",
+   "decision": "keep",
+   "why": "verificat: bar cu jazz live"
+  },
+  {
+   "osm_id": "n4195126091",
+   "name": "Snatch Pub",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n6324709233",
+   "name": "Tag Aperitivo Bar",
+   "decision": "keep",
+   "why": "verificat: aperitivo bar"
+  },
+  {
+   "osm_id": "n9729698795",
+   "name": "Tankeria Ursus",
+   "decision": "keep",
+   "why": "verificat: berărie"
+  },
+  {
+   "osm_id": "n10775260917",
+   "name": "Teo's Tonics",
+   "decision": "keep",
+   "why": "verificat: bar ieftin"
+  },
+  {
+   "osm_id": "n9228466808",
+   "name": "The Blank Lounge & Bar",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4638558489",
+   "name": "The Temple",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2139417233",
+   "name": "Trei Betivi",
+   "decision": "keep",
+   "why": "verificat: bar cu bere craft"
+  },
+  {
+   "osm_id": "n2291445691",
+   "name": "Trio Bar & Lounge",
+   "decision": "keep",
+   "why": "verificat: lounge cu narghilea"
+  },
+  {
+   "osm_id": "n2486324818",
+   "name": "True Social Club",
+   "decision": "keep",
+   "why": "verificat: club cu concerte"
+  },
+  {
+   "osm_id": "n11288715941",
+   "name": "Underworld",
+   "decision": "keep",
+   "why": "verificat: pub punk-rock"
+  },
+  {
+   "osm_id": "n1487149129",
+   "name": "Valea Regilor",
+   "decision": "keep",
+   "why": "verificat: cafenea cu narghilea"
+  },
+  {
+   "osm_id": "n4729786400",
+   "name": "Vol Cafe",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11292683912",
+   "name": "Wicked Bar",
+   "decision": "keep",
+   "why": "verificat: bar rock"
+  },
+  {
+   "osm_id": "n2288361159",
+   "name": "Wine Mood",
+   "decision": "keep",
+   "why": "verificat: wine bar"
+  },
+  {
+   "osm_id": "n10594123456",
+   "name": "WineOut",
+   "decision": "drop",
+   "why": "am găsit doar adresa, nimic de spus"
+  },
+  {
+   "osm_id": "n11223236584",
+   "name": "Zepelin 1929",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2582593270",
+   "name": "Zeppelin Pub",
+   "decision": "keep",
+   "why": "verificat: pub cu bere"
+  },
+  {
+   "osm_id": "n11252490940",
+   "name": "ZeZ Lounge",
+   "decision": "drop",
+   "why": "negăsit pe Google, neverificat"
+  },
+  {
+   "osm_id": "w236071707",
+   "name": "Bazin de Înot Dante Aligheri",
+   "decision": "drop",
+   "why": "bazin școlar, acces public neverificat"
+  },
+  {
+   "osm_id": "w38757552",
+   "name": "Bazin de înot Dinamo - Tolea Grințescu",
+   "decision": "drop",
+   "why": "neverificat (bazinul acoperit)"
+  },
+  {
+   "osm_id": "w858609086",
+   "name": "Bazin de înot Steaua",
+   "decision": "keep",
+   "why": "verificat: bazin de înot"
+  },
+  {
+   "osm_id": "w225503015",
+   "name": "Bazin Inot Aqua Sport",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w170953587",
+   "name": "Bazin Înot UMF Carol Davila",
+   "decision": "drop",
+   "why": "bazin universitar, acces public neverificat"
+  },
+  {
+   "osm_id": "w191144455",
+   "name": "Bazin Olimpic",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w40724996",
+   "name": "Bazin Olimpic Interior",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w920934041",
+   "name": "Bazin Titan",
+   "decision": "drop",
+   "why": "ștrandul Titan rămâne închis în 2026"
+  },
+  {
+   "osm_id": "n12765679610",
+   "name": "Bazinul de înot în aer liber Dinamo",
+   "decision": "keep",
+   "why": "verificat: bazin în aer liber"
+  },
+  {
+   "osm_id": "w699317788",
+   "name": "Bazinul de polo-înot Rapid",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n1738605903",
+   "name": "Biliard",
+   "decision": "drop",
+   "why": "King's Club Biliard: negăsit pe Google, probabil închis"
+  },
+  {
+   "osm_id": "w972807375",
+   "name": "Bonton",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w392489214",
+   "name": "Bucharest Sport Club",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w34376402",
+   "name": "Complex Sportiv 2000",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11216073804",
+   "name": "GAME WORLD",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n9156063382",
+   "name": "GV PvP VR",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n8691238511",
+   "name": "Magic Place Aqua Park",
+   "decision": "keep",
+   "why": "verificat: ștrand / parc acvatic"
+  },
+  {
+   "osm_id": "w1188646881",
+   "name": "Strandul Tineretului",
+   "decision": "drop",
+   "why": "Ștrandul Tineretului rămâne închis în 2026"
+  },
+  {
+   "osm_id": "w358718859",
+   "name": "Swimming Team Club",
+   "decision": "drop",
+   "why": "club de înot (cursuri), nu loc de ieșit"
+  },
+  {
+   "osm_id": "w23717864",
+   "name": "Ștrand Berceni",
+   "decision": "keep",
+   "why": "verificat: ștrand"
+  },
+  {
+   "osm_id": "w23561825",
+   "name": "Ștrandul Crângași",
+   "decision": "drop",
+   "why": "duplicat: e Magic Place Aqua Park"
+  },
+  {
+   "osm_id": "w27990894",
+   "name": "Ștrandul Drumul Taberei",
+   "decision": "keep",
+   "why": "verificat: ștrand / parc acvatic"
+  },
+  {
+   "osm_id": "w191148918",
+   "name": "Trambulina",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2865940383",
+   "name": "Wellness & Pool BabySpa",
+   "decision": "drop",
+   "why": "spa pentru bebeluși, nu e ieșire"
+  }
+ ],
+ "places": [
+  {
+   "name": "18 Lounge",
+   "osm_id": "n6988464016",
+   "cat": "bar",
+   "kind": "Rooftop lounge & restaurant",
+   "lat": 44.477454,
+   "lon": 26.071614,
+   "city": "București",
+   "story": "La etajul 18 al turnului sud City Gate, cu vedere peste Herăstrău, Casa Presei și Kiseleff: 180 de locuri înăuntru și 60 pe terasă. Din 2025 îl au proprietarii lui Nor din Sky Tower.",
+   "when": "seara, la apus, pe terasă; la prânz are meniu zilnic 12–15",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.therooftopguide.com/rooftop-bars-in-bucharest/18-lounge-by-embassy.html",
+    "https://www.economica.net/proprietarii-restaurantului-nor-din-sky-tower-au-preluat-18-lounge-cu-180-de-locuri-de-la-etajul-18-al-city-gate_180279.html",
+    "https://www.horeca.ro/restaurant/grupul-stadio-hospitality-concepts-preia-restaurantul-18-lounge-si-isi-consolideaza-pozitia-de-lider-pe-piata-restaurantelor-la-inaltime/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "1974 Niște Domni și Fiii",
+   "osm_id": "n3414081989",
+   "cat": "bar",
+   "kind": "Bar",
+   "lat": 44.430736,
+   "lon": 26.101871,
+   "city": "București",
+   "story": "Barul deschis în 2006 de Vlad Gorneanu, solistul trupei ZOB, pe Covaci: spirit rebel, decor făcut de mână, muzică live și discuții până târziu.",
+   "when": "în fiecare zi, până la 3 noaptea; cel mai plin în weekend",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.bucuresti.ro/locatii/baruri-si-puburi-1974-niste-domni-si-fiii-821"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "1UP Gamers Pub",
+   "osm_id": "n11638271659",
+   "cat": "bar",
+   "kind": "Pub cu jocuri",
+   "lat": 44.444957,
+   "lon": 26.096298,
+   "city": "București",
+   "story": "Pub pentru geeks pe Mendeleev: îți iei jocul tău sau alegi din colecția lor de board games, cu oameni prietenoși și atmosferă relaxată.",
+   "when": "seara, în gașcă, pentru o seară de board games",
+   "vibes": [
+    "Fun",
+    "Competitiv",
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://wanderlog.com/place/details/9409228/1up-gamers-pub",
+    "https://draculasguidetoromania.com/2023/05/27/things-to-do-for-geeks-in-bucharest-pubs-shopping-events/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Beat Bar Umanist",
+   "osm_id": "w954952572",
+   "cat": "bar",
+   "kind": "Bar cu jazz live",
+   "lat": 44.44041,
+   "lon": 26.072331,
+   "city": "București",
+   "story": "Bar mic și boem pe Calea Plevnei, cu graffiti pe pereți, sală de concerte și grădină: seri de jazz și jam sessions la care urcă oricine pe scenă.",
+   "when": "în serile cu jazz sau jam session (vezi pagina lor)",
+   "vibes": [
+    "Cultură",
+    "Chill",
+    "Aer liber"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://events.musicofourdesire.com/venue/beat-bar-umanist",
+    "https://www.tripadvisor.ie/Restaurant_Review-g294458-d8490237-Reviews-Beat_Bar_Umanist-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Club Mono",
+   "osm_id": "n9422684494",
+   "cat": "club",
+   "kind": "Club",
+   "lat": 44.436784,
+   "lon": 26.101314,
+   "city": "București",
+   "story": "Club pe Bălcescu, chiar în centru: peste 900 m², un ring mare și colțuri mai liniștite, petreceri tematice în weekend și seri diferite în timpul săptămânii.",
+   "when": "vineri–sâmbătă de la 20:00 (ma–joi 18–02)",
+   "vibes": [
+    "Party",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.tripadvisor.com/Attraction_Review-g294458-d25785756-Reviews-Club_Mono-Bucharest.html",
+    "https://clubmono.ro/",
+    "https://www.ase-bucharest.esn.ro/partners/club-mono"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Club Șurubelnița",
+   "osm_id": "n2569444845",
+   "cat": "club",
+   "kind": "Club / pub",
+   "lat": 44.434751,
+   "lon": 26.108088,
+   "city": "București",
+   "story": "Clubul de lângă Piața Rosetti, din 2013: bere multă și ieftină, folk live marțea și joia, karaoke miercurea, club vineri–sâmbătă și filme vechi duminica și lunea. Are reduceri pentru studenți.",
+   "when": "karaoke miercuri, petrecere vineri–sâmbătă",
+   "vibes": [
+    "Party",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://clubsurubelnita.ro/",
+    "https://zilesinopti.ro/locuri/club-surubelnita/",
+    "https://ialoc.ro/restaurante-bucuresti/club-surubelnita-rezervari-431"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Face Club",
+   "osm_id": "w202689090",
+   "cat": "club",
+   "kind": "Club",
+   "lat": 44.478081,
+   "lon": 26.069541,
+   "city": "București",
+   "story": "Club de lux în Piața Presei Libere, cu DJ internaționali, show-uri și zone de chill; mesele se rezervă (standard de la 500 €, VIP de la 1.000 €, până la 9 oameni).",
+   "when": "vineri și sâmbătă noaptea, după miezul nopții",
+   "vibes": [
+    "Party"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://faceclubbucharest.com/",
+    "https://www.finestclubs.com/venues/face-club",
+    "https://www.viator.com/tours/Bucharest/VIP-Super-Club-Table-Booking/d22134-102529P2"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Ganesha Caffe Victoriei",
+   "osm_id": "n1487149124",
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "lat": 44.433357,
+   "lon": 26.098046,
+   "city": "București",
+   "story": "Cafenea cu narghilea în pasajul de pe Calea Victoriei 16–20, cu decor inspirat din India și terasă mare; una dintre cele mai bine notate cafenele din oraș pe Tripadvisor (4,9).",
+   "when": "după-amiaza și seara, cu prietenii",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d16743059-Reviews-Ganesha_Caffe_Victoriei-Bucharest.html",
+    "https://ganeshacaffevictoriei.ro/",
+    "https://trendify.ro/ganesha-caffe-narghilea-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Grădina Mântuleasa",
+   "osm_id": "n11694509495",
+   "cat": "bar",
+   "kind": "Grădină cu bere artizanală",
+   "lat": 44.43731,
+   "lon": 26.114392,
+   "city": "București",
+   "story": "În fosta casă a lui Take Ionescu, pe strada lui Mircea Eliade: terasă în grădină, bar cu șemineu, bere artizanală românească și burgerul lăudat de toată lumea.",
+   "when": "ma–joi 16–23, vineri–sâmbătă până târziu; vara în grădină",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://gradinamantuleasa.ro/",
+    "https://www.bucuresti.ro/articole/3-restaurante-nou-deschise-in-bucuresti-de-la-un-bar-cu-tarot-la-o-gradina-readusa-la-viata-1690",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d27454330-Reviews-The_Drunken_Falcon-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Hidden – The Social Space",
+   "osm_id": "n3147680991",
+   "cat": "bar",
+   "kind": "Bar & spațiu cultural",
+   "lat": 44.415369,
+   "lon": 26.119673,
+   "city": "București",
+   "story": "Spațiu ascuns pe Doamna Chiajna care dă scena artiștilor tineri (teatru, grafică, muzică, scris); fac și seri de pictură.",
+   "when": "în serile cu evenimente; în timpul săptămânii până la 22",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.guerrillaradio.ro/avanpost/timp-liber/pub-bistro-terasa/hidden-the-social-space-538",
+    "https://m.iabilet.ro/bilete-hidden-the-social-space-venue-6267/",
+    "https://haisasocializam.ro/produs/seara-de-pictura-la-hidden-cu-art-house-bucharest"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Hugo Bar & Lounge",
+   "osm_id": "n2486324774",
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "lat": 44.433106,
+   "lon": 26.098331,
+   "city": "București",
+   "story": "Lounge cu narghilea și cocktailuri în pasajul de pe Calea Victoriei 16–20: cafea ziua, narghilea cu prietenii seara.",
+   "when": "zilnic 12–02, cel mai plin seara",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://hugobar.ro/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d23608854-Reviews-Hugo_Bar_Lounge-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Jo Lounge",
+   "osm_id": "w693861084",
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "lat": 44.42623,
+   "lon": 26.108051,
+   "city": "București",
+   "story": "Lounge pe malul Dâmboviței, pe Bulevardul Unirii, lângă Biblioteca Națională: narghilea, mâncare servită frumos și vedere spre râu.",
+   "when": "seara, pe terasă",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/jo-lounge-rezervari-3002",
+    "https://www.restocracy.ro/jo-lounge/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d16546823-Reviews-JO_Lounge-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Komodo Lounge Floreasca",
+   "osm_id": "n2526169547",
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "cuisine": "asiatică",
+   "lat": 44.457466,
+   "lon": 26.100677,
+   "city": "București",
+   "story": "Lounge cu narghilea și bucătărie asiatică, cu mobilier adus din Bali: peste 100 de arome de tutun, sushi tăiat la comandă și grill. O narghilea clasică e 150 de lei.",
+   "when": "seara, mai ales în weekend",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://komodolounge.ro/en",
+    "https://komodolounge.ro/en/menu",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d32883774-Reviews-Komodo_Lounge-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Manasia Hub",
+   "osm_id": "n4395232476",
+   "cat": "bar",
+   "kind": "Bar & spațiu cultural",
+   "lat": 44.431887,
+   "lon": 26.106662,
+   "city": "București",
+   "story": "Deschis în 2015 într-o clădire unde 60 de ani a fost secție de poliție: proiecții de film cu dezbateri, ateliere, concerte, expoziții și petreceri.",
+   "when": "în serile cu concerte sau petreceri (program pe iabilet)",
+   "vibes": [
+    "Cultură",
+    "Party",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.restocracy.ro/manasia-hub-bar/",
+    "https://www.societateamuzicala.ro/locurileculturii/manasia-hub/",
+    "https://zilesinopti.ro/locuri/manasia-hub/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nativ Bar Românesc",
+   "osm_id": "n11068954279",
+   "cat": "bar",
+   "kind": "Cocktail bar",
+   "lat": 44.442434,
+   "lon": 26.094036,
+   "city": "București",
+   "story": "Bar pe Calea Victoriei care își face cocktailurile din băuturi românești, ca țuica și pălinca.",
+   "when": "zilnic 17–02",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://salutbucuresti.ro/en/neighborhoods/victoriei/",
+    "https://restograf.ro/restaurante-calea-victoriei/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nexus Gamers Pub",
+   "osm_id": "n3067078344",
+   "cat": "bar",
+   "kind": "Pub cu jocuri",
+   "lat": 44.422056,
+   "lon": 26.073666,
+   "city": "București",
+   "story": "Pub de gaming pe Tudor Vladimirescu: jocuri pe PC, console și board games, pentru o seară de băut și jucat cu prietenii.",
+   "when": "seara, în gașcă",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://nexusclub.ro/bucuresti/",
+    "https://www.facebook.com/nexus.bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nova Lounge & Hookah",
+   "osm_id": "n9017905949",
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "lat": 44.438508,
+   "lon": 26.116469,
+   "city": "București",
+   "story": "Lounge cu narghilea la Foișorul de Foc, făcut de oameni cu 8 ani în domeniu: multe arome, cocktailuri și ceaiuri, plus board games și PlayStation într-o cameră separată.",
+   "when": "seara, cu prietenii",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://novalounge.ro/",
+    "https://novalounge.ro/despre",
+    "https://ialoc.ro/restaurante-bucuresti/nova-lounge-hookah-rezervari-4171"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "One Club",
+   "osm_id": "w153452101",
+   "cat": "club",
+   "kind": "Club",
+   "lat": 44.445799,
+   "lon": 26.059624,
+   "city": "București",
+   "story": "Unul dintre cele mai mari cluburi din București, în Regie (Șoseaua Orhideelor 1), cu loc pentru peste 2.000 de oameni; aici vin concertele și petrecerile mari cu bilet.",
+   "when": "vineri–sâmbătă noaptea și la concerte (bilete pe iabilet)",
+   "vibes": [
+    "Party"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.fest.ro/ro/bucuresti/locuri/cluburi/one-club",
+    "https://zilesinopti.ro/locuri/one-club/",
+    "https://www.onevent.ro/event-location/one-club/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Point",
+   "osm_id": "n6464450486",
+   "cat": "bar",
+   "kind": "Bar & teatru",
+   "lat": 44.444719,
+   "lon": 26.102524,
+   "city": "București",
+   "story": "Hub cultural independent într-o clădire interbelică lângă Piața Romană: teatru intim la etaj, bar-cafenea jos.",
+   "when": "seara, înainte sau după spectacol",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.restocracy.ro/point-bucuresti/",
+    "https://pointhub.ro/",
+    "https://www.bucuresti.ro/locatii/arta-si-cultura-point-1244"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Private Hell Rock Club",
+   "osm_id": "n7613023127",
+   "cat": "bar",
+   "kind": "Bar rock & metal",
+   "lat": 44.430467,
+   "lon": 26.101417,
+   "city": "București",
+   "story": "Barul de metal din Centrul Vechi („Rock 'n' Roll to Death!”): concerte live, karaoke metal, bere și shoturi ieftine, sonorul se aude până pe terasă.",
+   "when": "în fiecare seară de la 17; vineri până la 5, sâmbătă până la 6",
+   "vibes": [
+    "Party",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://privatehell.ro/contact/",
+    "https://www.tripadvisor.com/ShowUserReviews-g294458-d17626072-r809410555-Private_Hell_Club-Bucharest.html",
+    "https://bucharest-tips.com/places/352-nightlife-music-clubs-rock-bars-clubs-private-hell"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "QP Pub",
+   "osm_id": "n2570329815",
+   "cat": "bar",
+   "kind": "Pub",
+   "lat": 44.439552,
+   "lon": 26.103913,
+   "city": "București",
+   "story": "Pub clasic lângă Piața Rosetti, cu multă bere, o listă lungă de whisky și muzică bună.",
+   "when": "seara; vineri–sâmbătă până la 2",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.qp-pub.ro/",
+    "https://qp-pub.ro/contact/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sing Tagma",
+   "osm_id": "n7057819083",
+   "cat": "bar",
+   "kind": "Bar cu jazz live",
+   "lat": 44.443374,
+   "lon": 26.09678,
+   "city": "București",
+   "story": "Bar mic de jazz și blues lângă Piața Romană, cu muzică live constantă, cocktailuri și bere, într-o atmosferă de cartier.",
+   "when": "în serile cu concerte; zilnic până la miezul nopții",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://events.musicofourdesire.com/venue/sing-tagma",
+    "https://zilesinopti.ro/locuri/sing-tagma/",
+    "https://ialoc.ro/restaurante-bucuresti/sing-tagma-rezervari-2704"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Tag Aperitivo Bar",
+   "osm_id": "n6324709233",
+   "cat": "bar",
+   "kind": "Aperitivo bar",
+   "lat": 44.432206,
+   "lon": 26.100021,
+   "city": "București",
+   "story": "Bar de aperitivo intim la colțul Smârdan cu Lipscani: platouri cu brânzeturi, bruschete, paste și un pahar înainte de seară.",
+   "when": "de dimineață (8:30) până la 2 noaptea; cel mai bun la aperitiv, pe la 18–20",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.fest.ro/ro/bucuresti/locuri/baruri",
+    "https://revino.ro/wine-bars-bucharest-baruri-bucuresti-winebars-a429.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Tankeria Ursus",
+   "osm_id": "n9729698795",
+   "cat": "bar",
+   "kind": "Berărie",
+   "lat": 44.44303,
+   "lon": 26.093836,
+   "city": "București",
+   "story": "Berărie pe Calea Victoriei unde berea Ursus vine direct de pe linia fabricii în cel mult 24 de ore, în tancuri speciale, ferită de lumină.",
+   "when": "seara, la o bere cu prietenii",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.restocracy.ro/draft-pub-tankeria-ursus/",
+    "https://restaurantguru.com/Tankeria-Ursus-Bucharest",
+    "https://untappd.com/v/tankeria-ursus/10575989"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teo's Tonics",
+   "osm_id": "n10775260917",
+   "cat": "bar",
+   "kind": "Bar ieftin",
+   "lat": 44.431732,
+   "lon": 26.101721,
+   "city": "București",
+   "story": "Unul dintre cele mai ieftine locuri de bere din Centrul Vechi: mai mult magazin decât terasă, bun pentru începutul serii.",
+   "when": "seara, înainte de club",
+   "vibes": [
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.wall-street.ro/articol/Lifestyle/298192/foto-10-terase-din-bucuresti-unde-mai-gasesti-bere-la-10-lei-sau-chiar-mai-putin-in-2023.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Trei Bețivi",
+   "osm_id": "n2139417233",
+   "cat": "bar",
+   "kind": "Bar cu bere craft",
+   "lat": 44.441736,
+   "lon": 26.10954,
+   "city": "București",
+   "story": "Fostul Fri Kultur de pe Vasile Lascăr: bere craft rece, board games și muzică de la blues și psihedelic la punk, doom și black metal; lunea seară de metal, miercurea proiecții, duminica filme.",
+   "when": "seara; joi–sâmbătă până la 4",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://treibetivi.ro/contact/",
+    "https://zilesinopti.ro/locuri/trei-betivi-bar/",
+    "https://ialoc.ro/restaurante-bucuresti/trei-betivi-rezervari-392"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Trio Bar & Lounge",
+   "osm_id": "n2291445691",
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "lat": 44.433268,
+   "lon": 26.098661,
+   "city": "București",
+   "story": "Lounge cu narghilea în Pasajul Macca-Vilacrosse, pasajul cu acoperiș de sticlă galbenă deschis în 1891 pe Calea Victoriei.",
+   "when": "seara, cu prietenii",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d24037864-Reviews-Trio_Bar_And_Lounge-Bucharest.html",
+    "https://en.wikipedia.org/wiki/Pasajul_Macca-Vilacrosse"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "True Club",
+   "osm_id": "n2486324818",
+   "cat": "club",
+   "kind": "Club cu concerte",
+   "lat": 44.43046,
+   "lon": 26.102517,
+   "city": "București",
+   "story": "Din 2010 în Centrul Vechi, pe Covaci: scenă cu trupe live (jazz, blues, rock), bar și pizza; a crescut odată cu publicul lui, nu după mode.",
+   "when": "în serile cu concerte și weekend",
+   "vibes": [
+    "Party",
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.inyourpocket.com/bucharest/true-club_155186v",
+    "https://www.tripadvisor.com/ShowUserReviews-g294458-d5414983-r619312794-True_Social_Club-Bucharest.html",
+    "https://www.true-club.ro/contact/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Underworld",
+   "osm_id": "n11288715941",
+   "cat": "bar",
+   "kind": "Pub punk-rock",
+   "lat": 44.434684,
+   "lon": 26.10644,
+   "city": "București",
+   "story": "Pubul punk-rock de pe Colței, cu sală de concerte la subsol, foosball și board games.",
+   "when": "în serile cu concerte",
+   "vibes": [
+    "Party",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://foursquare.com/v/underworld-bar/4c2a67ae57a9c9b6db6df467"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Valea Regilor",
+   "osm_id": "n1487149129",
+   "cat": "bar",
+   "kind": "Cafenea cu narghilea",
+   "lat": 44.433332,
+   "lon": 26.098544,
+   "city": "București",
+   "story": "Prima cafenea cu narghilea din Bucureștiul de după 1990, în Pasajul Macca-Vilacrosse din anii '90: narghilea și cafea la nisip după rețetă egipteană.",
+   "when": "după-amiaza și seara",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://acasa.ro/noutati-290/ce-vizitam-azi-pasajul-macca-villacrosse-4759.html",
+    "https://zilesinopti.ro/locuri/valea-regilor/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d4890113-Reviews-Valea_Regilor-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Wicked Bar",
+   "osm_id": "n11292683912",
+   "cat": "bar",
+   "kind": "Bar rock",
+   "lat": 44.437739,
+   "lon": 26.112265,
+   "city": "București",
+   "story": "Bar rock lângă Grădina Icoanei: interior retro, terasă, classic rock și heavy metal pe playlist.",
+   "when": "seara, mai ales în weekend",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d18935984-Reviews-Wicked_Bar-Bucharest.html",
+    "https://wicked-bar.wheree.com/",
+    "https://firmania.ro/bucuresti/wicked-bar-235889"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Wine Mood",
+   "osm_id": "n2288361159",
+   "cat": "bar",
+   "kind": "Wine bar",
+   "lat": 44.418499,
+   "lon": 26.112657,
+   "city": "București",
+   "story": "Wine bar lângă metroul Timpuri Noi cu vinuri românești din toate regiunile țării, mâncare tradițională și degustări de vin.",
+   "when": "ma–du 15–24, seara",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://winemood.ro/contact/",
+    "https://winemood.ro/2025/09/19/degustare-vin-la-wine-mood-wine-bar-bucuresti-bistro/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d24078462-Reviews-Wine_Mood_Bistro-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Zeppelin Pub",
+   "osm_id": "n2582593270",
+   "cat": "bar",
+   "kind": "Pub cu bere",
+   "lat": 44.439898,
+   "lon": 26.110093,
+   "city": "București",
+   "story": "Pub pe o stradă liniștită lângă Vasile Lascăr, cu aproape 100 de beri românești și străine.",
+   "when": "ma–sâ 16–24",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://zeppelinpub.ro/en/contact/",
+    "https://www.tripadvisor.com/Attraction_Review-g294458-d6385686-Reviews-Zeppelin_Pub-Bucharest.html",
+    "https://foursquare.com/v/zeppelin-pub/5281d42a11d2c327660273b7"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Bazinul Steaua",
+   "osm_id": "w858609086",
+   "cat": "sport",
+   "kind": "Bazin de înot",
+   "lat": 44.41067,
+   "lon": 26.044742,
+   "city": "București",
+   "story": "Unul dintre puținele bazine din București unde poți înota fără să fii sportiv de performanță; înotul liber merge cu abonament (250 lei / 8 ședințe).",
+   "when": "zilnic 17–20",
+   "vibes": [
+    "Competitiv"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.bucuresti.ro/articole/10-bazine-din-bucuresti-in-care-poti-inota-fara-sa-fii-sportiv-de-performanta-1826"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Bazinul în aer liber Dinamo",
+   "osm_id": "n12765679610",
+   "cat": "sport",
+   "kind": "Bazin în aer liber",
+   "lat": 44.454844,
+   "lon": 26.104119,
+   "city": "București",
+   "story": "Bazinul în aer liber din Complexul Dinamo s-a redeschis pentru public de la 15 iunie; înotul liber merge cu abonament (de la 130 lei).",
+   "when": "doar vara (din iunie)",
+   "vibes": [
+    "Aer liber"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://www.bucuresti.ro/articole/10-bazine-din-bucuresti-in-care-poti-inota-fara-sa-fii-sportiv-de-performanta-1826"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Magic Place Aqua Park",
+   "osm_id": "n8691238511",
+   "cat": "activitate",
+   "kind": "Ștrand / parc acvatic",
+   "lat": 44.447504,
+   "lon": 26.041173,
+   "city": "București",
+   "story": "Ștrandul din Crângași, unul dintre cele trei ștranduri cu preț accesibil deschise în București în 2026: loc pentru 1.500 de oameni, intrare 85 de lei în cursul săptămânii (60 după ora 16), 105 în weekend.",
+   "when": "vara, iunie–august, zilnic 9–20; după 16 e mai ieftin",
+   "vibes": [
+    "Aer liber",
+    "Fun"
+   ],
+   "price": 85,
+   "free": false,
+   "sources": [
+    "https://gokid.ro/stranduri-bucuresti-kid-friendly-balaceala-familie-pret-rezonabil/",
+    "https://snppc.ro/magic-place-aqua-park-magic-summer-waves-p25",
+    "https://buletin.de/bucuresti/11-piscine-si-parcuri-acvatice-din-bucuresti-si-ilfov-unde-te-poti-racori-vara-aceasta-editia-2026/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Summer Park Berceni",
+   "osm_id": "w23717864",
+   "cat": "activitate",
+   "kind": "Ștrand",
+   "lat": 44.378898,
+   "lon": 26.106441,
+   "city": "București",
+   "story": "Ștrandul din Berceni, cel mai ieftin dintre cele trei deschise în 2026: 40 de lei în cursul săptămânii, 50 în weekend, cu piscină pentru adulți și copii, două terase, bar și teren de baschet.",
+   "when": "vara, zilnic 9–20",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": 40,
+   "free": false,
+   "sources": [
+    "https://gokid.ro/stranduri-bucuresti-kid-friendly-balaceala-familie-pret-rezonabil/",
+    "https://www.facebook.com/summerparkberceni/",
+    "https://buletin.de/bucuresti/11-piscine-si-parcuri-acvatice-din-bucuresti-si-ilfov-unde-te-poti-racori-vara-aceasta-editia-2026/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Magic Summer Waves",
+   "osm_id": "w27990894",
+   "cat": "activitate",
+   "kind": "Ștrand / parc acvatic",
+   "lat": 44.419391,
+   "lon": 26.030533,
+   "city": "București",
+   "story": "Parcul acvatic din Drumul Taberei: 5.500 m², 2.000 de șezlonguri gratuite și 4 piscine (2 pentru copii, 2 pentru adulți, una cu tobogan). Intrare 85 de lei în cursul săptămânii (60 după 16), 105 în weekend.",
+   "when": "vara, zilnic 9–20",
+   "vibes": [
+    "Aer liber",
+    "Fun"
+   ],
+   "price": 85,
+   "free": false,
+   "sources": [
+    "https://buletin.de/bucuresti/11-piscine-si-parcuri-acvatice-din-bucuresti-si-ilfov-unde-te-poti-racori-vara-aceasta-editia-2026/",
+    "https://www.iqads.ro/articol/51464/parcul-acvatic-magic-summer-waves-un-look-nou-si-un-concept-de-poveste",
+    "https://www.bilete.ro/parcul-acvatic-magic-summer-waves/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "IDM Club – biliard & bowling",
+   "osm_id": null,
+   "cat": "sport",
+   "kind": "Sală de biliard și bowling",
+   "lat": 44.442999,
+   "lon": 26.048969,
+   "city": "București",
+   "story": "Clubul mare de pe Splaiul Independenței 319B, cu 58 de mese de biliard, bowling, snooker, tenis de masă și darts; în prima săptămână din octombrie își serbează aniversarea cu prețuri reduse.",
+   "when": "luni–joi 9–01, vineri–sâmbătă 9–03; serile sunt cele mai pline",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://idmclub.ro/",
+    "https://idmclub.ro/contact.php",
+    "http://metropotam.ro/La-zi/Unde-jucam-biliard-in-Bucuresti-art0310350088/"
+   ],
+   "confidence": "high",
+   "coord_source": "nodul OSM «Terasa IDM Club» (n7832757604), aceeași adresă Splaiul Independenței 319B"
+  },
+  {
+   "name": "London Club Biliard & Snooker",
+   "osm_id": null,
+   "cat": "sport",
+   "kind": "Sală de biliard și snooker",
+   "lat": 44.44505,
+   "lon": 26.0959,
+   "city": "București",
+   "story": "Club de biliard ultracentral pe Biserica Amzei, lângă Piața Romană: 17 mese de biliard, 2 de snooker și saloane private.",
+   "when": "luni–joi 12–01, vineri–sâmbătă 12–03",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://zilesinopti.ro/locuri/london-club-biliard-snooker/",
+    "https://www.facebook.com/londonclubsnooker/",
+    "https://foursquare.com/v/london-club-biliard--snooker/4d6264b5338bb60ccca53ebd"
+   ],
+   "confidence": "medium",
+   "coord_source": "aproximat după adresă (Biserica Amzei 21-23), lângă nodul OSM Barrio de la nr. 30"
+  },
+  {
+   "name": "Komodo Lounge Old Town",
+   "osm_id": null,
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "lat": 44.430733,
+   "lon": 26.100788,
+   "city": "București",
+   "story": "Al doilea Komodo, pe Șelari în Centrul Vechi: narghilea, stridii și mâncare ucraineană și est-europeană.",
+   "when": "du–joi până la 00, vineri–sâmbătă până la 2",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://komodolounge.ro/en/old-town",
+    "https://komodolounge.ro/journal/where-to-go-out-in-bucharest"
+   ],
+   "confidence": "medium",
+   "coord_source": "după adresa Șelari 9-11 (aceeași poziție ca nodurile OSM de la 9-11, ex. n1416623913)"
+  },
+  {
+   "name": "Masters Billiard",
+   "osm_id": "n13247354036",
+   "cat": "sport",
+   "kind": "Sală de biliard",
+   "lat": 44.415607,
+   "lon": 26.110975,
+   "city": "București",
+   "story": "Club de biliard lângă Timpuri Noi, ținut de un fost campion: mese Dynamic la 40 de lei pe oră, muzică spaniolă și mâncare bună; aici se joacă Masters Pool League.",
+   "when": "zilnic 16–00",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://mastersbilliard.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm (nod existent n13247354036, scos la prima trecere ca „sală de biliard”)"
+  },
+  {
+   "name": "Narco Lounge",
+   "osm_id": "n12892532983",
+   "cat": "bar",
+   "kind": "Lounge cu narghilea",
+   "lat": 44.434228,
+   "lon": 26.138127,
+   "city": "București",
+   "story": "Lounge cu narghilea pe Mihai Bravu: cafea de specialitate ziua, cocktailuri și narghilea seara; recenziile laudă narghileaua bună și ieftină (5,0 pe Tripadvisor).",
+   "when": "seara",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "free": false,
+   "sources": [
+    "https://narco-lounge.ro/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d26304024-Reviews-Narco_Lounge-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm (nod existent n12892532983, scos la prima trecere)"
+  }
+ ]
+}

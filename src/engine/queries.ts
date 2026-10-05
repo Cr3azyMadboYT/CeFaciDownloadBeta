@@ -15,7 +15,8 @@ export interface Expect {
   outdoor?: boolean;       // ... has a terrace or is outside
   noChain?: boolean;       // ... is not a chain
   notKinds?: string[];     // none of the top results is one of these kinds
-  n?: number;              // how many top results to check (default 3)
+  n?: number;              // how many top results to check (default 3; 0 = nothing must come up)
+  absent?: RegExp;         // no result is named so (a chain we do not list)
   note?: boolean;          // the app must say it relaxed the request
 }
 export interface Case { q: string; e: Expect }
@@ -86,7 +87,7 @@ export const QUERIES: Case[] = [
   C('muzee ieftine', { kinds: ['museum', 'gallery'], maxPrice: 50 }),
   C('cinema', { kinds: ['cinema'] }),
   C('film diseara', { kinds: ['cinema'], notClosed: true }),
-  C('cinema afi', { kinds: ['cinema'], near: 'afi', within: 0.5, n: 2 }),
+  C('cinema afi', { kinds: ['cinema'], near: 'afi', within: 0.5, n: 1 }),
   C('galerie de arta', { kinds: ['gallery', 'arts_centre', 'museum'] }),
   // things to do
   C('bowlng', { cats: ['activitate'], note: true }),
@@ -95,7 +96,7 @@ export const QUERIES: Case[] = [
   C('escape', { kinds: ['escape_game'] }),
   C('patinoar', { kinds: ['ice_rink'], n: 2 }), // outdoor rinks open in winter (closed for now)
   C('aquapark', { kinds: ['water_park', 'beach_resort'] }),
-  C('zoo', { kinds: ['zoo'], n: 2 }),
+  C('zoo', { kinds: ['zoo'], n: 1 }),
   C('ceva cu copiii', { notKinds: ['bar', 'pub', 'nightclub', 'biergarten'] }),
   // people, budget, mood
   C('unde ies cu gasca de 6', { people: 6, notKinds: ['cafe'] }),
@@ -103,17 +104,18 @@ export const QUERIES: Case[] = [
   C('sub 50 lei', { maxPrice: 50, noChain: true }),
   C('cina romantica', { cats: ['mancare', 'bar', 'cafea'], notKinds: ['fast_food'], noChain: true }),
   C('in doi diseara floreasca', { near: 'floreasca', notClosed: true, notKinds: ['fast_food'] }),
-  // names: chains, joined or split, typos
-  C('mc donalds', { first: /McDonald/ }),
-  C('mcdonalds', { first: /McDonald/ }),
-  C('mcdonals', { first: /McDonald/ }),
-  C('kfc unirii', { first: /KFC/, near: 'unirii', n: 1 }),
-  C('starbucks', { first: /Starbucks/ }),
-  C('5 to go', { first: /5 to go/ }),
+  // names: joined or split, typos. Chains are not among the chosen places (decision Cornel, 05.10): nothing pretends
+  // to be one, and with a place in the search the good places there come instead
+  C('mc donalds', { absent: /McDonald/, n: 0 }),
+  C('mcdonalds', { absent: /McDonald/, n: 0 }),
+  C('kfc unirii', { absent: /KFC/, near: 'unirii', n: 1 }),
+  C('starbucks', { absent: /Starbucks/, n: 0 }),
+  C('beraria h', { first: /Berăria H/ }),
+  C('kultur haus', { first: /Kulturhaus/ }),
+  C('teos tonics', { first: /Teo's Tonics/ }),
   C('caru cu bere', { first: /Caru' cu Bere/ }),
   C('carucubere', { first: /Caru' cu Bere/ }),
   C('hanu berarilor', { first: /Hanu/ }),
-  C('bar italia', { first: /Bar Italia/ }),
   C('green hours', { first: /Green Hours/ }),
-  C('biliard', { first: /Biliard/i, n: 1 }),
+  C('biliard', { kinds: ['billiards'], n: 2 }),
 ];

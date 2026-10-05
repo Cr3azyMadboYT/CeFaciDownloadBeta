@@ -1,0 +1,2274 @@
+{
+ "decisions": [
+  {
+   "osm_id": "w162545134",
+   "name": "Ahmad Cuisine",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13877761333",
+   "name": "Ai Sushi Bar",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n5433115598",
+   "name": "Al Wady",
+   "decision": "keep",
+   "why": "libanez în vest (AFI)"
+  },
+  {
+   "osm_id": "w1196046893",
+   "name": "Ali Potol SHAWORMA by Gourmonde",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n9246074690",
+   "name": "Alt Shift",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n4090894275",
+   "name": "Amvrosia Restaurant Grecesc",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12433952493",
+   "name": "Arabu Grill",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n9654230095",
+   "name": "Argentine",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n2916653601",
+   "name": "Ashof Saorma Nonstop",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13936554301",
+   "name": "Asian Lab",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n8318435127",
+   "name": "Aslan",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n273118708",
+   "name": "Athena Gyros",
+   "decision": "drop",
+   "why": "gyros fast-food, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n3233960002",
+   "name": "B-Black Lebanese",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w186700919",
+   "name": "Beijing",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5335197759",
+   "name": "Beijing Garden",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "w941119949",
+   "name": "Beijing Garden",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "w1236639500",
+   "name": "Beirut",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5298238996",
+   "name": "Benihana",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n6917823021",
+   "name": "Beyaz Restaurant",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n2533820134",
+   "name": "Blue Margarita",
+   "decision": "keep",
+   "why": "printre cele mai des recomandate mexicane"
+  },
+  {
+   "osm_id": "n12090223769",
+   "name": "Bonze Sushi",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5996294485",
+   "name": "Camizo",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n8974886497",
+   "name": "Casa de Tacos",
+   "decision": "keep",
+   "why": "a doua locație Casa de Tacos"
+  },
+  {
+   "osm_id": "n10038019966",
+   "name": "Casa de Tacos",
+   "decision": "keep",
+   "why": "unul dintre cele mai recomandate mexicane"
+  },
+  {
+   "osm_id": "n12092517187",
+   "name": "Casa Vietnam",
+   "decision": "drop",
+   "why": "fast-food vietnamez de mall, fără surse"
+  },
+  {
+   "osm_id": "n1069129785",
+   "name": "Çeşme",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9654423481",
+   "name": "Chanh",
+   "decision": "keep",
+   "why": "vietnamez bun în Drumul Taberei"
+  },
+  {
+   "osm_id": "n14232278601",
+   "name": "Chautari",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n11013719576",
+   "name": "Chimichanga",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n12278145480",
+   "name": "Chinese Garden",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n12235147462",
+   "name": "Chong Qing",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12069599469",
+   "name": "Choose Cheese",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n2484089641",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n6323313080",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n6768983283",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n9394387216",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n9712629378",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n10027946537",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n10764174004",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n11064750164",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11161354050",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n3718155837",
+   "name": "Ciorbe si Placinte",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3070655073",
+   "name": "Colțunaș Chinezesc",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n11581824569",
+   "name": "Crăpelniță",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11031884374",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n3314300297",
+   "name": "Doner Kebap",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n11463472510",
+   "name": "Duman",
+   "decision": "keep",
+   "why": "turcesc recomandat, Decebal"
+  },
+  {
+   "osm_id": "n11078119266",
+   "name": "Edessa",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n1808662163",
+   "name": "Edo Sushi",
+   "decision": "keep",
+   "why": "sushi cu grădină și iaz cu koi, foarte bine notat"
+  },
+  {
+   "osm_id": "n4554310490",
+   "name": "Efes",
+   "decision": "keep",
+   "why": "turcesc din 2011, recomandat"
+  },
+  {
+   "osm_id": "w320707647",
+   "name": "El Medina",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n8373626028",
+   "name": "Fawal Restaurant Oriental - Helal",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13688881979",
+   "name": "Feng Shui",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n12279718091",
+   "name": "Flavors Restaurant",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n10594078976",
+   "name": "Fu Lin Men",
+   "decision": "keep",
+   "why": "chinezesc bun în vest"
+  },
+  {
+   "osm_id": "n2506857874",
+   "name": "Golden Kebap",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n6264864920",
+   "name": "golden wok",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8538306289",
+   "name": "Golden Woks",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n3462280479",
+   "name": "Good Hand Asian Food",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n11096820479",
+   "name": "Greek Taverna",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n11728305769",
+   "name": "Greek Taverna Mediterannia by Hades",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n10111661681",
+   "name": "Guri Guri",
+   "decision": "keep",
+   "why": "coreean autentic, al unei familii coreene"
+  },
+  {
+   "osm_id": "n11069181126",
+   "name": "Gyro",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4549351793",
+   "name": "Gyros",
+   "decision": "drop",
+   "why": "gyros fast-food, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n4080665317",
+   "name": "Gyros Mania",
+   "decision": "drop",
+   "why": "gyros fast-food, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n2449805176",
+   "name": "Gyros Sotos",
+   "decision": "drop",
+   "why": "gyros fast-food, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n1814904376",
+   "name": "Gyros Tessalonikis",
+   "decision": "drop",
+   "why": "gyros fast-food, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n9534248503",
+   "name": "Gyros Thessalonikis",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11581903269",
+   "name": "Gyros Thessalonikis",
+   "decision": "drop",
+   "why": "gyros fast-food, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n10027946533",
+   "name": "Happy",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n2791660282",
+   "name": "Harem Restaurant",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11482468569",
+   "name": "Hua Food",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n11891412206",
+   "name": "Hushimo",
+   "decision": "keep",
+   "why": "pad thai lăudat, Amzei"
+  },
+  {
+   "osm_id": "n7499197969",
+   "name": "Il Tacchino",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n11463489988",
+   "name": "Indivan Food",
+   "decision": "drop",
+   "why": "food truck cu recenzii puține și slabe"
+  },
+  {
+   "osm_id": "n3506294194",
+   "name": "Istambul",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8828024136",
+   "name": "Jade Land - Asian Food",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n7499243069",
+   "name": "Japanos",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n11068961008",
+   "name": "Japanos",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n12009485484",
+   "name": "Japanos",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n12059799921",
+   "name": "Japanos",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n6959718386",
+   "name": "Jimbo china",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n13011749006",
+   "name": "Kimchi",
+   "decision": "keep",
+   "why": "coreean recomandat de Restograf"
+  },
+  {
+   "osm_id": "n2526169547",
+   "name": "Komodo Lounge",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n9712629368",
+   "name": "Kungfu King",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n10997995971",
+   "name": "Kungfu King",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n13547226700",
+   "name": "Kungfu King",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n4521145291",
+   "name": "Kvala",
+   "decision": "keep",
+   "why": "grecesc recomandat, Cotroceni"
+  },
+  {
+   "osm_id": "n11096854731",
+   "name": "La Safi",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n11507864769",
+   "name": "La Zavat",
+   "decision": "keep",
+   "why": "tavernă autentică din 2010"
+  },
+  {
+   "osm_id": "n11089362663",
+   "name": "Lee Ho",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n11110462604",
+   "name": "Lee Ho",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n10931832402",
+   "name": "Lee Ho Express",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n11161354043",
+   "name": "Lee Ho Food",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n8797381931",
+   "name": "Lemon Bistro",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n13618974830",
+   "name": "Li Vu",
+   "decision": "keep",
+   "why": "vietnamez local, în est"
+  },
+  {
+   "osm_id": "n3413220016",
+   "name": "Li-WU",
+   "decision": "drop",
+   "why": "LiVU păstrat în vest și est; zona are deja Pho Thin și PhoBar"
+  },
+  {
+   "osm_id": "n10984499946",
+   "name": "Los Amantes",
+   "decision": "keep",
+   "why": "mexican recomandat, centru"
+  },
+  {
+   "osm_id": "n11511345869",
+   "name": "Magic Sushi",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11574150769",
+   "name": "Maher",
+   "decision": "keep",
+   "why": "libanez cu chef cu experiență"
+  },
+  {
+   "osm_id": "n10562353594",
+   "name": "Manay",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n12047762840",
+   "name": "Manay",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11584910569",
+   "name": "Manay Chinese Food",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13607997895",
+   "name": "MAT",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n1008838657",
+   "name": "Matheos Restaurant",
+   "decision": "keep",
+   "why": "grecesc cu pește, casă veche cu terasă"
+  },
+  {
+   "osm_id": "n5352780367",
+   "name": "Maya Fresh",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n13240848201",
+   "name": "Mexikanos",
+   "decision": "keep",
+   "why": "bucătar mexican, Centrul Vechi"
+  },
+  {
+   "osm_id": "n2486324794",
+   "name": "Mezze Taverna",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5938945696",
+   "name": "Mishi Mishi",
+   "decision": "keep",
+   "why": "sushi recomandat, în est"
+  },
+  {
+   "osm_id": "n6952897498",
+   "name": "Mumbai",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11131442205",
+   "name": "Murad",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n11222883615",
+   "name": "Nadasan",
+   "decision": "keep",
+   "why": "sushi gourmet, recomandat de Restograf"
+  },
+  {
+   "osm_id": "n2476489740",
+   "name": "Namaste",
+   "decision": "keep",
+   "why": "indian bine notat, centru"
+  },
+  {
+   "osm_id": "w178840077",
+   "name": "Naser 3",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8524673437",
+   "name": "Nikos Greek Taverna",
+   "decision": "keep",
+   "why": "tavernă grecească recomandată"
+  },
+  {
+   "osm_id": "n10027946586",
+   "name": "Nikos Greek Taverna",
+   "decision": "keep",
+   "why": "Nikos în vest (locația confirmată de Google)"
+  },
+  {
+   "osm_id": "n11463535891",
+   "name": "Nikos Greek Taverna Burebista",
+   "decision": "keep",
+   "why": "a doua locație Nikos (Alba Iulia)"
+  },
+  {
+   "osm_id": "n4508943938",
+   "name": "Noodle Pack",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13547291602",
+   "name": "Osama Sushi",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n13955373201",
+   "name": "Osama Sushi Chiajna",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n9116540918",
+   "name": "Padthai & Sushi",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1415396358",
+   "name": "Panda Restaurant",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n10630928720",
+   "name": "PengYou",
+   "decision": "keep",
+   "why": "chinezesc sichuan autentic, recomandat"
+  },
+  {
+   "osm_id": "n4466984690",
+   "name": "Phodee",
+   "decision": "keep",
+   "why": "vietnamez de familie, recomandat de B365"
+  },
+  {
+   "osm_id": "w281851047",
+   "name": "Piccolo Mondo",
+   "decision": "keep",
+   "why": "libanez vechi, de peste 30 de ani"
+  },
+  {
+   "osm_id": "n6935340962",
+   "name": "Pizza Ka",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n7608850693",
+   "name": "Poli",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n11582819469",
+   "name": "Puii Mei",
+   "decision": "drop",
+   "why": "fast-food asiatic de lanț/mall, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n648546126",
+   "name": "Qian Bao",
+   "decision": "keep",
+   "why": "chinezesc vechi și apreciat, în est"
+  },
+  {
+   "osm_id": "n3121977492",
+   "name": "Restaurant chinezesc Long Xuan - Casa Dragonului",
+   "decision": "keep",
+   "why": "pe lista Restograf, în sud-est"
+  },
+  {
+   "osm_id": "n2911228869",
+   "name": "Restaurant Clasis",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n4807344122",
+   "name": "Restaurant LiVU",
+   "decision": "keep",
+   "why": "vietnamez local, în vest"
+  },
+  {
+   "osm_id": "n2617494293",
+   "name": "Restaurant Nan Jing",
+   "decision": "keep",
+   "why": "primul chinezesc din România (1980)"
+  },
+  {
+   "osm_id": "n7613023125",
+   "name": "Restaurant Pekin",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n13823565295",
+   "name": "Restaurant Pengyou",
+   "decision": "keep",
+   "why": "a doua locație PengYou (Occidentului 11)"
+  },
+  {
+   "osm_id": "n5406434297",
+   "name": "Restaurant Santorini",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n10302662764",
+   "name": "Restaurent cu specific chinezesc",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n7622689038",
+   "name": "Roll Master",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n9524678017",
+   "name": "Roll Master",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n11624005069",
+   "name": "Royal Sushi House",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n13907816901",
+   "name": "Royal Sushi House",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "w1234994388",
+   "name": "Royal Sushi House",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n2497611200",
+   "name": "Ryu Sando Bar",
+   "decision": "keep",
+   "why": "concept japonez rar (katsu sando), bine notat"
+  },
+  {
+   "osm_id": "n7688611926",
+   "name": "Saidoun",
+   "decision": "keep",
+   "why": "libanez de referință"
+  },
+  {
+   "osm_id": "n6606566173",
+   "name": "Saniour",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n1731040928",
+   "name": "Saray",
+   "decision": "keep",
+   "why": "turcesc otoman, Centrul Vechi"
+  },
+  {
+   "osm_id": "n8537128371",
+   "name": "Sfeir",
+   "decision": "keep",
+   "why": "libanez bine notat"
+  },
+  {
+   "osm_id": "w374844424",
+   "name": "Shaormitza",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n9654230096",
+   "name": "Sheherezade",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n11511114369",
+   "name": "Sibelle",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "w39348919",
+   "name": "Souk",
+   "decision": "keep",
+   "why": "libanez recomandat, Floreasca"
+  },
+  {
+   "osm_id": "n11089362661",
+   "name": "Speed Pizza",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9582677957",
+   "name": "Stick It",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n9453510493",
+   "name": "SUMAC Lebanese Food Station",
+   "decision": "keep",
+   "why": "deja păstrat cu poveste în out-food.json (libanez în Militari)"
+  },
+  {
+   "osm_id": "n11045420409",
+   "name": "Sumeshi",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n10829792385",
+   "name": "Sushi Gallery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11398454551",
+   "name": "Sushi Gallery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11212334538",
+   "name": "Sushi House",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n2539639934",
+   "name": "Sushi KO",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11077275928",
+   "name": "Sushi Master",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n11271417084",
+   "name": "Sushi Master",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n5068655506",
+   "name": "Sushi Terra",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n9431474671",
+   "name": "Sushi Terra",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9654230098",
+   "name": "Sushi Terra",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10027945479",
+   "name": "Sushi Terra",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n11009891323",
+   "name": "Sushi Terra",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n5014453221",
+   "name": "Taksim",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n13152660587",
+   "name": "Tamashi",
+   "decision": "keep",
+   "why": "sushi bine notat în sud"
+  },
+  {
+   "osm_id": "n11581843969",
+   "name": "Taqueria",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4856262222",
+   "name": "Taverna Syrtaki",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n2872403930",
+   "name": "Templul Soarelui",
+   "decision": "keep",
+   "why": "chinezesc clasic, recomandat de Restograf"
+  },
+  {
+   "osm_id": "n3844149059",
+   "name": "Templul Soarelui",
+   "decision": "drop",
+   "why": "a doua locație Templul Soarelui, neverificată (sursa vorbește de Foișor)"
+  },
+  {
+   "osm_id": "n11648912069",
+   "name": "The Kimchi",
+   "decision": "drop",
+   "why": "neverificat (The Kimchi recomandat e cel din Dorobanți)"
+  },
+  {
+   "osm_id": "w579531982",
+   "name": "Thessalonikis Gyros",
+   "decision": "drop",
+   "why": "gyros fast-food, nu merită o ieșire"
+  },
+  {
+   "osm_id": "n11101750397",
+   "name": "Toan's",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5014453421",
+   "name": "Toàn's",
+   "decision": "drop",
+   "why": "Toan's deja păstrat (Centrul Vechi, Militari, Titan); aici e punct de mall"
+  },
+  {
+   "osm_id": "n4105479089",
+   "name": "Tóan's",
+   "decision": "drop",
+   "why": "Toan's deja păstrat (Centrul Vechi, Militari, Titan); aici e punct de mall"
+  },
+  {
+   "osm_id": "w547822235",
+   "name": "Tuk Tuk",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12386341942",
+   "name": "Turkish Doner Grill",
+   "decision": "drop",
+   "why": "shaorma/kebab fast-food, fără surse"
+  },
+  {
+   "osm_id": "n11916287033",
+   "name": "Turkish Kitchen",
+   "decision": "keep",
+   "why": "turcesc modern, recomandat"
+  },
+  {
+   "osm_id": "n10038068865",
+   "name": "Wok pe Loc",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n4104497889",
+   "name": "Wu Xing",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8538264364",
+   "name": "Yasser",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "n7009244265",
+   "name": "Yoshi",
+   "decision": "keep",
+   "why": "sushi și teppanyaki premium, recomandat"
+  },
+  {
+   "osm_id": "n11561138469",
+   "name": "Za'atar",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n7072470301",
+   "name": "Zao",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  },
+  {
+   "osm_id": "w206360989",
+   "name": "Zen Sushi",
+   "decision": "drop",
+   "why": "ZenSushi păstrat în Dorobanți și Militari; prea multe din același lanț aproape unul de altul"
+  },
+  {
+   "osm_id": "w244288793",
+   "name": "Zen Sushi",
+   "decision": "keep",
+   "why": "singurul sushi bun verificat în Militari (Google nu l-a găsit după nume, dar site-ul și Tripadvisor îl arată deschis)"
+  },
+  {
+   "osm_id": "n7156589785",
+   "name": "Zen Sushi Nordului",
+   "decision": "drop",
+   "why": "ZenSushi păstrat în Dorobanți și Militari; prea multe din același lanț aproape unul de altul"
+  },
+  {
+   "osm_id": "n5579986809",
+   "name": "Zensushi Take Away",
+   "decision": "drop",
+   "why": "sushi de livrare/lanț, fără recenzii care să-l recomande"
+  },
+  {
+   "osm_id": "n10759732085",
+   "name": "Zeugma",
+   "decision": "drop",
+   "why": "neverificat: n-am găsit surse care să-l recomande"
+  }
+ ],
+ "places": [
+  {
+   "name": "Edo Sushi & Garden",
+   "osm_id": "n1808662163",
+   "cat": "mancare",
+   "kind": "Restaurant japonez",
+   "cuisine": "sushi, japonez",
+   "lat": 44.440116,
+   "lon": 26.087002,
+   "city": "București",
+   "story": "Sushi într-o grădină cu un iaz făcut special pentru peștii koi, pe Știrbei Vodă. Unul dintre cele mai bine notate locuri cu sushi din oraș (4,9 din aproape 2.000 de voturi pe ialoc).",
+   "when": "seara și în weekend se umple (cam 50 de locuri), rezervă",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti?tip=sushi",
+    "https://restograf.ro/unde-mananci-cel-mai-bun-sushi-din-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Yoshi Sushi & Teppanyaki",
+   "osm_id": "n7009244265",
+   "cat": "mancare",
+   "kind": "Restaurant japonez",
+   "cuisine": "sushi, japonez, teppanyaki",
+   "lat": 44.461288,
+   "lon": 26.100393,
+   "city": "București",
+   "story": "Restaurant japonez premium în Floreasca, cu design elegant: sushi și teppanyaki gătit pe plită.",
+   "when": "seara, mai ales vineri–sâmbătă; rezervă",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/unde-mananci-cel-mai-bun-sushi-din-bucuresti/",
+    "https://ialoc.ro/restaurante-bucuresti?bucatarie=japoneza"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nadasan",
+   "osm_id": "n11222883615",
+   "cat": "mancare",
+   "kind": "Restaurant japonez",
+   "cuisine": "sushi, japonez",
+   "lat": 44.484292,
+   "lon": 26.08922,
+   "city": "București",
+   "story": "Restaurant japonez elegant, cu peste 40 de feluri în meniu. Pentru o masă mare iei Nadasan Set sau Sakura Set (56 de bucăți de sushi).",
+   "when": "seara; bun pentru grup, rezervă",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/unde-mananci-cel-mai-bun-sushi-din-bucuresti/",
+    "https://ialoc.ro/restaurante-bucuresti?tip=sushi"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "RYU Sando Bar",
+   "osm_id": "n2497611200",
+   "cat": "mancare",
+   "kind": "Bistro japonez",
+   "cuisine": "japonez, sando",
+   "lat": 44.481448,
+   "lon": 26.092145,
+   "city": "București",
+   "story": "Sando japonez, adică sandvișuri din pâine pufoasă de lapte, ca la street food-ul din Tokyo. Ia katsu sando (crocant și zemos) și karaage de pui la început.",
+   "when": "zilnic 11–22; prânz sau o cină rapidă",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/ryu-sando-bar-rezervari-4514",
+    "https://ryusandobar.ro/menu"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Tamashī Sushi & More",
+   "osm_id": "n13152660587",
+   "cat": "mancare",
+   "kind": "Restaurant japonez",
+   "cuisine": "sushi, japonez, fusion",
+   "lat": 44.418969,
+   "lon": 26.11511,
+   "city": "București",
+   "story": "Sushi și bucătărie japoneză fusion, în sudul orașului (zona Tineretului–Văcărești), foarte bine notat pe Tripadvisor.",
+   "when": "seara; în weekend sună înainte",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/unde-mananci-cel-mai-bun-sushi-din-bucuresti/",
+    "https://www.tripadvisor.com/Restaurants-g294458-c38-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "ZenSushi Militari",
+   "osm_id": "w244288793",
+   "cat": "mancare",
+   "kind": "Restaurant japonez",
+   "cuisine": "sushi, japonez",
+   "lat": 44.439592,
+   "lon": 26.027941,
+   "city": "București",
+   "story": "Localul ZenSushi pentru vestul orașului, deschis în toamna lui 2020 pe Uverturii, gândit mai ales pentru la pachet. ZenSushi e lanțul local cu sushi lăudat ca printre cele mai bune din București.",
+   "when": "L–S 12–22:30, D 12–22; mai mult la pachet",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://zensushibucuresti.ro/en/zensushi-militari",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d23399123-Reviews-Zensushi_Militari-Bucharest.html",
+    "https://wolt.com/en/rou/bucharest/restaurant/zen-sushi-militari-67dc3a18b93a5300e8efd51c"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mishi Mishi",
+   "osm_id": "n5938945696",
+   "cat": "mancare",
+   "kind": "Restaurant japonez",
+   "cuisine": "sushi, japonez",
+   "lat": 44.441601,
+   "lon": 26.152198,
+   "city": "București",
+   "story": "Loc cu sushi în estul orașului (zona Titan–Pantelimon), pe lista de locuri cu sushi recomandate de Gabriela Deleanu.",
+   "when": "seara; la pachet sau la masă",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://gabrieladeleanu.ro/sushi-bucuresti-mishi-mishi-gargantua-kslf-happy-ruse/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Ruka Izakaya",
+   "osm_id": null,
+   "cat": "mancare",
+   "kind": "Restaurant japonez",
+   "cuisine": "sushi, japonez, izakaya",
+   "lat": 44.4606406,
+   "lon": 26.1007402,
+   "city": "București",
+   "story": "Izakaya japonez în Agora Floreasca, cu porții de împărțit: nigiri, sashimi, maki, teppanyaki, plus sake și highball japonez. În bucătărie e head chef Valentin Ungureanu.",
+   "when": "L–S 12–23, D 12–22; seara cu prietenii, rezervă",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/restaurant/ruka-izakaya-2936/",
+    "https://www.restocracy.ro/ruka-izakaya-restaurant/",
+    "https://ialoc.ro/restaurante-bucuresti/ruka-izakaya-rezervari-3962"
+   ],
+   "confidence": "high",
+   "coord_source": "osm n11069880299 (nu era în TSV)"
+  },
+  {
+   "name": "PengYou (Hala Traian)",
+   "osm_id": "n10630928720",
+   "cat": "mancare",
+   "kind": "Restaurant chinezesc",
+   "cuisine": "chinezesc, sichuan",
+   "lat": 44.433896,
+   "lon": 26.119903,
+   "city": "București",
+   "story": "Mâncare din Sichuan, gătită de un bucătar născut și format acolo. Comandă pui Kung Pao sau Mapo Tofu, iute ca în China.",
+   "when": "seara; rezervă în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/top-restaurante-chinezesti-din-bucuresti/",
+    "https://ialoc.ro/restaurante-bucuresti/peng-you-restaurant-chinezesc-rezervari-2460",
+    "https://pengyou.ro/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "PengYou (Victoriei)",
+   "osm_id": "n13823565295",
+   "cat": "mancare",
+   "kind": "Restaurant chinezesc",
+   "cuisine": "chinezesc, sichuan",
+   "lat": 44.447712,
+   "lon": 26.083503,
+   "city": "București",
+   "story": "Al doilea PengYou, pe Occidentului, lângă Victoriei: aceeași bucătărie din Sichuan, cu bucătar chinez, pui Kung Pao și Mapo Tofu.",
+   "when": "seara; rezervă în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/top-restaurante-chinezesti-din-bucuresti/",
+    "https://pengyou.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "QianBao",
+   "osm_id": "n648546126",
+   "cat": "mancare",
+   "kind": "Restaurant chinezesc",
+   "cuisine": "chinezesc",
+   "lat": 44.42327,
+   "lon": 26.138398,
+   "city": "București",
+   "story": "Deschis din 2000 lângă Baba Novac: rețete chinezești autentice, bine gătite, porții generoase.",
+   "when": "seara și în weekend la prânz",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/top-restaurante-chinezesti-din-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Fu Lin Men",
+   "osm_id": "n10594078976",
+   "cat": "mancare",
+   "kind": "Restaurant chinezesc",
+   "cuisine": "chinezesc",
+   "lat": 44.428963,
+   "lon": 26.036932,
+   "city": "București",
+   "story": "Restaurant chinezesc ascuns pe Intrarea Silistraru, în vest (Drumul Taberei–Militari); pe lista Restograf de chinezești și lăudat online drept unul dintre cele mai bune din oraș.",
+   "when": "seara; în weekend cu familia",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/top-restaurante-chinezesti-din-bucuresti/",
+    "https://www.tiktok.com/@places2goto/video/7314348720592637216",
+    "https://www.facebook.com/fulinmen14/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nan Jing",
+   "osm_id": "n2617494293",
+   "cat": "mancare",
+   "kind": "Restaurant chinezesc",
+   "cuisine": "chinezesc",
+   "lat": 44.44944,
+   "lon": 26.091301,
+   "city": "București",
+   "story": "Primul restaurant chinezesc din România, deschis în 1980. Mâncare făcută ca la carte și seri plăcute pe terasă.",
+   "when": "seara; vara pe terasă",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/top-restaurante-chinezesti-din-bucuresti/",
+    "https://travelreview.ro/cele-mai-bune-restaurante-chinezesti-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Templul Soarelui (Foișor)",
+   "osm_id": "n2872403930",
+   "cat": "mancare",
+   "kind": "Restaurant chinezesc",
+   "cuisine": "chinezesc",
+   "lat": 44.440693,
+   "lon": 26.119576,
+   "city": "București",
+   "story": "Nume vechi în București, lângă Foișorul de Foc: mâncarea e bună, uneori excelentă, chiar dacă decorul e simplu.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/top-restaurante-chinezesti-din-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa Dragonului (Long Xuan)",
+   "osm_id": "n3121977492",
+   "cat": "mancare",
+   "kind": "Restaurant chinezesc",
+   "cuisine": "chinezesc",
+   "lat": 44.42039,
+   "lon": 26.134407,
+   "city": "București",
+   "story": "Restaurant chinezesc pe Calea Dudești, inclus de Restograf în topul chinezeștilor din București.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/top-restaurante-chinezesti-din-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Hushimo",
+   "osm_id": "n11891412206",
+   "cat": "mancare",
+   "kind": "Bistro asiatic",
+   "cuisine": "thailandez, vietnamez, indonezian",
+   "lat": 44.443477,
+   "lon": 26.096691,
+   "city": "București",
+   "story": "Bistro asiatic mic în Piața Amzei, cu mâncare thailandeză, vietnameză și indoneziană. Pad thai-ul e cel lăudat.",
+   "when": "prânz și seara; locul e mic",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/pad-thai-Bucharest-m6618",
+    "https://lovedeco.ro/hotspots-5-restaurante-specific-asiatic-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Kunnai",
+   "osm_id": null,
+   "cat": "mancare",
+   "kind": "Restaurant thailandez",
+   "cuisine": "thailandez",
+   "lat": 44.464875,
+   "lon": 26.0607302,
+   "city": "București",
+   "story": "Restaurant thailandez din 2012, în parcul Domenii, cu fața spre un loc de joacă liniștit. Gătesc Anne Ampawan și chef Songrit după rețete thailandeze: ce scrie „mild spicy” e chiar iute.",
+   "when": "prânz sau cină; rezervă seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/kunnai-thai-contemporary-restaurant-rezervari-447",
+    "https://bookingham.ro/bucuresti/restaurante/kunnai/1346",
+    "https://restaurantguru.com/Kunnai-Bucharest"
+   ],
+   "confidence": "high",
+   "coord_source": "osm n12078943323 (nu era în TSV)"
+  },
+  {
+   "name": "ISAN Thai Kitchen",
+   "osm_id": null,
+   "cat": "mancare",
+   "kind": "Restaurant thailandez",
+   "cuisine": "thailandez",
+   "lat": 44.43485,
+   "lon": 26.0968,
+   "city": "București",
+   "story": "Mâncare thailandeză din regiunea Isan (nord-estul Thailandei), cu ingrediente mai ales aduse de acolo și bucătar thailandez. Poate cel mai bun pad thai din oraș, zice B365; ia și supa tom yum, laab și mango sticky rice.",
+   "when": "zilnic 13–23; seara se umple",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://b365.ro/e-posibil-ca-cel-mai-gustos-pad-thai-din-bucuresti-sa-fie-la-isan-thai-kitchen-pe-regina-elisabeta-544327/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d23895637-Reviews-Isan_Thai_Kitchen-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "adresa Bd. Regina Elisabeta 26, poziție interpolată între nr. 15-19 și 28 din OSM (latura de nord a bulevardului)"
+  },
+  {
+   "name": "Namaste",
+   "osm_id": "n2476489740",
+   "cat": "mancare",
+   "kind": "Restaurant indian",
+   "cuisine": "indian",
+   "lat": 44.437371,
+   "lon": 26.114064,
+   "city": "București",
+   "story": "Restaurant indian pe Mântuleasa, cu meniu din mai multe regiuni ale Indiei; 4,7 pe Tripadvisor, lăudat pentru mâncare gustoasă și prețuri mici.",
+   "when": "seara; zilnic până la 23",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d26359824-Reviews-Namaste_Indian_Restaurant-Bucharest.html",
+    "https://ialoc.ro/restaurante-bucuresti/namaste-restaurant-indian-rezervari-4213"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mumbai Floreasca",
+   "osm_id": null,
+   "cat": "mancare",
+   "kind": "Restaurant indian",
+   "cuisine": "indian",
+   "lat": 44.4550308,
+   "lon": 26.1004165,
+   "city": "București",
+   "story": "Restaurant indian pe strada Chile, în Floreasca, cu accent pe gust autentic și farfurii frumos aranjate; printre cele mai bine notate localuri indiene din oraș pe Tripadvisor.",
+   "when": "zilnic 10–22; seara rezervă",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d23933776-Reviews-Mumbai-Bucharest.html",
+    "https://restaurantguru.com/Mumbai-Food-Bucharest"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm n13094788501 (nu era în TSV; Mumbai din TSV, Cotroceni, nu mai apare pe Google)"
+  },
+  {
+   "name": "Casa de Tacos (Bărăției)",
+   "osm_id": "n10038019966",
+   "cat": "mancare",
+   "kind": "Restaurant mexican",
+   "cuisine": "mexican, tacos",
+   "lat": 44.430483,
+   "lon": 26.1046,
+   "city": "București",
+   "story": "Localul mic, ascuns pe o alee în spatele Unirea Shopping Center, pornit din pasiune pentru Mexic după o călătorie acolo. Tacos făcute ca acolo.",
+   "when": "prânz și seara; locul e mic",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://thebite.aisb.ro/casa-de-tacos-the-best-mexican-restaurant-in-bucharest/",
+    "https://wanderlog.com/list/geoCategory/776123/best-mexican-foods-and-restaurants-in-bucharest"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa de Tacos (Calea Victoriei)",
+   "osm_id": "n8974886497",
+   "cat": "mancare",
+   "kind": "Restaurant mexican",
+   "cuisine": "mexican, tacos",
+   "lat": 44.449986,
+   "lon": 26.088117,
+   "city": "București",
+   "story": "A doua Casa de Tacos, pe Calea Victoriei 214: aceleași tacos din rețetele aduse dintr-o călătorie în Mexic.",
+   "when": "prânz și seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://thebite.aisb.ro/casa-de-tacos-the-best-mexican-restaurant-in-bucharest/",
+    "https://wanderlog.com/list/geoCategory/776123/best-mexican-foods-and-restaurants-in-bucharest"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Los Amantes",
+   "osm_id": "n10984499946",
+   "cat": "mancare",
+   "kind": "Restaurant mexican",
+   "cuisine": "mexican",
+   "lat": 44.436604,
+   "lon": 26.098058,
+   "city": "București",
+   "story": "Concept mexican eclectic pe Calea Victoriei 52, gândit ca loc unde încetinești ritmul: porții generoase și gusturi puternice.",
+   "when": "seara, cu prietenii",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://wanderlog.com/list/geoCategory/776123/best-mexican-foods-and-restaurants-in-bucharest",
+    "https://www.tripadvisor.com/Restaurants-g294458-c29-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Blue Margarita",
+   "osm_id": "n2533820134",
+   "cat": "mancare",
+   "kind": "Restaurant mexican",
+   "cuisine": "mexican, tex-mex",
+   "lat": 44.449619,
+   "lon": 26.092817,
+   "city": "București",
+   "story": "Restaurant cu aer de diner pe Povernei, cu gusturi din Mexic, Brazilia și Argentina: tacos, burritos și margarita.",
+   "when": "seara; bun pentru grup",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "https://wanderlog.com/list/geoCategory/776123/best-mexican-foods-and-restaurants-in-bucharest",
+    "https://www.facebook.com/bluemargaritarestaurant/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mexikanos",
+   "osm_id": "n13240848201",
+   "cat": "mancare",
+   "kind": "Restaurant mexican",
+   "cuisine": "mexican",
+   "lat": 44.431006,
+   "lon": 26.103027,
+   "city": "București",
+   "story": "Mexican în Centrul Vechi, pe Gabroveni, cu tacos și burritos făcute de un bucătar mexican.",
+   "when": "seara, înainte de ieșit în Centrul Vechi",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/Mexikanos-Bucharest",
+    "https://mexikanos.goto-where.com/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nikos Greek Taverna (Centrul Vechi)",
+   "osm_id": "n8524673437",
+   "cat": "mancare",
+   "kind": "Tavernă grecească",
+   "cuisine": "grecesc",
+   "lat": 44.430221,
+   "lon": 26.097885,
+   "city": "București",
+   "story": "Una dintre cele mai cunoscute taverne grecești din București: gyros, souvlaki, bifteki, coaste de miel, musaca, pește la grătar și fructe de mare.",
+   "when": "seara, mai ales în weekend; rezervă",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/articole/5-restaurante-cu-specific-grecesc-in-bucuresti-unde-mancam-cele-mai-bune-souvlaki-gyros-si-fructe-de-mare-2256",
+    "https://restograf.ro/cele-mai-bune-restaurante-grecesti-din-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nikos Greek Taverna Burebista",
+   "osm_id": "n11463535891",
+   "cat": "mancare",
+   "kind": "Tavernă grecească",
+   "cuisine": "grecesc",
+   "lat": 44.424067,
+   "lon": 26.129524,
+   "city": "București",
+   "story": "Nikos de lângă Piața Alba Iulia: același meniu mare de tavernă, cu gyros, souvlaki, musaca și pește la grătar.",
+   "when": "seara; rezervă în weekend",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/articole/5-restaurante-cu-specific-grecesc-in-bucuresti-unde-mancam-cele-mai-bune-souvlaki-gyros-si-fructe-de-mare-2256",
+    "https://ialoc.ro/restaurante-bucuresti/nikos-greek-taverna-burebista-rezervari-2823"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nikos Greek Taverna (Iuliu Maniu)",
+   "osm_id": "n10027946586",
+   "cat": "mancare",
+   "kind": "Tavernă grecească",
+   "cuisine": "grecesc",
+   "lat": 44.432606,
+   "lon": 26.052221,
+   "city": "București",
+   "story": "Nikos din vest, pe Bd. Iuliu Maniu: tavernă grecească cu gyros, souvlaki, bifteki și pește la grătar.",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/articole/5-restaurante-cu-specific-grecesc-in-bucuresti-unde-mancam-cele-mai-bune-souvlaki-gyros-si-fructe-de-mare-2256"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Taverna La Zavat",
+   "osm_id": "n11507864769",
+   "cat": "mancare",
+   "kind": "Tavernă grecească",
+   "cuisine": "grecesc",
+   "lat": 44.437965,
+   "lon": 26.123332,
+   "city": "București",
+   "story": "De afară clădirea de pe Popa Nan nu spune mare lucru, dar înăuntru te simți ca într-o tavernă din Grecia. Povestea a început în 2010.",
+   "when": "seara; rezervă vineri–sâmbătă",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/articole/5-restaurante-cu-specific-grecesc-in-bucuresti-unde-mancam-cele-mai-bune-souvlaki-gyros-si-fructe-de-mare-2256",
+    "https://restograf.ro/cele-mai-bune-restaurante-grecesti-din-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Kvala",
+   "osm_id": "n4521145291",
+   "cat": "mancare",
+   "kind": "Restaurant grecesc",
+   "cuisine": "grecesc, mediteranean, pește",
+   "lat": 44.43168,
+   "lon": 26.072719,
+   "city": "București",
+   "story": "Restaurant grecesc și mediteranean pe Louis Pasteur, în Cotroceni, cu carne, pește și fructe de mare.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/articole/5-restaurante-cu-specific-grecesc-in-bucuresti-unde-mancam-cele-mai-bune-souvlaki-gyros-si-fructe-de-mare-2256"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Matheos",
+   "osm_id": "n1008838657",
+   "cat": "mancare",
+   "kind": "Restaurant grecesc",
+   "cuisine": "grecesc, pește, fructe de mare",
+   "lat": 44.444811,
+   "lon": 26.119202,
+   "city": "București",
+   "story": "Grecesc cu pește și fructe de mare (creveți, calamar, caracatiță, doradă), într-o casă boierească veche lângă Calea Moșilor, cu terasă. Fostul Kostas.",
+   "when": "seara; vara pe terasă",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/articole/5-restaurante-cu-specific-grecesc-in-bucuresti-unde-mancam-cele-mai-bune-souvlaki-gyros-si-fructe-de-mare-2256",
+    "https://matheos.ro/",
+    "https://www.restocracy.ro/matheos/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Saidoun",
+   "osm_id": "n7688611926",
+   "cat": "mancare",
+   "kind": "Restaurant libanez",
+   "cuisine": "libanez",
+   "lat": 44.491482,
+   "lon": 26.087182,
+   "city": "București",
+   "story": "Restaurantul libanez al hotelului Phoenicia Grand: mezze libaneze, grătare, preparate vegetariene și deserturi orientale.",
+   "when": "seara; rezervă pentru grup",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/saidoun-restaurant/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d6692018-Reviews-Restaurant_Libanez_Saidoun-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sfeir Lebanese Cuisine",
+   "osm_id": "n8537128371",
+   "cat": "mancare",
+   "kind": "Restaurant libanez",
+   "cuisine": "libanez",
+   "lat": 44.422457,
+   "lon": 26.111445,
+   "city": "București",
+   "story": "Libanez modern pe Mircea Vodă, cu ingrediente naturale. Cei care merg laudă tabouleh-ul, hummusul și kebaburile.",
+   "when": "prânz și seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d16719082-Reviews-Sfeir_Lebanese_Cuisine-Bucharest.html",
+    "https://www.facebook.com/sfeir.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Souk",
+   "osm_id": "w39348919",
+   "cat": "mancare",
+   "kind": "Restaurant libanez",
+   "cuisine": "libanez",
+   "lat": 44.462805,
+   "lon": 26.101276,
+   "city": "București",
+   "story": "Libanez în Floreasca, numit de clienți „cel mai bun loc dacă vrei mâncare libaneză”. Ia supa de linte și salata fattoush.",
+   "when": "prânz și seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://wanderlog.com/list/geoCategory/788716/best-lebanese-foods-and-restaurants-in-bucharest",
+    "https://www.tripadvisor.com/Restaurants-g294458-c10626-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Maher",
+   "osm_id": "n11574150769",
+   "cat": "mancare",
+   "kind": "Restaurant libanez",
+   "cuisine": "libanez, grătar",
+   "lat": 44.446227,
+   "lon": 26.109579,
+   "city": "București",
+   "story": "Restaurant libanez făcut de chef Mohamad și echipa lui, cu peste 15 ani de bucătărie libaneză. Ia shish kebab, tabbouleh sau mixed grill.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/maher-restaurant/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d14030455-Reviews-Restaurant_Maher-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Piccolo Mondo",
+   "osm_id": "w281851047",
+   "cat": "mancare",
+   "kind": "Restaurant libanez",
+   "cuisine": "libanez",
+   "lat": 44.459915,
+   "lon": 26.077395,
+   "city": "București",
+   "story": "Libanezul de pe Clucerului, lângă Piața 1 Mai: meniul a rămas aproape neschimbat de peste 30 de ani.",
+   "when": "prânz și seara",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/piccolo-mondo-restaurant/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Al Wady (AFI Cotroceni)",
+   "osm_id": "n5433115598",
+   "cat": "mancare",
+   "kind": "Restaurant libanez",
+   "cuisine": "libanez",
+   "lat": 44.430617,
+   "lon": 26.052317,
+   "city": "București",
+   "story": "Libanez cu mezze și miel, plus hummus, falafel, plăcinte libaneze și shaorma. E în AFI Cotroceni, la granița cu Drumul Taberei.",
+   "when": "zilnic 9:30–21:30; după cumpărături sau film",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://alwady.ro/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d3531572-Reviews-Al_Wady-Bucharest.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Saray",
+   "osm_id": "n1731040928",
+   "cat": "mancare",
+   "kind": "Restaurant turcesc",
+   "cuisine": "turcesc",
+   "lat": 44.43251,
+   "lon": 26.098381,
+   "city": "București",
+   "story": "Bucătărie turcească tradițională în stil otoman, pe Lipscani, în mijlocul Centrului Vechi.",
+   "when": "seara; în weekend se umple",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/saray-restaurant/",
+    "https://restograf.ro/cele-mai-bune-restaurante-turcesti-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Efes – Turkish Cuisine Concept",
+   "osm_id": "n4554310490",
+   "cat": "mancare",
+   "kind": "Restaurant turcesc",
+   "cuisine": "turcesc",
+   "lat": 44.420319,
+   "lon": 26.116262,
+   "city": "București",
+   "story": "Din 2011, unul dintre cele mai bune restaurante turcești din București, cu un decor care amintește de Istanbul. E la 5 minute de metrou Timpuri Noi.",
+   "when": "zilnic 10–22",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/efes-turkish-cuisine-concept-rezervari-1200",
+    "https://restograf.ro/cele-mai-bune-restaurante-turcesti-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Duman Oriental Cuisine",
+   "osm_id": "n11463472510",
+   "cat": "mancare",
+   "kind": "Restaurant turcesc",
+   "cuisine": "turcesc, libanez",
+   "lat": 44.430041,
+   "lon": 26.134862,
+   "city": "București",
+   "story": "Restaurant turcesc și libanez pe Decebal, din familia de restaurante a lui Ensar Duman.",
+   "when": "zilnic 11–24; bun și pentru o cină târzie",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/cele-mai-bune-restaurante-turcesti-bucuresti/",
+    "https://dumanorientalcuisine.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Turkish Kitchen",
+   "osm_id": "n11916287033",
+   "cat": "mancare",
+   "kind": "Restaurant turcesc",
+   "cuisine": "turcesc",
+   "lat": 44.479486,
+   "lon": 26.102715,
+   "city": "București",
+   "story": "Bucătărie turcească într-o variantă contemporană, la parterul Globalworth Tower, lângă Promenada.",
+   "when": "prânz (birouri) și seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/turkish-kitchen-bucharest/",
+    "https://restograf.ro/cele-mai-bune-restaurante-turcesti-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Chanh Miam Miam",
+   "osm_id": "n9654423481",
+   "cat": "mancare",
+   "kind": "Restaurant vietnamez",
+   "cuisine": "vietnamez, pho",
+   "lat": 44.427194,
+   "lon": 26.034504,
+   "city": "București",
+   "story": "Vietnamez de cartier în Drumul Taberei, fără fițe: B365 l-a numit „onest și delicios”. Ia pho bo (39 lei) sau rața crocantă cu sos de arahide.",
+   "when": "prânz și seara; porții mari",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://b365.ro/ascuns-in-vazul-lumii-onest-si-delicios-inapoi-la-radacini-in-drumul-taberei-la-restaurantul-vietnamez-chanh-miam-miam-561371/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d24878042-Reviews-Chanh_Miam_Miam-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Pho Dee",
+   "osm_id": "n4466984690",
+   "cat": "mancare",
+   "kind": "Restaurant vietnamez",
+   "cuisine": "vietnamez, pho",
+   "lat": 44.431217,
+   "lon": 26.103275,
+   "city": "București",
+   "story": "Vietnamez mic, al unei familii, pe Brătianu lângă Unirii, cu gătit autentic. B365 zice că „merită 100% încercat”.",
+   "when": "prânz și seara; locul e mic",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://b365.ro/bucurestiul-are-un-nou-local-vietnamez-pho-dee-e-aproape-de-unirii-si-merita-100-incercat-573371/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "LiVU (Costache Negri)",
+   "osm_id": "n4807344122",
+   "cat": "mancare",
+   "kind": "Restaurant vietnamez",
+   "cuisine": "vietnamez",
+   "lat": 44.431341,
+   "lon": 26.07875,
+   "city": "București",
+   "story": "LiVU e unul dintre primele lanțuri de restaurante vietnameze din România; localul de pe Costache Negri e în vest, aproape de Cotroceni.",
+   "when": "prânz și seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://livu.ro/",
+    "https://wanderlog.com/list/geoCategory/792314/best-vietnamese-foods-and-restaurants-in-bucharest"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "LiVU (Pache Protopopescu)",
+   "osm_id": "n13618974830",
+   "cat": "mancare",
+   "kind": "Restaurant vietnamez",
+   "cuisine": "vietnamez",
+   "lat": 44.440959,
+   "lon": 26.132395,
+   "city": "București",
+   "story": "Localul LiVU din est, pe Pache Protopopescu, din unul dintre primele lanțuri vietnameze din România.",
+   "when": "prânz și seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://livu.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Guri Guri",
+   "osm_id": "n10111661681",
+   "cat": "mancare",
+   "kind": "Restaurant coreean",
+   "cuisine": "coreean",
+   "lat": 44.478446,
+   "lon": 26.115076,
+   "city": "București",
+   "story": "Restaurant și magazin coreean, al unei familii coreene, lângă metroul Pipera (Upground). Ia bibimbap, tocana de kimchi sau tteokbokki; poți lua și kituri să gătești acasă.",
+   "when": "prânz și seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/restaurante-coreene-din-bucuresti-autentice/",
+    "https://kdrama.ro/2021/09/14/o-vizita-la-noul-restaurant-coreean-guri-guri-din-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "The Kimchi",
+   "osm_id": "n13011749006",
+   "cat": "mancare",
+   "kind": "Restaurant coreean",
+   "cuisine": "coreean",
+   "lat": 44.45953,
+   "lon": 26.097738,
+   "city": "București",
+   "story": "Bucătărie coreeană autentică și consistentă, în Dorobanți (Intrarea Tudor Ștefan 32). Începe cu mandu, colțunașii crocanți cu sos dulce-iute.",
+   "when": "zilnic 12–22",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restograf.ro/restaurante-coreene-din-bucuresti-autentice/",
+    "https://thekimchi.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Tudi's Pizza",
+   "osm_id": null,
+   "cat": "mancare",
+   "kind": "Pizzerie",
+   "cuisine": "pizza, napoletană",
+   "lat": 44.45076,
+   "lon": 26.05632,
+   "city": "București",
+   "story": "Pizzerie de familie în Crângași, cu aluat dospit două zile și o terasă mică și cochetă, bună iarna și vara. Pe Tripadvisor, 4,8.",
+   "when": "zilnic 11–23; seara se umple terasa",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.co.uk/Restaurant_Review-g294458-d19049124-Reviews-Tudi_s_Zinca_Golescu-Bucharest.html",
+    "https://ialoc.ro/restaurante-bucuresti/tudiss-zinca-golescu-rezervari-3201",
+    "https://restaurantguru.com/Tudis-Pizza-Bucharest"
+   ],
+   "confidence": "high",
+   "coord_source": "osm n7964933657 (nu era în TSV)"
+  },
+  {
+   "name": "SPIZZA Artizanale",
+   "osm_id": null,
+   "cat": "mancare",
+   "kind": "Pizzerie",
+   "cuisine": "pizza, napoletană",
+   "lat": 44.37566,
+   "lon": 26.11073,
+   "city": "București",
+   "story": "Pizza napoletană în Berceni, cu marginea foarte înaltă. Îți torni singur limonadă sau prosecco dintr-o mașinuță italiană, iar pizza se taie cu foarfeca. Ia Mortadella Burrata.",
+   "when": "seara; locul e mic",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 56,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d28598708-Reviews-Spizza_Artizanale-Bucharest.html",
+    "https://www.tiktok.com/@coffeenomadul/video/7496943466224618774"
+   ],
+   "confidence": "high",
+   "coord_source": "osm n12412656770 (nu era în TSV)"
+  },
+  {
+   "name": "Basilico di Drumul Taberei",
+   "osm_id": null,
+   "cat": "mancare",
+   "kind": "Restaurant italian",
+   "cuisine": "pizza, italian",
+   "lat": 44.41514,
+   "lon": 26.01403,
+   "city": "București",
+   "story": "Restaurant italian de cartier în Drumul Taberei, spre Militari (Valea Oltului 61): pizza, paste, pește, salate și grătar.",
+   "when": "zilnic 11–23",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://drumultaberei.ro/basilico-di-drumul-taberei-restaurant-cu-specific-italian-pizza-pasta-grill-drinks/",
+    "http://basilico.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm w264742966 (nu era în TSV)"
+  }
+ ]
+}

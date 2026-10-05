@@ -3,7 +3,8 @@
 // the places where people gather). Input: the research files (JSON, one per area: nightlife, food, culture and
 // activities, nature, gathering spots), each with "places" (and "decisions" for the map's places it checked).
 // A place from the map is kept only when the research kept it; places the map lacks are added with their own id.
-// Usage: node scripts/curate.mjs out-*.json  → src/data/curated.json (import-osm.mjs then keeps only these)
+// Usage: node scripts/curate.mjs data-raw/research/out-*.json  → src/data/curated.json (import-osm.mjs then keeps only
+// these). The research files are kept in data-raw/research (two passes, 05.10).
 import fs from 'node:fs';
 
 const files = process.argv.slice(2);
@@ -12,6 +13,8 @@ const venues = JSON.parse(fs.readFileSync('src/data/venues.json', 'utf8'));
 const gone = JSON.parse(fs.readFileSync('src/data/gone.json', 'utf8'));
 const known = new Map([...gone, ...venues].map((v) => [v.id, v]));
 const before = fs.existsSync('src/data/curated.json') ? JSON.parse(fs.readFileSync('src/data/curated.json', 'utf8')) : null;
+// after an import venues.json holds only the chosen places: the ones chosen before still count as on the map
+for (const id of Object.keys(before?.keep ?? {})) if (!known.has(id)) known.set(id, { id });
 
 const fold = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const slug = (s) => fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
@@ -22,6 +25,9 @@ const VIBES = new Set(['Mâncare bună', 'Chill', 'Party', 'Fun', 'Competitiv', 
 function kindOf(p) {
   const t = fold((p.kind ?? '') + ' ' + (p.name ?? '') + ' ' + (p.cuisine ?? ''));
   const has = (re) => re.test(t);
+  // a billiard hall or a bowling alley is that, whatever category the research filed it under
+  if (has(/biliard|billiard|snooker/) && !has(/bowling/)) return 'billiards';
+  if (has(/bowling/)) return 'bowling_alley';
   switch (p.cat) {
     case 'loc':
       if (has(/food|street food|market|piata de|piața de/)) return 'food_market';
@@ -97,6 +103,11 @@ const facts = (p) => {
   const o = {};
   if (say(p.story)) o.story = say(p.story);
   if (say(p.when)) o.crowd = say(p.when);
+  if (say(p.cuisine)) o.cuisine = say(p.cuisine);
+  // what the place is, as the research found it (the map may call a billiard hall a bar), and a terrace when it has one
+  const k = kindOf(p);
+  if (k) { o.k = k; if (say(p.kind)) o.kind = say(p.kind); }
+  if (/teras|gr[aă]din[aă] de var[aă]|rooftop|[iî]n aer liber/i.test((p.kind ?? '') + ' ' + (p.story ?? ''))) o.terrace = true;
   const vibes = (p.vibes ?? []).filter((x) => VIBES.has(x));
   if (vibes.length) o.vibes = vibes;
   if (typeof p.price === 'number' && p.price >= 0 && p.price < 2000) o.price = Math.round(p.price);
@@ -125,7 +136,7 @@ for (const f of files) {
     let nid = 'c-' + slug(p.name);
     while (usedIds.has(nid)) nid += '-2';
     usedIds.add(nid);
-    add.push({ id: nid, name: say(p.name), k, kind: say(p.kind) || undefined, cuisine: say(p.cuisine) || undefined, lat: +p.lat.toFixed(6), lon: +p.lon.toFixed(6), city: say(p.city) || undefined, ...facts(p) });
+    add.push({ id: nid, name: say(p.name), kind: say(p.kind) || undefined, cuisine: say(p.cuisine) || undefined, lat: +p.lat.toFixed(6), lon: +p.lon.toFixed(6), city: say(p.city) || undefined, ...facts(p), k });
   }
 }
 for (const id of Object.keys(drop)) if (keep[id]) delete drop[id];

@@ -86,6 +86,8 @@ for (const e of els) {
   if (key === 'fast_food') v.fast = true;
   out.push(v);
 }
+// every place still on the map and open (closed ones were left out above), before the hand-picked list narrows it
+const onMap = new Set(out.map((v) => v.id));
 // The hand-picked list (src/data/curated.json, scripts/curate.mjs, decision Cornel 05.10): only the map's places the
 // research kept stay (with their story), and the good places the map lacks are added. Without the file, all stay.
 const curatedFile = new URL('../src/data/curated.json', import.meta.url);
@@ -106,7 +108,9 @@ export const KIND_CAT = {
   soccer: ['sport', 'Fotbal'], squash: ['sport', 'Squash'], swimming: ['sport', 'Piscină'], climbing: ['sport', 'Escaladă'],
   golf_course: ['sport', 'Golf'], horse_riding: ['sport', 'Călărie'],
 };
-const CUISINE_WORDS = { 'pizza': 'pizza', 'burger': 'burger', 'sushi': 'sushi', 'japonez': 'japanese', 'italian': 'italian', 'românesc': 'romanian', 'romanesc': 'romanian', 'româneasc': 'romanian', 'grecesc': 'greek', 'grecească': 'greek', 'turcesc': 'turkish', 'libanez': 'lebanese', 'asiatic': 'asian', 'chinezesc': 'chinese', 'thai': 'thai', 'indian': 'indian', 'mexican': 'mexican', 'american': 'american', 'steak': 'steak_house', 'pește': 'seafood', 'peste': 'seafood', 'kebab': 'kebab', 'shaorma': 'shawarma', 'vegan': 'vegan', 'vegetarian': 'vegetarian', 'franțuz': 'french', 'francez': 'french', 'spaniol': 'spanish', 'cafea': 'coffee_shop', 'prăjitur': 'cake', 'desert': 'dessert', 'înghețat': 'ice_cream', 'gelato': 'ice_cream', 'grătar': 'grill', 'brunch': 'breakfast', 'mic dejun': 'breakfast', 'coreean': 'korean', 'vietnamez': 'vietnamese', 'oriental': 'middle_eastern' };
+const CUISINE_WORDS = { 'pizza': 'pizza', 'burger': 'burger', 'sushi': 'sushi', 'japonez': 'japanese', 'italian': 'italian', 'românesc': 'romanian', 'romanesc': 'romanian', 'româneasc': 'romanian', 'grecesc': 'greek', 'grecească': 'greek', 'turcesc': 'turkish', 'libanez': 'lebanese', 'asiatic': 'asian', 'chinezesc': 'chinese', 'thai': 'thai', 'indian': 'indian', 'mexican': 'mexican', 'american': 'american', 'steak': 'steak_house', 'pește': 'seafood', 'peste': 'seafood', 'kebab': 'kebab', 'shaorma': 'shawarma', 'vegan': 'vegan', 'vegetarian': 'vegetarian', 'franțuz': 'french', 'francez': 'french', 'spaniol': 'spanish', 'cafea': 'coffee_shop', 'prăjitur': 'cake', 'desert': 'dessert', 'înghețat': 'ice_cream', 'gelato': 'ice_cream', 'grătar': 'grill', 'brunch': 'breakfast', 'mic dejun': 'breakfast', 'coreean': 'korean', 'vietnamez': 'vietnamese', 'oriental': 'middle_eastern', 'chinezeasc': 'chinese', 'turceasc': 'turkish', 'grec': 'greek', 'japon': 'japanese', 'liban': 'lebanese', 'arab': 'lebanese', 'sirian': 'middle_eastern', 'thailandez': 'thai', 'italia': 'italian', 'napolitan': 'pizza' };
+/** The engine's cuisine keys named in the research's words ("sushi, japoneză" → sushi, japanese). */
+const cuisinesIn = (text) => { const words = (text ?? '').toLowerCase(); return [...new Set(Object.entries(CUISINE_WORDS).filter(([w]) => words.includes(w)).map(([, k]) => k))]; };
 if (curated) {
   const picked = curated.keep ?? {};
   let dropped = 0;
@@ -119,6 +123,11 @@ if (curated) {
     if (f.crowd) v.crowd = f.crowd;
     if (f.vibes?.length) v.vibes = f.vibes;
     if (typeof f.price === 'number') v.price = f.price;
+    // the cuisine the research names (the map often lacks it: a Thai place with no cuisine is not found by "thai")
+    if (f.cuisine) v.cuisines = [...new Set([...v.cuisines, ...cuisinesIn(f.cuisine)])].slice(0, 4);
+    // the research saw what it really is: a billiard hall the map calls a bar, a bowling club mapped as its terrace
+    if (f.k && KIND_CAT[f.k] && KIND_CAT[f.k][0] !== v.cat) { v.k = f.k; v.cat = KIND_CAT[f.k][0]; v.kind = f.kind || KIND_CAT[f.k][1]; if (f.k !== 'fast_food') delete v.fast; }
+    if (f.terrace) v.outdoor = true;
   }
   let added = 0;
   for (const c of curated.add ?? []) {
@@ -127,14 +136,14 @@ if (curated) {
     const p = { lat: c.lat, lon: c.lon };
     const zone = ZONES.reduce((b, z) => (km(p, z) < km(p, b) ? z : b), ZONES[0]);
     if (km(p, zone) > 25) continue;
-    const words = (c.cuisine ?? '').toLowerCase();
-    const cuisines = [...new Set(Object.entries(CUISINE_WORDS).filter(([w]) => words.includes(w)).map(([, k]) => k))].slice(0, 3);
+    const cuisines = cuisinesIn(c.cuisine).slice(0, 3);
     const v = { id: c.id, name: c.name, cat: kc[0], kind: c.kind || kc[1], k: c.k, cuisines, lat: c.lat, lon: c.lon, zone: zone.id, pick: true };
     if (c.city) v.city = c.city;
     if (c.story) v.story = c.story;
     if (c.crowd) v.crowd = c.crowd;
     if (c.vibes?.length) v.vibes = c.vibes;
     if (typeof c.price === 'number') v.price = c.price;
+    if (c.terrace) v.outdoor = true;
     if (c.k === 'fast_food') v.fast = true;
     out.push(v);
     added++;
@@ -153,9 +162,11 @@ const today = new Date().toISOString().slice(0, 10);
 const keep = new Date(Date.now() - 183 * 864e5).toISOString().slice(0, 10);
 const before = fs.existsSync(outFile) ? JSON.parse(fs.readFileSync(outFile, 'utf8')) : [];
 const ids = new Set(out.map((v) => v.id));
-const gone = (fs.existsSync(goneFile) ? JSON.parse(fs.readFileSync(goneFile, 'utf8')) : []).filter((v) => !ids.has(v.id) && v.gone >= keep);
+// a place we did not choose is still on the map: it is not "gone" (old plans for it just no longer find it)
+const unpicked = (id) => !!curated && onMap.has(id);
+const gone = (fs.existsSync(goneFile) ? JSON.parse(fs.readFileSync(goneFile, 'utf8')) : []).filter((v) => !ids.has(v.id) && v.gone >= keep && !unpicked(v.id));
 const goneIds = new Set(gone.map((v) => v.id));
-for (const v of before) if (!ids.has(v.id) && !goneIds.has(v.id)) { const { wk, hours, ...rest } = v; void wk; void hours; gone.push({ ...rest, gone: today }); }
+for (const v of before) if (!ids.has(v.id) && !goneIds.has(v.id) && !unpicked(v.id)) { const { wk, hours, ...rest } = v; void wk; void hours; gone.push({ ...rest, gone: today }); }
 fs.writeFileSync(goneFile, JSON.stringify(gone));
 fs.writeFileSync(outFile, JSON.stringify(out));
 const byCat = out.reduce((m, v) => ((m[v.cat] = (m[v.cat] || 0) + 1), m), {});

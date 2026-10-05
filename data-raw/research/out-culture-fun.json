@@ -1,0 +1,4545 @@
+{
+ "decisions": [
+  {
+   "osm_id": "w1117479826",
+   "name": "Institutul Revoluției Române din Decembrie 1989",
+   "decision": "drop",
+   "why": "institut de cercetare, nu un muzeu deschis pentru ieșit"
+  },
+  {
+   "osm_id": "n2872402331",
+   "name": "Allegra Nomad Gallery",
+   "decision": "drop",
+   "why": "negăsit pe Google; galeria e în Combinatul Fondului Plastic (adăugat separat)"
+  },
+  {
+   "osm_id": "w241997161",
+   "name": "Amfiteatrul \"Sahia",
+   "decision": "drop",
+   "why": "amfiteatru universitar, fără program public"
+  },
+  {
+   "osm_id": "w23705047",
+   "name": "Amfiteatrul Mihai Eminescu",
+   "decision": "drop",
+   "why": "amfiteatru în parc doar cu evenimente rare"
+  },
+  {
+   "osm_id": "n2872402327",
+   "name": "ANAID ART GALLERY",
+   "decision": "drop",
+   "why": "galerie mică, interes redus pentru o ieșire"
+  },
+  {
+   "osm_id": "n2749532010",
+   "name": "Anca Poterașu Gallery",
+   "decision": "drop",
+   "why": "galerie comercială mică; păstrăm hub-urile mari"
+  },
+  {
+   "osm_id": "n2872402328",
+   "name": "ANNART GALLERY",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n7622689033",
+   "name": "Arcub",
+   "decision": "keep",
+   "why": "centru cultural activ în Centrul Vechi"
+  },
+  {
+   "osm_id": "w86553108",
+   "name": "ArCuB",
+   "decision": "drop",
+   "why": "dublură ARCUB, negăsit pe Google"
+  },
+  {
+   "osm_id": "r4871608",
+   "name": "Arenele Romane",
+   "decision": "keep",
+   "why": "scenă de concerte în aer liber, sezonieră"
+  },
+  {
+   "osm_id": "n2467918814",
+   "name": "Arhiva Națională de Filme Cinemateca Română",
+   "decision": "drop",
+   "why": "arhivă, nu e deschisă publicului (sălile ei sunt Eforie și Union)"
+  },
+  {
+   "osm_id": "n6920145517",
+   "name": "Art Hub",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n10778202975",
+   "name": "Art Safari",
+   "decision": "drop",
+   "why": "negăsit pe Google; locația Art Safari neconfirmată"
+  },
+  {
+   "osm_id": "n2872402329",
+   "name": "ART YOURSELF GALLERY",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n6907430602",
+   "name": "Artwill",
+   "decision": "drop",
+   "why": "galerie online/atelier, nu un loc de vizitat"
+  },
+  {
+   "osm_id": "n7072094240",
+   "name": "Asociația HEARTH",
+   "decision": "drop",
+   "why": "asociație, nu teatru cu program public"
+  },
+  {
+   "osm_id": "n2872402333",
+   "name": "Atelier 35",
+   "decision": "drop",
+   "why": "galerie mică; neverificat"
+  },
+  {
+   "osm_id": "n2872423667",
+   "name": "Atelier Frog",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n10147382210",
+   "name": "Atelier Marian Zidaru",
+   "decision": "drop",
+   "why": "atelier în Combinatul Fondului Plastic (inclus acolo)"
+  },
+  {
+   "osm_id": "w1109022310",
+   "name": "Atelier Vlad Basarab",
+   "decision": "drop",
+   "why": "negăsit; atelier în Combinatul Fondului Plastic"
+  },
+  {
+   "osm_id": "n13607930365",
+   "name": "Atelierul de Grafică Liviu Acasandrei",
+   "decision": "drop",
+   "why": "atelier de grafică, nișă"
+  },
+  {
+   "osm_id": "n2872423668",
+   "name": "Atelierul de productie",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w16291602",
+   "name": "Ateneul Român",
+   "decision": "keep",
+   "why": "reper, concerte"
+  },
+  {
+   "osm_id": "n9735047941",
+   "name": "Casa Artelor Dinu Lipatti",
+   "decision": "drop",
+   "why": "sală de nișă; neverificat"
+  },
+  {
+   "osm_id": "w1471936597",
+   "name": "Casa de Balet - Studio Unirii",
+   "decision": "drop",
+   "why": "școală de balet, nu loc de ieșit"
+  },
+  {
+   "osm_id": "n2634651890",
+   "name": "Casa Memorială \"Constantin Joja",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2634651950",
+   "name": "Casa Memorială \"George și Agatha Bacovia",
+   "decision": "drop",
+   "why": "casă memorială mică, program restrâns"
+  },
+  {
+   "osm_id": "n2634651992",
+   "name": "Casa Memorială \"Ion Minulescu",
+   "decision": "drop",
+   "why": "casă memorială mică, program restrâns"
+  },
+  {
+   "osm_id": "n2634652016",
+   "name": "Casa Memorială \"Liviu Rebreanu - Fanny Rebreanu",
+   "decision": "drop",
+   "why": "casă memorială mică, program restrâns"
+  },
+  {
+   "osm_id": "n2634652142",
+   "name": "Casa Memorială \"Tudor Arghezi",
+   "decision": "drop",
+   "why": "casă memorială mică, interes redus pentru tineri"
+  },
+  {
+   "osm_id": "w912686503",
+   "name": "Casa Memorială Anton Pann",
+   "decision": "drop",
+   "why": "casă memorială mică, fără program clar"
+  },
+  {
+   "osm_id": "n2872402334",
+   "name": "Centrul Artelor Vizuale - Galeria Căminul Artei",
+   "decision": "drop",
+   "why": "magazin de materiale și galerie mică"
+  },
+  {
+   "osm_id": "n5477585107",
+   "name": "Centrul Ceh",
+   "decision": "drop",
+   "why": "centru cultural cu program de birou"
+  },
+  {
+   "osm_id": "w705080782",
+   "name": "Centrul de Recreere și Dezvoltare Personală \"Conacul Golescu Grant",
+   "decision": "drop",
+   "why": "centru de protecția copilului, nu e deschis publicului"
+  },
+  {
+   "osm_id": "n3779623861",
+   "name": "Centrul de teatru educational Replika",
+   "decision": "keep",
+   "why": "teatru independent activ (verificat 2025)"
+  },
+  {
+   "osm_id": "w740152474",
+   "name": "Centrul Național al Cinematografiei",
+   "decision": "drop",
+   "why": "instituție administrativă (CNC)"
+  },
+  {
+   "osm_id": "n11411704670",
+   "name": "Centrul Național al Dansului București",
+   "decision": "keep",
+   "why": "spectacole de dans contemporan (verificat 2025)"
+  },
+  {
+   "osm_id": "r2230393",
+   "name": "Cercul Militar Național",
+   "decision": "drop",
+   "why": "clădire de văzut din afară; restaurantul e listat separat"
+  },
+  {
+   "osm_id": "n849372378",
+   "name": "Cinema City",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "n3726839339",
+   "name": "Cinema City",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "n7079505521",
+   "name": "Cinema City",
+   "decision": "keep",
+   "why": "cinema activ; include IMAX"
+  },
+  {
+   "osm_id": "n9394387194",
+   "name": "Cinema City",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "n849372410",
+   "name": "Cinema Europa",
+   "decision": "keep",
+   "why": "cinema ieftin cu poveste, activ 2025–2026"
+  },
+  {
+   "osm_id": "w1481066687",
+   "name": "Cinema Flamura",
+   "decision": "drop",
+   "why": "închis, clădire abandonată"
+  },
+  {
+   "osm_id": "n2468602231",
+   "name": "Cinema Muzeul Țăranului",
+   "decision": "keep",
+   "why": "cinema de artă"
+  },
+  {
+   "osm_id": "n849372350",
+   "name": "Cinema Union",
+   "decision": "keep",
+   "why": "cinematecă"
+  },
+  {
+   "osm_id": "n849372318",
+   "name": "Cinemateca Eforie",
+   "decision": "keep",
+   "why": "cinematecă, reper"
+  },
+  {
+   "osm_id": "n7192898466",
+   "name": "Cinemax",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "n442896940",
+   "name": "Cineplexx",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "w294724370",
+   "name": "Cineplexx",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "w23611484",
+   "name": "Circul Globus",
+   "decision": "keep",
+   "why": "spectacole, clădire emblematică"
+  },
+  {
+   "osm_id": "n7151190270",
+   "name": "Club 99",
+   "decision": "keep",
+   "why": "stand-up, foarte căutat de tineri"
+  },
+  {
+   "osm_id": "n7231261676",
+   "name": "Club Cajal",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2634652026",
+   "name": "Colecția \"Maria și Dr. George Severeanu",
+   "decision": "drop",
+   "why": "închis (OSM: closed)"
+  },
+  {
+   "osm_id": "n2634652183",
+   "name": "Colecția Muzeală a Episcopiei Armeano-Gregoriene",
+   "decision": "drop",
+   "why": "colecție religioasă de nișă"
+  },
+  {
+   "osm_id": "n2634652241",
+   "name": "Colecția Muzeală a Mănăstirii Ortodoxe Căldărușani",
+   "decision": "drop",
+   "why": "colecție de mănăstire, nișă"
+  },
+  {
+   "osm_id": "n2634652251",
+   "name": "Colecția Muzeală a Mănăstirii Ortodoxe Cernica",
+   "decision": "drop",
+   "why": "dublură Mănăstirea Cernica"
+  },
+  {
+   "osm_id": "n2634652874",
+   "name": "Colecția muzeală a Mănăstirii Ortodoxe Pasărea",
+   "decision": "drop",
+   "why": "colecție de mănăstire, nișă"
+  },
+  {
+   "osm_id": "n2634653097",
+   "name": "Colecția Muzeală a Mănăstirii Ortodoxe Țigănești",
+   "decision": "drop",
+   "why": "colecție de mănăstire, nișă"
+  },
+  {
+   "osm_id": "n2634652271",
+   "name": "Colecția Publică „Istoria Locală-Zona Snagov/Codrii Vlasiei”",
+   "decision": "drop",
+   "why": "colecție locală mică"
+  },
+  {
+   "osm_id": "n2634652940",
+   "name": "Colecție Muzeală a Aromânilor",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w1031378073",
+   "name": "Conacul Bujoiu",
+   "decision": "drop",
+   "why": "conac nevizitabil"
+  },
+  {
+   "osm_id": "w1316176597",
+   "name": "Conacul Filipescu",
+   "decision": "drop",
+   "why": "conac folosit pentru evenimente private"
+  },
+  {
+   "osm_id": "w612191194",
+   "name": "Conacul Stolnicului Constantin Cantacuzino",
+   "decision": "drop",
+   "why": "conac în ruină, nevizitabil"
+  },
+  {
+   "osm_id": "w781198789",
+   "name": "Creart",
+   "decision": "drop",
+   "why": "instituția care găzduiește Teatrelli (păstrat separat)"
+  },
+  {
+   "osm_id": "n10936959099",
+   "name": "Cuibul Artiștilor",
+   "decision": "keep",
+   "why": "teatru pentru tineri, activ"
+  },
+  {
+   "osm_id": "n2872423669",
+   "name": "D3SIGN box",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n10775260918",
+   "name": "El Deco",
+   "decision": "drop",
+   "why": "magazin/galerie comercială"
+  },
+  {
+   "osm_id": "n9412806036",
+   "name": "Elite Art Gallery",
+   "decision": "drop",
+   "why": "galerie comercială"
+  },
+  {
+   "osm_id": "n6985316061",
+   "name": "Elvira Popescu",
+   "decision": "keep",
+   "why": "cinema de artă, reper"
+  },
+  {
+   "osm_id": "n2587595059",
+   "name": "FF THEATRE",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n12318228499",
+   "name": "FormART",
+   "decision": "drop",
+   "why": "galerie mică"
+  },
+  {
+   "osm_id": "n2872402335",
+   "name": "Galeria 26",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n9250389007",
+   "name": "Galeria Artelor",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n255088136",
+   "name": "Galeria de Artă Europeană",
+   "decision": "drop",
+   "why": "face parte din MNAR (păstrat)"
+  },
+  {
+   "osm_id": "n2872402336",
+   "name": "Galeria Galateca",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2872423670",
+   "name": "Galeria IX",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2872402338",
+   "name": "Galeria LABORNA",
+   "decision": "drop",
+   "why": "galerie mică, nișă"
+  },
+  {
+   "osm_id": "n2872402337",
+   "name": "Galeria Posibilă",
+   "decision": "drop",
+   "why": "galerie mică; neverificat"
+  },
+  {
+   "osm_id": "n6513765648",
+   "name": "Galeria Romană",
+   "decision": "drop",
+   "why": "galerie comercială mică"
+  },
+  {
+   "osm_id": "n10147382214",
+   "name": "Galeria Sector 1",
+   "decision": "drop",
+   "why": "galerie în Combinatul Fondului Plastic (inclus acolo)"
+  },
+  {
+   "osm_id": "n10147382213",
+   "name": "Galeria Senat",
+   "decision": "drop",
+   "why": "galerie în Combinatul Fondului Plastic (inclus acolo)"
+  },
+  {
+   "osm_id": "n12318285854",
+   "name": "Galeria SIMEZA",
+   "decision": "drop",
+   "why": "galerie mică, program restrâns"
+  },
+  {
+   "osm_id": "n2502067814",
+   "name": "Galeriile de artă Orizont",
+   "decision": "drop",
+   "why": "galerie mică, program de birou"
+  },
+  {
+   "osm_id": "n3359325004",
+   "name": "Gradina Viitorului",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2634651900",
+   "name": "Grădina Botanică",
+   "decision": "keep",
+   "why": "loc de plimbare cu poveste"
+  },
+  {
+   "osm_id": "n2872403923",
+   "name": "H’ART GALLERY",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n12327311799",
+   "name": "Happy Cinema",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "n849372311",
+   "name": "Hollywood Multiplex",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "n849372287",
+   "name": "IMAX",
+   "decision": "drop",
+   "why": "dublură: sala IMAX e în Cinema City AFI Cotroceni (păstrat)"
+  },
+  {
+   "osm_id": "n2839203559",
+   "name": "Improteca",
+   "decision": "keep",
+   "why": "improv, activ 2025"
+  },
+  {
+   "osm_id": "n1741344816",
+   "name": "Incubator 107",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w168680322",
+   "name": "Institutul Francez",
+   "decision": "drop",
+   "why": "dublură: Cinema Elvire Popesco (păstrat) e în aceeași clădire"
+  },
+  {
+   "osm_id": "n10147382212",
+   "name": "Iomo Gallery",
+   "decision": "drop",
+   "why": "galerie în Combinatul Fondului Plastic (inclus acolo)"
+  },
+  {
+   "osm_id": "n2872403925",
+   "name": "Ivan Gallery",
+   "decision": "drop",
+   "why": "galerie comercială mică"
+  },
+  {
+   "osm_id": "n1213250524",
+   "name": "KODAK Cinelabs Romania",
+   "decision": "drop",
+   "why": "laborator de film, nu cinema"
+  },
+  {
+   "osm_id": "n2872423672",
+   "name": "M.N.D.A.C. - Magazinul Național de Artă Contemporană",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2872423673",
+   "name": "Masaryk 25",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w263323014",
+   "name": "Mănăstirea „Christiana”",
+   "decision": "drop",
+   "why": "mănăstire fără interes pentru vizitatori"
+  },
+  {
+   "osm_id": "w23491442",
+   "name": "Mănăstirea Antim",
+   "decision": "drop",
+   "why": "biserică istorică fără program de vizitare"
+  },
+  {
+   "osm_id": "w1324485970",
+   "name": "Mănăstirea catolică „Sfânta Agnes - Congregatio Jesu”",
+   "decision": "drop",
+   "why": "mănăstire catolică, nu e loc de vizitat"
+  },
+  {
+   "osm_id": "w891254538",
+   "name": "Mănăstirea Căldărușani",
+   "decision": "drop",
+   "why": "mănăstire departe, interes redus"
+  },
+  {
+   "osm_id": "w240611280",
+   "name": "Mănăstirea Cernica",
+   "decision": "keep",
+   "why": "plimbare de weekend"
+  },
+  {
+   "osm_id": "w76904582",
+   "name": "Mănăstirea Mihai Vodă",
+   "decision": "keep",
+   "why": "poveste unică"
+  },
+  {
+   "osm_id": "w1324485973",
+   "name": "Mănăstirea Ortodoxă Duminica Sfinților Romani",
+   "decision": "drop",
+   "why": "mănăstire nouă, fără interes de vizitare"
+  },
+  {
+   "osm_id": "w379370065",
+   "name": "Mănăstirea Pasărea",
+   "decision": "drop",
+   "why": "mănăstire fără interes pentru tineri"
+  },
+  {
+   "osm_id": "w177480930",
+   "name": "Mănăstirea Radu Vodă",
+   "decision": "drop",
+   "why": "mănăstire fără program pentru vizitatori"
+  },
+  {
+   "osm_id": "w1026232362",
+   "name": "Mănăstirea Sămurcășești",
+   "decision": "drop",
+   "why": "mănăstire fără interes de vizitare"
+  },
+  {
+   "osm_id": "w25511874",
+   "name": "Mănăstirea Snagov",
+   "decision": "keep",
+   "why": "poveste, excursie de o zi"
+  },
+  {
+   "osm_id": "w1169401746",
+   "name": "Mănăstirea Țigănești",
+   "decision": "drop",
+   "why": "mănăstire departe, interes redus"
+  },
+  {
+   "osm_id": "w810258272",
+   "name": "Mânăstirea Chiajna",
+   "decision": "keep",
+   "why": "loc cu poveste și atmosferă"
+  },
+  {
+   "osm_id": "w1333542840",
+   "name": "Mânăstirea Plumbuita",
+   "decision": "drop",
+   "why": "mănăstire fără interes pentru tineri"
+  },
+  {
+   "osm_id": "w241276018",
+   "name": "Mânăstirea Sfânta Ioana Andida",
+   "decision": "drop",
+   "why": "mănăstire nouă, fără interes de vizitare"
+  },
+  {
+   "osm_id": "n7179103985",
+   "name": "Metropolis Teatrul",
+   "decision": "keep",
+   "why": "teatru activ"
+  },
+  {
+   "osm_id": "n10778202977",
+   "name": "Micul Paris",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11916543515",
+   "name": "MINA",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2872403926",
+   "name": "MNAC Anexa",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n11361411667",
+   "name": "Mobius Gallery",
+   "decision": "drop",
+   "why": "galerie mică, program restrâns"
+  },
+  {
+   "osm_id": "n10775260927",
+   "name": "Mom Art",
+   "decision": "drop",
+   "why": "magazin/galerie comercială"
+  },
+  {
+   "osm_id": "n849372344",
+   "name": "Movieplex",
+   "decision": "keep",
+   "why": "cinema activ"
+  },
+  {
+   "osm_id": "n12288419303",
+   "name": "Museum of Senses",
+   "decision": "keep",
+   "why": "experiență interactivă, bună de grup"
+  },
+  {
+   "osm_id": "w179319668",
+   "name": "Muzeul \"Dr. Ioan si Nicolae Kalinderu",
+   "decision": "drop",
+   "why": "închis (OSM: closed), negăsit"
+  },
+  {
+   "osm_id": "n2634652937",
+   "name": "Muzeul \"K. H. Zambaccian",
+   "decision": "keep",
+   "why": "colecție surprinzătoare"
+  },
+  {
+   "osm_id": "n2634652031",
+   "name": "Muzeul \"Mitropolit Antim Ivireanul",
+   "decision": "drop",
+   "why": "muzeu religios mic"
+  },
+  {
+   "osm_id": "n2634652136",
+   "name": "Muzeul \"Theodor Aman",
+   "decision": "drop",
+   "why": "închis pentru restaurare (OSM: closed)"
+  },
+  {
+   "osm_id": "n2634652138",
+   "name": "Muzeul \"Theodor Pallady",
+   "decision": "drop",
+   "why": "muzeu mic, interes redus pentru o ieșire"
+  },
+  {
+   "osm_id": "n2634652661",
+   "name": "Muzeul Băncii Naționale a României",
+   "decision": "drop",
+   "why": "doar cu programare de grup"
+  },
+  {
+   "osm_id": "w999873708",
+   "name": "Muzeul CFR",
+   "decision": "drop",
+   "why": "muzeu mic, recenzii slabe"
+  },
+  {
+   "osm_id": "n2634652186",
+   "name": "Muzeul Colecțiilor de Artă",
+   "decision": "drop",
+   "why": "muzeu secundar al MNAR, interes redus"
+  },
+  {
+   "osm_id": "n8043746985",
+   "name": "Muzeul Copiilor",
+   "decision": "drop",
+   "why": "pentru copii"
+  },
+  {
+   "osm_id": "n2634652153",
+   "name": "Muzeul de Artă \"Vasile Grigore - Pictor și Colecționar",
+   "decision": "drop",
+   "why": "muzeu memorial mic"
+  },
+  {
+   "osm_id": "w244848005",
+   "name": "Muzeul de Artă Recentă",
+   "decision": "keep",
+   "why": "artă contemporană, clădire spectaculoasă"
+  },
+  {
+   "osm_id": "w529040882",
+   "name": "Muzeul de Artă Veche Apuseană Dumitru Minovici",
+   "decision": "drop",
+   "why": "vecin cu Vila Minovici (păstrată); interes redus"
+  },
+  {
+   "osm_id": "n2634651874",
+   "name": "Muzeul de Istorie a Evreilor din România \"sef rabin Dr. Moses Rosen",
+   "decision": "drop",
+   "why": "program foarte restrâns"
+  },
+  {
+   "osm_id": "n14181324174",
+   "name": "Muzeul Ecluza Herăstrău",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10137755832",
+   "name": "Muzeul Fotbalului",
+   "decision": "keep",
+   "why": "nișă, dar bun pentru fanii de fotbal; neverificat în detaliu"
+  },
+  {
+   "osm_id": "n2634652441",
+   "name": "Muzeul Holocaustului",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w243925663",
+   "name": "Muzeul Mănăstirii Cernica",
+   "decision": "drop",
+   "why": "dublură Mănăstirea Cernica"
+  },
+  {
+   "osm_id": "n2634651903",
+   "name": "Muzeul Memorial \"Dimitrie și Aurelia Ghiata",
+   "decision": "drop",
+   "why": "închis (OSM: closed), negăsit"
+  },
+  {
+   "osm_id": "n2634651916",
+   "name": "Muzeul Memorial \"Dr. Victor Babeș",
+   "decision": "drop",
+   "why": "muzeu memorial mic"
+  },
+  {
+   "osm_id": "n2634651941",
+   "name": "Muzeul Memorial \"George Călinescu",
+   "decision": "drop",
+   "why": "muzeu memorial, program restrâns"
+  },
+  {
+   "osm_id": "w23556233",
+   "name": "Muzeul Militar",
+   "decision": "drop",
+   "why": "dublură Muzeul Militar Național (păstrat)"
+  },
+  {
+   "osm_id": "n2634652010",
+   "name": "Muzeul Militar Național \"Regele Ferdinand I",
+   "decision": "keep",
+   "why": "muzeu mare, bun pentru pasionați"
+  },
+  {
+   "osm_id": "n4505417867",
+   "name": "Muzeul Municipiului București",
+   "decision": "keep",
+   "why": "muzeul orașului, clădire reper"
+  },
+  {
+   "osm_id": "n10898721104",
+   "name": "Muzeul Municipiului București",
+   "decision": "drop",
+   "why": "negăsit; dublură Muzeul Municipiului"
+  },
+  {
+   "osm_id": "n2634652840",
+   "name": "Muzeul Național al Hărților și Cărții Vechi",
+   "decision": "drop",
+   "why": "muzeu mic, interes redus"
+  },
+  {
+   "osm_id": "n6275995659",
+   "name": "Muzeul Național al Literaturii Române",
+   "decision": "drop",
+   "why": "interes redus pentru o ieșire"
+  },
+  {
+   "osm_id": "n10886384891",
+   "name": "Muzeul Național al Pompierilor",
+   "decision": "drop",
+   "why": "neverificat dacă s-a redeschis după restaurare"
+  },
+  {
+   "osm_id": "n5146804838",
+   "name": "Muzeul Național al Satului Dimitrie Gusti",
+   "decision": "keep",
+   "why": "reper, în aer liber"
+  },
+  {
+   "osm_id": "n2634652844",
+   "name": "Muzeul Național al Țăranului Român",
+   "decision": "keep",
+   "why": "reper"
+  },
+  {
+   "osm_id": "n2634652277",
+   "name": "Muzeul Național Cotroceni",
+   "decision": "keep",
+   "why": "palat istoric"
+  },
+  {
+   "osm_id": "n2634652837",
+   "name": "Muzeul Național de Artă al României",
+   "decision": "keep",
+   "why": "reper"
+  },
+  {
+   "osm_id": "n2634652838",
+   "name": "Muzeul Național de Artă Contemporană",
+   "decision": "keep",
+   "why": "artă contemporană, clădire spectaculoasă"
+  },
+  {
+   "osm_id": "n12601324233",
+   "name": "Muzeul Național de Istorie",
+   "decision": "keep",
+   "why": "reper, dar parțial în renovare"
+  },
+  {
+   "osm_id": "w23610985",
+   "name": "Muzeul Național de Istorie Naturală \"Grigore Antipa",
+   "decision": "keep",
+   "why": "reper, interactiv"
+  },
+  {
+   "osm_id": "n2634652847",
+   "name": "Muzeul Național Filatelic",
+   "decision": "drop",
+   "why": "muzeu de nișă"
+  },
+  {
+   "osm_id": "w23611090",
+   "name": "Muzeul Național Geologic",
+   "decision": "drop",
+   "why": "muzeu de nișă"
+  },
+  {
+   "osm_id": "w220667665",
+   "name": "Muzeul Național Tehnic \"Prof. ing. Dimitrie Leonida",
+   "decision": "keep",
+   "why": "muzeu tehnic, bun de combinat cu Parcul Carol"
+  },
+  {
+   "osm_id": "w38234390",
+   "name": "Muzeul Nicolae Minovici",
+   "decision": "keep",
+   "why": "casă cu poveste"
+  },
+  {
+   "osm_id": "n2634652846",
+   "name": "Muzeul Operei Naționale București",
+   "decision": "drop",
+   "why": "muzeu de nișă"
+  },
+  {
+   "osm_id": "n3424574370",
+   "name": "Muzeul Parfumurilor",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n13824624844",
+   "name": "Muzeul Recordurilor Românești",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2634652560",
+   "name": "Muzeul Sportului",
+   "decision": "drop",
+   "why": "program de birou, interes redus"
+  },
+  {
+   "osm_id": "n2634651973",
+   "name": "Muzeul Teatrului Naţional",
+   "decision": "drop",
+   "why": "muzeu de nișă, program restrâns"
+  },
+  {
+   "osm_id": "n6551718804",
+   "name": "Muzeul Telecomunicatiilor",
+   "decision": "drop",
+   "why": "program de birou, nișă"
+  },
+  {
+   "osm_id": "w215350961",
+   "name": "Muzeul Tudor Arghezi",
+   "decision": "drop",
+   "why": "dublură casa Tudor Arghezi"
+  },
+  {
+   "osm_id": "n2634652680",
+   "name": "Muzeul Universității București",
+   "decision": "drop",
+   "why": "muzeu universitar, nișă"
+  },
+  {
+   "osm_id": "w251129768",
+   "name": "Muzeul Universității Politehnice",
+   "decision": "drop",
+   "why": "muzeu universitar, nișă"
+  },
+  {
+   "osm_id": "n2872402339",
+   "name": "OB'ART",
+   "decision": "drop",
+   "why": "galerie mică (aceeași clădire cu Simeza)"
+  },
+  {
+   "osm_id": "w79139872",
+   "name": "Observatorul Astronomic Municipal \"Amiral Vasile Urseanu\" Bucuresti",
+   "decision": "keep",
+   "why": "experiență rară, bună de întâlnire"
+  },
+  {
+   "osm_id": "w163127914",
+   "name": "Opera Comică pentru Copii",
+   "decision": "drop",
+   "why": "pentru copii"
+  },
+  {
+   "osm_id": "w23556393",
+   "name": "Opera Națională",
+   "decision": "keep",
+   "why": "reper"
+  },
+  {
+   "osm_id": "w1456390102",
+   "name": "Palatul Băncii Marmorosch Blank",
+   "decision": "drop",
+   "why": "acum hotel, nu loc de vizitat"
+  },
+  {
+   "osm_id": "w27634114",
+   "name": "Palatul Ghica",
+   "decision": "drop",
+   "why": "palat nevizitabil"
+  },
+  {
+   "osm_id": "w39349047",
+   "name": "Palatul Mogoșoaia",
+   "decision": "keep",
+   "why": "reper, aer liber"
+  },
+  {
+   "osm_id": "w38236017",
+   "name": "Palatul Primăverii (fosta locuință a lui Nicolae Ceaușescu)",
+   "decision": "keep",
+   "why": "poveste puternică, foarte căutat"
+  },
+  {
+   "osm_id": "w232472401",
+   "name": "Palatul Regal",
+   "decision": "drop",
+   "why": "dublură: Palatul Regal = MNAR (păstrat)"
+  },
+  {
+   "osm_id": "w828136061",
+   "name": "Palatul Snagov",
+   "decision": "drop",
+   "why": "hotel și sală de evenimente"
+  },
+  {
+   "osm_id": "w407754956",
+   "name": "Palatul Știrbei",
+   "decision": "drop",
+   "why": "negăsit; folosit pentru evenimente private"
+  },
+  {
+   "osm_id": "n849372213",
+   "name": "Patria",
+   "decision": "drop",
+   "why": "cinema închis (OSM: closed)"
+  },
+  {
+   "osm_id": "n10775260926",
+   "name": "Rembrandt Art Center",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n12075938064",
+   "name": "Rezidența9",
+   "decision": "keep",
+   "why": "spațiu cultural pentru tineri; detalii neverificate"
+  },
+  {
+   "osm_id": "n11067430928",
+   "name": "Rotenberg Uzunov",
+   "decision": "drop",
+   "why": "galerie comercială mică"
+  },
+  {
+   "osm_id": "w1019934059",
+   "name": "Sala Dalles",
+   "decision": "keep",
+   "why": "spațiu cultural central"
+  },
+  {
+   "osm_id": "w435101321",
+   "name": "Sala Gloria",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2532095807",
+   "name": "Sala Luceafărul",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w23556959",
+   "name": "Sala Omnia",
+   "decision": "drop",
+   "why": "a doua sală CNDB (păstrat CNDB)"
+  },
+  {
+   "osm_id": "w232472620",
+   "name": "Sala Palatului",
+   "decision": "keep",
+   "why": "sală de concerte mare"
+  },
+  {
+   "osm_id": "w405561108",
+   "name": "Sala Radio",
+   "decision": "keep",
+   "why": "concerte"
+  },
+  {
+   "osm_id": "n6163869664",
+   "name": "Sala Rapsodia",
+   "decision": "drop",
+   "why": "sala ansamblului folcloric, interes redus pentru tineri"
+  },
+  {
+   "osm_id": "n7613023108",
+   "name": "Sala Studio - Arcub",
+   "decision": "drop",
+   "why": "dublură ARCUB (păstrat)"
+  },
+  {
+   "osm_id": "n2872403927",
+   "name": "Salonul de Proiecte",
+   "decision": "drop",
+   "why": "galerie mică; neverificat"
+  },
+  {
+   "osm_id": "w1109022311",
+   "name": "Sandwich Gallery",
+   "decision": "drop",
+   "why": "galerie în Combinatul Fondului Plastic (inclus acolo)"
+  },
+  {
+   "osm_id": "n10753053205",
+   "name": "Somn",
+   "decision": "drop",
+   "why": "galerie mică"
+  },
+  {
+   "osm_id": "n10147382209",
+   "name": "Spațiu Elena Scutaru",
+   "decision": "drop",
+   "why": "negăsit; în Combinatul Fondului Plastic"
+  },
+  {
+   "osm_id": "n10147382215",
+   "name": "Spațiu The Institute",
+   "decision": "drop",
+   "why": "negăsit; în Combinatul Fondului Plastic"
+  },
+  {
+   "osm_id": "n2479079709",
+   "name": "Teatrelli",
+   "decision": "keep",
+   "why": "teatru intim, iubit de tineri"
+  },
+  {
+   "osm_id": "n7151419882",
+   "name": "Teatrul / Terasa Infinit",
+   "decision": "keep",
+   "why": "teatru independent activ"
+  },
+  {
+   "osm_id": "n672417284",
+   "name": "Teatrul ACT",
+   "decision": "keep",
+   "why": "teatru cu poveste"
+  },
+  {
+   "osm_id": "n11574493274",
+   "name": "Teatrul Apolo 111",
+   "decision": "keep",
+   "why": "teatru independent"
+  },
+  {
+   "osm_id": "n14052027825",
+   "name": "Teatrul Avangardia",
+   "decision": "keep",
+   "why": "teatru activ 2025"
+  },
+  {
+   "osm_id": "w202427648",
+   "name": "Teatrul Bulandra",
+   "decision": "keep",
+   "why": "teatru reper"
+  },
+  {
+   "osm_id": "n166341331",
+   "name": "Teatrul Bulandra - Sala Izvor",
+   "decision": "drop",
+   "why": "dublură: Sala Izvor = Sala Liviu Ciulei (păstrată)"
+  },
+  {
+   "osm_id": "n2615945925",
+   "name": "Teatrul Bulandra - Sala Liviu Ciulei",
+   "decision": "keep",
+   "why": "teatru reper, altă adresă"
+  },
+  {
+   "osm_id": "n1726032613",
+   "name": "Teatrul Coquette",
+   "decision": "keep",
+   "why": "teatru activ 2025"
+  },
+  {
+   "osm_id": "n7153728638",
+   "name": "Teatrul de Artă",
+   "decision": "keep",
+   "why": "teatru activ (Google), detalii puține"
+  },
+  {
+   "osm_id": "n628598191",
+   "name": "Teatrul de Comedie",
+   "decision": "keep",
+   "why": "teatru reper"
+  },
+  {
+   "osm_id": "n10948504680",
+   "name": "Teatrul de Comedie - Sala Nouă",
+   "decision": "drop",
+   "why": "a doua sală a Teatrului de Comedie (păstrat)"
+  },
+  {
+   "osm_id": "n2617481588",
+   "name": "Teatrul de Marionete și Păpuși - Țăndărică",
+   "decision": "drop",
+   "why": "pentru copii"
+  },
+  {
+   "osm_id": "w232369190",
+   "name": "Teatrul de Operetă și Musical \"Ion Dacian",
+   "decision": "keep",
+   "why": "musicaluri"
+  },
+  {
+   "osm_id": "w274427973",
+   "name": "Teatrul de Păpuși",
+   "decision": "drop",
+   "why": "negăsit; pentru copii"
+  },
+  {
+   "osm_id": "n8912379327",
+   "name": "Teatrul de Revistă Constantin Tănase",
+   "decision": "keep",
+   "why": "spectacole de divertisment"
+  },
+  {
+   "osm_id": "w197841644",
+   "name": "Teatrul de vară Alhambra",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11047669593",
+   "name": "Teatrul de Vară Bazilescu",
+   "decision": "drop",
+   "why": "teatru de vară în parc, fără program constant"
+  },
+  {
+   "osm_id": "w28342020",
+   "name": "Teatrul de Vară Herastrau",
+   "decision": "drop",
+   "why": "teatru de vară, fără program constant"
+  },
+  {
+   "osm_id": "n6318962729",
+   "name": "Teatrul Elisabeta",
+   "decision": "keep",
+   "why": "teatru activ 2025–2026"
+  },
+  {
+   "osm_id": "w82950585",
+   "name": "Teatrul Evreiesc de Stat",
+   "decision": "keep",
+   "why": "teatru cu poveste"
+  },
+  {
+   "osm_id": "n6929956316",
+   "name": "Teatrul Excelsior",
+   "decision": "keep",
+   "why": "teatru pentru tineri"
+  },
+  {
+   "osm_id": "n11385598252",
+   "name": "Teatrul Ion Creangă",
+   "decision": "drop",
+   "why": "pentru copii"
+  },
+  {
+   "osm_id": "n7151421666",
+   "name": "Teatrul În Culise",
+   "decision": "keep",
+   "why": "teatru independent activ"
+  },
+  {
+   "osm_id": "w167182972",
+   "name": "Teatrul Masca",
+   "decision": "drop",
+   "why": "negăsit; Teatrul Masca e păstrat la adresa din Militari"
+  },
+  {
+   "osm_id": "w433897742",
+   "name": "Teatrul Masca",
+   "decision": "keep",
+   "why": "teatru diferit"
+  },
+  {
+   "osm_id": "n14206144401",
+   "name": "Teatrul Metronom",
+   "decision": "keep",
+   "why": "teatru activ, sală nouă 2026"
+  },
+  {
+   "osm_id": "n672363033",
+   "name": "Teatrul Mic",
+   "decision": "keep",
+   "why": "teatru reper"
+  },
+  {
+   "osm_id": "w41542957",
+   "name": "Teatrul Național",
+   "decision": "keep",
+   "why": "reper"
+  },
+  {
+   "osm_id": "n328622616",
+   "name": "Teatrul Nottara",
+   "decision": "keep",
+   "why": "teatru reper"
+  },
+  {
+   "osm_id": "n10750350226",
+   "name": "Teatrul Nou",
+   "decision": "keep",
+   "why": "teatru activ"
+  },
+  {
+   "osm_id": "w158239853",
+   "name": "Teatrul Odeon",
+   "decision": "keep",
+   "why": "teatru reper"
+  },
+  {
+   "osm_id": "n11876487093",
+   "name": "Teatrul Roșu",
+   "decision": "keep",
+   "why": "teatru-cafenea activ"
+  },
+  {
+   "osm_id": "n7216902495",
+   "name": "Teatrul Stela Popescu",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w1472212055",
+   "name": "Teatrul Zurli",
+   "decision": "drop",
+   "why": "pentru copii"
+  },
+  {
+   "osm_id": "n2872403931",
+   "name": "Tempoart Gallery - TCB",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2872403932",
+   "name": "The Ark - Centrul Internațional pentru Artă Contemporană",
+   "decision": "drop",
+   "why": "spațiu de închiriat pentru evenimente, fără program public constant"
+  },
+  {
+   "osm_id": "w1109022312",
+   "name": "The Institute",
+   "decision": "drop",
+   "why": "negăsit; în Combinatul Fondului Plastic"
+  },
+  {
+   "osm_id": "w703960191",
+   "name": "Țiriac Collection",
+   "decision": "keep",
+   "why": "colecție unică"
+  },
+  {
+   "osm_id": "n10147382211",
+   "name": "Una Galeria",
+   "decision": "drop",
+   "why": "galerie în Combinatul Fondului Plastic (inclus acolo)"
+  },
+  {
+   "osm_id": "n2872403933",
+   "name": "UNAgaleria",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n5898884385",
+   "name": "Undeva în Comunism",
+   "decision": "keep",
+   "why": "experiență cu poveste"
+  },
+  {
+   "osm_id": "n14052878452",
+   "name": "Velonova Mirage 3D Museum",
+   "decision": "keep",
+   "why": "activitate pentru poze; puține detalii verificate"
+  },
+  {
+   "osm_id": "n2872403934",
+   "name": "Victoria Art Center",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2872423674",
+   "name": "ZORZINI GALLERY",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n2507541755",
+   "name": "60 Minutes",
+   "decision": "keep",
+   "why": "escape room activ"
+  },
+  {
+   "osm_id": "n12299441833",
+   "name": "Academia de Paintball",
+   "decision": "keep",
+   "why": "activitate de grup; detalii neverificate"
+  },
+  {
+   "osm_id": "n11064463050",
+   "name": "Aero Squash",
+   "decision": "keep",
+   "why": "padel/squash rezervabil"
+  },
+  {
+   "osm_id": "w1415127396",
+   "name": "AFC Victoria Adunații-Copăceni",
+   "decision": "drop",
+   "why": "teren de club, nerezervabil"
+  },
+  {
+   "osm_id": "r16035562",
+   "name": "Al-Body Tenis Club",
+   "decision": "drop",
+   "why": "club de tenis mic; avem alte terenuri"
+  },
+  {
+   "osm_id": "w685112367",
+   "name": "Apollo",
+   "decision": "drop",
+   "why": "negăsit; teren de cartier"
+  },
+  {
+   "osm_id": "w28050464",
+   "name": "AS Club Politehnica",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w1226777019",
+   "name": "Autok9 Arena",
+   "decision": "drop",
+   "why": "bază de fotbal de cartier; păstrăm cluburile mari"
+  },
+  {
+   "osm_id": "w23583019",
+   "name": "Baza Sportivă ACS Daco-Getica București",
+   "decision": "drop",
+   "why": "negăsit; bază de club"
+  },
+  {
+   "osm_id": "w981687802",
+   "name": "Baza sportivă ASPOL",
+   "decision": "drop",
+   "why": "bază de club, nerezervabilă"
+  },
+  {
+   "osm_id": "w848452176",
+   "name": "Baza sportivă Carmesin",
+   "decision": "drop",
+   "why": "abandonată"
+  },
+  {
+   "osm_id": "w393036565",
+   "name": "Baza Sportivă Ion Rațiu",
+   "decision": "drop",
+   "why": "bază de cartier; avem alte terenuri"
+  },
+  {
+   "osm_id": "w848875778",
+   "name": "Baza sportivă Mase Plastice",
+   "decision": "drop",
+   "why": "abandonată"
+  },
+  {
+   "osm_id": "w1072292836",
+   "name": "Baza sportivă Vitan",
+   "decision": "drop",
+   "why": "teren municipal gratuit, nerezervabil"
+  },
+  {
+   "osm_id": "w813947746",
+   "name": "Bază sportivă - Universitatea din București",
+   "decision": "drop",
+   "why": "negăsit; bază universitară"
+  },
+  {
+   "osm_id": "w236071707",
+   "name": "Bazin de Înot Dante Aligheri",
+   "decision": "drop",
+   "why": "bazin școlar"
+  },
+  {
+   "osm_id": "w38757552",
+   "name": "Bazin de înot Dinamo - Tolea Grințescu",
+   "decision": "drop",
+   "why": "bazin de antrenament, nu e o ieșire"
+  },
+  {
+   "osm_id": "w858609086",
+   "name": "Bazin de înot Steaua",
+   "decision": "drop",
+   "why": "bazin de club"
+  },
+  {
+   "osm_id": "w225503015",
+   "name": "Bazin Inot Aqua Sport",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w170953587",
+   "name": "Bazin Înot UMF Carol Davila",
+   "decision": "drop",
+   "why": "bazin universitar"
+  },
+  {
+   "osm_id": "w191144455",
+   "name": "Bazin Olimpic",
+   "decision": "drop",
+   "why": "bazin de antrenament"
+  },
+  {
+   "osm_id": "w40724996",
+   "name": "Bazin Olimpic Interior",
+   "decision": "drop",
+   "why": "bazin de antrenament"
+  },
+  {
+   "osm_id": "w920934041",
+   "name": "Bazin Titan",
+   "decision": "drop",
+   "why": "bazin de cartier"
+  },
+  {
+   "osm_id": "n12765679610",
+   "name": "Bazinul de înot în aer liber Dinamo",
+   "decision": "drop",
+   "why": "bazin de club"
+  },
+  {
+   "osm_id": "w699317788",
+   "name": "Bazinul de polo-înot Rapid",
+   "decision": "drop",
+   "why": "bazin de club"
+  },
+  {
+   "osm_id": "n9871123617",
+   "name": "Bazinul Olimpic Otopeni",
+   "decision": "drop",
+   "why": "bazin olimpic de antrenament, acces limitat"
+  },
+  {
+   "osm_id": "r18184396",
+   "name": "Berceni Arena",
+   "decision": "keep",
+   "why": "patinoar acoperit"
+  },
+  {
+   "osm_id": "w42935214",
+   "name": "Biruința",
+   "decision": "drop",
+   "why": "negăsit; teren de cartier"
+  },
+  {
+   "osm_id": "n8911907337",
+   "name": "Blokx",
+   "decision": "keep",
+   "why": "bouldering, trend la tineri"
+  },
+  {
+   "osm_id": "w972807375",
+   "name": "Bonton",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w1160432997",
+   "name": "Bucharest Golf Club",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w392489214",
+   "name": "Bucharest Sport Club",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "n5962677031",
+   "name": "Captive Escape Room",
+   "decision": "keep",
+   "why": "escape room activ (Google); detalii puține"
+  },
+  {
+   "osm_id": "n3487492200",
+   "name": "Carpatic Escaladă & Bouldering",
+   "decision": "keep",
+   "why": "cățărare"
+  },
+  {
+   "osm_id": "w23705158",
+   "name": "Centrul Național de Tenis",
+   "decision": "drop",
+   "why": "centru federal; avem alte terenuri de tenis"
+  },
+  {
+   "osm_id": "w14450116",
+   "name": "Clubul Diplomaților",
+   "decision": "drop",
+   "why": "golf de club, acces limitat"
+  },
+  {
+   "osm_id": "w23731450",
+   "name": "Clubul Sportiv Năstase & Marica",
+   "decision": "keep",
+   "why": "terenuri rezervabile"
+  },
+  {
+   "osm_id": "w34376402",
+   "name": "Complex Sportiv 2000",
+   "decision": "drop",
+   "why": "bazin de cartier"
+  },
+  {
+   "osm_id": "w236835221",
+   "name": "Complexul Sportiv Concordia Chiajna",
+   "decision": "drop",
+   "why": "stadion de club"
+  },
+  {
+   "osm_id": "w1319614199",
+   "name": "Cotroceni on Ice",
+   "decision": "keep",
+   "why": "patinoar sezonier"
+  },
+  {
+   "osm_id": "w402868001",
+   "name": "Edenland Park",
+   "decision": "keep",
+   "why": "activitate în aer liber; nu a apărut în verificarea Google, de reconfirmat"
+  },
+  {
+   "osm_id": "w550416782",
+   "name": "Escape Room Dacia 130",
+   "decision": "keep",
+   "why": "escape room activ"
+  },
+  {
+   "osm_id": "n3487482570",
+   "name": "Fabrica de Cățărat",
+   "decision": "keep",
+   "why": "cățărare"
+  },
+  {
+   "osm_id": "n11216073804",
+   "name": "GAME WORLD",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n6621302168",
+   "name": "Grădina Zoologică",
+   "decision": "drop",
+   "why": "neverificat (etichetă greșită?)"
+  },
+  {
+   "osm_id": "n13164499536",
+   "name": "Grădina Zoologică Bucureşti",
+   "decision": "drop",
+   "why": "dublură Grădina Zoologică (păstrată)"
+  },
+  {
+   "osm_id": "w369588750",
+   "name": "Grădina Zoologică București",
+   "decision": "keep",
+   "why": "ieșire de zi în aer liber"
+  },
+  {
+   "osm_id": "n9156063382",
+   "name": "GV PvP VR",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w878203766",
+   "name": "Hai pe Cai",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w681065722",
+   "name": "Hipodrom EQUESTRIA",
+   "decision": "keep",
+   "why": "activitate diferită; detalii neverificate"
+  },
+  {
+   "osm_id": "w23673773",
+   "name": "Icar",
+   "decision": "drop",
+   "why": "teren de club"
+  },
+  {
+   "osm_id": "w23583422",
+   "name": "ICSIM",
+   "decision": "drop",
+   "why": "negăsit; teren de club"
+  },
+  {
+   "osm_id": "n10027946541",
+   "name": "Lasermaxx",
+   "decision": "keep",
+   "why": "laser tag"
+  },
+  {
+   "osm_id": "n10608900638",
+   "name": "LaserMaxx",
+   "decision": "keep",
+   "why": "laser tag"
+  },
+  {
+   "osm_id": "w23608496",
+   "name": "Libra Phoenix Tenis Club",
+   "decision": "drop",
+   "why": "club de tenis de cartier; neverificat"
+  },
+  {
+   "osm_id": "n8691238511",
+   "name": "Magic Place Aqua Park",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n14053037362",
+   "name": "Mystery Rooms Escape Bucuresti",
+   "decision": "keep",
+   "why": "escape room nou (Google ok); detalii puține"
+  },
+  {
+   "osm_id": "w263961419",
+   "name": "Offside Arena",
+   "decision": "drop",
+   "why": "teren de cartier"
+  },
+  {
+   "osm_id": "w230389804",
+   "name": "Orășelul Copiilor",
+   "decision": "drop",
+   "why": "pentru copii"
+  },
+  {
+   "osm_id": "w23583384",
+   "name": "Pescariu Sports & Spa",
+   "decision": "keep",
+   "why": "sport + relaxare"
+  },
+  {
+   "osm_id": "w123089723",
+   "name": "Piscina Complexului ASTORIA Snagov",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w1168911692",
+   "name": "Piscina Spa Domnești",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1172414352",
+   "name": "ProSport Arena",
+   "decision": "drop",
+   "why": "bază de cartier; păstrăm cluburile mari"
+  },
+  {
+   "osm_id": "n10883984904",
+   "name": "Rematch",
+   "decision": "keep",
+   "why": "jocuri de grup"
+  },
+  {
+   "osm_id": "n11112041578",
+   "name": "ReMatch",
+   "decision": "keep",
+   "why": "jocuri de grup"
+  },
+  {
+   "osm_id": "w897136249",
+   "name": "Stejarii Country Club",
+   "decision": "keep",
+   "why": "club sportiv de calitate; detalii neverificate"
+  },
+  {
+   "osm_id": "w1188646881",
+   "name": "Strandul Tineretului",
+   "decision": "drop",
+   "why": "închis (OSM: closed)"
+  },
+  {
+   "osm_id": "w358718859",
+   "name": "Swimming Team Club",
+   "decision": "drop",
+   "why": "club de înot pentru cursuri"
+  },
+  {
+   "osm_id": "n6377646615",
+   "name": "Școala de echitație EQUESTRIA",
+   "decision": "drop",
+   "why": "negăsit; dublură Equestria"
+  },
+  {
+   "osm_id": "w23717864",
+   "name": "Ștrand Berceni",
+   "decision": "drop",
+   "why": "ștrand de cartier"
+  },
+  {
+   "osm_id": "w23561825",
+   "name": "Ștrandul Crângași",
+   "decision": "drop",
+   "why": "ștrand de cartier; neverificat"
+  },
+  {
+   "osm_id": "w27990894",
+   "name": "Ștrandul Drumul Taberei",
+   "decision": "drop",
+   "why": "ștrand de cartier, sezonier"
+  },
+  {
+   "osm_id": "w772501798",
+   "name": "Tenis Club 2000 - Academia Sever Dron",
+   "decision": "drop",
+   "why": "club de tenis pentru antrenamente"
+  },
+  {
+   "osm_id": "w1016152679",
+   "name": "Tenis Club Micii Asi",
+   "decision": "drop",
+   "why": "club pentru copii"
+  },
+  {
+   "osm_id": "w739431922",
+   "name": "Tenis Club Sportiv Mazicon",
+   "decision": "drop",
+   "why": "club de tenis mic"
+  },
+  {
+   "osm_id": "w708470056",
+   "name": "Tenis Club Tineretului",
+   "decision": "keep",
+   "why": "tenis central rezervabil"
+  },
+  {
+   "osm_id": "w1177919783",
+   "name": "Tennis Hero",
+   "decision": "drop",
+   "why": "negăsit pe Google"
+  },
+  {
+   "osm_id": "w1170512639",
+   "name": "Teren de Fotbal cu iarbă sintetică",
+   "decision": "drop",
+   "why": "teren fără nume"
+  },
+  {
+   "osm_id": "w1201085604",
+   "name": "Teren de Tenis de Picior",
+   "decision": "drop",
+   "why": "teren fără nume"
+  },
+  {
+   "osm_id": "n10971390453",
+   "name": "The Void",
+   "decision": "keep",
+   "why": "escape room activ"
+  },
+  {
+   "osm_id": "w388832074",
+   "name": "Therme București",
+   "decision": "keep",
+   "why": "reper, foarte căutat"
+  },
+  {
+   "osm_id": "w191148918",
+   "name": "Trambulina",
+   "decision": "drop",
+   "why": "trambulină de sărituri în apă, bazin de antrenament"
+  },
+  {
+   "osm_id": "n4311411532",
+   "name": "Troll Escape Rooms",
+   "decision": "keep",
+   "why": "escape room activ"
+  },
+  {
+   "osm_id": "n2157472704",
+   "name": "Vertical Spirit Baicului",
+   "decision": "keep",
+   "why": "cățărare; detalii neverificate"
+  },
+  {
+   "osm_id": "n2865940383",
+   "name": "Wellness & Pool BabySpa",
+   "decision": "drop",
+   "why": "privat, pentru bebeluși"
+  }
+ ],
+ "places": [
+  {
+   "name": "ARCUB – Hanul Gabroveni",
+   "osm_id": "n7622689033",
+   "cat": "cultura",
+   "kind": "Centru cultural",
+   "lat": 44.431672,
+   "lon": 26.102577,
+   "city": "București",
+   "story": "Centrul cultural al Primăriei Capitalei ține expoziții, concerte și spectacole în Hanul Gabroveni, un han vechi din Centrul Vechi restaurat ca spațiu de artă.",
+   "when": "seara, la evenimente",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n7622689033",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Arenele Romane",
+   "osm_id": "r4871608",
+   "cat": "cultura",
+   "kind": "Concerte în aer liber",
+   "lat": 44.412959,
+   "lon": 26.093256,
+   "city": "București",
+   "story": "Amfiteatru în stil roman din Parcul Carol, cu gradene în jurul scenei; vara aici se țin concerte și festivaluri sub cerul liber.",
+   "when": "vara, seara la concerte",
+   "vibes": [
+    "Aer liber",
+    "Party",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap r4871608",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Ateneul Român",
+   "osm_id": "w16291602",
+   "cat": "cultura",
+   "kind": "Sală de concerte",
+   "lat": 44.441368,
+   "lon": 26.097361,
+   "city": "București",
+   "story": "Sala Filarmonicii „George Enescu”, inaugurată în 1888; în sala mare, deasupra publicului, o frescă de circa 75 m povestește istoria românilor.",
+   "when": "seara, la concert",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w16291602",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.fge.org.ro",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Centrul de Teatru Educațional Replika",
+   "osm_id": "n3779623861",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.415263,
+   "lon": 26.103317,
+   "city": "București",
+   "story": "Spațiu de teatru independent pe strada Lânăriei, cunoscut pentru spectacole despre teme sociale și civice; în 2025 a avut serile „Povești la Replika”, cu teatru lunea și filme marțea.",
+   "when": "seara (spectacolele încep de obicei la 19:00)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n3779623861",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bucuresti.ro/locatii/arta-si-cultura-centrul-de-teatru-educational-replika-1242",
+    "https://www.sapteseri.ro/evenimente/bucuresti/teatru/pe-ce-stam-povesti-la-replika"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Centrul Național al Dansului București (CNDB)",
+   "osm_id": "n11411704670",
+   "cat": "teatru",
+   "kind": "Dans contemporan",
+   "lat": 44.421973,
+   "lon": 26.106936,
+   "city": "București",
+   "story": "Singura instituție publică dedicată dansului contemporan, cu spectacole pe Bulevardul Mărășești și în Sala Omnia; în noiembrie 2025 a avut peste 10 evenimente.",
+   "when": "seara, la spectacole",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n11411704670",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://cndb.ro/despre-noi/cndb-sala-omnia/",
+    "https://www.icr.ro/pagini/centrul-national-al-dansului-bucuresti-cndb"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinema City Sun Plaza",
+   "osm_id": "n849372378",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.396176,
+   "lon": 26.122158,
+   "city": "București",
+   "story": "Multiplex cu 15 săli și peste 2.800 de locuri în Sun Plaza, chiar lângă metrou la Piața Sudului.",
+   "when": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n849372378",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemagia.ro/program-cinema/cinema-city-sun-plaza-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinema City Mega Mall",
+   "osm_id": "n3726839339",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.440831,
+   "lon": 26.152173,
+   "city": "București",
+   "story": "Multiplex cu 14 săli în Mega Mall, inclusiv sală 4DX, unde scaunele se mișcă și simți vânt și apă în timpul filmului.",
+   "when": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n3726839339",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemagia.ro/program-cinema/cinema-city-mega-mall-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinema City AFI Cotroceni (IMAX)",
+   "osm_id": "n7079505521",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.431342,
+   "lon": 26.052677,
+   "city": "București",
+   "story": "Cel mai mare cinematograf din România, în AFI Cotroceni, cu sală IMAX pentru filmele mari.",
+   "when": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n7079505521",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemacity.ro/imax"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinema City ParkLake",
+   "osm_id": "n9394387194",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.420919,
+   "lon": 26.149859,
+   "city": "București",
+   "story": "Multiplex cu 14 săli în ParkLake, dintre care 3 VIP, cu fotolii mari — bun de combinat cu o plimbare în Parcul IOR.",
+   "when": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n9394387194",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemagia.ro/program-cinema/cinema-city-parklake-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinema Europa",
+   "osm_id": "n849372410",
+   "cat": "film",
+   "kind": "Cinema de cartier",
+   "lat": 44.438129,
+   "lon": 26.114309,
+   "city": "București",
+   "story": "Cinematograf vechi de pe Calea Moșilor, cu bilete de 10 lei și weekenduri tematice cu clasice (în octombrie 2025: „Masters of Suspense”, cu Psycho și Rear Window).",
+   "when": "seara sau în weekend",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "price": 10,
+   "sources": [
+    "OpenStreetMap n849372410",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://cinemaeuropa.ro/",
+    "https://www.romaniafilm.ro/cinematografe/cinema-europa-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinema Muzeul Țăranului",
+   "osm_id": "n2468602231",
+   "cat": "film",
+   "kind": "Cinema de artă",
+   "lat": 44.454088,
+   "lon": 26.083385,
+   "city": "București",
+   "story": "Sală de film de autor și documentare în clădirea Muzeului Țăranului Român de pe Kiseleff.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2468602231",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://muzeultaranuluiroman.ro/cinema-muzeul-taranului/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinemateca Union",
+   "osm_id": "n849372350",
+   "cat": "film",
+   "kind": "Cinematecă",
+   "lat": 44.437148,
+   "lon": 26.096031,
+   "city": "București",
+   "story": "Una dintre sălile Arhivei Naționale de Filme, pe strada Ion Câmpineanu, cu clasice și retrospective la prețuri mici.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n849372350",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinemateca Eforie",
+   "osm_id": "n849372318",
+   "cat": "film",
+   "kind": "Cinematecă",
+   "lat": 44.434088,
+   "lon": 26.096874,
+   "city": "București",
+   "story": "Sala istorică a Cinematecii Române de pe strada Eforiei, cu retrospective, filme vechi restaurate și proiecții de festival.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n849372318",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.anf-cinemateca.ro/selectii-din-program",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinemax Veranda",
+   "osm_id": "n7192898466",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.451935,
+   "lon": 26.131197,
+   "city": "București",
+   "story": "Cinema cu 12 săli în Veranda Mall, cu sală Dolby Atmos și săli VIP cu lounge privat; luni biletul e mult mai ieftin (17 lei în 2025).",
+   "when": "seara; luni e cel mai ieftin",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": 31,
+   "sources": [
+    "OpenStreetMap n7192898466",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cine-max.ro/oferte-cinemax/preturi-bilete",
+    "https://sapteseri.ro/locuri/bucuresti/cinematografe/cinemax-veranda"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cineplexx Titan",
+   "osm_id": "n442896940",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.419501,
+   "lon": 26.178612,
+   "city": "București",
+   "story": "Cinema mic, cu 7 săli, lângă metroul 1 Decembrie 1918 — bun pentru un film fără aglomerația din mall-urile mari.",
+   "when": "după-amiaza și seara",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n442896940",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bucuresteni.ro/despre/cineplexx-titan/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cineplexx Băneasa",
+   "osm_id": "w294724370",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.506479,
+   "lon": 26.090433,
+   "city": "București",
+   "story": "Multiplex cu 13 săli în Băneasa Shopping City, cu săli VIP și o sală Ultra cu sunet Dolby Atmos.",
+   "when": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w294724370",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://cineplexx.ro/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Circul Metropolitan (Globus)",
+   "osm_id": "w23611484",
+   "cat": "cultura",
+   "kind": "Circ",
+   "lat": 44.45656,
+   "lon": 26.109527,
+   "city": "București",
+   "story": "Clădirea rotundă cu cupolă din Parcul Circului, deschisă în 1961, găzduiește spectacole de circ și shown-uri internaționale.",
+   "when": "weekend, la spectacole",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w23611484",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Club 99",
+   "osm_id": "n7151190270",
+   "cat": "teatru",
+   "kind": "Stand-up comedy",
+   "lat": 44.446325,
+   "lon": 26.107852,
+   "city": "București",
+   "story": "Primul club de stand-up din București, deschis de comedianți, pe Bulevardul Dacia 99; are show-uri în fiecare seară, cu nume mari și debutanți.",
+   "when": "seara, zilnic",
+   "vibes": [
+    "Fun",
+    "Party"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n7151190270",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://99club.ro/",
+    "https://www.bucuresti.ro/ro/locatii/spectacole-club-99-583"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cuibul Artiștilor",
+   "osm_id": "n10936959099",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.439586,
+   "lon": 26.126464,
+   "city": "București",
+   "story": "Proiect pornit în 2015 care a readus tinerii la teatru: spectacole intime, de două ori pe seară, la 19:00 și 21:00, pe Pache Protopopescu.",
+   "when": "seara (19:00 sau 21:00)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n10936959099",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://sapteseri.ro/locuri/bucuresti/teatre/cuibul-artistilor",
+    "https://www.revistabiz.ro/evadare-din-realitate-la-cuibul-artistilor/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cinema Elvire Popesco",
+   "osm_id": "n6985316061",
+   "cat": "film",
+   "kind": "Cinema de artă",
+   "lat": 44.446617,
+   "lon": 26.104282,
+   "city": "București",
+   "story": "Cinema-ul Institutului Francez de pe Bulevardul Dacia, numit după actrița Elvira Popescu, cu film european și festivaluri.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n6985316061",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://eventbook.ro/elvirepopesco",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Grădina Botanică „Dimitrie Brândză”",
+   "osm_id": "n2634651900",
+   "cat": "cultura",
+   "kind": "Grădină botanică",
+   "lat": 44.4369,
+   "lon": 26.066362,
+   "city": "București",
+   "story": "Grădina fondată în 1860 de Carol Davila: aproape 18 hectare de plante din toată lumea, alei umbrite și sere.",
+   "when": "ziua, primăvara–toamna",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634651900",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Happy Cinema Vitantis",
+   "osm_id": "n12327311799",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.399441,
+   "lon": 26.146882,
+   "city": "București",
+   "story": "Cinema în Vitantis Shopping Center; în aprilie 2025 a găzduit Classy Film Festival, cu clasice de Hitchcock, Kubrick și Fellini.",
+   "when": "seara",
+   "vibes": [
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n12327311799",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.vitantis.ro/happy-cinema/",
+    "https://zilesinopti.ro/2025/04/06/happy-cinema-classy-film-festival-2/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Hollywood Multiplex",
+   "osm_id": "n849372311",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.419819,
+   "lon": 26.127257,
+   "city": "București",
+   "story": "Multiplexul de la etajul 2 din București Mall, primul mall din România, deschis în 1999.",
+   "when": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n849372311",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://bucurestimall.ro/en/services/hollywood-multiplex/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Improteca",
+   "osm_id": "n2839203559",
+   "cat": "teatru",
+   "kind": "Teatru de improvizație",
+   "lat": 44.447935,
+   "lon": 26.111125,
+   "city": "București",
+   "story": "Teatru de improvizație fondat în 2018, cu show-uri la mansarda de pe strada Comănița 9 — nicio seară nu seamănă cu alta, iar publicul dă sugestii.",
+   "when": "seara, în weekend mai ales",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2839203559",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://improteca.ro/",
+    "https://improteca.ro/calendar-evenimente/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mănăstirea Cernica",
+   "osm_id": "w240611280",
+   "cat": "cultura",
+   "kind": "Mănăstire",
+   "lat": 44.433865,
+   "lon": 26.256992,
+   "city": "Cernica",
+   "story": "Mănăstire din 1608 pe insulele lacului Cernica, cu poduri, pădure și plimbări liniștite la 15 km de oraș.",
+   "when": "ziua, weekend",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w240611280",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mănăstirea Mihai Vodă",
+   "osm_id": "w76904582",
+   "cat": "cultura",
+   "kind": "Biserică istorică",
+   "lat": 44.431554,
+   "lon": 26.093308,
+   "city": "București",
+   "story": "Ctitorită de Mihai Viteazul în 1594; în 1985 regimul a mutat-o pe șine 289 de metri și a ascuns-o după blocuri.",
+   "when": "ziua",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w76904582",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mănăstirea Snagov",
+   "osm_id": "w25511874",
+   "cat": "cultura",
+   "kind": "Mănăstire pe insulă",
+   "lat": 44.729655,
+   "lon": 26.175883,
+   "city": "Snagov",
+   "story": "Mănăstire pe o insulă din lacul Snagov, unde legenda spune că e îngropat Vlad Țepeș; ajungi pe o pasarelă de lemn sau cu barca.",
+   "when": "ziua, weekend",
+   "vibes": [
+    "Aer liber",
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w25511874",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Ruinele Mănăstirii Chiajna",
+   "osm_id": "w810258272",
+   "cat": "cultura",
+   "kind": "Ruine istorice",
+   "lat": 44.479123,
+   "lon": 25.997798,
+   "city": "Chiajna",
+   "story": "Biserică uriașă ridicată la sfârșitul secolului XVIII și abandonată înainte de a fi sfințită; ruinele ei pline de legende sunt la marginea Bucureștiului.",
+   "when": "ziua, la apus pentru poze",
+   "vibes": [
+    "Aer liber",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w810258272",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Metropolis",
+   "osm_id": "n7179103985",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.447378,
+   "lon": 26.108795,
+   "city": "București",
+   "story": "Teatru al Primăriei Capitalei pe Bulevardul Mihai Eminescu, cu comedii și piese contemporane într-o sală de mărime medie.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n7179103985",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Movieplex Plaza România",
+   "osm_id": "n849372344",
+   "cat": "film",
+   "kind": "Cinema",
+   "lat": 44.428012,
+   "lon": 26.034095,
+   "city": "București",
+   "story": "Primul cinema care a adus 3D în România; a împlinit 20 de ani în 2025 și are 11 săli în Plaza România.",
+   "when": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n849372344",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://business-review.eu/bucharest-going-out/cinema/movieplex-cinema-the-first-cinema-to-bring-3d-technology-to-romania-celebrates-20-years-285657"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Museum of Senses",
+   "osm_id": "n12288419303",
+   "cat": "cultura",
+   "kind": "Muzeu interactiv",
+   "lat": 44.431357,
+   "lon": 26.053402,
+   "city": "București",
+   "story": "Muzeu de iluzii și camere interactive în AFI Cotroceni, făcut pentru atins, încercat și poze.",
+   "when": "oricând, ziua sau seara",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n12288419303",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.museumofsenses.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul „K. H. Zambaccian”",
+   "osm_id": "n2634652937",
+   "cat": "cultura",
+   "kind": "Muzeu de artă",
+   "lat": 44.460871,
+   "lon": 26.090939,
+   "city": "București",
+   "story": "Casa colecționarului Krikor Zambaccian, cu tablouri de Cézanne, Matisse și Renoir alături de Grigorescu și Luchian — o colecție mare într-o casă mică.",
+   "when": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634652937",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://mnar.ro/muzeul-k-h-zambaccian",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "MARe – Muzeul de Artă Recentă",
+   "osm_id": "w244848005",
+   "cat": "cultura",
+   "kind": "Muzeu de artă",
+   "lat": 44.467901,
+   "lon": 26.089054,
+   "city": "București",
+   "story": "Muzeu privat deschis în 2018 pe Bulevardul Primăverii, cu artă românească de după 1950 și expoziții temporare.",
+   "when": "ziua (închis marțea)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w244848005",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.mare.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Fotbalului",
+   "osm_id": "n10137755832",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.430886,
+   "lon": 26.102999,
+   "city": "București",
+   "story": "Muzeu dedicat fotbalului românesc, în Centrul Vechi, pe strada Gabroveni.",
+   "when": "ziua, marți–duminică",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n10137755832",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Militar Național „Regele Ferdinand I”",
+   "osm_id": "n2634652010",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.441392,
+   "lon": 26.076483,
+   "city": "București",
+   "story": "Muzeu mare de istorie militară, cu tancuri, tunuri și avioane expuse și în curte, lângă Gara de Nord.",
+   "when": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634652010",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.muzeulmilitar.ro/en/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Municipiului București – Palatul Suțu",
+   "osm_id": "n4505417867",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.434784,
+   "lon": 26.102393,
+   "city": "București",
+   "story": "Palatul Suțu, construit între 1833 și 1835 în stil neogotic, a fost locul celor mai cunoscute baluri ale Bucureștiului; azi spune istoria orașului.",
+   "when": "ziua (închis luni)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n4505417867",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://muzeulbucurestiului.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național al Satului „Dimitrie Gusti”",
+   "osm_id": "n5146804838",
+   "cat": "cultura",
+   "kind": "Muzeu în aer liber",
+   "lat": 44.472389,
+   "lon": 26.076627,
+   "city": "București",
+   "story": "Muzeu în aer liber deschis în 1936 de Dimitrie Gusti pe malul lacului Herăstrău, cu case, biserici și mori aduse din toată țara.",
+   "when": "ziua, mai ales primăvara–toamna",
+   "vibes": [
+    "Aer liber",
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n5146804838",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național al Țăranului Român",
+   "osm_id": "n2634652844",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.454423,
+   "lon": 26.083983,
+   "city": "București",
+   "story": "Muzeul declarat Muzeul European al Anului în 1996, cu săli gândite ca o poveste despre satul românesc; are și târguri și cinema în aceeași clădire.",
+   "when": "ziua (închis luni)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634652844",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://muzeultaranuluiroman.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național Cotroceni",
+   "osm_id": "n2634652277",
+   "cat": "cultura",
+   "kind": "Palat",
+   "lat": 44.434217,
+   "lon": 26.062502,
+   "city": "București",
+   "story": "Muzeul din palatul Cotroceni, în același ansamblu cu sediul Președinției; vizita se face cu programare și buletinul la tine.",
+   "when": "ziua, cu programare",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634652277",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.muzeulcotroceni.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național de Artă al României",
+   "osm_id": "n2634652837",
+   "cat": "cultura",
+   "kind": "Muzeu de artă",
+   "lat": 44.440074,
+   "lon": 26.095788,
+   "city": "București",
+   "story": "În fostul Palat Regal de pe Calea Victoriei: artă românească veche și modernă, plus galeria de artă europeană (Rembrandt, El Greco).",
+   "when": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634652837",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.mnar.arts.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național de Artă Contemporană (MNAC)",
+   "osm_id": "n2634652838",
+   "cat": "cultura",
+   "kind": "Muzeu de artă",
+   "lat": 44.428136,
+   "lon": 26.086631,
+   "city": "București",
+   "story": "Artă contemporană în aripa de vest a Palatului Parlamentului, deschisă în 2004; urci și la terasa de sus pentru priveliște.",
+   "when": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634652838",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.mnac.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național de Istorie a României",
+   "osm_id": "n12601324233",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.431488,
+   "lon": 26.097209,
+   "city": "București",
+   "story": "În Palatul Poștelor de pe Calea Victoriei, cu Tezaurul istoric și mulajul Columnei lui Traian; o parte din clădire e în renovare, verifică ce săli sunt deschise.",
+   "when": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n12601324233",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.mnir.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național de Istorie Naturală „Grigore Antipa”",
+   "osm_id": "w23610985",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.453096,
+   "lon": 26.084627,
+   "city": "București",
+   "story": "Muzeul cu dioramele inventate de Grigore Antipa: animale puse în decorul lor natural, cum nu vezi în alt muzeu; modernizat complet în 2011.",
+   "when": "ziua (închis luni)",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w23610985",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://antipa.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Național Tehnic „Dimitrie Leonida”",
+   "osm_id": "w220667665",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.417013,
+   "lon": 26.096548,
+   "city": "București",
+   "story": "Muzeu de inventatori și mașinării în Parcul Carol, fondat în 1909 de inginerul Dimitrie Leonida — de la motoare vechi la mașini de epocă.",
+   "when": "ziua",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w220667665",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.mnt-leonida.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Muzeul Nicolae Minovici („Vila cu clopoței”)",
+   "osm_id": "w38234390",
+   "cat": "cultura",
+   "kind": "Muzeu",
+   "lat": 44.484299,
+   "lon": 26.075301,
+   "city": "București",
+   "story": "„Vila cu clopoței”, ridicată în 1905 de medicul Nicolae Minovici în stil neoromânesc, adăpostește o colecție de artă populară lângă parcul Herăstrău.",
+   "when": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w38234390",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.minovici.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Observatorul Astronomic „Amiral Vasile Urseanu”",
+   "osm_id": "w79139872",
+   "cat": "cultura",
+   "kind": "Observator astronomic",
+   "lat": 44.448526,
+   "lon": 26.092891,
+   "city": "București",
+   "story": "Vila amiralului Vasile Urseanu, transformată în observator: în serile senine te uiți prin telescop la Lună și planete, chiar în centru.",
+   "when": "seara, pe cer senin",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w79139872",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.astro-urseanu.ro",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Opera Națională București",
+   "osm_id": "w23556393",
+   "cat": "teatru",
+   "kind": "Operă și balet",
+   "lat": 44.436065,
+   "lon": 26.079552,
+   "city": "București",
+   "story": "Clădirea operei de lângă Podul Eroilor, inaugurată în 1953, cu operă și balet clasic tot sezonul.",
+   "when": "seara, la spectacol",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w23556393",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://operanb.ro",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Palatul Mogoșoaia",
+   "osm_id": "w39349047",
+   "cat": "cultura",
+   "kind": "Palat",
+   "lat": 44.527636,
+   "lon": 25.992642,
+   "city": "Mogoșoaia",
+   "story": "Palatul ridicat de Constantin Brâncoveanu între 1698 și 1702, în stil brâncovenesc, cu parc mare și lac — locul clasic pentru o plimbare de weekend lângă București.",
+   "when": "ziua, weekend",
+   "vibes": [
+    "Aer liber",
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w39349047",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Palatul Primăverii",
+   "osm_id": "w38236017",
+   "cat": "cultura",
+   "kind": "Palat",
+   "lat": 44.468877,
+   "lon": 26.092324,
+   "city": "București",
+   "story": "Fosta casă a familiei Ceaușescu, deschisă publicului în 2016: robinete aurite, piscină cu mozaic și cinema privat.",
+   "when": "ziua, marți–duminică",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w38236017",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.palatulprimaverii.ro",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Rezidența BRD Scena9",
+   "osm_id": "n12075938064",
+   "cat": "cultura",
+   "kind": "Spațiu cultural",
+   "lat": 44.442381,
+   "lon": 26.105443,
+   "city": "București",
+   "story": "Spațiul cultural al revistei Scena9, cu discuții, concerte mici și expoziții, de obicei cu intrare liberă.",
+   "when": "seara, la evenimente",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n12075938064",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sala Dalles",
+   "osm_id": "w1019934059",
+   "cat": "cultura",
+   "kind": "Expoziții și evenimente",
+   "lat": 44.438269,
+   "lon": 26.101633,
+   "city": "București",
+   "story": "Sala de expoziții de pe Bulevardul Bălcescu, lângă Universitate, ridicată în 1932 din donația familiei Dalles; azi are expoziții, târguri și piesele Teatrului Avangardia.",
+   "when": "ziua sau seara, la evenimente",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w1019934059",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.dalles.ro/",
+    "https://www.dalles.ro/program-evenimente/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sala Palatului",
+   "osm_id": "w232472620",
+   "cat": "cultura",
+   "kind": "Sală de concerte",
+   "lat": 44.4391,
+   "lon": 26.095105,
+   "city": "București",
+   "story": "Sala de circa 4.000 de locuri din spatele Palatului Regal, construită în 1960, unde vin concerte mari, stand-up și spectacole.",
+   "when": "seara, la evenimente",
+   "vibes": [
+    "Cultură",
+    "Party"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w232472620",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://salapalatului.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sala Radio",
+   "osm_id": "w405561108",
+   "cat": "cultura",
+   "kind": "Sală de concerte",
+   "lat": 44.441264,
+   "lon": 26.083858,
+   "city": "București",
+   "story": "Sala orchestrelor Radio România, cunoscută pentru acustică; aici au loc concerte simfonice, de jazz și de film.",
+   "when": "seara, la concert",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w405561108",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.orchestreradio.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrelli",
+   "osm_id": "n2479079709",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.445224,
+   "lon": 26.099342,
+   "city": "București",
+   "story": "Teatru mic din Piața Lahovari, cu scena la câțiva metri de public și spectacole de comedie și dramă.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2479079709",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Infinit",
+   "osm_id": "n7151419882",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.446911,
+   "lon": 26.112489,
+   "city": "București",
+   "story": "Teatru independent cu terasă pe strada Mihai Eminescu 127, cu peste 50 de piese montate, de la „Alice în Țara Minunilor” la „Iliada”.",
+   "when": "seara; vara pe terasă",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n7151419882",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatruinfinit.ro/",
+    "https://www.mystage.ro/locatii/teatrul-infinit-230"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul ACT",
+   "osm_id": "n672417284",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.443498,
+   "lon": 26.093039,
+   "city": "București",
+   "story": "Primul teatru independent din România, fondat de Marcel Iureș într-un subsol de pe Calea Victoriei 126.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n672417284",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.teatrulact.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Apollo111",
+   "osm_id": "n11574493274",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.435614,
+   "lon": 26.094025,
+   "city": "București",
+   "story": "Teatru independent în Palatul Universul, clădirea fostului ziar „Universul”, cu spectacole contemporane și o comunitate tânără.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n11574493274",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Avangardia",
+   "osm_id": "n14052027825",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.438246,
+   "lon": 26.101651,
+   "city": "București",
+   "story": "Trupă independentă care joacă în Sala Dalles, lângă Universitate, comedii ca „Iubito, îți rămân dator!” și seri de microteatru.",
+   "when": "seara",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n14052027825",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.teatrulavangardia.ro/",
+    "https://www.teatrulavangardia.ro/spectacole/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Bulandra – Sala Toma Caragiu",
+   "osm_id": "w202427648",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.443632,
+   "lon": 26.104651,
+   "city": "București",
+   "story": "Teatrul numit după actrița Lucia Sturdza Bulandra; sala Toma Caragiu, de pe Jean Louis Calderon, are unele dintre cele mai premiate spectacole din oraș.",
+   "when": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w202427648",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bulandra.ro",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Bulandra – Sala Liviu Ciulei",
+   "osm_id": "n2615945925",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.433775,
+   "lon": 26.089553,
+   "city": "București",
+   "story": "A doua sală a Teatrului Bulandra, lângă Cișmigiu, poartă numele regizorului Liviu Ciulei.",
+   "when": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2615945925",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bulandra.ro",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Coquette",
+   "osm_id": "n1726032613",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.433181,
+   "lon": 26.117853,
+   "city": "București",
+   "story": "Teatru mic și elegant într-un conac de la începutul secolului XX de pe Calea Călărași 94; în 2025 a jucat „Panică” și „Frida Kahlo: Viva la Vida!”.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n1726032613",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://agerpres.ro/comunicate/2025/05/12/comunicat-de-presa---teatrul-coquette--1448245",
+    "https://www.teatrulcoquette.ro/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul de Artă",
+   "osm_id": "n7153728638",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.437072,
+   "lon": 26.116693,
+   "city": "București",
+   "story": "Teatru independent cu sală mică pe strada Sfântul Ștefan 21, aproape de Grădina Icoanei.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n7153728638",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatruldearta.ro/"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul de Comedie",
+   "osm_id": "n628598191",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.431123,
+   "lon": 26.099104,
+   "city": "București",
+   "story": "Teatru fondat în 1961, în Centrul Vechi, dedicat comediei — de la clasici la autori noi.",
+   "when": "seara",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n628598191",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://comedie.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Național de Operetă și Musical „Ion Dacian”",
+   "osm_id": "w232369190",
+   "cat": "teatru",
+   "kind": "Musical și operetă",
+   "lat": 44.423976,
+   "lon": 26.11063,
+   "city": "București",
+   "story": "Teatrul de operetă și musical al Capitalei, cu producții mari, orchestră și coregrafie, lângă Piața Unirii.",
+   "when": "seara, în weekend",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w232369190",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.opereta.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul de Revistă „Constantin Tănase”",
+   "osm_id": "n8912379327",
+   "cat": "teatru",
+   "kind": "Teatru de revistă",
+   "lat": 44.43593,
+   "lon": 26.0977,
+   "city": "București",
+   "story": "Teatrul care poartă numele marelui artist de revistă Constantin Tănase, cu spectacole cu muzică, dans și umor pe Calea Victoriei.",
+   "when": "seara",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n8912379327",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Elisabeta",
+   "osm_id": "n6318962729",
+   "cat": "teatru",
+   "kind": "Teatru de comedie",
+   "lat": 44.43448,
+   "lon": 26.094093,
+   "city": "București",
+   "story": "Teatru privat pe Bulevardul Regina Elisabeta 45, cu mii de spectatori pe săptămână la comedii și spectacole muzicale.",
+   "when": "seara, în weekend mai ales",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n6318962729",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulelisabeta.ro/spectacole-si-bilete/",
+    "https://www.divahair.ro/timp_liber/programul-teatrului-elisabeta-deschiderea-stagiunii-2025-2026"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Evreiesc de Stat",
+   "osm_id": "w82950585",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.429427,
+   "lon": 26.110698,
+   "city": "București",
+   "story": "Urmașul primului teatru profesionist în idiș din lume, fondat de Avram Goldfaden la Iași în 1876; azi joacă și în română, cu traducere.",
+   "when": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w82950585",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Excelsior",
+   "osm_id": "n6929956316",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.437701,
+   "lon": 26.098427,
+   "city": "București",
+   "story": "Teatru de stat cu spectacole gândite pentru adolescenți și tineri, cu teme actuale.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n6929956316",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul În Culise",
+   "osm_id": "n7151421666",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.446491,
+   "lon": 26.109145,
+   "city": "București",
+   "story": "Teatru independent fondat în 2011 de regizorul Cristian Bajora, pe strada Alecu Russo; în 2025 a avut premiera „Regele Desculț”, după Gogol.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n7151421666",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulinculise.ro/",
+    "https://movienews.ro/2025/01/13/regele-descult-un-altfel-de-teatru/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Masca",
+   "osm_id": "w433897742",
+   "cat": "teatru",
+   "kind": "Teatru de stradă și mișcare",
+   "lat": 44.438782,
+   "lon": 26.030324,
+   "city": "București",
+   "story": "Teatrul fondat în 1990 de Mihai Mălaimare, cu spectacole de mișcare, pantomimă și teatru de stradă, în Militari.",
+   "when": "seara; vara spectacole în aer liber",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w433897742",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.masca.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Metronom",
+   "osm_id": "n14206144401",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.433936,
+   "lon": 26.120834,
+   "city": "București",
+   "story": "Teatru independent de dramaturgie contemporană care, după ani de turnee, s-a mutat în iulie 2026 în sala proprie de pe strada Traian 105.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n14206144401",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulmetronom.ro/",
+    "https://regal-literar.ro/2026/08/15/teatrul-metronom-bucuresti-de-la-scena-itineranta-la-o-casa-proprie-a-dramaturgiei-contemporane/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Mic",
+   "osm_id": "n672363033",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.435692,
+   "lon": 26.095414,
+   "city": "București",
+   "story": "Teatru fondat în 1964, cu o sală mică și caldă lângă Calea Victoriei și spectacole cu actori cunoscuți.",
+   "when": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n672363033",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.teatrulmic.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Național „I. L. Caragiale”",
+   "osm_id": "w41542957",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.437056,
+   "lon": 26.1038,
+   "city": "București",
+   "story": "Clădirea emblematică de la Universitate, cu mai multe săli — de la Sala Mare la săli mici, experimentale.",
+   "when": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w41542957",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.tnb.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Nottara",
+   "osm_id": "n328622616",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.443521,
+   "lon": 26.098676,
+   "city": "București",
+   "story": "Teatrul de pe Magheru numit după actorul Constantin Nottara, cu piese clasice și contemporane.",
+   "when": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n328622616",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Nou",
+   "osm_id": "n10750350226",
+   "cat": "teatru",
+   "kind": "Teatru independent",
+   "lat": 44.418301,
+   "lon": 26.116195,
+   "city": "București",
+   "story": "Teatru independent pe strada Logofătul Tăutu, cu comedii contemporane și „Nocturne”, spectacole de noapte pentru cine vrea o seară mai intimă.",
+   "when": "seara, inclusiv târziu („Nocturne”)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n10750350226",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulnou.ro/",
+    "https://teatrulnou.ro/noctune-spectacole-de-noapte-la-teatrul-nou/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Odeon",
+   "osm_id": "w158239853",
+   "cat": "teatru",
+   "kind": "Teatru",
+   "lat": 44.435998,
+   "lon": 26.098947,
+   "city": "București",
+   "story": "Teatrul de pe Calea Victoriei cu Sala Majestic, al cărei tavan se poate deschide; spectacole îndrăznețe, multe premiate.",
+   "when": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w158239853",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Teatrul Roșu",
+   "osm_id": "n11876487093",
+   "cat": "teatru",
+   "kind": "Teatru-cafenea",
+   "lat": 44.430592,
+   "lon": 26.104742,
+   "city": "București",
+   "story": "Teatru-cafenea independent din 2013, în spatele magazinului Cocor, cu comedii în care stai la masă cu un pahar în mână.",
+   "when": "seara",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n11876487093",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulrosu.ro/despre-teatrul-rosu/",
+    "https://www.bilete.ro/bucuresti/teatrul-rosu/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Țiriac Collection",
+   "osm_id": "w703960191",
+   "cat": "cultura",
+   "kind": "Muzeu auto",
+   "lat": 44.570791,
+   "lon": 26.066759,
+   "city": "Otopeni",
+   "story": "Colecția de mașini a lui Ion Țiriac, de la automobile istorice la mașini de lux și de curse, într-un hangar din Otopeni.",
+   "when": "vineri–duminică",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w703960191",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.tiriaccollection.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Undeva în Comunism",
+   "osm_id": "n5898884385",
+   "cat": "cultura",
+   "kind": "Muzeu interactiv",
+   "lat": 44.430633,
+   "lon": 26.101481,
+   "city": "București",
+   "story": "Un apartament din anii ’80 reconstituit în Centrul Vechi, cu obiecte de epocă pe care le poți atinge.",
+   "when": "ziua (închis miercuri)",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n5898884385",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://undevaincomunism.com/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Velonova Mirage 3D Museum",
+   "osm_id": "n14052878452",
+   "cat": "cultura",
+   "kind": "Muzeu de iluzii 3D",
+   "lat": 44.435704,
+   "lon": 26.094918,
+   "city": "București",
+   "story": "Muzeu de iluzii 3D lângă Cișmigiu, cu picturi în care intri ca să faci poze.",
+   "when": "oricând, ziua",
+   "vibes": [
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n14052878452",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "60 Minutes Escape Room",
+   "osm_id": "n2507541755",
+   "cat": "activitate",
+   "kind": "Escape room",
+   "lat": 44.441943,
+   "lon": 26.105465,
+   "city": "București",
+   "story": "Escape room în centru, pe strada I. L. Caragiale: ai 60 de minute să rezolvi enigmele și să ieși din cameră cu gașca.",
+   "when": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2507541755",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://60minutes.ro"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Academia de Paintball",
+   "osm_id": "n12299441833",
+   "cat": "activitate",
+   "kind": "Paintball",
+   "lat": 44.437342,
+   "lon": 26.18279,
+   "city": "Pantelimon",
+   "story": "Teren de paintball la marginea de est a orașului, bun pentru o bătălie în echipe.",
+   "when": "ziua, weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n12299441833",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Aero Squash",
+   "osm_id": "n11064463050",
+   "cat": "sport",
+   "kind": "Padel și squash",
+   "lat": 44.47764,
+   "lon": 26.062802,
+   "city": "București",
+   "story": "Terenuri de squash, padel și badminton pe Bulevardul Mărăști, bune de rezervat cu prietenii seara după muncă.",
+   "when": "seara, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n11064463050",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.aerosquash.ro"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Berceni Arena",
+   "osm_id": "r18184396",
+   "cat": "activitate",
+   "kind": "Patinoar",
+   "lat": 44.379021,
+   "lon": 26.132901,
+   "city": "București",
+   "story": "Patinoar acoperit nou al Sectorului 4, cu sesiuni de patinaj pentru public și meciuri de hochei.",
+   "when": "tot anul, după program",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap r18184396",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://berceniarena.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Blokx",
+   "osm_id": "n8911907337",
+   "cat": "sport",
+   "kind": "Bouldering",
+   "lat": 44.479097,
+   "lon": 26.121563,
+   "city": "Voluntari",
+   "story": "Sală de bouldering — cățărare fără coardă, pe pereți joși cu saltele groase — unde poți veni și ca începător.",
+   "when": "seara sau weekend",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n8911907337",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://blokx.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Captive Escape Room",
+   "osm_id": "n5962677031",
+   "cat": "activitate",
+   "kind": "Escape room",
+   "lat": 44.452011,
+   "lon": 26.109675,
+   "city": "București",
+   "story": "Escape room în zona Dorobanți–Ștefan cel Mare, pentru grupuri care vor o oră de enigme.",
+   "when": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n5962677031",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Carpatic Escaladă & Bouldering",
+   "osm_id": "n3487492200",
+   "cat": "sport",
+   "kind": "Cățărare",
+   "lat": 44.44287,
+   "lon": 26.048263,
+   "city": "București",
+   "story": "Sală de escaladă și bouldering pe Splaiul Independenței, cu trasee pentru începători și avansați.",
+   "when": "seara, în timpul săptămânii",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n3487492200",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://carpatic.ro"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Clubul Sportiv Năstase & Marica",
+   "osm_id": "w23731450",
+   "cat": "sport",
+   "kind": "Tenis și fotbal",
+   "lat": 44.477103,
+   "lon": 26.099257,
+   "city": "București",
+   "story": "Club cu terenuri de tenis și fotbal în Pipera, deschis zilnic de dimineața până la miezul nopții.",
+   "when": "seara, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w23731450",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://nastase-marica.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cotroceni on Ice",
+   "osm_id": "w1319614199",
+   "cat": "activitate",
+   "kind": "Patinoar",
+   "lat": 44.430935,
+   "lon": 26.052047,
+   "city": "București",
+   "story": "Patinoar în aer liber lângă AFI Cotroceni, deschis iarna, cu patine de închiriat.",
+   "when": "iarna, seara",
+   "vibes": [
+    "Fun",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w1319614199",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Edenland Park",
+   "osm_id": "w402868001",
+   "cat": "activitate",
+   "kind": "Parc de aventură",
+   "lat": 44.652851,
+   "lon": 26.102242,
+   "city": "Balotești",
+   "story": "Parc de aventură în pădurea de lângă Balotești, cu trasee prin copaci și tiroliene.",
+   "when": "ziua, primăvara–toamna",
+   "vibes": [
+    "Aer liber",
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w402868001",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "EscapeMyRoom – Dacia 130",
+   "osm_id": "w550416782",
+   "cat": "activitate",
+   "kind": "Escape room",
+   "lat": 44.444297,
+   "lon": 26.115576,
+   "city": "București",
+   "story": "Escape room pe Bulevardul Dacia, cu echipe de 2 până la 8 oameni și o oră ca să evadezi.",
+   "when": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w550416782",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://escapemyroom.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Fabrica de Cățărat",
+   "osm_id": "n3487482570",
+   "cat": "sport",
+   "kind": "Cățărare",
+   "lat": 44.420468,
+   "lon": 26.094431,
+   "city": "București",
+   "story": "Sală de cățărare lângă Parcul Carol, cu trasee pentru toate nivelurile.",
+   "when": "seara sau weekend",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n3487482570",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.fabricadecatarat.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Grădina Zoologică București",
+   "osm_id": "w369588750",
+   "cat": "activitate",
+   "kind": "Grădină zoologică",
+   "lat": 44.517083,
+   "lon": 26.104408,
+   "city": "București",
+   "story": "Grădina zoologică din pădurea Băneasa, cu sute de animale și alei umbrite.",
+   "when": "ziua",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w369588750",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://bucurestizoo.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Equestria (hipodrom)",
+   "osm_id": "w681065722",
+   "cat": "sport",
+   "kind": "Călărie",
+   "lat": 44.651377,
+   "lon": 26.069534,
+   "city": "Corbeanca",
+   "story": "Bază de călărie la Corbeanca, unde poți lua lecții sau face o tură pe cal.",
+   "when": "ziua, weekend, cu programare",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w681065722",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "LaserMaxx AFI Cotroceni",
+   "osm_id": "n10027946541",
+   "cat": "activitate",
+   "kind": "Laser tag",
+   "lat": 44.430314,
+   "lon": 26.051313,
+   "city": "București",
+   "story": "Arenă de laser tag în AFI Cotroceni: echipe, veste cu senzori și labirint în semiîntuneric.",
+   "when": "oricând, seara mai ales",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n10027946541",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.lasermaxx.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "LaserMaxx Vitantis",
+   "osm_id": "n10608900638",
+   "cat": "activitate",
+   "kind": "Laser tag",
+   "lat": 44.399555,
+   "lon": 26.146442,
+   "city": "București",
+   "story": "A doua arenă LaserMaxx, în Vitantis Shopping Center, pentru meciuri de laser tag în echipe.",
+   "when": "după-amiaza și weekend",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n10608900638",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://lasermaxx.ro/lasermaxx-vitantis/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mystery Rooms Escape București",
+   "osm_id": "n14053037362",
+   "cat": "activitate",
+   "kind": "Escape room",
+   "lat": 44.438161,
+   "lon": 26.123442,
+   "city": "București",
+   "story": "Escape room în zona Moșilor, pentru o oră de enigme cu prietenii.",
+   "when": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n14053037362",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Pescariu Sports & Spa",
+   "osm_id": "w23583384",
+   "cat": "sport",
+   "kind": "Tenis, piscină, spa",
+   "lat": 44.471806,
+   "lon": 26.110682,
+   "city": "București",
+   "story": "Club cu tenis, squash, piscină și spa lângă lacul Tei, purtând numele fostului tenismen Dinu Pescariu.",
+   "when": "oricând, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w23583384",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "ReMatch Militari Shopping",
+   "osm_id": "n10883984904",
+   "cat": "activitate",
+   "kind": "Jocuri arcade",
+   "lat": 44.440037,
+   "lon": 25.982399,
+   "city": "București",
+   "story": "Sală de jocuri în Militari Shopping, cu arcade și jocuri pentru grupuri, deschisă zilnic 10–22.",
+   "when": "oricând",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n10883984904",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://rematch.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "ReMatch București Mall",
+   "osm_id": "n11112041578",
+   "cat": "activitate",
+   "kind": "Jocuri arcade",
+   "lat": 44.420091,
+   "lon": 26.127175,
+   "city": "București",
+   "story": "Sală de jocuri ReMatch în București Mall, cu arcade și jocuri pentru grupuri.",
+   "when": "oricând",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n11112041578",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://rematch.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Stejarii Country Club",
+   "osm_id": "w897136249",
+   "cat": "sport",
+   "kind": "Tenis și piscină",
+   "lat": 44.516088,
+   "lon": 26.069554,
+   "city": "București",
+   "story": "Club cu tenis, piscină și fotbal la marginea pădurii Băneasa.",
+   "when": "oricând, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w897136249",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Tenis Club Tineretului",
+   "osm_id": "w708470056",
+   "cat": "sport",
+   "kind": "Tenis",
+   "lat": 44.407951,
+   "lon": 26.101661,
+   "city": "București",
+   "story": "Terenuri de tenis lângă Parcul Tineretului, deschise până la miezul nopții, ușor de rezervat.",
+   "when": "seara, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w708470056",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "The Void Escape Room",
+   "osm_id": "n10971390453",
+   "cat": "activitate",
+   "kind": "Escape room",
+   "lat": 44.443132,
+   "lon": 26.100645,
+   "city": "București",
+   "story": "Escape room pe Pitar Moș, aproape de Piața Romană, cu jocuri pentru grupuri mici.",
+   "when": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n10971390453",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://thevoid.ro"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Therme București",
+   "osm_id": "w388832074",
+   "cat": "activitate",
+   "kind": "Terme și aquapark",
+   "lat": 44.605558,
+   "lon": 26.085421,
+   "city": "Balotești",
+   "story": "Cel mai mare centru de relaxare cu ape termale din regiune, deschis în 2016: zona The Palm cu palmieri, Elysium cu saune și Galaxy cu tobogane.",
+   "when": "oricând; seara e mai liniștit",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w388832074",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://therme.ro/",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Troll Escape Rooms",
+   "osm_id": "n4311411532",
+   "cat": "activitate",
+   "kind": "Escape room",
+   "lat": 44.437271,
+   "lon": 26.101016,
+   "city": "București",
+   "story": "Escape room pe Bulevardul Bălcescu, doar cu rezervare dinainte.",
+   "when": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n4311411532",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.gameoftrolls.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Vertical Spirit",
+   "osm_id": "n2157472704",
+   "cat": "sport",
+   "kind": "Cățărare",
+   "lat": 44.448493,
+   "lon": 26.151457,
+   "city": "București",
+   "story": "Sală de cățărare în zona Baicului, cu pereți de escaladă pentru începători și avansați.",
+   "when": "seara",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2157472704",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Combinatul Fondului Plastic",
+   "osm_id": null,
+   "cat": "cultura",
+   "kind": "Hub creativ",
+   "lat": 44.484,
+   "lon": 26.063,
+   "city": "București",
+   "story": "Fabrica de artă construită între 1966 și 1972 de Uniunea Artiștilor Plastici, azi plină de ateliere și galerii independente (Sector 1 Gallery, IOMO, The Institute); în 2025 a avut expoziții ca „16M2” la Galeria SENAT.",
+   "when": "la vernisaje, seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.modernism.ro/2025/03/19/expozitie-natura-cotidian-gallery-studio-76-combinatul-fondului-plastic-bucuresti/",
+    "https://uap.ro/16m2-galeria-senat-cfp/",
+    "http://www.combinatulfonduluiplastic.ro/stores.php",
+    "OpenStreetMap (galeriile de pe Str. Băiculești 29)"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Palatul Parlamentului – tur ghidat",
+   "osm_id": null,
+   "cat": "cultura",
+   "kind": "Palat",
+   "lat": 44.428136,
+   "lon": 26.086631,
+   "city": "București",
+   "story": "A doua cea mai mare clădire administrativă din lume, după Pentagon; turul ghidat intră prin strada Izvor (aceeași intrare cu MNAC) și cere buletinul.",
+   "when": "ziua, cu programare",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap n2634652838 (intrarea Izvor 2-4, comună cu MNAC)",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cărturești Carusel",
+   "osm_id": null,
+   "cat": "cultura",
+   "kind": "Librărie",
+   "lat": 44.43195,
+   "lon": 26.1013,
+   "city": "București",
+   "story": "Librăria deschisă în 2015 într-o clădire restaurată de pe Lipscani, cu etaje albe în jurul unui gol central și bistro sus — cel mai fotografiat interior din Centrul Vechi.",
+   "when": "oricând, ziua sau seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap (vecinii de pe Lipscani 53)",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Divertiland",
+   "osm_id": "w224921650",
+   "cat": "activitate",
+   "kind": "Aquapark",
+   "lat": 44.4321733,
+   "lon": 25.9450518,
+   "city": "Chiajna",
+   "story": "Aquapark în aer liber pe strada Divertismentului din Chiajna, cu piscine și tobogane; deschis doar vara.",
+   "when": "vara, ziua",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Party"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w224921650",
+    "https://www.divertiland.ro/",
+    "Google Maps (04.10.2026): închis temporar (sezonier)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Patinoarul Cișmigiu",
+   "osm_id": "w1508293151",
+   "cat": "activitate",
+   "kind": "Patinoar",
+   "lat": 44.4358867,
+   "lon": 26.0919013,
+   "city": "București",
+   "story": "Iarna, lacul din Cișmigiu devine patinoar în aer liber, în mijlocul celui mai vechi parc din oraș.",
+   "when": "iarna, seara",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "OpenStreetMap w1508293151 (seasonal=winter)",
+    "Google Maps (04.10.2026): închis temporar (sezonier)"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  }
+ ]
+}

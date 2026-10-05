@@ -1,0 +1,1009 @@
+{
+ "decisions": [
+  {
+   "osm_id": "w1420394521",
+   "name": "Aria naturală protejată Pajiștea Petricani",
+   "decision": "drop",
+   "why": "pajiște protejată de ~10 ha, fără alei sau amenajări; nu e loc de ieșire"
+  },
+  {
+   "osm_id": "w828136066",
+   "name": "Baza Sportivă \"Nicolae Navasart\"",
+   "decision": "drop",
+   "why": "bază sportivă de canotaj, nu parc public"
+  },
+  {
+   "osm_id": "w1296716083",
+   "name": "Colectia Dendrologica Snagov",
+   "decision": "drop",
+   "why": "colecție a ocolului silvic, nu am găsit că se vizitează; Pădurea și Lacul Snagov acoperă zona"
+  },
+  {
+   "osm_id": "w23608434",
+   "name": "Complexul Studențesc Leu",
+   "decision": "drop",
+   "why": "e campusul studențesc Leu, nu parc"
+  },
+  {
+   "osm_id": "w23557177",
+   "name": "Cotroceni",
+   "decision": "drop",
+   "why": "grădina Palatului Cotroceni, acces interzis (access=no)"
+  },
+  {
+   "osm_id": "w1323645807",
+   "name": "Dinamic Parc",
+   "decision": "drop",
+   "why": "parc de cartier în Chiajna, neverificat ca destinație"
+  },
+  {
+   "osm_id": "w88337886",
+   "name": "Domeniul Știrbey",
+   "decision": "keep",
+   "why": "parc istoric de 24 ha cu lac și palat, deschis vineri–duminică"
+  },
+  {
+   "osm_id": "w402867798",
+   "name": "Edenland Park - Parc de aventura",
+   "decision": "keep",
+   "why": "parc de aventură real, activ în 2026 (duplicat cu w402868001 din activități)"
+  },
+  {
+   "osm_id": "w360140661",
+   "name": "Extreme Park Cernica",
+   "decision": "keep",
+   "why": "parc de aventură în pădurea Cernica, cu tiroliană peste lac"
+  },
+  {
+   "osm_id": "w1173862898",
+   "name": "Ferma Animalelor",
+   "decision": "drop",
+   "why": "fermă cu animale pentru copii; mai potrivită la activități de familie"
+  },
+  {
+   "osm_id": "w62743951",
+   "name": "Grădina Icoanei",
+   "decision": "keep",
+   "why": "mică, dar grădină istorică din centru cu lac; bună pentru o plimbare în doi"
+  },
+  {
+   "osm_id": "w43272996",
+   "name": "Insula Câinilor",
+   "decision": "drop",
+   "why": "insulă din Parcul IOR, duplicat"
+  },
+  {
+   "osm_id": "w983580439",
+   "name": "Insula Fundeni",
+   "decision": "drop",
+   "why": "insulă fără acces/amenajări cunoscute"
+  },
+  {
+   "osm_id": "w298267725",
+   "name": "Insula Lacul Morii",
+   "decision": "keep",
+   "why": "redeschisă pe 18.09.2026: 3,4 ha amenajate, alei, plajă, pontoane"
+  },
+  {
+   "osm_id": "w14451012",
+   "name": "Insula Trandafirilor",
+   "decision": "drop",
+   "why": "parte din Herăstrău, duplicat"
+  },
+  {
+   "osm_id": "w487731551",
+   "name": "Parc Flămânzeni",
+   "decision": "drop",
+   "why": "parc mic de oraș (Buftea), ~3 ha"
+  },
+  {
+   "osm_id": "r8321292",
+   "name": "Parcul Alexandru Ioan Cuza",
+   "decision": "drop",
+   "why": "duplicat Parcul IOR (am păstrat r8321313)"
+  },
+  {
+   "osm_id": "r8321313",
+   "name": "Parcul Alexandru Ioan Cuza",
+   "decision": "keep",
+   "why": "IOR/Titan, unul dintre cele mai mari parcuri, cu lacul Titan"
+  },
+  {
+   "osm_id": "w23692562",
+   "name": "Parcul Bazilescu",
+   "decision": "drop",
+   "why": "parc de cartier (12 ha), urmează modernizare"
+  },
+  {
+   "osm_id": "r13220503",
+   "name": "Parcul Bordei",
+   "decision": "drop",
+   "why": "parc mic (3,3 ha); lacul era fără apă în aug. 2026"
+  },
+  {
+   "osm_id": "w13853540",
+   "name": "Parcul Carol",
+   "decision": "keep",
+   "why": "parc istoric mare: Mausoleu, Muzeul Tehnic, lac"
+  },
+  {
+   "osm_id": "w28831219",
+   "name": "Parcul Casa Albă",
+   "decision": "drop",
+   "why": "parc mic de oraș (Otopeni)"
+  },
+  {
+   "osm_id": "w1062719906",
+   "name": "Parcul Centenarului",
+   "decision": "drop",
+   "why": "scuar mic (~2,5 ha)"
+  },
+  {
+   "osm_id": "w28241031",
+   "name": "Parcul Cinema Floreasca",
+   "decision": "drop",
+   "why": "scuar mic de cartier"
+  },
+  {
+   "osm_id": "w23612226",
+   "name": "Parcul Circului",
+   "decision": "drop",
+   "why": "lacul e în stare proastă, parcul intră în reabilitare (2025–2026)"
+  },
+  {
+   "osm_id": "w16291869",
+   "name": "Parcul Cișmigiu",
+   "decision": "keep",
+   "why": "parcul clasic din centru: bărci vara, patinoar iarna"
+  },
+  {
+   "osm_id": "r8353393",
+   "name": "Parcul Constantin Brâncuși",
+   "decision": "drop",
+   "why": "parc mic de cartier (Titan)"
+  },
+  {
+   "osm_id": "w1160395218",
+   "name": "Parcul Corbeanca",
+   "decision": "drop",
+   "why": "parc mic de oraș (Corbeanca)"
+  },
+  {
+   "osm_id": "w149419543",
+   "name": "Parcul Crângași",
+   "decision": "drop",
+   "why": "parc de cartier, fără ceva special"
+  },
+  {
+   "osm_id": "w1381347872",
+   "name": "Parcul dendrologic - Colegiul Silvic „Theodor Pietraru”",
+   "decision": "drop",
+   "why": "parcul unui colegiu silvic, acces public neverificat"
+  },
+  {
+   "osm_id": "w395675082",
+   "name": "Parcul Dendrologic Chitila",
+   "decision": "keep",
+   "why": "parc dendrologic pe malul lacului Chitila, recomandat ca ieșire de weekend"
+  },
+  {
+   "osm_id": "w407167229",
+   "name": "Parcul dintre Flori",
+   "decision": "drop",
+   "why": "parc mic de oraș (Buftea)"
+  },
+  {
+   "osm_id": "w607298984",
+   "name": "Parcul Dobroești",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w21802163",
+   "name": "Parcul Drumul Taberei",
+   "decision": "keep",
+   "why": "parc mare renovat: lac, pod suspendat, skatepark, terenuri"
+  },
+  {
+   "osm_id": "w801382309",
+   "name": "Parcul Eroilor Sanitari",
+   "decision": "drop",
+   "why": "scuar de cartier"
+  },
+  {
+   "osm_id": "w969814412",
+   "name": "Parcul Fabrica de Gheață",
+   "decision": "drop",
+   "why": "parc de cartier, neverificat"
+  },
+  {
+   "osm_id": "w586357887",
+   "name": "Parcul Floreasca",
+   "decision": "drop",
+   "why": "parc de cartier; Herăstrău e alături și e mult mai bun"
+  },
+  {
+   "osm_id": "w23704035",
+   "name": "Parcul Florilor",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w23706618",
+   "name": "Parcul Gheorghe Petrașcu",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w23679596",
+   "name": "Parcul Giulești",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w408570351",
+   "name": "Parcul Grozăvești",
+   "decision": "drop",
+   "why": "parc de cartier, fără ceva special"
+  },
+  {
+   "osm_id": "w685369066",
+   "name": "Parcul Ion Creangă",
+   "decision": "drop",
+   "why": "parc de cartier, neverificat"
+  },
+  {
+   "osm_id": "w23770990",
+   "name": "Parcul Ion Voicu",
+   "decision": "drop",
+   "why": "scuar mic"
+  },
+  {
+   "osm_id": "w14262324",
+   "name": "Parcul Izvor",
+   "decision": "drop",
+   "why": "mai mult gazon pentru festivaluri; nu e o ieșire în sine"
+  },
+  {
+   "osm_id": "w23611141",
+   "name": "Parcul Kiseleff",
+   "decision": "drop",
+   "why": "fâșie verde de-a lungul șoselei, nu destinație"
+  },
+  {
+   "osm_id": "r21298944",
+   "name": "Parcul Liniei",
+   "decision": "keep",
+   "why": "parc liniar nou (2023–2026): pădure urbană, spații de lucru cu WiFi, pumptrack"
+  },
+  {
+   "osm_id": "w23697530",
+   "name": "Parcul Lunca Florilor",
+   "decision": "drop",
+   "why": "parc mic de cartier"
+  },
+  {
+   "osm_id": "w39349038",
+   "name": "Parcul Mogoșoaia",
+   "decision": "keep",
+   "why": "parcul Palatului Mogoșoaia, cu lac, acces liber"
+  },
+  {
+   "osm_id": "w23581184",
+   "name": "Parcul Morarilor",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w23737310",
+   "name": "Parcul Motodrom",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w88105780",
+   "name": "Parcul Natural Văcărești",
+   "decision": "keep",
+   "why": "Delta Văcărești, rezervație urbană unică"
+  },
+  {
+   "osm_id": "w586356880",
+   "name": "Parcul Național",
+   "decision": "drop",
+   "why": "în reabilitare; zona lacului se redeschide abia în ian. 2027 — de reluat atunci"
+  },
+  {
+   "osm_id": "w23705733",
+   "name": "Parcul Obor",
+   "decision": "drop",
+   "why": "scuar de cartier"
+  },
+  {
+   "osm_id": "w23556382",
+   "name": "Parcul Operei",
+   "decision": "drop",
+   "why": "scuar lângă Operă"
+  },
+  {
+   "osm_id": "w23581105",
+   "name": "Parcul Pantelimon",
+   "decision": "keep",
+   "why": "parc mare cu lac la marginea de est (încredere scăzută)"
+  },
+  {
+   "osm_id": "w23721148",
+   "name": "Parcul Pecineaga",
+   "decision": "drop",
+   "why": "parc mic de cartier"
+  },
+  {
+   "osm_id": "w23583153",
+   "name": "Parcul Plumbuita",
+   "decision": "drop",
+   "why": "șantier: reamenajarea pe etape a început în oct. 2026 — de reluat după"
+  },
+  {
+   "osm_id": "w23583196",
+   "name": "Parcul Plumbuita II",
+   "decision": "drop",
+   "why": "duplicat Plumbuita, tot șantier"
+  },
+  {
+   "osm_id": "w88337000",
+   "name": "Parcul Regele Mihai I Al României (Herăstrău)",
+   "decision": "keep",
+   "why": "Herăstrău: lac, bărci, vaporaș, tura de ~6 km"
+  },
+  {
+   "osm_id": "w88337012",
+   "name": "Parcul Regele Mihai I Al României (Herăstrău)",
+   "decision": "drop",
+   "why": "duplicat Herăstrău"
+  },
+  {
+   "osm_id": "w91797290",
+   "name": "Parcul Regele Mihai I Al României (Herăstrău)",
+   "decision": "drop",
+   "why": "duplicat Herăstrău"
+  },
+  {
+   "osm_id": "w23490535",
+   "name": "Parcul Romniceanu",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w23652333",
+   "name": "Parcul Sebastian",
+   "decision": "drop",
+   "why": "parc mic de cartier (~4 ha)"
+  },
+  {
+   "osm_id": "w235974932",
+   "name": "Parcul Sfântul Pantelimon",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w23739420",
+   "name": "Parcul Sticlăriei",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w23583220",
+   "name": "Parcul Tei",
+   "decision": "keep",
+   "why": "parc pe malul lacului Tei, cu terase"
+  },
+  {
+   "osm_id": "w819885742",
+   "name": "Parcul Teilor",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w718970300",
+   "name": "Parcul Timișoara",
+   "decision": "drop",
+   "why": "scuar de cartier"
+  },
+  {
+   "osm_id": "w14360895",
+   "name": "Parcul Tineretului",
+   "decision": "keep",
+   "why": "unul dintre cele mai mari parcuri, cu lac și piste"
+  },
+  {
+   "osm_id": "w23751031",
+   "name": "Parcul Titănel",
+   "decision": "drop",
+   "why": "parc mic lângă IOR"
+  },
+  {
+   "osm_id": "w1054221333",
+   "name": "Parcul Tudor Arghezi",
+   "decision": "drop",
+   "why": "parc de cartier (Berceni)"
+  },
+  {
+   "osm_id": "w259482040",
+   "name": "Parcul Tudor Vladimirescu",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "r19937268",
+   "name": "Parcul Unirii",
+   "decision": "drop",
+   "why": "scuarul din Piața Unirii, în plus șantierul Planșeului Unirii (2026)"
+  },
+  {
+   "osm_id": "w1086229087",
+   "name": "Parcul Valea Mangului",
+   "decision": "drop",
+   "why": "parc nou de oraș (Chitila), local; nu am confirmat că e gata"
+  },
+  {
+   "osm_id": "w23583450",
+   "name": "Parcul Verdi",
+   "decision": "drop",
+   "why": "parc de cartier"
+  },
+  {
+   "osm_id": "w85952406",
+   "name": "Pădurea Snagov - arie protejată",
+   "decision": "keep",
+   "why": "rezervație cu trasee marcate prin pădure"
+  },
+  {
+   "osm_id": "w1422672324",
+   "name": "Viscofil Park",
+   "decision": "drop",
+   "why": "nu există pe Google, probabil parcul unui ansamblu rezidențial"
+  }
+ ],
+ "places": [
+  {
+   "name": "Parcul Regele Mihai I (Herăstrău)",
+   "osm_id": "w88337000",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.470635,
+   "lon": 26.08163,
+   "city": "București",
+   "story": "Faci tura lacului Herăstrău (aproape 6 km), bună de alergat, de bicicletă sau de role, ori iei vaporașul pentru o cursă de vreo 25 de minute. De la Debarcaderul Central închiriezi barcă sau hidrobicicletă (12 lei/oră în 2025), iar pe drum treci prin Grădina Japoneză și pe Insula Trandafirilor.",
+   "when": "oricând; bărcile și vaporașul merg zilnic în sezonul cald (primăvară–toamnă)",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Fun"
+   ],
+   "free": true,
+   "sources": [
+    "https://agerpres.ro/administratie/2025/05/15/alpab-curse-zilnice-cu-vaporasul-si-plimbari-cu-barci-si-hidrobiciclete-pe-lacul-herastrau--1449517",
+    "https://www.alltrails.com/trail/romania/bucharest/herastrau-park-loop",
+    "https://umblu-teleleu.ro/parcul-herastrau/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Cișmigiu",
+   "osm_id": "w16291869",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.437217,
+   "lon": 26.090355,
+   "city": "București",
+   "story": "Parcul istoric din centru, cu lac: vara te plimbi cu barca sau cu hidrobicicleta (40 lei/oră în 2025), iar iarna lacul devine patinoar în aer liber (sezonul 2025–2026: 50 lei pentru o oră și jumătate, patine de închiriat pe loc).",
+   "when": "vara cu barca, iarna la patinoar (din decembrie)",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://gokid.ro/lacul-cismigiu-plimbare-cu-barca-si-hidrobicicleta/",
+    "https://umblu-teleleu.ro/parcul-cismigiu/",
+    "https://gokid.ro/patinoare-bucuresti-lista-completa/",
+    "https://www.euronews.ro/articole/patinoarul-cismigiu-se-deschide-luni-acces-gratuit-pentru-copiii-cu-varste-de-pan"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Tineretului",
+   "osm_id": "w14360895",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.406294,
+   "lon": 26.109343,
+   "city": "București",
+   "story": "Unul dintre cele mai mari parcuri din oraș: aleea largă din jurul lacului e făcută pentru alergat și bicicletă, pe lac închiriezi barcă sau hidrobicicletă, iar la intrarea dinspre Bd. Gheorghe Șincai găsești biciclete de închiriat. Ai și terenuri de sport și destulă iarbă pentru un picnic.",
+   "when": "în weekend, mai ales primăvara și vara",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "free": true,
+   "sources": [
+    "https://umblu-teleleu.ro/parcul-tineretului/",
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-tineretului-67"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Carol I",
+   "osm_id": "w13853540",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.413988,
+   "lon": 26.096467,
+   "city": "București",
+   "story": "Parc istoric pe dealul Filaret: urci la Mausoleul de 48 m de pe cel mai înalt punct, intri la Muzeul Tehnic „Dimitrie Leonida”, care e chiar în parc, și te oprești la lacul cu rațe și țestoase. La Arenele Romane din parc se țin concerte și evenimente.",
+   "when": "după-amiaza, în weekend; seara când e eveniment la Arene",
+   "vibes": [
+    "Chill",
+    "Cultură",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://umblu-teleleu.ro/parcul-carol/",
+    "https://bucurestitrip.ro/parcul-carol-i/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Alexandru Ioan Cuza (IOR / Titan)",
+   "osm_id": "r8321313",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.426306,
+   "lon": 26.15657,
+   "city": "București",
+   "story": "Parc de vreo 85 ha în Titan, construit în jurul lacului Titan, care e tăiat în două de podul Liviu Rebreanu și are cinci insule. Aleile lungi de pe malul apei sunt bune de plimbare, de alergat sau de bicicletă.",
+   "when": "oricând, mai ales în weekend și vara seara",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://www.gandul.ro/actualitate/parcul-ior-sau-minunea-din-titan-un-lac-cinci-insule-si-o-biserica-documentar-19802770",
+    "https://bucurestitrip.ro/parcul-ior-alexandru-ioan-cuza/",
+    "https://mtb-tours.kerucov.ro/editorial.php?editorial=76"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Drumul Taberei (Moghioroș)",
+   "osm_id": "w21802163",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.420252,
+   "lon": 26.031499,
+   "city": "București",
+   "story": "Parc renovat, cu lac traversat de un pod suspendat și o grădină japoneză. Ai skatepark, terenuri de baschet, fotbal și tenis, mese de ping-pong și de șah și un amfiteatru unde se țin spectacole.",
+   "when": "după-amiaza și seara, în sezonul cald",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Competitiv",
+    "Chill"
+   ],
+   "free": true,
+   "sources": [
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-drumul-taberei-parcul-moghioros-80",
+    "https://b365.ro/parcuri-din-bucuresti-pentru-sporturi-urbane-unde-poti-face-plimbari-linistite-si-sigure-cu-hoverboard-ul-rolele-sau-skateboard-ul-561693/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Natural Văcărești (Delta Văcărești)",
+   "osm_id": "w88105780",
+   "cat": "natura",
+   "kind": "Rezervație naturală",
+   "lat": 44.399413,
+   "lon": 26.133574,
+   "city": "București",
+   "story": "O deltă în mijlocul orașului, cu stuf, bălți și păsări pe care nu le vezi în alt parc. Faci „Poteca biodiversității urbane” (2,3 km, cam o oră) sau mergi cu bicicleta pe digul Belvedere; în sezonul cald se fac și tururi ghidate gratuite cu biologi și ornitologi. Deschis zilnic 07–21.",
+   "when": "dimineața sau spre apus, din primăvară până toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "free": true,
+   "sources": [
+    "https://wall-street.ro/articol/Turism/270599/delta-vacaresti-de-unde-incep-traseele-si-ce-activitati-poti-face-in-rezervatia-naturala-parc-vacaresti.html?full=",
+    "https://greencommunity.ro/program-vizitare-parcul-natural-vacaresti-tur-ghidat/",
+    "https://buletin.de/bucuresti/9-ani-de-la-infiintarea-parcului-natural-vacaresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Palatului Mogoșoaia",
+   "osm_id": "w39349038",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.527215,
+   "lon": 25.997329,
+   "city": "Mogoșoaia",
+   "story": "În jurul Palatului Brâncovenesc ai parc mare și malul lacului cu acces liber: te plimbi, faci picnic pe iarbă sau bei o cafea pe terasă. Plătești doar dacă intri în muzeu (palatul, cuhnia, expozițiile): 15 lei adulți, 8 lei elevi și studenți.",
+   "when": "în weekend, primăvara și toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "free": true,
+   "sources": [
+    "https://umblu-teleleu.ro/mogosoaia/",
+    "https://ilfovul.ro/palatul-mogosoaia-ghid-vizitare/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Tei",
+   "osm_id": "w23583220",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.465586,
+   "lon": 26.12359,
+   "city": "București",
+   "story": "Parc pe malul lacului Tei, cu alei largi pentru plimbare și alergat. Pe apă sunt lebede și rațe, iar chiar în parc e un restaurant cu terasă cu vedere la lac.",
+   "when": "seara, vara",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://toplocuri.ro/parcul-tei",
+    "https://zilesinopti.ro/locuri/lacul-tei-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Pantelimon",
+   "osm_id": "w23581105",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.437722,
+   "lon": 26.200289,
+   "city": "București",
+   "story": "Parc mare cu lac și pădure la marginea de est a orașului, cu piste pentru alergat, bicicletă și role, terenuri de sport și foișoare.",
+   "when": "în weekend, vara",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "free": true,
+   "sources": [
+    "https://zilesinopti.ro/locuri/parcul-pantelimon/",
+    "https://www.clubulcopiilor.ro/locatie/parcul-pantelimon/"
+   ],
+   "confidence": "low",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Liniei",
+   "osm_id": "r21298944",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.430952,
+   "lon": 26.033048,
+   "city": "București",
+   "story": "Parc liniar nou, făcut pe o fostă linie de tren din Militari. Are o pădure urbană cu vreo 900 de copaci, pavilioane de lucru în aer liber cu prize și WiFi, pumptrack, pistă de biciclete, mese de ping-pong și de teqball și hamace.",
+   "when": "oricând; ziua dacă vrei să lucrezi afară",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "free": true,
+   "sources": [
+    "https://www.economica.net/s-a-deschis-parcul-liniei-2-singurul-din-bucuresti-cu-padure-urbana-si-spatii-de-lucru-in-aer-liber_743311.html",
+    "https://buletin.de/bucuresti/al-doilea-tronson-din-parcul-liniei-de-3500-mp-a-fost-deschis-publicului-zona-are-spatii-de-lucru-in-aer-liber-cu-prize-si-wifi/",
+    "https://greencommunity.ro/parcul-liniei-faza-2-inaugurare-bucuresti-sector-6/",
+    "https://www.g4media.ro/parcul-liniei-faza-3-solutii-bazate-natura-militari.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Insula Lacul Morii",
+   "osm_id": "w298267725",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.45963,
+   "lon": 26.0293,
+   "city": "București",
+   "story": "E deschisă din 18 septembrie 2026, după zeci de ani de abandon: 3,4 ha cu alei care coboară până la apă, piste de alergare și o zonă de plajă unde poți sta la soare (scăldatul e interzis). Are și pontoane pentru caiace, bărci și hidrobiciclete.",
+   "when": "la apus, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://www.radioromania.ro/stiri-locale/dupa-lucrari-de-amenajare-insula-lacul-morii-se-deschide-pentru-promenada-id217843.html",
+    "https://www.forbes.ro/insula-lacul-morii-34-hectare-reamenajate-in-parc-urban-investitie-de-59-mil-lei-520552",
+    "https://ziare.com/insula-lacul-morii/redeschisa-plaja-ciprian-ciucu-2036217",
+    "https://www.g4media.ro/insula-lacului-morii-reamenajata-pontoane-caiace-taxi-apa.html",
+    "https://www.bucuresti.ro/articole/insula-lacului-morii-se-deschide-dupa-zeci-de-ani-de-semi-abandon-cum-arata-si-care-sunt-regulile-pentru-vizitatori-1924"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Grădina Icoanei",
+   "osm_id": "w62743951",
+   "cat": "natura",
+   "kind": "Grădină",
+   "lat": 44.443503,
+   "lon": 26.103709,
+   "city": "București",
+   "story": "O grădină mică și cochetă din 1873, la doi pași de Piața Romană, cu un lac pe care stau rațe și lebede. E bună pentru o plimbare scurtă în doi, pe care o poți continua pe străzile cu vile frumoase din cartierul Icoanei.",
+   "when": "după-amiaza, ca oprire scurtă",
+   "vibes": [
+    "Chill"
+   ],
+   "free": true,
+   "sources": [
+    "https://www.bucuresti.ro/articole/gradina-icoanei-parcul-mic-si-cochet-din-centrul-capitalei-89",
+    "https://b365.ro/icoanei-cartierul-perfect-pentru-plimbare-mahalaua-de-unde-izvora-bucurestioara-cu-apa-greu-mirositoare-acum-zona-cu-cele-mai-frumoase-si-scumpe-case-din-bucuresti-520519/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Domeniul Știrbey",
+   "osm_id": "w88337886",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.565913,
+   "lon": 25.938586,
+   "city": "Buftea",
+   "story": "Parc vechi de 24 ha pe malul lacului Buftea, cu Palatul Știrbey, turnul de apă proiectat de Anghel Saligny și un lac interior cu rațe, gâște și lebede. Are cafenea pe malul lacului și restaurant. Intri vineri–duminică, 12–24, cu un voucher de 50 lei pe care îl consumi la restaurant. În august aici se ține festivalul Summer Well.",
+   "when": "vineri–duminică, după-amiaza",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "free": false,
+   "sources": [
+    "https://www.romaniamama.ro/turism/domeniul-stirbey--program-de-vizitare_3972.html",
+    "https://wel.ro/atractie/domeniul-stirbey/",
+    "https://buletin.de/bucuresti/summer-well-2025-incepe-vineri-la-buftea-programul-complet/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Dendrologic Chitila",
+   "osm_id": "w395675082",
+   "cat": "natura",
+   "kind": "Parc dendrologic",
+   "lat": 44.506966,
+   "lon": 25.99589,
+   "city": "Chitila",
+   "story": "Parc de vreo 3 ha cu arbori și arbuști decorativi rari, pe malul lacului Chitila. Mergi pe mal pe jos, cu bicicleta sau cu trotineta (are pistă de biciclete), iar pentru copii e și o tiroliană. Intrarea e gratuită, între 07 și 22.",
+   "when": "în weekend, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://danaparaschiv.com/parcul-dendrologic-chitila/",
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-dendrologic-chitila-716"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Edenland Park",
+   "osm_id": "w402867798",
+   "cat": "natura",
+   "kind": "Parc de aventură",
+   "lat": 44.651942,
+   "lon": 26.101107,
+   "city": "Balotești",
+   "story": "Parc de aventură în pădurea de la Balotești, cu trasee prin copaci de la ușor la greu, perete de escaladă, paintball și plimbări călare. Plătești intrarea în parc, iar fiecare activitate separat.",
+   "when": "în weekend, din primăvară până toamna",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "free": false,
+   "sources": [
+    "https://www.edenland.ro/activities-costs/",
+    "https://www.edenland.ro/tree-courses/",
+    "https://www.tripadvisor.com/Attraction_Review-g4324155-d7927643-Reviews-Edenland_Park-Balotesti_Ilfov_County_Southern_Romania.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Extreme Park Cernica",
+   "osm_id": "w360140661",
+   "cat": "natura",
+   "kind": "Parc de aventură",
+   "lat": 44.436785,
+   "lon": 26.243628,
+   "city": "Cernica",
+   "story": "Parc de aventură în pădurea Cernica, cu trasee prin copaci marcate pe culori după dificultate și tir cu arcul. Atracția principală e tiroliana lungă peste lacul Cernica.",
+   "when": "în weekend, vara",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "free": false,
+   "sources": [
+    "https://extremepark.ro/",
+    "https://www.seebucharest.ro/extreme-park-cernica/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Pădurea Snagov",
+   "osm_id": "w85952406",
+   "cat": "natura",
+   "kind": "Pădure",
+   "lat": 44.721021,
+   "lon": 26.140236,
+   "city": "Snagov",
+   "story": "Rezervație de vreo 1.470 ha lângă lacul Snagov, cu stejari vechi și o zonă rară de fagi, neobișnuiți la câmpie. Fundația Snagov a marcat trasee: de exemplu BI01, un circuit de 9,2 km pe drumuri forestiere, marcat cu buline portocalii. În rezervație se merge doar pe traseele marcate.",
+   "when": "în weekend, primăvara și toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://fundatiasnagov.ro/p-mediu/trasee-eco-turistice/traseu-bi01/",
+    "https://fundatiasnagov.ro/p-mediu/trasee-eco-turistice/",
+    "https://ro.wikipedia.org/wiki/P%C4%83durea_Snagov"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Grădina Botanică „Dimitrie Brândză”",
+   "osm_id": null,
+   "cat": "natura",
+   "kind": "Grădină botanică",
+   "lat": 44.4376702,
+   "lon": 26.0633499,
+   "city": "București",
+   "story": "Grădina Universității din București: alei printre plante din toată lumea, o grădină japoneză și sere cu palmieri și orhidee, plus Pavilionul Pădurea Tropicală. Biletul e 15 lei din 16 martie până pe 15 octombrie (08–20); iarna costă 8 lei și programul e 09–15:30. Serele au program separat, mai scurt. Studenții UB intră gratis.",
+   "when": "dimineața sau după-amiaza, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "free": false,
+   "sources": [
+    "https://stirileprotv.ro/stiri/travel/locul-din-bucuresti-unde-uiti-ca-esti-in-oras-gasesti-palmieri-orhidee-si-o-gradina-japoneza-pentru-un-bilet-de-doar-15-lei.html",
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-gradina-botanica-dimitrie-brandza-649"
+   ],
+   "confidence": "high",
+   "coord_source": "osm (w23557199, centrul grădinii; intrarea e pe Șos. Cotroceni)"
+  },
+  {
+   "name": "Pădurea Băneasa",
+   "osm_id": null,
+   "cat": "natura",
+   "kind": "Pădure",
+   "lat": 44.517083,
+   "lon": 26.104408,
+   "city": "București",
+   "story": "Pădurea de la marginea de nord a orașului are trei trasee oficiale de bicicletă: Albastru (4 km, pe alei asfaltate), Galben (6,5 km) și Roșu (7 km, pe poteci naturale). Ai locuri de picnic cu mese și bănci, iar la margine e Grădina Zoologică.",
+   "when": "în weekend, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "free": true,
+   "sources": [
+    "https://calatoruldigital.ro/2025/08/trasee-biciclete-padurea-baneasa/",
+    "https://b365.ro/tur-ghidat-in-padurea-baneasa-organizat-de-asociatia-parcul-natural-bucuresti-e-gratuit-si-e-in-weekend-in-limita-locurilor-disponibile-585039/",
+    "https://danaparaschiv.com/padurea-baneasa-un-colt-de-rai-langa-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm (w369588750, Grădina Zoologică din pădure)"
+  },
+  {
+   "name": "Pădurea și lacul Cernica",
+   "osm_id": null,
+   "cat": "natura",
+   "kind": "Pădure",
+   "lat": 44.433865,
+   "lon": 26.256992,
+   "city": "Cernica",
+   "story": "Pădure întinsă de-a lungul lacului Cernica, arie de protecție pentru păsări din 2011, la 15–20 km de centru. Are poteci late, bune de plimbare și de bicicletă, locuri de picnic, iar pe insula din lac e Mănăstirea Cernica.",
+   "when": "în weekend, primăvara și toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "free": true,
+   "sources": [
+    "https://ilfovul.ro/padurea-cernica-natura-margine-bucuresti/",
+    "https://b365.ro/sapte-paduri-langa-bucuresti-pentru-plimbare-si-picnic-563347/",
+    "https://www.outdooractive.com/en/travel-guide/lacul-cernica/54093217/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm (w240611280, Mănăstirea Cernica, pe malul/insula lacului)"
+  },
+  {
+   "name": "Pădurea Pustnicu",
+   "osm_id": null,
+   "cat": "natura",
+   "kind": "Pădure",
+   "lat": 44.472272,
+   "lon": 26.307466,
+   "city": "Brănești",
+   "story": "Pădure sălbatică pe malul lacului Pasărea. „Ruta 10” e un traseu de bicicletă de 10 km pe drumuri forestiere (are și o variantă de 5 km) care pornește din parcarea restaurantului Casa Pustnicu. Mai ai o potecă pe malul lacului, bună de alergat, și câteva locuri de grătar. După ploaie e noroi.",
+   "when": "în weekend, pe vreme uscată",
+   "vibes": [
+    "Aer liber",
+    "Competitiv",
+    "Chill"
+   ],
+   "free": true,
+   "sources": [
+    "https://www.g4media.ro/video-primul-traseu-pentru-biciclete-amenajat-exclusiv-in-padure-in-zona-bucuresti-ilfov-inaugurat-ruta-10-a-fost-amenajata-in-padurea-pustnicu.html",
+    "https://ski-outdoor.ro/outdoor/2022/07/28/traseu-de-biciclete-pe-drumuri-forestiere-in-padurea-pustnicu-ilfov/",
+    "https://www.bucuresti.ro/articole/tur-ghidat-in-afara-bucurestiului-5-locuri-mai-putin-stiute-la-doar-30-de-minute-de-capitala-padurea-ascunsa-parcul-cu-arbori-rari-si-schitul-de-pe-malul-lacului-1750"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm (n4101582596, Restaurant Casa Pustnicu = startul Rutei 10)"
+  },
+  {
+   "name": "Lacul Snagov",
+   "osm_id": null,
+   "cat": "natura",
+   "kind": "Lac",
+   "lat": 44.707738,
+   "lon": 26.173835,
+   "city": "Snagov",
+   "story": "Din Snagov Sat pleacă plimbări de o oră cu barca prin rezervația naturală a lacului, cu ghid audio. Pe insula din mijloc e Mănăstirea Snagov, din secolul al XIV-lea, unde legenda spune că ar fi îngropat Vlad Țepeș; pe malul ei se poate opri barca. În bazele de agrement de pe mal închiriezi bărci cu vâsle, caiace sau SUP.",
+   "when": "vara, în weekend",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "free": false,
+   "sources": [
+    "https://buletin.de/bucuresti/povestiri-la-bordul-vaporasului-pe-lacul-snagov-cat-costa-plimbarile-pe-apa-insotite-de-ghiduri-audio-prin-rezervatia-naturala/",
+    "https://snagov.ro/services/circuite-plimbari-ture/circuit-vaporas/",
+    "https://ilfovul.ro/lacul-snagov-ghid-complet/",
+    "https://blog.travelminit.ro/lacul-snagov-relaxare-natura-la-doar-40-de-kilometri-de-bucuresti/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm (n2634652271, Șos. Snagov 78, Snagov Sat — punct aproximativ de acces, nu debarcaderul exact)"
+  }
+ ]
+}

@@ -1,0 +1,3850 @@
+[
+ {
+  "name": "Caru' cu Bere",
+  "osm_id": "n916075216",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, berărie",
+  "lat": 44.432001,
+  "lon": 26.098106,
+  "city": "București",
+  "story": "Berăria pornită în 1879 stă din 1899 în clădirea neogotică de pe Stavropoleos, cu vitralii, bolți și pereți pictați. Comanzi mici, ciolan și berea casei.",
+  "when": "oricând; seara se umple, rezervă",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură",
+   "Fun"
+  ],
+  "price": 120,
+  "sources": [
+   "OSM n916075216",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/restaurante-bucuresti-2025-cele-mai-bune-restaurante-din-bucuresti-care-merita-vizitate_3623727.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Hanu' lui Manuc",
+  "osm_id": "n2486324769",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească",
+  "lat": 44.42972,
+  "lon": 26.102347,
+  "city": "București",
+  "story": "Han ridicat în 1808 de negustorul armean Manuc Bei; aici s-au purtat în 1812 tratativele pentru Pacea de la București. Vara mănânci în curtea interioară, sub galeriile de lemn.",
+  "when": "prânz sau seara; vara în curte",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură",
+   "Aer liber"
+  ],
+  "price": 130,
+  "sources": [
+   "OSM n2486324769",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Capșa",
+  "osm_id": "n3078194005",
+  "cat": "desert",
+  "kind": "Cofetărie",
+  "cuisine": "cofetărie, românească",
+  "lat": 44.435388,
+  "lon": 26.09814,
+  "city": "București",
+  "story": "Casa Capșa, deschisă pe Calea Victoriei în 1852, e locul unde s-a inventat în 1920 tortul Joffre, în onoarea mareșalului francez. Vii pentru o felie de Joffre și un pic de istorie.",
+  "when": "după-amiaza, la o prăjitură",
+  "vibes": [
+   "Cultură",
+   "Chill"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n3078194005",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm",
+  "note": "Cofetăria/restaurantul hotelului Capșa; programul sălii poate varia."
+ },
+ {
+  "name": "Casa Doina",
+  "osm_id": "w277782378",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească",
+  "lat": 44.45891,
+  "lon": 26.083394,
+  "city": "București",
+  "story": "Restaurant cu tradiție pe Șoseaua Kiseleff, într-o vilă veche cu grădină mare sub copaci. Bucătărie românească clasică, bună pentru o masă cu familia sau o seară mai elegantă.",
+  "when": "seara; vara în grădină",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură",
+   "Aer liber"
+  ],
+  "price": 180,
+  "sources": [
+   "OSM w277782378",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Hanu' Berarilor – Casa Elena Lupescu",
+  "osm_id": "n2476458605",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, berărie",
+  "lat": 44.439672,
+  "lon": 26.123848,
+  "city": "București",
+  "story": "Berărie într-o vilă interbelică ce poartă numele Elenei Lupescu, celebra iubită a regelui Carol al II-lea. Mâncare românească și bere la terasă.",
+  "when": "seara, cu gașca",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură",
+   "Fun"
+  ],
+  "price": 110,
+  "sources": [
+   "OSM n2476458605",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Restaurantul Vatra",
+  "osm_id": "n2994764233",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească",
+  "lat": 44.435325,
+  "lon": 26.09458,
+  "city": "București",
+  "story": "Restaurant românesc la doi pași de Cișmigiu, cu decor rustic și meniu de acasă: ciorbe, sarmale, papanași.",
+  "when": "prânz sau cină",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 90,
+  "sources": [
+   "OSM n2994764233",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Lacrimi și Sfinți",
+  "osm_id": "n3414077420",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească modernă",
+  "lat": 44.430536,
+  "lon": 26.102866,
+  "city": "București",
+  "story": "Bucătărie românească reinterpretată, în Centrul Vechi, într-un decor cu obiecte vechi adunate de prin țară. Bun loc să le arăți prietenilor din afară cum mâncăm noi.",
+  "when": "seara, cu rezervare",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură"
+  ],
+  "price": 150,
+  "sources": [
+   "OSM n3414077420",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Zexe Zahana",
+  "osm_id": "n2483551207",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească",
+  "lat": 44.46122,
+  "lon": 26.08683,
+  "city": "București",
+  "story": "Un clasic pentru mâncare românească gătită serios, pe Bulevardul Aviatorilor: ciorbe, tocănițe și rețete vechi boierești.",
+  "when": "prânz sau cină",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 140,
+  "sources": [
+   "OSM n2483551207",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "La Mama – Clubul Țăranului",
+  "osm_id": "n2503489527",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească",
+  "lat": 44.454387,
+  "lon": 26.083092,
+  "city": "București",
+  "story": "Localul La Mama de lângă Muzeul Țăranului Român, cu țesături și obiecte țărănești pe pereți. Mâncare românească sățioasă la preț de student.",
+  "when": "prânz, sau înainte/după muzeu",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură",
+   "Chill"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n2503489527",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "La Mama Delea Veche",
+  "osm_id": "n979620393",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească",
+  "lat": 44.432439,
+  "lon": 26.129388,
+  "city": "București",
+  "story": "Lanțul La Mama, cu mâncare românească gătită și prețuri mici, aici în zona Delea Veche–Muncii.",
+  "when": "prânz sau cină ieftină",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n979620393",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Restaurantul Militar",
+  "osm_id": "n2468478918",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, internațională",
+  "lat": 44.434962,
+  "lon": 26.09702,
+  "city": "București",
+  "story": "Restaurantul din Cercul Militar Național, palatul ridicat între 1911 și 1923 pe locul fostei mănăstiri Sărindar. Mănânci în săli cu tavane înalte sau, vara, în grădină.",
+  "when": "prânz; vara seara în grădină",
+  "vibes": [
+   "Cultură",
+   "Mâncare bună",
+   "Aer liber"
+  ],
+  "price": 110,
+  "sources": [
+   "OSM n2468478918",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Casa Oamenilor de Știință",
+  "osm_id": "n1768893912",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "internațională",
+  "lat": 44.445791,
+  "lon": 26.099441,
+  "city": "București",
+  "story": "Vilă istorică din Piața Lahovari cu restaurant și grădină liniștită, ascunsă de agitația de pe Magheru.",
+  "when": "seara; vara în grădină",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Cultură"
+  ],
+  "price": 130,
+  "sources": [
+   "OSM n1768893912",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Terasa Obor",
+  "osm_id": "n6467827485",
+  "cat": "mancare",
+  "kind": "Terasă",
+  "cuisine": "mici, grătar",
+  "lat": 44.450331,
+  "lon": 26.129354,
+  "city": "București",
+  "story": "Mici la grătar și bere la halbă lângă Piața Obor – ritualul bucureștean de sâmbătă după cumpărături.",
+  "when": "weekend la prânz",
+  "vibes": [
+   "Mâncare bună",
+   "Fun",
+   "Aer liber"
+  ],
+  "price": 40,
+  "sources": [
+   "OSM n6467827485",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Food Bazaar Matache",
+  "osm_id": "n13104418691",
+  "cat": "mancare",
+  "kind": "Food market",
+  "cuisine": "street food, mai multe tarabe",
+  "lat": 44.44519,
+  "lon": 26.081028,
+  "city": "București",
+  "story": "Food hall în Hala Matache, refăcută lângă Gara de Nord: mai multe tarabe de street food sub același acoperiș, bun când fiecare vrea altceva.",
+  "when": "prânz sau seara cu gașca",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n13104418691",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Casa Jienilor",
+  "osm_id": "w563922172",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, oltenească",
+  "lat": 44.439119,
+  "lon": 26.13003,
+  "city": "București",
+  "story": "Mâncare oltenească în porții uriașe și la prețuri mici, recomandată des printre localurile ieftine bune din oraș.",
+  "when": "prânz",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM w563922172",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "KAIAMO",
+  "osm_id": null,
+  "cat": "mancare",
+  "kind": "Fine dining",
+  "cuisine": "românească experimentală",
+  "lat": 44.464104,
+  "lon": 26.088929,
+  "city": "București",
+  "story": "Bucătăria românească experimentală a chef-ului Radu Ionescu: 3 toques Gault&Millau (15 puncte), meniuri de degustare sezoniere și peste 200 de etichete de vin. Pentru o seară specială.",
+  "when": "seara, cu rezervare",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură"
+  ],
+  "price": null,
+  "sources": [
+   "https://ro.gaultmillau.com/restaurant/kaiamo?locale=ro-RO",
+   "https://ialoc.ro/restaurante-bucuresti/kaiamo-rezervari-2992",
+   "https://www.stiripesurse.ro/restaurante-bucuresti-2025-cele-mai-bune-restaurante-din-bucuresti-care-merita-vizitate_3623727.html"
+  ],
+  "confidence": "high",
+  "coord_source": "maps",
+  "note": "Nu e în OSM. Adresa: Strada Ermil Pangrati 30A (zona Aviatorilor). Coordonate din fișa Maps citată în rezultatele de căutare."
+ },
+ {
+  "name": "NOUA. Bucătărie Românească",
+  "osm_id": "n13706030501",
+  "cat": "mancare",
+  "kind": "Fine dining",
+  "cuisine": "românească modernă",
+  "lat": 44.43845,
+  "lon": 26.123359,
+  "city": "București",
+  "story": "Restaurantul chef-ului Alex Petricean (Chef of the Year Gault&Millau 2018), cu un meniu care te poartă prin regiunile României.",
+  "when": "seara, cu rezervare",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură"
+  ],
+  "price": null,
+  "sources": [
+   "OSM n13706030501",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://restograf.ro/cele-mai-bune-restaurante-fine-dining-din-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Mace",
+  "osm_id": "n11067430934",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "mediteraneană, levantină",
+  "lat": 44.441167,
+  "lon": 26.09807,
+  "city": "București",
+  "story": "Restaurantul chef-ului Joseph Hadad de lângă Ateneu, cu bucătărie mediteraneană-levantină.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": null,
+  "sources": [
+   "OSM n11067430934",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://restograf.ro/cele-mai-bune-restaurante-fine-dining-din-bucuresti/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Le Bab (Calea Victoriei)",
+  "osm_id": "n7613023113",
+  "cat": "mancare",
+  "kind": "Street food",
+  "cuisine": "kebab gourmet, levantină",
+  "lat": 44.431999,
+  "lon": 26.097625,
+  "city": "București",
+  "story": "Kebab gourmet din familia lui Joseph Hadad: street food levantin făcut cu grijă de restaurant, la preț de shaorma bună.",
+  "when": "prânz sau noaptea târziu",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n7613023113",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Le Bab (Charles de Gaulle)",
+  "osm_id": "n11078411661",
+  "cat": "mancare",
+  "kind": "Street food",
+  "cuisine": "kebab gourmet, levantină",
+  "lat": 44.465499,
+  "lon": 26.085484,
+  "city": "București",
+  "story": "Același kebab gourmet Le Bab, în Piața Charles de Gaulle, la intrarea spre Herăstrău.",
+  "when": "prânz, înainte de parc",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n11078411661",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Simbio",
+  "osm_id": "n3404292993",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "europeană, românească",
+  "lat": 44.43501,
+  "lon": 26.111919,
+  "city": "București",
+  "story": "Bistro într-o casă veche de pe strada Negustori, cu terasă în curte; meniu românesc-european și brunch bun în weekend.",
+  "when": "brunch în weekend; seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill",
+   "Aer liber"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM n3404292993",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Shift",
+  "osm_id": "n4243839491",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "burgeri, europeană",
+  "lat": 44.444936,
+  "lon": 26.101631,
+  "city": "București",
+  "story": "Pub-bistro în zona Armenească, cu terasă în grădina unei vile, cunoscut pentru burgeri și atmosfera relaxată.",
+  "when": "seara, cu gașca",
+  "vibes": [
+   "Mâncare bună",
+   "Chill",
+   "Aer liber"
+  ],
+  "price": 90,
+  "sources": [
+   "OSM n4243839491",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Aubergine",
+  "osm_id": "n4957277421",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "mediteraneană",
+  "lat": 44.431115,
+  "lon": 26.09991,
+  "city": "București",
+  "story": "Restaurant mediteraneean pe strada Smârdan, un colț mai liniștit al Centrului Vechi.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 110,
+  "sources": [
+   "OSM n4957277421",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Energiea",
+  "osm_id": "n2587540738",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "europeană",
+  "lat": 44.43329,
+  "lon": 26.094903,
+  "city": "București",
+  "story": "Bistro mare pe Ion Brezoianu, la marginea Cișmigiului, cu bucătărie europeană și terasă.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM n2587540738",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Beca's Kitchen",
+  "osm_id": "n3807892722",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "europeană, de sezon",
+  "lat": 44.447714,
+  "lon": 26.104042,
+  "city": "București",
+  "story": "Restaurant mic, ca o sufragerie, pe Mihai Eminescu, cu meniu scurt care se schimbă după sezon.",
+  "when": "seara, cu rezervare",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 140,
+  "sources": [
+   "OSM n3807892722",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Cambun",
+  "osm_id": "w1235220017",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească modernă",
+  "lat": 44.461359,
+  "lon": 26.098525,
+  "city": "București",
+  "story": "Deschis în 2025 pe Constantin Aricescu, în Floreasca, printre locurile noi „cu povești românești” din ghidurile de anul trecut.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură"
+  ],
+  "price": 140,
+  "sources": [
+   "OSM w1235220017",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/60-locuri-noi-bucuresti-deschise-in-2025/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Gram Bistro",
+  "osm_id": "n10951615129",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "brunch, europeană",
+  "lat": 44.452403,
+  "lon": 26.081706,
+  "city": "București",
+  "story": "Bistro iubit pentru brunch și farfurii de bistro bine făcute, lângă Piața Victoriei.",
+  "when": "brunch în weekend; prânz",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 80,
+  "sources": [
+   "OSM n10951615129",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Rawdia",
+  "osm_id": "n11582993011",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "raw vegan",
+  "lat": 44.46117,
+  "lon": 26.099155,
+  "city": "București",
+  "story": "Restaurant raw vegan în Floreasca: preparate crude, colorate, și deserturi fără coacere.",
+  "when": "prânz",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 80,
+  "sources": [
+   "OSM n11582993011",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "NOR Sky Casual Restaurant",
+  "osm_id": "n7090938385",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "internațională",
+  "lat": 44.477904,
+  "lon": 26.104781,
+  "city": "București",
+  "story": "La etajul 36 al Sky Tower, cea mai înaltă clădire din București: priveliște panoramică peste tot orașul, la cină sau la un cocktail.",
+  "when": "seara, la apus",
+  "vibes": [
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 180,
+  "sources": [
+   "OSM n7090938385",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://restograf.ro/restaurante-la-inaltime-in-bucuresti-11-locuri-cu-vedere-spectaculoasa-a-orasului/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Aria TNB",
+  "osm_id": "n9405774196",
+  "cat": "mancare",
+  "kind": "Rooftop",
+  "cuisine": "internațională, cocktailuri",
+  "lat": 44.43672,
+  "lon": 26.103215,
+  "city": "București",
+  "story": "Pe acoperișul Teatrului Național: peste 1.200 mp de terasă cu vedere spre Universitate și Centrul Vechi.",
+  "when": "seara, la apus (sezonul cald)",
+  "vibes": [
+   "Aer liber",
+   "Chill",
+   "Fun"
+  ],
+  "price": 120,
+  "sources": [
+   "OSM n9405774196",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://restograf.ro/restaurante-la-inaltime-in-bucuresti-11-locuri-cu-vedere-spectaculoasa-a-orasului/",
+   "https://www.bucuresti.ro/articole/rooftop-bars-in-bucuresti-8-locuri-unde-merita-sa-prinzi-apusul-264"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Biutiful by the Lake",
+  "osm_id": "w943937960",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "internațională",
+  "lat": 44.477197,
+  "lon": 26.086835,
+  "city": "București",
+  "story": "Restaurant cu terasă chiar pe malul lacului Herăstrău, bun pentru apus și cină afară vara.",
+  "when": "seara, vara",
+  "vibes": [
+   "Aer liber",
+   "Chill"
+  ],
+  "price": 150,
+  "sources": [
+   "OSM w943937960",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Taverna Sârbului (Herăstrău)",
+  "osm_id": "w252858333",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "sârbească, grătar",
+  "lat": 44.48284,
+  "lon": 26.067723,
+  "city": "București",
+  "story": "Grătare sârbești la jar, porții mari și terasă mare în zona Parcului Herăstrău.",
+  "when": "seara cu gașca; vara pe terasă",
+  "vibes": [
+   "Mâncare bună",
+   "Aer liber",
+   "Fun"
+  ],
+  "price": 120,
+  "sources": [
+   "OSM w252858333",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Casa di David",
+  "osm_id": "n2099385681",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "italiană, internațională",
+  "lat": 44.475473,
+  "lon": 26.089356,
+  "city": "București",
+  "story": "Restaurant elegant în Parcul Herăstrău, cu terasă spre lac; pentru ocazii speciale.",
+  "when": "seara, ocazii speciale",
+  "vibes": [
+   "Aer liber",
+   "Mâncare bună"
+  ],
+  "price": null,
+  "sources": [
+   "OSM n2099385681",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Taverna Georgia",
+  "osm_id": "n11755890269",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "georgiană",
+  "lat": 44.440371,
+  "lon": 26.112242,
+  "city": "București",
+  "story": "Primul restaurant georgian autentic din București: khachapuri, khinkali și vin georgian.",
+  "when": "seara cu gașca",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM n11755890269",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Jeonjuu",
+  "osm_id": "n10775253395",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "coreeană, grătar coreean",
+  "lat": 44.430998,
+  "lon": 26.099488,
+  "city": "București",
+  "story": "Grătar coreean la masă, în Centrul Vechi: îți gătești singur carnea pe grătarul din mijlocul mesei.",
+  "when": "seara cu gașca",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 130,
+  "sources": [
+   "OSM n10775253395",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Seoul Korean Restaurant",
+  "osm_id": "n11088563306",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "coreeană",
+  "lat": 44.469147,
+  "lon": 26.071536,
+  "city": "București",
+  "story": "Restaurant coreean în zona Domenii, cu bibimbap, supe picante și grătar.",
+  "when": "prânz sau cină",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM n11088563306",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Toan's (Centrul Vechi)",
+  "osm_id": "n8660344252",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "vietnameză",
+  "lat": 44.433444,
+  "lon": 26.100732,
+  "city": "București",
+  "story": "Bistro vietnamez cu pho, bun bo și rulouri proaspete, rapid și ieftin, pe Ion Ghica.",
+  "when": "prânz sau cină rapidă",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n8660344252",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Toan's (Militari)",
+  "osm_id": "n14130976246",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "vietnameză",
+  "lat": 44.434109,
+  "lon": 26.010892,
+  "city": "București",
+  "story": "Pho și preparate vietnameze de la Toan's, în Militari, pe Iuliu Maniu.",
+  "when": "prânz sau cină rapidă",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n14130976246",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Toan's (Titan)",
+  "osm_id": "w162553157",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "vietnameză",
+  "lat": 44.434311,
+  "lon": 26.160738,
+  "city": "București",
+  "story": "Pho și preparate vietnameze de la Toan's, pe Nicolae Grigorescu, aproape de Parcul IOR.",
+  "when": "prânz sau cină rapidă",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM w162553157",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Pho Thin",
+  "osm_id": "w1224889723",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "vietnameză, pho",
+  "lat": 44.451623,
+  "lon": 26.130151,
+  "city": "București",
+  "story": "Poartă numele celebrei supe Pho Thin din Hanoi; vii pentru un pho fierbinte cu vită, aproape de Obor.",
+  "when": "prânz",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM w1224889723",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "PhoBar",
+  "osm_id": "n13917650801",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "vietnameză",
+  "lat": 44.447021,
+  "lon": 26.110964,
+  "city": "București",
+  "story": "Bar de pho și street food vietnamez pe Mihai Eminescu.",
+  "when": "prânz sau cină",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n13917650801",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Kanpai",
+  "osm_id": "n3602026798",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "japoneză",
+  "lat": 44.462138,
+  "lon": 26.09928,
+  "city": "București",
+  "story": "Restaurant japonez în Dorobanți, cu sushi și preparate calde, pentru o cină japoneză făcută serios.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 160,
+  "sources": [
+   "OSM n3602026798",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "YUKI japanese home dining",
+  "osm_id": "n2839098033",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "japoneză",
+  "lat": 44.460798,
+  "lon": 26.095208,
+  "city": "București",
+  "story": "„Japanese home dining”: mâncare japoneză gătită ca acasă, într-un spațiu mic din Floreasca.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 120,
+  "sources": [
+   "OSM n2839098033",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Zensushi Dorobanți",
+  "osm_id": "n14074896201",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "japoneză, sushi",
+  "lat": 44.461711,
+  "lon": 26.096391,
+  "city": "București",
+  "story": "Unul dintre cele mai cunoscute nume de sushi din București, din aceeași familie cu noul Oyabun (2026).",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 130,
+  "sources": [
+   "OSM n14074896201",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://zilesinopti.ro/2026/08/10/locuri-noi-in-bucuresti-august-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Sagakura",
+  "osm_id": "n10951615131",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "japoneză",
+  "lat": 44.452406,
+  "lon": 26.081239,
+  "city": "București",
+  "story": "Restaurant japonez lângă Piața Victoriei, pe Nicolae Titulescu, apărut în topurile 2025–2026.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 150,
+  "sources": [
+   "OSM n10951615131",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Tom Yum",
+  "osm_id": "n11215704038",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "thailandeză",
+  "lat": 44.434075,
+  "lon": 26.097854,
+  "city": "București",
+  "story": "Mâncare thailandeză în centru: supa tom yum, pad thai și curry-uri.",
+  "when": "prânz sau cină",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 80,
+  "sources": [
+   "OSM n11215704038",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Machhapuchhre",
+  "osm_id": "n11462228739",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "nepaleză, indiană",
+  "lat": 44.451895,
+  "lon": 26.077347,
+  "city": "București",
+  "story": "Restaurant nepalez numit după muntele sacru Machhapuchhre din Himalaya: momo (găluște aburite) și curry-uri.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 80,
+  "sources": [
+   "OSM n11462228739",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Haveli",
+  "osm_id": "n2994961690",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "indiană",
+  "lat": 44.444927,
+  "lon": 26.11771,
+  "city": "București",
+  "story": "Restaurant indian cu tandoori, curry-uri și naan, în zona Moșilor.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 90,
+  "sources": [
+   "OSM n2994961690",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Taj",
+  "osm_id": "n2500813827",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "indiană",
+  "lat": 44.422972,
+  "lon": 26.074139,
+  "city": "București",
+  "story": "Restaurant indian pe Calea 13 Septembrie, aproape de Palatul Parlamentului.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 90,
+  "sources": [
+   "OSM n2500813827",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "MAT (Al Pastor by MAT)",
+  "osm_id": "n11584831869",
+  "cat": "mancare",
+  "kind": "Street food",
+  "cuisine": "mexicană, tacos",
+  "lat": 44.444015,
+  "lon": 26.095498,
+  "city": "București",
+  "story": "Tacos al pastor ca în Mexic, lângă Piața Amzei.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n11584831869",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Taqueria El Torito",
+  "osm_id": "n6896538217",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "mexicană",
+  "lat": 44.428394,
+  "lon": 26.094526,
+  "city": "București",
+  "story": "Taqueria aproape de Palatul Parlamentului: tacos, quesadillas și margarita.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 80,
+  "sources": [
+   "OSM n6896538217",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Casa España by Alioli",
+  "osm_id": "n1974128904",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "spaniolă, tapas",
+  "lat": 44.451622,
+  "lon": 26.09568,
+  "city": "București",
+  "story": "Tapas, paella și vin spaniol în zona Dorobanți, de la echipa Alioli.",
+  "when": "seara cu gașca",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 140,
+  "sources": [
+   "OSM n1974128904",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Beyti",
+  "osm_id": "w1490427698",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "turcească, kebab",
+  "lat": 44.458402,
+  "lon": 26.106576,
+  "city": "București",
+  "story": "Restaurantul turcesc din Floreasca devenit legendă pentru kebab la grătar, pide și porții mari.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 90,
+  "sources": [
+   "OSM w1490427698",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Divan",
+  "osm_id": "n7106605879",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "turcească",
+  "lat": 44.470822,
+  "lon": 26.10923,
+  "city": "București",
+  "story": "Restaurant turcesc cu meze, kebab și baclava, pe Barbu Văcărescu.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 110,
+  "sources": [
+   "OSM n7106605879",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Greekos",
+  "osm_id": "n8565806982",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "grecească",
+  "lat": 44.429536,
+  "lon": 26.139466,
+  "city": "București",
+  "story": "Taverna grecească cu gyros, souvlaki și saganaki, pe Mihai Bravu.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 80,
+  "sources": [
+   "OSM n8565806982",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Mesogios Primăverii",
+  "osm_id": "n9007779916",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "grecească, pește",
+  "lat": 44.470456,
+  "lon": 26.089476,
+  "city": "București",
+  "story": "Restaurant grecesc cu pește și fructe de mare, în cartierul Primăverii.",
+  "when": "seara, ocazii",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 220,
+  "sources": [
+   "OSM n9007779916",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Suzana Ribs & Wings",
+  "osm_id": "n2351339222",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "americană, coaste",
+  "lat": 44.42143,
+  "lon": 26.086661,
+  "city": "București",
+  "story": "Coaste și aripioare cu sosuri, la Palatul Bragadiru de pe Calea Rahovei, fosta reședință a familiei de berari Bragadiru.",
+  "when": "seara cu gașca",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM n2351339222",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Bocca Lupo",
+  "osm_id": "n3105375696",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "italiană",
+  "lat": 44.433805,
+  "lon": 26.077947,
+  "city": "București",
+  "story": "Restaurant italian de cartier în Cotroceni.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 110,
+  "sources": [
+   "OSM n3105375696",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Gallo Nero",
+  "osm_id": "n2496044354",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "italiană",
+  "lat": 44.42858,
+  "lon": 26.133682,
+  "city": "București",
+  "story": "Restaurant italian pe Bulevardul Decebal, un clasic al zonei Alba Iulia.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 110,
+  "sources": [
+   "OSM n2496044354",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Animaletto Pizza Bar",
+  "osm_id": "n11669695269",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "pizza napoletană",
+  "lat": 44.448213,
+  "lon": 26.095341,
+  "city": "București",
+  "story": "Singura pizzerie din România inclusă în Top 50 Pizza Europe: pizza napoletană cu margini pufoase, pe strada Visarion.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n11669695269",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://hotnews.ro/weekend-trending-n-bucuresti-10-locuri-unde-gasesti-cele-mai-bune-pizze-din-oras-116882",
+   "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Il Pizzaiolo",
+  "osm_id": "n7169802586",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "pizza napoletană",
+  "lat": 44.432321,
+  "lon": 26.144573,
+  "city": "București",
+  "story": "Pizzerie de cartier lângă Piața Muncii, cu pizzaioli care au lucrat în Napoli, ingrediente aduse din Italia și cuptor cu lemne.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n7169802586",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://hotnews.ro/weekend-trending-n-bucuresti-10-locuri-unde-gasesti-cele-mai-bune-pizze-din-oras-116882",
+   "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Centrale Pizza",
+  "osm_id": "n11068961012",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "pizza napoletană",
+  "lat": 44.443095,
+  "lon": 26.093461,
+  "city": "București",
+  "story": "Pizza napoletană autentică pe Calea Victoriei, care a prins repede la public deși e nouă.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n11068961012",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Fomizza",
+  "osm_id": "n14058359291",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "pizza napoletană",
+  "lat": 44.454952,
+  "lon": 26.081569,
+  "city": "București",
+  "story": "Pizza napoletană cu blat subțire și margini pufoase, pe Ion Mihalache.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n14058359291",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Napoletinii (Tineretului)",
+  "osm_id": "n13017015601",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "pizza napoletană",
+  "lat": 44.415501,
+  "lon": 26.102999,
+  "city": "București",
+  "story": "Pizza napoletană după rețete autentice, aproape de Parcul Tineretului.",
+  "when": "seara, după parc",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n13017015601",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Napoletinii (Vasile Lascăr)",
+  "osm_id": "n12252698101",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "pizza napoletană",
+  "lat": 44.446567,
+  "lon": 26.111429,
+  "city": "București",
+  "story": "Pizza napoletană Napoletinii, pe Vasile Lascăr, în zona Grădina Icoanei.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n12252698101",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Smash Baby",
+  "osm_id": "n11131305330",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "burgeri, smash",
+  "lat": 44.440934,
+  "lon": 26.092497,
+  "city": "București",
+  "story": "Smash burgeri simpli și perfecți: comanzi Baby G, cu cheddar, ceapă, castraveți murați și sosul G de casă.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM n11131305330",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://restograf.ro/cei-mai-buni-burgeri-din-bucuresti/",
+   "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Smashy",
+  "osm_id": "n11511308437",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "burgeri, smash",
+  "lat": 44.432608,
+  "lon": 26.126002,
+  "city": "București",
+  "story": "Smash burger făcut corect: carne presată pe plită fierbinte, crustă caramelizată, interior zemos. Încearcă Truffle Burger.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM n11511308437",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Smashed Burgers",
+  "osm_id": "n13531878203",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "burgeri, smash",
+  "lat": 44.446697,
+  "lon": 26.111455,
+  "city": "București",
+  "story": "Double G: două chiftele Wagyu-Angus, cheddar topit, castraveți murați și sosul casei.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n13531878203",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Burger Van Bistro",
+  "osm_id": "n3096282348",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "burgeri",
+  "lat": 44.436607,
+  "lon": 26.095216,
+  "city": "București",
+  "story": "Printre primii burgeri buni din oraș, între Calea Victoriei și Cișmigiu, cu atmosferă de cartier.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n3096282348",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://restograf.ro/cei-mai-buni-burgeri-din-bucuresti/",
+   "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Burgeria Știrbei",
+  "osm_id": "w232502551",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "burgeri",
+  "lat": 44.439891,
+  "lon": 26.086341,
+  "city": "București",
+  "story": "Și-a făcut numele cu ingrediente bune, rețete gândite și execuție fără greș, pe Știrbei Vodă.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM w232502551",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "The Millenial Burger",
+  "osm_id": "n11582968770",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "burgeri gourmet",
+  "lat": 44.44724,
+  "lon": 26.087316,
+  "city": "București",
+  "story": "Burgeri gourmet la preț accesibil, în Piața Sfinții Voievozi, între Gara de Nord și Grivița.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 45,
+  "sources": [
+   "OSM n11582968770",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/restaurante-bucuresti-2025-cele-mai-bune-restaurante-din-bucuresti-care-merita-vizitate_3623727.html",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Dristor Kebap (Dristor)",
+  "osm_id": "n450520681",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "shaorma",
+  "lat": 44.420319,
+  "lon": 26.137414,
+  "city": "București",
+  "story": "Shaorma de la Dristor e etalonul cu care se compară toate celelalte; ăsta e localul de lângă metroul Dristor.",
+  "when": "oricând, inclusiv noaptea",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "price": 35,
+  "sources": [
+   "OSM n450520681",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ofertebucuresti.ro/unde-mananci-cea-mai-buna-shaorma-din-bucuresti-top-10-locuri-emblematice/",
+   "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Dristor Kebap (Centrul Vechi)",
+  "osm_id": "n1731040881",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "shaorma",
+  "lat": 44.430046,
+  "lon": 26.100283,
+  "city": "București",
+  "story": "Shaorma Dristor în Centrul Vechi, pe Franceză – salvarea de după o seară în oraș.",
+  "when": "noaptea, după ieșit",
+  "vibes": [
+   "Mâncare bună",
+   "Party"
+  ],
+  "price": 35,
+  "sources": [
+   "OSM n1731040881",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ofertebucuresti.ro/unde-mananci-cea-mai-buna-shaorma-din-bucuresti-top-10-locuri-emblematice/",
+   "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Genin Shaorma",
+  "osm_id": "n7038740802",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "shaorma",
+  "lat": 44.454852,
+  "lon": 26.100544,
+  "city": "București",
+  "story": "Alegerea puriștilor și rivalul direct al Dristorului: carne de calitate și ingrediente mereu proaspete, pe Calea Floreasca.",
+  "when": "prânz sau noaptea",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 38,
+  "sources": [
+   "OSM n7038740802",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Socului Kebap (Obor)",
+  "osm_id": "n10230891917",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "shaorma",
+  "lat": 44.449702,
+  "lon": 26.123574,
+  "city": "București",
+  "story": "Socului a ajuns sinonim cu shaorma consistentă și accesibilă; localul din Obor merge perfect după o tură prin piață.",
+  "when": "oricând",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 32,
+  "sources": [
+   "OSM n10230891917",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Shaormeria Băneasa (Aerogării)",
+  "osm_id": "w1218360364",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "shaorma",
+  "lat": 44.494527,
+  "lon": 26.080493,
+  "city": "București",
+  "story": "Legenda shaormei din nordul orașului, căreia i se spune și „La Turcu'”: consistentă și fără pretenții.",
+  "when": "oricând",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 33,
+  "sources": [
+   "OSM w1218360364",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Sharkia",
+  "osm_id": "n2558977793",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "orientală, shaorma",
+  "lat": 44.440952,
+  "lon": 26.09293,
+  "city": "București",
+  "story": "Mâncare orientală foarte bine cotată de clienți (4,8 pe TripAdvisor), în centru.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM n2558977793",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html",
+   "https://www.tripadvisor.com/Restaurants-g294458-zfd10936-Bucharest-Shawarma.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Calif",
+  "osm_id": "n2611043627",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "libaneză, falafel",
+  "lat": 44.441608,
+  "lon": 26.134243,
+  "city": "București",
+  "story": "Falafel și shaorma în stil libanez, în zona Iancului.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 35,
+  "sources": [
+   "OSM n2611043627",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Ali Baba",
+  "osm_id": "n2382674377",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "arăbească, shaorma",
+  "lat": 44.433139,
+  "lon": 26.138554,
+  "city": "București",
+  "story": "Mâncare arăbească și shaorma pe Mihai Bravu, recomandată printre localurile bune și ieftine.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 45,
+  "sources": [
+   "OSM n2382674377",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "HARE",
+  "osm_id": "w809885097",
+  "cat": "mancare",
+  "kind": "Brunch",
+  "cuisine": "brunch, europeană",
+  "lat": 44.466676,
+  "lon": 26.084501,
+  "city": "București",
+  "story": "Restaurant cu grădină lângă Arcul de Triumf, popular pentru brunch-ul de weekend.",
+  "when": "brunch în weekend",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Mâncare bună"
+  ],
+  "price": 80,
+  "sources": [
+   "OSM w809885097",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Matinée Floreasca",
+  "osm_id": "n12074907530",
+  "cat": "mancare",
+  "kind": "Brunch",
+  "cuisine": "mic-dejun, brunch",
+  "lat": 44.460004,
+  "lon": 26.100485,
+  "city": "București",
+  "story": "În Agora Floreasca, unul dintre cele mai bune locuri pentru mic-dejun sau brunch din zonă.",
+  "when": "dimineața; brunch în weekend",
+  "vibes": [
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n12074907530",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Bread and Butter",
+  "osm_id": "n11215700346",
+  "cat": "mancare",
+  "kind": "Brunch",
+  "cuisine": "brunch, brutărie",
+  "lat": 44.434091,
+  "lon": 26.098014,
+  "city": "București",
+  "story": "Brunch, pâine bună și cafea, pe lângă Calea Victoriei.",
+  "when": "dimineața; brunch",
+  "vibes": [
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n11215700346",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Ever After",
+  "osm_id": "n11295353657",
+  "cat": "mancare",
+  "kind": "Brunch",
+  "cuisine": "brunch",
+  "lat": 44.443213,
+  "lon": 26.096179,
+  "city": "București",
+  "story": "Loc de brunch în centru, aproape de Piața Amzei, prezent în ghidurile de brunch 2025.",
+  "when": "brunch în weekend",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n11295353657",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Erbario",
+  "osm_id": "n12109983201",
+  "cat": "mancare",
+  "kind": "Brunch",
+  "cuisine": "brunch",
+  "lat": 44.412124,
+  "lon": 26.099896,
+  "city": "București",
+  "story": "Bistro de brunch în zona Tineretului, pe General Haralambie.",
+  "when": "brunch în weekend",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n12109983201",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "YOLK the egg station",
+  "osm_id": "n11582119769",
+  "cat": "mancare",
+  "kind": "Brunch",
+  "cuisine": "mic-dejun, ouă",
+  "lat": 44.440401,
+  "lon": 26.101815,
+  "city": "București",
+  "story": "Totul se învârte în jurul oului: sandvișuri și preparate cu ouă, pe Nicolae Filipescu.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM n11582119769",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Bruncherry by Happy Eggs",
+  "osm_id": "n13544497939",
+  "cat": "mancare",
+  "kind": "Brunch",
+  "cuisine": "brunch, ouă",
+  "lat": 44.444284,
+  "lon": 26.09766,
+  "city": "București",
+  "story": "Brunch cu ouă în toate felurile, lângă Piața Amzei.",
+  "when": "dimineața; weekend",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n13544497939",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Gioelia (Centrul Vechi)",
+  "osm_id": "n6721487026",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "gelato italian",
+  "lat": 44.430128,
+  "lon": 26.099559,
+  "city": "București",
+  "story": "Gelaterie italiană recomandată des de localnici pentru calitatea constantă; perfectă la o plimbare prin Centrul Vechi.",
+  "when": "după-amiaza, seara vara",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM n6721487026",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464",
+   "https://restograf.ro/gelaterii-cu-inghetata-artizanala-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Gelateria La Romana",
+  "osm_id": "n10537965479",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "gelato italian",
+  "lat": 44.443664,
+  "lon": 26.092499,
+  "city": "București",
+  "story": "Gelato extrem de cremos, cu toppinguri generoase și atmosferă de gelaterie clasică italiană, pe Calea Victoriei.",
+  "when": "după-amiaza, seara vara",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n10537965479",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Velocità (Calea Victoriei)",
+  "osm_id": "n7843199085",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "gelato artizanal",
+  "lat": 44.44323,
+  "lon": 26.093347,
+  "city": "București",
+  "story": "Înghețată făcută zilnic, cu gusturi intense și bine echilibrate; unul dintre cele mai populare locuri din oraș.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM n7843199085",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Velocità (AFI Cotroceni)",
+  "osm_id": "n12092411916",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "gelato artizanal",
+  "lat": 44.430699,
+  "lon": 26.053331,
+  "city": "București",
+  "story": "Înghețata Velocità, făcută zilnic, în AFI Cotroceni.",
+  "when": "după cinema sau shopping",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM n12092411916",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Uau Il Gelato",
+  "osm_id": "n8972865889",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "gelato natural",
+  "lat": 44.431593,
+  "lon": 26.101065,
+  "city": "București",
+  "story": "Prima înghețată naturală, fără E-uri, din România, preparată în fața clienților; aici în Centrul Vechi, pe Gabroveni.",
+  "when": "după-amiaza, seara",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n8972865889",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Sweetology",
+  "osm_id": "n6609904822",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "înghețată artizanală",
+  "lat": 44.443296,
+  "lon": 26.093725,
+  "city": "București",
+  "story": "Înghețată artizanală fără conservanți sau aditivi, doar din ingrediente naturale.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM n6609904822",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "ViceCream",
+  "osm_id": "n9714055259",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "înghețată artizanală",
+  "lat": 44.4425,
+  "lon": 26.095997,
+  "city": "București",
+  "story": "Gelaterie artizanală pe George Enescu, aproape de Piața Amzei.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM n9714055259",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Thaice Cream",
+  "osm_id": "n12211690840",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "înghețată thailandeză",
+  "lat": 44.431036,
+  "lon": 26.052161,
+  "city": "București",
+  "story": "Înghețată în stil thailandez, rulată pe placa rece, în AFI Cotroceni.",
+  "when": "după cinema sau shopping",
+  "vibes": [
+   "Fun",
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n12211690840",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Zenzero Gelato",
+  "osm_id": "n10980100230",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "gelato artizanal",
+  "lat": 44.498775,
+  "lon": 26.068124,
+  "city": "București",
+  "story": "Gelaterie artizanală în Bucureștii Noi, pe Dobrogeanu-Gherea.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 18,
+  "sources": [
+   "OSM n10980100230",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Sicily Gelato & Cafe",
+  "osm_id": "n12443853506",
+  "cat": "desert",
+  "kind": "Gelaterie",
+  "cuisine": "gelato sicilian",
+  "lat": 44.463501,
+  "lon": 26.104509,
+  "city": "București",
+  "story": "Gelato în stil sicilian, în zona Floreasca.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM n12443853506",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Cannoleria (Floreasca)",
+  "osm_id": "n13869497589",
+  "cat": "desert",
+  "kind": "Patiserie",
+  "cuisine": "cannoli siciliene",
+  "lat": 44.458306,
+  "lon": 26.100111,
+  "city": "București",
+  "story": "Cannoli siciliene cu ricotta, în Floreasca.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM n13869497589",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Cannoleria Decebal",
+  "osm_id": "w1234985989",
+  "cat": "desert",
+  "kind": "Patiserie",
+  "cuisine": "cannoli siciliene",
+  "lat": 44.427027,
+  "lon": 26.134946,
+  "city": "București",
+  "story": "Cannoli siciliene cu ricotta, pe Bulevardul Decebal.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 20,
+  "sources": [
+   "OSM w1234985989",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Love You Choux",
+  "osm_id": "n11705012594",
+  "cat": "desert",
+  "kind": "Patiserie",
+  "cuisine": "choux, eclere",
+  "lat": 44.4414,
+  "lon": 26.097963,
+  "city": "București",
+  "story": "Desert-bar cu choux și eclere, în centru, aproape de Ateneu.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n11705012594",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Cookie Beacon",
+  "osm_id": "n13544497925",
+  "cat": "desert",
+  "kind": "Patiserie",
+  "cuisine": "cookies, brunch",
+  "lat": 44.444178,
+  "lon": 26.094242,
+  "city": "București",
+  "story": "Cunoscut pentru cookies-urile lui faimoase, plus brunch, aproape de Piața Amzei.",
+  "when": "oricând ai poftă de dulce",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n13544497925",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Boutique du Pain",
+  "osm_id": "n6929956290",
+  "cat": "desert",
+  "kind": "Brutărie",
+  "cuisine": "franțuzească, patiserie",
+  "lat": 44.43758,
+  "lon": 26.09849,
+  "city": "București",
+  "story": "Brutărie-patiserie în stil francez: croissante, pâine și tarte, aproape de Calea Victoriei.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n6929956290",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Atelierul de tarte",
+  "osm_id": "n14058359290",
+  "cat": "desert",
+  "kind": "Patiserie",
+  "cuisine": "tarte",
+  "lat": 44.455042,
+  "lon": 26.081483,
+  "city": "București",
+  "story": "Tarte dulci și sărate, pe Ion Mihalache.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n14058359290",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Knafeiada",
+  "osm_id": "n13483547254",
+  "cat": "desert",
+  "kind": "Patiserie",
+  "cuisine": "knafeh, levantină",
+  "lat": 44.443354,
+  "lon": 26.097279,
+  "city": "București",
+  "story": "Knafeh, desertul levantin cu brânză topită și kadaif, servit cald, pe George Enescu.",
+  "when": "seara, la desert",
+  "vibes": [
+   "Chill",
+   "Fun"
+  ],
+  "price": 30,
+  "sources": [
+   "OSM n13483547254",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Turkish Sweets Duman",
+  "osm_id": "n2405677715",
+  "cat": "desert",
+  "kind": "Patiserie",
+  "cuisine": "dulciuri turcești",
+  "lat": 44.429908,
+  "lon": 26.134655,
+  "city": "București",
+  "story": "Baclava și dulciuri turcești cu ceai, pe Bulevardul Decebal.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n2405677715",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Coftale",
+  "osm_id": null,
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate, brunch",
+  "lat": 44.436662,
+  "lon": 26.119683,
+  "city": "București",
+  "story": "Prima cafenea de specialitate din București (decembrie 2012), într-o casă veche cu grădină, pe Ștefan Mihăileanu. Bună și pentru lucrat.",
+  "when": "dimineața sau după-amiaza; brunch",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "price": 30,
+  "sources": [
+   "https://europeancoffeetrip.com/cafe/coftale-bucharest/",
+   "https://salutbucuresti.ro/en/guides/best-cafes/",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "maps",
+  "note": "Nu e în OSM/TSV. Adresa: Strada Profesor Ștefan Mihăileanu 42. Mai are un local la Foișorul de Foc (fără coordonate verificate)."
+ },
+ {
+  "name": "Origo (Lipscani)",
+  "osm_id": "n3101709891",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.433211,
+  "lon": 26.095261,
+  "city": "București",
+  "story": "Probabil cea mai veche cafenea de specialitate din București, pe Lipscani 9 – reperul cu care se compară celelalte.",
+  "when": "dimineața sau după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n3101709891",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/",
+   "https://restograf.ro/cafenele-din-bucuresti-unde-mergem-pentru-o-cafea-de-specialitate/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Origo (Dorobanți)",
+  "osm_id": "n7128123251",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.461243,
+  "lon": 26.093847,
+  "city": "București",
+  "story": "Origo în varianta de nord: spațiu minimalist, lumină naturală, meniu scurt; iubit de cei care lucrează de pe laptop.",
+  "when": "dimineața; lucru",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n7128123251",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Beans & Dots (Palatul Universul)",
+  "osm_id": "n5898775985",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate, brunch",
+  "lat": 44.435706,
+  "lon": 26.094019,
+  "city": "București",
+  "story": "În Palatul Universul, unul dintre cele mai prietenoase locuri pentru laptop din oraș: wifi stabil, spațiu generos, cafea constantă.",
+  "when": "dimineața; lucru",
+  "vibes": [
+   "Chill",
+   "Cultură"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n5898775985",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "STEAM Coffee (Universitate)",
+  "osm_id": "n11594139506",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.436897,
+  "lon": 26.105769,
+  "city": "București",
+  "story": "Într-o clădire istorică reconvertită lângă Universitate, cu pour-over schimbat săptămânal, din boabe de la prăjitorii europeni de top.",
+  "when": "oricând",
+  "vibes": [
+   "Chill",
+   "Cultură"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n11594139506",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "STEAM (Charles de Gaulle)",
+  "osm_id": "n10652617105",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.465296,
+  "lon": 26.085839,
+  "city": "București",
+  "story": "Steam lângă Piața Charles de Gaulle, la intrarea spre Herăstrău – cafea bună înainte de o plimbare în parc.",
+  "when": "dimineața, înainte de parc",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n10652617105",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "STEAM (Ștefan cel Mare)",
+  "osm_id": "n11255096138",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.453133,
+  "lon": 26.109037,
+  "city": "București",
+  "story": "Steam pe Ștefan cel Mare, aproape de Dinamo și Obor.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n11255096138",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "BOB Coffee Lab",
+  "osm_id": "n5898729286",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.465487,
+  "lon": 26.085499,
+  "city": "București",
+  "story": "Unul dintre numele vechi ale cafelei de specialitate din București, în Piața Charles de Gaulle.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n5898729286",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Orygyns",
+  "osm_id": "n7179021186",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.480016,
+  "lon": 26.100471,
+  "city": "București",
+  "story": "Cafea din recolte de sezon, prăjită pe profiluri atent alese; localul din zona Aviației.",
+  "when": "dimineața; lucru",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n7179021186",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Coffee Map Roastery",
+  "osm_id": "n13361797002",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate, prăjitorie",
+  "lat": 44.462502,
+  "lon": 26.095266,
+  "city": "București",
+  "story": "Prăjitorie cu cafenea în zona Dorobanți–Floreasca.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n13361797002",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "KOPP Specialty Coffee",
+  "osm_id": "n13781123201",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.432699,
+  "lon": 26.07664,
+  "city": "București",
+  "story": "Cafenea de specialitate deschisă în 2025 în Cotroceni, pe Doctor Joseph Lister.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n13781123201",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/60-locuri-noi-bucuresti-deschise-in-2025/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Râșnit Specialty Coffee",
+  "osm_id": "n13574655833",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.447018,
+  "lon": 26.100342,
+  "city": "București",
+  "story": "Cafenea de specialitate în zona Piața Romană.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n13574655833",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Sloane Coffee Roastery",
+  "osm_id": "n13236285713",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate, prăjitorie",
+  "lat": 44.443444,
+  "lon": 26.05633,
+  "city": "București",
+  "story": "Prăjitorie de cafea cu cafenea, în vestul orașului, spre Grozăvești.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n13236285713",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Saint Roastery Botanica",
+  "osm_id": "w1558570091",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate, prăjitorie",
+  "lat": 44.445948,
+  "lon": 26.064963,
+  "city": "București",
+  "story": "Cafenea și prăjitorie lângă Grădina Botanică, pe Calea Plevnei – bună înainte sau după o plimbare prin grădină.",
+  "when": "dimineața, înainte de Botanică",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM w1558570091",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Mezin Specialty Coffee",
+  "osm_id": "n13564795451",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.459616,
+  "lon": 26.095206,
+  "city": "București",
+  "story": "Cafenea mică de specialitate în zona Dorobanți.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n13564795451",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Oma Speciality Coffee",
+  "osm_id": "n11331475896",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.439797,
+  "lon": 26.113893,
+  "city": "București",
+  "story": "Cafenea de specialitate pe Calea Moșilor.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n11331475896",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Zării Specialty Coffee",
+  "osm_id": "n13174883798",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.436964,
+  "lon": 26.069291,
+  "city": "București",
+  "story": "Cafenea de specialitate în zona Cotroceni.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n13174883798",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Two Minutes",
+  "osm_id": "n2839098042",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea",
+  "lat": 44.461506,
+  "lon": 26.099421,
+  "city": "București",
+  "story": "Cafenea mică în Floreasca, pe Constantin Aricescu.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n2839098042",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Boiler Coffee Shop",
+  "osm_id": "n8599551539",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.432945,
+  "lon": 26.138793,
+  "city": "București",
+  "story": "Cafenea de specialitate în zona Dristor–Decebal.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n8599551539",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Boiler x Guido",
+  "osm_id": "n11795216443",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea, brunch",
+  "lat": 44.449207,
+  "lon": 26.088318,
+  "city": "București",
+  "story": "Cafea de specialitate și brunch, în ghidurile de brunch 2025.",
+  "when": "brunch în weekend",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM n11795216443",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Guido",
+  "osm_id": "n7175225885",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea",
+  "lat": 44.446618,
+  "lon": 26.113438,
+  "city": "București",
+  "story": "Cafenea de specialitate în zona Moșilor–Eminescu.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n7175225885",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Uzina Coffee",
+  "osm_id": "n7843192385",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.4435,
+  "lon": 26.093923,
+  "city": "București",
+  "story": "Cafenea de specialitate în Piața Amzei, bună de luat cu tine prin piață.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n7843192385",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Okfea (Calea Victoriei)",
+  "osm_id": "n11068961018",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.443337,
+  "lon": 26.092853,
+  "city": "București",
+  "story": "Cafenea de specialitate pe Calea Victoriei.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n11068961018",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Drip Coffee",
+  "osm_id": "n7175227588",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.421626,
+  "lon": 26.095952,
+  "city": "București",
+  "story": "Cafenea mică pe strada 11 Iunie, aproape de Parcul Carol.",
+  "when": "dimineața, înainte de parc",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n7175227588",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Siphon Coffee Shop",
+  "osm_id": "n14125042602",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.451701,
+  "lon": 26.101476,
+  "city": "București",
+  "story": "Cafenea de specialitate în zona Dacia–Eminescu.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n14125042602",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Kink Coffee",
+  "osm_id": "n8982367317",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.423738,
+  "lon": 26.122284,
+  "city": "București",
+  "story": "Cafenea de specialitate pe Bulevardul Octavian Goga.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n8982367317",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Meron (Cișmigiu)",
+  "osm_id": "n6718728585",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.434825,
+  "lon": 26.094579,
+  "city": "București",
+  "story": "Cafea prăjită proaspăt la Cluj, servită pe Regina Elisabeta, lângă Cișmigiu.",
+  "when": "dimineața sau înainte de parc",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n6718728585",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://salutbucuresti.ro/en/guides/best-cafes/",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "NOMONYM Coffee Roastery",
+  "osm_id": "n13781123302",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate, prăjitorie",
+  "lat": 44.439609,
+  "lon": 26.130655,
+  "city": "București",
+  "story": "Prăjitorie de cafea cu cafenea în zona Piața Iancului.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n13781123302",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Manufaktura (Floreasca)",
+  "osm_id": "n4866286521",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.47828,
+  "lon": 26.103987,
+  "city": "București",
+  "story": "Lanțul românesc de cafea de specialitate, aici pe Calea Floreasca.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n4866286521",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "MATERA Urban Coffee Trip",
+  "osm_id": "n14136477666",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea de specialitate",
+  "lat": 44.464297,
+  "lon": 26.085812,
+  "city": "București",
+  "story": "Cafenea nouă (2025) pe Bulevardul Aviatorilor 57.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n14136477666",
+   "Google Places: negăsit la verificarea din 2026-10-04",
+   "https://ideiroscate.ro/60-locuri-noi-bucuresti-deschise-in-2025/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm",
+  "note": "Apare în ghidul localurilor noi 2025, dar n-a fost găsit pe Google la verificarea din 04.10."
+ },
+ {
+  "name": "Base Coffee Shop",
+  "osm_id": "n14058623131",
+  "cat": "cafea",
+  "kind": "Cafenea de specialitate",
+  "cuisine": "cafea",
+  "lat": 44.457684,
+  "lon": 26.078622,
+  "city": "București",
+  "story": "Cafenea nouă (vara 2026) pe Ion Mihalache, cu terasă umbrită.",
+  "when": "dimineața; terasă",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n14058623131",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://zilesinopti.ro/2026/08/10/locuri-noi-in-bucuresti-august-2026/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Sip Coffee & Wine",
+  "osm_id": "n13625669766",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, vin, panini",
+  "lat": 44.43569,
+  "lon": 26.109179,
+  "city": "București",
+  "story": "Interior instagramabil și panini foarte bune; cafea ziua, un pahar de vin seara.",
+  "when": "oricând",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 40,
+  "sources": [
+   "OSM n13625669766",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Artichoke Social House",
+  "osm_id": "n5898763785",
+  "cat": "cafea",
+  "kind": "Brunch",
+  "cuisine": "brunch, cafea",
+  "lat": 44.437916,
+  "lon": 26.096486,
+  "city": "București",
+  "story": "Brunch și cafea pe Calea Victoriei, aproape de Centrul Vechi.",
+  "when": "brunch în weekend",
+  "vibes": [
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n5898763785",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "FROG",
+  "osm_id": "n2617153041",
+  "cat": "cafea",
+  "kind": "Brunch",
+  "cuisine": "brunch, cafea",
+  "lat": 44.438152,
+  "lon": 26.107782,
+  "city": "București",
+  "story": "Brunch și cafea pe Vasile Lascăr, aproape de Piața Rosetti.",
+  "when": "brunch în weekend",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n2617153041",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "B4 Market",
+  "osm_id": "n2387663653",
+  "cat": "cafea",
+  "kind": "Brunch",
+  "cuisine": "brunch, cafea",
+  "lat": 44.464216,
+  "lon": 26.095907,
+  "city": "București",
+  "story": "Design deosebit cu ferestre mari și brunch pentru toate gusturile, de la vegetarieni la burgeri și pancakes americane.",
+  "when": "brunch în weekend",
+  "vibes": [
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 70,
+  "sources": [
+   "OSM n2387663653",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Social Kitchen Hygge",
+  "osm_id": "n2355295304",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, mic-dejun",
+  "lat": 44.43361,
+  "lon": 26.097732,
+  "city": "București",
+  "story": "Cafenea-bistro pe Calea Victoriei, aproape de Centrul Vechi, bună pentru mic-dejun.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 45,
+  "sources": [
+   "OSM n2355295304",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "J'ai Bistrot",
+  "osm_id": "n2939214402",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, bistro",
+  "lat": 44.444806,
+  "lon": 26.085735,
+  "city": "București",
+  "story": "Cafenea-bistro pe Calea Griviței, aproape de Gara de Nord.",
+  "when": "dimineața sau prânz",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 45,
+  "sources": [
+   "OSM n2939214402",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Throwback Coffee House",
+  "osm_id": "n14007065588",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea",
+  "lat": 44.429362,
+  "lon": 26.069938,
+  "city": "București",
+  "story": "Cafenea de cartier în Cotroceni.",
+  "when": "dimineața",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n14007065588",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Mtcha Lab",
+  "osm_id": "n14219454376",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "matcha",
+  "lat": 44.443604,
+  "lon": 26.094457,
+  "city": "București",
+  "story": "Bar de matcha lângă Piața Amzei, pentru cine vrea altceva decât cafea.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 28,
+  "sources": [
+   "OSM n14219454376",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Camera din Față",
+  "osm_id": "n3798121589",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, ceai",
+  "lat": 44.444237,
+  "lon": 26.096625,
+  "city": "București",
+  "story": "Cafenea mică și primitoare pe Mendeleev, aproape de Piața Amzei, bună de stat la poveste sau de citit.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill",
+   "Cultură"
+  ],
+  "price": 22,
+  "sources": [
+   "OSM n3798121589",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Green Hours",
+  "osm_id": "w1081931347",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, bar, jazz",
+  "lat": 44.442928,
+  "lon": 26.093677,
+  "city": "București",
+  "story": "Cafenea-club pe Calea Victoriei 120, loc legendar pentru concerte de jazz și teatru independent.",
+  "when": "seara, la concert",
+  "vibes": [
+   "Cultură",
+   "Chill",
+   "Party"
+  ],
+  "price": 40,
+  "sources": [
+   "OSM w1081931347",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Grădina Verona",
+  "osm_id": "n1413464749",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, limonade",
+  "lat": 44.443174,
+  "lon": 26.099812,
+  "city": "București",
+  "story": "Cafenea-grădină ascunsă în spatele librăriei Cărturești Verona, la doi pași de Piața Romană: umbră, limonadă și cărți.",
+  "when": "după-amiaza, sezonul cald",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Cultură"
+  ],
+  "price": 30,
+  "sources": [
+   "OSM n1413464749",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Infinitea",
+  "osm_id": "n4574853189",
+  "cat": "cafea",
+  "kind": "Ceainărie",
+  "cuisine": "ceai",
+  "lat": 44.427818,
+  "lon": 26.071996,
+  "city": "București",
+  "story": "Ceainărie liniștită în Cotroceni, cu multe feluri de ceai.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n4574853189",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Green Tea",
+  "osm_id": "n13763738501",
+  "cat": "cafea",
+  "kind": "Ceainărie",
+  "cuisine": "ceai",
+  "lat": 44.434152,
+  "lon": 26.118655,
+  "city": "București",
+  "story": "Ceainărie în zona Calea Călărașilor, cu ceaiuri din toată lumea.",
+  "when": "după-amiaza",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 25,
+  "sources": [
+   "OSM n13763738501",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Snakes & Wizzards",
+  "osm_id": "n5035012722",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "board games, cafea",
+  "lat": 44.439645,
+  "lon": 26.130862,
+  "city": "București",
+  "story": "Cafenea cu jocuri de societate lângă Piața Iancului: alegi un joc de pe raft și stai ore întregi cu gașca.",
+  "when": "seara cu gașca",
+  "vibes": [
+   "Fun",
+   "Chill"
+  ],
+  "price": 30,
+  "sources": [
+   "OSM n5035012722",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Ceramic Cafe",
+  "osm_id": "n5714624185",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, atelier de ceramică",
+  "lat": 44.448975,
+  "lon": 26.095126,
+  "city": "București",
+  "story": "Cafenea pe Visarion unde îți pictezi singur cana sau farfuria de ceramică.",
+  "when": "după-amiaza, cu prietenii",
+  "vibes": [
+   "Fun",
+   "Cultură",
+   "Chill"
+  ],
+  "price": 60,
+  "sources": [
+   "OSM n5714624185",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Bernschutz & Co",
+  "osm_id": "n734559061",
+  "cat": "cafea",
+  "kind": "Cafenea",
+  "cuisine": "cafea, bistro",
+  "lat": 44.434575,
+  "lon": 26.10198,
+  "city": "București",
+  "story": "Cafenea-bistro boemă în zona Universitate–Unirii.",
+  "when": "după-amiaza sau seara",
+  "vibes": [
+   "Chill"
+  ],
+  "price": 35,
+  "sources": [
+   "OSM n734559061",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "low",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Arezzo Ristorante",
+  "osm_id": "n10199556329",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "italiană, pizza",
+  "lat": 44.492896,
+  "lon": 26.148227,
+  "city": "Voluntari (Pipera)",
+  "story": "Restaurant italian mic și intim în Pipera, cu ingrediente aduse din Italia; laudele merg la pizza, paste și tiramisu.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 110,
+  "sources": [
+   "OSM n10199556329",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ialoc.ro/restaurante-bucuresti/arezzo-ristorante-rezervari-2528"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "La Pescadería by Alioli",
+  "osm_id": "w941119947",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "spaniolă, pește",
+  "lat": 44.490912,
+  "lon": 26.128078,
+  "city": "Voluntari (Pipera)",
+  "story": "Pește și fructe de mare în stil spaniol, de la echipa Alioli, în Pipera.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 150,
+  "sources": [
+   "OSM w941119947",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Arte Napoletana",
+  "osm_id": "n12368291207",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "pizza napoletană",
+  "lat": 44.375701,
+  "lon": 26.149062,
+  "city": "Popești-Leordeni",
+  "story": "Pizza napoletană adevărată, cu aluat pe biga, pe primul loc în Popești-Leordeni pe TripAdvisor.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 55,
+  "sources": [
+   "OSM n12368291207",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.tripadvisor.com/Restaurant_Review-g8341627-d33249594-Reviews-Arte_Napoletana-Popesti_Leordeni_Ilfov_County_Southern_Romania.html",
+   "https://www.tripadvisor.com/Restaurants-g8341627-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "La Ciotoianu",
+  "osm_id": "n10266482712",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "grătar, mici",
+  "lat": 44.376127,
+  "lon": 26.164224,
+  "city": "Popești-Leordeni",
+  "story": "Grătar cu „cei mai buni mici din zonă”, după clienți, la prețuri decente.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM n10266482712",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.tripadvisor.com/Restaurants-g8341627-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "MiT – Burgărie și altele",
+  "osm_id": "n10113765947",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "burgeri, cafea de specialitate",
+  "lat": 44.370742,
+  "lon": 26.146201,
+  "city": "Popești-Leordeni",
+  "story": "Burgărie de cartier cu cafea de specialitate, bere și atmosferă cozy; nota maximă pe TripAdvisor.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună",
+   "Chill"
+  ],
+  "price": 50,
+  "sources": [
+   "OSM n10113765947",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.tripadvisor.com/Restaurant_Review-g8341627-d24086637-Reviews-MiT_Burgarie_si_altele-Popesti_Leordeni_Ilfov_County_Southern_Romania.html",
+   "https://www.tripadvisor.com/Restaurants-g8341627-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Zema Food",
+  "osm_id": "n11466353073",
+  "cat": "mancare",
+  "kind": "Bistro",
+  "cuisine": "internațională",
+  "lat": 44.374212,
+  "lon": 26.150837,
+  "city": "Popești-Leordeni",
+  "story": "Bistro mic din Popești, cu nota maximă pe TripAdvisor.",
+  "when": "prânz",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 45,
+  "sources": [
+   "OSM n11466353073",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.tripadvisor.com/Restaurants-g8341627-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Phoenix Cernica",
+  "osm_id": "n3647437509",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "internațională",
+  "lat": 44.434828,
+  "lon": 26.244554,
+  "city": "Pantelimon (lacul Cernica)",
+  "story": "Complex pe malul lacului Cernica, cu restaurantul à la carte Garuda și punți deasupra apei.",
+  "when": "weekend, la prânz",
+  "vibes": [
+   "Aer liber",
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 130,
+  "sources": [
+   "OSM n3647437509",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.nwradu.ro/2022/05/restaurant-phoenix-cernica-new-concept-pantelimon/",
+   "https://vreaulocatie.ro/l/restaurant/phoenix-cernica"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Vatra Neamului",
+  "osm_id": "w263218303",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, ucraineană",
+  "lat": 44.608076,
+  "lon": 26.072682,
+  "city": "Balotești",
+  "story": "Restaurant mare pe DN1, cu bucătărie românească și ucraineană și peste 3.000 de recenzii bune (4,5).",
+  "when": "prânz în weekend",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM w263218303",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.tripadvisor.com/Restaurants-g3791062-Corbeanca_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Sushi Master Balotești",
+  "osm_id": "n11059863265",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "japoneză, sushi",
+  "lat": 44.603911,
+  "lon": 26.06762,
+  "city": "Balotești",
+  "story": "„Cel mai bun sushi din zona Otopeni”, zic clienții; încearcă platoul Philadelphia.",
+  "when": "seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 90,
+  "sources": [
+   "OSM n11059863265",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.tripadvisor.com/Restaurants-g3791062-Corbeanca_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Plaza Restaurant",
+  "osm_id": "n8154202096",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "internațională",
+  "lat": 44.668228,
+  "lon": 26.075161,
+  "city": "Snagov (Tâncăbești)",
+  "story": "Pe DN1, la Tâncăbești, spre lacul Snagov: lăudat pentru atmosferă, personal și mâncare foarte bună.",
+  "when": "prânz în weekend",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM n8154202096",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.tripadvisor.com/Restaurants-g1675686-Snagov_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Grădina Snagov",
+  "osm_id": "n12312753049",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, internațională",
+  "lat": 44.712174,
+  "lon": 26.174838,
+  "city": "Snagov",
+  "story": "Restaurant cu multă verdeață lângă lacul Snagov, pentru o masă liniștită în afara orașului.",
+  "when": "weekend, la prânz",
+  "vibes": [
+   "Aer liber",
+   "Chill",
+   "Mâncare bună"
+  ],
+  "price": 120,
+  "sources": [
+   "OSM n12312753049",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://ialoc.ro/restaurante-snagov/gradina-snagov-rezervari-4232",
+   "https://www.tripadvisor.com/Restaurants-g1675686-Snagov_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Taverna Studioului",
+  "osm_id": "w986515730",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, internațională",
+  "lat": 44.574938,
+  "lon": 25.939031,
+  "city": "Buftea",
+  "story": "Restaurant cu atmosferă aparte în Buftea, lângă Studiourile de film.",
+  "when": "weekend",
+  "vibes": [
+   "Mâncare bună",
+   "Cultură"
+  ],
+  "price": 100,
+  "sources": [
+   "OSM w986515730",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.soimiigastronomiei.ro/city-50470-buftea",
+   "https://www.tripadvisor.com/Restaurants-g2242218-Buftea_Ilfov_County_Southern_Romania.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Clubul Bărboșilor",
+  "osm_id": "w986515791",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească",
+  "lat": 44.573041,
+  "lon": 25.937233,
+  "city": "Buftea",
+  "story": "Reper local pentru bucătărie românească autentică în Buftea, pe strada Studioului.",
+  "when": "prânz în weekend",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 90,
+  "sources": [
+   "OSM w986515791",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)",
+   "https://www.soimiigastronomiei.ro/city-50470-buftea"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Restaurant Palatul Mogoșoaia",
+  "osm_id": "w835097917",
+  "cat": "mancare",
+  "kind": "Restaurant",
+  "cuisine": "românească, internațională",
+  "lat": 44.52853,
+  "lon": 25.996915,
+  "city": "Mogoșoaia",
+  "story": "La intrarea în parcul Palatului Mogoșoaia: terasă și sala „Domnița Bălașa”, în stil brâncovenesc. Ideal după o plimbare prin grădinile palatului.",
+  "when": "sâmbătă–duminică, 12–22",
+  "vibes": [
+   "Cultură",
+   "Aer liber",
+   "Mâncare bună"
+  ],
+  "price": 120,
+  "sources": [
+   "OSM w835097917",
+   "Google Places: negăsit la verificarea din 2026-10-04",
+   "https://www.palatulmogosoaia.ro/terasa.html",
+   "https://www.facebook.com/restaurant.mogosoaia/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm",
+  "note": "Program doar în weekend (12–22), după site-ul palatului; Google nu l-a găsit la verificarea automată."
+ },
+ {
+  "name": "SUMAC Lebanese Food Station",
+  "osm_id": "n9453510493",
+  "cat": "mancare",
+  "kind": "Fast food",
+  "cuisine": "libaneză",
+  "lat": 44.446291,
+  "lon": 25.986536,
+  "city": "Chiajna (Militari Residence)",
+  "story": "Street food libanez în Militari Residence.",
+  "when": "prânz sau seara",
+  "vibes": [
+   "Mâncare bună"
+  ],
+  "price": 45,
+  "sources": [
+   "OSM n9453510493",
+   "Google Places: deschis (verificare checked.json, 2026-10-04)"
+  ],
+  "confidence": "low",
+  "coord_source": "osm",
+  "note": "Ales doar pe baza conceptului și a statusului „deschis” pe Google; calitatea nu am verificat-o."
+ }
+]

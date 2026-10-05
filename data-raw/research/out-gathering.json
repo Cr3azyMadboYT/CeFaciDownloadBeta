@@ -1,0 +1,860 @@
+[
+ {
+  "name": "Piața Constituției",
+  "osm_id": null,
+  "cat": "loc",
+  "kind": "Piață cu evenimente",
+  "lat": 44.4273,
+  "lon": 26.0915,
+  "city": "București",
+  "story": "Piața uriașă din fața Palatului Parlamentului se umple când e ceva mare: Street Food Festival și Zilele Bucureștiului în septembrie (în 2026, Rudimental și video-mapping pe Palat), apoi Târgul de Crăciun cu roată mare, patinoar acoperit, peste 130 de căsuțe și concerte. Fără eveniment e doar o piață goală, așa că merită doar atunci.",
+  "when": "la evenimente: Street Food Festival (început de septembrie), Zilele Bucureștiului (septembrie), Târgul de Crăciun (sfârșit de noiembrie – 28 decembrie, mai ales seara și în weekend)",
+  "season": "evenimente",
+  "vibes": [
+   "Fun",
+   "Party",
+   "Mâncare bună",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.infomusic.ro/2025/11/program-concerte-targul-de-craciun-bucuresti-2025-piata-constitutiei/",
+   "https://www.bucuresti.ro/ro/articole/programul-targurilor-de-craciun-din-bucuresti-2025-2026-piata-constitutiei-opera-drumul-taberei-si-baneasa-883",
+   "https://www.catavencii.ro/zilele-bucurestiului-2026-evenimente-de-top-si-show-uri-live-in-piata-constitutiei/",
+   "https://www.bucuresti.ro/articole/bucharest-street-food-festival-se-intoarce-in-piata-constitutiei-pe-5-si-6-septembrie-1838",
+   "https://www.infomusic.ro/2026/09/program-bucharest-street-food-festival2026/"
+  ],
+  "confidence": "high",
+  "coord_source": "wikipedia (prin căutare: ~44.427, 26.092), verificat cu localurile OSM de pe Bd. Unirii 2–5"
+ },
+ {
+  "name": "Calul Bălan (malul Lacului Buftea)",
+  "osm_id": null,
+  "cat": "loc",
+  "kind": "Mal de lac cu restaurant istoric",
+  "lat": 44.565725,
+  "lon": 25.926101,
+  "city": "Buftea",
+  "story": "Calul Bălan e un restaurant cu terasă pe malul Lacului Buftea, cu poveste din anii '60, și locul de unde localnicii pornesc la plimbare pe dig, pe lângă biserică, până în spatele Domeniului Știrbey. Serile de vară și în weekend e plin, iar în sală sunt des nunți, așa că pentru terasă sună înainte.",
+  "when": "vineri–duminică, mai ales serile de vară",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Mâncare bună"
+  ],
+  "free": true,
+  "sources": [
+   "https://vreaulocatie.ro/l/restaurant/ballroom-calul-balan",
+   "https://www.locatiinuntabucuresti.ro/detalii/calul-balan-294",
+   "https://expresuldebuftea.ro/9-activitati-pe-care-sa-le-faci-cu-copiii-in-buftea/",
+   "https://yably.ro/recenzii/buftea/restaurant-calul-balan-str-aleea-cu-brazi-nr8g",
+   "https://restaurantguru.com/Restaurant-Calul-Balan-Bucharest",
+   "https://zilesinopti.ro/locuri/restaurant-calul-balan/ (Aleea cu Brazi 1, malul Lacului Buftea)"
+  ],
+  "confidence": "medium",
+  "coord_source": "ESTIMAT, DE VERIFICAT pe hartă (Aleea cu Brazi 1 / colț cu Independenței, Buftea): pus la capătul de sud-est al lacului, lângă dig, la sud de Domeniul Știrbey din OSM; poate fi decalat 300–500 m"
+ },
+ {
+  "name": "Domeniul Știrbey",
+  "osm_id": "w88337886",
+  "cat": "cultura",
+  "kind": "Domeniu istoric cu festival",
+  "lat": 44.565913,
+  "lon": 25.938586,
+  "city": "Buftea",
+  "story": "Conacul și parcul Știrbey de pe malul Lacului Buftea sunt casa festivalului Summer Well: în 2026 (7–9 august) au cântat aici Nick Cave & The Bad Seeds și Palaye Royale. În restul anului e mai ales loc de evenimente private, deci verifică înainte să mergi.",
+  "when": "weekendul Summer Well (august) și la evenimente anunțate",
+  "season": "evenimente",
+  "vibes": [
+   "Party",
+   "Cultură",
+   "Aer liber"
+  ],
+  "free": false,
+  "sources": [
+   "https://summerwell.ro/ro",
+   "https://www.antena3.ro/life/timp-liber/muzica/incepe-summer-well-2026-in-buftea-artistii-care-concerteaza-pe-domeniul-stirbey-si-programul-festivalului-pe-zile-cat-costa-biletele-798643.html",
+   "https://buletin.de/bucuresti/vineri-incepe-summer-well-2026-la-domeniul-stirbey-din-buftea-programul-concertelor/",
+   "https://www.profit.ro/povesti-cu-profit/real-estate-constructii/exclusiv-video-domeniul-stirbey-detinut-de-o-apropiata-a-familiei-lui-dan-voiculescu-se-transforma-vor-fi-3-pavilioane-dedicate-evenimentelor-si-case-pentru-cazare-22270296"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Calea Victoriei pietonală (Străzi Deschise)",
+  "osm_id": null,
+  "cat": "loc",
+  "kind": "Stradă pietonală în weekend",
+  "lat": 44.438067,
+  "lon": 26.097493,
+  "city": "București",
+  "story": "Din aprilie până în octombrie, în weekend, Calea Victoriei se închide pentru mașini între Bd. Dacia și Splai și devine promenadă cu ateliere, parade, sport și muzică; din 2026 s-a adăugat și strada Ion Brezoianu. Treci pe la Ateneu și Cercul Militar fără să te ferești de mașini.",
+  "when": "sâmbătă și duminică, 10:00–22:00, din 25 aprilie până pe 11 octombrie 2026 (unele weekenduri doar sâmbăta)",
+  "season": "vara",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Cultură",
+   "Fun"
+  ],
+  "free": true,
+  "sources": [
+   "https://arcub.ro/proiect/strazi-deschise-bucuresti-editia-2026",
+   "https://www.antena3.ro/actualitate/locale/calea-victoriei-si-o-alta-artera-importanta-devin-pietonale-din-acest-weekend-programul-si-traseul-strazi-deschise-bucuresti-2026-784996.html",
+   "https://www.rador.ro/2026/09/25/calea-victoriei-din-capitala-devine-pietonala-in-cadrul-proiectului-strazi-deschise/",
+   "https://www.nwradu.ro/2026/04/calea-victoriei-redevine-pietonala-weekend-strazi-deschise/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm (local de pe Calea Victoriei 70, la mijlocul traseului)"
+ },
+ {
+  "name": "Centrul Vechi (Lipscani)",
+  "osm_id": null,
+  "cat": "loc",
+  "kind": "Zonă pietonală cu baruri",
+  "lat": 44.431884,
+  "lon": 26.100283,
+  "city": "București",
+  "story": "Străduțele pietonale dintre Lipscani, Smârdan și Covaci sunt punctul de plecare clasic al serii: zeci de baruri, puburi și cluburi la câțiva pași unul de altul, terase pe stradă și muzică live. Vara, vinerea și sâmbăta, e cea mai aglomerată zonă de ieșit din oraș.",
+  "when": "joi–sâmbătă seara, până dimineața; vara e cel mai plin",
+  "season": "tot anul",
+  "vibes": [
+   "Party",
+   "Fun",
+   "Mâncare bună"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.bucuresti.ro/articole/ghid-complet-pentru-viata-de-noapte-in-bucuresti-in-2026-unde-se-distreaza-tinerii-in-capitala-1614",
+   "https://salutbucuresti.ro/en/attractions/old-town/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm (Lipscani 28)"
+ },
+ {
+  "name": "Parcul Herăstrău (Regele Mihai I)",
+  "osm_id": "w88337000",
+  "cat": "natura",
+  "kind": "Parc cu lac și promenadă",
+  "lat": 44.470635,
+  "lon": 26.08163,
+  "city": "București",
+  "story": "Cel mai mare parc din oraș, cu promenadă pe malul lacului, Insula Trandafirilor și skatepark. Din aprilie până în octombrie iei vaporașul, barca sau hidrobicicleta de la Debarcaderul Central, din zona Berăria H.",
+  "when": "zilnic; weekendul și serile de vară sunt cele mai pline",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Fun"
+  ],
+  "free": true,
+  "sources": [
+   "https://b365.ro/start-la-plimbari-cu-vaporasul-barca-si-hidrobicicleta-pe-lacul-herastrau-vineri-se-deschide-debarcaderul-central-pmb-anunta-lista-preturilor-si-orarul-zilnic-566079/",
+   "https://umblu-teleleu.ro/parcul-herastrau/",
+   "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Berăria H",
+  "osm_id": "w28230560",
+  "cat": "bar",
+  "kind": "Berărie uriașă cu concerte",
+  "lat": 44.476645,
+  "lon": 26.075922,
+  "city": "București",
+  "story": "Se laudă că e cea mai mare berărie din sud-estul Europei, cu terasă pe malul Lacului Herăstrău și concerte aproape săptămânal (în toamna lui 2026: Cargo, Bosquito, seri cu lăutari). Bună pentru gașcă mare: încape toată lumea.",
+  "when": "seara, mai ales vineri–sâmbătă și în serile cu concert",
+  "season": "tot anul",
+  "vibes": [
+   "Party",
+   "Fun",
+   "Mâncare bună"
+  ],
+  "free": false,
+  "sources": [
+   "https://berariah.ro/",
+   "https://berariah.ro/en/facts",
+   "https://zilesinopti.ro/beraria-h-evenimente/",
+   "https://www.onevent.ro/event-organizer/beraria-h/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Lacul Morii – digul și Insula Lacul Morii",
+  "osm_id": "w298267725",
+  "cat": "natura",
+  "kind": "Promenadă pe dig + insulă nouă",
+  "lat": 44.45963,
+  "lon": 26.0293,
+  "city": "București",
+  "story": "Cel mai mare lac din București are pe dig o promenadă lată, cu pergole și bănci, perfectă la apus. Pe 18 septembrie 2026 s-a redeschis Insula Lacul Morii, refăcută cu ~12 milioane de euro: pontoane de 40–50 m, insule plutitoare cu plante și alei până la apă.",
+  "when": "seara, la apus; weekendul e cel mai plin (cu bicicleta pe dig doar între 00:00 și 18:00)",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://agerpres.ro/administratie/2026/09/18/sector-6-insula-lacul-morii-a-fost-redeschisa-publicului---un-altfel-de-parc-intr-un-peisaj-natural---1595052",
+   "https://www.antena3.ro/actualitate/locale/insula-lacul-morii-s-a-redeschis-cum-arata-dupa-ce-a-fost-modernizata-cu-12-milioane-de-euro-ciucu-faecm-si-un-parc-liniar-de-2-km-803818.html",
+   "https://www.bucuresti.ro/articole/plimbarea-completa-in-jurul-lacului-morii-ce-gasesti-pe-fiecare-mal-1585",
+   "https://b365.ro/reguli-pe-digul-promenada-de-la-lacul-morii-din-bucuresti-acces-cu-bicicleta-in-intervalul-00-00-18-00-amenzi-mari-pentru-intrarea-pe-pista-de-alergare-480662/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm (Insula Lacul Morii)"
+ },
+ {
+  "name": "Parcul Natural Văcărești",
+  "osm_id": "w88105780",
+  "cat": "natura",
+  "kind": "Deltă în mijlocul orașului",
+  "lat": 44.399413,
+  "lon": 26.133574,
+  "city": "București",
+  "story": "O deltă sălbatică de vreo 183 de hectare între blocuri, cu stuf, ochiuri de apă și peste 180 de specii de plante și animale. Parcul face tururi ghidate și ture de observat păsări; vino spre apus și ia un binoclu.",
+  "when": "weekend dimineața sau spre apus; la evenimentele parcului",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-natural-vacaresti-delta-vacaresti-71",
+   "https://apnv.ro/evenimente/",
+   "https://www.europafm.ro/eveniment-sambata-in-parcul-natural-vacaresti-tururi-ghidate-activitati-de-observare-a-pasarilor-si-ateliere-interactive/",
+   "https://greencommunity.ro/scoala-se-poate-muta-pentru-o-zi-in-natura-parcul-natural-vacaresti-ii-invita-pe-elevi-la-vizite-ghidate-si-ateliere-pentru-saptamana-verde-2026-2027/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Parcul Cișmigiu",
+  "osm_id": "w16291869",
+  "cat": "natura",
+  "kind": "Parc cu lac și patinoar",
+  "lat": 44.437217,
+  "lon": 26.090355,
+  "city": "București",
+  "story": "Parcul clasic din centru: vara iei barca pe lac, iar iarna lacul golit devine cel mai cunoscut patinoar în aer liber din oraș, de vreo 3.600 m². În sezonul trecut patinoarul s-a deschis pe 19 decembrie și a ținut până la sfârșitul lui februarie.",
+  "when": "vara, după-amiaza și seara; iarna la patinoar (mijlocul lui decembrie – februarie, 10:00–21:30)",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Fun"
+  ],
+  "free": true,
+  "sources": [
+   "https://gokid.ro/patinoar-cismigiu/",
+   "https://gokid.ro/patinoare-bucuresti-lista-completa/",
+   "https://umblu-teleleu.ro/parcul-cismigiu/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Arenele Romane",
+  "osm_id": "r4871608",
+  "cat": "cultura",
+  "kind": "Amfiteatru pentru concerte în aer liber",
+  "lat": 44.412959,
+  "lon": 26.093256,
+  "city": "București",
+  "story": "Amfiteatrul din Parcul Carol unde se țin concertele de vară în aer liber: în 2026 au cântat aici Empire of the Sun, KALEO, Skillet și Rita Ora. Fără concert e închis, deci uită-te întâi la program.",
+  "when": "serile de concert, mai–septembrie",
+  "season": "evenimente",
+  "vibes": [
+   "Party",
+   "Cultură",
+   "Aer liber"
+  ],
+  "free": false,
+  "sources": [
+   "https://www.songkick.com/venues/67159-arenele-romane/calendar",
+   "https://www.jambase.com/venue/arenele-romane-roman-arenas",
+   "https://visitbucharest.today/bucharest-concerts/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Parcul Carol",
+  "osm_id": "w13853540",
+  "cat": "natura",
+  "kind": "Parc istoric pe deal",
+  "lat": 44.413988,
+  "lon": 26.096467,
+  "city": "București",
+  "story": "Parc mare pe dealul Filaret, cu Mausoleul și Mormântul Soldatului Necunoscut sus și Arenele Romane într-un colț. Seara e unul dintre parcurile unde grupurile de prieteni stau pe iarbă, pe role sau pe biciclete.",
+  "when": "seara și în weekend, primăvara–toamna",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566",
+   "https://www.songkick.com/venues/67159-arenele-romane/calendar"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Parcul Drumul Taberei",
+  "osm_id": "w21802163",
+  "cat": "natura",
+  "kind": "Parc cu lac și bărci",
+  "lat": 44.420252,
+  "lon": 26.031499,
+  "city": "București",
+  "story": "Fostul Parc Moghioroș, refăcut complet, are lac cu bărci, hidrobiciclete și bărci-lebădă de închiriat până seara. Vara, la proiecțiile «Cinema sub stele» din amfiteatru, filmul se vede și din barcă.",
+  "when": "vara, după-amiaza și seara; în weekend programul la bărci e mai lung",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Fun"
+  ],
+  "free": true,
+  "sources": [
+   "https://primarie6.ro/primarie_sector6/program-prelungit-de-relaxare-pe-lacul-din-parcul-drumul-taberei",
+   "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-drumul-taberei-parcul-moghioros-80",
+   "https://www.asistentasociala6.ro/noutati/program-artistic-west-side-flower-fest-2026"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Parcul IOR (Alexandru Ioan Cuza)",
+  "osm_id": "r8321313",
+  "cat": "natura",
+  "kind": "Parc cu lac și fântâni muzicale",
+  "lat": 44.426306,
+  "lon": 26.15657,
+  "city": "București",
+  "story": "Lacul Titan e singurul lac natural din București, iar fântânile de pe apă fac joi–duminică seara spectacole de apă, lumini și muzică, până în octombrie. Mai are o grădină japoneză cu podeț și unul dintre skateparkurile unde se strâng tinerii.",
+  "when": "joi–duminică seara pentru fântâni (primăvara – octombrie); weekendul ziua",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Fun"
+  ],
+  "free": true,
+  "sources": [
+   "https://b365.ro/spectacolele-de-la-fantanile-muzicale-din-parcul-ior-reincep-de-maine-si-tin-pana-in-octombrie-cele-din-parcul-teilor-sunt-inca-in-mentenanta-607756/",
+   "https://www.primarie3.ro/index.php/presa/comunicat/fantanile-muzicale-din-parcul-ior-au-revenit-cu-spectacole-de-lumini-i-muzic/8602",
+   "https://bucurestitrip.ro/parcul-ior-alexandru-ioan-cuza/",
+   "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Fântânile din Piața Unirii",
+  "osm_id": "r19937268",
+  "cat": "loc",
+  "kind": "Spectacol de fântâni",
+  "lat": 44.427453,
+  "lon": 26.102449,
+  "city": "București",
+  "story": "Vineri, sâmbătă și duminică seara, fântânile din Piața Unirii fac un show de vreo 45 de minute cu apă, lumini și muzică; în 2026 tema a fost filmele celebre, cu câteva seri și de drone. Intrarea e liberă, dar vino cu un sfert de oră înainte ca să prinzi loc bun.",
+  "when": "vineri–duminică seara, mai – începutul lui octombrie (în septembrie–octombrie show-ul e la 20:00, vara la 21:00–21:30)",
+  "season": "vara",
+  "vibes": [
+   "Fun",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://buletin.de/bucuresti/revin-spectacolele-de-apa-muzica-si-lumini-la-fantanile-din-piata-unirii-programul-pana-in-septembrie/",
+   "https://stirileprotv.ro/divers/programul-fantanilor-din-piata-unirii-orele-la-care-incepe-spectacolul-de-muzica-si-lumini-in-fiecare-weekend.html",
+   "https://www.apanovabucuresti.ro/informatii-utile/stiri/fantanile-piata-unirii-recod-mondial"
+  ],
+  "confidence": "high",
+  "coord_source": "osm (Parcul Unirii, în mijlocul pieței)"
+ },
+ {
+  "name": "Parcul Tineretului",
+  "osm_id": "w14360895",
+  "cat": "natura",
+  "kind": "Parc mare pentru seri cu prietenii",
+  "lat": 44.406294,
+  "lon": 26.109343,
+  "city": "București",
+  "story": "Unul dintre parcurile unde tinerii chiar se strâng seara: alei lungi și luminate, lac, skatepark și Teatrul de vară, cu spectacole și concerte în sezonul cald. E lângă metrou, deci ajungi ușor de oriunde.",
+  "when": "seara, primăvara–toamna; weekendul",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Fun"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566",
+   "https://umblu-teleleu.ro/parcul-tineretului/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Palatul și parcul Mogoșoaia",
+  "osm_id": "w39349047",
+  "cat": "cultura",
+  "kind": "Palat brâncovenesc cu lac și parc",
+  "lat": 44.527636,
+  "lon": 25.992642,
+  "city": "Mogoșoaia",
+  "story": "Palatul brâncovenesc, cu loggia deschisă spre lac, și parcul cu intrare liberă sunt locul de picnic preferat la 15 minute de oraș. În 2026 a găzduit și festivaluri: Big Little Festival (august) și prima ediție Always Forever, cu vreo 6.000 de oameni la apus pe malul lacului.",
+  "when": "weekendul, primăvara–toamna (vino dimineața, se aglomerează repede); vara, în weekend, scena de pe aleea principală are teatru, muzică și filme",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber",
+   "Cultură"
+  ],
+  "free": true,
+  "sources": [
+   "https://umblu-teleleu.ro/mogosoaia/",
+   "https://www.infomusic.ro/agenda/big-little-festival-2026/",
+   "https://www.bugetul.ro/always-forever-festival-prima-edi%C8%9Bie-la-mogo%C8%99oaia-peste-6000/",
+   "https://parculmogosoaia.ro/category/program/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Lacul Snagov – Snagov Parc",
+  "osm_id": null,
+  "cat": "natura",
+  "kind": "Lac cu plajă și pădure",
+  "lat": 44.713626,
+  "lon": 26.16327,
+  "city": "Snagov",
+  "story": "La vreo 40 km de București, zona Snagov Parc are plajă pe peninsulă, cu umbră de copaci, pontoane și terase pe malul lacului, plus pădurea Snagov pentru plimbare. La intrarea în Snagov Parc se plătește taxă pe mașină și de persoană.",
+  "when": "weekendurile de vară, ziua",
+  "season": "vara",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "free": false,
+  "sources": [
+   "https://marinaport.ro/amplasament.html",
+   "https://marinaport.ro/lacul-snagov.html",
+   "https://www.barci.ro/lacul-snagov/",
+   "https://incotro.olx.ro/padurea-si-lacul-snagov-de-ce-si-cand-sa-le-vizitezi/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm (restaurant Dolce Vita Snagov, adresa «Parc Snagov Ponton 800»)"
+ },
+ {
+  "name": "Therme București",
+  "osm_id": "w388832074",
+  "cat": "activitate",
+  "kind": "Băi termale cu tobogane",
+  "lat": 44.605558,
+  "lon": 26.085421,
+  "city": "Balotești",
+  "story": "Complex de băi termale deschis tot anul, cu piscine printre plante tropicale, saune și tobogane, salvarea perfectă pentru o zi de ploaie sau de iarnă. Sâmbăta între 12 și 17 e cel mai aglomerat (de 1 ianuarie s-a stat ore la coadă), așa că ia bilet online și vino devreme.",
+  "when": "tot anul; cel mai plin sâmbăta 12:00–17:00 și în vacanțe",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Fun"
+  ],
+  "free": false,
+  "sources": [
+   "https://umblu-teleleu.ro/therme/",
+   "https://b365.ro/video-therme-bucuresti-a-fost-luat-cu-asalt-in-prima-zi-a-anului-au-stat-la-coada-cateva-ore-bune-chiar-si-cei-cu-bilete-online-590726/",
+   "https://salutbucuresti.ro/en/attractions/therme-bucharest/"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Edenland Park",
+  "osm_id": "w402868001",
+  "cat": "activitate",
+  "kind": "Parc de aventură în copaci",
+  "lat": 44.652851,
+  "lon": 26.102242,
+  "city": "Balotești",
+  "story": "Parc de aventură în pădurea de la Balotești, cu 14 trasee prin copaci, tiroliene și pereți de cățărat, plus ATV, călărie și paintball. Intrarea pornește de la vreo 25 de lei, activitățile se plătesc separat și se închide pe ploaie.",
+  "when": "zilnic de la 10:00 până la apus, mai ales weekendurile din sezonul cald",
+  "season": "vara",
+  "vibes": [
+   "Fun",
+   "Competitiv",
+   "Aer liber"
+  ],
+  "free": false,
+  "sources": [
+   "https://salutbucuresti.ro/ro/atractii/edenland-park/",
+   "https://www.bucuresti.ro/locatii/descopera-orasul-edenland-park-720"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Extreme Park Cernica",
+  "osm_id": "w360140661",
+  "cat": "activitate",
+  "kind": "Tiroliană peste lac și paintball",
+  "lat": 44.436785,
+  "lon": 26.243628,
+  "city": "Cernica",
+  "story": "În pădurea Cernica, cu tiroliana care trece peste lac (parcul o anunță drept cea mai lungă din România), 9 trasee prin copaci, tir cu arcul și paintball. Bun cu gașca pentru o după-amiază competitivă.",
+  "when": "weekendurile din sezonul cald",
+  "season": "vara",
+  "vibes": [
+   "Fun",
+   "Competitiv",
+   "Aer liber"
+  ],
+  "free": false,
+  "sources": [
+   "https://www.tripadvisor.com/Attraction_Review-g7890669-d7942548-Reviews-Extreme_Park_Cernica-Pantelimon_Ilfov_County_Southern_Romania.html",
+   "https://www.seebucharest.ro/extreme-park-cernica/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Lacul și Mănăstirea Cernica",
+  "osm_id": "w240611280",
+  "cat": "natura",
+  "kind": "Pădure, lac și mănăstire pe insulă",
+  "lat": 44.433865,
+  "lon": 26.256992,
+  "city": "Cernica",
+  "story": "La vreo 14 km de oraș, lacul Cernica, de peste 300 de hectare, e înconjurat de pădure, iar mănăstirea veche stă pe insulele din lac. Bun pentru o plimbare liniștită; pe terenul mănăstirii nu se pune muzică și nu se face grătar.",
+  "when": "weekend, ziua",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.infopensiuni.ro/cazare-cernica/obiective-turistice-cernica/padurea-si-lacul-cernica_6275",
+   "http://www.obiective-turistice.ro/padurea-si-lacul-cernica",
+   "https://www.outdooractive.com/en/travel-guide/lacul-cernica/54093217/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Terasa Obor (micii din Piața Obor)",
+  "osm_id": "n6467827485",
+  "cat": "mancare",
+  "kind": "Mici la piață",
+  "lat": 44.450331,
+  "lon": 26.129354,
+  "city": "București",
+  "story": "Micii din Obor sunt o instituție: de 1 Mai 2026, coada la Terasa Obor a trecut de 100 de metri, cu până la două ore de așteptare. Piața are acum și cafenele de specialitate și mâncare din toată lumea, deci merită o tură prin hală după.",
+  "when": "la prânz, mai ales în weekend și de sărbători",
+  "season": "tot anul",
+  "vibes": [
+   "Mâncare bună",
+   "Fun"
+  ],
+  "free": false,
+  "sources": [
+   "https://www.antena3.ro/actualitate/social/cat-costa-micii-de-1-mai-2026-in-piata-obor-din-bucuresti-fara-vreme-de-gratar-la-iarba-verde-romanii-fac-cozi-la-terase-786496.html",
+   "https://www.gandul.ro/actualitate/coada-uriasa-la-micii-laudati-din-obor-de-1-mai-randul-se-intinde-pe-mai-mult-de-100-de-metri-iar-timpul-de-asteptare-este-de-aproape-2-ore-20877811",
+   "https://hotnews.ro/oborul-intre-mici-si-cafea-de-specialitate-cum-s-a-schimbat-cea-mai-mare-piata-din-bucuresti-pentru-noile-generatii-lumea-se-opreste-consuma-si-vrea-sa-vada-si-altceva-2333086"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Linea / Closer to the Moon",
+  "osm_id": "n5807532953",
+  "cat": "bar",
+  "kind": "Rooftop cu vedere peste Centrul Vechi",
+  "lat": 44.433054,
+  "lon": 26.096848,
+  "city": "București",
+  "story": "Rooftop la etajul 5, deasupra Lipscani, cu cea mai bună vedere peste Centrul Vechi; urci cu liftul «To the Moon and Back». Vara stai afară, iarna în iglu-uri încălzite, iar la apus se umple, așa că rezervă.",
+  "when": "la apus și seara, tot anul",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Party",
+   "Mâncare bună"
+  ],
+  "free": false,
+  "sources": [
+   "https://booklinea.me/",
+   "https://www.therooftopguide.com/rooftop-bars-in-bucharest/linea-closer-to-the-moon.html"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Control Club",
+  "osm_id": "n1729617170",
+  "cat": "club",
+  "kind": "Club de concerte indie",
+  "lat": 44.435597,
+  "lon": 26.096987,
+  "city": "București",
+  "story": "Clubul de pe Constantin Mille unde ajung trupele indie și alternative din afară, cu petreceri cu DJ după concert. A împlinit 18 ani în octombrie 2026, cu un weekend întreg de concerte (Liars, Opus Kink, Șuie Paparude).",
+  "when": "joi–sâmbătă seara, mai ales în serile de concert",
+  "season": "tot anul",
+  "vibes": [
+   "Party",
+   "Cultură"
+  ],
+  "free": false,
+  "sources": [
+   "https://www.control-club.ro/events/",
+   "https://munteanurecomanda.ro/noutati/trei-concerte-pentru-18-ani-de-control/",
+   "https://eventbook.ro/hall/club-control"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Expirat Halele Carol",
+  "osm_id": "n10964569389",
+  "cat": "club",
+  "kind": "Club și sală de concerte într-o fostă hală",
+  "lat": 44.415463,
+  "lon": 26.093131,
+  "city": "București",
+  "story": "Club mare în Halele Carol, fosta zonă industrială de lângă Parcul Carol, cu concerte românești (Omul cu Șobolani, Killa Fonic, NIDAL, Vlad Dobrescu) și petreceri până dimineața. Concertele încep de obicei pe la 21:30, cu porțile deschise de la 20:00.",
+  "when": "vineri–sâmbătă seara și în serile de concert",
+  "season": "tot anul",
+  "vibes": [
+   "Party",
+   "Cultură"
+  ],
+  "free": false,
+  "sources": [
+   "https://www.iconcert.ro/event/concert-vlad-dobrescu-expirat-halele-carol-bucuresti-2026",
+   "https://www.iconcert.ro/event/concert-omul-cu-sobolani-expirat-halele-carol-bucuresti-2026",
+   "https://www.iabilet.ro/bilete-expirat-halele-carol-venue-1845/?nomobile=1"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Parcul Kiseleff",
+  "osm_id": "w23611141",
+  "cat": "natura",
+  "kind": "Parc pe Kiseleff, cu festivaluri",
+  "lat": 44.457403,
+  "lon": 26.083375,
+  "city": "București",
+  "story": "Parc umbros pe Șoseaua Kiseleff, între Piața Victoriei și Arcul de Triumf, lângă Muzeul Țăranului. Primăvara, Bucharest Street Food Festival se mută pe bulevard: în 2026, pe 18–19 aprilie, cu zeci de food truck-uri, VAMA și Moonlight Breakfast.",
+  "when": "la festivaluri (aprilie); în rest, plimbare ziua",
+  "season": "evenimente",
+  "vibes": [
+   "Mâncare bună",
+   "Aer liber",
+   "Fun"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.infomusic.ro/agenda/bucharest-street-food-festival-2026/",
+   "https://www.onevent.ro/evenimente/bucharest-street-food-festival/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Muzeul Satului „Dimitrie Gusti”",
+  "osm_id": "n5146804838",
+  "cat": "cultura",
+  "kind": "Muzeu în aer liber cu târguri",
+  "lat": 44.472389,
+  "lon": 26.076627,
+  "city": "București",
+  "story": "Un sat întreg, cu case, mori și biserici aduse din toată țara, pe malul Herăstrăului. La târgurile lui (Mărțișor, Florii, Sânziene, Târgul Pâinii de la sfârșitul lui septembrie) vin meșteri și mâncare tradițională.",
+  "when": "ziua, mai ales în weekendurile cu târg",
+  "season": "tot anul",
+  "vibes": [
+   "Cultură",
+   "Aer liber",
+   "Mâncare bună"
+  ],
+  "free": false,
+  "sources": [
+   "https://www.bucurestifm.ro/2026/03/24/targ-de-florii-la-muzeul-national-al-satului-dimitrie-gusti-traditii-mestesuguri-si-spectacole-intre-3-si-5-aprilie/",
+   "https://uzpr.ro/29/09/2026/targul-painii-editia-a-v-a-la-muzeul-national-al-satului-dimitrie-gusti-de-elena-trifan/",
+   "https://spotmedia.ro/stiri/timp-liber/muzeul-national-al-satului-dimitrie-gusti-va-invita-in-perioada-26-27-septembrie-2026-sa-sarbatorim-impreuna-ziua-satului-romanesc"
+  ],
+  "confidence": "high",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Cărturești Carusel",
+  "osm_id": null,
+  "cat": "cultura",
+  "kind": "Librărie-spectacol",
+  "lat": 44.4319,
+  "lon": 26.1013,
+  "city": "București",
+  "story": "Librăria albă, cu balcoane în spirală, din Lipscani rămâne una dintre opririle sigure la plimbarea prin centru. Intri gratis, te uiți de sus la tot «caruselul» de cărți și ieși direct în Centrul Vechi.",
+  "when": "zilnic, ziua și seara",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Cultură"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm (clădirea vecină, Lipscani 53; librăria e la nr. 55)"
+ },
+ {
+  "name": "Water Park Otopeni",
+  "osm_id": null,
+  "cat": "activitate",
+  "kind": "Ștrand cu piscine",
+  "lat": 44.562069,
+  "lon": 26.063846,
+  "city": "Otopeni",
+  "story": "Ștrandul mare din Otopeni, unde vara se țin și evenimente: în iunie 2026 aici s-au jucat calificările FIBA 3x3 Europe Cup. Bun pentru o zi la piscină fără să mergi până la mare.",
+  "when": "vara, în weekend, ziua",
+  "season": "vara",
+  "vibes": [
+   "Fun",
+   "Aer liber"
+  ],
+  "free": false,
+  "sources": [
+   "https://waterpark.ro/evenimente/",
+   "https://www.bucuresti.ro/articole/parcuri-acvatice-din-bucuresti-in-2026-unde-fugim-de-caldura-vara-aceasta-1597"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm (date brute, nu e în aplicație)"
+ },
+ {
+  "name": "Parcul Tei",
+  "osm_id": "w23583220",
+  "cat": "natura",
+  "kind": "Parc cu lac și pontoane",
+  "lat": 44.465586,
+  "lon": 26.12359,
+  "city": "București",
+  "story": "Parcul de pe malul Lacului Tei are pontoane care intră în apă și bărci de închiriat; e mai liniștit decât Herăstrăul și aproape de Floreasca. Bun pentru o plimbare la apus fără înghesuială.",
+  "when": "seara, primăvara–toamna",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.seebucharest.ro/parcul-de-agrement-tei/",
+   "https://stirileprotv.ro/stiri/travel/parcul-tei-si-povestea-lui-ce-s-a-intamplat-cu-parcul-de-distractii-din-interior.html"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "ParkLake (lângă Parcul IOR)",
+  "osm_id": null,
+  "cat": "loc",
+  "kind": "Mall, loc de întâlnire când plouă",
+  "lat": 44.420919,
+  "lon": 26.149859,
+  "city": "București",
+  "story": "Pentru mulți tineri din est, mallul de lângă Parcul IOR e locul de întâlnire când plouă sau e frig: cinema, food court și, când se oprește ploaia, ieși direct în parc.",
+  "when": "tot anul, mai ales seara și în zilele cu vreme rea",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Fun",
+   "Mâncare bună"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm (Cinema City ParkLake, Str. Liviu Rebreanu 4)"
+ },
+ {
+  "name": "Sun Plaza",
+  "osm_id": null,
+  "cat": "loc",
+  "kind": "Mall, loc de întâlnire când plouă",
+  "lat": 44.396176,
+  "lon": 26.122158,
+  "city": "București",
+  "story": "Mallul mare din sud, lângă Parcul Natural Văcărești, e unul dintre locurile unde se strâng tinerii când e frig sau plouă: cinema, food court și ceva de făcut fără program.",
+  "when": "tot anul, mai ales seara și în zilele cu vreme rea",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Fun",
+   "Mâncare bună"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm (Cinema City Sun Plaza, Calea Văcărești 391)"
+ },
+ {
+  "name": "Mănăstirea Snagov",
+  "osm_id": "w25511874",
+  "cat": "cultura",
+  "kind": "Mănăstire pe insulă",
+  "lat": 44.729655,
+  "lon": 26.175883,
+  "city": "Snagov",
+  "story": "Mănăstirea de pe insula din Lacul Snagov, unde legenda spune că ar fi îngropat Vlad Țepeș. Se leagă bine cu o zi la lac și o tură cu barca.",
+  "when": "weekend, ziua",
+  "season": "tot anul",
+  "vibes": [
+   "Cultură",
+   "Aer liber",
+   "Chill"
+  ],
+  "free": true,
+  "sources": [
+   "https://www.barci.ro/lacul-snagov/",
+   "https://incotro.olx.ro/padurea-si-lacul-snagov-de-ce-si-cand-sa-le-vizitezi/"
+  ],
+  "confidence": "medium",
+  "coord_source": "osm"
+ },
+ {
+  "name": "Parcul dintre Flori",
+  "osm_id": "w407167229",
+  "cat": "natura",
+  "kind": "Parcul orașului Buftea",
+  "lat": 44.551832,
+  "lon": 25.949717,
+  "city": "Buftea",
+  "story": "Singurul parc amenajat din Buftea, cu loc de joacă și alei, unde ies seara localnicii. E bun ca a doua oprire după o plimbare pe digul de la Calul Bălan.",
+  "when": "seara, vara",
+  "season": "tot anul",
+  "vibes": [
+   "Chill",
+   "Aer liber"
+  ],
+  "free": true,
+  "sources": [
+   "https://expresuldebuftea.ro/9-activitati-pe-care-sa-le-faci-cu-copiii-in-buftea/"
+  ],
+  "confidence": "low",
+  "coord_source": "osm"
+ }
+]

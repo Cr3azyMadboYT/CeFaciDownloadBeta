@@ -1,0 +1,5145 @@
+{
+ "decisions": [
+  {
+   "osm_id": "n13351083161",
+   "name": "1 Minute",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4988113921",
+   "name": "11D",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4080665314",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4330787289",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5278303557",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6053540086",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8828063881",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9943494822",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10258048294",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10279803908",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10304866057",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10305067098",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10574704183",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10682657547",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10891962019",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10931156083",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11150527429",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11514826811",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11613196581",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11771989569",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11830879369",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12382090710",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12425675488",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13200130401",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13519870033",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13625439912",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13723240041",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w751555978",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1190118008",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1484107301",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12362029465",
+   "name": "6 Ciorbe",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13324821915",
+   "name": "81nfinity",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu bucătărie internațională pe Biruinței 81, cu nota 4,8 di…"
+  },
+  {
+   "osm_id": "n13607997893",
+   "name": "A.P. Kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1415127396",
+   "name": "AFC Victoria Adunații-Copăceni",
+   "decision": "drop",
+   "why": "teren de sport local, nu loc de ieșit"
+  },
+  {
+   "osm_id": "w1098851225",
+   "name": "Airport Grill",
+   "decision": "drop",
+   "why": "în aeroport (locurile din aeroport sunt scoase)"
+  },
+  {
+   "osm_id": "w1196046893",
+   "name": "Ali Potol SHAWORMA by Gourmonde",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10284926362",
+   "name": "AliKebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10610808705",
+   "name": "All For Six",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w219769048",
+   "name": "Ambasad'Or",
+   "decision": "drop",
+   "why": "salon de evenimente"
+  },
+  {
+   "osm_id": "n12362055781",
+   "name": "Amicii",
+   "decision": "keep",
+   "why": "verificat: Cafenea pe Biruinței 87 cu cafea bună și prăjituri, unde se țin și înt…"
+  },
+  {
+   "osm_id": "w307865089",
+   "name": "Amid Kebap Chiajna",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12153041045",
+   "name": "Amora",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4090894275",
+   "name": "Amvrosia Restaurant Grecesc",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12188425955",
+   "name": "Antiqua Napoli",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1416738224",
+   "name": "ARA Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12433952493",
+   "name": "Arabu Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11187972861",
+   "name": "ARC Bakery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1286132356",
+   "name": "Arena",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1420394521",
+   "name": "Aria naturală protejată Pajiștea Petricani",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n14131632666",
+   "name": "Aroma",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8318435127",
+   "name": "Aslan",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10113765945",
+   "name": "Aulat",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3570850793",
+   "name": "Bar, cafea",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w943265163",
+   "name": "BarBQ",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w828136066",
+   "name": "Baza Sportivă \"Nicolae Navasart\"",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w981687802",
+   "name": "Baza sportivă ASPOL",
+   "decision": "drop",
+   "why": "teren de sport local, nu loc de ieșit"
+  },
+  {
+   "osm_id": "w848452176",
+   "name": "Baza sportivă Carmesin",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w848875778",
+   "name": "Baza sportivă Mase Plastice",
+   "decision": "drop",
+   "why": "teren de sport local, nu loc de ieșit"
+  },
+  {
+   "osm_id": "n9871123617",
+   "name": "Bazinul Olimpic Otopeni",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n12574170844",
+   "name": "Băieții cu Creveții",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w318990255",
+   "name": "BBQ & Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w598169298",
+   "name": "Beijing Garden",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w941119949",
+   "name": "Beijing Garden",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11370725889",
+   "name": "Bella italia",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13283158601",
+   "name": "Bella Italia Cosmopolis",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8647860519",
+   "name": "Best Food Shaorma Militari Residence",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11150471914",
+   "name": "Best of Shaorma",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6917823021",
+   "name": "Beyaz Restaurant",
+   "decision": "keep",
+   "why": "verificat: Restaurant turcesc pe Colentina 442, cunoscut pentru grătar: Adana keb…"
+  },
+  {
+   "osm_id": "n4400914089",
+   "name": "Bistro Decan",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w262778118",
+   "name": "Bistro Edy",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11096820462",
+   "name": "BOB Coffee Lab",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13569684601",
+   "name": "Boom Burger",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1160432997",
+   "name": "Bucharest Golf Club",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n7617615390",
+   "name": "Buddies",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12109969744",
+   "name": "Buongiorno Italian",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8242880866",
+   "name": "Burger King",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1553246950",
+   "name": "Burger King",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12639312101",
+   "name": "Burgers by Ferma Baciu",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11530572917",
+   "name": "Cafeaua la Parc",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w985610301",
+   "name": "Cantina",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4077779689",
+   "name": "Cantine 2 North Center",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9003531374",
+   "name": "Cantinetta",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w244285599",
+   "name": "Capri",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8482802223",
+   "name": "Cartofisserie",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1057030070",
+   "name": "Cartofisserie",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3647831865",
+   "name": "Casa Cernica",
+   "decision": "drop",
+   "why": "neverificat (sursele vorbesc de alte localuri de la Cernica)"
+  },
+  {
+   "osm_id": "n13654229367",
+   "name": "Casa cu Păuni",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w231801493",
+   "name": "Casa de Piatră",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n841466798",
+   "name": "Casa Luca",
+   "decision": "drop",
+   "why": "mai ales nunți și botezuri"
+  },
+  {
+   "osm_id": "n3305356244",
+   "name": "Casa Parisiană",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n2443661969",
+   "name": "Casa Pedro",
+   "decision": "drop",
+   "why": "mai ales evenimente; nu e în orașul Pantelimon"
+  },
+  {
+   "osm_id": "w495066823",
+   "name": "Casa Românească",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu mâncare românească vizavi de aeroportul Henri Coandă, cu…"
+  },
+  {
+   "osm_id": "n2800591014",
+   "name": "Casa Vânătorească",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu hotel și cramă pe drumul Chitila–Mogoșoaia, cu mâncare r…"
+  },
+  {
+   "osm_id": "n2918314863",
+   "name": "Casa Vladis",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13378312432",
+   "name": "Catastrophe",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3647437386",
+   "name": "Cernica",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11725872169",
+   "name": "Cetatea Din Alep",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11300087946",
+   "name": "Check-in Lounge",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11579389869",
+   "name": "Chef Simon Meat Master",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8642644922",
+   "name": "CHIAJNA CATERING",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12069599469",
+   "name": "Choose Cheese",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11064750164",
+   "name": "Chopstix",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11941790915",
+   "name": "Cofee",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9582677958",
+   "name": "Cofetăria Sara",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1296716083",
+   "name": "Colectia Dendrologica Snagov",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "n2634652241",
+   "name": "Colecția Muzeală a Mănăstirii Ortodoxe Căldărușani",
+   "decision": "drop",
+   "why": "dublură: colecția mănăstirii, păstrată Mănăstirea Căldărușani"
+  },
+  {
+   "osm_id": "n2634652251",
+   "name": "Colecția Muzeală a Mănăstirii Ortodoxe Cernica",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2634652874",
+   "name": "Colecția muzeală a Mănăstirii Ortodoxe Pasărea",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2634653097",
+   "name": "Colecția Muzeală a Mănăstirii Ortodoxe Țigănești",
+   "decision": "drop",
+   "why": "dublură: colecția mănăstirii, păstrată Mănăstirea Țigănești"
+  },
+  {
+   "osm_id": "n2634652271",
+   "name": "Colecția Publică „Istoria Locală-Zona Snagov/Codrii Vlasiei”",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3647445854",
+   "name": "Colonial club Cernica",
+   "decision": "drop",
+   "why": "salon de evenimente pe malul lacului"
+  },
+  {
+   "osm_id": "n3070655073",
+   "name": "Colțunaș Chinezesc",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w396242423",
+   "name": "Complex Tancabesti",
+   "decision": "drop",
+   "why": "complex de evenimente, neverificat"
+  },
+  {
+   "osm_id": "w236835221",
+   "name": "Complexul Sportiv Concordia Chiajna",
+   "decision": "drop",
+   "why": "teren de sport local, nu loc de ieșit"
+  },
+  {
+   "osm_id": "w1031378073",
+   "name": "Conacul Bujoiu",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1316176597",
+   "name": "Conacul Filipescu",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w612191194",
+   "name": "Conacul Stolnicului Constantin Cantacuzino",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13031458666",
+   "name": "CrazyCrepes",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11064750163",
+   "name": "Cremeria Matei",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9711271743",
+   "name": "Crepes Cuisine",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n503667801",
+   "name": "D&D Design District Café",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5075418321",
+   "name": "Danacais",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n14219454365",
+   "name": "Delicii la Tuci",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11089362664",
+   "name": "Dinner Food",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12077712565",
+   "name": "Dinner Food",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13936441502",
+   "name": "Dodo Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10297036075",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11031884374",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11420115274",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13336028227",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3009653433",
+   "name": "Doncafé Brasserie",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3314300297",
+   "name": "Doner Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1368607375",
+   "name": "Donkey Pub",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n9034618779",
+   "name": "Donuttery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n2918314870",
+   "name": "Dovinot",
+   "decision": "keep",
+   "why": "verificat: Clubul din Mihăilești, lăudat pentru muzică bună, energie și prețuri r…"
+  },
+  {
+   "osm_id": "n3570924505",
+   "name": "Dovinot",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w599922728",
+   "name": "Dream's Pub",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10610760344",
+   "name": "Dristor Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13679263401",
+   "name": "Eden Bar",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n9226929866",
+   "name": "Eggs Cup",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1548651660",
+   "name": "Egoist Resto&Lounge",
+   "decision": "drop",
+   "why": "există, dar nimic de spus din surse"
+  },
+  {
+   "osm_id": "n7617615389",
+   "name": "Ev Don fusion",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10199327913",
+   "name": "Fast Food \"La Roșcatu\"",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10111661679",
+   "name": "Fayn",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1173862898",
+   "name": "Ferma Animalelor",
+   "decision": "keep",
+   "why": "verificat: Prima fermă-parc cu animale domestice pentru copii din România, deschi…"
+  },
+  {
+   "osm_id": "w330122581",
+   "name": "Foozz Pizza & Food Delivery",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5290479714",
+   "name": "Fratelli Lounge & Club",
+   "decision": "drop",
+   "why": "starea în 2026 neverificată; Fratelli Studios e deja păstrat"
+  },
+  {
+   "osm_id": "n2457438681",
+   "name": "Fratelli Social Club",
+   "decision": "drop",
+   "why": "doar vara (locație de sezon), închis acum"
+  },
+  {
+   "osm_id": "n10111661680",
+   "name": "FruFru",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8828063886",
+   "name": "Garden8",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4831113321",
+   "name": "Geemeenii Bistro",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1108272756",
+   "name": "Geemeenii Bistro",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w696897450",
+   "name": "Gelato Natura",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n8004376949",
+   "name": "Ginger Horse",
+   "decision": "keep",
+   "why": "verificat: Pub irlandez pe Bulevardul Pipera 40B, cu multe whisky-uri și bere la …"
+  },
+  {
+   "osm_id": "n4778563342",
+   "name": "Giuliano's Heritage Hotel",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9558269022",
+   "name": "Goat",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6264864920",
+   "name": "golden wok",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13608095631",
+   "name": "Good & Goody",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12533822401",
+   "name": "Gorilla's Crazy Burgers",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5999608620",
+   "name": "Gotti",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n6621302168",
+   "name": "Grădina Zoologică",
+   "decision": "drop",
+   "why": "probabil etichetă greșită pe hartă (nu e grădină zoologică în Chiajna)"
+  },
+  {
+   "osm_id": "n13164499536",
+   "name": "Grădina Zoologică Bucureşti",
+   "decision": "drop",
+   "why": "dublură: Grădina Zoologică București e deja păstrată"
+  },
+  {
+   "osm_id": "n1756952314",
+   "name": "Green Garlic Pub",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9105835853",
+   "name": "Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10212528308",
+   "name": "GRILLY'S Corner",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10111661681",
+   "name": "Guri Guri",
+   "decision": "keep",
+   "why": "verificat: Restaurant coreean ținut de o familie de coreeni, pe Fabrica de Glucoz…"
+  },
+  {
+   "osm_id": "n13322585557",
+   "name": "Gusturi de casă",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11069181126",
+   "name": "Gyro",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4080665317",
+   "name": "Gyros Mania",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7263353911",
+   "name": "Häagen-Dazs",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w878203766",
+   "name": "Hai pe Cai",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12165537279",
+   "name": "Hanul Oltenesc",
+   "decision": "keep",
+   "why": "verificat: Restaurant-pizzerie pe Șoseaua Giurgiului în 1 Decembrie, foarte bine …"
+  },
+  {
+   "osm_id": "n769582150",
+   "name": "Hanul Vlăsia",
+   "decision": "keep",
+   "why": "verificat: Han cu mâncare românească (puiul și medalionul „Vlăsia”, cotlet de ber…"
+  },
+  {
+   "osm_id": "n9846854233",
+   "name": "Hasmir Kebap 2",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6053546185",
+   "name": "Hasmir Kebap 3",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1396180787",
+   "name": "Hesburger",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1544837136",
+   "name": "Hesburger",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6053540087",
+   "name": "House of Burger",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13261571186",
+   "name": "I SMASHED",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10889700573",
+   "name": "IKEA Restaurant",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4363439143",
+   "name": "Insieme",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4363436537",
+   "name": "Insieme Bar",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4363436377",
+   "name": "Insieme Club",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w263218364",
+   "name": "Institut Disciples Escoffier - Restaurant Escoffier",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9433334767",
+   "name": "Iute",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13324148604",
+   "name": "Jar House",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4423507989",
+   "name": "Jerry's Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5901273786",
+   "name": "Jerry's Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7617615392",
+   "name": "Jerry's Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8482802222",
+   "name": "Jerry's Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w587319816",
+   "name": "Jerry's Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9105778597",
+   "name": "JOY Coffee Shop",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13974797880",
+   "name": "Kaufland Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1227619196",
+   "name": "Kaufland Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1238689138",
+   "name": "Kaufland Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1262299985",
+   "name": "Kaufland Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1098273273",
+   "name": "Kave",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n7183659338",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7263354836",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8727841098",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8727841105",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10610760339",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w415281299",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w925040752",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1191271954",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10728177839",
+   "name": "Kicineta",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3021824672",
+   "name": "Km 19 Grill Cafe",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n1213250524",
+   "name": "KODAK Cinelabs Romania",
+   "decision": "drop",
+   "why": "laborator de film, nu cinema"
+  },
+  {
+   "osm_id": "n516870100",
+   "name": "La Baraca",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11150471926",
+   "name": "La baronul",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n9575352925",
+   "name": "La Bufet",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n247733154",
+   "name": "La Casolare",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13242491440",
+   "name": "La Crama",
+   "decision": "keep",
+   "why": "verificat: Bar & grill pe Atomiștilor 250A în Măgurele, specializat pe fripturi ș…"
+  },
+  {
+   "osm_id": "n4207655089",
+   "name": "La Doi Frați",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4095998543",
+   "name": "La Fănică",
+   "decision": "drop",
+   "why": "doar descrieri generice, neverificat"
+  },
+  {
+   "osm_id": "n10610760343",
+   "name": "La Galleria",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13654104339",
+   "name": "La Galleria",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n677426083",
+   "name": "La Gica",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4086003128",
+   "name": "La Mami Acasă",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n9970174228",
+   "name": "La Merenda",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n9505385222",
+   "name": "La Platouri",
+   "decision": "keep",
+   "why": "verificat: Restaurant (cu hotel) pe Bulevardul Voluntari 84C, printre cele mai bi…"
+  },
+  {
+   "osm_id": "n8654465495",
+   "name": "La Pyny",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1443414004",
+   "name": "La Seratta",
+   "decision": "drop",
+   "why": "salon de evenimente (nunți), nu loc de ieșit"
+  },
+  {
+   "osm_id": "w1416738221",
+   "name": "La Vânători",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w439992366",
+   "name": "La Virajul Trei",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n2360465919",
+   "name": "Laguna Verde",
+   "decision": "keep",
+   "why": "verificat: Restaurant pescăresc pe malul bălții de la Căciulați, cu salon rustic …"
+  },
+  {
+   "osm_id": "n9775223451",
+   "name": "Lari's Legend",
+   "decision": "keep",
+   "why": "verificat: Restaurant mediteranean din Ștefăneștii de Jos, doar cu mâncare făcută…"
+  },
+  {
+   "osm_id": "n11089362663",
+   "name": "Lee Ho",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8797381931",
+   "name": "Lemon Bistro",
+   "decision": "drop",
+   "why": "doar adresa în surse, nimic de spus"
+  },
+  {
+   "osm_id": "n9943494831",
+   "name": "Loco Pub",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5879385087",
+   "name": "Lucky Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6988548042",
+   "name": "Lucky Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5435274421",
+   "name": "Mandaloo",
+   "decision": "keep",
+   "why": "verificat: Restaurant-lounge cu decor aparte în Complex LA (Amurgului 34), cu men…"
+  },
+  {
+   "osm_id": "n10727893918",
+   "name": "Manuel",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9712629363",
+   "name": "Manufaktura",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n14004741101",
+   "name": "Manufaktura",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9334882320",
+   "name": "Maroon",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9401083996",
+   "name": "Maroon",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4400899490",
+   "name": "Mazaka Turkish Grill",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w263323014",
+   "name": "Mănăstirea „Christiana”",
+   "decision": "drop",
+   "why": "neverificat (mănăstire fără surse găsite)"
+  },
+  {
+   "osm_id": "w1324485970",
+   "name": "Mănăstirea catolică „Sfânta Agnes - Congregatio Jesu”",
+   "decision": "drop",
+   "why": "neverificat (mănăstire fără surse găsite)"
+  },
+  {
+   "osm_id": "w891254538",
+   "name": "Mănăstirea Căldărușani",
+   "decision": "keep",
+   "why": "verificat: Mănăstire ridicată în 1638 de Matei Basarab lângă lacul Căldărușani, c…"
+  },
+  {
+   "osm_id": "w1324485973",
+   "name": "Mănăstirea Ortodoxă Duminica Sfinților Romani",
+   "decision": "drop",
+   "why": "neverificat (mănăstire fără surse găsite)"
+  },
+  {
+   "osm_id": "w379370065",
+   "name": "Mănăstirea Pasărea",
+   "decision": "drop",
+   "why": "neverificat (mănăstire fără surse găsite)"
+  },
+  {
+   "osm_id": "w1026232362",
+   "name": "Mănăstirea Sămurcășești",
+   "decision": "drop",
+   "why": "neverificat (mănăstire fără surse găsite)"
+  },
+  {
+   "osm_id": "w1169401746",
+   "name": "Mănăstirea Țigănești",
+   "decision": "keep",
+   "why": "verificat: Una dintre cele mai liniștite și bine păstrate mănăstiri de lângă Bucu…"
+  },
+  {
+   "osm_id": "w1333542840",
+   "name": "Mânăstirea Plumbuita",
+   "decision": "drop",
+   "why": "neverificat (mănăstire fără surse găsite)"
+  },
+  {
+   "osm_id": "n7056302039",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8244872606",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8721737443",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9045007885",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w251384862",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w295740328",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w306089487",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w461328280",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w660143839",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1017616119",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9575352923",
+   "name": "Mesopotamia",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10610760340",
+   "name": "Mesopotamia",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10891746895",
+   "name": "Mesopotamia",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11064750153",
+   "name": "Mesopotamia",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11916543515",
+   "name": "MINA",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w560172835",
+   "name": "Moon Bistro",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13520171060",
+   "name": "MRS Kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w243925663",
+   "name": "Muzeul Mănăstirii Cernica",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n14244975990",
+   "name": "Niko Pallace Jilava",
+   "decision": "drop",
+   "why": "salon de evenimente"
+  },
+  {
+   "osm_id": "n9105778596",
+   "name": "NOD",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10610760341",
+   "name": "Noodle Pack",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11844514512",
+   "name": "Novu",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu bucătărie internațională și terasă, pe Pădurea Mogoșoaia…"
+  },
+  {
+   "osm_id": "n3505133093",
+   "name": "O Sole Mio",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13565049102",
+   "name": "Ograda Urbană",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w941119954",
+   "name": "Orygyns",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13955373201",
+   "name": "Osama Sushi Chiajna",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w27634114",
+   "name": "Palatul Ghica",
+   "decision": "drop",
+   "why": "Palatul Ghica nu e deschis publicului"
+  },
+  {
+   "osm_id": "w828136061",
+   "name": "Palatul Snagov",
+   "decision": "keep",
+   "why": "verificat: Palatul de pe malul lacului Snagov se vizitează cu bilet (70 lei adulț…"
+  },
+  {
+   "osm_id": "w407754956",
+   "name": "Palatul Știrbei",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1415396358",
+   "name": "Panda Restaurant",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11530606840",
+   "name": "Panoramic",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3564779634",
+   "name": "Paradis",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w487731551",
+   "name": "Parc Flămânzeni",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w28831219",
+   "name": "Parcul Casa Albă",
+   "decision": "drop",
+   "why": "acoperit de Pădurea Băneasa (păstrată)"
+  },
+  {
+   "osm_id": "w1160395218",
+   "name": "Parcul Corbeanca",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w1381347872",
+   "name": "Parcul dendrologic - Colegiul Silvic „Theodor Pietraru”",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w407167229",
+   "name": "Parcul dintre Flori",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w607298984",
+   "name": "Parcul Dobroești",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w685369066",
+   "name": "Parcul Ion Creangă",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w23739420",
+   "name": "Parcul Sticlăriei",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w1086229087",
+   "name": "Parcul Valea Mangului",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w941119950",
+   "name": "Passione Ristorante",
+   "decision": "keep",
+   "why": "verificat: Restaurant italian din Pipera Plaza, lăudat pentru risotto, paste și p…"
+  },
+  {
+   "osm_id": "w123089723",
+   "name": "Piscina Complexului ASTORIA Snagov",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1168911692",
+   "name": "Piscina Spa Domnești",
+   "decision": "keep",
+   "why": "verificat: Complex în Domnești (Tudor Vladimirescu 309) cu piscină pentru adulți …"
+  },
+  {
+   "osm_id": "n10610808732",
+   "name": "Pizza Bonita",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n247641131",
+   "name": "Pizza California",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3420263975",
+   "name": "Pizza Flux - cuptor cu lemne",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4714567389",
+   "name": "Pizza Hut",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9433334766",
+   "name": "Pizza Hut",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9226855841",
+   "name": "Pizza Hut Delivery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10060255154",
+   "name": "Pizza Hut Delivery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n6935340962",
+   "name": "Pizza Ka",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13265121349",
+   "name": "Pizza Papa Man",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5261489155",
+   "name": "Pizzeria La Nae",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w408492998",
+   "name": "Pizzeria Romană",
+   "decision": "keep",
+   "why": "verificat: Pizzeria din centrul Buftei (Știrbei Vodă 20A), cu pizza cu blat subți…"
+  },
+  {
+   "osm_id": "n3420263983",
+   "name": "Pizzeria Scarabel",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11347028415",
+   "name": "Plug In Coffee",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12666540318",
+   "name": "Plug In Coffee",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2847722808",
+   "name": "Popas Haplea",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4687665889",
+   "name": "Popas Rândunica",
+   "decision": "keep",
+   "why": "verificat: Restaurant deschis din 1991 în Chiajna, cu mâncare românească, terasă …"
+  },
+  {
+   "osm_id": "n12847241697",
+   "name": "Popești station shaorma",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1227673747",
+   "name": "Popeyes",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w941119946",
+   "name": "Porto Gallo",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11623947469",
+   "name": "PrazVegas",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9362431748",
+   "name": "Preso Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7294410245",
+   "name": "Presto Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10610808708",
+   "name": "Presto Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13718155201",
+   "name": "Presto Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9575352922",
+   "name": "Puii Mei",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4540680490",
+   "name": "Q's inn",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n6868270636",
+   "name": "Queen Events",
+   "decision": "drop",
+   "why": "salon de evenimente"
+  },
+  {
+   "osm_id": "w1239493578",
+   "name": "Red Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4391460190",
+   "name": "Republica Döner Kebap",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8654444572",
+   "name": "Restaurant Aqua",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu piscină în Ghermănești (Șos. Ghermănești 58A), 4,4 din 2…"
+  },
+  {
+   "osm_id": "n10143621709",
+   "name": "Restaurant arabesc",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3570102495",
+   "name": "Restaurant Buda",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n1211033854",
+   "name": "Restaurant Casa Domnești",
+   "decision": "keep",
+   "why": "verificat: Restaurant elegant în Domnești cu mâncare românească și internațională…"
+  },
+  {
+   "osm_id": "n3570064794",
+   "name": "Restaurant Confidence",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9695190610",
+   "name": "Restaurant Crystal Gold",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5906079374",
+   "name": "Restaurant Doi Tăurași",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5646198649",
+   "name": "Restaurant Dovinot",
+   "decision": "keep",
+   "why": "verificat: Restaurant din Mihăilești cu mâncare românească și europeană, terasă ș…"
+  },
+  {
+   "osm_id": "w985525175",
+   "name": "Restaurant Golden Plum",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n8374920709",
+   "name": "Restaurant Jawad",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1110482246",
+   "name": "Restaurant Majestic",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3647445855",
+   "name": "Restaurant Porumbița",
+   "decision": "drop",
+   "why": "acum sală de evenimente (Cernica Events)"
+  },
+  {
+   "osm_id": "w527662648",
+   "name": "Restaurant Stejarii",
+   "decision": "keep",
+   "why": "verificat: Restaurantul de lângă piscina Stejarii Country Club (clubul lui Țiriac…"
+  },
+  {
+   "osm_id": "n4349316189",
+   "name": "Restaurant Tecadra",
+   "decision": "keep",
+   "why": "verificat: Berărie germană la hotelul Tecadra din Pipera (Erou Iancu Nicolae 67A)…"
+  },
+  {
+   "osm_id": "w941063540",
+   "name": "Restaurantul „Casa Albă”",
+   "decision": "keep",
+   "why": "verificat: Vila din Pădurea Băneasa ridicată în 1930 de arhitectul Octav Doicescu…"
+  },
+  {
+   "osm_id": "n4101482395",
+   "name": "Restaurantul „Casa Veldoni”",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3917063025",
+   "name": "Restaurantul Latin",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w372498431",
+   "name": "Ro & La.",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11624005069",
+   "name": "Royal Sushi House",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11064750165",
+   "name": "Rustic",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4369544897",
+   "name": "Salon Evenimente Casa Alba",
+   "decision": "drop",
+   "why": "salon de evenimente"
+  },
+  {
+   "osm_id": "n8828063880",
+   "name": "Samsara (Delivery Only)",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4712948976",
+   "name": "San Diego",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13936554501",
+   "name": "SANDWICH LA JUMA' DE KIL - MILITARI",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w846625616",
+   "name": "Sara Bistro",
+   "decision": "keep",
+   "why": "verificat: Bistroul deschis la sfârșitul lui 2019 în Otopeni, pe Ion Creangă 2: g…"
+  },
+  {
+   "osm_id": "n8227510805",
+   "name": "Sarea'n Bucate",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11347052256",
+   "name": "Sea Ray - Fructe de mare",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu pește și fructe de mare aduse de la Marea Neagră, pe Dru…"
+  },
+  {
+   "osm_id": "n11150618988",
+   "name": "Shaormeria Baneasa",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10012750177",
+   "name": "Shaormeria Băneasa",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10113539336",
+   "name": "Shaormeria Băneasa",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13288614601",
+   "name": "Shaormeria Băneasa",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1057038573",
+   "name": "Shaormeria Băneasa",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1227666860",
+   "name": "Shaormeria Băneasa Voluntari",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11059863262",
+   "name": "Sheriff Real Food",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w301746662",
+   "name": "Silflor Move",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n8482802227",
+   "name": "So Coffee",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10610808727",
+   "name": "SO! Coffee",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w277589947",
+   "name": "Sonya Bistro & More",
+   "decision": "keep",
+   "why": "verificat: Restaurantul de pe Atomiștilor 250A, fostul Sonya Bistro, cu mâncare i…"
+  },
+  {
+   "osm_id": "n11089362662",
+   "name": "Spartan",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13710660636",
+   "name": "Speciality Cofee",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11089362661",
+   "name": "Speed Pizza",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5880648936",
+   "name": "Springtime",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4107002593",
+   "name": "Starbucks",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n6155836786",
+   "name": "Starbucks",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6155839926",
+   "name": "Starbucks",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6155859303",
+   "name": "Starbucks",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7263354837",
+   "name": "Starbucks",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w650210420",
+   "name": "Starbucks",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9582677957",
+   "name": "Stick It",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9226903343",
+   "name": "Stradale",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11903333376",
+   "name": "Stradale",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w637892799",
+   "name": "Studio 80",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13087685431",
+   "name": "Subway",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w374280516",
+   "name": "Subway",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9453510493",
+   "name": "SUMAC Lebanese Food Station",
+   "decision": "drop",
+   "why": "doar menționat, fără ceva de spus"
+  },
+  {
+   "osm_id": "n10829792385",
+   "name": "Sushi Gallery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11398454551",
+   "name": "Sushi Gallery",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n6377646615",
+   "name": "Școala de echitație EQUESTRIA",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10113539337",
+   "name": "Șiș Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9334882323",
+   "name": "Ted’s Coffee",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n8244872614",
+   "name": "Ted's Coffee Co.",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12652303088",
+   "name": "Ted's Coffee Co.",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12759697006",
+   "name": "Ted's Coffee Co.",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12880708096",
+   "name": "Temple of Brewzeus",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8655042099",
+   "name": "Tempo Cafe",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3497280994",
+   "name": "Terasa Cora",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10705100997",
+   "name": "The Brasserie",
+   "decision": "keep",
+   "why": "verificat: Restaurant pe Biruinței 45 cu pizza, burgeri, paste și meniul zilei.…"
+  },
+  {
+   "osm_id": "w625068172",
+   "name": "The Brick",
+   "decision": "keep",
+   "why": "verificat: Deschis în 2009 în Paradisul Verde din Corbeanca, un amestec între Bud…"
+  },
+  {
+   "osm_id": "n516859749",
+   "name": "The Library",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1110306409",
+   "name": "Time 2 Eat",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4105479089",
+   "name": "Tóan's",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13500900557",
+   "name": "Togo",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9001356319",
+   "name": "Tratoria Arte Pasta",
+   "decision": "drop",
+   "why": "în Săftica, doar surse vechi; neverificat"
+  },
+  {
+   "osm_id": "n9402587517",
+   "name": "Tratorria arte pasta",
+   "decision": "drop",
+   "why": "dublură/neverificat (Arte Pasta, Săftica)"
+  },
+  {
+   "osm_id": "w625113482",
+   "name": "Trattoria Paradis",
+   "decision": "keep",
+   "why": "verificat: Pizzeria de cartier din Paradisul Verde (Corbeanca), 4,0 pe Tripadviso…"
+  },
+  {
+   "osm_id": "w485117431",
+   "name": "Trattoria Roz Cafe",
+   "decision": "keep",
+   "why": "verificat: Trattorie din Militari Residence (Rezervelor 52) cu pizza și mâncare m…"
+  },
+  {
+   "osm_id": "n11166911349",
+   "name": "Trenta pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7617615391",
+   "name": "Trenta Pizza",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12282332080",
+   "name": "Tucano Coffee",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1227673753",
+   "name": "Tucano Coffee",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12245868732",
+   "name": "Turkish Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10610760342",
+   "name": "Uncle John",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11466353074",
+   "name": "Uncle John",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1022842199",
+   "name": "Uncle John",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5706022892",
+   "name": "Uno Cafe",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4080665315",
+   "name": "Urban Foods",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4889286405",
+   "name": "Valahia",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13960836702",
+   "name": "Velluto Caffe",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13829596747",
+   "name": "Venetto Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12282332074",
+   "name": "Verbun Shaorma",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10610808707",
+   "name": "Vibe Cafe",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1422672324",
+   "name": "Viscofil Park",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1062944261",
+   "name": "WayCup",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2494935410",
+   "name": "West Gate Restaurant",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n12442528261",
+   "name": "Yvi's Restaurant",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3273011235",
+   "name": "Zigu",
+   "decision": "keep",
+   "why": "verificat: Restaurant din centrul Pantelimonului (Bd. Biruinței 140-142), cu mânc…"
+  },
+  {
+   "osm_id": "n4308640644",
+   "name": "4 Brothers",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13141248874",
+   "name": "4 Frați Döner",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10209842678",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10595911870",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10596143220",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10749243237",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11091658599",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11161225813",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11233048737",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11368746671",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11396504897",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11533467352",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11665150969",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11947814832",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12003199456",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12222303133",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12281555388",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12337824021",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12633113488",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12774633185",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12912644269",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12925631167",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13574625920",
+   "name": "5 to go",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3468645493",
+   "name": "Acvila",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3271274322",
+   "name": "AMID Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5549741030",
+   "name": "Aroma Empire Cofee",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4793844721",
+   "name": "Aubert",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1372145620",
+   "name": "Autocarul cu Bunătăți",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1226777019",
+   "name": "Autok9 Arena",
+   "decision": "drop",
+   "why": "teren de sport local, nu loc de ieșit"
+  },
+  {
+   "osm_id": "n3431737203",
+   "name": "Autoservire",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4528960489",
+   "name": "B V M Sala Ps @ xbox",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3233960002",
+   "name": "B-Black Lebanese",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5207955896",
+   "name": "Bar & grill La Grădină",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4456565391",
+   "name": "Bar La Gargarite",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w858609086",
+   "name": "Bazin de înot Steaua",
+   "decision": "drop",
+   "why": "bazin de club, mai ales cursuri; nu e în Sectorul 5"
+  },
+  {
+   "osm_id": "n13008541770",
+   "name": "Bella Italia",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13664762514",
+   "name": "Berceni 53",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13633512165",
+   "name": "Betty Ice",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9850897623",
+   "name": "Bistro 23",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11125489705",
+   "name": "Bistro 31",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n7614905139",
+   "name": "Bistro Box Cuisine",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11780093948",
+   "name": "Bobalicious",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w256200924",
+   "name": "Bodega la Iulian",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12090223769",
+   "name": "Bonze Sushi",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n2614868599",
+   "name": "Bubu Pizza",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5037018532",
+   "name": "Burger King",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w837034103",
+   "name": "Burger King",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2288454474",
+   "name": "Burger Story",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w1204190633",
+   "name": "Cafe Nar",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5520224021",
+   "name": "Cafetăria Sebastian",
+   "decision": "keep",
+   "why": "verificat: Cantină cu mâncare românească gătită în ziua respectivă, pe Mihail Seb…"
+  },
+  {
+   "osm_id": "n11101750320",
+   "name": "Cartofisserie",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3439090038",
+   "name": "Casa Brâncoveanu - restaurant - pizzerie",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4548618789",
+   "name": "Casa Brândușa",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu grădină pe Novaci 9B (13 Septembrie), cu ciorbă de burtă…"
+  },
+  {
+   "osm_id": "n2634651950",
+   "name": "Casa Memorială \"George și Agatha Bacovia\"",
+   "decision": "keep",
+   "why": "verificat: Casa din Berceni unde au trăit Bacovia și soția lui, primul muzeu de s…"
+  },
+  {
+   "osm_id": "n2634652142",
+   "name": "Casa Memorială \"Tudor Arghezi\"",
+   "decision": "keep",
+   "why": "verificat: Casa lui Arghezi de pe strada Mărțișor, muzeu al MNLR, înconjurată de …"
+  },
+  {
+   "osm_id": "n4686942790",
+   "name": "Casa pizza",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10735357630",
+   "name": "Castronul Gustos",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n1069129785",
+   "name": "Çeşme",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4336660455",
+   "name": "Chicken Deea shaorma",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1481066687",
+   "name": "Cinema Flamura",
+   "decision": "drop",
+   "why": "Cinema Flamura e închis de ani buni (surse: Berceni de Poveste, Wikipedia)"
+  },
+  {
+   "osm_id": "n12757240654",
+   "name": "Ciorbe",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12775597965",
+   "name": "Ciorbe Plăcinte",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10810991734",
+   "name": "Ciorbe și plăcinte",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11533467366",
+   "name": "Ciorbe și Plăcinte",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13616279031",
+   "name": "Ciorbe și Plăcinte",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2876969501",
+   "name": "Club Daimon",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11800372286",
+   "name": "Cofee Top",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13885740738",
+   "name": "Colibri - The Welcome Hub",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w700190532",
+   "name": "Coltu' Berarilor",
+   "decision": "keep",
+   "why": "verificat: Unul dintre cele mai apreciate localuri din Sectorul 5 (Malcoci 2A, Ra…"
+  },
+  {
+   "osm_id": "n10924947179",
+   "name": "Crown Burger",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w501944919",
+   "name": "cuptor cu lemne",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4336665812",
+   "name": "DelArte Pizza & Grill",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5174912368",
+   "name": "Dinner Food",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n6832359344",
+   "name": "Dodo Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5300011422",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7258427956",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9958810727",
+   "name": "Domino's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w1530189140",
+   "name": "Doner Kebab By Chef Nicu Bals",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2296190886",
+   "name": "Dristor Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10925348235",
+   "name": "El Patron Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6321573529",
+   "name": "Ella Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2294927342",
+   "name": "Eric & Kevin",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8001071986",
+   "name": "Fabio Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w667052342",
+   "name": "fast food non-stop",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5769383254",
+   "name": "Fasty Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11233048939",
+   "name": "Fendi Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11439300070",
+   "name": "Fendi Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11725839444",
+   "name": "Fendi Kebap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13929527015",
+   "name": "Franco Kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13856968750",
+   "name": "Fry",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11573953970",
+   "name": "Furgoneta Street Chefs",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5287755726",
+   "name": "Gloria Jean's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4192269178",
+   "name": "Golden Woks",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8694192988",
+   "name": "Greek tavern",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3706469011",
+   "name": "Green Restaurant",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n6860714690",
+   "name": "Grill",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n9534248503",
+   "name": "Gyros Thessalonikis",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n6582595289",
+   "name": "Hacienda Del Patron",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4206774488",
+   "name": "Hanul Haiducilor",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12922627143",
+   "name": "Happy Hour",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3909469979",
+   "name": "Helin Kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w23673773",
+   "name": "Icar",
+   "decision": "drop",
+   "why": "teren de sport local, nu loc de ieșit"
+  },
+  {
+   "osm_id": "n13230195119",
+   "name": "Il Tuo Ristorante",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5037021037",
+   "name": "Imbiss Grill",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w700437607",
+   "name": "Interbelic",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3255799461",
+   "name": "Jerry's Pizza - Berceni",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6959718386",
+   "name": "Jimbo china",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3844141530",
+   "name": "Kaufland grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11275527611",
+   "name": "Kaufland Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n6872167775",
+   "name": "Kaya Turkish Kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2296190908",
+   "name": "KFC",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11725839459",
+   "name": "Koffeine",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n13614526282",
+   "name": "Kral kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10302522367",
+   "name": "Kristal",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11573808069",
+   "name": "La Buni",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5114477400",
+   "name": "La Conu'",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10743535679",
+   "name": "La Gerusurvey",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w218729979",
+   "name": "La Grași",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10562319885",
+   "name": "La Ioana",
+   "decision": "keep",
+   "why": "verificat: Restaurantul de cartier din Berceni (Râul Mara 4), deschis din 2004, c…"
+  },
+  {
+   "osm_id": "n12202542604",
+   "name": "La Micul Vesel",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4524020228",
+   "name": "La Moșu",
+   "decision": "drop",
+   "why": "doar listat, neverificat"
+  },
+  {
+   "osm_id": "n12358008490",
+   "name": "La Sediu",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10810956620",
+   "name": "Lyst",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n12551452322",
+   "name": "MABO",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n6247989213",
+   "name": "macelarie \" la nea nicu\"",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10562353594",
+   "name": "Manay",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11584910569",
+   "name": "Manay Chinese Food",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n2296190891",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7605074568",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w246515273",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w646910551",
+   "name": "McDonald's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13929527021",
+   "name": "MEGA Doner",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3406666448",
+   "name": "Melissa Kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2382281571",
+   "name": "Mirador",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4559864052",
+   "name": "Mr. Laziz",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w215350961",
+   "name": "Muzeul Tudor Arghezi",
+   "decision": "drop",
+   "why": "dublură a Casei Memoriale Tudor Arghezi (păstrată n2634652142)"
+  },
+  {
+   "osm_id": "w241803936",
+   "name": "Nicma",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4261498192",
+   "name": "Nussdorf",
+   "decision": "keep",
+   "why": "verificat: Restaurant în Ferentari (Năsăud 99A), cu mâncare americană și italiană…"
+  },
+  {
+   "osm_id": "n5504558821",
+   "name": "Oala Babei",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w263961419",
+   "name": "Offside Arena",
+   "decision": "drop",
+   "why": "teren de sport local, nu loc de ieșit"
+  },
+  {
+   "osm_id": "w230389804",
+   "name": "Orășelul Copiilor",
+   "decision": "keep",
+   "why": "verificat: Colțul de sud-est al Parcului Tineretului, cu carting, mașinuțe bușito…"
+  },
+  {
+   "osm_id": "n2296190883",
+   "name": "Oxigen Club",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n4686943189",
+   "name": "Panorama",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w23721148",
+   "name": "Parcul Pecineaga",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "w23652333",
+   "name": "Parcul Sebastian",
+   "decision": "keep",
+   "why": "verificat: Parcul de pe Calea Rahovei, cu locuri de joacă, aparate de fitness, te…"
+  },
+  {
+   "osm_id": "w1054221333",
+   "name": "Parcul Tudor Arghezi",
+   "decision": "drop",
+   "why": "neverificat (parc local fără surse)"
+  },
+  {
+   "osm_id": "n12772210855",
+   "name": "Parkcafe",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n10261899523",
+   "name": "Pașa Kabap",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n13729445808",
+   "name": "Patrick Grill",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11780093947",
+   "name": "Perpedes Coffee",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4548400791",
+   "name": "Pisica sălbatică",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13370514501",
+   "name": "Pizza Bella",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2296190913",
+   "name": "Pizza Hut",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5383255221",
+   "name": "Pizza Hut Delivery",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4686942791",
+   "name": "Pizza Smiley",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n7635071787",
+   "name": "Pizza Suprema",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2907592104",
+   "name": "Pizzeria Athos",
+   "decision": "drop",
+   "why": "doar listat, neverificat"
+  },
+  {
+   "osm_id": "n6221105364",
+   "name": "Pizzeria Athos",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4151952758",
+   "name": "Pizzeria Vatra cu bunătăți",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10595917780",
+   "name": "Polyn Royal Saloon",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3649454800",
+   "name": "Presto Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4442890748",
+   "name": "Presto Pizza Rahova",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3319452188",
+   "name": "Provence - Berceni",
+   "decision": "drop",
+   "why": "mai ales evenimente"
+  },
+  {
+   "osm_id": "n12774658828",
+   "name": "Rainbow cofee & more",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4622178719",
+   "name": "Rainbow Cofee & more",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4890419432",
+   "name": "Restaurant Anysan",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3265528742",
+   "name": "Restaurant Botanic",
+   "decision": "keep",
+   "why": "verificat: Restaurant în Orășelul Copiilor (Calea Piscului), cu paste, mâncare tr…"
+  },
+  {
+   "osm_id": "n5857522785",
+   "name": "Restaurant Britannia",
+   "decision": "keep",
+   "why": "verificat: Restaurant cu grătar și meniu internațional pe Petre Ispirescu 9B (Rah…"
+  },
+  {
+   "osm_id": "n6041887055",
+   "name": "Restaurant Cabana",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4809361871",
+   "name": "Restaurant Casa Ionescu",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w977601451",
+   "name": "Restaurant Casa Lazar",
+   "decision": "drop",
+   "why": "doar adresa în surse"
+  },
+  {
+   "osm_id": "n2865891235",
+   "name": "Restaurant CASA NICA",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11598491921",
+   "name": "Restaurant Casa Voicu",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4686942989",
+   "name": "Restaurant Elena",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n13840523301",
+   "name": "Restaurant Excellence",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n8837413143",
+   "name": "Restaurant Golden family",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3265533069",
+   "name": "Restaurant HK",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n8394504385",
+   "name": "Restaurant Influence",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3976317196",
+   "name": "Restaurant Le Medieval",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5208930429",
+   "name": "Restaurant Miru & Laur",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n12340384104",
+   "name": "Restaurant Morfeo",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n2288467748",
+   "name": "Restaurant Nașu și Finu",
+   "decision": "drop",
+   "why": "doar adresa în surse"
+  },
+  {
+   "osm_id": "w837076386",
+   "name": "Restaurant Simple",
+   "decision": "keep",
+   "why": "verificat: Restaurant de cartier pe Frumușani 8A, cu 4,6 din 414 recenzii Google:…"
+  },
+  {
+   "osm_id": "n4369182992",
+   "name": "Restaurant Tuku",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n5495675763",
+   "name": "Restaurant-terasa La Mavro",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n2907494538",
+   "name": "Rista",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4192269188",
+   "name": "Rustic",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3233960003",
+   "name": "Salad Box",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3834942079",
+   "name": "Sanli Kebab",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n14016769492",
+   "name": "Seen",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3431737206",
+   "name": "Shaorma",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4927880467",
+   "name": "Shaorma Aladdin",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5907718276",
+   "name": "Shaorma Metrou",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3135874697",
+   "name": "Shaorma orientală Al Emir",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12628251905",
+   "name": "Shaorma pe jar",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n10924947176",
+   "name": "Shaormeria Băneasa",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11800352443",
+   "name": "Shaormeria Băneasa",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n10236126602",
+   "name": "Socului Kebap",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w263960903",
+   "name": "South Burger Garden",
+   "decision": "keep",
+   "why": "verificat: Terasa South Burger de pe Metalurgiei 70, deschisă în vara lui 2021 și…"
+  },
+  {
+   "osm_id": "n13121015876",
+   "name": "Spartan",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12412656770",
+   "name": "SPIZZA Artizanale",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9144737462",
+   "name": "Springtime",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n11291231401",
+   "name": "Stage Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2296190858",
+   "name": "Starbucks",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n5857513885",
+   "name": "Story Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2345754111",
+   "name": "Subway",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w700225607",
+   "name": "Subway",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n3397867619",
+   "name": "Șaorma Baba Ali",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n5401078119",
+   "name": "Șaorma La Colț",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w23717864",
+   "name": "Ștrand Berceni",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11780093949",
+   "name": "Tava cu de toate",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "w411804098",
+   "name": "Terasa Ancor",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3987842815",
+   "name": "Terasa Castel",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n12892599486",
+   "name": "Terasa cu flori",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "w1064492912",
+   "name": "Terasa Metalurgiei",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4861543673",
+   "name": "Terasa Prieteniei",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12775595020",
+   "name": "Terasa Sebastian",
+   "decision": "keep",
+   "why": "verificat: Terasă lângă Parcul Sebastian cu grătar pe jar: mici, frigărui de porc…"
+  },
+  {
+   "osm_id": "n11101750397",
+   "name": "Toan's",
+   "decision": "drop",
+   "why": "negăsit pe Google (probabil închis sau redenumit)"
+  },
+  {
+   "osm_id": "n12948951217",
+   "name": "Tonola Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "w414404585",
+   "name": "Trattoria & pizza Giovane",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n12551454291",
+   "name": "Trattoria Alora",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n3976317216",
+   "name": "Trattoria Angoli",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n11511147869",
+   "name": "Trattoria Belvedere",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n2823012499",
+   "name": "Trattoria Borghese",
+   "decision": "keep",
+   "why": "verificat: Trattorie italiană pe Dâmbului 155, cu pizza, paste și fructe de mare.…"
+  },
+  {
+   "osm_id": "n3055266071",
+   "name": "Trenta Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4686804192",
+   "name": "Trenta Pizza",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n3290376129",
+   "name": "Țap's Kebab",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n11101750319",
+   "name": "Uncle John's",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n9137431855",
+   "name": "Vienna Original Wrust",
+   "decision": "drop",
+   "why": "lanț / fast-food sau local de cartier fără nimic deosebit"
+  },
+  {
+   "osm_id": "n4130871611",
+   "name": "You & Me",
+   "decision": "drop",
+   "why": "neverificat"
+  },
+  {
+   "osm_id": "n4890177182",
+   "name": "Zambro",
+   "decision": "drop",
+   "why": "neverificat"
+  }
+ ],
+ "places": [
+  {
+   "name": "Casa Românească Otopeni",
+   "osm_id": "w495066823",
+   "cat": "mancare",
+   "kind": "Restaurant cu terasă",
+   "cuisine": "românească",
+   "lat": 44.569013,
+   "lon": 26.069257,
+   "city": "Otopeni",
+   "zone": "otopeni",
+   "story": "Restaurant cu mâncare românească vizavi de aeroportul Henri Coandă, cu terasă acoperită și încălzită plus grădină (până la 300 de locuri), deci terasa merge și toamna-iarna; are și cramă.",
+   "when": "zilnic 10–23; seara și în weekend la prânz",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantcasaromaneasca.ro/casa-romaneasca-otopeni/",
+    "https://ialoc.ro/restaurante-bucuresti/casa-romaneasca-rezervari-1586",
+    "https://www.tripadvisor.com/Restaurant_Review-g298476-d2321243-Reviews-Casa_Romaneasca_Otopeni-Otopeni_Ilfov_County_Southern_Romania.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sara Bistro",
+   "osm_id": "w846625616",
+   "cat": "mancare",
+   "kind": "Bistro",
+   "cuisine": "grecească, burgeri",
+   "lat": 44.536506,
+   "lon": 26.059579,
+   "city": "Otopeni",
+   "zone": "otopeni",
+   "story": "Bistroul deschis la sfârșitul lui 2019 în Otopeni, pe Ion Creangă 2: gyros făcut în casă, burgerii și coastele casei, paste și deserturi de casă.",
+   "when": "zilnic 10–23; seara după muncă",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://sarabistro.ro/despre-noi/",
+    "https://sarabistro.ro/contact/",
+    "https://amfostacolo.ro/impresii9.php?iid=107419&d=unde-mancam-in-imprejurimile-bucurestiului--bucuresti"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa Albă Băneasa",
+   "osm_id": "w941063540",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "românească",
+   "lat": 44.518997,
+   "lon": 26.09059,
+   "city": "București",
+   "zone": "otopeni",
+   "story": "Vila din Pădurea Băneasa ridicată în 1930 de arhitectul Octav Doicescu, care în 1939 a fost una dintre atracțiile Expoziției Internaționale de la New York; restaurantul a fost redeschis în 2024, cu aer interbelic.",
+   "when": "zilnic 12–24; la prânz în weekend, după o plimbare prin pădure",
+   "vibes": [
+    "Mâncare bună",
+    "Chill",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantcasaalba.ro/",
+    "https://www.restocracy.ro/casa-alba-baneasa/",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d34311040-Reviews-Restaurant_Casa_Alba-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "NOVU",
+   "osm_id": "n11844514512",
+   "cat": "mancare",
+   "kind": "Restaurant cu terasă",
+   "cuisine": "internațională",
+   "lat": 44.537624,
+   "lon": 26.095674,
+   "city": "Otopeni",
+   "zone": "otopeni",
+   "story": "Restaurant cu bucătărie internațională și terasă, pe Pădurea Mogoșoaia 31-41 (zona Otopeni/Băneasa), recomandat pe ialoc pentru ieșit cu prietenii sau cu copiii; are nota 5 din 17 voturi.",
+   "when": "zilnic 10–22",
+   "vibes": [
+    "Mâncare bună",
+    "Chill",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/novu-rezervari-4247",
+    "https://www.tripadvisor.com/Restaurants-g298476-Otopeni_Ilfov_County_Southern_Romania.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Stejarii Pool Club",
+   "osm_id": "w527662648",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "lat": 44.515924,
+   "lon": 26.070465,
+   "city": "București",
+   "zone": "otopeni",
+   "story": "Restaurantul de lângă piscina Stejarii Country Club (clubul lui Țiriac), pe Jandarmeriei 14A, peste drum de Băneasa.",
+   "when": "vara la piscină; seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/stejarii-pool-club-restaurant/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Passione Ristorante",
+   "osm_id": "w941119950",
+   "cat": "mancare",
+   "kind": "Restaurant italian",
+   "cuisine": "italiană",
+   "lat": 44.490981,
+   "lon": 26.128541,
+   "city": "Voluntari",
+   "zone": "voluntari",
+   "story": "Restaurant italian din Pipera Plaza, lăudat pentru risotto, paste și pizza; are 4,5 din 106 recenzii pe Restaurant Guru.",
+   "when": "la prânz cu colegii din Pipera și seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/passione-restaurant/",
+    "https://restaurantguru.com/Passione-Ristorante-Voluntari",
+    "https://passione.ro/about-us/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Guri Guri",
+   "osm_id": "n10111661681",
+   "cat": "mancare",
+   "kind": "Restaurant coreean",
+   "cuisine": "coreeană",
+   "lat": 44.478446,
+   "lon": 26.115076,
+   "city": "București",
+   "zone": "voluntari",
+   "story": "Restaurant coreean ținut de o familie de coreeni, pe Fabrica de Glucoză, la 5 minute de metrou Pipera; e și magazin asiatic. Încearcă pizza coreeană cu kimchi sau tocănița cu tofu și fructe de mare.",
+   "when": "la prânz și seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/guri-guri-restaurant/",
+    "https://zilesinopti.ro/2022/09/19/5-restaurante-asiatice-deosebite/",
+    "https://kdrama.ro/2021/09/14/o-vizita-la-noul-restaurant-coreean-guri-guri-din-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Ginger Horse Irish Pub",
+   "osm_id": "n8004376949",
+   "cat": "bar",
+   "kind": "Pub",
+   "cuisine": "pub",
+   "lat": 44.506105,
+   "lon": 26.137216,
+   "city": "Voluntari",
+   "zone": "voluntari",
+   "story": "Pub irlandez pe Bulevardul Pipera 40B, cu multe whisky-uri și bere la draft; are 4,7 și a ajuns loc de întâlnire în Pipera.",
+   "when": "seara, mai ales joi–sâmbătă",
+   "vibes": [
+    "Chill",
+    "Party"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g1528115-d16756005-Reviews-Ginger_Horse_Irish_Pub-Voluntari_Ilfov_County_Southern_Romania.html",
+    "https://visitromania.ro/en/attraction/pipera-voluntari/ginger-horse-irish-pub",
+    "https://restaurantguru.com/Ginger-Horse-Irish-Pub-Bucharest/menu"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "La Platouri",
+   "osm_id": "n9505385222",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "lat": 44.49132,
+   "lon": 26.189787,
+   "city": "Voluntari",
+   "zone": "voluntari",
+   "story": "Restaurant (cu hotel) pe Bulevardul Voluntari 84C, printre cele mai bine notate din oraș: 4,6 din 220 de recenzii pe Restaurant Guru.",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/La-platouri-Voluntari",
+    "https://www.facebook.com/p/La-Platouri-100063467173470/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Tecadra",
+   "osm_id": "n4349316189",
+   "cat": "mancare",
+   "kind": "Berărie",
+   "cuisine": "germană",
+   "lat": 44.51373,
+   "lon": 26.126429,
+   "city": "Voluntari",
+   "zone": "voluntari",
+   "story": "Berărie germană la hotelul Tecadra din Pipera (Erou Iancu Nicolae 67A), cu 70 de locuri, terasă de vară și colț pentru copii.",
+   "when": "seara; terasa vara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/tecadra-restaurant/",
+    "https://www.tripadvisor.com/Hotel_Review-g1528115-d1527475-Reviews-Tecadra_Hotel-Voluntari_Ilfov_County_Southern_Romania.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Beyaz Restaurant",
+   "osm_id": "n6917823021",
+   "cat": "mancare",
+   "kind": "Restaurant turcesc",
+   "cuisine": "turcească",
+   "lat": 44.477375,
+   "lon": 26.162633,
+   "city": "București",
+   "zone": "voluntari",
+   "story": "Restaurant turcesc pe Colentina 442, cunoscut pentru grătar: Adana kebab, frigărui de pui, pide; 43–110 lei de persoană, are și loc afară.",
+   "when": "zilnic 8–23",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 75,
+   "sources": [
+    "https://www.facebook.com/beyazrestaurant/",
+    "https://beyaz-restaurant.menufyy.com/",
+    "https://restaurantguru.com/Elisa-BistroandLounge-Bucharest"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Lari's Legend",
+   "osm_id": "n9775223451",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "mediteraneană",
+   "lat": 44.53776,
+   "lon": 26.170284,
+   "city": "Ștefăneștii de Jos",
+   "zone": "voluntari",
+   "story": "Restaurant mediteranean din Ștefăneștii de Jos, doar cu mâncare făcută în casă, într-un spațiu mic și intim.",
+   "when": "zilnic 9–22",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://larislegend.ro/?lang=en"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Ferma Animalelor",
+   "osm_id": "w1173862898",
+   "cat": "activitate",
+   "kind": "Fermă pentru copii",
+   "lat": 44.467747,
+   "lon": 26.211089,
+   "city": "Pantelimon",
+   "zone": "pantelimon",
+   "story": "Prima fermă-parc cu animale domestice pentru copii din România, deschisă în 2009 lângă Pantelimon: copiii hrănesc animalele, văd cum se mulg vacile, merg pe ponei și pe tiroliană.",
+   "when": "în weekend, ziua",
+   "vibes": [
+    "Fun",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://fermaanimalelor.ro/exploreaza-ferma/ce-este-ferma-animalelor/",
+    "https://www.clubulcopiilor.ro/locatie/ferma-animalelor/",
+    "https://calatoruldigital.ro/2020/04/ferma-animalelor-pantelimon/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Zigu",
+   "osm_id": "n3273011235",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "românească, pizza",
+   "lat": 44.450508,
+   "lon": 26.22713,
+   "city": "Pantelimon",
+   "zone": "pantelimon",
+   "story": "Restaurant din centrul Pantelimonului (Bd. Biruinței 140-142), cu mâncare românească amestecată cu italiană: pizza cu bacon și măsline, paste cu somon, ceafă cu piure.",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://zigu-pantelimon-077145.goto-where.com/",
+    "https://www.rsu.ro/fast-food_zigu_rezervare_fast-food_7626.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Laguna Verde",
+   "osm_id": "n2360465919",
+   "cat": "mancare",
+   "kind": "Restaurant pe malul lacului",
+   "cuisine": "pește",
+   "lat": 44.628428,
+   "lon": 26.147498,
+   "city": "Căciulați",
+   "zone": "snagov",
+   "story": "Restaurant pescăresc pe malul bălții de la Căciulați, cu salon rustic cu grinzi de lemn, terase spre lac (400 de locuri) și pontoane de pescuit.",
+   "when": "în weekend la prânz; terasa vara",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/laguna-verde-complex-restaurant/",
+    "https://www.lagunaverde.ro/",
+    "https://www.tripadvisor.com/Restaurant_Review-g27110023-d4317421-Reviews-Restaurant_Laguna_Verde-Caciulati_Ilfov_County_Southern_Romania.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Aqua Beach Snagov",
+   "osm_id": "n8654444572",
+   "cat": "mancare",
+   "kind": "Restaurant cu piscină",
+   "lat": 44.689087,
+   "lon": 26.140934,
+   "city": "Snagov",
+   "zone": "snagov",
+   "story": "Restaurant cu piscină în Ghermănești (Șos. Ghermănești 58A), 4,4 din 247 de recenzii; 43–110 lei de persoană.",
+   "when": "vara, ziua la piscină; seara la masă",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": 75,
+   "sources": [
+    "https://restaurantguru.com/Aqua-Beach-Snagov"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Palatul Snagov",
+   "osm_id": "w828136061",
+   "cat": "cultura",
+   "kind": "Palat",
+   "lat": 44.725962,
+   "lon": 26.171601,
+   "city": "Snagov",
+   "zone": "snagov",
+   "story": "Palatul de pe malul lacului Snagov se vizitează cu bilet (70 lei adulți, 60 lei elevi/studenți/pensionari).",
+   "when": "doar luni–joi 8:00–16:30 (ultima intrare 15:30)",
+   "vibes": [
+    "Cultură"
+   ],
+   "price": 70,
+   "sources": [
+    "https://www.bucuresti.ro/locatii/obiective-turistice-si-atractii-palatul-snagov-710",
+    "https://planiada.ro/destinatii/ilfov/palatul-snagov-462",
+    "https://en.wikipedia.org/wiki/Snagov_Palace"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mănăstirea Căldărușani",
+   "osm_id": "w891254538",
+   "cat": "cultura",
+   "kind": "Mănăstire",
+   "lat": 44.676109,
+   "lon": 26.26417,
+   "city": "Gruiu",
+   "zone": "snagov",
+   "story": "Mănăstire ridicată în 1638 de Matei Basarab lângă lacul Căldărușani, cu tei seculari și un muzeu cu icoane pictate de Nicolae Grigorescu.",
+   "when": "ziua, în weekend",
+   "vibes": [
+    "Cultură",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/locatii/locuri-istorice-manastirea-caldarusani-711",
+    "https://travel.ro/caldarusani-manastirea-construita-in-100-de-zile/",
+    "https://www.infinitravel.ro/manastirea-caldarusani-destinatii-langa-bucuresti/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mănăstirea Țigănești",
+   "osm_id": "w1169401746",
+   "cat": "cultura",
+   "kind": "Mănăstire",
+   "lat": 44.728874,
+   "lon": 26.084069,
+   "city": "Ciolpani",
+   "zone": "snagov",
+   "story": "Una dintre cele mai liniștite și bine păstrate mănăstiri de lângă București, înconjurată de Lacul Maicilor; se leagă ușor într-o zi cu Snagov și Căldărușani.",
+   "when": "ziua",
+   "vibes": [
+    "Cultură",
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://amfostacolo.ro/impresii9.php?iid=87654&d=manastirea-tiganesti-ciolpani--bucuresti",
+    "https://www.fundatiacaleavictoriei.ro/vizita-la-manastirea-carmelitana-si-la-manastirea-tiganesti/",
+    "https://amfostacolo.ro/impresii9.php?iid=102022"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "The Brick",
+   "osm_id": "w625068172",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "lat": 44.603628,
+   "lon": 26.006238,
+   "city": "Corbeanca",
+   "zone": "corbeanca",
+   "story": "Deschis în 2009 în Paradisul Verde din Corbeanca, un amestec între Buddha Bar și pub englezesc; are 4,4 din 623 de recenzii.",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://da.zf.ro/dupa-afaceri/gastronomie/evadare-in-weekend-the-brick-din-corbeanca-6480477",
+    "https://restaurantguru.com/The-Brick-Otopeni",
+    "https://www.tripadvisor.com/Restaurant_Review-g298476-d2522712-Reviews-The_Brick-Otopeni_Ilfov_County_Southern_Romania.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Trattoria Paradis",
+   "osm_id": "w625113482",
+   "cat": "mancare",
+   "kind": "Pizzerie",
+   "cuisine": "pizza, italiană",
+   "lat": 44.602776,
+   "lon": 26.007389,
+   "city": "Corbeanca",
+   "zone": "corbeanca",
+   "story": "Pizzeria de cartier din Paradisul Verde (Corbeanca), 4,0 pe Tripadvisor, cu livrare în zonă.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g3791062-d14047256-Reviews-Trattoria_Paradis-Corbeanca_Ilfov_County_Southern_Romania.html",
+    "https://www.trattoriaparadis.ro/",
+    "https://restaurantguru.com/Trattoria-Paradis-Corbeanca"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Pizzeria Romană",
+   "osm_id": "w408492998",
+   "cat": "mancare",
+   "kind": "Pizzerie",
+   "cuisine": "pizza",
+   "lat": 44.560664,
+   "lon": 25.943614,
+   "city": "Buftea",
+   "zone": "buftea",
+   "story": "Pizzeria din centrul Buftei (Știrbei Vodă 20A), cu pizza cu blat subțire coaptă în cuptor cu lemne.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/Pizzeria-Romana-Buftea",
+    "https://expresuldebuftea.ro/turul-pizzeriilor-din-buftea/",
+    "https://www.facebook.com/p/Pizzeria-Romana-100049818266480/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Hanul Vlăsia",
+   "osm_id": "n769582150",
+   "cat": "mancare",
+   "kind": "Restaurant cu terasă",
+   "cuisine": "românească",
+   "lat": 44.55057,
+   "lon": 25.88271,
+   "city": "Buftea",
+   "zone": "buftea",
+   "story": "Han cu mâncare românească (puiul și medalionul „Vlăsia”, cotlet de berbecuț la grătar), salon rustic și terase pentru sute de oameni; 3,7 din 891 de recenzii.",
+   "when": "în weekend la prânz; terasa vara",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://hanulvlasia.metro.rest/?lang=en",
+    "https://mindtrip.ai/restaurant/buftea-southern-romania/hanul-vlasia/re-X81hBxiN"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa Vânătorească",
+   "osm_id": "n2800591014",
+   "cat": "mancare",
+   "kind": "Restaurant cu terasă",
+   "cuisine": "românească",
+   "lat": 44.51337,
+   "lon": 25.992673,
+   "city": "Chitila",
+   "zone": "chitila",
+   "story": "Restaurant cu hotel și cramă pe drumul Chitila–Mogoșoaia, cu mâncare românească și internațională și o terasă mare cu loc de joacă pentru copii.",
+   "when": "zilnic 10–23; terasa vara",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.restocracy.ro/?p=72399",
+    "https://zilesinopti.ro/locuri/casa-vanatoreasca/",
+    "https://ialoc.ro/restaurante-bucuresti/casa-vanatoreasca-rezervari-113"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Popas Rândunica",
+   "osm_id": "n4687665889",
+   "cat": "mancare",
+   "kind": "Restaurant cu terasă",
+   "cuisine": "românească",
+   "lat": 44.452209,
+   "lon": 26.000285,
+   "city": "Chiajna",
+   "zone": "chiajna",
+   "story": "Restaurant deschis din 1991 în Chiajna, cu mâncare românească, terasă acoperită și loc de joacă pentru copii.",
+   "when": "în weekend la prânz și seara",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://popasrindunica.ro/",
+    "https://www.tripadvisor.com/Restaurant_Review-g12714861-d8653414-Reviews-Popas_Rindunica-Chiajna_Ilfov_County_Southern_Romania.html",
+    "https://www.locatiipentrununti.ro/local/popas-randunica-chiajna.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Trattoria Roz Cafe",
+   "osm_id": "w485117431",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "pizza, mediteraneană",
+   "lat": 44.447765,
+   "lon": 25.986822,
+   "city": "Chiajna",
+   "zone": "chiajna",
+   "story": "Trattorie din Militari Residence (Rezervelor 52) cu pizza și mâncare mediteraneană, bună și pentru vegetarieni; a doua cea mai bine clasată din Chiajna pe Tripadvisor.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g12714861-d12881150-Reviews-Trattoria_Roz_Cafe-Chiajna_Ilfov_County_Southern_Romania.html",
+    "https://delivery.trattoriarozcafe.ro/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Mandaloo",
+   "osm_id": "n5435274421",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "lat": 44.372709,
+   "lon": 26.149528,
+   "city": "Popești-Leordeni",
+   "zone": "popesti",
+   "story": "Restaurant-lounge cu decor aparte în Complex LA (Amurgului 34), cu meniu amestecat (grătar, burgeri, clătite); pe locul 2 din 149 de localuri din Popești-Leordeni pe Restaurant Guru.",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/Mandaloo-Restaurant-Lounge-Popesti-Leordeni",
+    "https://www.airestaurant.ro/locatie/restaurant-mandaloo/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Amicii",
+   "osm_id": "n12362055781",
+   "cat": "cafea",
+   "kind": "Cafenea",
+   "cuisine": "cafea, deserturi",
+   "lat": 44.36255,
+   "lon": 26.151645,
+   "city": "Popești-Leordeni",
+   "zone": "popesti",
+   "story": "Cafenea pe Biruinței 87 cu cafea bună și prăjituri, unde se țin și întâlniri de carte, evenimente și seri cu muzică live.",
+   "when": "după-amiaza; seara la evenimente",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "price": null,
+   "sources": [
+    "https://visitromania.ro/en/attraction/popesti-leordeni/amicii-bucuresti",
+    "https://www.bilete.ro/popesti-leordeni/restaurant-amicii/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sea Ray",
+   "osm_id": "n11347052256",
+   "cat": "mancare",
+   "kind": "Restaurant de pește",
+   "cuisine": "pește, fructe de mare",
+   "lat": 44.372064,
+   "lon": 26.153907,
+   "city": "Popești-Leordeni",
+   "zone": "popesti",
+   "story": "Restaurant cu pește și fructe de mare aduse de la Marea Neagră, pe Drumul Fermei.",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://popesti-leordeni.cylex.ro/restaurant/",
+    "https://restaurantguru.com/Popesti-Leordeni"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "The Brasserie",
+   "osm_id": "n10705100997",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "pizza, burgeri",
+   "lat": 44.366886,
+   "lon": 26.154322,
+   "city": "Popești-Leordeni",
+   "zone": "popesti",
+   "story": "Restaurant pe Biruinței 45 cu pizza, burgeri, paste și meniul zilei.",
+   "when": "zilnic 10–22:30; la prânz pentru meniul zilei",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://thebrasserie.ro/",
+    "https://www.tiktok.com/@poftasigust/video/7414156106752183584",
+    "https://ro.revieweuro.com/ilfov/the-brasserie-2159544"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "81 Infinity",
+   "osm_id": "n13324821915",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "internațională",
+   "lat": 44.363239,
+   "lon": 26.151961,
+   "city": "Popești-Leordeni",
+   "zone": "popesti",
+   "story": "Restaurant cu bucătărie internațională pe Biruinței 81, cu nota 4,8 din 37 de voturi pe ialoc.",
+   "when": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti?zona=berceni%2Cpopesti-leordeni"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Piscina Spa Domnești",
+   "osm_id": "w1168911692",
+   "cat": "sport",
+   "kind": "Piscină și tenis",
+   "lat": 44.403741,
+   "lon": 25.953162,
+   "city": "Domnești",
+   "zone": "bragadiru",
+   "story": "Complex în Domnești (Tudor Vladimirescu 309) cu piscină pentru adulți (20×10 m) și una pentru copii, șezlonguri, terenuri de tenis și sală de fitness.",
+   "when": "zilnic 10–21; piscina vara",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://aventi.ro/aventura-provider/piscina-spa-domnesti/",
+    "http://piscinaspa.ro/contact/",
+    "https://piscinaspa.ro/meniu/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa Domnești",
+   "osm_id": "n1211033854",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "românească",
+   "lat": 44.403743,
+   "lon": 25.950889,
+   "city": "Domnești",
+   "zone": "bragadiru",
+   "story": "Restaurant elegant în Domnești cu mâncare românească și internațională.",
+   "when": "miercuri–duminică 13–22 (luni și marți închis)",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "http://www.casadomnesti.ro/",
+    "https://domnesti.cylex.ro/restaurant/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Club Dovinot",
+   "osm_id": "n2918314870",
+   "cat": "club",
+   "kind": "Club",
+   "lat": 44.316588,
+   "lon": 25.900516,
+   "city": "Mihăilești",
+   "zone": "bragadiru",
+   "story": "Clubul din Mihăilești, lăudat pentru muzică bună, energie și prețuri rezonabile.",
+   "when": "vineri și sâmbătă noaptea",
+   "vibes": [
+    "Party"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/Club-Dovinot-Mihailesti",
+    "https://www.triphobo.com/places/mihileti-romania/club-dovinot"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Restaurant Dovinot",
+   "osm_id": "n5646198649",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "românească",
+   "lat": 44.298366,
+   "lon": 25.885094,
+   "city": "Mihăilești",
+   "zone": "bragadiru",
+   "story": "Restaurant din Mihăilești cu mâncare românească și europeană, terasă și program non-stop.",
+   "when": "oricând (non-stop)",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/Dovinot-Lac-Mihailesti",
+    "https://mihailesti.cylex.ro/firma/dovinot-1122856.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Sytago (fost Sonya Bistro & More)",
+   "osm_id": "w277589947",
+   "cat": "mancare",
+   "kind": "Restaurant cu terasă",
+   "cuisine": "italiană, internațională",
+   "lat": 44.350173,
+   "lon": 26.030345,
+   "city": "Măgurele",
+   "zone": "magurele",
+   "story": "Restaurantul de pe Atomiștilor 250A, fostul Sonya Bistro, cu mâncare italiană și internațională și terasă de vară de 150 de locuri; 4 din peste 1.200 de recenzii.",
+   "when": "seara și în weekend; terasa vara",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/Sytago-Magurele",
+    "https://wanderlog.com/place/details/2952643/restaurant-sytago",
+    "http://sytago.ro/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "La Crama",
+   "osm_id": "n13242491440",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "grătar, românească",
+   "lat": 44.350803,
+   "lon": 26.030492,
+   "city": "Măgurele",
+   "zone": "magurele",
+   "story": "Bar & grill pe Atomiștilor 250A în Măgurele, specializat pe fripturi și grătar românesc.",
+   "when": "zilnic până la miezul nopții",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://firmania.ro/magurele/la-crama-176564",
+    "https://restaurantguru.com/Restaurant-La-Crama-Magurele"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Hanul Oltenesc",
+   "osm_id": "n12165537279",
+   "cat": "mancare",
+   "kind": "Restaurant-pizzerie",
+   "cuisine": "românească, pizza",
+   "lat": 44.284267,
+   "lon": 26.060254,
+   "city": "1 Decembrie",
+   "zone": "magurele",
+   "story": "Restaurant-pizzerie pe Șoseaua Giurgiului în 1 Decembrie, foarte bine notat (peste 1.400 de recenzii pe Restaurant Guru).",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://restaurantguru.com/Hanul-Oltenesc-1-Decembrie",
+    "https://www.tripadvisor.com/Restaurant_Review-g8538423-d23729370-Reviews-Hanul_Oltenesc-1_Deciembre_Ilfov_County_Southern_Romania.html",
+    "https://www.instagram.com/hanul_oltenesc/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa Memorială Tudor Arghezi (Mărțișor)",
+   "osm_id": "n2634652142",
+   "cat": "cultura",
+   "kind": "Casă memorială",
+   "lat": 44.397241,
+   "lon": 26.117717,
+   "city": "București",
+   "zone": "s4",
+   "story": "Casa lui Arghezi de pe strada Mărțișor, muzeu al MNLR, înconjurată de cireșii și vișinii plantați de poet; se vizitează cu ghid.",
+   "when": "marți–duminică 10–18 (nov–feb 9–17); luni închis",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": 30,
+   "sources": [
+    "https://mnlr.ro/en/case-memoriale/casa-memoriala-tudor-arghezi-martisor/",
+    "https://b365.ro/casa-memoriala-tudor-arghezi-martisor-lucruri-mai-putin-stiute-despre-muzeul-inconjurat-de-ciresi-si-visini-din-capitala-581393/",
+    "https://bercenidepoveste.ro/casa-memoriala-tudor-arghezi/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa Memorială George și Agatha Bacovia",
+   "osm_id": "n2634651950",
+   "cat": "cultura",
+   "kind": "Casă memorială",
+   "lat": 44.397006,
+   "lon": 26.101241,
+   "city": "București",
+   "zone": "s4",
+   "story": "Casa din Berceni unde au trăit Bacovia și soția lui, primul muzeu de scriitor din cartier: mobila, manuscrisele și fotografiile familiei, plus grădina cu flori.",
+   "when": "marți–duminică 10–18 (nov–feb 9–17); luni închis",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": 30,
+   "sources": [
+    "https://mnlr.ro/en/case-memoriale/casa-memoriala-george-si-agatha-bacovia/",
+    "https://www.bucuresti.ro/articole/casa-memoriala-george-si-agatha-bacovia-scurt-istoric-program-expozitie-bilete-1295",
+    "https://bercenidepoveste.ro/casa-memoriala-george-bacovia-primul-muzeu-de-scriitor-din-berceni/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Orășelul Copiilor",
+   "osm_id": "w230389804",
+   "cat": "activitate",
+   "kind": "Parc de distracții",
+   "lat": 44.401186,
+   "lon": 26.109323,
+   "city": "București",
+   "zone": "s4",
+   "story": "Colțul de sud-est al Parcului Tineretului, cu carting, mașinuțe bușitoare, roată mare, roller coastere și loc de joacă.",
+   "when": "în weekend, după-amiaza",
+   "vibes": [
+    "Fun",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://en.wikipedia.org/wiki/Tineretului_Park"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Botanic",
+   "osm_id": "n3265528742",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "lat": 44.403046,
+   "lon": 26.11036,
+   "city": "București",
+   "zone": "s4",
+   "story": "Restaurant în Orășelul Copiilor (Calea Piscului), cu paste, mâncare tradițională, cocktailuri și platouri cu fructe de mare.",
+   "when": "zilnic 10–24",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://zilesinopti.ro/locuri/botanic-restaurant/",
+    "https://am-gasit.ro/botanic-restaurant/"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "South Burger Garden",
+   "osm_id": "w263960903",
+   "cat": "mancare",
+   "kind": "Terasă",
+   "cuisine": "burgeri",
+   "lat": 44.371174,
+   "lon": 26.122577,
+   "city": "București",
+   "zone": "s4",
+   "story": "Terasa South Burger de pe Metalurgiei 70, deschisă în vara lui 2021 și ajunsă una dintre cele mai căutate din sudul Bucureștiului: burgeri, grătar, paste și loc de joacă pentru copii.",
+   "when": "zilnic 11–23:50; seara și în weekend",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://southburger.ro/garden/",
+    "https://ialoc.ro/restaurante-bucuresti/south-burger-garden-rezervari-4020",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d11706591-Reviews-South_Burger_Garden-Bucharest.html"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "La Ioana",
+   "osm_id": "n10562319885",
+   "cat": "mancare",
+   "kind": "Restaurant-pizzerie",
+   "cuisine": "românească, italiană",
+   "lat": 44.385766,
+   "lon": 26.110625,
+   "city": "București",
+   "zone": "s4",
+   "story": "Restaurantul de cartier din Berceni (Râul Mara 4), deschis din 2004, cu mâncare românească și italiană: paste, file american, saramură.",
+   "when": "seara și în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/la-ioana-rezervari-2768",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d15212068-Reviews-La_Ioana-Bucharest.html",
+    "https://foursquare.com/v/restaurant-la-ioana/4dc92585887721632c7151fd"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Trattoria Borghese",
+   "osm_id": "n2823012499",
+   "cat": "mancare",
+   "kind": "Restaurant italian",
+   "cuisine": "italiană",
+   "lat": 44.399163,
+   "lon": 26.110269,
+   "city": "București",
+   "zone": "s4",
+   "story": "Trattorie italiană pe Dâmbului 155, cu pizza, paste și fructe de mare.",
+   "when": "zilnic 10–24",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d12197382-Reviews-Trattoria_Borghese-Bucharest.html",
+    "https://meniu.menu/restaurants/sector-4/trattoria-borghese"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Restaurant Simple",
+   "osm_id": "w837076386",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "românească",
+   "lat": 44.386121,
+   "lon": 26.131078,
+   "city": "București",
+   "zone": "s4",
+   "story": "Restaurant de cartier pe Frumușani 8A, cu 4,6 din 414 recenzii Google: meniu variat, atmosferă plăcută, prețuri accesibile.",
+   "when": "zilnic 12–22",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://2nicecaffe.com/post/liste-26-restaurante-family-friendly-din-berceni-bucuresti.p116"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Coltu' Berarilor",
+   "osm_id": "w700190532",
+   "cat": "mancare",
+   "kind": "Restaurant-berărie",
+   "cuisine": "românească, bere",
+   "lat": 44.409104,
+   "lon": 26.070114,
+   "city": "București",
+   "zone": "s5",
+   "story": "Unul dintre cele mai apreciate localuri din Sectorul 5 (Malcoci 2A, Rahova): 4,6 din 943 de recenzii.",
+   "when": "zilnic 11–23; seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://meniu.menu/restaurants/sector-5/coltu039-berarilor",
+    "https://coltu-berarilor.ro/meniu/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Casa Brândușa",
+   "osm_id": "n4548618789",
+   "cat": "mancare",
+   "kind": "Restaurant cu grădină",
+   "cuisine": "românească",
+   "lat": 44.416994,
+   "lon": 26.064954,
+   "city": "București",
+   "zone": "s5",
+   "story": "Restaurant cu grădină pe Novaci 9B (13 Septembrie), cu ciorbă de burtă, sarmale cu mămăligă și papanași; 4,0 din peste 1.300 de recenzii Google.",
+   "when": "zilnic 11–23; în weekend la prânz",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d5001802-Reviews-Casa_Brandusa_Restaurant_Garden-Bucharest.html",
+    "https://2nicecaffe.com/post/liste-24-restaurante-family-friendly-din-rahova-bucuresti.p110",
+    "https://restaurant-casabrandusa.ro/"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Terasa Sebastian – Grătar cu Jar",
+   "osm_id": "n12775595020",
+   "cat": "mancare",
+   "kind": "Terasă",
+   "cuisine": "grătar",
+   "lat": 44.413154,
+   "lon": 26.073093,
+   "city": "București",
+   "zone": "s5",
+   "story": "Terasă lângă Parcul Sebastian cu grătar pe jar: mici, frigărui de porc sau miel, cotlet, pastramă și cârnați.",
+   "when": "zilnic 10–23; seara",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d34392407-Reviews-Terasa_Sebastian_Gratar_cu_Jar-Bucharest.html",
+    "https://www.soimiigastronomiei.ro/profile-341383-terasa-sebastian-gratar-cu-jar"
+   ],
+   "confidence": "high",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Parcul Sebastian",
+   "osm_id": "w23652333",
+   "cat": "natura",
+   "kind": "Parc",
+   "lat": 44.414967,
+   "lon": 26.06917,
+   "city": "București",
+   "zone": "s5",
+   "story": "Parcul de pe Calea Rahovei, cu locuri de joacă, aparate de fitness, terenuri de fotbal și baschet, alei umbrite și o mică fântână arteziană.",
+   "when": "ziua și seara devreme",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-sebastian-76"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Nussdorf",
+   "osm_id": "n4261498192",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "americană, italiană",
+   "lat": 44.410149,
+   "lon": 26.077759,
+   "city": "București",
+   "zone": "s5",
+   "story": "Restaurant în Ferentari (Năsăud 99A), cu mâncare americană și italiană la prețuri moderate; se rezervă pe ialoc.",
+   "when": "zilnic 10–23",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/nussdorf-rezervari-337"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Britannia Bar & Grill",
+   "osm_id": "n5857522785",
+   "cat": "mancare",
+   "kind": "Restaurant",
+   "cuisine": "internațională",
+   "lat": 44.411564,
+   "lon": 26.068475,
+   "city": "București",
+   "zone": "s5",
+   "story": "Restaurant cu grătar și meniu internațional pe Petre Ispirescu 9B (Rahova).",
+   "when": "zilnic 10–23:30",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://www.britanniarestaurant.ro/contact/",
+    "https://www.rsu.ro/restaurant_britannia_bar__grill_rezervare_restaurant_5830.html"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  },
+  {
+   "name": "Cafetăria Sebastian",
+   "osm_id": "n5520224021",
+   "cat": "mancare",
+   "kind": "Cantină",
+   "cuisine": "românească",
+   "lat": 44.413761,
+   "lon": 26.072623,
+   "city": "București",
+   "zone": "s5",
+   "story": "Cantină cu mâncare românească gătită în ziua respectivă, pe Mihail Sebastian 18.",
+   "when": "zilnic 7–20; la prânz",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": null,
+   "sources": [
+    "https://2nicecaffe.com/post/liste-16-cofetarii-din-rahova-bucuresti.p276"
+   ],
+   "confidence": "medium",
+   "coord_source": "osm"
+  }
+ ]
+}
