@@ -30,8 +30,11 @@ export interface PlanReq {
   near?: boolean;           // "aproape"
   strict?: boolean;         // only within maxKm: no looking further
   car?: boolean;            // false: they only walk, so no driving between places
+  go?: 'car' | 'bus' | 'bike'; // how they get further than a walk (the sign-up's answer; default the car)
+  avoid?: string[];         // places left out ("Altă surpriză": the ones already shown)
+  askedMax?: number;        // the budget they chose (Bilu may look above it; the plan still says it is over)
 }
-export type Way = 'walk' | 'car';
+export type Way = 'walk' | 'car' | 'bus' | 'bike';
 export interface PlanStep { v: Venue; at: Date; until: Date; travel: number; by: Way; why: string; price: number; open: OpenInfo; sure: boolean; reasons: string[] }
 export interface Check { ok: boolean; text: string }
 export interface MadePlan {
@@ -57,8 +60,11 @@ export const whoOf = (n: number): Who => (n <= 1 ? '1' : n === 2 ? '2' : n <= 4 
 export { carMin };
 /** On foot up to 1,2 km, else by car or taxi. */
 /** How they get to a place `d` km away: on foot when it is close, or always when they only walk (`car` false). */
-export const wayOf = (d: number, car = true): Way => (d <= 1.2 || !car ? 'walk' : 'car');
-export const minutesBy = (d: number, by: Way = wayOf(d)) => (by === 'walk' ? walkMin(d) : carMin(d));
+export const wayOf = (d: number, car = true, go: Way = 'car'): Way => (d <= 1.2 || !car ? 'walk' : go);
+/** Minutes on the way: on foot, by car, by bus (with the wait), by bike (about 15 km/h). */
+export const minutesBy = (d: number, by: Way = wayOf(d)) => (by === 'walk' ? walkMin(d) : by === 'bus' ? Math.round(8 + d * 3) : by === 'bike' ? Math.max(3, Math.round(d * 4)) : carMin(d));
+const BY_TEXT: Record<Way, string> = { walk: 'pe jos', car: 'cu mașina', bus: 'cu autobuzul', bike: 'cu bicicleta' };
+const wayFor = (req: PlanReq, d: number) => wayOf(d, req.car !== false, req.go ?? 'car');
 const roundUp5 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 5) * 5); return t; };
 const kmText = (d: number) => (d < 1 ? Math.max(50, Math.round((d * 1000) / 50) * 50) + ' m' : d.toFixed(d < 10 ? 1 : 0).replace('.', ',') + ' km');
 
@@ -80,11 +86,11 @@ function extraFit(v: Venue, req: PlanReq): number | null {
 
 const reach = (req: PlanReq) => (req.near ? Math.min(req.maxKm, 6) : req.maxKm);
 function askOf(req: PlanReq): Ask {
-  return { who: whoOf(req.people), when: 'acum', at: req.at, budget: req.budgetMax, budgetMin: req.budgetMin || undefined, maxKm: reach(req), vibes: req.vibes, people: req.people };
+  return { who: whoOf(req.people), when: 'acum', at: req.at, budget: req.budgetMax, budgetMin: req.budgetMin || undefined, maxKm: reach(req), vibes: req.vibes, people: req.people, avoid: req.avoid };
 }
 
 /** When you get to a place `d` km away: the hour asked, or — leaving now — after the way there. */
-const arrival = (req: PlanReq, d: number) => (req.now ? roundUp5(new Date(req.at.getTime() + minutesBy(d, wayOf(d, req.car !== false)) * 60e3)) : new Date(req.at.getTime()));
+const arrival = (req: PlanReq, d: number) => (req.now ? roundUp5(new Date(req.at.getTime() + minutesBy(d, wayFor(req, d)) * 60e3)) : new Date(req.at.getTime()));
 
 /** "Deschis până la 23:00", "Deschis", or unknown hours. */
 function openInfo(v: Venue, at: Date): OpenInfo {
@@ -125,7 +131,7 @@ const vibeFit = (vibes: Vibe[], req: PlanReq) => !req.vibes.length || vibes.some
 
 function single(c: Cand, req: PlanReq, ctx: Ctx, title: string, sub: string, id: string): MadePlan {
   const v = c.s.v;
-  const by = wayOf(c.s.km, req.car !== false);
+  const by = wayFor(req, c.s.km);
   const step: PlanStep = { v, at: c.at, until: c.until, travel: minutesBy(c.s.km, by), by, why: KINDS[v.k]?.label ?? v.kind, price: priceOf(v), open: openInfo(v, c.at), sure: c.sure, reasons: c.s.reasons };
   return finish({ id, title, sub, steps: [step], price: step.price, drive: false, checks: [], family: groupOf(v), fits: vibeFit(vibesOf(v), req) }, req, ctx);
 }
@@ -134,10 +140,11 @@ function fromRoute(c: EveningCand, req: PlanReq, ctx: Ctx): MadePlan {
   const r = c.r;
   const steps: PlanStep[] = r.steps.map((s, i) => {
     const d = km(i === 0 ? ctx.origin : r.steps[i - 1].v, s.v);
-    const by: Way = i === 0 ? wayOf(d, req.car !== false) : r.drive ? 'car' : 'walk';
-    return { v: s.v, at: s.at, until: s.until, travel: i === 0 ? minutesBy(d, by) : s.walk, by, why: s.why, price: s.price, open: openInfo(s.v, s.at), sure: s.sure, reasons: s.reasons };
+    const by: Way = i === 0 ? wayFor(req, d) : r.drive ? req.go ?? 'car' : 'walk';
+    return { v: s.v, at: s.at, until: s.until, travel: i === 0 || by !== 'walk' ? minutesBy(d, by) : s.walk, by, why: s.why, price: s.price, open: openInfo(s.v, s.at), sure: s.sure, reasons: s.reasons };
   });
-  return finish({ id: r.id, title: r.label, sub: r.sub, steps, price: r.price, over: r.over, drive: !!r.drive, checks: [], family: r.family, fits: vibeFit(r.vibes, req), note: r.note }, req, ctx);
+  const note = r.note?.replace('cu mașina sau cu taxiul', BY_TEXT[req.go ?? 'car'] + ' sau cu taxiul');
+  return finish({ id: r.id, title: r.label, sub: r.sub, steps, price: r.price, over: r.over, drive: !!r.drive, checks: [], family: r.family, fits: vibeFit(r.vibes, req), note }, req, ctx);
 }
 
 /** The checks shown on the plan ("✓ Deschis la 20:00", "⚠ +35 peste buget"…) and the price over the budget. */
@@ -151,10 +158,12 @@ function finish(p: MadePlan, req: PlanReq, ctx: Ctx): MadePlan {
   const first = p.steps[0];
   const d = km(ctx.origin, first.v);
   if (req.now) checks.push({ ok: true, text: kmText(d) + ', ajungeți pe la ' + hhmm(first.at) });
-  else checks.push({ ok: true, text: kmText(d) + ', ~' + first.travel + ' min ' + (first.by === 'walk' ? 'pe jos' : 'cu mașina') });
+  else checks.push({ ok: true, text: kmText(d) + ', ~' + first.travel + ' min ' + BY_TEXT[first.by] });
   const price = p.steps.reduce((a, s) => a + s.price, 0);
-  const over = req.budgetMax !== Infinity && price > req.budgetMax ? price - req.budgetMax : undefined;
-  if (req.budgetMax === Infinity) checks.push({ ok: true, text: '~' + price + ' lei de persoană' });
+  // against the budget they chose, even when Bilu had to look above it
+  const cap = req.askedMax ?? req.budgetMax;
+  const over = cap !== Infinity && price > cap ? price - cap : undefined;
+  if (cap === Infinity) checks.push({ ok: true, text: '~' + price + ' lei de persoană' });
   else if (!over) checks.push({ ok: true, text: '~' + price + ' lei, în buget' });
   else checks.push({ ok: false, text: '~' + price + ' lei, +' + over + ' peste buget' });
   const wet = p.steps.map((s) => ({ s, w: wxAt(ctx.weather, s.at) })).find(({ s, w }) => w?.wet && exposure(s.v) !== 'in');
@@ -162,7 +171,7 @@ function finish(p: MadePlan, req: PlanReq, ctx: Ctx): MadePlan {
   if (wet) checks.push({ ok: false, text: 'La ' + hhmm(wet.s.at) + ': ' + wet.w!.text + ', stați înăuntru' });
   else if (w0) checks.push({ ok: !w0.wet, text: w0.temp + '°, ' + w0.text });
   // a big group: a table for nine does not wait for you
-  if (req.people >= 7 && p.steps.some((s) => s.v.cat === 'mancare' || s.v.cat === 'bar' || s.v.cat === 'club' || s.v.cat === 'activitate' || s.v.cat === 'sport')) checks.push({ ok: false, text: 'Sunteți ' + req.people + ': sunați să rezervați' });
+  if (req.people >= 6 && p.steps.some((s) => s.v.cat === 'mancare' || s.v.cat === 'bar' || s.v.cat === 'club' || s.v.cat === 'activitate' || s.v.cat === 'sport')) checks.push({ ok: false, text: 'Sunteți ' + req.people + ': sunați să rezervați' });
   return { ...p, price, over, checks };
 }
 
@@ -206,7 +215,7 @@ function cheaperTip(p: MadePlan, all: Venue[], req: PlanReq, ctx: Ctx): MadePlan
   });
   if (!best) return undefined;
   const total = p.price - best.save;
-  return { step: best.step, v: best.v, text: 'Cu ' + best.v.name + ' în loc de ' + p.steps[best.step].v.name + ': ~' + total + ' lei' + (total <= req.budgetMax ? ', în buget.' : '.') };
+  return { step: best.step, v: best.v, text: 'Cu ' + best.v.name + ' în loc de ' + p.steps[best.step].v.name + ': ~' + total + ' lei' + (total <= (req.askedMax ?? req.budgetMax) ? ', în buget.' : '.') };
 }
 
 /** Puts another place in one step (the tip, or "Alt bar") and checks the plan again. */
@@ -221,7 +230,7 @@ export function swapStep(p: MadePlan, i: number, v: Venue, req: PlanReq, ctx: Ct
     // the way to this place and to the next one changed with the swap
     if (k !== i && k !== i + 1) return x;
     const d = km(k === 0 ? ctx.origin : list[k - 1].v, x.v);
-    const by: Way = k === 0 ? wayOf(d, req.car !== false) : p.drive ? 'car' : 'walk';
+    const by: Way = k === 0 ? wayFor(req, d) : p.drive ? req.go ?? 'car' : 'walk';
     return { ...x, by, travel: minutesBy(d, by) };
   });
   return finish({ ...p, steps, tip: undefined }, req, ctx);
@@ -264,8 +273,8 @@ function singles(ranked: Cand[], n: number, used: Set<string>, req: PlanReq, ctx
 
 /** Three evenings: the best fitting, then — when it costs little — other kinds of evening; never a place twice. */
 function eveningsFor(all: Venue[], req: PlanReq, ctx: Ctx): MadePlan[] {
-  const accept = (v: Venue) => extraFit(v, req);
-  const eAsk: EveningAsk = { who: whoOf(req.people), when: 'acum', at: req.at, now: req.now, total: true, budget: req.budgetMax, maxKm: reach(req), walkKm: req.walkKm, vibes: req.vibes, people: req.people, accept, car: req.car };
+  const accept = (v: Venue) => (req.avoid?.includes(v.id) ? null : extraFit(v, req));
+  const eAsk: EveningAsk = { who: whoOf(req.people), when: 'acum', at: req.at, now: req.now, total: true, budget: req.budgetMax, budgetMin: req.budgetMin || undefined, maxKm: reach(req), walkKm: req.walkKm, vibes: req.vibes, people: req.people, accept, car: req.car };
   const cands = eveningCands(all, eAsk, ctx);
   const picked: EveningCand[] = [];
   const used = new Set<string>();
@@ -300,20 +309,25 @@ function tryPlans(all: Venue[], req: PlanReq, ctx: Ctx): MadePlan[] {
 const NEED_TEXT: Record<Need, string> = { wifi: 'wifi', nosmoke: 'fără fum', smoke: 'loc de fumat', wheel: 'acces cu scaun cu rotile', ac: 'aer condiționat' };
 
 /** Three plans for the request, with what Bilu had to change to find them, or why there is none. */
-export function makePlans(all: Venue[], req0: PlanReq, ctx: Ctx): PlanSet {
+export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
+  const req0: PlanReq = { ...req00, askedMax: req00.askedMax ?? req00.budgetMax };
   let req = req0;
   let plans = tryPlans(all, req, ctx);
   let relaxed: Relax[] = [];
-  // fewer than three: look further (a small town at night); nothing at all: let go, one more thing each time, of what
+  // fewer than three: look further, step by step (10, 20, 30, 40 km: a small town at night); nothing at all: let go, one more thing each time, of what
   // keeps them out — "aproape", "cu terasă", the budget (twice it, then any), then 40 km. Each step keeps the ones
   // before it, and Bilu says the ones that were needed.
+  // (on foot only: no further than 10 km — a bus ride, not a drive)
+  // (leaving now: no further than 30 km, an hour and a quarter on the way at most)
+  const top = (r: PlanReq) => (r.car === false ? 10 : r.now ? 30 : 40);
+  const further = (r: PlanReq) => (!r.near && !r.strict && r.maxKm < top(r) ? { ...r, maxKm: Math.min(top(r), [10, 20, 30, 40].find((k) => k > r.maxKm && k >= Math.min(r.maxKm * 2, 40)) ?? 40) } : null);
   const ladder: [Relax, (r: PlanReq) => PlanReq | null][] = [
-    ['far', (r) => (!r.near && !r.strict && r.maxKm < 40 ? { ...r, maxKm: [10, 20, 30, 40].find((k) => k >= r.maxKm * 2) ?? 40 } : null)],
+    ['far', further], ['far', further], ['far', further],
     ['near', (r) => (r.near ? { ...r, near: false, maxKm: r.strict ? r.maxKm : Math.max(r.maxKm, 10) } : null)],
     ['needs', (r) => (r.outdoor || r.needs?.length ? { ...r, outdoor: undefined, needs: undefined } : null)],
     ['budget', (r) => (r.budgetMax !== Infinity && r.budgetMax < Math.max(50, req0.budgetMax * 2) ? { ...r, budgetMin: 0, budgetMax: Math.max(50, req0.budgetMax * 2) } : r.budgetMin > 0 ? { ...r, budgetMin: 0 } : null)],
     ['budget', (r) => (r.budgetMax !== Infinity ? { ...r, budgetMin: 0, budgetMax: Infinity } : null)],
-    ['wider', (r) => (!r.strict && r.maxKm < 40 ? { ...r, near: false, maxKm: 40 } : null)],
+    ['wider', (r) => (!r.strict && r.maxKm < top(r) ? { ...r, near: false, maxKm: top(r) } : null)],
   ];
   let cur = req0;
   const chain: Relax[] = [];
@@ -348,7 +362,7 @@ export function makePlans(all: Venue[], req0: PlanReq, ctx: Ctx): PlanSet {
     const h = nightHour(req0.at);
     empty = h >= 26.5 && h < 29 ? 'E ' + hhmm(req0.at) + ': aproape tot e închis acum. Hai să facem planul pentru diseară sau mâine.'
       : ctx.minor && h >= 21.5 ? 'La ora asta, pentru cei sub 18 ani, nu mai e nimic deschis prin apropiere.'
-      : 'N-am găsit nimic deschis atunci, nici până la 40 km.';
+      : 'N-am găsit nimic deschis atunci, nici până la ' + Math.max(req.maxKm, top(req0)) + ' km.';
   }
   // Bilu says one or two things, the most important first: a long speech is not read
   return { plans, req, relaxed, note: notes.slice(0, 2).join(' ') || undefined, empty };
@@ -356,8 +370,11 @@ export function makePlans(all: Venue[], req0: PlanReq, ctx: Ctx): PlanSet {
 
 export interface Suggestion { v: Venue; tag: string; line: string; at: Date }
 /** "Bilu îți sugerează" on Acasă: two or three ideas without asking anything — by the weather, close by, by taste. */
-export function suggest(all: Venue[], req: PlanReq, ctx: Ctx): Suggestion[] {
-  const ranked = rankAt(all, req, ctx);
+export function suggest(all: Venue[], req0: PlanReq, ctx: Ctx): Suggestion[] {
+  // a quiet hour in a small town: look further, like the plans do, rather than show nothing
+  let req = req0;
+  let ranked = rankAt(all, req, ctx);
+  while (ranked.length < 3 && !req.strict && req.maxKm < 40) { req = { ...req, maxKm: [10, 20, 30, 40].find((k) => k > req.maxKm) ?? 40 }; ranked = rankAt(all, req, ctx); }
   const out: Suggestion[] = [];
   const used = new Set<string>();
   const add = (c: Cand | undefined, tag: string, line: (v: Venue) => string) => { if (c && !used.has(c.s.v.id)) { used.add(c.s.v.id); out.push({ v: c.s.v, tag, line: line(c.s.v), at: c.at }); } };

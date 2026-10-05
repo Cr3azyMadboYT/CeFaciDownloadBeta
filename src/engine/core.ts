@@ -255,6 +255,9 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   if (n > k.max && !ROOMY.has(v.k)) return null;
   // an escape room, a court, billiards, bowling or paintball need company: not offered to one person
   if (n < k.min) return null;
+  // alone, a club or a beer garden only when they asked for a party
+  if (n === 1 && (v.k === 'nightclub' || v.k === 'biergarten') && !(ask.wants ?? ask.vibes).includes('Party')) return null;
+  if (ask.avoid?.includes(v.id)) return null;
   const t = ask.at ?? targetTime(ask.when, k.night, ctx.now);
   // open when you get there, or very likely so (its kind at that hour); parks and palaces only by daylight
   const chance = openChance(v, t);
@@ -299,7 +302,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const hits = want.filter((w) => vibes.includes(w));
   if (hits.length) reasons.push('Se potrivește cu ' + hits.slice(0, 2).join(' și '));
   const liked = likes.find((l) => v.cuisines.includes(l) || kindKeyOf(v) === l);
-  if (liked) reasons.push('Ai zis că îți place ' + (CUISINES[liked] ?? k.label).toLowerCase());
+  if (liked) reasons.push(LIKE_SAY[liked] ? 'Ai zis că îți plac ' + LIKE_SAY[liked] : 'Ai zis că îți place ' + (CUISINES[liked] ?? k.label).toLowerCase());
   if (open.known) reasons.push(open.label);
   reasons.push(d < 1 ? 'La ' + Math.round(d * 1000) + ' m' : 'La ' + d.toFixed(1).replace('.', ',') + ' km');
   if (n >= 3 && k.cat === 'activitate') reasons.push('Bun pentru ' + n + ' persoane');
@@ -308,6 +311,13 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   return { v, score, km: d, open, reasons: reasons.slice(0, 3), parts };
 }
 const kindKeyOf = (v: Venue) => v.k;
+/** "Ai zis că îți plac filmele": the kinds of places someone likes, in words. */
+const LIKE_SAY: Record<string, string> = {
+  cinema: 'filmele', escape_game: 'escape room-urile', bowling_alley: 'bowlingul', billiards: 'biliardul', amusement_arcade: 'jocurile',
+  nightclub: 'cluburile', cafe: 'cafenelele', ice_cream: 'deserturile', padel: 'padelul', tennis: 'tenisul', soccer: 'fotbalul',
+  squash: 'squash-ul', climbing: 'escalada', swimming: 'înotul', park: 'parcurile', botanical_garden: 'grădinile', nature_reserve: 'plimbările în natură',
+  promenade: 'plimbările', museum: 'muzeele', theatre: 'teatrul', gallery: 'galeriile', arts_centre: 'spectacolele',
+};
 
 /** Three different ideas, not three pizzerias: the best, then the best of other categories. */
 export function recommend(all: Venue[], ask: Ask, ctx: Ctx, page = 0, per = 3): { picks: Scored[]; total: number } {

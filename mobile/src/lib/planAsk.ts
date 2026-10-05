@@ -29,6 +29,16 @@ export interface Draft {
 
 export const BUDGET_TOP = 300; // the bar's right end: 300 means "300+", any price
 const KEY = 'cefaci.planAsk';
+const SURPRISED = 'cefaci.surprised'; // the places the last surprises opened (2 days): the next one is somewhere else
+const recentSurprises = (now = Date.now()): string[] => {
+  try { return ((JSON.parse(localStorage.getItem(SURPRISED) ?? '[]') as { id: string; at: number }[]).filter((x) => now - x.at < 2 * 864e5)).map((x) => x.id); } catch { return []; }
+};
+const rememberSurprise = (ids: string[], now = Date.now()) => {
+  try {
+    const old = (JSON.parse(localStorage.getItem(SURPRISED) ?? '[]') as { id: string; at: number }[]).filter((x) => now - x.at < 2 * 864e5 && !ids.includes(x.id));
+    localStorage.setItem(SURPRISED, JSON.stringify([...old, ...ids.map((id) => ({ id, at: now }))].slice(-30)));
+  } catch { /* storage blocked */ }
+};
 
 /** Leaving now: in 5 minutes (shoes, keys). */
 const soon = (now: Date) => { const t = new Date(now.getTime() + 5 * 60e3); t.setSeconds(0, 0); return t; };
@@ -79,7 +89,7 @@ function fromSignup(now: Date): Draft {
   const d = APP.homeDefaults();
   const max = d.budget === '0' ? 0 : d.budget === '50' ? 50 : d.budget === '100' ? 100 : BUDGET_TOP;
   const h = now.getHours();
-  return { mode: h >= 16 || h < 5 ? 'seara' : 'loc', evening: eveningOf(now), hour: '20:00', people: d.who === '1' ? 1 : d.who === '2' ? 2 : 4, budget: [0, max], vibes: d.vibes };
+  return { mode: h >= 16 || h < 5 ? 'seara' : 'loc', evening: eveningOf(now), hour: d.hour, people: d.who === '1' ? 1 : d.who === '2' ? 2 : 4, budget: [0, max], vibes: d.vibes };
 }
 export function loadLast(): Draft | null {
   try {
@@ -100,6 +110,8 @@ export function firstDraft(now = new Date()): Draft {
   const h = now.getHours();
   const late = h >= 19 || h < 5;
   const keep = base.hour !== 'acum' && momentOf(e0, base.hour).getTime() > now.getTime() + 30 * 60e3;
+  // with no plan made yet, the hour they go out at (Ziua: 14:00), if it is still ahead today
+  if (!loadLast() && keep && base.hour !== '20:00') return { ...base, evening: e0, extra: undefined, crewId: undefined, crewName: undefined };
   // never last time's crew: a plan "Facem așa" with a crew is sent to all of them, so the crew is picked each time at
   // "Câți sunteți?" (Ai chef de…, Bilu's ideas and Explorează do not ask)
   return { ...base, evening: e0, hour: late ? 'acum' : keep ? base.hour : hourFor(e0, '20:00', now), extra: undefined, crewId: undefined, crewName: undefined };
@@ -121,11 +133,14 @@ export function againDraft(now = new Date()): { draft: Draft; notice?: Notice } 
   return { draft: { ...d, evening: addDays(e0, 1), hour: last.hour }, notice: { text: 'Data trecută a fost la ' + last.hour + '; azi ora a trecut, așa că l-am făcut pentru mâine.', label: 'Vreau acum', patch: { evening: e0, hour: 'acum' } } };
 }
 
-/** "Surprinde-mă": a whole outing, any vibe (your taste decides), now — or tonight at 20:00 in the late afternoon. */
+/** "Surprinde-mă": a whole outing, now — or tonight at 20:00 in the late afternoon; the vibe is theirs (chill or party,
+ *  from the sign-up), else any (their taste decides). */
 export function surpriseDraft(now = new Date()): Draft {
   const base = loadLast() ?? fromSignup(now);
   const h = now.getHours();
-  return { ...base, mode: 'seara', evening: eveningOf(now), hour: h >= 17 && h < 19 ? '20:00' : 'acum', vibes: [], extra: undefined, crewId: undefined };
+  const d = APP.homeDefaults();
+  const vibes = d.mood === 'chill' || d.mood === 'party' ? d.vibes : [];
+  return { ...base, mode: 'seara', evening: eveningOf(now), hour: h >= 17 && h < 19 ? '20:00' : 'acum', vibes, extra: undefined, crewId: undefined, crewName: undefined };
 }
 
 /** "Ai chef de Party": the usual answers, with that vibe. */
@@ -140,10 +155,12 @@ export const usePlans = () => useSyncExternalStore((f) => { subs.add(f); return 
 export const getPlans = () => s;
 
 /** Makes the three plans for the draft a moment after the tap (the screen shows Bilu checking meanwhile).
- *  `surprise`: one of them is picked to be opened; `avoid`: places already shown ("Altă surpriză"). */
+ *  `surprise`: one of them is picked to be opened, not one opened by a recent surprise; `avoid`: places already shown
+ *  ("Altă surpriză"), left out; `save`: these are their own answers (Creează plan, "Mai vrei ceva?"), kept for "Ca data
+ *  trecută" and ticked the next time — a surprise, "Ai chef de…" or Explorează's chip are not. */
 let runId = 0; // only the newest request may fill the screen (a crew's plans wait up to 2.5 s for its taste)
-export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surprise?: boolean; avoid?: string[] } = {}): Promise<S> {
-  saveLast(d);
+export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surprise?: boolean; avoid?: string[]; save?: boolean } = {}): Promise<S> {
+  if (o.save) saveLast(d);
   const id = ++runId;
   s = { ...s, draft: d, chips: o.chips ?? [], notice: o.notice, loading: true, seen: o.avoid ?? [] };
   emit();
@@ -153,11 +170,17 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
     : Promise.resolve(undefined);
   return new Promise((done) => void taste.then((tt) => setTimeout(() => {
     if (id !== runId) { done(s); return; } // a newer request is on its way: this one is dropped
-    const r = APP.makePlans(askOf(d), o.avoid ?? [], tt);
-    // a surprise: the best plan most of the time, sometimes the second or third
+    // a surprise leaves out the places of the last surprises (two days), as long as something is left
+    const avoid = [...(o.avoid ?? []), ...(o.surprise ? recentSurprises() : [])];
+    let r = APP.makePlans(askOf(d), avoid, tt);
+    if (!r.plans.length && avoid.length) r = APP.makePlans(askOf(d), o.avoid ?? [], tt);
+    if (!r.plans.length && o.avoid?.length) r = APP.makePlans(askOf(d), [], tt);
+    // a surprise: any of the plans, the best a little more often
     const roll = Math.random();
-    const pick = o.surprise && r.plans.length ? Math.min(r.plans.length - 1, roll < 0.55 ? 0 : roll < 0.85 ? 1 : 2) : 0;
-    s = { ...s, plans: r.plans, note: r.note, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...(o.surprise && r.plans[pick] ? r.plans[pick].steps.map((x) => x.place.id) : [])] };
+    const pick = o.surprise && r.plans.length ? Math.min(r.plans.length - 1, roll < 0.45 ? 0 : roll < 0.75 ? 1 : 2) : 0;
+    const opened = o.surprise && r.plans[pick] ? r.plans[pick].steps.map((x) => x.place.id) : [];
+    if (opened.length) rememberSurprise(opened);
+    s = { ...s, plans: r.plans, note: r.note, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
     emit();
     done(s);
   }, 30)));
@@ -168,6 +191,7 @@ export function nextSurprise(): Promise<S> | null {
   const seen = new Set(s.seen);
   const i = s.plans.findIndex((p) => !p.steps.some((x) => seen.has(x.place.id)));
   if (i >= 0) {
+    rememberSurprise(s.plans[i].steps.map((x) => x.place.id));
     s = { ...s, pick: i, seen: [...s.seen, ...s.plans[i].steps.map((x) => x.place.id)] };
     emit();
     return Promise.resolve(s);

@@ -73,7 +73,7 @@ export default function PlanuriGata() {
   if (!draft) return <Redirect href="/acasa" />;
   const people = draft.people;
   const wx = APP.dayWeather(plans[0]?.steps[0].at ?? askOf(draft).at);
-  const redo = (p: Partial<Draft>, chips: string[] = st.chips) => { setSaid(null); void runPlans({ ...draft, ...p }, { chips }); };
+  const redo = (p: Partial<Draft>, chips: string[] = st.chips) => { setSaid(null); void runPlans({ ...draft, ...p }, { chips, save: true }); };
 
   // "Mai vrei ceva?": the words change the plans right here
   const tell = (text: string) => {
@@ -82,7 +82,7 @@ export default function PlanuriGata() {
     if (!r.chips.length) { setSaid('Nu m-am prins. Încearcă „mai ieftin”, „aproape”, „cu terasă”, „fără fum” sau o oră („la 22”).'); return; }
     const a = r.ask;
     setQ('');
-    redo({ evening: r.slot.evening, hour: r.slot.hour, people: a.people, vibes: a.vibes, budget: [a.budget[0], a.budget[1] === Infinity ? BUDGET_TOP : Math.min(BUDGET_TOP, a.budget[1])], extra: { outdoor: a.outdoor, needs: a.needs, near: a.near } }, [...st.chips, ...r.chips]);
+    redo({ evening: r.slot.evening, hour: r.slot.hour, people: a.people, ...(a.people !== draft.people ? { crewId: undefined, crewName: undefined } : {}), vibes: a.vibes, budget: [a.budget[0], a.budget[1] === Infinity ? BUDGET_TOP : Math.min(BUDGET_TOP, a.budget[1])], extra: { outdoor: a.outdoor, needs: a.needs, near: a.near } }, [...st.chips, ...r.chips]);
   };
   const footer = !loading && people >= 2 && plans.length >= 2; // „Trimite la vot” at the bottom
   const late = askOf(draft).at.getHours();
@@ -148,7 +148,7 @@ export default function PlanuriGata() {
               <View style={{ gap: 4 }}>
                 {p.steps.map((s, k) => (
                   <View key={s.place.id}>
-                    {k > 0 ? <T style={{ marginLeft: 58, marginVertical: 2, fontFamily: F.m, fontSize: 12, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : '🚶 ') + s.travel + ' min'}</T> : null}
+                    {k > 0 ? <T style={{ marginLeft: 58, marginVertical: 2, fontFamily: F.m, fontSize: 12, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : s.by === 'bus' ? '🚌 ' : s.by === 'bike' ? '🚲 ' : '🚶 ') + s.travel + ' min'}</T> : null}
                     <StepRow s={s} />
                     {p.steps.length === 1 && s.place.story ? <T numberOfLines={2} style={{ marginLeft: 58, marginTop: 4, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: t.ink2 }}>{s.place.story}</T> : null}
                   </View>

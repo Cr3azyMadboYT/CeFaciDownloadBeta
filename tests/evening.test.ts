@@ -34,6 +34,12 @@ describe('seara completă', () => {
     expect(n.steps[2].at.getHours()).toBeGreaterThanOrEqual(22);
   });
   it('no clubs for under 18', () => expect(evenings(all, ask, ctx('centru', sat, true)).some((r) => r.id === 'noaptea')).toBe(false));
+  it('under 18, after 21:00: still a whole evening (a dinner and a dessert, a walk where people are)', () => {
+    const late = new Date(2026, 9, 3, 20, 30);
+    const r = evenings(all, { ...ask, at: late }, ctx('centru', late, true));
+    expect(r.length).toBeGreaterThan(0);
+    for (const x of r) for (const st of x.steps) expect(['bar', 'pub', 'biergarten', 'nightclub']).not.toContain(st.v.k);
+  });
   it('a small town gets an evening by car, every place within how far they would go', () => {
     const wide = { ...ask, maxKm: 20 };
     const b = evenings(all, wide, ctx('buftea'));

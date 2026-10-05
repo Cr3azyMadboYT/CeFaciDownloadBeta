@@ -56,6 +56,8 @@ export interface Ask {
   vibes: Vibe[];
   at?: Date;           // the exact moment of the plan ("Creează plan": a day and an hour); else `when` decides
   people?: number;     // how many exactly ("Câți sunteți?"); else `who` decides
+  wants?: Vibe[];      // what they asked for themselves (a step of an evening scores with the evening's vibes)
+  avoid?: string[];    // places left out ("Altă surpriză": the ones already shown)
 }
 
 export interface Ctx {

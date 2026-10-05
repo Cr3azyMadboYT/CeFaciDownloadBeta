@@ -139,4 +139,38 @@ describe('Creează plan', () => {
       }
     }
   });
+  it('cu autobuzul: drumul spus cu autobuzul, nu cu mașina', () => {
+    APP.savePrefs({ zone: 'centru', dist: '20', moves: ['walk', 'bus'], here: undefined } as never);
+    const plans = APP.makePlans({ mode: 'loc', at: at(1, 20), people: 2, budget: [0, 300], vibes: [] }).plans;
+    for (const p of plans) {
+      expect(p.checks.some((c) => /cu mașina/.test(c.text)), p.title).toBe(false);
+      for (const s of p.steps) expect(['walk', 'bus']).toContain(s.by);
+    }
+    APP.savePrefs({ moves: ['walk', 'car'] } as never);
+  });
+  it('„în buget” doar când e în bugetul ales, chiar dacă Bilu a căutat peste el', () => {
+    APP.savePrefs({ zone: 'snagov', dist: '20', moves: ['walk', 'car'], here: undefined } as never);
+    for (const mode of ['loc', 'seara'] as const) {
+      const r = APP.makePlans({ mode, at: at(1, 21), people: 2, budget: [0, 30], vibes: [] });
+      for (const p of r.plans) if (p.price > 30) expect(p.checks.some((c) => /în buget/.test(c.text)), p.title + ' ' + p.price).toBe(false);
+    }
+  });
+  it('„Altă surpriză”: locurile deja văzute nu mai apar deloc', () => {
+    APP.savePrefs({ zone: 'centru', dist: '20', moves: ['walk', 'car'], here: undefined } as never);
+    const first = APP.makePlans({ mode: 'seara', at: at(1, 20), people: 2, budget: [0, 300], vibes: [] }).plans;
+    const seen = first.flatMap((p) => p.steps.map((s) => s.place.id));
+    const again = APP.makePlans({ mode: 'seara', at: at(1, 20), people: 2, budget: [0, 300], vibes: [] }, seen).plans;
+    expect(again.length).toBeGreaterThan(0);
+    for (const p of again) for (const s of p.steps) expect(seen, s.place.name).not.toContain(s.place.id);
+  });
+  it('„de la 150 de lei”: toată seara costă măcar atât', () => {
+    APP.savePrefs({ zone: 'centru', dist: '20', moves: ['walk', 'car'], here: undefined } as never);
+    const r = APP.makePlans({ mode: 'seara', at: at(1, 20), people: 2, budget: [150, Infinity], vibes: [] });
+    for (const p of r.plans) if (p.steps.length > 1) expect(p.price, p.title).toBeGreaterThanOrEqual(150);
+  });
+  it('singur, cu „Party” ales: clubul e voie', () => {
+    APP.savePrefs({ zone: 'centru', dist: '20', moves: ['walk', 'car'], here: undefined } as never);
+    const r = APP.makePlans({ mode: 'seara', at: at(1, 22), people: 1, budget: [0, 300], vibes: ['Party'] });
+    expect(r.plans.some((p) => p.steps.some((s) => s.place.real.k === 'nightclub'))).toBe(true);
+  });
 });

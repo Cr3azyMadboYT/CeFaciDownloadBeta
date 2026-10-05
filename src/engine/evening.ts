@@ -10,7 +10,7 @@ import { nightHour } from './time';
 import { wxAt } from './weather';
 import type { Ask, Ctx, Venue, Vibe, When, Who } from './types';
 
-export type SlotId = 'masa' | 'pahar' | 'club' | 'joaca' | 'spectacol' | 'film' | 'dulce' | 'cafea' | 'plimbare' | 'cultura' | 'gustare';
+export type SlotId = 'masa' | 'pahar' | 'club' | 'joaca' | 'spectacol' | 'film' | 'dulce' | 'desert' | 'cafea' | 'plimbare' | 'promenada' | 'cultura' | 'gustare';
 interface Slot {
   kinds: string[];
   min: number;                   // how long you usually stay, minutes
@@ -29,13 +29,16 @@ export const SLOTS: Record<SlotId, Slot> = {
   spectacol: { kinds: ['theatre', 'arts_centre'], min: 130, windows: [[17.5, 20.25]], why: () => 'Spectacolul', whole: 120 },
   film: { kinds: ['cinema'], min: 130, windows: [[11, 22]], why: () => 'Filmul', whole: 120 },
   dulce: { kinds: ['ice_cream', 'cafe'], min: 50, windows: [[11, 21.5]], why: () => 'Ceva dulce' },
+  // in the evening: a dessert after dinner, a walk where people are (Centrul Vechi, Calea Victoriei, a lake shore)
+  desert: { kinds: ['ice_cream', 'cafe'], min: 45, windows: [[17, 23.5]], why: () => 'Desertul' },
+  promenada: { kinds: ['promenade', 'square'], min: 60, windows: [[17, 23]], why: () => 'Plimbarea' },
   cafea: { kinds: ['cafe'], min: 60, windows: [[8, 20]], why: () => 'O cafea' },
   plimbare: { kinds: ['park', 'botanical_garden', 'nature_reserve', 'promenade', 'square'], min: 80, windows: [[8, 20]], why: () => 'Plimbarea' },
   cultura: { kinds: ['museum', 'gallery', 'planetarium', 'castle', 'palace', 'manor'], min: 90, windows: [[9.5, 17.5]], why: () => 'Muzeul' },
   gustare: { kinds: ['fast_food'], min: 35, windows: [[22, 29]], why: () => 'Ceva de mâncat' },
 };
 
-export type TemplateId = 'cina-bar' | 'noaptea' | 'pahar-club' | 'club-gustare' | 'doua-baruri' | 'cultura' | 'film-cina' | 'film-pahar' | 'activ' | 'joaca-pahar' | 'dulce' | 'afara' | 'cultura-zi';
+export type TemplateId = 'cina-bar' | 'noaptea' | 'pahar-club' | 'club-gustare' | 'doua-baruri' | 'cultura' | 'film-cina' | 'film-pahar' | 'activ' | 'joaca-pahar' | 'dulce' | 'afara' | 'cultura-zi' | 'cina-desert' | 'plimbare-desert';
 export interface Template {
   id: TemplateId; label: string; sub: string;
   alone?: string;                // the title when the optional part is left out ("Spectacol și cină" without the dinner)
@@ -57,6 +60,9 @@ export const TEMPLATES: Template[] = [
   { id: 'activ', label: 'Joacă, apoi masă', sub: 'escape, jocuri sau sport, apoi mâncare și un pahar', steps: [{ slot: 'joaca' }, { slot: 'masa' }, { slot: 'pahar', optional: true }], vibes: ['Fun', 'Competitiv'], ideal: 18, family: 'play' },
   { id: 'joaca-pahar', label: 'Joacă, apoi un pahar', sub: 'escape, jocuri sau sport, apoi un bar', steps: [{ slot: 'joaca' }, { slot: 'pahar' }], vibes: ['Fun', 'Competitiv'], ideal: 20.5, family: 'play' },
   { id: 'dulce', label: 'Ceva dulce și un film', sub: 'desert sau cafea, apoi cinema', steps: [{ slot: 'dulce' }, { slot: 'film' }], vibes: ['Chill'], ideal: 17.5, family: 'culture' },
+  // evenings without a bar (for everyone, and the ones under 18 have these after 21:00)
+  { id: 'cina-desert', label: 'Cină și desert', sub: 'restaurant, apoi ceva dulce aproape', steps: [{ slot: 'masa' }, { slot: 'desert' }], vibes: ['Mâncare bună', 'Chill'], ideal: 19.5, family: 'food' },
+  { id: 'plimbare-desert', label: 'Plimbare și ceva dulce', sub: 'unde e lume seara, apoi un desert', steps: [{ slot: 'promenada' }, { slot: 'desert' }], vibes: ['Chill', 'Aer liber'], ideal: 19, family: 'day', outdoor: true },
   { id: 'afara', label: 'Parc, cafea și masă', sub: 'o plimbare, o cafea, apoi masa', steps: [{ slot: 'plimbare' }, { slot: 'cafea' }, { slot: 'masa', optional: true }], vibes: ['Aer liber', 'Chill'], ideal: 12, family: 'day', outdoor: true },
   { id: 'cultura-zi', label: 'Muzeu și o cafea', sub: 'cultură, apoi o cafea aproape', steps: [{ slot: 'cultura' }, { slot: 'cafea' }, { slot: 'masa', optional: true }], vibes: ['Cultură', 'Chill'], ideal: 12.5, family: 'day' },
 ];
@@ -68,7 +74,7 @@ export interface Route { id: TemplateId; label: string; sub: string; steps: Rout
  * `total`: the budget is for the whole evening, per person (a route may go up to a third over it, and says by how much);
  * `accept`: what else a place must have ("cu terasă", "fără fum", not already in another plan): null leaves it out,
  * a number adds to its score. */
-export interface EveningAsk { who: Who; when: When; budget: number; maxKm: number; walkKm: number; vibes: Vibe[]; at?: Date; now?: boolean; total?: boolean; people?: number; accept?: (v: Venue) => number | null; car?: boolean }
+export interface EveningAsk { who: Who; when: When; budget: number; budgetMin?: number; maxKm: number; walkKm: number; vibes: Vibe[]; at?: Date; now?: boolean; total?: boolean; people?: number; accept?: (v: Venue) => number | null; car?: boolean }
 
 const roundUp5 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 5) * 5); return t; };
 const roundUp15 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 15) * 15); return t; };
@@ -123,7 +129,7 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
     const spec = steps0[i];
     const slot = SLOTS[spec.slot];
     const radius = i === 0 ? ask.maxKm : drive ? Math.max(ask.walkKm, 10) : ask.walkKm;
-    const stepAsk: Ask = { who: ask.who, when: 'acum', budget: ask.budget, maxKm: radius, vibes: tpl.vibes.length ? tpl.vibes : ask.vibes, people: ask.people };
+    const stepAsk: Ask = { who: ask.who, when: 'acum', budget: ask.budget, maxKm: radius, vibes: tpl.vibes.length ? tpl.vibes : ask.vibes, wants: ask.vibes, people: ask.people };
     const ranked: Cand[] = [];
     for (const v of kindsOf(all, slot.kinds)) {
       if (used.has(v.id) || (ctx.minor && adultOnly(v))) continue;
@@ -178,6 +184,7 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
   }
   if (!steps.length) return null;
   if (ask.budget !== Infinity && total > (ask.total ? ask.budget * 1.35 : ask.budget * Math.max(1, steps.length))) return null;
+  if (ask.budgetMin && total < ask.budgetMin) return null; // "de la 150 de lei": not a 60-lei evening
   const over = ask.total && ask.budget !== Infinity && total > ask.budget ? total - ask.budget : undefined;
   const score = picked.reduce((a, x) => a + x, 0) / Math.max(1, picked.length);
   let note: string | undefined;
@@ -207,7 +214,8 @@ function fitOf(tpl: Template, r: Route, ask: EveningAsk, ctx: Ctx): number {
   const wx = wxAt(ctx.weather, r.steps[0].at);
   if (tpl.outdoor) fit += wx?.nice ? 6 : wx && (wx.wet || wx.cold) ? -20 : 0;
   const n = ask.people ?? (ask.who === '1' ? 1 : ask.who === '2' ? 2 : ask.who === '34' ? 4 : 6);
-  if (n === 1 && (tpl.family === 'night' || tpl.id === 'activ' || tpl.id === 'joaca-pahar')) fit -= 4;
+  // alone: a walk, a dinner and a dessert, a film; two bars only for someone who asked for a party
+  if (n === 1 && (tpl.family === 'night' || tpl.id === 'activ' || tpl.id === 'joaca-pahar')) fit -= ask.vibes.includes('Party') ? 4 : 12;
   if (n === 2 && (tpl.id === 'cina-bar' || tpl.id === 'cultura' || tpl.id === 'film-cina' || tpl.id === 'dulce')) fit += 3;
   if (n >= 3 && (tpl.family === 'play' || tpl.family === 'night')) fit += 3;
   if (r.drive) fit -= 2;

@@ -131,7 +131,7 @@ export default function Cont() {
   const km = radius ?? (home ? APP.bestRadius(home, moves) : 20);
   const [likes, setLikes] = useState<string[]>([]);
   const [budget, setBudget] = useState('100');
-  const [who, setWho] = useState('group');
+  const [who, setWho] = useState(''); // asked, not guessed: alone, in two or with the crew changes every plan
   const [when, setWhen] = useState<string[]>(['eve', 'we']);
   const [mood, setMood] = useState('mix');
   const [votes, setVotes] = useState<[string | undefined, string][]>([]);
@@ -182,6 +182,8 @@ export default function Cont() {
   const bDt = bM ? new Date(Number(bM[3]), Number(bM[2]) - 1, Number(bM[1])) : null;
   const bReal = !!bDt && !!bM && bDt.getDate() === Number(bM[1]) && bDt.getMonth() === Number(bM[2]) - 1 && bDt.getTime() <= Date.now();
   const age = bReal ? APP.age(bIso) : null;
+  // 16–17 (the birth date they confirmed): the questions leave out clubs, party and nights out
+  const minor = !!birthIso && (APP.age(birthIso) ?? 18) < 18;
   const bOk = age !== null && age <= 110;
   const ageNote = !birth ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : !bM ? 'Scrie data așa: 14.05.2004.' : !bOk ? 'Data nu pare bună. Verifică ziua, luna și anul.' : age! < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : age! < 18 ? 'Până la 18 ani îți arătăm doar locurile pentru oricine, fără baruri și cluburi.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.';
   const nameOff = first.trim().length < 2 || !userOk || !bOk || age! < 16;
@@ -215,10 +217,12 @@ export default function Cont() {
     name: ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
     zone: ['up', 'De unde pleci de obicei? Cel mai simplu: folosește locația ta. Sau alege tu orașul ori sectorul.'],
     radius: ['wink', 'Cât de departe ai merge pentru o seară bună? Ți-am pus raza în care ai destule locuri. O schimbi oricând de pe Acasă.'],
-    likes: ['hi', likes.length >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.'],
-    style: ['wink', 'Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.'],
+    likes: ['hi', likes.length >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac' + (first.trim() ? ', ' + first.trim() : '') + '. Așa știu de unde să încep.'],
+    style: ['wink', !who ? 'Întâi: ieși mai mult singur, în doi sau cu gașca? Îți fac alte planuri pentru fiecare.' : 'Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.'],
     picks: ['up', pick === 0 ? 'Aproape gata: ' + (real.length || 5) + ' locuri reale din zona ta. Zi-mi repede dacă ai merge.' : votes[votes.length - 1][1] === 'yes' ? 'Notat! Îmi place cum gândești.' : votes[votes.length - 1][1] === 'no' ? 'Ok, pe ăsta nu ți-l mai arăt des.' : 'Hmm, bine. Îl las pe „poate”.'],
-    friends: ['hi', 'Cu prietenii e mai distractiv. Îi adaugi după @username, din Profil.'],
+    friends: who === 'solo' ? ['wink', 'Îți fac planuri pentru tine: cafenele, muzee, filme, plimbări. Când ai chef de companie, adaugi prieteni.']
+      : who === 'duo' ? ['hi', 'Adaugă-l pe cel cu care ieși și vă trimit planurile amândurora.']
+      : ['hi', 'Cu gașca e mai distractiv: votați împreună unde mergeți.'],
   };
   const sayNow = say[step];
 
@@ -226,7 +230,7 @@ export default function Cont() {
   const startPicks = () => { setVotes([]); go('picks'); };
   const enter = async () => {
     setBusy(true);
-    const err = await finishSignup({ first, user: u, birthIso, zoneId, dist, moves, likes, budget, who, when, mood, votes, home, radiusKm: km, live });
+    const err = await finishSignup({ first, user: u, birthIso, zoneId, dist, moves, likes: minor ? likes.filter((x) => x !== 'party') : likes, budget, who, when: minor ? when.filter((x) => x !== 'late') : when, mood: minor && mood === 'party' ? 'mix' : mood, votes, home, radiusKm: km, live });
     setBusy(false);
     if (err) { setSaveErr(err); go('name'); return; }
     router.replace('/acasa');
@@ -425,7 +429,7 @@ export default function Cont() {
           <H1>Ce-ți place?</H1>
           <Lead style={{ marginTop: 6 }}>{n === 0 ? 'Alege măcar 3. Poți schimba oricând.' : n < 3 ? 'Mai alege ' + (3 - n) + '.' : n + ' alese. Bun început!'}</Lead>
           <View style={{ marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-            {LIKES.map(([key, label, bg, icon]) => {
+            {LIKES.filter(([key]) => !(minor && key === 'party')).map(([key, label, bg, icon]) => {
               const on = likes.includes(key);
               return (
                 <View key={key} style={{ width: '48.5%', borderRadius: 23, borderWidth: 3, borderColor: on ? '#FFD43B' : 'transparent', margin: -3 }}>
@@ -450,14 +454,15 @@ export default function Cont() {
 
   if (step === 'style') {
     const rows: [string, string, string[] | string, (v: string) => void, [string, string][], boolean][] = [
-      ['st-b', 'Cât cheltui de obicei, de persoană', budget, setBudget, [['0', 'Gratis'], ['50', '≤ 50 lei'], ['100', '≤ 100'], ['any', 'Oricât']], false],
       ['st-w', 'Cu cine ieși cel mai des', who, setWho, [['solo', 'Singur'], ['duo', 'În doi'], ['group', 'Cu gașca']], false],
-      ['st-t', 'Când ieși', when, (v) => toggle(when, setWhen, v), [['day', 'Ziua'], ['eve', 'Seara'], ['late', 'Noaptea'], ['we', 'Weekend']], true],
-      ['st-m', 'Mai degrabă', mood, setMood, [['chill', 'Chill'], ['mix', 'Și-și'], ['party', 'Party']], false],
+      ['st-b', 'Cât cheltui de obicei, de persoană', budget, setBudget, [['0', 'Gratis'], ['50', '≤ 50 lei'], ['100', '≤ 100'], ['any', 'Oricât']], false],
+      // under 18: no nights out and no party (the app shows them none)
+      ['st-t', 'Când ieși', when, (v) => toggle(when, setWhen, v), minor ? [['day', 'Ziua'], ['eve', 'Seara'], ['we', 'Weekend']] : [['day', 'Ziua'], ['eve', 'Seara'], ['late', 'Noaptea'], ['we', 'Weekend']], true],
+      ['st-m', 'Mai degrabă', mood, setMood, minor ? [['chill', 'Liniște'], ['mix', 'Și-și'], ['fun', 'Distracție']] : [['chill', 'Chill'], ['mix', 'Și-și'], ['party', 'Party']], false],
     ];
     return (
       <Slide k="style">
-        <StepScreen k={5} onBack={back} foot={<Big label="Mai departe" disabled={when.length === 0} onPress={startPicks} />}>
+        <StepScreen k={5} onBack={back} foot={<Big label={!who ? 'Alege cu cine ieși' : 'Mai departe'} disabled={when.length === 0 || !who} onPress={startPicks} />}>
           {bubble}
           <H1>Cum ieși tu?</H1>
           {rows.map(([id, label, val, set, opts, multi]) => (
@@ -508,8 +513,12 @@ export default function Cont() {
     <Slide k="friends">
       <StepScreen k={7} onBack={back} foot={<Big label="Gata" onPress={() => go('done')} />}>
         {bubble}
-        <H1>Cu cine ieși?</H1>
-        <Lead style={{ marginTop: 6 }}>Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile le faci din Planuri și votați împreună unde mergeți.</Lead>
+        <H1>{who === 'solo' ? 'Și când vrei companie' : who === 'duo' ? 'Cu cine ieși în doi?' : 'Gașca ta'}</H1>
+        <Lead style={{ marginTop: 6 }}>{who === 'solo'
+          ? 'Planurile ți le fac pentru o persoană: fără escape room sau biliard, care cer companie. Prietenii îi adaugi oricând din Profil → Prieteni, după @username sau cu codul tău.'
+          : who === 'duo'
+            ? 'Adaugă-l din Profil → Prieteni, după @username sau cu codul tău. Îi trimiți planul și răspunde cu „Vin” sau „Nu pot”.'
+            : 'Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile le faci din Planuri și votați împreună unde mergeți.'}</Lead>
       </StepScreen>
     </Slide>
   );

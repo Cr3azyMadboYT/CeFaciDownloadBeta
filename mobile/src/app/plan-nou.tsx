@@ -47,7 +47,7 @@ export default function PlanNou() {
   useEffect(() => { const id = setTimeout(() => setNames(APP.preview(askOf(d))), 60); return () => clearTimeout(id); }, [d, wxv]);
 
   // changing one answer from the plans screen: back to it; else on to it
-  const finish = (x = d) => { void runPlans(x); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata'); };
+  const finish = (x = d) => { void runPlans(x, { save: true }); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata'); };
   const next = (x = d) => { if (k >= STEPS.length - 1) finish(x); else setK(k + 1); };
   const auto = (p: Partial<Draft>) => { const x = { ...d, ...p }; setD(x); setTimeout(() => next(x), 220); };
   const back = () => (k > 0 ? setK(k - 1) : router.canGoBack() ? router.back() : router.replace('/acasa'));
@@ -171,7 +171,7 @@ export default function PlanNou() {
                 <Lbl style={{ marginTop: 22, marginBottom: 8 }}>Sau alege gașca</Lbl>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                   {crews.map((c) => {
-                    const n = Math.max(2, c.members.filter((m) => m.status === 'member').length);
+                    const n = c.members.filter((m) => m.status === 'member').length + 1; // the members and you
                     return <Chip key={c.id} label={c.name + ' · ' + n} on={d.crewId === c.id} onPress={() => auto({ people: n, crewId: c.id, crewName: c.name })} />;
                   })}
                 </View>

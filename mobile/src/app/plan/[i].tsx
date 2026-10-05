@@ -76,7 +76,7 @@ export default function PlanDeschis() {
                   {k > 0 ? (
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 34 }}>
                       <View style={{ width: 2, height: 34, backgroundColor: t.line, marginLeft: 79 }} />
-                      <T style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : '🚶 ') + s.travel + ' min până aici'}</T>
+                      <T style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : s.by === 'bus' ? '🚌 ' : s.by === 'bike' ? '🚲 ' : '🚶 ') + s.travel + ' min până aici'}</T>
                     </View>
                   ) : null}
                   <StepRow s={s} />

@@ -139,6 +139,13 @@ const WHEN_MAP: Record<string, When> = { now: 'acum', eve: 'diseara', tom: 'main
 const WHO_MAP: Record<string, Who> = { 1: '1', 2: '2', 34: '34', 5: '5' };
 const BUDGET_MAX: Record<string, number> = { 0: 0, 50: 50, 100: 100, 200: 200, any: Infinity };
 const DUR_MAX: Record<string, number> = { 1: 1.5, 23: 3, 4: 99 };
+// the kinds of places each answer at "Ce-ți place?" is about: a like for escape rooms lifts escape rooms, not every
+// place that is "Fun" (karaoke, board games and stand-up are not kinds on the map: their vibes say it)
+const LIKE_KINDS: Record<string, string[]> = {
+  bowl: ['bowling_alley', 'amusement_arcade', 'billiards'], escape: ['escape_game'], film: ['cinema'], party: ['nightclub'],
+  cafe: ['cafe', 'ice_cream'], sport: ['padel', 'tennis', 'soccer', 'squash', 'climbing', 'swimming'],
+  nature: ['park', 'botanical_garden', 'nature_reserve', 'promenade'], culture: ['museum', 'theatre', 'gallery', 'arts_centre'], standup: ['theatre', 'arts_centre'],
+};
 const VIBE_LIKES: Record<string, string[]> = { bowl: ['Fun', 'Competitiv'], escape: ['Fun', 'Competitiv'], film: ['Cultură', 'Chill'], party: ['Party'], karaoke: ['Fun', 'Party'], food: ['Mâncare bună'], cafe: ['Chill'], sport: ['Competitiv'], nature: ['Aer liber'], culture: ['Cultură'], board: ['Fun'], standup: ['Cultură', 'Fun'] };
 
 // Sign-up and "for you" picks: one idea from each kind of outing first (eat, drink, culture, play, outdoors), best
@@ -276,7 +283,7 @@ export const APP = {
   },
   byId(id: string) { return this.byIdMap.get(id); },
   ctx(): Ctx {
-    const likes = this.prefs.likes.flatMap((l) => VIBE_LIKES[l] ?? [l]);
+    const likes = [...new Set(this.prefs.likes.flatMap((l) => [...(VIBE_LIKES[l] ?? [l]), ...(LIKE_KINDS[l] ?? [])]))];
     return { prefs: { zone: this.prefs.zone, likes }, origin: this.origin(), now: new Date(), history: this.history(), minor: this.isMinor(), liked: this.prefs.liked, disliked: this.prefs.disliked, weather: this.weather };
   },
   histMemo: null as string[] | null,
@@ -340,8 +347,12 @@ export const APP = {
     const when = w.includes('eve') || w.includes('late') ? 'eve' : w.includes('we') ? 'we' : w.includes('day') ? 'now' : 'eve';
     const budget = p.budget === '0' || p.budget === '50' || p.budget === '100' || p.budget === 'any' ? p.budget : '100';
     const fromLikes = [...new Set(p.likes.flatMap((l) => VIBE_LIKES[l] ?? []))];
-    const vibes = p.mood === 'chill' ? ['Chill'] : p.mood === 'party' ? ['Party'] : fromLikes.slice(0, 2);
-    return { who, when, dur: '23', budget, vibes, dist: p.dist || '20', km: this.radiusKm() };
+    // under 18 there is no party to have: the vibes come from what they like instead
+    const party = !this.isMinor();
+    const vibes = p.mood === 'chill' ? ['Chill'] : p.mood === 'party' && party ? ['Party'] : fromLikes.filter((x) => party || x !== 'Party').slice(0, 2);
+    // the hour a first plan starts at: by day for those who go out by day, late for night owls, else 20:00
+    const hour = w.length && !w.includes('eve') && !w.includes('we') ? (w.includes('day') ? '14:00' : '22:00') : '20:00';
+    return { who, when, dur: '23', budget, vibes, hour, mood: p.mood, dist: p.dist || '20', km: this.radiusKm() };
   },
   pickVotes: new Map<string, string>(),
   notePick(id: string | undefined, vote: string) { if (id) this.pickVotes.set(id, vote); },
@@ -437,7 +448,9 @@ export const APP = {
     const walkKm = moves.includes('walk') || moves.length === 0 ? 1.2 : 3;
     const maxKm = this.radiusKm();
     const car = !(moves.length > 0 && moves.every((m) => m === 'walk'));
-    return { mode: a.mode, at: a.at, now: a.now, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near, strict: a.strict, car };
+    // further than a walk: by car if they drive, else by bus, else by bike
+    const go: PlanReq['go'] = moves.includes('car') || !moves.length ? 'car' : moves.includes('bus') ? 'bus' : moves.includes('bike') ? 'bike' : undefined;
+    return { mode: a.mode, at: a.at, now: a.now, people: a.people, budgetMin: a.budget[0], budgetMax: a.budget[1], vibes: a.vibes as PlanReq['vibes'], maxKm, walkKm, outdoor: a.outdoor, needs: a.needs, near: a.near, strict: a.strict, car, go };
   },
   lastPlans: [] as MadePlan[],
   lastReq: null as PlanReq | null,
@@ -445,8 +458,8 @@ export const APP = {
    * is nothing. `avoid`: places to leave out ("Altă surpriză" after the three shown). */
   makePlans(a: PlanAsk, avoid: string[] = [], taste?: Taste) {
     const ctx0 = this.ctx();
-    const ctx = { ...ctx0, taste, history: avoid.length ? [...ctx0.history, ...avoid] : ctx0.history };
-    const set: PlanSet = makePlans(VENUES, this.planReq(a), ctx);
+    const ctx = { ...ctx0, taste };
+    const set: PlanSet = makePlans(VENUES, { ...this.planReq(a), avoid: avoid.length ? avoid : undefined }, ctx);
     this.lastPlans = set.plans; this.lastReq = set.req; this.altSeen.clear();
     return { plans: set.plans.map((p) => this.showPlan(p)), note: set.note, empty: set.empty, relaxed: set.relaxed };
   },
