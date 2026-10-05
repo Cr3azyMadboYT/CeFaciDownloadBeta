@@ -101,10 +101,16 @@ export default function PlanDeschis() {
           <Muted style={{ marginTop: 6 }}>Prețurile sunt estimate.</Muted>
         </View>
       </ScrollView>
-      <View style={{ flexDirection: 'row', gap: 8, paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
-        {surprise ? <Big label="Altă surpriză" color={t.s2} ink={t.ink} icon={<Icon name="dice" color={t.ink} />} style={{ paddingHorizontal: 16 }} onPress={() => { void nextSurprise(); }} /> : null}
-        <Big label="Facem așa" color="#FFD43B" ink="#0E1440" style={{ flex: 1 }} onPress={make} />
-        {people >= 2 ? <Big label="La vot" color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} style={{ paddingHorizontal: 18 }} onPress={() => setVote(true)} /> : null}
+      {/* the main button gets the whole row; the other two share the row above it (on a phone with big letters three in
+          one row left "Facem așa" one letter wide, 06.10) */}
+      <View style={{ gap: 8, paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
+        {surprise || people >= 2 ? (
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            {surprise ? <Big label="Altă surpriză" color={t.s2} ink={t.ink} icon={<Icon name="dice" color={t.ink} />} style={{ flex: 1, minHeight: 50 }} onPress={() => { void nextSurprise(); }} /> : null}
+            {people >= 2 ? <Big label="La vot" color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} style={{ flex: 1, minHeight: 50 }} onPress={() => setVote(true)} /> : null}
+          </View>
+        ) : null}
+        <Big label="Facem așa" color="#FFD43B" ink="#0E1440" onPress={make} />
       </View>
       <VoteStart open={vote} onClose={() => setVote(false)} places={[]} f={f}
         routes={[p, ...plans.filter((x) => x !== p)].map((x) => ({ label: x.title, sub: x.steps.map((s) => s.place.name).join(' → '), price: x.price, from: x.from, steps: x.steps.map((s) => ({ place: s.place, at: s.at, slot: s.slot })) }))} />

@@ -354,7 +354,7 @@ export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
   else if ((relaxed.includes('far') || relaxed.includes('wider')) && !(close < 12 && farFirst)) notes.push('Prin apropiere n-am găsit destule la ora asta, așa că m-am uitat până la ' + req.maxKm + ' km.');
   const lone = plans.filter((p) => p.id.startsWith('loc-')).length;
   const linked = plans.length - lone;
-  if (req.mode === 'seara' && lone) notes.push(!linked ? 'La ora asta nu se leagă o ieșire cu mai multe locuri: îți dau locuri bune, câte unul.' : 'Doar ' + (linked === 1 ? 'o ieșire' : linked + ' ieșiri') + ' cu mai multe locuri se leagă la ora asta; ' + (lone === 1 ? 'al treilea plan e un singur loc.' : 'restul sunt câte un singur loc.'));
+  if (req.mode === 'seara' && lone) notes.push(!linked ? 'La ora asta nu găsesc o seară cu mai multe opriri deschise una după alta, așa că îți dau locuri bune, câte unul.' : 'La ora asta doar ' + (linked === 1 ? 'un plan are' : linked + ' planuri au') + ' mai multe opriri deschise una după alta; ' + (lone === 1 ? 'celălalt e un singur loc.' : 'celelalte sunt câte un singur loc.'));
   const hit = plans.filter((p) => p.fits).length;
   if (req.vibes.length && plans.length && hit < plans.length) {
     const said = '„' + req.vibes.join('”, „') + '”';

@@ -212,26 +212,43 @@ export function withLive(plans: Shown[], live: Record<string, Live>): Shown[] {
   });
 }
 async function verifyLive(id: number, again: (closed: string[]) => Made) {
+  // a place put in instead of a closed one is asked too, and so on (06.10: Fabrica came in for three closed clubs
+  // and was closed as well, but stayed on screen); after the last round, a plan with a place Google says is closed
+  // goes out rather than send them to a locked door
   const closed: string[] = [];
-  for (let round = 0; round < 2; round++) {
+  const names = new Map<string, string>();
+  const ROUNDS = 3;
+  for (let round = 0; round < ROUNDS; round++) {
     const items = new Map<string, { id: string; name: string; lat: number; lon: number; at: Date; until?: Date }>();
     for (const p of s.plans) for (const x of p.steps) {
       if (!needsCheck(x.place.real.k, x.place.real.cat) || items.has(x.place.id)) continue;
       const at = new Date(x.at);
       items.set(x.place.id, { id: x.place.id, name: x.place.name, lat: x.place.real.lat, lon: x.place.real.lon, at, until: untilOf(at, x.until) });
+      names.set(x.place.id, x.place.name);
     }
     const live = await checkOpen([...items.values()]);
     if (id !== runId) return;
     const shut = Object.entries(live).filter(([, v]) => v.open === false).map(([k]) => k);
-    if (!shut.length || round === 1) { s = { ...s, plans: withLive(s.plans, live) }; emit(); if (!shut.length) return; }
-    if (round === 1) return;
-    // closed at that hour: the plans again without them, and Bilu says so
+    if (!shut.length) { s = { ...s, plans: withLive(s.plans, live) }; emit(); return; }
     closed.push(...shut);
+    const said = (ids: string[]) => {
+      const n = ids.map((k) => names.get(k)).filter(Boolean) as string[];
+      return n.length === 1 ? n[0] + ' e închis la ora aia (am verificat pe Google), așa că l-am schimbat.'
+        : 'Am verificat pe Google: ' + n.slice(0, 3).join(', ') + (n.length > 3 ? ' și încă ' + (n.length - 3) : '') + ' sunt închise la ora aia, așa că le-am schimbat.';
+    };
+    if (round === ROUNDS - 1) {
+      // still closed ones after the last round: those plans go; the rest stay, checked
+      const keep = withLive(s.plans.filter((p) => !p.steps.some((x) => shut.includes(x.place.id))), live);
+      s = keep.length
+        ? { ...s, plans: keep, note: said(closed), pick: Math.min(s.pick, keep.length - 1) }
+        : { ...s, plans: [], note: undefined, empty: 'Am verificat pe Google și locurile bune de pe aproape sunt închise la ora asta. Încearcă altă oră sau mai departe.', pick: 0 };
+      emit();
+      return;
+    }
+    // closed at that hour: the plans again without them, and Bilu says so
     const r = again(closed);
     if (id !== runId) return;
-    const names = shut.map((k) => [...items.values()].find((x) => x.id === k)?.name).filter(Boolean);
-    const said = names.length === 1 ? names[0] + ' e închis la ora aia (am verificat pe Google), așa că l-am schimbat.' : 'Am verificat pe Google: ' + names.slice(0, 3).join(', ') + ' sunt închise la ora aia, așa că le-am schimbat.';
-    s = { ...s, plans: r.plans, note: said + (r.note ? ' ' + r.note : ''), empty: r.empty, pick: Math.min(s.pick, Math.max(0, r.plans.length - 1)) };
+    s = { ...s, plans: r.plans, note: said(closed) + (r.note ? ' ' + r.note : ''), empty: r.empty, pick: Math.min(s.pick, Math.max(0, r.plans.length - 1)) };
     emit();
   }
 }

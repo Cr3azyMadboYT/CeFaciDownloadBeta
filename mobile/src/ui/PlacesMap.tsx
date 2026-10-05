@@ -28,7 +28,8 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
   function send(x){ window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(x)); }
   function start(){
     if(!window.maplibregl){ document.body.innerHTML='<div class="err">Harta are nevoie de internet. Lista de mai jos merge și fără.</div>'; return; }
-    var map=new maplibregl.Map({container:'m',style:'https://tiles.openfreemap.org/styles/liberty',center:[D.origin.lon,D.origin.lat],zoom:13,attributionControl:{compact:true}});
+    var map=new maplibregl.Map({container:'m',style:'https://tiles.openfreemap.org/styles/liberty',center:[D.origin.lon,D.origin.lat],zoom:13,attributionControl:false});
+    map.addControl(new maplibregl.AttributionControl({compact:true}),'top-right');
     var b=new maplibregl.LngLatBounds();b.extend([D.origin.lon,D.origin.lat]);
     var me=document.createElement('div');me.className='me';new maplibregl.Marker({element:me}).setLngLat([D.origin.lon,D.origin.lat]).setPopup(new maplibregl.Popup({offset:12}).setText(D.origin.label)).addTo(map);
     D.pins.forEach(function(p){
@@ -44,7 +45,9 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
         map.addSource('r',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:D.pins.map(function(p){return[p.lon,p.lat];})}}});
         map.addLayer({id:'r',type:'line',source:'r',paint:{'line-color':'#2F5BFF','line-width':4,'line-dasharray':[1.5,1.2]}});
       }
-      if(D.pins.length) map.fitBounds(b,{padding:56,maxZoom:15,duration:0});
+      if(D.pins.length) map.fitBounds(b,{padding:{top:64,bottom:84,left:48,right:48},maxZoom:15,duration:0});
+      // the credit stays a small (i) until tapped, not a box over the map
+      var a=document.querySelector('.maplibregl-ctrl-attrib');if(a) a.classList.remove('maplibregl-compact-show');
       send({ready:true});
     });
   }
