@@ -129,6 +129,8 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
       if (used.has(v.id) || (ctx.minor && adultOnly(v))) continue;
       const d = km(from, v);
       if (d > radius) continue;
+      // every place stays within how far they would go (a walk past its edge is fine; a drive is not)
+      if (i > 0 && km(ctx.origin, v) > ask.maxKm + (drive ? 0 : 1.2)) continue;
       const extra = ask.accept ? ask.accept(v) : 0;
       if (extra === null) continue;
       // when you get there: the time asked for the first place (or now + the way there), after the way for the next ones
@@ -187,7 +189,8 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
   const say = (s: string) => (lunch ? s.replace('Cină', 'Prânz').replace('cină', 'prânz').replace('Cina', 'Prânzul') : s);
   // a part left out (the snack after the club) is not promised in the title
   const sub = steps.length < steps0.length ? steps.map((s) => s.why.toLowerCase()).join(', apoi ') : tpl.sub;
-  const label = steps.length < steps0.length && tpl.alone ? tpl.alone : tpl.label;
+  // by car between the places: not "la pas"
+  const label = (steps.length < steps0.length && tpl.alone ? tpl.alone : tpl.label).replace(', la pas', drive ? '' : ', la pas');
   return { id: tpl.id, label: say(label), sub: say(sub), steps, price: total, score, note, drive, over, family: tpl.family, vibes: tpl.vibes };
 }
 type Cand = { v: Venue; arrive: Date; until: Date; travel: number; sure: boolean; closes: Date | null; score: number; reasons: string[]; stretched: number };

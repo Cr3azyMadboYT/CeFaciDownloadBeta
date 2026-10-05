@@ -34,10 +34,17 @@ describe('seara completă', () => {
     expect(n.steps[2].at.getHours()).toBeGreaterThanOrEqual(22);
   });
   it('no clubs for under 18', () => expect(evenings(all, ask, ctx('centru', sat, true)).some((r) => r.id === 'noaptea')).toBe(false));
-  it('a small town gets an evening by car', () => {
-    const b = evenings(all, ask, ctx('buftea'));
+  it('a small town gets an evening by car, every place within how far they would go', () => {
+    const wide = { ...ask, maxKm: 20 };
+    const b = evenings(all, wide, ctx('buftea'));
     expect(b.length).toBeGreaterThan(0);
     expect(b.some((r) => r.drive)).toBe(true);
+    for (const r of b) for (const st of r.steps) expect(km(zoneById('buftea'), st.v), r.label + ': ' + st.v.name).toBeLessThanOrEqual(r.drive ? 20 : 21.2);
+    for (const r of b) if (r.drive) expect(r.label).not.toMatch(/la pas/);
+    // 8 km around Buftea: no evening that ends further away
+    for (const r of evenings(all, ask, ctx('buftea'))) for (const st of r.steps) expect(km(zoneById('buftea'), st.v)).toBeLessThanOrEqual(r.drive ? 8 : 9.2);
+    // only on foot: no driving between places
+    expect(evenings(all, { ...wide, car: false }, ctx('buftea')).some((r) => r.drive)).toBe(false);
   });
   it('another variant changes the first place', () => {
     const a = evenings(all, ask, ctx('centru')).find((r) => r.id === 'cina-bar')!;

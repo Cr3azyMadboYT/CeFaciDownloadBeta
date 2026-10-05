@@ -85,6 +85,10 @@ hidekb() {
   if adb shell dumpsys input_method | grep -q "mInputShown=true"; then adb shell input keyevent 4; sleep 1; fi
 }
 scroll() { adb shell input swipe 540 1700 540 500 400; sleep 1; }
+# a swipe that starts high on the screen (lower down a map would take it and move instead of the page)
+scrollhigh() { adb shell input swipe 540 1000 540 200 400; sleep 1; }
+# a swipe that starts low (under a map near the top)
+scrolllow() { adb shell input swipe 540 1980 540 1450 400; sleep 1; }
 go() { adb shell am start -W -a android.intent.action.VIEW -d "cefaci:///$1" "$PKG" >/dev/null 2>&1; }
 logs() { adb logcat -d -s ReactNativeJS:V | grep -E "$1" | tail -"${2:-20}"; }
 
@@ -129,7 +133,7 @@ if [ "$MODE" = "e2e" ]; then
   go zona; sleep 4; shot zona 2; bottom zona
   tap '^Ilfov$' && shot zona-ilfov 2
   tap '^Buftea$' && shot zona-buftea 4
-  scroll; scroll
+  scrollhigh; scrollhigh
   tap '^20 km' && shot zona-raza 3 && bottom zona-raza
   tap '^Gata: ' && sleep 3
   go acasa; sleep 3; shot acasa-buftea 2
@@ -137,16 +141,17 @@ if [ "$MODE" = "e2e" ]; then
   # the sign-up's new steps
   go cont; sleep 3
   tap '^Continuă cu email' && sleep 2
-  tap '^ex: Cornel' && sleep 1 && adb shell input text Test && sleep 1
-  hidekb; tap '^cum te găsesc' && sleep 1 && adb shell input text test_e2e && sleep 2
-  hidekb; tap '^ZZ.LL.AAAA' && sleep 1 && adb shell input text 05051998 && sleep 1
+  # the field itself (its description comes after the label with the same words)
+  tap '^Prenumele$' last && sleep 1 && adb shell input text Test && sleep 1
+  hidekb; tap '^Username$' last && sleep 1 && adb shell input text test_e2e && sleep 2
+  hidekb; tap '^Data nașterii$' last && sleep 1 && adb shell input text 05051998 && sleep 1
   hidekb
   shot cont-nume 1; bottom cont-nume
   tap '^Mai departe$' && sleep 2
   tap '^Da, e corectă' && shot cont-unde 3 && bottom cont-unde
   tap '^Ilfov$' && shot cont-ilfov 2
   tap '^Buftea$' && shot cont-raza 6 && bottom cont-raza
-  scroll
+  scrolllow
   tap '^Cu mașina$' && shot cont-raza-pe-jos 3
   tap '^20 km' && shot cont-raza-20 3
   logs "E2E|Error|error|Warning" 30

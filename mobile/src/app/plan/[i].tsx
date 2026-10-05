@@ -58,6 +58,14 @@ export default function PlanDeschis() {
           </View>
           <Muted style={{ marginTop: 2, fontSize: 14 }}>{(p.steps.length === 1 ? p.steps[0].place.title + ' · ' : '') + p.from + '–' + p.to + ' · ' + (people === 1 ? 'doar tu' : people + ' persoane')}</Muted>
           <Checks plan={p} />
+          {surprise && st.note ? (
+            // what Bilu had to change to find it (further than the radius, over the budget…): said here too, the
+            // surprise skips the list where it is written
+            <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 14, backgroundColor: t.yellowSoft }}>
+              <Icon name="sparkle" size={18} color={t.yellowInk} />
+              <T style={{ flex: 1, fontFamily: F.m, fontSize: 13, lineHeight: 18 }}>{st.note}</T>
+            </View>
+          ) : null}
 
           <View style={{ marginTop: 14, padding: 14, borderRadius: 22, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
             {p.steps.map((s, k) => {
