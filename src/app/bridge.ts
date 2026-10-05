@@ -37,7 +37,14 @@ export interface Home { lat: number; lon: number; name: string; area: 'Bucureșt
 export const RADII = [5, 10, 20, 30, 40];
 // Ilfov places besides the zones, for "Unde mai exact?": their centre is where the map's places with that town in their
 // address are (real data, kept up to date by the OSM import; a town with no place on the map is not offered)
-const ILFOV_MORE = ['Balotești', 'Cernica', 'Domnești', 'Berceni', 'Brănești', 'Ciolpani', '1 Decembrie', 'Jilava', 'Ciorogârla', 'Moara Vlăsiei', 'Afumați', 'Cornetu', 'Ștefăneștii de Jos', 'Dobroești', 'Dragomirești-Vale'];
+// more Ilfov towns to set off from, placed at the middle of their places' addresses on the map (OpenStreetMap, 10.2026,
+// before the places were narrowed to the chosen ones: where you live does not depend on which places we show)
+const ILFOV_MORE: [string, number, number][] = [
+  ['Balotești', 44.6043, 26.0705], ['Cernica', 44.4301, 26.2541], ['Domnești', 44.4251, 25.9495], ['Berceni', 44.3214, 26.1808],
+  ['Brănești', 44.463, 26.334], ['Ciolpani', 44.729, 26.0842], ['1 Decembrie', 44.2895, 26.0611], ['Jilava', 44.3227, 26.0715],
+  ['Ciorogârla', 44.4418, 25.9067], ['Moara Vlăsiei', 44.6756, 26.2676], ['Afumați', 44.5177, 26.2406], ['Cornetu', 44.3555, 25.9603],
+  ['Ștefăneștii de Jos', 44.5378, 26.1703], ['Dobroești', 44.4716, 26.1729], ['Dragomirești-Vale', 44.4403, 25.9433],
+];
 const PKEY = 'cefaci.prefs';
 const SKEY = 'cefaci.state';
 // what the main board keeps between launches: plans, XP and stamps, theme, the tour seen, the Plus free week
@@ -223,10 +230,7 @@ export const APP = {
   homes(area: 'București' | 'Ilfov'): Home[] {
     if (area === 'București') return ZONES.filter((z) => z.area === 'București' && /^s\d$/.test(z.id)).map((z) => ({ lat: z.lat, lon: z.lon, name: z.name, area }));
     const towns: Home[] = ZONES.filter((z) => z.area === 'Ilfov').map((z) => ({ lat: z.lat, lon: z.lon, name: z.name, area }));
-    for (const name of ILFOV_MORE) {
-      const at = VENUES.filter((v) => v.city === name);
-      if (at.length) towns.push({ lat: +(at.reduce((a, v) => a + v.lat, 0) / at.length).toFixed(4), lon: +(at.reduce((a, v) => a + v.lon, 0) / at.length).toFixed(4), name, area });
-    }
+    for (const [name, lat, lon] of ILFOV_MORE) towns.push({ lat, lon, name, area });
     return towns.sort((a, b) => a.name.localeCompare(b.name, 'ro'));
   },
   /** A point (the phone's location, a moved pin) as a Home: named after the nearest sector or town. */

@@ -25,7 +25,7 @@ describe('weekly opening tables', () => {
         if (openState(v, t).open !== o.getState(t)) diff++;
       }
     }
-    expect(checked).toBeGreaterThan(10000);
+    expect(checked).toBeGreaterThan(5000);
     expect(diff / checked).toBeLessThan(0.002);
   });
   it('label the next change like before', () => {

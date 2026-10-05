@@ -7,7 +7,7 @@ import { km } from '../src/engine/core';
 const at = (dayAdd: number, h: number) => { const d = new Date(); d.setDate(d.getDate() + dayAdd); d.setHours(h, 0, 0, 0); return d; };
 
 describe('de unde pleci și cât de departe', () => {
-  it('București: doar sectoarele; Ilfov: orașele, și cele cu localuri pe hartă', () => {
+  it('București: doar sectoarele; Ilfov: orașele, și localitățile din adresele de pe hartă', () => {
     expect(APP.homes('București').map((h) => h.name)).toEqual(['Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5', 'Sector 6']);
     const ilfov = APP.homes('Ilfov').map((h) => h.name);
     expect(ilfov).toEqual(expect.arrayContaining(['Buftea', 'Otopeni', 'Snagov', 'Jilava', 'Balotești', 'Cernica']));

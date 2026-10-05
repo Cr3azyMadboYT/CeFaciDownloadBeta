@@ -129,6 +129,8 @@ for (const f of files) {
   }
 }
 for (const id of Object.keys(drop)) if (keep[id]) delete drop[id];
+// a place stays only with its story: kept by a check but left without one (the research was not sure) goes
+for (const [id, k] of Object.entries(keep)) if (!k.story) { delete keep[id]; drop[id] = 'fără poveste verificată'; }
 
 const out = {
   updated: new Date().toISOString().slice(0, 10),

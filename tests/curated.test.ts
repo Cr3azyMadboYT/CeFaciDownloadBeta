@@ -36,7 +36,10 @@ describe.skipIf(!cur)('localurile alese', () => {
   });
   it('locurile unde se strânge lumea sunt în aplicație (de pildă în Buftea și Piața Constituției)', () => {
     const gather = all.filter((v) => v.k === 'square' || v.k === 'promenade' || v.k === 'food_market');
-    expect(gather.length).toBeGreaterThan(8);
+    expect(gather.length).toBeGreaterThanOrEqual(5);
+    for (const re of [/Piața Constituției/, /Calul Bălan/, /Centrul Vechi/, /Calea Victoriei/]) expect(all.some((v) => re.test(v.name)), String(re)).toBe(true);
+    const buftea = all.filter((v) => km(v, { lat: 44.566, lon: 25.94 }) < 3);
+    expect(buftea.length).toBeGreaterThanOrEqual(3);
   });
   it('felurile din import (scripts/import-osm.mjs KIND_CAT) sunt ca în motor', () => {
     const src = fs.readFileSync('scripts/import-osm.mjs', 'utf8');

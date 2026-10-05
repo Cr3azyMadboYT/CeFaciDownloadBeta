@@ -1,0 +1,4849 @@
+{
+ "updated": "2026-10-05",
+ "about": "Locurile alese pentru CeFaci (05.10): deschise acum, care merită, cu povestea lor (fapte verificate, surse la fiecare). Doar acestea apar în aplicație.",
+ "keep": {
+  "n7622689033": {
+   "story": "Centrul cultural al Primăriei Capitalei ține expoziții, concerte și spectacole în Hanul Gabroveni, un han vechi din Centrul Vechi restaurat ca spațiu de artă.",
+   "crowd": "seara, la evenimente",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n7622689033",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "r4871608": {
+   "story": "Amfiteatrul din Parcul Carol unde se țin concertele de vară în aer liber: în 2026 au cântat aici Empire of the Sun, KALEO, Skillet și Rita Ora. Fără concert e închis, deci uită-te întâi la program.",
+   "crowd": "serile de concert, mai–septembrie",
+   "vibes": [
+    "Party",
+    "Cultură",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://www.songkick.com/venues/67159-arenele-romane/calendar",
+    "https://www.jambase.com/venue/arenele-romane-roman-arenas",
+    "https://visitbucharest.today/bucharest-concerts/"
+   ]
+  },
+  "w16291602": {
+   "story": "Sala Filarmonicii „George Enescu”, inaugurată în 1888; în sala mare, deasupra publicului, o frescă de circa 75 m povestește istoria românilor.",
+   "crowd": "seara, la concert",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w16291602",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.fge.org.ro"
+   ]
+  },
+  "n3779623861": {
+   "story": "Spațiu de teatru independent pe strada Lânăriei, cunoscut pentru spectacole despre teme sociale și civice; în 2025 a avut serile „Povești la Replika”, cu teatru lunea și filme marțea.",
+   "crowd": "seara (spectacolele încep de obicei la 19:00)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n3779623861",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bucuresti.ro/locatii/arta-si-cultura-centrul-de-teatru-educational-replika-1242"
+   ]
+  },
+  "n11411704670": {
+   "story": "Singura instituție publică dedicată dansului contemporan, cu spectacole pe Bulevardul Mărășești și în Sala Omnia; în noiembrie 2025 a avut peste 10 evenimente.",
+   "crowd": "seara, la spectacole",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n11411704670",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://cndb.ro/despre-noi/cndb-sala-omnia/"
+   ]
+  },
+  "n849372378": {
+   "story": "Multiplex cu 15 săli și peste 2.800 de locuri în Sun Plaza, chiar lângă metrou la Piața Sudului.",
+   "crowd": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n849372378",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemagia.ro/program-cinema/cinema-city-sun-plaza-bucuresti/"
+   ]
+  },
+  "n3726839339": {
+   "story": "Multiplex cu 14 săli în Mega Mall, inclusiv sală 4DX, unde scaunele se mișcă și simți vânt și apă în timpul filmului.",
+   "crowd": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n3726839339",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemagia.ro/program-cinema/cinema-city-mega-mall-bucuresti/"
+   ]
+  },
+  "n7079505521": {
+   "story": "Cel mai mare cinematograf din România, în AFI Cotroceni, cu sală IMAX pentru filmele mari.",
+   "crowd": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n7079505521",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemacity.ro/imax"
+   ]
+  },
+  "n9394387194": {
+   "story": "Multiplex cu 14 săli în ParkLake, dintre care 3 VIP, cu fotolii mari — bun de combinat cu o plimbare în Parcul IOR.",
+   "crowd": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n9394387194",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cinemagia.ro/program-cinema/cinema-city-parklake-bucuresti/"
+   ]
+  },
+  "n849372410": {
+   "story": "Cinematograf vechi de pe Calea Moșilor, cu bilete de 10 lei și weekenduri tematice cu clasice (în octombrie 2025: „Masters of Suspense”, cu Psycho și Rear Window).",
+   "crowd": "seara sau în weekend",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "price": 10,
+   "sources": [
+    "OpenStreetMap n849372410",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://cinemaeuropa.ro/"
+   ]
+  },
+  "n2468602231": {
+   "story": "Sală de film de autor și documentare în clădirea Muzeului Țăranului Român de pe Kiseleff.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n2468602231",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://muzeultaranuluiroman.ro/cinema-muzeul-taranului/"
+   ]
+  },
+  "n849372350": {
+   "story": "Una dintre sălile Arhivei Naționale de Filme, pe strada Ion Câmpineanu, cu clasice și retrospective la prețuri mici.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n849372350",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n849372318": {
+   "story": "Sala istorică a Cinematecii Române de pe strada Eforiei, cu retrospective, filme vechi restaurate și proiecții de festival.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n849372318",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.anf-cinemateca.ro/selectii-din-program"
+   ]
+  },
+  "n7192898466": {
+   "story": "Cinema cu 12 săli în Veranda Mall, cu sală Dolby Atmos și săli VIP cu lounge privat; luni biletul e mult mai ieftin (17 lei în 2025).",
+   "crowd": "seara; luni e cel mai ieftin",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": 31,
+   "sources": [
+    "OpenStreetMap n7192898466",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.cine-max.ro/oferte-cinemax/preturi-bilete"
+   ]
+  },
+  "n442896940": {
+   "story": "Cinema mic, cu 7 săli, lângă metroul 1 Decembrie 1918 — bun pentru un film fără aglomerația din mall-urile mari.",
+   "crowd": "după-amiaza și seara",
+   "vibes": [
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n442896940",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bucuresteni.ro/despre/cineplexx-titan/"
+   ]
+  },
+  "w294724370": {
+   "story": "Multiplex cu 13 săli în Băneasa Shopping City, cu săli VIP și o sală Ultra cu sunet Dolby Atmos.",
+   "crowd": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap w294724370",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://cineplexx.ro/"
+   ]
+  },
+  "w23611484": {
+   "story": "Clădirea rotundă cu cupolă din Parcul Circului, deschisă în 1961, găzduiește spectacole de circ și shown-uri internaționale.",
+   "crowd": "weekend, la spectacole",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w23611484",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n7151190270": {
+   "story": "Primul club de stand-up din București, deschis de comedianți, pe Bulevardul Dacia 99; are show-uri în fiecare seară, cu nume mari și debutanți.",
+   "crowd": "seara, zilnic",
+   "vibes": [
+    "Fun",
+    "Party"
+   ],
+   "sources": [
+    "OpenStreetMap n7151190270",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://99club.ro/"
+   ]
+  },
+  "n10936959099": {
+   "story": "Proiect pornit în 2015 care a readus tinerii la teatru: spectacole intime, de două ori pe seară, la 19:00 și 21:00, pe Pache Protopopescu.",
+   "crowd": "seara (19:00 sau 21:00)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n10936959099",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://sapteseri.ro/locuri/bucuresti/teatre/cuibul-artistilor"
+   ]
+  },
+  "n6985316061": {
+   "story": "Cinema-ul Institutului Francez de pe Bulevardul Dacia, numit după actrița Elvira Popescu, cu film european și festivaluri.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n6985316061",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://eventbook.ro/elvirepopesco"
+   ]
+  },
+  "n2634651900": {
+   "story": "Grădina fondată în 1860 de Carol Davila: aproape 18 hectare de plante din toată lumea, alei umbrite și sere.",
+   "crowd": "ziua, primăvara–toamna",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n2634651900",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n12327311799": {
+   "story": "Cinema în Vitantis Shopping Center; în aprilie 2025 a găzduit Classy Film Festival, cu clasice de Hitchcock, Kubrick și Fellini.",
+   "crowd": "seara",
+   "vibes": [
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n12327311799",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.vitantis.ro/happy-cinema/"
+   ]
+  },
+  "n849372311": {
+   "story": "Multiplexul de la etajul 2 din București Mall, primul mall din România, deschis în 1999.",
+   "crowd": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n849372311",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://bucurestimall.ro/en/services/hollywood-multiplex/"
+   ]
+  },
+  "n2839203559": {
+   "story": "Teatru de improvizație fondat în 2018, cu show-uri la mansarda de pe strada Comănița 9 — nicio seară nu seamănă cu alta, iar publicul dă sugestii.",
+   "crowd": "seara, în weekend mai ales",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n2839203559",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://improteca.ro/"
+   ]
+  },
+  "w240611280": {
+   "story": "La vreo 14 km de oraș, lacul Cernica, de peste 300 de hectare, e înconjurat de pădure, iar mănăstirea veche stă pe insulele din lac. Bun pentru o plimbare liniștită; pe terenul mănăstirii nu se pune muzică și nu se face grătar.",
+   "crowd": "weekend, ziua",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://www.infopensiuni.ro/cazare-cernica/obiective-turistice-cernica/padurea-si-lacul-cernica_6275",
+    "http://www.obiective-turistice.ro/padurea-si-lacul-cernica",
+    "https://www.outdooractive.com/en/travel-guide/lacul-cernica/54093217/"
+   ],
+   "price": 0
+  },
+  "w76904582": {
+   "story": "Ctitorită de Mihai Viteazul în 1594; în 1985 regimul a mutat-o pe șine 289 de metri și a ascuns-o după blocuri.",
+   "crowd": "ziua",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w76904582",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "w25511874": {
+   "story": "Mănăstirea de pe insula din Lacul Snagov, unde legenda spune că ar fi îngropat Vlad Țepeș. Se leagă bine cu o zi la lac și o tură cu barca.",
+   "crowd": "weekend, ziua",
+   "vibes": [
+    "Cultură",
+    "Aer liber",
+    "Chill"
+   ],
+   "sources": [
+    "https://www.barci.ro/lacul-snagov/",
+    "https://incotro.olx.ro/padurea-si-lacul-snagov-de-ce-si-cand-sa-le-vizitezi/"
+   ],
+   "price": 0
+  },
+  "w810258272": {
+   "story": "Biserică uriașă ridicată la sfârșitul secolului XVIII și abandonată înainte de a fi sfințită; ruinele ei pline de legende sunt la marginea Bucureștiului.",
+   "crowd": "ziua, la apus pentru poze",
+   "vibes": [
+    "Aer liber",
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w810258272",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n7179103985": {
+   "story": "Teatru al Primăriei Capitalei pe Bulevardul Mihai Eminescu, cu comedii și piese contemporane într-o sală de mărime medie.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n7179103985",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n849372344": {
+   "story": "Primul cinema care a adus 3D în România; a împlinit 20 de ani în 2025 și are 11 săli în Plaza România.",
+   "crowd": "oricând, mai ales seara",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n849372344",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://business-review.eu/bucharest-going-out/cinema/movieplex-cinema-the-first-cinema-to-bring-3d-technology-to-romania-celebrates-20-years-285657"
+   ]
+  },
+  "n12288419303": {
+   "story": "Muzeu de iluzii și camere interactive în AFI Cotroceni, făcut pentru atins, încercat și poze.",
+   "crowd": "oricând, ziua sau seara",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n12288419303",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.museumofsenses.ro/"
+   ]
+  },
+  "n2634652937": {
+   "story": "Casa colecționarului Krikor Zambaccian, cu tablouri de Cézanne, Matisse și Renoir alături de Grigorescu și Luchian — o colecție mare într-o casă mică.",
+   "crowd": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n2634652937",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://mnar.ro/muzeul-k-h-zambaccian"
+   ]
+  },
+  "w244848005": {
+   "story": "Muzeu privat deschis în 2018 pe Bulevardul Primăverii, cu artă românească de după 1950 și expoziții temporare.",
+   "crowd": "ziua (închis marțea)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w244848005",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.mare.ro/"
+   ]
+  },
+  "n10137755832": {},
+  "n2634652010": {
+   "story": "Muzeu mare de istorie militară, cu tancuri, tunuri și avioane expuse și în curte, lângă Gara de Nord.",
+   "crowd": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n2634652010",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.muzeulmilitar.ro/en/"
+   ]
+  },
+  "n4505417867": {
+   "story": "Palatul Suțu, construit între 1833 și 1835 în stil neogotic, a fost locul celor mai cunoscute baluri ale Bucureștiului; azi spune istoria orașului.",
+   "crowd": "ziua (închis luni)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n4505417867",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://muzeulbucurestiului.ro/"
+   ]
+  },
+  "n5146804838": {
+   "story": "Un sat întreg, cu case, mori și biserici aduse din toată țara, pe malul Herăstrăului. La târgurile lui (Mărțișor, Florii, Sânziene, Târgul Pâinii de la sfârșitul lui septembrie) vin meșteri și mâncare tradițională.",
+   "crowd": "ziua, mai ales în weekendurile cu târg",
+   "vibes": [
+    "Cultură",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://www.bucurestifm.ro/2026/03/24/targ-de-florii-la-muzeul-national-al-satului-dimitrie-gusti-traditii-mestesuguri-si-spectacole-intre-3-si-5-aprilie/",
+    "https://uzpr.ro/29/09/2026/targul-painii-editia-a-v-a-la-muzeul-national-al-satului-dimitrie-gusti-de-elena-trifan/",
+    "https://spotmedia.ro/stiri/timp-liber/muzeul-national-al-satului-dimitrie-gusti-va-invita-in-perioada-26-27-septembrie-2026-sa-sarbatorim-impreuna-ziua-satului-romanesc"
+   ]
+  },
+  "n2634652844": {
+   "story": "Muzeul declarat Muzeul European al Anului în 1996, cu săli gândite ca o poveste despre satul românesc; are și târguri și cinema în aceeași clădire.",
+   "crowd": "ziua (închis luni)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n2634652844",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://muzeultaranuluiroman.ro/"
+   ]
+  },
+  "n2634652277": {
+   "story": "Muzeul din palatul Cotroceni, în același ansamblu cu sediul Președinției; vizita se face cu programare și buletinul la tine.",
+   "crowd": "ziua, cu programare",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n2634652277",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.muzeulcotroceni.ro/"
+   ]
+  },
+  "n2634652837": {
+   "story": "În fostul Palat Regal de pe Calea Victoriei: artă românească veche și modernă, plus galeria de artă europeană (Rembrandt, El Greco).",
+   "crowd": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n2634652837",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.mnar.arts.ro/"
+   ]
+  },
+  "n2634652838": {
+   "story": "Artă contemporană în aripa de vest a Palatului Parlamentului, deschisă în 2004; urci și la terasa de sus pentru priveliște.",
+   "crowd": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n2634652838",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.mnac.ro/"
+   ]
+  },
+  "n12601324233": {},
+  "w23610985": {
+   "story": "Muzeul cu dioramele inventate de Grigore Antipa: animale puse în decorul lor natural, cum nu vezi în alt muzeu; modernizat complet în 2011.",
+   "crowd": "ziua (închis luni)",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap w23610985",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://antipa.ro/"
+   ]
+  },
+  "w220667665": {
+   "story": "Muzeu de inventatori și mașinării în Parcul Carol, fondat în 1909 de inginerul Dimitrie Leonida — de la motoare vechi la mașini de epocă.",
+   "crowd": "ziua",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w220667665",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.mnt-leonida.ro/"
+   ]
+  },
+  "w38234390": {
+   "story": "„Vila cu clopoței”, ridicată în 1905 de medicul Nicolae Minovici în stil neoromânesc, adăpostește o colecție de artă populară lângă parcul Herăstrău.",
+   "crowd": "ziua, miercuri–duminică",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w38234390",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.minovici.ro/"
+   ]
+  },
+  "w79139872": {
+   "story": "Vila amiralului Vasile Urseanu, transformată în observator: în serile senine te uiți prin telescop la Lună și planete, chiar în centru.",
+   "crowd": "seara, pe cer senin",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w79139872",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "http://www.astro-urseanu.ro"
+   ]
+  },
+  "w23556393": {
+   "story": "Clădirea operei de lângă Podul Eroilor, inaugurată în 1953, cu operă și balet clasic tot sezonul.",
+   "crowd": "seara, la spectacol",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w23556393",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://operanb.ro"
+   ]
+  },
+  "w39349047": {
+   "story": "Palatul brâncovenesc, cu loggia deschisă spre lac, și parcul cu intrare liberă sunt locul de picnic preferat la 15 minute de oraș. În 2026 a găzduit și festivaluri: Big Little Festival (august) și prima ediție Always Forever, cu vreo 6.000 de oameni la apus pe malul lacului.",
+   "crowd": "weekendul, primăvara–toamna (vino dimineața, se aglomerează repede); vara, în weekend, scena de pe aleea principală are teatru, muzică și filme",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "sources": [
+    "https://umblu-teleleu.ro/mogosoaia/",
+    "https://www.infomusic.ro/agenda/big-little-festival-2026/",
+    "https://www.bugetul.ro/always-forever-festival-prima-edi%C8%9Bie-la-mogo%C8%99oaia-peste-6000/"
+   ],
+   "price": 0
+  },
+  "w38236017": {
+   "story": "Fosta casă a familiei Ceaușescu, deschisă publicului în 2016: robinete aurite, piscină cu mozaic și cinema privat.",
+   "crowd": "ziua, marți–duminică",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap w38236017",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.palatulprimaverii.ro"
+   ]
+  },
+  "n12075938064": {},
+  "w1019934059": {
+   "story": "Sala de expoziții de pe Bulevardul Bălcescu, lângă Universitate, ridicată în 1932 din donația familiei Dalles; azi are expoziții, târguri și piesele Teatrului Avangardia.",
+   "crowd": "ziua sau seara, la evenimente",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w1019934059",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.dalles.ro/"
+   ]
+  },
+  "w232472620": {
+   "story": "Sala de circa 4.000 de locuri din spatele Palatului Regal, construită în 1960, unde vin concerte mari, stand-up și spectacole.",
+   "crowd": "seara, la evenimente",
+   "vibes": [
+    "Cultură",
+    "Party"
+   ],
+   "sources": [
+    "OpenStreetMap w232472620",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://salapalatului.ro/"
+   ]
+  },
+  "w405561108": {
+   "story": "Sala orchestrelor Radio România, cunoscută pentru acustică; aici au loc concerte simfonice, de jazz și de film.",
+   "crowd": "seara, la concert",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w405561108",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.orchestreradio.ro/"
+   ]
+  },
+  "n2479079709": {
+   "story": "Teatru mic din Piața Lahovari, cu scena la câțiva metri de public și spectacole de comedie și dramă.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n2479079709",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n7151419882": {
+   "story": "Teatru independent cu terasă pe strada Mihai Eminescu 127, cu peste 50 de piese montate, de la „Alice în Țara Minunilor” la „Iliada”.",
+   "crowd": "seara; vara pe terasă",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n7151419882",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatruinfinit.ro/"
+   ]
+  },
+  "n672417284": {
+   "story": "Primul teatru independent din România, fondat de Marcel Iureș într-un subsol de pe Calea Victoriei 126.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n672417284",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.teatrulact.ro/"
+   ]
+  },
+  "n11574493274": {
+   "story": "Teatru independent în Palatul Universul, clădirea fostului ziar „Universul”, cu spectacole contemporane și o comunitate tânără.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n11574493274",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n14052027825": {
+   "story": "Trupă independentă care joacă în Sala Dalles, lângă Universitate, comedii ca „Iubito, îți rămân dator!” și seri de microteatru.",
+   "crowd": "seara",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n14052027825",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.teatrulavangardia.ro/"
+   ]
+  },
+  "w202427648": {
+   "story": "Teatrul numit după actrița Lucia Sturdza Bulandra; sala Toma Caragiu, de pe Jean Louis Calderon, are unele dintre cele mai premiate spectacole din oraș.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w202427648",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bulandra.ro"
+   ]
+  },
+  "n2615945925": {
+   "story": "A doua sală a Teatrului Bulandra, lângă Cișmigiu, poartă numele regizorului Liviu Ciulei.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n2615945925",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.bulandra.ro"
+   ]
+  },
+  "n1726032613": {
+   "story": "Teatru mic și elegant într-un conac de la începutul secolului XX de pe Calea Călărași 94; în 2025 a jucat „Panică” și „Frida Kahlo: Viva la Vida!”.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n1726032613",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://agerpres.ro/comunicate/2025/05/12/comunicat-de-presa---teatrul-coquette--1448245"
+   ]
+  },
+  "n7153728638": {},
+  "n628598191": {
+   "story": "Teatru fondat în 1961, în Centrul Vechi, dedicat comediei — de la clasici la autori noi.",
+   "crowd": "seara",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n628598191",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://comedie.ro/"
+   ]
+  },
+  "w232369190": {
+   "story": "Teatrul de operetă și musical al Capitalei, cu producții mari, orchestră și coregrafie, lângă Piața Unirii.",
+   "crowd": "seara, în weekend",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap w232369190",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.opereta.ro/"
+   ]
+  },
+  "n8912379327": {
+   "story": "Teatrul care poartă numele marelui artist de revistă Constantin Tănase, cu spectacole cu muzică, dans și umor pe Calea Victoriei.",
+   "crowd": "seara",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n8912379327",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n6318962729": {
+   "story": "Teatru privat pe Bulevardul Regina Elisabeta 45, cu mii de spectatori pe săptămână la comedii și spectacole muzicale.",
+   "crowd": "seara, în weekend mai ales",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n6318962729",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulelisabeta.ro/spectacole-si-bilete/"
+   ]
+  },
+  "w82950585": {
+   "story": "Urmașul primului teatru profesionist în idiș din lume, fondat de Avram Goldfaden la Iași în 1876; azi joacă și în română, cu traducere.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w82950585",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n6929956316": {
+   "story": "Teatru de stat cu spectacole gândite pentru adolescenți și tineri, cu teme actuale.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n6929956316",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n7151421666": {
+   "story": "Teatru independent fondat în 2011 de regizorul Cristian Bajora, pe strada Alecu Russo; în 2025 a avut premiera „Regele Desculț”, după Gogol.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n7151421666",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulinculise.ro/"
+   ]
+  },
+  "w433897742": {
+   "story": "Teatrul fondat în 1990 de Mihai Mălaimare, cu spectacole de mișcare, pantomimă și teatru de stradă, în Militari.",
+   "crowd": "seara; vara spectacole în aer liber",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap w433897742",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.masca.ro/"
+   ]
+  },
+  "n14206144401": {
+   "story": "Teatru independent de dramaturgie contemporană care, după ani de turnee, s-a mutat în iulie 2026 în sala proprie de pe strada Traian 105.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n14206144401",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulmetronom.ro/"
+   ]
+  },
+  "n672363033": {
+   "story": "Teatru fondat în 1964, cu o sală mică și caldă lângă Calea Victoriei și spectacole cu actori cunoscuți.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n672363033",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.teatrulmic.ro/"
+   ]
+  },
+  "w41542957": {
+   "story": "Clădirea emblematică de la Universitate, cu mai multe săli — de la Sala Mare la săli mici, experimentale.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w41542957",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.tnb.ro/"
+   ]
+  },
+  "n328622616": {
+   "story": "Teatrul de pe Magheru numit după actorul Constantin Nottara, cu piese clasice și contemporane.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n328622616",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n10750350226": {
+   "story": "Teatru independent pe strada Logofătul Tăutu, cu comedii contemporane și „Nocturne”, spectacole de noapte pentru cine vrea o seară mai intimă.",
+   "crowd": "seara, inclusiv târziu („Nocturne”)",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n10750350226",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulnou.ro/"
+   ]
+  },
+  "w158239853": {
+   "story": "Teatrul de pe Calea Victoriei cu Sala Majestic, al cărei tavan se poate deschide; spectacole îndrăznețe, multe premiate.",
+   "crowd": "seara",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap w158239853",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n11876487093": {
+   "story": "Teatru-cafenea independent din 2013, în spatele magazinului Cocor, cu comedii în care stai la masă cu un pahar în mână.",
+   "crowd": "seara",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap n11876487093",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://teatrulrosu.ro/despre-teatrul-rosu/"
+   ]
+  },
+  "w703960191": {
+   "story": "Colecția de mașini a lui Ion Țiriac, de la automobile istorice la mașini de lux și de curse, într-un hangar din Otopeni.",
+   "crowd": "vineri–duminică",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap w703960191",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.tiriaccollection.ro/"
+   ]
+  },
+  "n5898884385": {
+   "story": "Un apartament din anii ’80 reconstituit în Centrul Vechi, cu obiecte de epocă pe care le poți atinge.",
+   "crowd": "ziua (închis miercuri)",
+   "vibes": [
+    "Cultură",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n5898884385",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://undevaincomunism.com/"
+   ]
+  },
+  "n14052878452": {},
+  "n2507541755": {
+   "story": "Escape room în centru, pe strada I. L. Caragiale: ai 60 de minute să rezolvi enigmele și să ieși din cameră cu gașca.",
+   "crowd": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap n2507541755",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://60minutes.ro"
+   ]
+  },
+  "n12299441833": {},
+  "n11064463050": {
+   "story": "Terenuri de squash, padel și badminton pe Bulevardul Mărăști, bune de rezervat cu prietenii seara după muncă.",
+   "crowd": "seara, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n11064463050",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.aerosquash.ro"
+   ]
+  },
+  "r18184396": {
+   "story": "Patinoar acoperit nou al Sectorului 4, cu sesiuni de patinaj pentru public și meciuri de hochei.",
+   "crowd": "tot anul, după program",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap r18184396",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://berceniarena.ro/"
+   ]
+  },
+  "n8911907337": {
+   "story": "Sală de bouldering — cățărare fără coardă, pe pereți joși cu saltele groase — unde poți veni și ca începător.",
+   "crowd": "seara sau weekend",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n8911907337",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://blokx.ro/"
+   ]
+  },
+  "n5962677031": {},
+  "n3487492200": {
+   "story": "Sală de escaladă și bouldering pe Splaiul Independenței, cu trasee pentru începători și avansați.",
+   "crowd": "seara, în timpul săptămânii",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n3487492200",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://carpatic.ro"
+   ]
+  },
+  "w23731450": {
+   "story": "Club cu terenuri de tenis și fotbal în Pipera, deschis zilnic de dimineața până la miezul nopții.",
+   "crowd": "seara, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap w23731450",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://nastase-marica.ro/"
+   ]
+  },
+  "w1319614199": {
+   "story": "Patinoar în aer liber lângă AFI Cotroceni, deschis iarna, cu patine de închiriat.",
+   "crowd": "iarna, seara",
+   "vibes": [
+    "Fun",
+    "Aer liber"
+   ],
+   "sources": [
+    "OpenStreetMap w1319614199",
+    "Google Maps (verify-places, 04.10.2026): operațional"
+   ]
+  },
+  "w402868001": {
+   "story": "Parc de aventură în pădurea de la Balotești, cu 14 trasee prin copaci, tiroliene și pereți de cățărat, plus ATV, călărie și paintball. Intrarea pornește de la vreo 25 de lei, activitățile se plătesc separat și se închide pe ploaie.",
+   "crowd": "zilnic de la 10:00 până la apus, mai ales weekendurile din sezonul cald",
+   "vibes": [
+    "Fun",
+    "Competitiv",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://salutbucuresti.ro/ro/atractii/edenland-park/",
+    "https://www.bucuresti.ro/locatii/descopera-orasul-edenland-park-720"
+   ]
+  },
+  "w550416782": {
+   "story": "Escape room pe Bulevardul Dacia, cu echipe de 2 până la 8 oameni și o oră ca să evadezi.",
+   "crowd": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap w550416782",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://escapemyroom.ro/"
+   ]
+  },
+  "n3487482570": {
+   "story": "Sală de cățărare lângă Parcul Carol, cu trasee pentru toate nivelurile.",
+   "crowd": "seara sau weekend",
+   "vibes": [
+    "Competitiv",
+    "Fun"
+   ],
+   "sources": [
+    "OpenStreetMap n3487482570",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.fabricadecatarat.ro/"
+   ]
+  },
+  "w369588750": {
+   "story": "Grădina zoologică din pădurea Băneasa, cu sute de animale și alei umbrite.",
+   "crowd": "ziua",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w369588750",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://bucurestizoo.ro/"
+   ]
+  },
+  "w681065722": {},
+  "n10027946541": {
+   "story": "Arenă de laser tag în AFI Cotroceni: echipe, veste cu senzori și labirint în semiîntuneric.",
+   "crowd": "oricând, seara mai ales",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap n10027946541",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.lasermaxx.ro/"
+   ]
+  },
+  "n10608900638": {
+   "story": "A doua arenă LaserMaxx, în Vitantis Shopping Center, pentru meciuri de laser tag în echipe.",
+   "crowd": "după-amiaza și weekend",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap n10608900638",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://lasermaxx.ro/lasermaxx-vitantis/"
+   ]
+  },
+  "n14053037362": {},
+  "w23583384": {
+   "story": "Club cu tenis, squash, piscină și spa lângă lacul Tei, purtând numele fostului tenismen Dinu Pescariu.",
+   "crowd": "oricând, cu rezervare",
+   "vibes": [
+    "Competitiv",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w23583384",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  "n10883984904": {
+   "story": "Sală de jocuri în Militari Shopping, cu arcade și jocuri pentru grupuri, deschisă zilnic 10–22.",
+   "crowd": "oricând",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap n10883984904",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://rematch.ro/"
+   ]
+  },
+  "n11112041578": {
+   "story": "Sală de jocuri ReMatch în București Mall, cu arcade și jocuri pentru grupuri.",
+   "crowd": "oricând",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap n11112041578",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://rematch.ro/"
+   ]
+  },
+  "w897136249": {},
+  "w708470056": {},
+  "n10971390453": {
+   "story": "Escape room pe Pitar Moș, aproape de Piața Romană, cu jocuri pentru grupuri mici.",
+   "crowd": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap n10971390453",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://thevoid.ro"
+   ]
+  },
+  "w388832074": {
+   "story": "Complex de băi termale deschis tot anul, cu piscine printre plante tropicale, saune și tobogane, salvarea perfectă pentru o zi de ploaie sau de iarnă. Sâmbăta între 12 și 17 e cel mai aglomerat (de 1 ianuarie s-a stat ore la coadă), așa că ia bilet online și vino devreme.",
+   "crowd": "tot anul; cel mai plin sâmbăta 12:00–17:00 și în vacanțe",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "https://umblu-teleleu.ro/therme/",
+    "https://b365.ro/video-therme-bucuresti-a-fost-luat-cu-asalt-in-prima-zi-a-anului-au-stat-la-coada-cateva-ore-bune-chiar-si-cei-cu-bilete-online-590726/",
+    "https://salutbucuresti.ro/en/attractions/therme-bucharest/"
+   ]
+  },
+  "n4311411532": {
+   "story": "Escape room pe Bulevardul Bălcescu, doar cu rezervare dinainte.",
+   "crowd": "seara sau weekend, cu rezervare",
+   "vibes": [
+    "Fun",
+    "Competitiv"
+   ],
+   "sources": [
+    "OpenStreetMap n4311411532",
+    "Google Maps (verify-places, 04.10.2026): operațional",
+    "https://www.gameoftrolls.ro/"
+   ]
+  },
+  "n2157472704": {},
+  "n7613023095": {
+   "story": "Librăria albă, cu balcoane în spirală, din Lipscani rămâne una dintre opririle sigure la plimbarea prin centru. Intri gratis, te uiți de sus la tot «caruselul» de cărți și ieși direct în Centrul Vechi.",
+   "crowd": "zilnic, ziua și seara",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "sources": [
+    "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+   ],
+   "price": 0
+  },
+  "w224921650": {
+   "story": "Aquapark în aer liber pe strada Divertismentului din Chiajna, cu piscine și tobogane; deschis doar vara.",
+   "crowd": "vara, ziua",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Party"
+   ],
+   "sources": [
+    "OpenStreetMap w224921650",
+    "https://www.divertiland.ro/",
+    "Google Maps (04.10.2026): închis temporar (sezonier)"
+   ]
+  },
+  "w1508293151": {
+   "story": "Iarna, lacul din Cișmigiu devine patinoar în aer liber, în mijlocul celui mai vechi parc din oraș.",
+   "crowd": "iarna, seara",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Chill"
+   ],
+   "sources": [
+    "OpenStreetMap w1508293151 (seasonal=winter)",
+    "Google Maps (04.10.2026): închis temporar (sezonier)"
+   ]
+  },
+  "n916075216": {
+   "story": "Berăria pornită în 1879 stă din 1899 în clădirea neogotică de pe Stavropoleos, cu vitralii, bolți și pereți pictați. Comanzi mici, ciolan și berea casei.",
+   "crowd": "oricând; seara se umple, rezervă",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură",
+    "Fun"
+   ],
+   "price": 120,
+   "sources": [
+    "OSM n916075216",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/restaurante-bucuresti-2025-cele-mai-bune-restaurante-din-bucuresti-care-merita-vizitate_3623727.html"
+   ]
+  },
+  "n2486324769": {
+   "story": "Han ridicat în 1808 de negustorul armean Manuc Bei; aici s-au purtat în 1812 tratativele pentru Pacea de la București. Vara mănânci în curtea interioară, sub galeriile de lemn.",
+   "crowd": "prânz sau seara; vara în curte",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură",
+    "Aer liber"
+   ],
+   "price": 130,
+   "sources": [
+    "OSM n2486324769",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3078194005": {
+   "story": "Casa Capșa, deschisă pe Calea Victoriei în 1852, e locul unde s-a inventat în 1920 tortul Joffre, în onoarea mareșalului francez. Vii pentru o felie de Joffre și un pic de istorie.",
+   "crowd": "după-amiaza, la o prăjitură",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n3078194005",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w277782378": {
+   "story": "Restaurant cu tradiție pe Șoseaua Kiseleff, într-o vilă veche cu grădină mare sub copaci. Bucătărie românească clasică, bună pentru o masă cu familia sau o seară mai elegantă.",
+   "crowd": "seara; vara în grădină",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură",
+    "Aer liber"
+   ],
+   "price": 180,
+   "sources": [
+    "OSM w277782378",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2476458605": {
+   "story": "Berărie într-o vilă interbelică ce poartă numele Elenei Lupescu, celebra iubită a regelui Carol al II-lea. Mâncare românească și bere la terasă.",
+   "crowd": "seara, cu gașca",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură",
+    "Fun"
+   ],
+   "price": 110,
+   "sources": [
+    "OSM n2476458605",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2994764233": {
+   "story": "Restaurant românesc la doi pași de Cișmigiu, cu decor rustic și meniu de acasă: ciorbe, sarmale, papanași.",
+   "crowd": "prânz sau cină",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 90,
+   "sources": [
+    "OSM n2994764233",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3414077420": {
+   "story": "Bucătărie românească reinterpretată, în Centrul Vechi, într-un decor cu obiecte vechi adunate de prin țară. Bun loc să le arăți prietenilor din afară cum mâncăm noi.",
+   "crowd": "seara, cu rezervare",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "price": 150,
+   "sources": [
+    "OSM n3414077420",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2483551207": {
+   "story": "Un clasic pentru mâncare românească gătită serios, pe Bulevardul Aviatorilor: ciorbe, tocănițe și rețete vechi boierești.",
+   "crowd": "prânz sau cină",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 140,
+   "sources": [
+    "OSM n2483551207",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2503489527": {
+   "story": "Localul La Mama de lângă Muzeul Țăranului Român, cu țesături și obiecte țărănești pe pereți. Mâncare românească sățioasă la preț de student.",
+   "crowd": "prânz, sau înainte/după muzeu",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură",
+    "Chill"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n2503489527",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n979620393": {
+   "story": "Lanțul La Mama, cu mâncare românească gătită și prețuri mici, aici în zona Delea Veche–Muncii.",
+   "crowd": "prânz sau cină ieftină",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n979620393",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2468478918": {
+   "story": "Restaurantul din Cercul Militar Național, palatul ridicat între 1911 și 1923 pe locul fostei mănăstiri Sărindar. Mănânci în săli cu tavane înalte sau, vara, în grădină.",
+   "crowd": "prânz; vara seara în grădină",
+   "vibes": [
+    "Cultură",
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": 110,
+   "sources": [
+    "OSM n2468478918",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n1768893912": {
+   "story": "Vilă istorică din Piața Lahovari cu restaurant și grădină liniștită, ascunsă de agitația de pe Magheru.",
+   "crowd": "seara; vara în grădină",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "price": 130,
+   "sources": [
+    "OSM n1768893912",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n6467827485": {
+   "story": "Micii din Obor sunt o instituție: de 1 Mai 2026, coada la Terasa Obor a trecut de 100 de metri, cu până la două ore de așteptare. Piața are acum și cafenele de specialitate și mâncare din toată lumea, deci merită o tură prin hală după.",
+   "crowd": "la prânz, mai ales în weekend și de sărbători",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 40,
+   "sources": [
+    "https://www.antena3.ro/actualitate/social/cat-costa-micii-de-1-mai-2026-in-piata-obor-din-bucuresti-fara-vreme-de-gratar-la-iarba-verde-romanii-fac-cozi-la-terase-786496.html",
+    "https://www.gandul.ro/actualitate/coada-uriasa-la-micii-laudati-din-obor-de-1-mai-randul-se-intinde-pe-mai-mult-de-100-de-metri-iar-timpul-de-asteptare-este-de-aproape-2-ore-20877811",
+    "https://hotnews.ro/oborul-intre-mici-si-cafea-de-specialitate-cum-s-a-schimbat-cea-mai-mare-piata-din-bucuresti-pentru-noile-generatii-lumea-se-opreste-consuma-si-vrea-sa-vada-si-altceva-2333086"
+   ]
+  },
+  "n13104418691": {
+   "story": "Food hall în Hala Matache, refăcută lângă Gara de Nord: mai multe tarabe de street food sub același acoperiș, bun când fiecare vrea altceva.",
+   "crowd": "prânz sau seara cu gașca",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n13104418691",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w563922172": {
+   "story": "Mâncare oltenească în porții uriașe și la prețuri mici, recomandată des printre localurile ieftine bune din oraș.",
+   "crowd": "prânz",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM w563922172",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "n13706030501": {
+   "story": "Restaurantul chef-ului Alex Petricean (Chef of the Year Gault&Millau 2018), cu un meniu care te poartă prin regiunile României.",
+   "crowd": "seara, cu rezervare",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "sources": [
+    "OSM n13706030501",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://restograf.ro/cele-mai-bune-restaurante-fine-dining-din-bucuresti/"
+   ]
+  },
+  "n11067430934": {
+   "story": "Restaurantul chef-ului Joseph Hadad de lângă Ateneu, cu bucătărie mediteraneană-levantină.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "sources": [
+    "OSM n11067430934",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://restograf.ro/cele-mai-bune-restaurante-fine-dining-din-bucuresti/"
+   ]
+  },
+  "n7613023113": {
+   "story": "Kebab gourmet din familia lui Joseph Hadad: street food levantin făcut cu grijă de restaurant, la preț de shaorma bună.",
+   "crowd": "prânz sau noaptea târziu",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n7613023113",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11078411661": {
+   "story": "Același kebab gourmet Le Bab, în Piața Charles de Gaulle, la intrarea spre Herăstrău.",
+   "crowd": "prânz, înainte de parc",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n11078411661",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3404292993": {
+   "story": "Bistro într-o casă veche de pe strada Negustori, cu terasă în curte; meniu românesc-european și brunch bun în weekend.",
+   "crowd": "brunch în weekend; seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM n3404292993",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n4243839491": {
+   "story": "Pub-bistro în zona Armenească, cu terasă în grădina unei vile, cunoscut pentru burgeri și atmosfera relaxată.",
+   "crowd": "seara, cu gașca",
+   "vibes": [
+    "Mâncare bună",
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 90,
+   "sources": [
+    "OSM n4243839491",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n4957277421": {
+   "story": "Restaurant mediteraneean pe strada Smârdan, un colț mai liniștit al Centrului Vechi.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 110,
+   "sources": [
+    "OSM n4957277421",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2587540738": {
+   "story": "Bistro mare pe Ion Brezoianu, la marginea Cișmigiului, cu bucătărie europeană și terasă.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM n2587540738",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3807892722": {
+   "story": "Restaurant mic, ca o sufragerie, pe Mihai Eminescu, cu meniu scurt care se schimbă după sezon.",
+   "crowd": "seara, cu rezervare",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 140,
+   "sources": [
+    "OSM n3807892722",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w1235220017": {
+   "story": "Deschis în 2025 pe Constantin Aricescu, în Floreasca, printre locurile noi „cu povești românești” din ghidurile de anul trecut.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "price": 140,
+   "sources": [
+    "OSM w1235220017",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/60-locuri-noi-bucuresti-deschise-in-2025/"
+   ]
+  },
+  "n10951615129": {
+   "story": "Bistro iubit pentru brunch și farfurii de bistro bine făcute, lângă Piața Victoriei.",
+   "crowd": "brunch în weekend; prânz",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 80,
+   "sources": [
+    "OSM n10951615129",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n11582993011": {
+   "story": "Restaurant raw vegan în Floreasca: preparate crude, colorate, și deserturi fără coacere.",
+   "crowd": "prânz",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 80,
+   "sources": [
+    "OSM n11582993011",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n7090938385": {
+   "story": "La etajul 36 al Sky Tower, cea mai înaltă clădire din București: priveliște panoramică peste tot orașul, la cină sau la un cocktail.",
+   "crowd": "seara, la apus",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 180,
+   "sources": [
+    "OSM n7090938385",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://restograf.ro/restaurante-la-inaltime-in-bucuresti-11-locuri-cu-vedere-spectaculoasa-a-orasului/"
+   ]
+  },
+  "n9405774196": {
+   "story": "Rooftop pe acoperișul Teatrului Național, cu o terasă de 1.200 m² și priveliște spre Bulevardul Magheru și centru; are și zonă acoperită, deci merge în orice anotimp.",
+   "crowd": "zilnic 12–24; cel mai frumos la apus",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "price": 120,
+   "sources": [
+    "https://www.aria-tnb.ro/ro/",
+    "https://www.restocracy.ro/aria-tnb/",
+    "https://www.bucuresti.ro/locatii/baruri-si-puburi-aria-tnb-1209"
+   ]
+  },
+  "w943937960": {
+   "story": "Restaurant cu terasă chiar pe malul lacului Herăstrău, bun pentru apus și cină afară vara.",
+   "crowd": "seara, vara",
+   "vibes": [
+    "Aer liber",
+    "Chill"
+   ],
+   "price": 150,
+   "sources": [
+    "OSM w943937960",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w252858333": {
+   "story": "Grătare sârbești la jar, porții mari și terasă mare în zona Parcului Herăstrău.",
+   "crowd": "seara cu gașca; vara pe terasă",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber",
+    "Fun"
+   ],
+   "price": 120,
+   "sources": [
+    "OSM w252858333",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2099385681": {
+   "story": "Restaurant elegant în Parcul Herăstrău, cu terasă spre lac; pentru ocazii speciale.",
+   "crowd": "seara, ocazii speciale",
+   "vibes": [
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "OSM n2099385681",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11755890269": {
+   "story": "Primul restaurant georgian autentic din București: khachapuri, khinkali și vin georgian.",
+   "crowd": "seara cu gașca",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM n11755890269",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "n10775253395": {
+   "story": "Grătar coreean la masă, în Centrul Vechi: îți gătești singur carnea pe grătarul din mijlocul mesei.",
+   "crowd": "seara cu gașca",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 130,
+   "sources": [
+    "OSM n10775253395",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "n11088563306": {
+   "story": "Restaurant coreean în zona Domenii, cu bibimbap, supe picante și grătar.",
+   "crowd": "prânz sau cină",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM n11088563306",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n8660344252": {
+   "story": "Bistro vietnamez cu pho, bun bo și rulouri proaspete, rapid și ieftin, pe Ion Ghica.",
+   "crowd": "prânz sau cină rapidă",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n8660344252",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "n14130976246": {
+   "story": "Pho și preparate vietnameze de la Toan's, în Militari, pe Iuliu Maniu.",
+   "crowd": "prânz sau cină rapidă",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n14130976246",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "w162553157": {
+   "story": "Pho și preparate vietnameze de la Toan's, pe Nicolae Grigorescu, aproape de Parcul IOR.",
+   "crowd": "prânz sau cină rapidă",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM w162553157",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "w1224889723": {
+   "story": "Poartă numele celebrei supe Pho Thin din Hanoi; vii pentru un pho fierbinte cu vită, aproape de Obor.",
+   "crowd": "prânz",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM w1224889723",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13917650801": {
+   "story": "Bar de pho și street food vietnamez pe Mihai Eminescu.",
+   "crowd": "prânz sau cină",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n13917650801",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3602026798": {
+   "story": "Restaurant japonez în Dorobanți, cu sushi și preparate calde, pentru o cină japoneză făcută serios.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 160,
+   "sources": [
+    "OSM n3602026798",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2839098033": {
+   "story": "„Japanese home dining”: mâncare japoneză gătită ca acasă, într-un spațiu mic din Floreasca.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 120,
+   "sources": [
+    "OSM n2839098033",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n14074896201": {
+   "story": "Unul dintre cele mai cunoscute nume de sushi din București, din aceeași familie cu noul Oyabun (2026).",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 130,
+   "sources": [
+    "OSM n14074896201",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://zilesinopti.ro/2026/08/10/locuri-noi-in-bucuresti-august-2026/"
+   ]
+  },
+  "n10951615131": {
+   "story": "Restaurant japonez lângă Piața Victoriei, pe Nicolae Titulescu, apărut în topurile 2025–2026.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 150,
+   "sources": [
+    "OSM n10951615131",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "n11215704038": {
+   "story": "Mâncare thailandeză în centru: supa tom yum, pad thai și curry-uri.",
+   "crowd": "prânz sau cină",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 80,
+   "sources": [
+    "OSM n11215704038",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11462228739": {
+   "story": "Restaurant nepalez numit după muntele sacru Machhapuchhre din Himalaya: momo (găluște aburite) și curry-uri.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 80,
+   "sources": [
+    "OSM n11462228739",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2994961690": {
+   "story": "Restaurant indian cu tandoori, curry-uri și naan, în zona Moșilor.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 90,
+   "sources": [
+    "OSM n2994961690",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2500813827": {
+   "story": "Restaurant indian pe Calea 13 Septembrie, aproape de Palatul Parlamentului.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 90,
+   "sources": [
+    "OSM n2500813827",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11584831869": {
+   "story": "Tacos al pastor ca în Mexic, lângă Piața Amzei.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n11584831869",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "n6896538217": {
+   "story": "Taqueria aproape de Palatul Parlamentului: tacos, quesadillas și margarita.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 80,
+   "sources": [
+    "OSM n6896538217",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n1974128904": {
+   "story": "Tapas, paella și vin spaniol în zona Dorobanți, de la echipa Alioli.",
+   "crowd": "seara cu gașca",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 140,
+   "sources": [
+    "OSM n1974128904",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w1490427698": {
+   "story": "Restaurantul turcesc din Floreasca devenit legendă pentru kebab la grătar, pide și porții mari.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 90,
+   "sources": [
+    "OSM w1490427698",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n7106605879": {
+   "story": "Restaurant turcesc cu meze, kebab și baclava, pe Barbu Văcărescu.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 110,
+   "sources": [
+    "OSM n7106605879",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n8565806982": {
+   "story": "Taverna grecească cu gyros, souvlaki și saganaki, pe Mihai Bravu.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 80,
+   "sources": [
+    "OSM n8565806982",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n9007779916": {
+   "story": "Restaurant grecesc cu pește și fructe de mare, în cartierul Primăverii.",
+   "crowd": "seara, ocazii",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 220,
+   "sources": [
+    "OSM n9007779916",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2351339222": {
+   "story": "Coaste și aripioare cu sosuri, la Palatul Bragadiru de pe Calea Rahovei, fosta reședință a familiei de berari Bragadiru.",
+   "crowd": "seara cu gașca",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM n2351339222",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3105375696": {
+   "story": "Restaurant italian de cartier în Cotroceni.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 110,
+   "sources": [
+    "OSM n3105375696",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2496044354": {
+   "story": "Restaurant italian pe Bulevardul Decebal, un clasic al zonei Alba Iulia.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 110,
+   "sources": [
+    "OSM n2496044354",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11669695269": {
+   "story": "Singura pizzerie din România inclusă în Top 50 Pizza Europe: pizza napoletană cu margini pufoase, pe strada Visarion.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n11669695269",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://hotnews.ro/weekend-trending-n-bucuresti-10-locuri-unde-gasesti-cele-mai-bune-pizze-din-oras-116882"
+   ]
+  },
+  "n7169802586": {
+   "story": "Pizzerie de cartier lângă Piața Muncii, cu pizzaioli care au lucrat în Napoli, ingrediente aduse din Italia și cuptor cu lemne.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n7169802586",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://hotnews.ro/weekend-trending-n-bucuresti-10-locuri-unde-gasesti-cele-mai-bune-pizze-din-oras-116882"
+   ]
+  },
+  "n11068961012": {
+   "story": "Pizza napoletană autentică pe Calea Victoriei, care a prins repede la public deși e nouă.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n11068961012",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+   ]
+  },
+  "n14058359291": {
+   "story": "Pizza napoletană cu blat subțire și margini pufoase, pe Ion Mihalache.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n14058359291",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+   ]
+  },
+  "n13017015601": {
+   "story": "Pizza napoletană după rețete autentice, aproape de Parcul Tineretului.",
+   "crowd": "seara, după parc",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n13017015601",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+   ]
+  },
+  "n12252698101": {
+   "story": "Pizza napoletană Napoletinii, pe Vasile Lascăr, în zona Grădina Icoanei.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n12252698101",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cea-mai-buna-pizza-din-bucuresti-ghid-complet-al-pizzeriilor-de-top-din-capitala_3620079.html"
+   ]
+  },
+  "n11131305330": {
+   "story": "Smash burgeri simpli și perfecți: comanzi Baby G, cu cheddar, ceapă, castraveți murați și sosul G de casă.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM n11131305330",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://restograf.ro/cei-mai-buni-burgeri-din-bucuresti/"
+   ]
+  },
+  "n11511308437": {
+   "story": "Smash burger făcut corect: carne presată pe plită fierbinte, crustă caramelizată, interior zemos. Încearcă Truffle Burger.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM n11511308437",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+   ]
+  },
+  "n13531878203": {
+   "story": "Double G: două chiftele Wagyu-Angus, cheddar topit, castraveți murați și sosul casei.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n13531878203",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+   ]
+  },
+  "n3096282348": {
+   "story": "Printre primii burgeri buni din oraș, între Calea Victoriei și Cișmigiu, cu atmosferă de cartier.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n3096282348",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://restograf.ro/cei-mai-buni-burgeri-din-bucuresti/"
+   ]
+  },
+  "w232502551": {
+   "story": "Și-a făcut numele cu ingrediente bune, rețete gândite și execuție fără greș, pe Știrbei Vodă.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM w232502551",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.turistulliber.ro/blog/aventuri-culinare/unde-mananci-cei-mai-buni-burgeri-din-bucuresti/"
+   ]
+  },
+  "n11582968770": {
+   "story": "Burgeri gourmet la preț accesibil, în Piața Sfinții Voievozi, între Gara de Nord și Grivița.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 45,
+   "sources": [
+    "OSM n11582968770",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/restaurante-bucuresti-2025-cele-mai-bune-restaurante-din-bucuresti-care-merita-vizitate_3623727.html"
+   ]
+  },
+  "n450520681": {
+   "story": "Shaorma de la Dristor e etalonul cu care se compară toate celelalte; ăsta e localul de lângă metroul Dristor.",
+   "crowd": "oricând, inclusiv noaptea",
+   "vibes": [
+    "Mâncare bună",
+    "Fun"
+   ],
+   "price": 35,
+   "sources": [
+    "OSM n450520681",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ofertebucuresti.ro/unde-mananci-cea-mai-buna-shaorma-din-bucuresti-top-10-locuri-emblematice/"
+   ]
+  },
+  "n1731040881": {
+   "story": "Shaorma Dristor în Centrul Vechi, pe Franceză – salvarea de după o seară în oraș.",
+   "crowd": "noaptea, după ieșit",
+   "vibes": [
+    "Mâncare bună",
+    "Party"
+   ],
+   "price": 35,
+   "sources": [
+    "OSM n1731040881",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ofertebucuresti.ro/unde-mananci-cea-mai-buna-shaorma-din-bucuresti-top-10-locuri-emblematice/"
+   ]
+  },
+  "n7038740802": {
+   "story": "Alegerea puriștilor și rivalul direct al Dristorului: carne de calitate și ingrediente mereu proaspete, pe Calea Floreasca.",
+   "crowd": "prânz sau noaptea",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 38,
+   "sources": [
+    "OSM n7038740802",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+   ]
+  },
+  "n10230891917": {
+   "story": "Socului a ajuns sinonim cu shaorma consistentă și accesibilă; localul din Obor merge perfect după o tură prin piață.",
+   "crowd": "oricând",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 32,
+   "sources": [
+    "OSM n10230891917",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+   ]
+  },
+  "w1218360364": {
+   "story": "Legenda shaormei din nordul orașului, căreia i se spune și „La Turcu'”: consistentă și fără pretenții.",
+   "crowd": "oricând",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 33,
+   "sources": [
+    "OSM w1218360364",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+   ]
+  },
+  "n2558977793": {
+   "story": "Mâncare orientală foarte bine cotată de clienți (4,8 pe TripAdvisor), în centru.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM n2558977793",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.stiripesurse.ro/cele-mai-bune-saorme-din-bucuresti-cine-este-regele-saormei-in-capitala_3612023.html"
+   ]
+  },
+  "n2611043627": {
+   "story": "Falafel și shaorma în stil libanez, în zona Iancului.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 35,
+   "sources": [
+    "OSM n2611043627",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2382674377": {
+   "story": "Mâncare arăbească și shaorma pe Mihai Bravu, recomandată printre localurile bune și ieftine.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 45,
+   "sources": [
+    "OSM n2382674377",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://umblu-teleleu.ro/top-9-restaurante-din-bucuresti-conform-tripadvisor-update-2026/"
+   ]
+  },
+  "w809885097": {
+   "story": "Restaurant cu grădină lângă Arcul de Triumf, popular pentru brunch-ul de weekend.",
+   "crowd": "brunch în weekend",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "price": 80,
+   "sources": [
+    "OSM w809885097",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n12074907530": {
+   "story": "În Agora Floreasca, unul dintre cele mai bune locuri pentru mic-dejun sau brunch din zonă.",
+   "crowd": "dimineața; brunch în weekend",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n12074907530",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n11215700346": {
+   "story": "Brunch, pâine bună și cafea, pe lângă Calea Victoriei.",
+   "crowd": "dimineața; brunch",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n11215700346",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n11295353657": {
+   "story": "Loc de brunch în centru, aproape de Piața Amzei, prezent în ghidurile de brunch 2025.",
+   "crowd": "brunch în weekend",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n11295353657",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n12109983201": {
+   "story": "Bistro de brunch în zona Tineretului, pe General Haralambie.",
+   "crowd": "brunch în weekend",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n12109983201",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n11582119769": {
+   "story": "Totul se învârte în jurul oului: sandvișuri și preparate cu ouă, pe Nicolae Filipescu.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM n11582119769",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13544497939": {
+   "story": "Brunch cu ouă în toate felurile, lângă Piața Amzei.",
+   "crowd": "dimineața; weekend",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n13544497939",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n6721487026": {
+   "story": "Gelaterie italiană recomandată des de localnici pentru calitatea constantă; perfectă la o plimbare prin Centrul Vechi.",
+   "crowd": "după-amiaza, seara vara",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM n6721487026",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+   ]
+  },
+  "n10537965479": {
+   "story": "Gelato extrem de cremos, cu toppinguri generoase și atmosferă de gelaterie clasică italiană, pe Calea Victoriei.",
+   "crowd": "după-amiaza, seara vara",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n10537965479",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+   ]
+  },
+  "n7843199085": {
+   "story": "Înghețată făcută zilnic, cu gusturi intense și bine echilibrate; unul dintre cele mai populare locuri din oraș.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM n7843199085",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+   ]
+  },
+  "n12092411916": {
+   "story": "Înghețata Velocità, făcută zilnic, în AFI Cotroceni.",
+   "crowd": "după cinema sau shopping",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM n12092411916",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+   ]
+  },
+  "n8972865889": {
+   "story": "Prima înghețată naturală, fără E-uri, din România, preparată în fața clienților; aici în Centrul Vechi, pe Gabroveni.",
+   "crowd": "după-amiaza, seara",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n8972865889",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+   ]
+  },
+  "n6609904822": {
+   "story": "Înghețată artizanală fără conservanți sau aditivi, doar din ingrediente naturale.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM n6609904822",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.bucuresti.ro/articole/unde-mancam-cea-mai-buna-inghetata-in-bucuresti-10-localuri-pe-care-nu-trebuie-sa-le-ratezi-1464"
+   ]
+  },
+  "n9714055259": {
+   "story": "Gelaterie artizanală pe George Enescu, aproape de Piața Amzei.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM n9714055259",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n12211690840": {
+   "story": "Înghețată în stil thailandez, rulată pe placa rece, în AFI Cotroceni.",
+   "crowd": "după cinema sau shopping",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n12211690840",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n10980100230": {
+   "story": "Gelaterie artizanală în Bucureștii Noi, pe Dobrogeanu-Gherea.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 18,
+   "sources": [
+    "OSM n10980100230",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n12443853506": {
+   "story": "Gelato în stil sicilian, în zona Floreasca.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM n12443853506",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13869497589": {
+   "story": "Cannoli siciliene cu ricotta, în Floreasca.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM n13869497589",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w1234985989": {
+   "story": "Cannoli siciliene cu ricotta, pe Bulevardul Decebal.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 20,
+   "sources": [
+    "OSM w1234985989",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11705012594": {
+   "story": "Desert-bar cu choux și eclere, în centru, aproape de Ateneu.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n11705012594",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13544497925": {
+   "story": "Cunoscut pentru cookies-urile lui faimoase, plus brunch, aproape de Piața Amzei.",
+   "crowd": "oricând ai poftă de dulce",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n13544497925",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n6929956290": {
+   "story": "Brutărie-patiserie în stil francez: croissante, pâine și tarte, aproape de Calea Victoriei.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n6929956290",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n14058359290": {
+   "story": "Tarte dulci și sărate, pe Ion Mihalache.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n14058359290",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13483547254": {
+   "story": "Knafeh, desertul levantin cu brânză topită și kadaif, servit cald, pe George Enescu.",
+   "crowd": "seara, la desert",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "price": 30,
+   "sources": [
+    "OSM n13483547254",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2405677715": {
+   "story": "Baclava și dulciuri turcești cu ceai, pe Bulevardul Decebal.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n2405677715",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3101709891": {
+   "story": "Probabil cea mai veche cafenea de specialitate din București, pe Lipscani 9 – reperul cu care se compară celelalte.",
+   "crowd": "dimineața sau după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n3101709891",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n7128123251": {
+   "story": "Origo în varianta de nord: spațiu minimalist, lumină naturală, meniu scurt; iubit de cei care lucrează de pe laptop.",
+   "crowd": "dimineața; lucru",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n7128123251",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n5898775985": {
+   "story": "În Palatul Universul, unul dintre cele mai prietenoase locuri pentru laptop din oraș: wifi stabil, spațiu generos, cafea constantă.",
+   "crowd": "dimineața; lucru",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n5898775985",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n11594139506": {
+   "story": "Într-o clădire istorică reconvertită lângă Universitate, cu pour-over schimbat săptămânal, din boabe de la prăjitorii europeni de top.",
+   "crowd": "oricând",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n11594139506",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n10652617105": {
+   "story": "Steam lângă Piața Charles de Gaulle, la intrarea spre Herăstrău – cafea bună înainte de o plimbare în parc.",
+   "crowd": "dimineața, înainte de parc",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n10652617105",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n11255096138": {
+   "story": "Steam pe Ștefan cel Mare, aproape de Dinamo și Obor.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n11255096138",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n5898729286": {
+   "story": "Unul dintre numele vechi ale cafelei de specialitate din București, în Piața Charles de Gaulle.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n5898729286",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n7179021186": {
+   "story": "Cafea din recolte de sezon, prăjită pe profiluri atent alese; localul din zona Aviației.",
+   "crowd": "dimineața; lucru",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n7179021186",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n13361797002": {
+   "story": "Prăjitorie cu cafenea în zona Dorobanți–Floreasca.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n13361797002",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13781123201": {
+   "story": "Cafenea de specialitate deschisă în 2025 în Cotroceni, pe Doctor Joseph Lister.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n13781123201",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/60-locuri-noi-bucuresti-deschise-in-2025/"
+   ]
+  },
+  "n13574655833": {
+   "story": "Cafenea de specialitate în zona Piața Romană.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n13574655833",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13236285713": {
+   "story": "Prăjitorie de cafea cu cafenea, în vestul orașului, spre Grozăvești.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n13236285713",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w1558570091": {
+   "story": "Cafenea și prăjitorie lângă Grădina Botanică, pe Calea Plevnei – bună înainte sau după o plimbare prin grădină.",
+   "crowd": "dimineața, înainte de Botanică",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM w1558570091",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13564795451": {
+   "story": "Cafenea mică de specialitate în zona Dorobanți.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n13564795451",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11331475896": {
+   "story": "Cafenea de specialitate pe Calea Moșilor.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n11331475896",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13174883798": {
+   "story": "Cafenea de specialitate în zona Cotroceni.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n13174883798",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2839098042": {
+   "story": "Cafenea mică în Floreasca, pe Constantin Aricescu.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n2839098042",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n8599551539": {
+   "story": "Cafenea de specialitate în zona Dristor–Decebal.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n8599551539",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11795216443": {
+   "story": "Cafea de specialitate și brunch, în ghidurile de brunch 2025.",
+   "crowd": "brunch în weekend",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM n11795216443",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n7175225885": {
+   "story": "Cafenea de specialitate în zona Moșilor–Eminescu.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n7175225885",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n7843192385": {
+   "story": "Cafenea de specialitate în Piața Amzei, bună de luat cu tine prin piață.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n7843192385",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n11068961018": {
+   "story": "Cafenea de specialitate pe Calea Victoriei.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n11068961018",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n7175227588": {
+   "story": "Cafenea mică pe strada 11 Iunie, aproape de Parcul Carol.",
+   "crowd": "dimineața, înainte de parc",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n7175227588",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n14125042602": {
+   "story": "Cafenea de specialitate în zona Dacia–Eminescu.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n14125042602",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n8982367317": {
+   "story": "Cafenea de specialitate pe Bulevardul Octavian Goga.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n8982367317",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n6718728585": {
+   "story": "Cafea prăjită proaspăt la Cluj, servită pe Regina Elisabeta, lângă Cișmigiu.",
+   "crowd": "dimineața sau înainte de parc",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n6718728585",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://salutbucuresti.ro/en/guides/best-cafes/"
+   ]
+  },
+  "n13781123302": {
+   "story": "Prăjitorie de cafea cu cafenea în zona Piața Iancului.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n13781123302",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n4866286521": {
+   "story": "Lanțul românesc de cafea de specialitate, aici pe Calea Floreasca.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n4866286521",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n14136477666": {
+   "story": "Cafenea nouă (2025) pe Bulevardul Aviatorilor 57.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n14136477666",
+    "Google Places: negăsit la verificarea din 2026-10-04",
+    "https://ideiroscate.ro/60-locuri-noi-bucuresti-deschise-in-2025/"
+   ]
+  },
+  "n14058623131": {
+   "story": "Cafenea nouă (vara 2026) pe Ion Mihalache, cu terasă umbrită.",
+   "crowd": "dimineața; terasă",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n14058623131",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://zilesinopti.ro/2026/08/10/locuri-noi-in-bucuresti-august-2026/"
+   ]
+  },
+  "n13625669766": {
+   "story": "Interior instagramabil și panini foarte bune; cafea ziua, un pahar de vin seara.",
+   "crowd": "oricând",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 40,
+   "sources": [
+    "OSM n13625669766",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n5898763785": {
+   "story": "Brunch și cafea pe Calea Victoriei, aproape de Centrul Vechi.",
+   "crowd": "brunch în weekend",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n5898763785",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n2617153041": {
+   "story": "Brunch și cafea pe Vasile Lascăr, aproape de Piața Rosetti.",
+   "crowd": "brunch în weekend",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n2617153041",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n2387663653": {
+   "story": "Design deosebit cu ferestre mari și brunch pentru toate gusturile, de la vegetarieni la burgeri și pancakes americane.",
+   "crowd": "brunch în weekend",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 70,
+   "sources": [
+    "OSM n2387663653",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n2355295304": {
+   "story": "Cafenea-bistro pe Calea Victoriei, aproape de Centrul Vechi, bună pentru mic-dejun.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 45,
+   "sources": [
+    "OSM n2355295304",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  "n2939214402": {
+   "story": "Cafenea-bistro pe Calea Griviței, aproape de Gara de Nord.",
+   "crowd": "dimineața sau prânz",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 45,
+   "sources": [
+    "OSM n2939214402",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n14007065588": {
+   "story": "Cafenea de cartier în Cotroceni.",
+   "crowd": "dimineața",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n14007065588",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n14219454376": {
+   "story": "Bar de matcha lângă Piața Amzei, pentru cine vrea altceva decât cafea.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 28,
+   "sources": [
+    "OSM n14219454376",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n3798121589": {
+   "story": "Cafenea mică și primitoare pe Mendeleev, aproape de Piața Amzei, bună de stat la poveste sau de citit.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "price": 22,
+   "sources": [
+    "OSM n3798121589",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "w1081931347": {
+   "story": "Fondat în 1994 într-o pivniță de pe Calea Victoriei 120, e cel mai vechi club de jazz din România de după ’89: concerte săptămânale de jazz, blues și funk, plus teatrul independent LUNI.",
+   "crowd": "în serile de concert; festivalul de jazz e la început de iunie",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "price": 40,
+   "sources": [
+    "https://www.greenhours.ro/",
+    "https://www.greenhours.ro/contact/",
+    "https://likealocalguide.com/bucharest/green-hours-jazz-club-bar-and-theater"
+   ]
+  },
+  "n1413464749": {
+   "story": "Cafenea-grădină ascunsă în spatele librăriei Cărturești Verona, la doi pași de Piața Romană: umbră, limonadă și cărți.",
+   "crowd": "după-amiaza, sezonul cald",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "price": 30,
+   "sources": [
+    "OSM n1413464749",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n4574853189": {
+   "story": "Ceainărie liniștită în Cotroceni, cu multe feluri de ceai.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n4574853189",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n13763738501": {
+   "story": "Ceainărie în zona Calea Călărașilor, cu ceaiuri din toată lumea.",
+   "crowd": "după-amiaza",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 25,
+   "sources": [
+    "OSM n13763738501",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n5035012722": {
+   "story": "Cafenea cu jocuri de societate lângă Piața Iancului: alegi un joc de pe raft și stai ore întregi cu gașca.",
+   "crowd": "seara cu gașca",
+   "vibes": [
+    "Fun",
+    "Chill"
+   ],
+   "price": 30,
+   "sources": [
+    "OSM n5035012722",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n5714624185": {
+   "story": "Cafenea pe Visarion unde îți pictezi singur cana sau farfuria de ceramică.",
+   "crowd": "după-amiaza, cu prietenii",
+   "vibes": [
+    "Fun",
+    "Cultură",
+    "Chill"
+   ],
+   "price": 60,
+   "sources": [
+    "OSM n5714624185",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n10199556329": {
+   "story": "Restaurant italian mic și intim în Pipera, cu ingrediente aduse din Italia; laudele merg la pizza, paste și tiramisu.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 110,
+   "sources": [
+    "OSM n10199556329",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ialoc.ro/restaurante-bucuresti/arezzo-ristorante-rezervari-2528"
+   ]
+  },
+  "w941119947": {
+   "story": "Pește și fructe de mare în stil spaniol, de la echipa Alioli, în Pipera.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 150,
+   "sources": [
+    "OSM w941119947",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)"
+   ]
+  },
+  "n12368291207": {
+   "story": "Pizza napoletană adevărată, cu aluat pe biga, pe primul loc în Popești-Leordeni pe TripAdvisor.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 55,
+   "sources": [
+    "OSM n12368291207",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.tripadvisor.com/Restaurant_Review-g8341627-d33249594-Reviews-Arte_Napoletana-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "n10266482712": {
+   "story": "Grătar cu „cei mai buni mici din zonă”, după clienți, la prețuri decente.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM n10266482712",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.tripadvisor.com/Restaurants-g8341627-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "n10113765947": {
+   "story": "Burgărie de cartier cu cafea de specialitate, bere și atmosferă cozy; nota maximă pe TripAdvisor.",
+   "crowd": "prânz sau seara",
+   "vibes": [
+    "Mâncare bună",
+    "Chill"
+   ],
+   "price": 50,
+   "sources": [
+    "OSM n10113765947",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.tripadvisor.com/Restaurant_Review-g8341627-d24086637-Reviews-MiT_Burgarie_si_altele-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "n11466353073": {
+   "story": "Bistro mic din Popești, cu nota maximă pe TripAdvisor.",
+   "crowd": "prânz",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 45,
+   "sources": [
+    "OSM n11466353073",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.tripadvisor.com/Restaurants-g8341627-Popesti_Leordeni_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "n3647437509": {
+   "story": "Complex pe malul lacului Cernica, cu restaurantul à la carte Garuda și punți deasupra apei.",
+   "crowd": "weekend, la prânz",
+   "vibes": [
+    "Aer liber",
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 130,
+   "sources": [
+    "OSM n3647437509",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.nwradu.ro/2022/05/restaurant-phoenix-cernica-new-concept-pantelimon/"
+   ]
+  },
+  "w263218303": {
+   "story": "Restaurant mare pe DN1, cu bucătărie românească și ucraineană și peste 3.000 de recenzii bune (4,5).",
+   "crowd": "prânz în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM w263218303",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.tripadvisor.com/Restaurants-g3791062-Corbeanca_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "n11059863265": {
+   "story": "„Cel mai bun sushi din zona Otopeni”, zic clienții; încearcă platoul Philadelphia.",
+   "crowd": "seara",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 90,
+   "sources": [
+    "OSM n11059863265",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.tripadvisor.com/Restaurants-g3791062-Corbeanca_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "n8154202096": {
+   "story": "Pe DN1, la Tâncăbești, spre lacul Snagov: lăudat pentru atmosferă, personal și mâncare foarte bună.",
+   "crowd": "prânz în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM n8154202096",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.tripadvisor.com/Restaurants-g1675686-Snagov_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "n12312753049": {
+   "story": "Restaurant cu multă verdeață lângă lacul Snagov, pentru o masă liniștită în afara orașului.",
+   "crowd": "weekend, la prânz",
+   "vibes": [
+    "Aer liber",
+    "Chill",
+    "Mâncare bună"
+   ],
+   "price": 120,
+   "sources": [
+    "OSM n12312753049",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://ialoc.ro/restaurante-snagov/gradina-snagov-rezervari-4232"
+   ]
+  },
+  "w986515730": {
+   "story": "Restaurant cu atmosferă aparte în Buftea, lângă Studiourile de film.",
+   "crowd": "weekend",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "price": 100,
+   "sources": [
+    "OSM w986515730",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.soimiigastronomiei.ro/city-50470-buftea"
+   ]
+  },
+  "w986515791": {
+   "story": "Reper local pentru bucătărie românească autentică în Buftea, pe strada Studioului.",
+   "crowd": "prânz în weekend",
+   "vibes": [
+    "Mâncare bună"
+   ],
+   "price": 90,
+   "sources": [
+    "OSM w986515791",
+    "Google Places: deschis (verificare checked.json, 2026-10-04)",
+    "https://www.soimiigastronomiei.ro/city-50470-buftea"
+   ]
+  },
+  "w835097917": {
+   "story": "La intrarea în parcul Palatului Mogoșoaia: terasă și sala „Domnița Bălașa”, în stil brâncovenesc. Ideal după o plimbare prin grădinile palatului.",
+   "crowd": "sâmbătă–duminică, 12–22",
+   "vibes": [
+    "Cultură",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "price": 120,
+   "sources": [
+    "OSM w835097917",
+    "Google Places: negăsit la verificarea din 2026-10-04",
+    "https://www.palatulmogosoaia.ro/terasa.html"
+   ]
+  },
+  "w88337886": {
+   "story": "Parc vechi de 24 ha pe malul lacului Buftea, cu Palatul Știrbey, turnul de apă proiectat de Anghel Saligny și un lac interior cu rațe, gâște și lebede. Are cafenea pe malul lacului și restaurant. Intri vineri–duminică, 12–24, cu un voucher de 50 lei pe care îl consumi la restaurant. În august aici se ține festivalul Summer Well.",
+   "crowd": "vineri–duminică, după-amiaza",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "sources": [
+    "https://www.romaniamama.ro/turism/domeniul-stirbey--program-de-vizitare_3972.html",
+    "https://wel.ro/atractie/domeniul-stirbey/",
+    "https://buletin.de/bucuresti/summer-well-2025-incepe-vineri-la-buftea-programul-complet/"
+   ]
+  },
+  "w88337000": {
+   "story": "Faci tura lacului Herăstrău (aproape 6 km), bună de alergat, de bicicletă sau de role, ori iei vaporașul pentru o cursă de vreo 25 de minute. De la Debarcaderul Central închiriezi barcă sau hidrobicicletă (12 lei/oră în 2025), iar pe drum treci prin Grădina Japoneză și pe Insula Trandafirilor.",
+   "crowd": "oricând; bărcile și vaporașul merg zilnic în sezonul cald (primăvară–toamnă)",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Fun"
+   ],
+   "price": 0,
+   "sources": [
+    "https://agerpres.ro/administratie/2025/05/15/alpab-curse-zilnice-cu-vaporasul-si-plimbari-cu-barci-si-hidrobiciclete-pe-lacul-herastrau--1449517",
+    "https://www.alltrails.com/trail/romania/bucharest/herastrau-park-loop",
+    "https://umblu-teleleu.ro/parcul-herastrau/"
+   ]
+  },
+  "w28230560": {
+   "story": "Cea mai mare berărie din sud-estul Europei, cu terasă pe malul lacului Herăstrău și concerte aproape în fiecare weekend, de la lăutari la Carla’s Dreams.",
+   "crowd": "vineri–sâmbătă, în serile cu concert",
+   "vibes": [
+    "Fun",
+    "Party",
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://berariah.ro/",
+    "https://zilesinopti.ro/beraria-h-evenimente/",
+    "https://www.songkick.com/venues/2820463-beraria-h"
+   ]
+  },
+  "w298267725": {
+   "story": "E deschisă din 18 septembrie 2026, după zeci de ani de abandon: 3,4 ha cu alei care coboară până la apă, piste de alergare și o zonă de plajă unde poți sta la soare (scăldatul e interzis). Are și pontoane pentru caiace, bărci și hidrobiciclete.",
+   "crowd": "la apus, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.radioromania.ro/stiri-locale/dupa-lucrari-de-amenajare-insula-lacul-morii-se-deschide-pentru-promenada-id217843.html",
+    "https://www.forbes.ro/insula-lacul-morii-34-hectare-reamenajate-in-parc-urban-investitie-de-59-mil-lei-520552",
+    "https://ziare.com/insula-lacul-morii/redeschisa-plaja-ciprian-ciucu-2036217"
+   ]
+  },
+  "w88105780": {
+   "story": "O deltă în mijlocul orașului, cu stuf, bălți și păsări pe care nu le vezi în alt parc. Faci „Poteca biodiversității urbane” (2,3 km, cam o oră) sau mergi cu bicicleta pe digul Belvedere; în sezonul cald se fac și tururi ghidate gratuite cu biologi și ornitologi. Deschis zilnic 07–21.",
+   "crowd": "dimineața sau spre apus, din primăvară până toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "price": 0,
+   "sources": [
+    "https://wall-street.ro/articol/Turism/270599/delta-vacaresti-de-unde-incep-traseele-si-ce-activitati-poti-face-in-rezervatia-naturala-parc-vacaresti.html?full=",
+    "https://greencommunity.ro/program-vizitare-parcul-natural-vacaresti-tur-ghidat/",
+    "https://buletin.de/bucuresti/9-ani-de-la-infiintarea-parcului-natural-vacaresti/"
+   ]
+  },
+  "w16291869": {
+   "story": "Parcul istoric din centru, cu lac: vara te plimbi cu barca sau cu hidrobicicleta (40 lei/oră în 2025), iar iarna lacul devine patinoar în aer liber (sezonul 2025–2026: 50 lei pentru o oră și jumătate, patine de închiriat pe loc).",
+   "crowd": "vara cu barca, iarna la patinoar (din decembrie)",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://gokid.ro/lacul-cismigiu-plimbare-cu-barca-si-hidrobicicleta/",
+    "https://umblu-teleleu.ro/parcul-cismigiu/",
+    "https://gokid.ro/patinoare-bucuresti-lista-completa/"
+   ]
+  },
+  "w13853540": {
+   "story": "Parc istoric pe dealul Filaret: urci la Mausoleul de 48 m de pe cel mai înalt punct, intri la Muzeul Tehnic „Dimitrie Leonida”, care e chiar în parc, și te oprești la lacul cu rațe și țestoase. La Arenele Romane din parc se țin concerte și evenimente.",
+   "crowd": "după-amiaza, în weekend; seara când e eveniment la Arene",
+   "vibes": [
+    "Chill",
+    "Cultură",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://umblu-teleleu.ro/parcul-carol/",
+    "https://bucurestitrip.ro/parcul-carol-i/"
+   ]
+  },
+  "w21802163": {
+   "story": "Parc renovat, cu lac traversat de un pod suspendat și o grădină japoneză. Ai skatepark, terenuri de baschet, fotbal și tenis, mese de ping-pong și de șah și un amfiteatru unde se țin spectacole.",
+   "crowd": "după-amiaza și seara, în sezonul cald",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Competitiv",
+    "Chill"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-drumul-taberei-parcul-moghioros-80",
+    "https://b365.ro/parcuri-din-bucuresti-pentru-sporturi-urbane-unde-poti-face-plimbari-linistite-si-sigure-cu-hoverboard-ul-rolele-sau-skateboard-ul-561693/"
+   ]
+  },
+  "r8321313": {
+   "story": "Parc de vreo 85 ha în Titan, construit în jurul lacului Titan, care e tăiat în două de podul Liviu Rebreanu și are cinci insule. Aleile lungi de pe malul apei sunt bune de plimbare, de alergat sau de bicicletă.",
+   "crowd": "oricând, mai ales în weekend și vara seara",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.gandul.ro/actualitate/parcul-ior-sau-minunea-din-titan-un-lac-cinci-insule-si-o-biserica-documentar-19802770",
+    "https://bucurestitrip.ro/parcul-ior-alexandru-ioan-cuza/",
+    "https://mtb-tours.kerucov.ro/editorial.php?editorial=76"
+   ]
+  },
+  "r19937268": {
+   "story": "Vineri, sâmbătă și duminică seara, fântânile din Piața Unirii fac un show de vreo 45 de minute cu apă, lumini și muzică; în 2026 tema a fost filmele celebre, cu câteva seri și de drone. Intrarea e liberă, dar vino cu un sfert de oră înainte ca să prinzi loc bun.",
+   "crowd": "vineri–duminică seara, mai – începutul lui octombrie (în septembrie–octombrie show-ul e la 20:00, vara la 21:00–21:30)",
+   "vibes": [
+    "Fun",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://buletin.de/bucuresti/revin-spectacolele-de-apa-muzica-si-lumini-la-fantanile-din-piata-unirii-programul-pana-in-septembrie/",
+    "https://stirileprotv.ro/divers/programul-fantanilor-din-piata-unirii-orele-la-care-incepe-spectacolul-de-muzica-si-lumini-in-fiecare-weekend.html",
+    "https://www.apanovabucuresti.ro/informatii-utile/stiri/fantanile-piata-unirii-recod-mondial"
+   ]
+  },
+  "w14360895": {
+   "story": "Unul dintre cele mai mari parcuri din oraș: aleea largă din jurul lacului e făcută pentru alergat și bicicletă, pe lac închiriezi barcă sau hidrobicicletă, iar la intrarea dinspre Bd. Gheorghe Șincai găsești biciclete de închiriat. Ai și terenuri de sport și destulă iarbă pentru un picnic.",
+   "crowd": "în weekend, mai ales primăvara și vara",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "price": 0,
+   "sources": [
+    "https://umblu-teleleu.ro/parcul-tineretului/",
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-tineretului-67"
+   ]
+  },
+  "w360140661": {
+   "story": "Parc de aventură în pădurea Cernica, cu trasee prin copaci marcate pe culori după dificultate și tir cu arcul. Atracția principală e tiroliana lungă peste lacul Cernica.",
+   "crowd": "în weekend, vara",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "sources": [
+    "https://extremepark.ro/",
+    "https://www.seebucharest.ro/extreme-park-cernica/"
+   ]
+  },
+  "n5807532953": {
+   "story": "Rooftop la etajul 5, deasupra clădirii Magazinului Victoria de pe Lipscani, cu priveliște peste acoperișurile Centrului Vechi; iarna mesele stau în igluuri încălzite.",
+   "crowd": "la apus, mai ales joi–sâmbătă; rezervă din timp pentru terasă",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://www.therooftopguide.com/rooftop-bars-in-bucharest/linea-closer-to-the-moon.html",
+    "https://booklinea.me/",
+    "https://travelnotesandbeyond.com/bucharest-nightlife-best-bars-and-clubs/"
+   ]
+  },
+  "n1729617170": {
+   "story": "Casa muzicii indie și alternative din centru: două săli cu muzică diferită și o curte interioară pe Constantin Mille. În octombrie 2026 a împlinit 18 ani, cu concerte Liars și Lucy Kruger.",
+   "crowd": "concerte în timpul săptămânii (vezi programul), petreceri vineri–sâmbătă după miezul nopții",
+   "vibes": [
+    "Party",
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "https://eventbook.ro/hall/club-control",
+    "https://www.songkick.com/venues/921096-control-club",
+    "https://www.tripadvisor.com/Attraction_Review-g294458-d7052255-Reviews-Control_Club-Bucharest.html"
+   ]
+  },
+  "n10964569389": {
+   "story": "Clubul alternativ Expirat stă acum în Halele Carol, fostele hale industriale de lângă Parcul Carol. În 2026 au urcat pe scena lui Omul cu Șobolani (29 de ani de trupă) și Suie Paparude.",
+   "crowd": "în serile cu concert (de obicei de la 21:30) și vineri–sâmbătă noaptea",
+   "vibes": [
+    "Party",
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "https://www.iconcert.ro/event/concert-omul-cu-sobolani-expirat-halele-carol-bucuresti-2026",
+    "https://lounge-avenue.com/event/suie-paparude-expirat-halele-carol-bucharest/",
+    "https://tickets.expirat.org/"
+   ]
+  },
+  "w23611141": {
+   "story": "Parc umbros pe Șoseaua Kiseleff, între Piața Victoriei și Arcul de Triumf, lângă Muzeul Țăranului. Primăvara, Bucharest Street Food Festival se mută pe bulevard: în 2026, pe 18–19 aprilie, cu zeci de food truck-uri, VAMA și Moonlight Breakfast.",
+   "crowd": "la festivaluri (aprilie); în rest, plimbare ziua",
+   "vibes": [
+    "Mâncare bună",
+    "Aer liber",
+    "Fun"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.infomusic.ro/agenda/bucharest-street-food-festival-2026/",
+    "https://www.onevent.ro/evenimente/bucharest-street-food-festival/"
+   ]
+  },
+  "w23583220": {
+   "story": "Parc pe malul lacului Tei, cu alei largi pentru plimbare și alergat. Pe apă sunt lebede și rațe, iar chiar în parc e un restaurant cu terasă cu vedere la lac.",
+   "crowd": "seara, vara",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://toplocuri.ro/parcul-tei",
+    "https://zilesinopti.ro/locuri/lacul-tei-bucuresti/"
+   ]
+  },
+  "n9394387195": {
+   "story": "Pentru mulți tineri din est, mallul de lângă Parcul IOR e locul de întâlnire când plouă sau e frig: cinema, food court și, când se oprește ploaia, ieși direct în parc.",
+   "crowd": "tot anul, mai ales seara și în zilele cu vreme rea",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Mâncare bună"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+   ]
+  },
+  "w402867798": {
+   "story": "Parc de aventură în pădurea de la Balotești, cu trasee prin copaci de la ușor la greu, perete de escaladă, paintball și plimbări călare. Plătești intrarea în parc, iar fiecare activitate separat.",
+   "crowd": "în weekend, din primăvară până toamna",
+   "vibes": [
+    "Fun",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "sources": [
+    "https://www.edenland.ro/activities-costs/",
+    "https://www.edenland.ro/tree-courses/",
+    "https://www.tripadvisor.com/Attraction_Review-g4324155-d7927643-Reviews-Edenland_Park-Balotesti_Ilfov_County_Southern_Romania.html"
+   ]
+  },
+  "w62743951": {
+   "story": "O grădină mică și cochetă din 1873, la doi pași de Piața Romană, cu un lac pe care stau rațe și lebede. E bună pentru o plimbare scurtă în doi, pe care o poți continua pe străzile cu vile frumoase din cartierul Icoanei.",
+   "crowd": "după-amiaza, ca oprire scurtă",
+   "vibes": [
+    "Chill"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.bucuresti.ro/articole/gradina-icoanei-parcul-mic-si-cochet-din-centrul-capitalei-89",
+    "https://b365.ro/icoanei-cartierul-perfect-pentru-plimbare-mahalaua-de-unde-izvora-bucurestioara-cu-apa-greu-mirositoare-acum-zona-cu-cele-mai-frumoase-si-scumpe-case-din-bucuresti-520519/"
+   ]
+  },
+  "w395675082": {
+   "story": "Parc de vreo 3 ha cu arbori și arbuști decorativi rari, pe malul lacului Chitila. Mergi pe mal pe jos, cu bicicleta sau cu trotineta (are pistă de biciclete), iar pentru copii e și o tiroliană. Intrarea e gratuită, între 07 și 22.",
+   "crowd": "în weekend, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://danaparaschiv.com/parcul-dendrologic-chitila/",
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-parcul-dendrologic-chitila-716"
+   ]
+  },
+  "r21298944": {
+   "story": "Parc liniar nou, făcut pe o fostă linie de tren din Militari. Are o pădure urbană cu vreo 900 de copaci, pavilioane de lucru în aer liber cu prize și WiFi, pumptrack, pistă de biciclete, mese de ping-pong și de teqball și hamace.",
+   "crowd": "oricând; ziua dacă vrei să lucrezi afară",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.economica.net/s-a-deschis-parcul-liniei-2-singurul-din-bucuresti-cu-padure-urbana-si-spatii-de-lucru-in-aer-liber_743311.html",
+    "https://buletin.de/bucuresti/al-doilea-tronson-din-parcul-liniei-de-3500-mp-a-fost-deschis-publicului-zona-are-spatii-de-lucru-in-aer-liber-cu-prize-si-wifi/",
+    "https://greencommunity.ro/parcul-liniei-faza-2-inaugurare-bucuresti-sector-6/"
+   ]
+  },
+  "w39349038": {
+   "story": "În jurul Palatului Brâncovenesc ai parc mare și malul lacului cu acces liber: te plimbi, faci picnic pe iarbă sau bei o cafea pe terasă. Plătești doar dacă intri în muzeu (palatul, cuhnia, expozițiile): 15 lei adulți, 8 lei elevi și studenți.",
+   "crowd": "în weekend, primăvara și toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "price": 0,
+   "sources": [
+    "https://umblu-teleleu.ro/mogosoaia/",
+    "https://ilfovul.ro/palatul-mogosoaia-ghid-vizitare/"
+   ]
+  },
+  "w23581105": {},
+  "w85952406": {
+   "story": "Rezervație de vreo 1.470 ha lângă lacul Snagov, cu stejari vechi și o zonă rară de fagi, neobișnuiți la câmpie. Fundația Snagov a marcat trasee: de exemplu BI01, un circuit de 9,2 km pe drumuri forestiere, marcat cu buline portocalii. În rezervație se merge doar pe traseele marcate.",
+   "crowd": "în weekend, primăvara și toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://fundatiasnagov.ro/p-mediu/trasee-eco-turistice/traseu-bi01/",
+    "https://fundatiasnagov.ro/p-mediu/trasee-eco-turistice/",
+    "https://ro.wikipedia.org/wiki/P%C4%83durea_Snagov"
+   ]
+  },
+  "n6943415085": {
+   "story": "Bar de vin pe strada Tonitza, la marginea Centrului Vechi, cu terasă și vin la pahar; deschis zilnic până la 1.",
+   "crowd": "zilnic 14:30–01",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://www.abelswinebar.ro/",
+    "OpenStreetMap n6943415085 (program, terasă)"
+   ]
+  },
+  "n9420725776": {},
+  "n1814904321": {},
+  "n9643248317": {
+   "story": "Club de stand-up comedy cu spectacole aproape în fiecare seară (de la 19, sâmbăta și de la 16:30) — bun de mers cu gașca la râs înainte de bar.",
+   "crowd": "duminică–vineri de la 19, sâmbătă de la 16:30",
+   "vibes": [
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "https://comicsclub.ro/",
+    "OpenStreetMap n9643248317 (program)"
+   ]
+  },
+  "n2460477735": {},
+  "w1449607814": {
+   "story": "Pub jos, club sus: la parter ai biliard, darts și pizza din cuptor cu lemne, iar la etaj e sala de 800 de locuri în care se țin unele dintre cele mai importante concerte rock din București.",
+   "crowd": "zilnic până la 5; urmărește programul de concerte",
+   "vibes": [
+    "Party",
+    "Fun",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://fabrica-club.ro/loc-de-intalnire/fabrica/",
+    "https://fabrica-club.ro/contact/",
+    "https://zilesinopti.ro/locuri/club-fabrica/"
+   ]
+  },
+  "n7176366608": {
+   "story": "Pe Gabroveni din anul 2000, Fire e clubul studenților din Centrul Vechi: rock, hip-hop și underground în loc de muzică comercială, bere ieftină și un atrium acoperit cu ieșire pe Covaci.",
+   "crowd": "zilnic până la 4, vineri–sâmbătă până la 6",
+   "vibes": [
+    "Party",
+    "Fun"
+   ],
+   "sources": [
+    "https://www.metalhead.ro/cluburi/fire-club---bucuresti-2-1.html",
+    "https://www.inyourpocket.com/bucharest/fire-club_14235v",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d7812281-Reviews-Fire_Club-Bucharest.html"
+   ]
+  },
+  "n10856109721": {
+   "story": "Bar „botanic” la etajul 1 din Palatul Universul, deschis din 2016, cu cocteiluri din ingrediente est-europene: shrub de gutui, lichior de polen, semințe de floarea-soarelui. În 2025 a intrat în clasamentul Top 500 Bars.",
+   "crowd": "oricare seară; ideal pentru primul cocteil al serii",
+   "vibes": [
+    "Chill"
+   ],
+   "sources": [
+    "https://www.urban.ro/bucuresti-in-clasamentul-celor-mai-bune-baruri-din-lume/",
+    "https://www.restocracy.ro/fix-botanical-bar/",
+    "https://barmagazine.com/bars/fix-me-a-drink"
+   ]
+  },
+  "n5290479000": {
+   "story": "Unul dintre cele mai mari cluburi din oraș (circa 850 m², deschis în noiembrie 2010), cu DJ internaționali și concerte; în același complex sunt Fratelli Lounge & Club și, vara, Fratelli Social Club.",
+   "crowd": "vineri–sâmbătă după miezul nopții",
+   "vibes": [
+    "Party"
+   ],
+   "sources": [
+    "https://archello.com/project/fratelli-studios",
+    "https://fratelli.ro/evenimente/nye-fratelli-studios/",
+    "https://www.waze.com/live-map/directions/ro/bucuresti/bucuresti/fratelli-studios?to=place.ChIJ10k48Z74sUARtfCyYRQnVnI"
+   ]
+  },
+  "n4408090991": {
+   "story": "Bar de cocteiluri cu aer de speakeasy la parterul Magazinului Victoria, clădire din 1928: pian, biciclete agățate pe pereți, DJ și, în unele seri, muzică live.",
+   "crowd": "joi–sâmbătă; vineri și sâmbătă până la 5",
+   "vibes": [
+    "Party",
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "https://www.spottedbylocals.com/bucharest/interbelic/",
+    "https://www.inyourpocket.com/bucharest/interbelic_42182v",
+    "https://interbelic.ro/"
+   ]
+  },
+  "n12790924201": {
+   "story": "Deschis în iulie 2020, are 20 de robinete cu bere artizanală românească și străină, cu prețul pe 100 ml: îți alegi mărimea paharului ca să guști mai multe. Burgerii merg bine lângă.",
+   "crowd": "luni–joi de la 17, vineri–duminică de la 12, până la miezul nopții",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://indagare.com/activity/ironic-taproom",
+    "https://brewver.com/venues/23176/Ironic-Taproom",
+    "https://www.tripadvisor.com/Attraction_Review-g294458-d25468673-Reviews-Ironic_Taproom-Bucharest.html"
+   ]
+  },
+  "n13522478476": {
+   "story": "Clubul de muzică electronică ce a intrat de mai multe ori în topul DJ Mag al celor mai bune 100 de cluburi din lume; din 2012 stă într-un fost cinematograf de pe Bulevardul Regina Elisabeta.",
+   "crowd": "vineri–sâmbătă după miezul nopții",
+   "vibes": [
+    "Party"
+   ],
+   "sources": [
+    "https://en.wikipedia.org/wiki/Kristal_Glam_Club",
+    "https://www.songkick.com/venues/2305794-kristal-glam-club",
+    "https://x.com/kristalclub"
+   ]
+  },
+  "n718723997": {
+   "story": "Club pe Sfânta Vineri cu concept adus din Berlin (numele înseamnă „casa culturii”), loc pentru 800 de oameni și prețuri printre cele mai mici din centru.",
+   "crowd": "vineri–sâmbătă 22–05",
+   "vibes": [
+    "Party",
+    "Fun"
+   ],
+   "sources": [
+    "https://www.infomusic.ro/location/kulturhaus-club/",
+    "https://www.bucuresti.ro/locatii/cluburi-kulturhaus-570",
+    "https://www.facebook.com/kulturhausbukarest/"
+   ]
+  },
+  "n1731040985": {
+   "story": "Trei etaje pe Gabroveni: la subsol cântă trupe live, la parter e pub cu meciuri pe ecrane, iar la etaj e karaoke în fiecare seară de la 21.",
+   "crowd": "zilnic 13–05; karaoke de la 21",
+   "vibes": [
+    "Fun",
+    "Party"
+   ],
+   "sources": [
+    "https://www.inyourpocket.com/bucharest/mojo_56237v",
+    "https://ialoc.ro/restaurante-bucuresti/mojo-rezervari-459",
+    "https://www.seebucharest.ro/mojo-music-club/"
+   ]
+  },
+  "n13706065301": {
+   "story": "Peste 30 de cocteiluri italiene și variante de Negroni, cu cicchetti venețiene, într-un interior retro-art deco semnat de arhitecta ucraineană Lisa Shinder; se deschide zilnic la 17:19, fix.",
+   "crowd": "zilnic de la 17:19; vineri–sâmbătă până la 03:19",
+   "vibes": [
+    "Chill",
+    "Fun"
+   ],
+   "sources": [
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d32822657-Reviews-Negroni_Aperitivo_Bar-Bucharest.html",
+    "https://wanderlog.com/place/details/8807362/negroni-aperitivo-bar",
+    "https://beethere.ro/venues/negroni-aperitivo-bar"
+   ]
+  },
+  "n1416616482": {
+   "story": "Terasă pe acoperiș pe Smârdan, cu acoperiș retractabil și o „grădină secretă”; după cină se transformă în club cu DJ până dimineața.",
+   "crowd": "vineri–sâmbătă după 23 (deschis până la 4)",
+   "vibes": [
+    "Party",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://nomadskybar.ro/contact/",
+    "https://www.therooftopguide.com/rooftop-bars-in-bucharest/nomad-skybar.html",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d7345672-Reviews-NOMAD_Skybar-Bucharest.html"
+   ]
+  },
+  "n7826698274": {
+   "story": "Club de vară pe malul lacului Herăstrău, cu mâncare asiatică cu influențe peruane și petreceri de miercuri până duminică de la 23; public pus la patru ace și prețuri pe măsură.",
+   "crowd": "vara, miercuri–duminică după 23",
+   "vibes": [
+    "Party",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://events.musicofourdesire.com/venue/nuba_summervibes",
+    "https://nuba.ro/wp-content/uploads/2025/10/Events-By-Nuba-2025.pdf",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d8800189-Reviews-Nuba_Restaurant_Lounge_Bar-Bucharest.html"
+   ]
+  },
+  "n13705806402": {
+   "story": "Speakeasy ascuns în spatele ușii fostului Oficiu Poștal nr. 1 de pe Matei Millo, cu roșul cutiilor poștale în decor și cocteiluri artizanale schimbate după sezon.",
+   "crowd": "miercuri–duminică seara; vineri–sâmbătă mai târziu",
+   "vibes": [
+    "Chill"
+   ],
+   "sources": [
+    "https://ialoc.ro/restaurante-bucuresti/oficiul-1-rezervari-4143",
+    "https://restograf.ro/cele-mai-cool-cocktail-baruri-din-bucuresti/",
+    "https://oficiul1.com/"
+   ]
+  },
+  "w438875605": {
+   "story": "Clubul de rock și metal din Grozăvești: în toamna lui 2026 cântă aici Danko Jones, Swallow the Sun și trupele festivalului Funk Rock Hotel (Suie Paparude, Moonlight Breakfast).",
+   "crowd": "în serile cu concert",
+   "vibes": [
+    "Party",
+    "Fun",
+    "Cultură"
+   ],
+   "sources": [
+    "https://quantic.pub/evenimente/",
+    "https://www.songkick.com/venues/3550769-quantic-pub",
+    "https://events.musicofourdesire.com/event/yeys-funk-rock-hotel-2026-festival-urban-festival-bucharest-romania"
+   ]
+  },
+  "w1185691220": {
+   "story": "Bar de cocteiluri cu seră și grădină în curtea istorică a Casei Brătianu de pe C.A. Rosetti, ascuns după gard, între copaci. Nu se fac rezervări.",
+   "crowd": "luni–vineri 12–23, weekendul 10–23; cel mai frumos vara, seara",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://www.inyourpocket.com/bucharest/sera-eden_172002v",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d32893011-Reviews-Sera_Eden-Bucharest.html",
+    "https://bookingham.ro/bucuresti/restaurante/sera-eden/1805"
+   ]
+  },
+  "n10775260912": {
+   "story": "Bar mic de cocteiluri pe Covaci, printre cele mai bine cotate din oraș, unde primești o gustare din partea casei lângă băutură.",
+   "crowd": "marți–duminică 17–01",
+   "vibes": [
+    "Chill"
+   ],
+   "sources": [
+    "https://www.top100ofromania.eu/sub-category/70/baruri",
+    "https://travelnotesandbeyond.com/bucharest-nightlife-best-bars-and-clubs/",
+    "https://sipbucharest.ro"
+   ]
+  },
+  "n11068954263": {
+   "story": "Pub pe George Enescu, lângă Piața Romană, care arată ca un pub englezesc, dar are în meniu mâncare românească de altădată.",
+   "crowd": "joi–sâmbătă seara",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://www.restocracy.ro/terminus-pub/",
+    "https://ialoc.ro/restaurante-bucuresti/terminus-rezervari-301",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d7002920-Reviews-Terminus-Bucharest.html"
+   ]
+  },
+  "n9228466809": {
+   "story": "Bar de cocteiluri în seiful adevărat al fostei Bănci Marmorosch Blank, sub hotelul The Marmorosch: uși de oțel, casete de depozit și seifuri originale în jurul mesei.",
+   "crowd": "seara, pentru un cocteil liniștit",
+   "vibes": [
+    "Chill",
+    "Cultură"
+   ],
+   "sources": [
+    "https://www.marmorosch.com/the-vault/",
+    "https://www.interestingbars.com/bar/the-vault-bucharest",
+    "https://www.tripadvisor.com/Restaurant_Review-g294458-d27461727-Reviews-The_Vault-Bucharest.html"
+   ]
+  },
+  "n5157603171": {
+   "story": "Pe Calea Victoriei din 2017, e locul în care încerci la un loc multe beri artizanale românești, cu bucătărie de bistro alături.",
+   "crowd": "zilnic 12–24",
+   "vibes": [
+    "Chill",
+    "Mâncare bună"
+   ],
+   "sources": [
+    "https://travelnotesandbeyond.com/bucharest-nightlife-best-bars-and-clubs/",
+    "https://www.bere-zaganu.ro/"
+   ]
+  },
+  "n4747540699": {
+   "story": "Rooftop de 700 m² pe acoperișul unei foste fabrici de bumbac de lângă Dâmbovița, la câțiva pași de metroul Timpuri Noi; pe lângă băuturi are proiecții de film, ateliere și dezbateri.",
+   "crowd": "sezonier: din mai până toamna, la apus; în rest doar evenimente private",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "sources": [
+    "https://deschis-gastrobar.ro/rooftop",
+    "https://www.therooftopguide.com/rooftop-bars-in-bucharest/deschis-gastrobar.html",
+    "https://g4food.ro/7-rooftop-uri-din-bucuresti-unde-merita-sa-iesi-in-serile-de-vara/"
+   ]
+  }
+ },
+ "add": [
+  {
+   "id": "c-combinatul-fondului-plastic",
+   "name": "Combinatul Fondului Plastic",
+   "k": "arts_centre",
+   "kind": "Hub creativ",
+   "lat": 44.484,
+   "lon": 26.063,
+   "city": "București",
+   "story": "Fabrica de artă construită între 1966 și 1972 de Uniunea Artiștilor Plastici, azi plină de ateliere și galerii independente (Sector 1 Gallery, IOMO, The Institute); în 2025 a avut expoziții ca „16M2” la Galeria SENAT.",
+   "crowd": "la vernisaje, seara",
+   "vibes": [
+    "Cultură",
+    "Chill"
+   ],
+   "sources": [
+    "https://www.modernism.ro/2025/03/19/expozitie-natura-cotidian-gallery-studio-76-combinatul-fondului-plastic-bucuresti/",
+    "https://uap.ro/16m2-galeria-senat-cfp/",
+    "http://www.combinatulfonduluiplastic.ro/stores.php"
+   ]
+  },
+  {
+   "id": "c-palatul-parlamentului-tur-ghidat",
+   "name": "Palatul Parlamentului – tur ghidat",
+   "k": "palace",
+   "kind": "Palat",
+   "lat": 44.428136,
+   "lon": 26.086631,
+   "city": "București",
+   "story": "A doua cea mai mare clădire administrativă din lume, după Pentagon; turul ghidat intră prin strada Izvor (aceeași intrare cu MNAC) și cere buletinul.",
+   "crowd": "ziua, cu programare",
+   "vibes": [
+    "Cultură"
+   ],
+   "sources": [
+    "OpenStreetMap n2634652838 (intrarea Izvor 2-4, comună cu MNAC)",
+    "cunoștințe generale, fără verificare web în 10.2026 (căutarea epuizată)"
+   ]
+  },
+  {
+   "id": "c-kaiamo",
+   "name": "KAIAMO",
+   "k": "restaurant",
+   "kind": "Fine dining",
+   "cuisine": "românească experimentală",
+   "lat": 44.464104,
+   "lon": 26.088929,
+   "city": "București",
+   "story": "Bucătăria românească experimentală a chef-ului Radu Ionescu: 3 toques Gault&Millau (15 puncte), meniuri de degustare sezoniere și peste 200 de etichete de vin. Pentru o seară specială.",
+   "crowd": "seara, cu rezervare",
+   "vibes": [
+    "Mâncare bună",
+    "Cultură"
+   ],
+   "sources": [
+    "https://ro.gaultmillau.com/restaurant/kaiamo?locale=ro-RO",
+    "https://ialoc.ro/restaurante-bucuresti/kaiamo-rezervari-2992",
+    "https://www.stiripesurse.ro/restaurante-bucuresti-2025-cele-mai-bune-restaurante-din-bucuresti-care-merita-vizitate_3623727.html"
+   ]
+  },
+  {
+   "id": "c-coftale",
+   "name": "Coftale",
+   "k": "cafe",
+   "kind": "Cafenea de specialitate",
+   "cuisine": "cafea de specialitate, brunch",
+   "lat": 44.436662,
+   "lon": 26.119683,
+   "city": "București",
+   "story": "Prima cafenea de specialitate din București (decembrie 2012), într-o casă veche cu grădină, pe Ștefan Mihăileanu. Bună și pentru lucrat.",
+   "crowd": "dimineața sau după-amiaza; brunch",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 30,
+   "sources": [
+    "https://europeancoffeetrip.com/cafe/coftale-bucharest/",
+    "https://salutbucuresti.ro/en/guides/best-cafes/",
+    "https://ideiroscate.ro/30-locuri-de-brunch-in-bucuresti/"
+   ]
+  },
+  {
+   "id": "c-piata-constitutiei",
+   "name": "Piața Constituției",
+   "k": "square",
+   "kind": "Piață cu evenimente",
+   "lat": 44.4273,
+   "lon": 26.0915,
+   "city": "București",
+   "story": "Piața uriașă din fața Palatului Parlamentului se umple când e ceva mare: Street Food Festival și Zilele Bucureștiului în septembrie (în 2026, Rudimental și video-mapping pe Palat), apoi Târgul de Crăciun cu roată mare, patinoar acoperit, peste 130 de căsuțe și concerte. Fără eveniment e doar o piață goală, așa că merită doar atunci.",
+   "crowd": "la evenimente: Street Food Festival (început de septembrie), Zilele Bucureștiului (septembrie), Târgul de Crăciun (sfârșit de noiembrie – 28 decembrie, mai ales seara și în weekend)",
+   "vibes": [
+    "Fun",
+    "Party",
+    "Mâncare bună",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.infomusic.ro/2025/11/program-concerte-targul-de-craciun-bucuresti-2025-piata-constitutiei/",
+    "https://www.bucuresti.ro/ro/articole/programul-targurilor-de-craciun-din-bucuresti-2025-2026-piata-constitutiei-opera-drumul-taberei-si-baneasa-883",
+    "https://www.catavencii.ro/zilele-bucurestiului-2026-evenimente-de-top-si-show-uri-live-in-piata-constitutiei/"
+   ]
+  },
+  {
+   "id": "c-calul-balan-malul-lacului-buftea",
+   "name": "Calul Bălan (malul Lacului Buftea)",
+   "k": "promenade",
+   "kind": "Mal de lac cu restaurant istoric",
+   "lat": 44.565725,
+   "lon": 25.926101,
+   "city": "Buftea",
+   "story": "Calul Bălan e un restaurant cu terasă pe malul Lacului Buftea, cu poveste din anii '60, și locul de unde localnicii pornesc la plimbare pe dig, pe lângă biserică, până în spatele Domeniului Știrbey. Serile de vară și în weekend e plin, iar în sală sunt des nunți, așa că pentru terasă sună înainte.",
+   "crowd": "vineri–duminică, mai ales serile de vară",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Mâncare bună"
+   ],
+   "price": 0,
+   "sources": [
+    "https://vreaulocatie.ro/l/restaurant/ballroom-calul-balan",
+    "https://www.locatiinuntabucuresti.ro/detalii/calul-balan-294",
+    "https://expresuldebuftea.ro/9-activitati-pe-care-sa-le-faci-cu-copiii-in-buftea/"
+   ]
+  },
+  {
+   "id": "c-calea-victoriei-pietonala-strazi-deschis",
+   "name": "Calea Victoriei pietonală (Străzi Deschise)",
+   "k": "square",
+   "kind": "Stradă pietonală în weekend",
+   "lat": 44.438067,
+   "lon": 26.097493,
+   "city": "București",
+   "story": "Din aprilie până în octombrie, în weekend, Calea Victoriei se închide pentru mașini între Bd. Dacia și Splai și devine promenadă cu ateliere, parade, sport și muzică; din 2026 s-a adăugat și strada Ion Brezoianu. Treci pe la Ateneu și Cercul Militar fără să te ferești de mașini.",
+   "crowd": "sâmbătă și duminică, 10:00–22:00, din 25 aprilie până pe 11 octombrie 2026 (unele weekenduri doar sâmbăta)",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură",
+    "Fun"
+   ],
+   "price": 0,
+   "sources": [
+    "https://arcub.ro/proiect/strazi-deschise-bucuresti-editia-2026",
+    "https://www.antena3.ro/actualitate/locale/calea-victoriei-si-o-alta-artera-importanta-devin-pietonale-din-acest-weekend-programul-si-traseul-strazi-deschise-bucuresti-2026-784996.html",
+    "https://www.rador.ro/2026/09/25/calea-victoriei-din-capitala-devine-pietonala-in-cadrul-proiectului-strazi-deschise/"
+   ]
+  },
+  {
+   "id": "c-centrul-vechi-lipscani",
+   "name": "Centrul Vechi (Lipscani)",
+   "k": "square",
+   "kind": "Zonă pietonală cu baruri",
+   "lat": 44.431884,
+   "lon": 26.100283,
+   "city": "București",
+   "story": "Străduțele pietonale dintre Lipscani, Smârdan și Covaci sunt punctul de plecare clasic al serii: zeci de baruri, puburi și cluburi la câțiva pași unul de altul, terase pe stradă și muzică live. Vara, vinerea și sâmbăta, e cea mai aglomerată zonă de ieșit din oraș.",
+   "crowd": "joi–sâmbătă seara, până dimineața; vara e cel mai plin",
+   "vibes": [
+    "Party",
+    "Fun",
+    "Mâncare bună"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.bucuresti.ro/articole/ghid-complet-pentru-viata-de-noapte-in-bucuresti-in-2026-unde-se-distreaza-tinerii-in-capitala-1614",
+    "https://salutbucuresti.ro/en/attractions/old-town/"
+   ]
+  },
+  {
+   "id": "c-lacul-snagov-snagov-parc",
+   "name": "Lacul Snagov – Snagov Parc",
+   "k": "nature_reserve",
+   "kind": "Lac cu plajă și pădure",
+   "lat": 44.713626,
+   "lon": 26.16327,
+   "city": "Snagov",
+   "story": "La vreo 40 km de București, zona Snagov Parc are plajă pe peninsulă, cu umbră de copaci, pontoane și terase pe malul lacului, plus pădurea Snagov pentru plimbare. La intrarea în Snagov Parc se plătește taxă pe mașină și de persoană.",
+   "crowd": "weekendurile de vară, ziua",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://marinaport.ro/amplasament.html",
+    "https://marinaport.ro/lacul-snagov.html",
+    "https://www.barci.ro/lacul-snagov/"
+   ]
+  },
+  {
+   "id": "c-water-park-otopeni",
+   "name": "Water Park Otopeni",
+   "k": "water_park",
+   "kind": "Ștrand cu piscine",
+   "lat": 44.562069,
+   "lon": 26.063846,
+   "city": "Otopeni",
+   "story": "Ștrandul mare din Otopeni, unde vara se țin și evenimente: în iunie 2026 aici s-au jucat calificările FIBA 3x3 Europe Cup. Bun pentru o zi la piscină fără să mergi până la mare.",
+   "crowd": "vara, în weekend, ziua",
+   "vibes": [
+    "Fun",
+    "Aer liber"
+   ],
+   "sources": [
+    "https://waterpark.ro/evenimente/",
+    "https://www.bucuresti.ro/articole/parcuri-acvatice-din-bucuresti-in-2026-unde-fugim-de-caldura-vara-aceasta-1597"
+   ]
+  },
+  {
+   "id": "c-sun-plaza",
+   "name": "Sun Plaza",
+   "k": "square",
+   "kind": "Mall, loc de întâlnire când plouă",
+   "lat": 44.396176,
+   "lon": 26.122158,
+   "city": "București",
+   "story": "Mallul mare din sud, lângă Parcul Natural Văcărești, e unul dintre locurile unde se strâng tinerii când e frig sau plouă: cinema, food court și ceva de făcut fără program.",
+   "crowd": "tot anul, mai ales seara și în zilele cu vreme rea",
+   "vibes": [
+    "Chill",
+    "Fun",
+    "Mâncare bună"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.bucuresti.ro/articole/cum-socializeaza-adolescentii-din-bucuresti-pe-timpul-verii-care-sunt-locurile-preferate-de-intalnire-si-ce-activitati-au-1566"
+   ]
+  },
+  {
+   "id": "c-gradina-botanica-dimitrie-brandza",
+   "name": "Grădina Botanică „Dimitrie Brândză”",
+   "k": "botanical_garden",
+   "kind": "Grădină botanică",
+   "lat": 44.43767,
+   "lon": 26.06335,
+   "city": "București",
+   "story": "Grădina Universității din București: alei printre plante din toată lumea, o grădină japoneză și sere cu palmieri și orhidee, plus Pavilionul Pădurea Tropicală. Biletul e 15 lei din 16 martie până pe 15 octombrie (08–20); iarna costă 8 lei și programul e 09–15:30. Serele au program separat, mai scurt. Studenții UB intră gratis.",
+   "crowd": "dimineața sau după-amiaza, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "sources": [
+    "https://stirileprotv.ro/stiri/travel/locul-din-bucuresti-unde-uiti-ca-esti-in-oras-gasesti-palmieri-orhidee-si-o-gradina-japoneza-pentru-un-bilet-de-doar-15-lei.html",
+    "https://www.bucuresti.ro/locatii/parcuri-si-gradini-gradina-botanica-dimitrie-brandza-649"
+   ]
+  },
+  {
+   "id": "c-padurea-baneasa",
+   "name": "Pădurea Băneasa",
+   "k": "nature_reserve",
+   "kind": "Pădure",
+   "lat": 44.517083,
+   "lon": 26.104408,
+   "city": "București",
+   "story": "Pădurea de la marginea de nord a orașului are trei trasee oficiale de bicicletă: Albastru (4 km, pe alei asfaltate), Galben (6,5 km) și Roșu (7 km, pe poteci naturale). Ai locuri de picnic cu mese și bănci, iar la margine e Grădina Zoologică.",
+   "crowd": "în weekend, primăvara–toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Competitiv"
+   ],
+   "price": 0,
+   "sources": [
+    "https://calatoruldigital.ro/2025/08/trasee-biciclete-padurea-baneasa/",
+    "https://b365.ro/tur-ghidat-in-padurea-baneasa-organizat-de-asociatia-parcul-natural-bucuresti-e-gratuit-si-e-in-weekend-in-limita-locurilor-disponibile-585039/",
+    "https://danaparaschiv.com/padurea-baneasa-un-colt-de-rai-langa-bucuresti/"
+   ]
+  },
+  {
+   "id": "c-padurea-si-lacul-cernica",
+   "name": "Pădurea și lacul Cernica",
+   "k": "nature_reserve",
+   "kind": "Pădure",
+   "lat": 44.433865,
+   "lon": 26.256992,
+   "city": "Cernica",
+   "story": "Pădure întinsă de-a lungul lacului Cernica, arie de protecție pentru păsări din 2011, la 15–20 km de centru. Are poteci late, bune de plimbare și de bicicletă, locuri de picnic, iar pe insula din lac e Mănăstirea Cernica.",
+   "crowd": "în weekend, primăvara și toamna",
+   "vibes": [
+    "Chill",
+    "Aer liber"
+   ],
+   "price": 0,
+   "sources": [
+    "https://ilfovul.ro/padurea-cernica-natura-margine-bucuresti/",
+    "https://b365.ro/sapte-paduri-langa-bucuresti-pentru-plimbare-si-picnic-563347/",
+    "https://www.outdooractive.com/en/travel-guide/lacul-cernica/54093217/"
+   ]
+  },
+  {
+   "id": "c-padurea-pustnicu",
+   "name": "Pădurea Pustnicu",
+   "k": "nature_reserve",
+   "kind": "Pădure",
+   "lat": 44.472272,
+   "lon": 26.307466,
+   "city": "Brănești",
+   "story": "Pădure sălbatică pe malul lacului Pasărea. „Ruta 10” e un traseu de bicicletă de 10 km pe drumuri forestiere (are și o variantă de 5 km) care pornește din parcarea restaurantului Casa Pustnicu. Mai ai o potecă pe malul lacului, bună de alergat, și câteva locuri de grătar. După ploaie e noroi.",
+   "crowd": "în weekend, pe vreme uscată",
+   "vibes": [
+    "Aer liber",
+    "Competitiv",
+    "Chill"
+   ],
+   "price": 0,
+   "sources": [
+    "https://www.g4media.ro/video-primul-traseu-pentru-biciclete-amenajat-exclusiv-in-padure-in-zona-bucuresti-ilfov-inaugurat-ruta-10-a-fost-amenajata-in-padurea-pustnicu.html",
+    "https://ski-outdoor.ro/outdoor/2022/07/28/traseu-de-biciclete-pe-drumuri-forestiere-in-padurea-pustnicu-ilfov/",
+    "https://www.bucuresti.ro/articole/tur-ghidat-in-afara-bucurestiului-5-locuri-mai-putin-stiute-la-doar-30-de-minute-de-capitala-padurea-ascunsa-parcul-cu-arbori-rari-si-schitul-de-pe-malul-lacului-1750"
+   ]
+  },
+  {
+   "id": "c-lacul-snagov",
+   "name": "Lacul Snagov",
+   "k": "park",
+   "kind": "Lac",
+   "lat": 44.707738,
+   "lon": 26.173835,
+   "city": "Snagov",
+   "story": "Din Snagov Sat pleacă plimbări de o oră cu barca prin rezervația naturală a lacului, cu ghid audio. Pe insula din mijloc e Mănăstirea Snagov, din secolul al XIV-lea, unde legenda spune că ar fi îngropat Vlad Țepeș; pe malul ei se poate opri barca. În bazele de agrement de pe mal închiriezi bărci cu vâsle, caiace sau SUP.",
+   "crowd": "vara, în weekend",
+   "vibes": [
+    "Chill",
+    "Aer liber",
+    "Cultură"
+   ],
+   "sources": [
+    "https://buletin.de/bucuresti/povestiri-la-bordul-vaporasului-pe-lacul-snagov-cat-costa-plimbarile-pe-apa-insotite-de-ghiduri-audio-prin-rezervatia-naturala/",
+    "https://snagov.ro/services/circuite-plimbari-ture/circuit-vaporas/",
+    "https://ilfovul.ro/lacul-snagov-ghid-complet/"
+   ]
+  },
+  {
+   "id": "c-club-guesthouse",
+   "name": "Club Guesthouse",
+   "k": "nightclub",
+   "kind": "Club de muzică electronică",
+   "lat": 44.411758,
+   "lon": 26.118599,
+   "city": "București",
+   "story": "Buncărul techno al Bucureștiului, din decembrie 2010, în complexul unei foste fabrici de pe Splaiul Unirii 160: sistem de sunet Funktion-One, pereți plini de stickere și regula „fără telefoane” pe ring.",
+   "crowd": "miercuri–sâmbătă, mai ales vineri și sâmbătă noaptea",
+   "vibes": [
+    "Party"
+   ],
+   "sources": [
+    "https://www.clubguesthouse.ro/contact",
+    "https://www.corner.inc/place/pDPuyqoHEDTt",
+    "https://www.entertix.ro/evenimente/34962/tricky-live-club-guesthouse-bucuresti-11-iunie-2026-guesthouse-bucuresti.html"
+   ]
+  }
+ ],
+ "drop": {
+  "w1117479826": "institut de cercetare, nu un muzeu deschis pentru ieșit",
+  "n2872402331": "negăsit pe Google; galeria e în Combinatul Fondului Plastic (adăugat separat)",
+  "w241997161": "amfiteatru universitar, fără program public",
+  "w23705047": "amfiteatru în parc doar cu evenimente rare",
+  "n2872402327": "galerie mică, interes redus pentru o ieșire",
+  "n2749532010": "galerie comercială mică; păstrăm hub-urile mari",
+  "n2872402328": "negăsit pe Google",
+  "w86553108": "dublură ARCUB, negăsit pe Google",
+  "n2467918814": "arhivă, nu e deschisă publicului (sălile ei sunt Eforie și Union)",
+  "n6920145517": "negăsit pe Google",
+  "n10778202975": "negăsit pe Google; locația Art Safari neconfirmată",
+  "n2872402329": "negăsit pe Google",
+  "n6907430602": "galerie online/atelier, nu un loc de vizitat",
+  "n7072094240": "asociație, nu teatru cu program public",
+  "n2872402333": "galerie mică; neverificat",
+  "n2872423667": "negăsit pe Google",
+  "n10147382210": "atelier în Combinatul Fondului Plastic (inclus acolo)",
+  "w1109022310": "negăsit; atelier în Combinatul Fondului Plastic",
+  "n13607930365": "atelier de grafică, nișă",
+  "n2872423668": "negăsit pe Google",
+  "n9735047941": "sală de nișă; neverificat",
+  "w1471936597": "școală de balet, nu loc de ieșit",
+  "n2634651890": "negăsit pe Google",
+  "n2634651950": "casă memorială mică, program restrâns",
+  "n2634651992": "casă memorială mică, program restrâns",
+  "n2634652016": "casă memorială mică, program restrâns",
+  "n2634652142": "casă memorială mică, interes redus pentru tineri",
+  "w912686503": "casă memorială mică, fără program clar",
+  "n2872402334": "magazin de materiale și galerie mică",
+  "n5477585107": "centru cultural cu program de birou",
+  "w705080782": "centru de protecția copilului, nu e deschis publicului",
+  "w740152474": "instituție administrativă (CNC)",
+  "r2230393": "clădire de văzut din afară; restaurantul e listat separat",
+  "w1481066687": "închis, clădire abandonată",
+  "n7231261676": "negăsit pe Google",
+  "n2634652026": "închis (OSM: closed)",
+  "n2634652183": "colecție religioasă de nișă",
+  "n2634652241": "colecție de mănăstire, nișă",
+  "n2634652251": "dublură Mănăstirea Cernica",
+  "n2634652874": "colecție de mănăstire, nișă",
+  "n2634653097": "colecție de mănăstire, nișă",
+  "n2634652271": "colecție locală mică",
+  "n2634652940": "negăsit pe Google",
+  "w1031378073": "conac nevizitabil",
+  "w1316176597": "conac folosit pentru evenimente private",
+  "w612191194": "conac în ruină, nevizitabil",
+  "w781198789": "instituția care găzduiește Teatrelli (păstrat separat)",
+  "n2872423669": "negăsit pe Google",
+  "n10775260918": "magazin/galerie comercială",
+  "n9412806036": "galerie comercială",
+  "n2587595059": "neverificat",
+  "n12318228499": "galerie mică",
+  "n2872402335": "negăsit pe Google",
+  "n9250389007": "negăsit pe Google",
+  "n255088136": "face parte din MNAR (păstrat)",
+  "n2872402336": "negăsit pe Google",
+  "n2872423670": "negăsit pe Google",
+  "n2872402338": "galerie mică, nișă",
+  "n2872402337": "galerie mică; neverificat",
+  "n6513765648": "galerie comercială mică",
+  "n10147382214": "galerie în Combinatul Fondului Plastic (inclus acolo)",
+  "n10147382213": "galerie în Combinatul Fondului Plastic (inclus acolo)",
+  "n12318285854": "galerie mică, program restrâns",
+  "n2502067814": "galerie mică, program de birou",
+  "n3359325004": "neverificat",
+  "n2872403923": "negăsit pe Google",
+  "n849372287": "dublură: sala IMAX e în Cinema City AFI Cotroceni (păstrat)",
+  "n1741344816": "negăsit pe Google",
+  "w168680322": "dublură: Cinema Elvire Popesco (păstrat) e în aceeași clădire",
+  "n10147382212": "galerie în Combinatul Fondului Plastic (inclus acolo)",
+  "n2872403925": "galerie comercială mică",
+  "n1213250524": "laborator de film, nu cinema",
+  "n2872423672": "negăsit pe Google",
+  "n2872423673": "neverificat",
+  "w263323014": "mănăstire fără interes pentru vizitatori",
+  "w23491442": "biserică istorică fără program de vizitare",
+  "w1324485970": "mănăstire catolică, nu e loc de vizitat",
+  "w891254538": "mănăstire departe, interes redus",
+  "w1324485973": "mănăstire nouă, fără interes de vizitare",
+  "w379370065": "mănăstire fără interes pentru tineri",
+  "w177480930": "mănăstire fără program pentru vizitatori",
+  "w1026232362": "mănăstire fără interes de vizitare",
+  "w1169401746": "mănăstire departe, interes redus",
+  "w1333542840": "mănăstire fără interes pentru tineri",
+  "w241276018": "mănăstire nouă, fără interes de vizitare",
+  "n10778202977": "neverificat",
+  "n11916543515": "neverificat",
+  "n2872403926": "negăsit pe Google",
+  "n11361411667": "galerie mică, program restrâns",
+  "n10775260927": "magazin/galerie comercială",
+  "w179319668": "închis (OSM: closed), negăsit",
+  "n2634652031": "muzeu religios mic",
+  "n2634652136": "închis pentru restaurare (OSM: closed)",
+  "n2634652138": "muzeu mic, interes redus pentru o ieșire",
+  "n2634652661": "doar cu programare de grup",
+  "w999873708": "muzeu mic, recenzii slabe",
+  "n2634652186": "muzeu secundar al MNAR, interes redus",
+  "n8043746985": "pentru copii",
+  "n2634652153": "muzeu memorial mic",
+  "w529040882": "vecin cu Vila Minovici (păstrată); interes redus",
+  "n2634651874": "program foarte restrâns",
+  "n14181324174": "neverificat",
+  "n2634652441": "negăsit pe Google",
+  "w243925663": "dublură Mănăstirea Cernica",
+  "n2634651903": "închis (OSM: closed), negăsit",
+  "n2634651916": "muzeu memorial mic",
+  "n2634651941": "muzeu memorial, program restrâns",
+  "w23556233": "dublură Muzeul Militar Național (păstrat)",
+  "n10898721104": "negăsit; dublură Muzeul Municipiului",
+  "n2634652840": "muzeu mic, interes redus",
+  "n6275995659": "interes redus pentru o ieșire",
+  "n10886384891": "neverificat dacă s-a redeschis după restaurare",
+  "n2634652847": "muzeu de nișă",
+  "w23611090": "muzeu de nișă",
+  "n2634652846": "muzeu de nișă",
+  "n3424574370": "negăsit pe Google",
+  "n13824624844": "neverificat",
+  "n2634652560": "program de birou, interes redus",
+  "n2634651973": "muzeu de nișă, program restrâns",
+  "n6551718804": "program de birou, nișă",
+  "w215350961": "dublură casa Tudor Arghezi",
+  "n2634652680": "muzeu universitar, nișă",
+  "w251129768": "muzeu universitar, nișă",
+  "n2872402339": "galerie mică (aceeași clădire cu Simeza)",
+  "w163127914": "pentru copii",
+  "w1456390102": "acum hotel, nu loc de vizitat",
+  "w27634114": "palat nevizitabil",
+  "w232472401": "dublură: Palatul Regal = MNAR (păstrat)",
+  "w828136061": "hotel și sală de evenimente",
+  "w407754956": "negăsit; folosit pentru evenimente private",
+  "n849372213": "cinema închis (OSM: closed)",
+  "n10775260926": "negăsit pe Google",
+  "n11067430928": "galerie comercială mică",
+  "w435101321": "neverificat",
+  "n2532095807": "neverificat",
+  "w23556959": "a doua sală CNDB (păstrat CNDB)",
+  "n6163869664": "sala ansamblului folcloric, interes redus pentru tineri",
+  "n7613023108": "dublură ARCUB (păstrat)",
+  "n2872403927": "galerie mică; neverificat",
+  "w1109022311": "galerie în Combinatul Fondului Plastic (inclus acolo)",
+  "n10753053205": "galerie mică",
+  "n10147382209": "negăsit; în Combinatul Fondului Plastic",
+  "n10147382215": "negăsit; în Combinatul Fondului Plastic",
+  "n166341331": "dublură: Sala Izvor = Sala Liviu Ciulei (păstrată)",
+  "n10948504680": "a doua sală a Teatrului de Comedie (păstrat)",
+  "n2617481588": "pentru copii",
+  "w274427973": "negăsit; pentru copii",
+  "w197841644": "neverificat",
+  "n11047669593": "teatru de vară în parc, fără program constant",
+  "w28342020": "teatru de vară, fără program constant",
+  "n11385598252": "pentru copii",
+  "w167182972": "negăsit; Teatrul Masca e păstrat la adresa din Militari",
+  "n7216902495": "negăsit pe Google",
+  "w1472212055": "pentru copii",
+  "n2872403931": "negăsit pe Google",
+  "n2872403932": "spațiu de închiriat pentru evenimente, fără program public constant",
+  "w1109022312": "negăsit; în Combinatul Fondului Plastic",
+  "n10147382211": "galerie în Combinatul Fondului Plastic (inclus acolo)",
+  "n2872403933": "negăsit pe Google",
+  "n2872403934": "negăsit pe Google",
+  "n2872423674": "negăsit pe Google",
+  "w1415127396": "teren de club, nerezervabil",
+  "r16035562": "club de tenis mic; avem alte terenuri",
+  "w685112367": "negăsit; teren de cartier",
+  "w28050464": "negăsit pe Google",
+  "w1226777019": "bază de fotbal de cartier; păstrăm cluburile mari",
+  "w23583019": "negăsit; bază de club",
+  "w981687802": "bază de club, nerezervabilă",
+  "w848452176": "abandonată",
+  "w393036565": "bază de cartier; avem alte terenuri",
+  "w848875778": "abandonată",
+  "w1072292836": "teren municipal gratuit, nerezervabil",
+  "w813947746": "negăsit; bază universitară",
+  "w236071707": "bazin școlar",
+  "w38757552": "bazin de antrenament, nu e o ieșire",
+  "w858609086": "bazin de club",
+  "w225503015": "negăsit pe Google",
+  "w170953587": "bazin universitar",
+  "w191144455": "bazin de antrenament",
+  "w40724996": "bazin de antrenament",
+  "w920934041": "bazin de cartier",
+  "n12765679610": "bazin de club",
+  "w699317788": "bazin de club",
+  "n9871123617": "bazin olimpic de antrenament, acces limitat",
+  "w42935214": "negăsit; teren de cartier",
+  "w972807375": "negăsit pe Google",
+  "w1160432997": "negăsit pe Google",
+  "w392489214": "negăsit pe Google",
+  "w23705158": "centru federal; avem alte terenuri de tenis",
+  "w14450116": "golf de club, acces limitat",
+  "w34376402": "bazin de cartier",
+  "w236835221": "stadion de club",
+  "n11216073804": "neverificat",
+  "n6621302168": "neverificat (etichetă greșită?)",
+  "n13164499536": "dublură Grădina Zoologică (păstrată)",
+  "n9156063382": "negăsit pe Google",
+  "w878203766": "negăsit pe Google",
+  "w23673773": "teren de club",
+  "w23583422": "negăsit; teren de club",
+  "w23608496": "club de tenis de cartier; neverificat",
+  "n8691238511": "neverificat",
+  "w263961419": "teren de cartier",
+  "w230389804": "pentru copii",
+  "w123089723": "negăsit pe Google",
+  "w1168911692": "neverificat",
+  "w1172414352": "bază de cartier; păstrăm cluburile mari",
+  "w1188646881": "închis (OSM: closed)",
+  "w358718859": "club de înot pentru cursuri",
+  "n6377646615": "negăsit; dublură Equestria",
+  "w23717864": "ștrand de cartier",
+  "w23561825": "ștrand de cartier; neverificat",
+  "w27990894": "ștrand de cartier, sezonier",
+  "w772501798": "club de tenis pentru antrenamente",
+  "w1016152679": "club pentru copii",
+  "w739431922": "club de tenis mic",
+  "w1177919783": "negăsit pe Google",
+  "w1170512639": "teren fără nume",
+  "w1201085604": "teren fără nume",
+  "w191148918": "trambulină de sărituri în apă, bazin de antrenament",
+  "n2865940383": "privat, pentru bebeluși",
+  "w1420394521": "pajiște protejată de ~10 ha, fără alei sau amenajări; nu e loc de ieșire",
+  "w828136066": "bază sportivă de canotaj, nu parc public",
+  "w1296716083": "colecție a ocolului silvic, nu am găsit că se vizitează; Pădurea și Lacul Snagov acoperă zona",
+  "w23608434": "e campusul studențesc Leu, nu parc",
+  "w23557177": "grădina Palatului Cotroceni, acces interzis (access=no)",
+  "w1323645807": "parc de cartier în Chiajna, neverificat ca destinație",
+  "w1173862898": "fermă cu animale pentru copii; mai potrivită la activități de familie",
+  "w43272996": "insulă din Parcul IOR, duplicat",
+  "w983580439": "insulă fără acces/amenajări cunoscute",
+  "w14451012": "parte din Herăstrău, duplicat",
+  "w487731551": "parc mic de oraș (Buftea), ~3 ha",
+  "r8321292": "duplicat Parcul IOR (am păstrat r8321313)",
+  "w23692562": "parc de cartier (12 ha), urmează modernizare",
+  "r13220503": "parc mic (3,3 ha); lacul era fără apă în aug. 2026",
+  "w28831219": "parc mic de oraș (Otopeni)",
+  "w1062719906": "scuar mic (~2,5 ha)",
+  "w28241031": "scuar mic de cartier",
+  "w23612226": "lacul e în stare proastă, parcul intră în reabilitare (2025–2026)",
+  "r8353393": "parc mic de cartier (Titan)",
+  "w1160395218": "parc mic de oraș (Corbeanca)",
+  "w149419543": "parc de cartier, fără ceva special",
+  "w1381347872": "parcul unui colegiu silvic, acces public neverificat",
+  "w407167229": "parc mic de oraș (Buftea)",
+  "w607298984": "parc de cartier",
+  "w801382309": "scuar de cartier",
+  "w969814412": "parc de cartier, neverificat",
+  "w586357887": "parc de cartier; Herăstrău e alături și e mult mai bun",
+  "w23704035": "parc de cartier",
+  "w23706618": "parc de cartier",
+  "w23679596": "parc de cartier",
+  "w408570351": "parc de cartier, fără ceva special",
+  "w685369066": "parc de cartier, neverificat",
+  "w23770990": "scuar mic",
+  "w14262324": "mai mult gazon pentru festivaluri; nu e o ieșire în sine",
+  "w23697530": "parc mic de cartier",
+  "w23581184": "parc de cartier",
+  "w23737310": "parc de cartier",
+  "w586356880": "în reabilitare; zona lacului se redeschide abia în ian. 2027 — de reluat atunci",
+  "w23705733": "scuar de cartier",
+  "w23556382": "scuar lângă Operă",
+  "w23721148": "parc mic de cartier",
+  "w23583153": "șantier: reamenajarea pe etape a început în oct. 2026 — de reluat după",
+  "w23583196": "duplicat Plumbuita, tot șantier",
+  "w88337012": "duplicat Herăstrău",
+  "w91797290": "duplicat Herăstrău",
+  "w23490535": "parc de cartier",
+  "w23652333": "parc mic de cartier (~4 ha)",
+  "w235974932": "parc de cartier",
+  "w23739420": "parc de cartier",
+  "w819885742": "parc de cartier",
+  "w718970300": "scuar de cartier",
+  "w23751031": "parc mic lângă IOR",
+  "w1054221333": "parc de cartier (Berceni)",
+  "w259482040": "parc de cartier",
+  "w1086229087": "parc nou de oraș (Chitila), local; nu am confirmat că e gata",
+  "w23583450": "parc de cartier",
+  "w1422672324": "nu există pe Google, probabil parcul unui ansamblu rezidențial",
+  "n3414081989": "neverificat",
+  "n11638271659": "pub de gaming de nișă, neverificat",
+  "n1313962113": "bar/pub de cartier, fără ceva aparte",
+  "n2486324755": "cafenea-bar generică",
+  "n2981929463": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n628640533": "generic, neverificat",
+  "n11361661471": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1726036430": "neverificat",
+  "n2441208843": "Bamboo s-a închis și a devenit OXYA; adresa și programul actual neclare, recenzii mixte",
+  "n5207955896": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n2456026950": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4456565391": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n5076893594": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n11892243882": "neverificat (program de zi, 12–22)",
+  "n11096639769": "neverificat",
+  "n3570850793": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n14059905001": "neverificat",
+  "w1545133204": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1295875083": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "w954952572": "neverificat",
+  "n9199197647": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1487149122": "duplicat/adresă veche a Beer O’Clock; negăsit pe Google",
+  "n7613023091": "club comercial, neverificat",
+  "n7613023088": "berărie turistică din Centrul Vechi",
+  "n1416623901": "pub turistic din Centrul Vechi",
+  "n1738605903": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4518003489": "bar/pub de cartier, fără ceva aparte",
+  "w1301793980": "bar/pub de cartier, fără ceva aparte",
+  "w256200924": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n9366184117": "neverificat",
+  "n4550151125": "cafenea-pub de cartier (program până la 22)",
+  "n1416626233": "pub turistic din Centrul Vechi",
+  "n2486324757": "restaurant-bar obișnuit (aceeași clădire cu Nomad, păstrat acela)",
+  "n10775253404": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n10775253369": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n2452954595": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n11530572917": "bar/pub de cartier, fără ceva aparte",
+  "n2498865760": "cafenea de cartier",
+  "n12857634419": "cafenea de ciocolată, nu bar",
+  "w153452086": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n7613013080": "bar comercial din Centrul Vechi",
+  "n10775253370": "bar comercial din Centrul Vechi",
+  "n2876969501": "bar/pub de cartier, fără ceva aparte",
+  "n4404905890": "duplicat: Expirat (n10964569389), aceeași adresă",
+  "w49478635": "duplicat: Fabrica (w1449607814), aceeași clădire",
+  "n4524097189": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n9422684494": "neverificat",
+  "n2569444845": "neverificat",
+  "n7476801786": "pub studențesc din Regie, generic",
+  "n3118882252": "generic, neverificat",
+  "n3647445854": "ștrand/club de plajă la Cernica, nu loc de ieșit seara",
+  "n6874193940": "pub de cartier",
+  "n7622689031": "pub de meciuri, generic",
+  "n1416623907": "berărie turistică din Centrul Vechi",
+  "n4548620589": "neverificat",
+  "n4291097989": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n2027805090": "neverificat (n-am găsit surse în această trecere)",
+  "n3766017232": "brasserie generică",
+  "n2918314870": "bar/pub de cartier, fără ceva aparte",
+  "n2484809316": "berărie de cartier generică",
+  "w599922728": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n6988883364": "pub de cartier",
+  "n2979373166": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n11543760229": "neverificat",
+  "n13679263401": "bar/pub de cartier, fără ceva aparte",
+  "n2841152761": "cafenea-vinotecă de cartier",
+  "n3211314261": "club comercial, neverificat",
+  "n7613023097": "club comercial din Centrul Vechi, nimic aparte",
+  "n1399214938": "club studențesc din Regie, generic",
+  "n7613023115": "negăsit pe Google",
+  "n2463617058": "bar de hotel (Athénée Palace), program de zi",
+  "n4735277122": "generic, neverificat",
+  "n7613023099": "pub de meciuri, generic",
+  "w247015087": "neverificat",
+  "w202689090": "club comercial, neverificat",
+  "n4185616896": "bar/pub de cartier, fără ceva aparte",
+  "n11186371908": "neverificat",
+  "n5290479714": "același complex cu Fratelli Studios (păstrat acela)",
+  "n2457438681": "același complex cu Fratelli Studios; doar vara",
+  "n1416523788": "cafenea-bar generică",
+  "n4272755690": "bar/pub de cartier, fără ceva aparte",
+  "n13764774155": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n10775260907": "neverificat (bar de board games)",
+  "n2479026840": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n11694509495": "neverificat (n-am găsit surse în această trecere)",
+  "n2847265801": "închis: Grădina Eden din curtea Palatului Știrbei s-a închis când a expirat contractul cu proprietarul",
+  "n6582595289": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1814904386": "pub de meciuri, generic",
+  "n5074563140": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n7608946002": "generic, neverificat",
+  "n3147680991": "neverificat",
+  "n2486324774": "lounge generic, neverificat",
+  "n1829798963": "bar/pub de cartier, fără ceva aparte",
+  "n4363439143": "bar/pub de cartier, fără ceva aparte",
+  "n4363436537": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4363436377": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1416626264": "pub turistic din Centrul Vechi",
+  "n9711421104": "bar/pub de cartier, fără ceva aparte",
+  "n10728177839": "bar/pub de cartier, fără ceva aparte",
+  "n1758983402": "club comercial din Centrul Vechi, nimic aparte",
+  "n11037311104": "bar de hotel",
+  "n4512969189": "bar/pub de cartier, fără ceva aparte",
+  "n4272738690": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4272738692": "bar/pub de cartier, fără ceva aparte",
+  "n2460684201": "bar/pub de cartier, fără ceva aparte",
+  "n8654465495": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4980346421": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1829798894": "bar/pub de cartier, fără ceva aparte",
+  "n972950465": "magazin/bistro, nu bar",
+  "n2621106559": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n10775260923": "club comercial din Centrul Vechi, nimic aparte",
+  "n9943494831": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n3707388579": "neverificat",
+  "n2288307304": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n11067430941": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n3028685333": "bar/pub de cartier, fără ceva aparte",
+  "n4395232476": "neverificat (n-am găsit surse în această trecere)",
+  "n13247354036": "sală de biliard",
+  "w153446689": "bar/pub de cartier, fără ceva aparte",
+  "w693861079": "neverificat",
+  "n7623037421": "neverificat",
+  "n12892532983": "bar/pub de cartier, fără ceva aparte",
+  "n11068954279": "neverificat",
+  "n2455132923": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n3067078344": "pub de gaming de nișă, neverificat",
+  "n9017905949": "neverificat",
+  "n6388075686": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n3135903530": "pub tematic de lanț",
+  "n11511308426": "pub tematic de lanț; negăsit pe Google",
+  "n10775253374": "bar de petrecere comercial din Centrul Vechi",
+  "n7057805151": "generic, neverificat",
+  "w153452101": "neverificat",
+  "n6975727352": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n2296190883": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n10775253402": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4729809761": "generic, neverificat",
+  "n1416623913": "club comercial din Centrul Vechi, nimic aparte",
+  "n1416520165": "generic, neverificat",
+  "n6311770059": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n10775253403": "lanț turistic (vișinată din Lviv), nimic local",
+  "n4723654804": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1163550599": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n6464450486": "generic, neverificat",
+  "n11009898060": "bar/pub de cartier, fără ceva aparte",
+  "n1744636490": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n2615818178": "pub obișnuit (frate cu Terminus, păstrat acela)",
+  "n7613023127": "neverificat",
+  "w153446693": "bar/pub de cartier, fără ceva aparte",
+  "n13308353074": "neverificat",
+  "n2570329815": "generic, neverificat",
+  "n3142491332": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n12688650476": "bar/pub de cartier, fără ceva aparte",
+  "n13503680623": "bar/pub de cartier, fără ceva aparte",
+  "n9353065456": "bar/pub de cartier, fără ceva aparte",
+  "n4543671189": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n11795229276": "generic, neverificat",
+  "n10775253367": "bar de shoturi de lanț",
+  "n2016987050": "pub de cartier",
+  "n7057819083": "neverificat",
+  "n7613013079": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1113946009": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4195126091": "generic, neverificat",
+  "n6988883362": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n1416513554": "pub irlandez obișnuit, nimic aparte",
+  "n8464759917": "închis (marcat „Închis” chiar în OSM)",
+  "n3257106261": "negăsit pe Google (filiala din București a barului din Vama Veche)",
+  "n6324709233": "neverificat",
+  "n9729698795": "neverificat; aceeași adresă cu Green Hours (adăugat)",
+  "n10775260917": "neverificat",
+  "w411804098": "bar/pub de cartier, fără ceva aparte",
+  "n3497280994": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n12180485085": "bar/pub de cartier, fără ceva aparte",
+  "w1064492912": "bar/pub de cartier, fără ceva aparte",
+  "n4861543673": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n4550726596": "bar/pub de cartier, fără ceva aparte",
+  "n12843632998": "bar/pub de cartier, fără ceva aparte",
+  "n7746211487": "bar/pub de cartier, fără ceva aparte",
+  "n6968373510": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n10734997449": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n9228466808": "lobby-ul hotelului Marmorosch; păstrat The Vault, din același hotel",
+  "n2473209494": "notă mică (3,8 pe Tripadvisor), nimic aparte",
+  "n327224704": "pub irlandez obișnuit, nimic aparte",
+  "n2826880099": "pub de cartier",
+  "n7293870985": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n2468602240": "bar/pub de cartier, fără ceva aparte",
+  "n7602227264": "pub obișnuit",
+  "n4638558489": "neverificat",
+  "n1416616474": "pub obișnuit din Centrul Vechi",
+  "n7613013077": "bar comercial din Centrul Vechi",
+  "n7613023096": "bar comercial din Centrul Vechi",
+  "n2139417233": "generic, neverificat",
+  "n6564811971": "bar comercial din Centrul Vechi",
+  "n2291445691": "lounge generic, neverificat",
+  "n2486324818": "neverificat",
+  "n11288715941": "neverificat",
+  "n11208070638": "sală de evenimente, nu bar",
+  "n11292683912": "neverificat",
+  "n2288361159": "neverificat",
+  "n10594123456": "neverificat",
+  "n4890177182": "bar/pub de cartier, fără ceva aparte",
+  "n7613023087": "negăsit pe Google Maps (probabil închis sau inexistent)",
+  "n11223236584": "neverificat",
+  "n2582593270": "generic, neverificat",
+  "n11252490940": "negăsit pe Google Maps (probabil închis sau inexistent)"
+ }
+}
