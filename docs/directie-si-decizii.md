@@ -285,6 +285,13 @@ Planul complet e în documentul „CeFaci — Banii și taxele: cum nu intrăm �
 - Pe Acasă apare un rând care se derulează cu primele 5. „Vezi toate” deschide ecranul Live Drops.
 - „Ia oferta” rezervă oferta pentru tine 45 de minute și o pune ca bilet în Planuri, cu cod QR de arătat la casă. Dacă nu ajungi, oferta revine altcuiva.
 - Ordinea e după distanță și după cât timp a mai rămas, nu după cine plătește. Notificările vin doar dacă le-ai activat, maximum una pe zi.
+- **Reducerile din Live Drops (decizie Cornel, 06.10): Plus e mereu mai bun decât gratis.**
+  - Pentru toți (gratis): între 10% și 15%.
+  - Pentru Plus: cel puțin 15% și mereu cu cel puțin 5 puncte peste reducerea pentru toți (10% → Plus ≥ 15%; 15% → Plus ≥ 20%), cel mult 30%.
+  - Localul alege un singur număr (pentru toți), iar Plus se calculează singur (+5); poate da mai mult la Plus, în limită.
+  - Reducerile nu se adună: într-un drop, clientul Plus primește prețul Plus al drop-ului, nu drop + reducerea Plus obișnuită.
+  - Drop-urile care nu sunt în procente (ceva gratis, 1+1, ofertă de grup): Plus le vede cu 10 minute mai devreme; „ceva în plus pentru Plus” e opțional.
+  - În Business, bara de reducere nu iese din limite și arată „Toți: −15% · Plus: −20%”. Regula se scrie și în baza de date (ca rolurile din Admin), ca să nu se poată ocoli.
 
 ## Planuri multiple
 
