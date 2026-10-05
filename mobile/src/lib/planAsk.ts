@@ -9,6 +9,7 @@ import type { PlanAsk } from '../../../src/app/bridge';
 import { addDays, dateShort, eveningOf, eveningWord, isoDay, momentOf, whenWords } from '../../../src/engine/time';
 import { APP } from './session';
 import { crewHasMinor, crewTaste } from './crews';
+import { checkOpen, closedNow, needsCheck, type Live } from './liveOpen';
 import type { Taste } from '../../../src/engine/types';
 
 export type Made = ReturnType<typeof APP.makePlans>;
@@ -175,7 +176,7 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
   return new Promise((done) => void Promise.all([taste, minorQ]).then(([tt, crewMinor]) => setTimeout(() => {
     if (id !== runId) { done(s); return; } // a newer request is on its way: this one is dropped
     // a surprise leaves out the places of the last surprises (two days), as long as something is left
-    const avoid = [...(o.avoid ?? []), ...(o.surprise ? recentSurprises() : [])];
+    const avoid = [...(o.avoid ?? []), ...(o.surprise ? recentSurprises() : []), ...closedNow()];
     let r = APP.makePlans(askOf(d), avoid, tt, crewMinor);
     if (!r.plans.length && avoid.length) r = APP.makePlans(askOf(d), o.avoid ?? [], tt, crewMinor);
     if (!r.plans.length && o.avoid?.length) r = APP.makePlans(askOf(d), [], tt, crewMinor);
@@ -188,7 +189,51 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
     s = { ...s, notice: o.notice ?? minorNote, plans: r.plans, note: r.note, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
     emit();
     done(s);
+    // then Google is asked whether they are really open at those hours; a closed one is swapped for another
+    void verifyLive(id, (extra) => APP.makePlans(askOf(d), [...avoid, ...extra], tt, crewMinor));
   }, 30)));
+}
+/** When a step ends, as a moment (its `until` is "HH:MM", after midnight on the next day). */
+function untilOf(at: Date, until: string): Date {
+  const [h, m] = until.split(':').map(Number);
+  const u = new Date(at.getTime()); u.setHours(h, m, 0, 0);
+  if (u.getTime() <= at.getTime()) u.setDate(u.getDate() + 1);
+  return u;
+}
+/** The plans with what Google said: "Verificat acum pe Google: deschis până la 02:00" instead of Bilu's guess. */
+function withLive(plans: Shown[], live: Record<string, Live>): Shown[] {
+  return plans.map((p) => {
+    const asked = p.steps.filter((x) => needsCheck(x.place.real.k, x.place.real.cat));
+    if (!asked.length || !asked.every((x) => live[x.place.id]?.open === true)) return p;
+    const one = asked.length === 1 ? live[asked[0].place.id] : null;
+    const text = 'Verificat acum pe Google: ' + (p.steps.length === 1 ? 'deschis' + (one?.closes ? ' până la ' + one.closes : '') : 'toate deschise la ora lor');
+    const checks = [{ ok: true, text }, ...p.checks.filter((c) => !/^Deschis la|^Toate deschise|^Program neconfirmat/.test(c.text))];
+    return { ...p, checks };
+  });
+}
+async function verifyLive(id: number, again: (closed: string[]) => Made) {
+  const closed: string[] = [];
+  for (let round = 0; round < 2; round++) {
+    const items = new Map<string, { id: string; name: string; lat: number; lon: number; at: Date; until?: Date }>();
+    for (const p of s.plans) for (const x of p.steps) {
+      if (!needsCheck(x.place.real.k, x.place.real.cat) || items.has(x.place.id)) continue;
+      const at = new Date(x.at);
+      items.set(x.place.id, { id: x.place.id, name: x.place.name, lat: x.place.real.lat, lon: x.place.real.lon, at, until: untilOf(at, x.until) });
+    }
+    const live = await checkOpen([...items.values()]);
+    if (id !== runId) return;
+    const shut = Object.entries(live).filter(([, v]) => v.open === false).map(([k]) => k);
+    if (!shut.length || round === 1) { s = { ...s, plans: withLive(s.plans, live) }; emit(); if (!shut.length) return; }
+    if (round === 1) return;
+    // closed at that hour: the plans again without them, and Bilu says so
+    closed.push(...shut);
+    const r = again(closed);
+    if (id !== runId) return;
+    const names = shut.map((k) => [...items.values()].find((x) => x.id === k)?.name).filter(Boolean);
+    const said = names.length === 1 ? names[0] + ' e închis la ora aia (am verificat pe Google), așa că l-am schimbat.' : 'Am verificat pe Google: ' + names.slice(0, 3).join(', ') + ' sunt închise la ora aia, așa că le-am schimbat.';
+    s = { ...s, plans: r.plans, note: said + (r.note ? ' ' + r.note : ''), empty: r.empty, pick: Math.min(s.pick, Math.max(0, r.plans.length - 1)) };
+    emit();
+  }
 }
 /** "Altă surpriză": the next plan of the three, then three new ones without the places already shown. */
 export function nextSurprise(): Promise<S> | null {
