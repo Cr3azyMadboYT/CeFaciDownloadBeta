@@ -127,4 +127,16 @@ describe('Creează plan', () => {
       for (const x of ideas) if (!x.now) expect(x.at.getHours()).toBeGreaterThanOrEqual(10);
     }
   });
+  it('„Doar eu”: nimic ce cere companie (escape, biliard, bowling, terenuri, paintball), fără club ca primă idee', () => {
+    APP.savePrefs({ zone: 'centru', dist: '20', moves: ['walk', 'car'], here: undefined } as never);
+    const NEEDS_COMPANY = ['escape_game', 'billiards', 'bowling_alley', 'padel', 'tennis', 'squash', 'soccer', 'paintball', 'miniature_golf', 'biergarten'];
+    for (const [d, h] of [[0, 15], [0, 21], [1, 23]] as const) {
+      for (const mode of ['loc', 'seara'] as const) {
+        const plans = APP.makePlans({ mode, at: at(d, h), people: 1, budget: [0, 300], vibes: [] }).plans;
+        expect(plans.length, mode + ' ' + h).toBeGreaterThan(0);
+        for (const p of plans) for (const s of p.steps) expect(NEEDS_COMPANY, p.title + ': ' + s.place.real.name).not.toContain(s.place.real.k);
+        if (mode === 'loc') expect(plans[0].steps[0].place.real.k, 'prima idee pentru unul singur').not.toBe('nightclub');
+      }
+    }
+  });
 });

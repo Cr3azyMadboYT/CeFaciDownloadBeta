@@ -222,6 +222,13 @@ export const dayOnly = (v: Venue, t: Date) => !v.wk && !v.hours && info(v).night
 export const WHO_N: Record<Who, number> = { '1': 1, '2': 2, '34': 4, '5': 6 };
 /** Places a big group still fits in, with a call ahead (15 at a restaurant, a club, a cinema); a court or an escape
  * room has a real limit of people. */
+/** How good a kind is for one person on their own (0–1; others 0.6): a café, a museum, a film, a walk, a pool or the
+ * climbing wall are made for it; a club or a beer garden alone is not much of a night out. */
+const SOLO: Record<string, number> = {
+  cafe: 1, museum: 1, gallery: 1, cinema: 1, theatre: 1, arts_centre: 1, park: 1, botanical_garden: 1, nature_reserve: 1,
+  promenade: 1, planetarium: 1, swimming: 1, climbing: 1, ice_cream: 0.9, palace: 0.9, castle: 0.9, manor: 0.9, monastery: 0.9,
+  food_market: 0.9, square: 0.8, event_space: 0.8, bar: 0.6, restaurant: 0.6, fast_food: 0.6, pub: 0.5, nightclub: 0, biergarten: 0.2,
+};
 const ROOMY = new Set(['square', 'promenade', 'food_market', 'event_space', 'restaurant', 'fast_food', 'cafe', 'ice_cream', 'bar', 'pub', 'biergarten', 'nightclub', 'cinema', 'theatre', 'arts_centre', 'museum', 'gallery', 'bowling_alley', 'amusement_arcade', 'trampoline_park', 'ice_rink', 'karting', 'billiards', 'park', 'nature_reserve', 'botanical_garden', 'beach_resort', 'zoo', 'aquarium', 'water_park', 'theme_park', 'castle', 'palace', 'manor', 'monastery', 'planetarium', 'miniature_golf']);
 
 /**
@@ -246,6 +253,8 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   if (ask.budgetMin && price < ask.budgetMin) return null;
   const n = ask.people ?? WHO_N[ask.who];
   if (n > k.max && !ROOMY.has(v.k)) return null;
+  // an escape room, a court, billiards, bowling or paintball need company: not offered to one person
+  if (n < k.min) return null;
   const t = ask.at ?? targetTime(ask.when, k.night, ctx.now);
   // open when you get there, or very likely so (its kind at that hour); parks and palaces only by daylight
   const chance = openChance(v, t);
@@ -269,7 +278,8 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   const aproape = 10 * Math.max(0, 1 - d / Math.max(ask.maxKm, 1));
   const nou = ctx.history.includes(v.id) ? 0 : 10;
   const said = ctx.liked?.includes(v.id) ? 6 : ctx.disliked?.includes(v.id) ? -15 : 0;
-  const gasca = 10 * (n >= k.min && n <= k.max ? (n >= 3 && (k.cat === 'activitate' || k.cat === 'sport' || k.cat === 'bar') ? 1 : 0.8) : 0.3);
+  const gasca = 10 * (n === 1 ? SOLO[v.k] ?? 0.6 : n >= k.min && n <= k.max ? (n >= 3 && (k.cat === 'activitate' || k.cat === 'sport' || k.cat === 'bar') ? 1 : 0.8) : 0.3)
+    + (n === 1 && (v.k === 'nightclub' || v.k === 'biergarten') ? -12 : 0);
 
   // a court or a park is a good idea for those who like sport or the outdoors; for the others it comes after a place to sit
   const niche = (k.cat === 'sport' || k.cat === 'natura') && !want.some((w) => w === 'Competitiv' || w === 'Aer liber') ? -8 : 0;
@@ -293,6 +303,7 @@ export function scoreVenue(v: Venue, ask: Ask, ctx: Ctx): Scored | null {
   if (open.known) reasons.push(open.label);
   reasons.push(d < 1 ? 'La ' + Math.round(d * 1000) + ' m' : 'La ' + d.toFixed(1).replace('.', ',') + ' km');
   if (n >= 3 && k.cat === 'activitate') reasons.push('Bun pentru ' + n + ' persoane');
+  if (n === 1 && (SOLO[v.k] ?? 0) >= 1) reasons.push('Merge bine și singur');
   if (!ctx.history.includes(v.id)) reasons.push('N-ai mai fost');
   return { v, score, km: d, open, reasons: reasons.slice(0, 3), parts };
 }
