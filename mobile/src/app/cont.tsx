@@ -19,6 +19,7 @@ import { Icon } from '../ui/Icon';
 import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { Doodles } from '../ui/Doodles';
+import { isRudeName, RUDE_SAY } from '../../../src/app/names';
 
 const STEPS = ['start', 'name', 'zone', 'radius', 'likes', 'style', 'picks', 'friends', 'done'] as const;
 type Step = (typeof STEPS)[number] | 'email';
@@ -186,7 +187,9 @@ export default function Cont() {
   const minor = !!birthIso && (APP.age(birthIso) ?? 18) < 18;
   const bOk = age !== null && age <= 110;
   const ageNote = !birth ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : !bM ? 'Scrie data așa: 14.05.2004.' : !bOk ? 'Data nu pare bună. Verifică ziua, luna și anul.' : age! < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : age! < 18 ? 'Până la 18 ani îți arătăm doar locurile pentru oricine, fără baruri și cluburi.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.';
-  const nameOff = first.trim().length < 2 || !userOk || !bOk || age! < 16;
+  // nume urâte (Cornel, 06.10): Bilu cere alt nume; serverul verifică la fel
+  const rudeFirst = isRudeName(first), rudeUser = isRudeName(u);
+  const nameOff = first.trim().length < 2 || !userOk || !bOk || age! < 16 || rudeFirst || rudeUser;
   const onBirth = (x: string) => { const dg = x.replace(/\D/g, '').slice(0, 8); setBirth(dg.length > 4 ? dg.slice(0, 2) + '.' + dg.slice(2, 4) + '.' + dg.slice(4) : dg.length > 2 ? dg.slice(0, 2) + '.' + dg.slice(2) : dg); setAgeAsk(false); };
 
   // ---------- email ----------
@@ -214,7 +217,7 @@ export default function Cont() {
 
   const say: Partial<Record<Step, [Mood, string]>> = {
     email: ['hi', sent ? 'Ți-am trimis un cod pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod, ca să știu că ești tu.'],
-    name: ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
+    name: rudeFirst || rudeUser ? ['oops', RUDE_SAY] : ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
     zone: ['up', 'De unde pleci de obicei? Cel mai simplu: folosește locația ta. Sau alege tu orașul ori sectorul.'],
     radius: ['wink', 'Cât de departe ai merge pentru o seară bună? Ți-am pus raza în care ai destule locuri. O schimbi oricând de pe Acasă.'],
     likes: ['hi', likes.length >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac' + (first.trim() ? ', ' + first.trim() : '') + '. Așa știu de unde să încep.'],
@@ -355,11 +358,11 @@ export default function Cont() {
               <Lbl>Prenumele</Lbl>
               <Field value={first} onChangeText={(x) => setFirst(x.slice(0, 24))} placeholder="ex: Cornel" accessibilityLabel="Prenumele" autoCapitalize="words" autoComplete="given-name" textContentType="givenName"
                 focused={focus === 'fn'} onFocus={() => setFocus('fn')} onBlur={() => setFocus('')} />
-              <Muted>Prietenii îți văd prenumele și inițiala numelui.</Muted>
+              {rudeFirst ? <Note kind="err">{RUDE_SAY}</Note> : <Muted>Prietenii îți văd prenumele și inițiala numelui.</Muted>}
               <Lbl style={{ marginTop: 8 }}>Username</Lbl>
               <Field prefix="@" value={u} onChangeText={(x) => { setUser(clean(x)); setSaveErr(''); }} placeholder="cum te găsesc prietenii" accessibilityLabel="Username" autoCapitalize="none" autoCorrect={false}
                 focused={focus === 'un'} onFocus={() => setFocus('un')} onBlur={() => setFocus('')} />
-              {userTaken ? (
+              {rudeUser ? <Note kind="err">{RUDE_SAY}</Note> : userTaken ? (
                 <View style={{ gap: 8 }}>
                   <Note kind="err">{'@' + u + ' e deja luat. Încearcă una din astea:'}</Note>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>

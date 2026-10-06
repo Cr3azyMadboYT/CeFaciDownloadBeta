@@ -7,7 +7,10 @@ it('keeps every rule of the database', async () => {
   const db = new PGlite();
   const q = (s, p) => db.query(s, p);
   await db.exec(`
-    create role anon nologin; create role authenticated nologin;
+    create role anon nologin; create role authenticated nologin; create role service_role nologin;
+    -- like Supabase: everything new in public is granted to the API roles by name (RLS and revokes must hold anyway)
+    alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
+    alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
     create schema auth; create table auth.users (id uuid primary key);
     create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
     grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;
@@ -203,6 +206,22 @@ it('keeps every rule of the database', async () => {
   await expectFail('an admin cannot touch the founder', () => (async () => { await q(`update staff set role = 'admin' where user_id = $1`, [U.bob]); return as('bob', `select staff_remove($1)`, [U.ana]); })(), /Nu ai voie/);
   await expectFail('nobody changes their own role', () => as('ana', `select staff_set($1, 'suport')`, [U.ana]), /singur/);
   await q(`delete from staff where user_id in ($1, $2)`, [U.bob, U.cris]);
+
+  // what the public key (anon) and a signed-in phone can call
+  eq('anon can run no function', (await q(`select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute') order by 1`)).rows.map((r) => r.proname), []);
+  eq('server-only functions are closed to the app', (await q(`select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and p.proname in ('import_places', 'xp_bill', 'google_key') and has_function_privilege('authenticated', p.oid, 'execute')`)).rows, []);
+  eq('every table has row security', (await q(`select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity`)).rows, []);
+  await expectFail('the public key cannot import places', async () => { await db.exec(`reset role; set role anon;`); try { await q(`select import_places('[]'::jsonb, now())`); } finally { await db.exec('reset role'); } }, /permission denied/);
+  await expectFail('a phone cannot import places', () => as('bob', `select import_places('[]'::jsonb, now())`), /permission denied/);
+  await expectFail('a phone cannot give itself XP for a bill', () => as('bob', `select xp_bill($1, 'n1', current_date)`, [U.bob]), /permission denied/);
+
+  // rude names (decision Cornel, 06.10)
+  await expectFail('rude username', () => as('eve', `select * from complete_signup('pu1a_mea', 'Eva', '2000-01-01')`), /alt nume/);
+  await expectFail('rude first name', () => as('eve', `select * from complete_signup('eva.m', 'Muie', '2000-01-01')`), /alt nume/);
+  await expectFail('rude name, spelled out', () => as('ana', `update profiles set first_name = 'P.u.l.a' where id = $1`, [U.ana]), /alt nume/);
+  await expectOk('a normal name change', () => as('ana', `update profiles set first_name = 'Ursula' where id = $1`, [U.ana]));
+  await expectFail('rude crew name', () => as('ana', `select create_crew('Gașca de p1zda', 'pizza', '#FF6A4D', array[$1, $2]::uuid[])`, [U.bob, U.teen]), /alt nume/);
+  await expectFail('rude crew rename', () => as('bob', `update crews set name = 'cacaturi' where id = $1`, [crew]), /alt nume/);
 
     // account deletion
   await expectOk('delete account', () => as('cris', `select delete_my_account()`));

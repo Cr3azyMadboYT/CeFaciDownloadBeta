@@ -9,7 +9,8 @@ import { useApp } from '../lib/session';
 import { toast } from '../lib/toast';
 import { CrewMark } from '../ui/CrewMark';
 import { Icon } from '../ui/Icon';
-import { Big, Field, H1, Lbl, Muted, Note, Press, T } from '../ui/kit';
+import { Big, Field, H1, Lbl, Muted, Note, Press, Say, T } from '../ui/kit';
+import { isRudeName } from '../../../src/app/names';
 import { F, useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 
@@ -36,7 +37,9 @@ export default function GascaNoua() {
   const back = () => (router.canGoBack() ? router.back() : router.replace('/planuri'));
   const names = friends?.filter((f) => picked.includes(f.id)).map((f) => f.first_name) ?? [];
   const auto = names.length >= 2 ? 'Tu, ' + names.slice(0, 2).join(' și ') + (names.length > 2 ? ' și încă ' + (names.length - 2) : '') : 'ex: Gașca de vineri';
+  const rude = isRudeName(name);
   const create = async () => {
+    if (rude) return;
     setBusy(true); setErr('');
     const r = await createCrew((name.trim() || auto).slice(0, 40), icon, color, picked.filter((x) => friends?.some((f) => f.id === x)));
     setBusy(false);
@@ -65,6 +68,7 @@ export default function GascaNoua() {
           <>
             <Lbl>Numele gășcii</Lbl>
             <Field value={name} onChangeText={(x) => setName(x.slice(0, 40))} placeholder={auto} accessibilityLabel="Numele gășcii" focused={focus} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} />
+            {rude ? <Say mood="oops" text={'Te rog alege alt nume pentru gașcă, acesta nu prea pare potrivit.'} /> : null}
             <Lbl>Ștampila</Lbl>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
               {STAMP_ICONS.map(([key, ic, label]) => (
@@ -99,7 +103,7 @@ export default function GascaNoua() {
       </ScrollView>
       {who && known && friends && friends.length >= 2 ? (
         <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: Math.max(ins.bottom, 12) + 14, borderTopWidth: 1, borderTopColor: t.line }}>
-          <Big label={busy ? 'O clipă…' : picked.length < 2 ? 'Alege cel puțin 2 prieteni' : 'Trimite ' + picked.length + ' invitații'} disabled={busy || picked.length < 2} onPress={create} />
+          <Big label={busy ? 'O clipă…' : picked.length < 2 ? 'Alege cel puțin 2 prieteni' : 'Trimite ' + picked.length + ' invitații'} disabled={busy || picked.length < 2 || rude} onPress={create} />
         </View>
       ) : null}
       <TopShade />
