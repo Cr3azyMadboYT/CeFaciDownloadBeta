@@ -47,11 +47,11 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 3. Etapa 2: conturi + gașca cu vot în timp real (Supabase).
 
 ## Bani (decizii)
-- Start ca PFA la primul leu încasat; SRL peste ~50–60k lei/an sau când pornesc biletele.
-- Plus (20 lei/lună) doar prin Google Play / App Store. Netopia pentru plățile localurilor și bilete.
+- Firma (06.10, după verificarea juridică): **SRL înainte de primul contract cu un local** (nu doar înainte de primul leu); contractele, politicile și contul Play pe SRL.
+- Plus (20 lei/lună): de întrebat Google în scris dacă trebuie prin Play (reducerile la localuri sunt servicii fizice); plătit doar de la 18 ani. Netopia/Stripe pentru plăți; la bilete banii nu trec prin noi.
 - Localurile (06.10, înlocuiește „5% din notă”): plătesc doar rezervările confirmate și Live Drop-urile puse de ei, pe om venit, după treapta de preț a localului (sub 50 / 50–150 / peste 150 lei de persoană: rezervare 2/5/8 lei, Live Drop 3/7/10 lei; fondatori cu 1 leu mai puțin, pe viață); o taxă pe om pe vizită, doar cei veniți, fără copii sub 12, max 10 pe masă; 0 pentru Plus și pentru cei veniți din planuri; bilete 8% (fondatori 6%); „Sponsorizat” separat. Fondatori: 3 luni gratis de la activare (+ până la 3 luni dacă n-a venit nimeni). Lista lunii înainte de factură. Detalii: `docs/directie-si-decizii.md` → Cum face CeFaci bani.
 - Live Drops: gratis 10–15%, Plus cu ≥5 puncte peste (15–30%), reducerile nu se adună; regula și în baza de date.
-- Anti-păcăleală (06.10, aprobat cu treptele): numărul de oameni îl confirmă clientul; vizita se dovedește prin scanare, locație sau „Am fost acolo”; treapta o stabilim noi din bonuri; lunile gratuite o dată pe CUI; compensația Plus recuperată de la local; banii pe bilete după eveniment; facturi neplătite → stop rezervări/drops după 30 de zile. Pagina Plus promite doar ce se ține (Bilu auriu + carnet auriu făcute). Detalii: `docs/directie-si-decizii.md`.
+- Logica Business + Admin + bani: `docs/logica-business-admin.md` (v2, 06.10, după 3 verificări cu 89 de probleme rezolvate; are întâietate peste celelalte documente). Pe scurt: la dubiu nu facturăm și nu pedepsim; dovezi puternice (bifa localului, codul de pe bilet, bonul cu CUI, scanarea verificată) vs. slabe (o poziție, „Am fost acolo”); „Închide seara” până la 12:00; „cuvântul serii” pe ecranul de sosire; un procent pe notă; lunile gratuite o dată pe loc fizic; patru ochi pe orice micșorare; lista pe 3, factura prin e-Factura cu căsuță de ieșire. De hotărât de Cornel: cap. 17. Nimic din Business/Admin nu se construiește până nu aprobă. Pagina Plus promite doar ce se ține (Bilu auriu + carnet auriu făcute).
 
 ## Aplicația de telefon = `mobile/` (decizie Cornel, 03.10: „aplicație scrisă pentru telefon, nu web app împachetat”)
 - React Native + Expo (SDK 57), ecrane native refăcute după canvas (`mobile/src/app/*`, piese în `mobile/src/ui`). Pachet `ro.cefaci.app`.

@@ -23,9 +23,9 @@ CE E CeFaci (informație pentru tine; Andrei nu știe nimic până nu-i spun eu)
 - Recomandările NU se cumpără: un local nu plătește ca să apară mai sus. Partenerii primesc unelte în plus, nu loc în top.
 - Partenerii primesc: Live Drops (oferte scurte pe orele goale, cu locuri limitate, pe care le văd oamenii din jur), rezervări din aplicație (și pentru gășci mari), clienți Plus, profilul lor (poze, meniu, evenimente, program), cifre (câți au venit prin CeFaci, nota medie, ce caută lumea în zonă), bilete la evenimente.
 - Reguli Live Drops: reducerea pentru toți e 10–15%; pentru clienții Plus e cu cel puțin 5 puncte mai mult (minim 15%, maxim 30%); reducerile nu se adună.
-- Dovada că omul a venit prin CeFaci: un cod QR CeFaci la bar, scanat de client, plus poza bonului fiscal (aplicația citește totalul). Clientul are motiv să scaneze: primește XP, iar reducerea Plus merge doar prin scanare.
-- Bani: localul plătește doar pentru două lucruri pe care le pornește el: o rezervare primită prin CeFaci și confirmată de el, și un Live Drop pus de el, pe fiecare om care chiar a venit. Tariful depinde de cât costă localul de persoană: sub 50 lei → 2 lei la rezervare, 3 lei la Live Drop; 50–150 lei → 5 / 7 lei; peste 150 lei → 8 / 10 lei (treapta e scrisă în contract). Reguli: o singură taxă pe om pe vizită (rezervare + Live Drop la aceeași masă = doar Live Drop); doar cine a venit (rezervare de 6, au venit 4 → 4); copiii sub 12 ani nu se plătesc; cel mult 10 oameni plătiți pe masă; numărul îl confirmă clientul la scanare, iar ospătarul îl poate corecta. Oamenii veniți din planuri fără rezervare sau ofertă și clienții Plus: 0 lei. Localul alege câte mese dă prin CeFaci și poate opri rezervările oricând (atunci aplicația arată telefonul lui, gratis). Bilete: 8%. Evenimente promovate, scrise clar „Sponsorizat”, separat de recomandări. Bonul nu intră la plată. Factura lunar; lista lunii vine cu 3 zile înainte și se poate semnala orice greșeală; sumele sub 30 lei trec pe luna următoare.
-- Ofertă pentru localurile fondatoare (primele 15–20): 3 luni gratis din ziua în care localul e activ ca partener (profil publicat, cod la bar); dacă în cele 3 luni nu vine nimeni prin rezervare sau Live Drop, gratuitatea se prelungește până la primul om adus (cel mult încă 3 luni). Apoi cu 1 leu mai puțin pe om la orice treaptă, pe viață, bilete 6% în loc de 8%, plus insigna „Partener fondator”, scris în contract. Ieșire oricând, fără penalizări (se pierde statutul de fondator).
+- Dovada că omul a venit prin CeFaci: clientul scanează codul QR CeFaci de la bar; pe ecranul lui apar oferta și „cuvântul serii” (două cuvinte noi în fiecare zi, pe care personalul le vede în Business, ca să știe că ecranul e adevărat). La sfârșitul serii (sau a doua zi până la 12:00) localul „închide seara”: confirmă cine a venit, de obicei cu un singur buton. O dovadă slabă de la client (o poziție GPS, un „da”) nu-l face pe local să plătească dacă localul zice „n-au venit”; la dubiu nu se facturează. Bonul nu intră la plată.
+- Bani: localul plătește doar pentru două lucruri pe care le pornește el: o rezervare primită prin CeFaci și confirmată de el, și un Live Drop pus de el, pe fiecare om care chiar a venit. Tariful depinde de cât costă localul de persoană: sub 50 lei → 2 lei la rezervare, 3 lei la Live Drop; 50–150 lei → 5 / 7 lei; peste 150 lei → 8 / 10 lei (treapta e scrisă în contract). Reguli: o singură taxă pe om pe vizită (rezervare + Live Drop la aceeași masă = doar Live Drop); doar cine a venit (rezervare de 6, au venit 4 → 4); copiii sub 12 ani nu se plătesc; cel mult 10 oameni plătiți pe masă; numărul îl confirmă clientul la scanare, iar localul îl poate corecta până a doua zi la 12:00 (clientul e întrebat). La Live Drop se plătesc doar cei care au primit reducerea. Vizitele fără rezervare CeFaci și fără Live Drop, inclusiv cele cu reducerea Plus: 0 lei; rezervările și drop-urile se plătesc la fel, cu sau fără Plus. Propunere, de confirmat: același om se plătește de cel mult 3 ori pe an la același local (de la a 4-a vizită e clientul localului). Oferta nu se poate lua de cine e deja la masă sau la ușă. Localul alege câte mese dă prin CeFaci și poate opri rezervările oricând (atunci aplicația arată telefonul lui, gratis). Bilete: 8%. Evenimente promovate, scrise clar „Sponsorizat”, separat de recomandări. Bonul nu intră la plată. Factura lunar, prin e-Factura; lista lunii vine pe 3 și se poate contesta 3 zile lucrătoare. Tarifele nu includ TVA (CeFaci nu e plătitoare de TVA). Treapta o calculează CeFaci din bonuri, după o formulă din contract; localul o vede înainte să semneze.
+- Ofertă pentru localurile fondatoare (cel mult 20): 3 luni gratis din ziua în care localul e activ ca partener (contract acceptat de administratorul firmei, profil publicat, cod la bar); dacă în cele 3 luni nu vine nimeni prin rezervare sau Live Drop, gratuitatea se prelungește până la primul om adus (cel mult încă 3 luni). Apoi cu 1 leu mai puțin pe om decât tariful obișnuit, cât timp rămâne partener, plus insigna „Partener fondator”, scris în contract. Biletele nu sunt încă în ofertă. Ieșire oricând, fără penalizări (se pierde statutul de fondator). Contractul îl semnează firma CeFaci (SRL).
 - CeFaci Plus (pentru clienți): 20 lei pe lună, 10–20% reducere la partenere (o dau localurile, pot exclude serile de vârf), pentru client și prietenii de la masă (max. 4).
 
 SCENARIUL (îl aleg eu în primul mesaj)
@@ -59,7 +59,7 @@ Trei lucruri, concret:
 
 **Când întreabă „cât mă costă?”**
 ```
-Oamenii care vă găsesc în aplicație și vin din planuri: gratis, mereu, noi sau vechi. Plătiți doar pentru ce puneți dumneavoastră în aplicație: un Live Drop pe o seară goală sau o rezervare confirmată de dumneavoastră, și doar pentru omul care chiar a venit. Primele 3 luni: nimic, și încep abia când sunteți activ în aplicație; dacă în timpul ăsta nu vă aducem pe nimeni, se prelungesc. După aceea, ca partener fondator, un leu mai puțin decât ceilalți, pe viață: la un local ca al dumneavoastră, 4 lei de om la rezervare și 6 lei la Live Drop. Dacă nu primiți rezervări prin aplicație și nu puneți Live Drops, nu plătiți nimic. Ca să comparăm: Glovo ia în jur de 25%, o reclamă pe Facebook o plătiți înainte, fără să știți dacă aduce pe cineva.
+Oamenii care vă găsesc în aplicație și vin din planuri: gratis, mereu, noi sau vechi. Plătiți doar pentru ce puneți dumneavoastră în aplicație: un Live Drop pe o seară goală sau o rezervare confirmată de dumneavoastră, și doar pentru omul care chiar a venit. Primele 3 luni: nimic, și încep abia când sunteți activ în aplicație; dacă în timpul ăsta nu vă aducem pe nimeni, se prelungesc. După aceea, ca partener fondator, un leu mai puțin decât ceilalți, cât timp rămâneți partener. Tariful depinde de cât costă localul de persoană; îl calculăm din bonuri, după o formulă scrisă în contract, și îl vedeți înainte să semnați (la un local de 50–150 lei de persoană, ca fondator: 4 lei de om la rezervare și 6 lei la Live Drop). Dacă nu primiți rezervări prin aplicație și nu puneți Live Drops, nu plătiți nimic. Ca să comparăm: Glovo ia în jur de 25%, o reclamă pe Facebook o plătiți înainte, fără să știți dacă aduce pe cineva.
 ```
 
 **Când zice „n-aveți oameni în aplicație”**
@@ -69,7 +69,7 @@ Aveți dreptate, abia pornim, și de asta primele 3 luni sunt gratis: nu riscaț
 
 **Când zice „ospătarii n-au timp de aplicații”**
 ```
-Ospătarul nu face nimic în plus. Clientul scanează un cod QR lipit la bar și la final face poză bonului. Totalul îl citim noi de pe bon. Dumneavoastră doar puneți codul la vedere.
+Trei lucruri, cam un minut pe seară. Unu: rezervările mici se confirmă singure, cât aveți loc. Doi: când vine un client CeFaci, ospătarul se uită pe ecranul lui la cuvântul serii (îl vede și el în aplicație) și aplică procentul pe notă, înainte de nota de plată. Trei: la final de seară sau a doua zi până la prânz, „Închide seara”: lista vine completată din scanări și, dacă e corectă, e un singur buton. Vă las și o foaie de o pagină pentru personal.
 ```
 
 **Când zice „nu vreau vânători de reduceri”**
@@ -84,12 +84,12 @@ Ieșiți oricând, fără penalizări. Localul rămâne în aplicație ca orice 
 
 **Când întreabă „dacă o masă are și rezervare, și Live Drop, plătesc de două ori?”**
 ```
-Nu. O singură taxă pe om, pe vizită: dacă au rezervat și au luat și oferta, plătiți doar Live Drop-ul. Și doar pentru cei care au venit: dacă au rezervat 6 și au venit 4, plătiți 4. Copiii sub 12 ani nu se pun, iar la o masă mare se plătesc cel mult 10 oameni.
+Nu. Același om nu se plătește de două ori în aceeași seară: pentru cei care au luat oferta plătiți Live Drop-ul, pentru restul mesei rezervarea. Și doar pentru cei care au venit: dacă au rezervat 6 și au venit 4, plătiți 4. Copiii sub 12 ani nu se pun, iar la o masă mare se plătesc cel mult 10 oameni.
 ```
 
 **Când întreabă „de când curg cele 3 luni gratuite?”**
 ```
-Din ziua în care sunteți activ în aplicație: profilul publicat și codul pus la bar. O scriem în contract. Și dacă în cele 3 luni nu vă aducem niciun om prin rezervare sau ofertă, gratuitatea se prelungește până la primul om adus.
+Din ziua în care sunteți activ în aplicație: contractul semnat de administratorul firmei, profilul publicat și codul pus la bar. Data exactă de început și de sfârșit o vedeți în aplicație și o scriem în contract. Și dacă în cele 3 luni nu vă aducem niciun om prin rezervare sau ofertă, gratuitatea se prelungește până la primul om adus.
 ```
 
 **Când zice „deci dacă primesc rezervări plătesc, chiar dacă n-am pus nicio ofertă?”**
@@ -100,6 +100,16 @@ Da, rezervarea făcută prin CeFaci și confirmată de dumneavoastră e și ea u
 **Când e o cafenea sau un loc ieftin („5 lei la o cafea de 15?”)**
 ```
 Aveți dreptate, de asta tariful depinde de cât costă localul: sub 50 de lei de persoană e 2 lei la rezervare și 3 la Live Drop, iar ca fondator cu un leu mai puțin.
+```
+
+**Când zice „clientul ăsta vine la mine de 3 ani, nu l-ați adus voi”**
+```
+Pentru vizitele lui obișnuite nu plătiți nimic: dacă vine din planuri, fără rezervare și fără ofertă, e 0 lei. Oferta din Live Drop nu o poate lua cineva care e deja la masă sau la ușă, și o puteți da doar clienților noi prin CeFaci. Iar la rezervări (dacă aprobăm regula), același om se plătește de cel mult 3 ori pe an la dumneavoastră: de la a patra oară e clientul dumneavoastră, nu al nostru.
+```
+
+**Când întreabă „și dacă zic că n-au venit?”**
+```
+Atunci nu plătiți. Dacă clientul zice că a fost, are nevoie de o dovadă serioasă (de exemplu bonul fiscal cu CUI-ul dumneavoastră); un simplu „da, am fost” nu ajunge. Iar dacă nu e clar, nu facturăm și nici pe client nu-l pedepsim. Ce vă cerem în schimb: să închideți seara, ca să știm cine a venit.
 ```
 
 **Ca să închizi**
@@ -125,7 +135,7 @@ Pentru ce nu primiți acum: oamenii vin doar când îi trimite aplicația singur
 
 **Când negociază („e prea mult”)**
 ```
-Vă înțeleg. Ce pot face: prima lună gratis, ca să vedeți dacă ofertele umplu sala, apoi 5 lei la rezervare și 7 la Live Drop, doar pe cine vine. Nu e abonament: lunile în care nu primiți rezervări prin aplicație și nu puneți oferte nu plătiți nimic.
+Vă înțeleg. Ce pot face: prima lună gratis (dacă hotărâm așa pentru partenerii care nu sunt fondatori), ca să vedeți dacă ofertele umplu sala, apoi tariful treptei dumneavoastră, calculat din bonuri (la 117 lei de persoană: 5 lei la rezervare și 7 la Live Drop), doar pe cine vine. Nu e abonament: lunile în care nu primiți rezervări prin aplicație și nu puneți oferte nu plătiți nimic.
 ```
 
 **Ca să închizi**
