@@ -7,6 +7,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP } from '../../lib/session';
+import { telLink, webLink } from '../../lib/links';
 import { fmtDur, useFilters } from '../../lib/filters';
 import { createPlan } from '../../lib/plans';
 import { Icon, type IconName } from '../../ui/Icon';
@@ -58,7 +59,8 @@ export default function Loc() {
   const back = () => (router.canGoBack() ? router.back() : router.replace('/exploreaza'));
   const plan = () => { const pid = createPlan(p.id, f); router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); };
   const nav = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v.lat + ',' + v.lon);
-  const site = v.website ? (v.website.startsWith('http') ? v.website : 'https://' + v.website) : null;
+  const site = webLink(v.website);
+  const tel = telLink(v.phone);
   const address = [v.street, v.city ?? p.zone].filter(Boolean).join(', ');
   const has: [IconName | null, string][] = [
     ...(v.outdoor ? [['tree', 'Terasă'] as [IconName, string]] : []),
@@ -141,7 +143,7 @@ export default function Loc() {
             <PlacesMap height={180} pins={[{ id: p.id, lat: v.lat, lon: v.lon, name: p.name, sub: p.title, bg: p.bg, fg: p.fg, n: 1, hot: true }]} origin={{ ...APP.origin(), label: APP.zoneName() }} />
             <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
               <Pill icon="map" label="Drum" onPress={() => void Linking.openURL(nav)} />
-              {v.phone ? <Pill icon="phone" label="Sună" onPress={() => void Linking.openURL('tel:' + v.phone!.replace(/\s/g, ''))} /> : null}
+              {tel ? <Pill icon="phone" label="Sună" onPress={() => void Linking.openURL(tel)} /> : null}
               {site ? <Pill icon="globe" label="Site" onPress={() => { WebBrowser.openBrowserAsync(site).catch(() => void Linking.openURL(site)); }} /> : null}
             </View>
           </View>

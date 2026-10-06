@@ -84,7 +84,7 @@ export async function going(sid: string): Promise<Going[]> {
 /** Live: someone answered to a plan of mine, or called me to one. */
 export function watchPlans(me: string, cb: () => void) {
   const ch = sb().channel('plans-' + me + '-' + Math.random().toString(36).slice(2))
-    .on('postgres_changes' as never, { event: '*', schema: 'public', table: 'plan_members' } as never, cb)
+    // an answer or a new person on a plan touches the plan (plans.changed_at), which comes only to the people in it
     .on('postgres_changes' as never, { event: 'UPDATE', schema: 'public', table: 'plans' } as never, cb)
     .subscribe();
   return () => { void sb().removeChannel(ch); };

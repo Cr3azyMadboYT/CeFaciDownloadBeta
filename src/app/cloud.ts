@@ -35,9 +35,16 @@ export async function restore(db: CloudClient, userId: string): Promise<Restored
   return { known: true, first: prof.first_name };
 }
 
+/** The home point leaves the phone only to about 100 m (07.10): enough for plans, not an address. */
+export function coarse(prefs: Record<string, unknown>): Record<string, unknown> {
+  const h = prefs.home as { lat?: unknown; lon?: unknown } | undefined;
+  if (!h || typeof h.lat !== 'number' || typeof h.lon !== 'number') return prefs;
+  return { ...prefs, home: { ...h, lat: Math.round(h.lat * 1000) / 1000, lon: Math.round(h.lon * 1000) / 1000 } };
+}
+
 /** End of sign-up with an account: create the profile. Returns an error to show, or null. */
 export async function createAccount(db: CloudClient, p: { username: string; first: string; birth: string; prefs: Record<string, unknown> }): Promise<string | null> {
-  const { error } = await db.rpc('complete_signup', { p_username: p.username, p_first_name: p.first, p_birth_date: p.birth, p_prefs: p.prefs });
+  const { error } = await db.rpc('complete_signup', { p_username: p.username, p_first_name: p.first, p_birth_date: p.birth, p_prefs: coarse(p.prefs) });
   if (!error) return null;
   const msg = String((error as { message?: string }).message ?? '');
   if (/duplicate|unique/i.test(msg)) return 'Username-ul a fost luat între timp. Alege altul.';
@@ -74,9 +81,9 @@ export function makeUploader(db: CloudClient, userId: string, wait = 3000, phone
     void name; void user; void birth; void google; void here;
     const { savedAt, ...rest } = state;
     void savedAt;
-    const body = JSON.stringify([rest, answers]);
+    const body = JSON.stringify([rest, coarse(answers)]);
     if (body === lastSent) return; // the clock ticks every second; only real changes go out
-    pending = { app_state: state, prefs: answers, body };
+    pending = { app_state: state, prefs: coarse(answers), body };
     if (t) return; // at most one upload every few seconds
     t = setTimeout(() => {
       t = undefined;

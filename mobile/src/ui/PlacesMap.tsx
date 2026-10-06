@@ -6,13 +6,14 @@ import { Linking, Platform, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Muted } from './kit';
 import { useTheme } from './theme';
+import { mapLink } from '../lib/links';
 
 export interface MapPin { id: string; lat: number; lon: number; name: string; sub: string; bg: string; fg: string; n: number; hot?: boolean }
 
 function html(pins: MapPin[], origin: { lat: number; lon: number; label: string }, line: boolean, dark: boolean, pick: boolean) {
   const data = JSON.stringify({ pins, origin, line, dark, pick }).replace(/</g, '\\u003c');
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
+<link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'};font-family:system-ui,sans-serif}
 .pin{width:30px;height:30px;border-radius:50%;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font:800 14px system-ui;box-shadow:0 3px 8px rgba(14,20,64,.35)}
 .pin.hot{width:36px;height:36px;font-size:16px;border-color:#FFD43B}
@@ -21,7 +22,7 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
 .card button{border:0;border-radius:10px;background:#2F5BFF;color:#fff;font:700 14px system-ui;padding:8px 14px}
 .err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5A6390;font:600 14px system-ui;text-align:center;padding:20px}</style></head>
 <body><div id="m"></div>
-<script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+<script integrity="sha384-GfxBM9x46BaAFxtCq39Fxir8fNZ4VDnwgfi6Kzi5/F1tAFsm0amuuV8kd+Pxzuf/" crossorigin="anonymous" src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
 <script>
 (function(){
   var D=${data};
@@ -51,7 +52,7 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
       send({ready:true});
     });
   }
-  if(window.maplibregl) start(); else { var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';s.onload=start;s.onerror=start;document.head.appendChild(s); }
+  if(window.maplibregl) start(); else { var s=document.createElement('script');s.integrity='sha384-GfxBM9x46BaAFxtCq39Fxir8fNZ4VDnwgfi6Kzi5/F1tAFsm0amuuV8kd+Pxzuf/';s.crossOrigin='anonymous';s.src='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';s.onload=start;s.onerror=start;document.head.appendChild(s); }
 })();
 </script></body></html>`;
 }
@@ -71,7 +72,7 @@ export function PlacesMap({ pins, origin, line = false, height = 360, onPick }: 
         nestedScrollEnabled
         setSupportMultipleWindows={false}
         // only the map itself loads here; a link (the map's credits) opens in the browser
-        onShouldStartLoadWithRequest={(req) => { if (/^(about:|data:)/.test(req.url)) return true; Linking.openURL(req.url).catch(() => {}); return false; }}
+        onShouldStartLoadWithRequest={(req) => { if (/^(about:|data:)/.test(req.url)) return true; const u = mapLink(req.url); if (u) Linking.openURL(u).catch(() => {}); return false; }}
         onMessage={(e) => { try { const m = JSON.parse(e.nativeEvent.data); if (m.pick && onPick) onPick(m.pick); } catch { /* ignore */ } }}
         style={{ backgroundColor: t.bg }}
       />

@@ -16,17 +16,7 @@ language sql immutable set search_path = '' as $$
   select ((t at time zone 'Europe/Bucharest') - interval '5 hours')::date
 $$;
 
--- „Cuvântul serii”: două cuvinte noi în fiecare zi pentru fiecare local; clientul le vede doar după o scanare adevărată
-create or replace function private.day_word(v text, d date) returns text
-language sql immutable set search_path = '' as $$
-  select (array['Lămâie','Pisică','Cireașă','Chitară','Lună','Stea','Umbrelă','Gutuie','Portocală','Bicicletă','Rachetă',
-                'Pălărie','Ciocolată','Căpșună','Balenă','Vioară','Lalea','Comoară','Corabie','Furtună','Ghindă','Brioșă',
-                'Busolă','Cometă','Vulpe','Bufniță','Zebră','Caramea','Lanternă','Vacanță'])[1 + ('x' || substr(md5(v || d::text), 1, 6))::bit(24)::int % 30]
-    || ' ' ||
-    (array['albastră','veselă','rapidă','aurie','verde','roșie','mică','uriașă','dulce','cuminte','zburdalnică','fermecată',
-           'curajoasă','somnoroasă','pufoasă','rotundă','sclipitoare','grăbită','liniștită','năzdrăvană','violetă',
-           'portocalie','argintie','vrăjită','fericită','zâmbitoare','misterioasă','jucăușă','strălucitoare','norocoasă'])[1 + ('x' || substr(md5(d::text || v), 1, 6))::bit(24)::int % 30]
-$$;
+
 
 -- ---------- partenerii ----------
 create table public.partners (
@@ -45,8 +35,11 @@ create table public.partners (
   created_at timestamptz not null default now()
 );
 alter table public.partners enable row level security;
--- ce e public la un partener (aplicația arată „Rezervă prin CeFaci”, „−15% cu Plus”)
+-- ce e public la un partener (aplicația arată „Rezervă prin CeFaci”, „−15% cu Plus”): doar aceste coloane, nu firma,
+-- CUI-ul, procentul sau lunile gratuite (07.10)
 create policy partners_read on public.partners for select to authenticated using (true);
+revoke all on public.partners from anon, authenticated;
+grant select (venue_id, status, reservations_on, plus_pct) on public.partners to authenticated;
 
 create table public.partner_members (
   venue_id text not null references public.partners (venue_id) on delete cascade,
@@ -66,6 +59,21 @@ create table public.venue_codes (
   created_at timestamptz not null default now()
 );
 alter table public.venue_codes enable row level security; -- codul îl citesc doar funcțiile și echipa localului (prin biz_today)
+
+-- „Cuvântul serii”: două cuvinte noi în fiecare zi pentru fiecare local; clientul le vede doar după o scanare adevărată.
+-- Pornesc din codul secret al localului (venue_codes), nu din date publice: nu se pot calcula de acasă (07.10).
+create or replace function private.day_word(v text, d date) returns text
+language sql stable security definer set search_path = '' as $$
+  with k as (select coalesce((select token from public.venue_codes where venue_id = v), '') || v as s)
+  select (array['Lămâie','Pisică','Cireașă','Chitară','Lună','Stea','Umbrelă','Gutuie','Portocală','Bicicletă','Rachetă',
+                'Pălărie','Ciocolată','Căpșună','Balenă','Vioară','Lalea','Comoară','Corabie','Furtună','Ghindă','Brioșă',
+                'Busolă','Cometă','Vulpe','Bufniță','Zebră','Caramea','Lanternă','Vacanță'])[1 + ('x' || substr(md5(k.s || d::text), 1, 6))::bit(24)::int % 30]
+    || ' ' ||
+    (array['albastră','veselă','rapidă','aurie','verde','roșie','mică','uriașă','dulce','cuminte','zburdalnică','fermecată',
+           'curajoasă','somnoroasă','pufoasă','rotundă','sclipitoare','grăbită','liniștită','năzdrăvană','violetă',
+           'portocalie','argintie','vrăjită','fericită','zâmbitoare','misterioasă','jucăușă','strălucitoare','norocoasă'])[1 + ('x' || substr(md5(d::text || k.s), 1, 6))::bit(24)::int % 30]
+  from k
+$$;
 
 create table public.reservations (
   id uuid primary key default gen_random_uuid(),
@@ -198,7 +206,7 @@ language sql stable security definer set search_path = '' as $$
     select x.*, row_number() over (partition by x.user_id order by x.scanned_at) as nth
     from public.visits x
     where x.venue_id = v and x.kind in ('rezervare', 'drop') and x.bill is not null
-      and (x.outcome = 'a venit' or (x.outcome = 'deschis' and x.bill_source = 'bon'))
+      and (x.bill_source = 'bon' or x.outcome = 'a venit')   -- bonul clientului bate „n-a venit” pus de local
       and x.work_day > d1 - 366
   )
   select e.id, e.work_day, e.kind, e.bill, e.bill_source,
@@ -220,11 +228,19 @@ begin
   if pr.venue_id is null or pr.status <> 'activ' or not pr.reservations_on then raise exception 'Localul nu primește acum rezervări prin CeFaci.'; end if;
   if p_at < now() + interval '15 minutes' or p_at > now() + interval '30 days' then raise exception 'Alege o oră de peste cel puțin 15 minute, în următoarele 30 de zile.'; end if;
   if p_people not between 1 and 20 or coalesce(p_kids, 0) not between 0 and 10 then raise exception 'Numărul de oameni nu e bun.'; end if;
+  perform pg_advisory_xact_lock(hashtext('cefaci.res.' || me::text));   -- două cereri trimise deodată nu ocolesc limita
+  if (select count(*) from public.reservations where user_id = me and created_at > now() - interval '1 day') >= 4 then
+    raise exception 'Ai făcut destule rezervări azi. Mâine mai poți.'; end if;
   if (select count(*) from public.reservations where user_id = me and at > now() and status in ('cerută', 'confirmată')) >= 2 then
     raise exception 'Ai deja 2 rezervări care urmează. Anulează una ca să faci alta.'; end if;
   insert into public.reservations (venue_id, user_id, people, kids, at, note, status)
   values (p_venue, me, p_people, coalesce(p_kids, 0), p_at, nullif(trim(p_note), ''),
-          case when p_people + coalesce(p_kids, 0) <= pr.auto_confirm_max and p_people < 8 then 'confirmată' else 'cerută' end)
+          -- confirmată singură doar pentru conturi cunoscute (de cel puțin 7 zile sau cu o vizită adevărată): conturile noi,
+          -- făcute pe bandă, nu pot ocupa mesele fără ca localul să vadă cererea
+          case when p_people + coalesce(p_kids, 0) <= pr.auto_confirm_max and p_people < 8
+                    and ((select created_at from public.profiles where id = me) < now() - interval '7 days'
+                         or exists (select 1 from public.visits where user_id = me and outcome = 'a venit'))
+               then 'confirmată' else 'cerută' end)
   returning * into r;
   return r;
 end $$;
@@ -243,6 +259,10 @@ language plpgsql security definer set search_path = '' as $$
 declare me uuid := auth.uid(); d public.drops; taken int; c public.drop_claims; plus boolean := private.plus_active(me);
 begin
   if me is null then raise exception 'Intră în cont ca să iei oferta.'; end if;
+  perform pg_advisory_xact_lock(hashtext('cefaci.claim.' || me::text)); -- o singură ofertă odată, chiar trimisă deodată
+  if (select count(*) from public.drop_claims c2 where c2.user_id = me and c2.status = 'activ' and c2.expires_at < now()
+        and c2.created_at > now() - interval '7 days') >= 2 then
+    raise exception 'Ai lăsat 2 oferte să expire săptămâna asta. Mai poți lua peste câteva zile.'; end if;
   select * into d from public.drops where id = p_drop for update;   -- un singur om ia ultimele locuri
   if d.id is null or d.stopped_at is not null or now() >= d.ends_at - interval '15 minutes' then raise exception 'Oferta s-a terminat.'; end if;
   if now() < d.starts_at - (case when plus then interval '10 minutes' else interval '0' end) then raise exception 'Oferta nu a început încă.'; end if;
@@ -267,14 +287,18 @@ begin
 end $$;
 
 -- „Am ajuns”: clientul scanează codul de la bar; o vizită pe zi la un local (scanările repetate o întorc pe aceeași)
-create or replace function public.visit_scan(p_token text, p_table text default null, p_people int default null) returns jsonb
+-- Codul e lipit la bar, deci se poate fotografia: scanarea cere și poziția telefonului, la cel mult 300 m de local (07.10).
+create or replace function public.visit_scan(p_token text, p_lat double precision, p_lon double precision, p_table text default null, p_people int default null) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 declare me uuid := auth.uid(); v text; pr public.partners; today date := private.work_day(now());
-        x public.visits; r public.reservations; c public.drop_claims; d public.drops; plus boolean; vname text;
+        x public.visits; r public.reservations; c public.drop_claims; d public.drops; plus boolean; vname text; pos public.venues;
 begin
   if me is null then raise exception 'Intră în cont ca să scanezi.'; end if;
   select venue_id into v from public.venue_codes where token = trim(p_token);
   if v is null then raise exception 'Codul nu e al unui local CeFaci.'; end if;
+  select * into pos from public.venues where id = v;
+  if p_lat is null or p_lon is null or pos.id is null or private.km(p_lat, p_lon, pos.lat, pos.lon) > 0.3 then
+    raise exception 'Scanează codul când ești la local (pornește locația).'; end if;
   select * into pr from public.partners where venue_id = v;
   if pr.status = 'iesit' then raise exception 'Localul nu mai e partener CeFaci.'; end if;
   plus := private.plus_active(me);
@@ -321,10 +345,11 @@ begin
   if x.id is null then return jsonb_build_object('ok', false, 'error', 'Nu găsesc vizita.'); end if;
   select * into pr from public.partners where venue_id = x.venue_id;
   if regexp_replace(coalesce(p_cui, ''), '\D', '', 'g') <> pr.cui then return jsonb_build_object('ok', false, 'error', 'Bonul nu e de la localul ăsta.'); end if;
-  if p_issued is not null and private.work_day(p_issued) not between x.work_day and x.work_day + 1 then
+  if p_issued is null then return jsonb_build_object('ok', false, 'error', 'Nu se vede data și ora pe bon.'); end if;
+  if private.work_day(p_issued) not between x.work_day and x.work_day + 1 then
     return jsonb_build_object('ok', false, 'error', 'Bonul e din altă zi.'); end if;
   if exists (select 1 from public.receipts where visit_id = x.id) then return jsonb_build_object('ok', false, 'error', 'Bonul vizitei e deja pus.'); end if;
-  if p_issued is not null and exists (select 1 from public.receipts where venue_id = x.venue_id and total = p_total and issued_at = p_issued) then
+  if exists (select 1 from public.receipts where venue_id = x.venue_id and total = p_total and issued_at = p_issued) then
     return jsonb_build_object('ok', false, 'error', 'Bonul ăsta e deja pus.'); end if;
   -- o zi de Plus la fiecare al doilea bon de la parteneri, cel mult 4 pe lună
   select count(*) into n from public.receipts where user_id = p_user and created_at >= date_trunc('month', now());
@@ -337,7 +362,7 @@ begin
   end if;
   insert into public.receipts (visit_id, venue_id, user_id, total, discount, issued_at, plus_day)
   values (x.id, x.venue_id, p_user, p_total, p_discount, p_issued, got);
-  update public.visits set bill = p_total, bill_source = 'bon' where id = x.id;
+  update public.visits set bill = p_total, bill_source = 'bon', outcome = 'a venit' where id = x.id;
   return jsonb_build_object('ok', true, 'bill', p_total, 'plus_day', got, 'receipts_this_month', n + 1);
 end $$;
 
@@ -388,7 +413,7 @@ begin
 end $$;
 
 create or replace function public.drop_create(p_venue text, p_title text, p_pct_all int, p_pct_plus int, p_seats int, p_minutes int,
-  p_starts timestamptz default null, p_min_group int default 1, p_adult boolean default false, p_new_only boolean default false) returns public.drops
+  p_starts timestamptz default null, p_min_group int default 1, p_adult boolean default true, p_new_only boolean default false) returns public.drops
 language plpgsql security definer set search_path = '' as $$
 declare pr public.partners; s timestamptz := coalesce(p_starts, now()); d public.drops;
 begin
@@ -398,13 +423,14 @@ begin
   if s < now() - interval '5 minutes' or s > now() + interval '7 days' then raise exception 'Începutul trebuie să fie acum sau în următoarele 7 zile.'; end if;
   if p_minutes not between 30 and 240 then raise exception 'Un Live Drop ține între 30 de minute și 4 ore.'; end if;
   if pr.plus_pct is not null and p_pct_plus < pr.plus_pct then raise exception 'Pentru Plus pune cel puțin reducerea ta Plus obișnuită (% la sută).', pr.plus_pct; end if;
-  if p_title ~* '(tutun|narghilea|narghilea|shisha|vape|țigări|tigari)' then raise exception 'Fără tutun, narghilea sau vape în Live Drops.'; end if;
+  if private.plain(p_title) ~ '(tutun|narghil|shisha|sisha|hookah|vape|vapat|tigar|tigari|iqos|glo)' then raise exception 'Fără tutun, narghilea sau vape în Live Drops.'; end if;
   if exists (select 1 from public.drops where venue_id = p_venue and stopped_at is null
              and tstzrange(starts_at, ends_at) && tstzrange(s, s + make_interval(mins => p_minutes))) then
     raise exception 'Ai deja un Live Drop în intervalul ăsta.'; end if;
   insert into public.drops (venue_id, title, pct_all, pct_plus, seats, min_group, starts_at, ends_at, adult, new_only, created_by)
   values (p_venue, trim(p_title), p_pct_all, p_pct_plus, p_seats, greatest(1, p_min_group), s, s + make_interval(mins => p_minutes),
-          p_adult or p_title ~* '(cocktail|bere|vin|shot|alcool|prosecco|spritz|whisky|vodka|gin|rom|bar)', p_new_only, auth.uid())
+          coalesce(p_adult, true) or private.plain(p_title) ~ '(cocktail|coctail|bere|beri|vin|shot|alcool|prosecco|spritz|whisk|vodka|votca|gin|rom|bar|tequila|lichior|palinc|tuica|aperol|happy hour|halba|pahar)',
+          p_new_only, auth.uid())
   returning * into d;
   return d;
 end $$;
@@ -418,6 +444,12 @@ begin
   update public.drops set stopped_at = now() where id = p_id and stopped_at is null; -- cine a luat-o deja rămâne cu ea
 end $$;
 
+-- textul fără diacritice și fără cifre puse în loc de litere (c0cktail, b3re), pentru filtrele de mai sus
+create or replace function private.plain(t text) returns text
+language sql immutable set search_path = '' as $$
+  select regexp_replace(translate(lower(coalesce(t, '')), 'ăâîșşțţ0134578@$', 'aaisstto1eastbas'), '\s+', ' ', 'g')
+$$;
+
 -- „Închide seara”: localul confirmă fiecare masă CeFaci și scrie nota (bonul clientului bate ce scrie localul)
 create or replace function public.visit_close(p_visit uuid, p_came boolean, p_bill numeric default null) returns void
 language plpgsql security definer set search_path = '' as $$
@@ -425,6 +457,7 @@ declare x public.visits;
 begin
   select * into x from public.visits where id = p_visit for update;
   if x.id is null or private.member_role(x.venue_id) is null or private.member_role(x.venue_id) = 'scanare' then raise exception 'Nu ai voie.'; end if;
+  if p_came is null then raise exception 'Spune dacă au venit sau nu.'; end if;
   if now() > ((x.work_day + 1)::timestamp + time '12:00') at time zone 'Europe/Bucharest' then raise exception 'Seara asta s-a închis singură la 12:00.'; end if;
   if p_came is false and x.bill_source = 'bon' then raise exception 'Clientul a pus bonul de aici, deci a venit.'; end if;
   if p_bill is not null and (p_bill < 0 or p_bill >= 100000) then raise exception 'Nota nu pare bună.'; end if;
@@ -537,6 +570,7 @@ begin
   if nullif(trim(p_owner), '') is not null then
     select id into owner from public.profiles where username = lower(trim(both '@ ' from p_owner));
     if owner is null then raise exception 'Nu găsesc @%. Proprietarul își face întâi cont în aplicația CeFaci.', p_owner; end if;
+    if private.staff_role(owner) is not null then raise exception 'Cineva din echipa CeFaci nu poate fi proprietarul unui local partener.'; end if;
     insert into public.partner_members (venue_id, user_id, role, added_by) values (p_venue, owner, 'proprietar', auth.uid())
     on conflict (venue_id, user_id) do update set role = 'proprietar', active = true;
   end if;
@@ -554,23 +588,26 @@ begin
       'venue_id', p.venue_id, 'name', coalesce(v.edit->>'name', v.name), 'firm', p.firm, 'cui', p.cui, 'founder', p.founder, 'rate', p.rate,
       'status', p.status, 'activated_at', p.activated_at, 'free_until', p.free_until,
       'team', (select jsonb_agg(jsonb_build_object('username', pr.username, 'role', m.role)) from public.partner_members m join public.profiles pr on pr.id = m.user_id where m.venue_id = p.venue_id and m.active),
-      'month', (select jsonb_build_object('bills', coalesce(sum(f.bill), 0), 'fee', coalesce(sum(f.fee) filter (where not f.free), 0), 'would_pay', coalesce(sum(f.fee) filter (where f.free), 0), 'visits', count(*))
-                from private.visit_fees(p.venue_id, m0, (m0 + interval '1 month' - interval '1 day')::date) f),
-      'flags', (select count(*) from public.visits x join public.receipts r on r.visit_id = x.id where x.venue_id = p.venue_id and x.declared is not null and x.declared < r.total * 0.9 and x.work_day >= m0)
+      'month', case when private.can('partners') or private.can('money') then (select jsonb_build_object('bills', coalesce(sum(f.bill), 0), 'fee', coalesce(sum(f.fee) filter (where not f.free), 0), 'would_pay', coalesce(sum(f.fee) filter (where f.free), 0), 'visits', count(*))
+                from private.visit_fees(p.venue_id, m0, (m0 + interval '1 month' - interval '1 day')::date) f) end,
+      -- de verificat: nota scrisă de local mult sub bon; mese scanate trecute „n-a venit”; seri neînchise
+      'flags', (select count(*) from public.visits x join public.receipts r on r.visit_id = x.id where x.venue_id = p.venue_id and x.declared is not null and x.declared < r.total * 0.9 and x.work_day >= m0),
+      'noshow', (select count(*) from public.visits x where x.venue_id = p.venue_id and x.kind in ('rezervare', 'drop') and x.outcome = 'n-a venit' and x.work_day >= m0),
+      'unclosed', (select count(*) from public.visits x where x.venue_id = p.venue_id and x.kind in ('rezervare', 'drop') and x.outcome = 'deschis' and x.bill is null and x.work_day < private.work_day(now()) - 1)
     ) order by p.created_at) from public.partners p left join public.venues v on v.id = p.venue_id), '[]');
 end $$;
 
 -- ---------- drepturile ----------
 revoke all on function private.work_day(timestamptz), private.day_word(text, date), private.plus_active(uuid), private.member_role(text),
-  private.visit_fees(text, date, date) from public;
+  private.visit_fees(text, date, date), private.plain(text) from public;
 grant execute on function private.work_day(timestamptz), private.day_word(text, date), private.plus_active(uuid), private.member_role(text) to authenticated;
 revoke all on function public.reservation_request(text, timestamptz, int, int, text), public.reservation_cancel(uuid), public.drop_claim(uuid, int),
-  public.visit_scan(text, text, int), public.biz_my_venues(), public.biz_today(text), public.reservation_decide(uuid, boolean),
+  public.visit_scan(text, double precision, double precision, text, int), public.biz_my_venues(), public.biz_today(text), public.reservation_decide(uuid, boolean),
   public.drop_create(text, text, int, int, int, int, timestamptz, int, boolean, boolean), public.drop_stop(uuid), public.visit_close(uuid, boolean, numeric),
   public.biz_month(text, date), public.biz_settings_save(text, boolean, int, int), public.biz_team(text), public.biz_team_set(text, text, text),
   public.admin_partner_save(text, text, text, boolean, text, text), public.admin_partners() from public, anon;
 grant execute on function public.reservation_request(text, timestamptz, int, int, text), public.reservation_cancel(uuid), public.drop_claim(uuid, int),
-  public.visit_scan(text, text, int), public.biz_my_venues(), public.biz_today(text), public.reservation_decide(uuid, boolean),
+  public.visit_scan(text, double precision, double precision, text, int), public.biz_my_venues(), public.biz_today(text), public.reservation_decide(uuid, boolean),
   public.drop_create(text, text, int, int, int, int, timestamptz, int, boolean, boolean), public.drop_stop(uuid), public.visit_close(uuid, boolean, numeric),
   public.biz_month(text, date), public.biz_settings_save(text, boolean, int, int), public.biz_team(text), public.biz_team_set(text, text, text),
   public.admin_partner_save(text, text, text, boolean, text, text), public.admin_partners() to authenticated;

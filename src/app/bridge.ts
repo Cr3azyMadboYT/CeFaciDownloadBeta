@@ -21,7 +21,7 @@ function readPlaceCache(): PlaceCache {
   return { at: '', rows: {} };
 }
 let placeCache = readPlaceCache();
-let VENUES = mergePlaces(BUNDLED, Object.values(placeCache.rows));
+let VENUES = (() => { try { return mergePlaces(BUNDLED, Object.values(placeCache.rows)); } catch { placeCache = { at: '', rows: {} }; return BUNDLED; } })();
 // places that left the map (closed): never recommended, but old plans and stamps still find them
 const GONE = goneJson as Venue[];
 const BY_ID = new Map([...GONE, ...BUNDLED, ...VENUES].map((v) => [v.id, v]));

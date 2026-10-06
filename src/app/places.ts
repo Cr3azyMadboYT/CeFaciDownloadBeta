@@ -13,15 +13,33 @@ export interface PlaceCache { at: string; rows: Record<string, PlaceRow> }
  *  would not make a usable place (no name, unknown kind, no position) leaves the place as it was. */
 export function mergePlaces(base: Venue[], rows: PlaceRow[]): Venue[] {
   const byId = new Map(base.map((v) => [v.id, v]));
+  const sample = base[0] as unknown as Record<string, unknown> | undefined;
   for (const r of rows) {
-    if (r.status !== 'on') { byId.delete(r.id); continue; }
-    const v = { ...(byId.get(r.id) ?? {}), ...(r.data ?? {}), ...(r.edit ?? {}), id: r.id } as Venue;
-    const kind = KINDS[v.k];
-    if (!v.name || !kind || typeof v.lat !== 'number' || typeof v.lon !== 'number') continue;
-    v.cat = kind.cat;
-    if (!Array.isArray(v.cuisines)) v.cuisines = [];
-    if (!v.kind) v.kind = kind.label;
-    byId.set(r.id, v);
+    try {
+      if (!r || typeof r.id !== 'string') continue;
+      if (r.status !== 'on') { byId.delete(r.id); continue; }
+      const had = byId.get(r.id) as unknown as Record<string, unknown> | undefined;
+      const v: Record<string, unknown> = { ...(had ?? {}) };
+      // a field from the server is taken only with the same type the app knows (a bad edit from Admin, a text where a
+      // list should be, must not crash the app for everyone)
+      for (const part of [r.data, r.edit]) {
+        if (!part || typeof part !== 'object' || Array.isArray(part)) continue;
+        for (const [k, x] of Object.entries(part)) {
+          if (k === '__proto__' || k === 'constructor' || k === 'prototype' || x === null || x === undefined) continue;
+          const ref = had?.[k] ?? sample?.[k];
+          if (ref !== undefined && (Array.isArray(ref) !== Array.isArray(x) || typeof ref !== typeof x)) continue;
+          v[k] = x;
+        }
+      }
+      v.id = r.id;
+      const kind = KINDS[v.k as string];
+      if (typeof v.name !== 'string' || !v.name || !kind || typeof v.lat !== 'number' || typeof v.lon !== 'number'
+          || !Number.isFinite(v.lat) || !Number.isFinite(v.lon)) continue;
+      v.cat = kind.cat;
+      if (!Array.isArray(v.cuisines)) v.cuisines = [];
+      if (typeof v.kind !== 'string' || !v.kind) v.kind = kind.label;
+      byId.set(r.id, v as unknown as Venue);
+    } catch { /* a bad row leaves the place as it was */ }
   }
   return [...byId.values()];
 }

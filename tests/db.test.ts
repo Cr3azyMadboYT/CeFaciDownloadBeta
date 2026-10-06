@@ -17,7 +17,7 @@ it('keeps every rule of the database', async () => {
     create publication supabase_realtime;
   `);
   await db.exec(fs.readdirSync('supabase/migrations').sort().map((f) => fs.readFileSync('supabase/migrations/' + f, 'utf8')).join('\n'));
-  await db.exec(`grant usage on schema public to authenticated; grant select, insert, update, delete on all tables in schema public to authenticated;`);
+  await db.exec(`grant usage on schema public to anon, authenticated;`);
   const U = { ana: '00000000-0000-0000-0000-00000000000a', bob: '00000000-0000-0000-0000-00000000000b', cris: '00000000-0000-0000-0000-00000000000c', teen: '00000000-0000-0000-0000-00000000000d', eve: '00000000-0000-0000-0000-00000000000e' };
   for (const id of Object.values(U)) await q('insert into auth.users values ($1)', [id]);
   let ok = 0, bad = 0;
@@ -60,7 +60,8 @@ it('keeps every rule of the database', async () => {
   await expectOk('teen accepts', () => as('teen', `update friendships set status = 'accepted' where requester = $1`, [U.ana]));
   await expectOk('ana asks cris', () => as('ana', `insert into friendships (requester, addressee) values ($1, $2)`, [U.ana, U.cris]));
   await expectOk('cris accepts', () => as('cris', `update friendships set status = 'accepted' where requester = $1`, [U.ana]));
-  eq('mutual friends bob-teen', (await as('bob', `select username from mutual_friends($1)`, [U.teen])).rows.map((r) => r.username), ['ana.p']);
+  eq('no mutual friends shown about a stranger', (await as('bob', `select username from mutual_friends($1)`, [U.teen])).rows.map((r) => r.username), []);
+  eq('mutual friends with a friend', (await as('teen', `select username from mutual_friends($1)`, [U.ana])).rows.map((r) => r.username), []);
   
   // crews
   await expectFail('crew needs 2 friends', () => as('ana', `select create_crew('Gașca', 'pizza', '#FF6A4D', array[$1]::uuid[])`, [U.bob]), /cel puțin 2/);
@@ -116,7 +117,7 @@ it('keeps every rule of the database', async () => {
   await expectFail('a vote for someone else', () => as('bob', `insert into outing_votes (plan_id, user_id, vote) values ($1, $2, 1)`, [pv, U.cris]));
   await expectFail('ana was not at the outing', () => as('ana', `insert into outing_votes (plan_id, vote) values ($1, 1)`, [pv]));
   await expectFail('a vote outside the scale', () => as('cris', `insert into outing_votes (plan_id, vote) values ($1, 5)`, [pv]));
-  eq('crew taste for a member', (await as('bob', `select venue_id, score, outings from crew_taste($1) order by venue_id`, [crew])).rows.map((r) => r.venue_id + ':' + r.score + '/' + r.outings), ['n1:4/1', 'n2:1/0']);
+  eq('crew taste for a member', (await as('bob', `select venue_id, score, outings from crew_taste($1) order by venue_id`, [crew])).rows.map((r) => r.venue_id + ':' + r.score + '/' + r.outings), ['n1:2/1', 'n2:1/0']);
   eq('crew taste hidden from others', (await as('ana', `select count(*)::int n from crew_taste($1)`, [crew])).rows[0].n, 0);
   eq('votes are private', (await as('cris', `select count(*)::int n from outing_votes`)).rows[0].n, 0);
   const one = (r) => { if (!r.rows.length) throw new Error('none'); };
@@ -129,9 +130,10 @@ it('keeps every rule of the database', async () => {
   await expectOk('the organiser votes', () => as('ana', `insert into outing_votes (plan_id, vote) values ($1, -1)`, [p3]));
   await expectFail('a plan cannot be sent to a crew you are not in', () => as('ana', `update plans set crew_id = $1 where id = $2 returning 1`, [crew, p3]).then(one), /găști din care faci parte/);
   await expectOk('the organiser can still cancel', () => as('ana', `update plans set status = 'cancelled' where id = $1`, [p3]));
-  eq('crew taste unchanged by outsiders', (await as('bob', `select venue_id, score, outings from crew_taste($1) order by venue_id`, [crew])).rows.map((r) => r.venue_id + ':' + r.score + '/' + r.outings), ['n1:4/1', 'n2:1/0']);
+  eq('crew taste unchanged by outsiders', (await as('bob', `select venue_id, score, outings from crew_taste($1) order by venue_id`, [crew])).rows.map((r) => r.venue_id + ':' + r.score + '/' + r.outings), ['n1:2/1', 'n2:1/0']);
   await expectOk('report a closed place', () => as('bob', `insert into reports (venue_id, kind) values ('n1', 'inchis')`));
-  await expectFail('report as someone else', () => as('bob', `insert into reports (user_id, venue_id, kind) values ($1, 'n1', 'inchis')`, [U.cris]));
+  await as('bob', `insert into reports (user_id, venue_id, kind, status, answer) values ($1, 'n1', 'inchis', 'rezolvat', 'gata')`, [U.cris]);
+  eq('a report is always the sender\'s and new', (await q(`select user_id, status, answer from reports where venue_id = 'n1' order by created_at desc limit 1`)).rows[0], { user_id: U.bob, status: 'nou', answer: null });
   eq('reports are not readable', (await as('bob', `select count(*)::int n from reports`)).rows[0].n, 0);
   // XP on the server
   await q(`insert into venues (id, name, cat, lat, lon) values ('n1', 'Caru', 'mancare', 44.4312, 26.1010), ('n2', 'Muzeu', 'cultura', 44.4320, 26.1020), ('n3', 'Bistro', 'mancare', 44.4330, 26.1030)`);
@@ -147,10 +149,18 @@ it('keeps every rule of the database', async () => {
   await q(`update xp_log set created_at = now() - interval '1 hour' where user_id = $1`, [U.bob]);
   eq('new place, same kind: +150', (await as('bob', `select xp_check_in('n3', 44.4330, 26.1030, 10) r`)).rows[0].r.gain, 150);
   eq('stamps follow', (await as('bob', `select stamps from profiles where id = $1`, [U.bob])).rows[0].stamps, 2);
-  await expectFail('the app cannot give itself the receipt XP', () => as('bob', `select xp_bill($1, 'n1', current_date)`, [U.bob]));
-  eq('receipt after check-in (as the service)', (await q(`select xp_bill($1, 'n1', (now() at time zone 'Europe/Bucharest')::date) r`, [U.bob])).rows[0].r.gain, 25);
-  eq('receipt only once', (await q(`select xp_bill($1, 'n1', (now() at time zone 'Europe/Bucharest')::date) r`, [U.bob])).rows[0].r.gain, 0);
-  eq('no receipt without check-in', (await q(`select xp_bill($1, 'n2', current_date) r`, [U.bob])).rows[0].r.gain, 0);
+  await expectFail('the app cannot give itself the receipt XP', () => as('bob', `select xp_bill($1, 'n1', current_date, 'x')`, [U.bob]));
+  const bday = `(now() at time zone 'Europe/Bucharest')::date`;
+  eq('before reading the photo: ready', (await q(`select xp_bill_ready($1, 'n1', ${bday}) r`, [U.bob])).rows[0].r.ok, true);
+  eq('before reading the photo: no check-in, no Google', (await q(`select xp_bill_ready($1, 'n2', ${bday}) r`, [U.bob])).rows[0].r.ok, false);
+  eq('before reading the photo: not a day in the future', (await q(`select xp_bill_ready($1, 'n1', ${bday} + 1) r`, [U.bob])).rows[0].r.ok, false);
+  eq('receipt after check-in (as the service)', (await q(`select xp_bill($1, 'n1', ${bday}, '12345678|2026-10-06|21:30|120.00') r`, [U.bob])).rows[0].r.gain, 25);
+  eq('receipt only once', (await q(`select xp_bill($1, 'n1', ${bday}, '12345678|2026-10-06|21:31|99.00') r`, [U.bob])).rows[0].r.gain, 0);
+  eq('one check-in, not two receipts (the next day)', (await q(`select xp_bill($1, 'n1', ${bday} + 1, '12345678|2026-10-07|00:30|50.00') r`, [U.bob])).rows[0].r.gain, 0);
+  eq('no receipt without check-in', (await q(`select xp_bill($1, 'n2', current_date, '1|2|3|4') r`, [U.bob])).rows[0].r.gain, 0);
+  await q(`insert into xp_log (user_id, kind, venue_id, cat, amount) values ($1, 'checkin', 'n1', 'bar', 100)`, [U.ana]);
+  eq('the same receipt photo from another account', (await q(`select xp_bill($1, 'n1', ${bday}, '12345678|2026-10-06|21:30|120.00') r`, [U.ana])).rows[0].r.error, 'Bonul ăsta a fost deja pus.');
+  await expectFail('a check-in at a place that is not in the list', () => as('cris', `select xp_check_in('x-inventat', 44.4313, 26.1011, 5, 'k1', 44.4313, 26.1011)`), /Nu știm/);
   await expectFail('the app cannot read the Google key', () => as('bob', `select google_key()`));
   eq('weather is readable', (await as('bob', `select count(*)::int n from weather`)).rows[0].n, 0);
   await expectFail('the app cannot write the weather', () => as('bob', `insert into weather (data) values ('{}')`));
@@ -213,7 +223,7 @@ it('keeps every rule of the database', async () => {
   eq('every table has row security', (await q(`select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity`)).rows, []);
   await expectFail('the public key cannot import places', async () => { await db.exec(`reset role; set role anon;`); try { await q(`select import_places('[]'::jsonb, now())`); } finally { await db.exec('reset role'); } }, /permission denied/);
   await expectFail('a phone cannot import places', () => as('bob', `select import_places('[]'::jsonb, now())`), /permission denied/);
-  await expectFail('a phone cannot give itself XP for a bill', () => as('bob', `select xp_bill($1, 'n1', current_date)`, [U.bob]), /permission denied/);
+  await expectFail('a phone cannot give itself XP for a bill', () => as('bob', `select xp_bill($1, 'n1', current_date, 'x')`, [U.bob]), /permission denied/);
 
   // rude names (decision Cornel, 06.10)
   await expectFail('rude username', () => as('eve', `select * from complete_signup('pu1a_mea', 'Eva', '2000-01-01')`), /alt nume/);
@@ -222,6 +232,43 @@ it('keeps every rule of the database', async () => {
   await expectOk('a normal name change', () => as('ana', `update profiles set first_name = 'Ursula' where id = $1`, [U.ana]));
   await expectFail('rude crew name', () => as('ana', `select create_crew('Gașca de p1zda', 'pizza', '#FF6A4D', array[$1, $2]::uuid[])`, [U.bob, U.teen]), /alt nume/);
   await expectFail('rude crew rename', () => as('bob', `update crews set name = 'cacaturi' where id = $1`, [crew]), /alt nume/);
+
+  // the attacks found on 07.10: nobody moves their row onto someone else
+  const one2 = (r) => { if (!r.rows.length) throw new Error('none'); };
+  await expectOk('eve signs up', () => as('eve', `select * from complete_signup('eve.x', 'Eva', '1995-01-01')`));
+  await expectOk('eve asks cris', () => as('eve', `insert into friendships (requester, addressee) values ($1, $2)`, [U.eve, U.cris]));
+  await expectFail('cris turns eve\'s request into a friendship with bob', () => as('cris', `update friendships set requester = $1, status = 'accepted' where requester = $2 and addressee = $3 returning 1`, [U.bob, U.eve, U.cris]).then(one2), /Nu se poate/);
+  await expectFail('a friend request to a minor by id', () => as('eve', `insert into friendships (requester, addressee) values ($1, $2)`, [U.eve, U.teen]));
+  const other = (await as('ana', `select create_crew('Doar noi', 'star', '#FFD43B', array[$1]::uuid[], true) id`, [U.teen])).rows[0].id;
+  await expectFail('moving into a crew you were not invited to', () => as('cris', `update crew_members set crew_id = $1, status = 'member' where crew_id = $2 and user_id = $3 returning 1`, [other, crew, U.cris]).then(one2), /Nu se poate/);
+  await expectFail('moving onto a plan you were not called to', () => as('bob', `update plan_members set plan_id = $1 where plan_id = $2 and user_id = $3 returning 1`, [p3, pv, U.bob]).then(one2));
+  const solo = (await as('cris', `select start_vote(null, null, $1::jsonb, now() + interval '1 hour') id`, [opts])).rows[0].id;
+  const soloOpt = (await as('cris', `select id from vote_options where session_id = $1 limit 1`, [solo])).rows[0].id;
+  await expectOk('cris votes in a vote of her own', () => as('cris', `insert into ballots (session_id, option_id, user_id, value) values ($1, $2, $3, 'super')`, [solo, soloOpt, U.cris]));
+  await expectFail('and cannot move that vote into another vote', () => as('cris', `update ballots set session_id = $1 where session_id = $2 returning 1`, [vs2, solo]).then(one2));
+  await expectFail('a ballot must be for an option of its vote', () => q(`insert into ballots (session_id, option_id, user_id, value) values ($1, $2, $3, 'da')`, [vs2, soloOpt, U.bob]));
+  await expectFail('a vote with 11 options', () => as('cris', `select start_vote(null, null, $1::jsonb, now() + interval '1 hour')`, [JSON.stringify(Array.from({ length: 11 }, (_, i) => ({ venue_id: 'v' + i, venue_name: 'V' + i })))]), /cel mult 10/);
+  await expectFail('the crew link cannot be set by hand', () => as('bob', `update crews set invite_token = 'parola123456', invite_expires_at = now() + interval '10 years' where id = $1 returning 1`, [crew]).then(one2));
+  await expectFail('a plan in the past (to fill the crew taste)', () => as('bob', `insert into plans (owner_id, crew_id, venue_id, venue_name, starts_at) values ($1, $2, 'n1', 'X', '2000-01-01')`, [U.bob, crew]));
+  eq('a plan takes the real name of the place', (await as('bob', `insert into plans (owner_id, venue_id, venue_name, starts_at) values ($1, 'n3', 'Ceva urât', now() + interval '1 hour') returning venue_name`, [U.bob])).rows[0].venue_name, 'Bistro');
+  await expectFail('no rude name for a place not in the list', () => as('bob', `insert into plans (owner_id, venue_id, venue_name, starts_at) values ($1, 'x1', 'La muie', now() + interval '1 hour')`, [U.bob]), /alt nume/);
+  // without an account: only the places, and not who changed them
+  const anon = async (sql) => { await db.exec('reset role; set role anon;'); try { return await q(sql); } finally { await db.exec('reset role'); } };
+  eq('the public key reads the places', (await anon(`select count(*)::int n from venues`)).rows[0].n > 0, true);
+  eq('but not who edited them', await anon(`select edited_by from venues limit 1`).then(() => 'read', () => 'denied'), 'denied');
+  eq('nor the profiles', await anon(`select count(*) from profiles`).then(() => 'read', () => 'denied'), 'denied');
+  eq('nor the weather', await anon(`select count(*) from weather`).then(() => 'read', () => 'denied'), 'denied');
+  // the notifications of a phone follow the account on it
+  await expectOk('bob registers his phone', () => as('bob', `select push_token_save('tok-telefon-1')`));
+  await expectOk('cris signs in on the same phone', () => as('cris', `select push_token_save('tok-telefon-1')`));
+  eq('the phone is now cris\'s', (await q(`select user_id from push_tokens where token = 'tok-telefon-1'`)).rows[0].user_id, U.cris);
+  // Google: quotas, and the weather asked once
+  const quota = async (who, n) => (await q(`select api_quota($1, 'e-deschis', $2) ok`, [U[who], n])).rows[0].ok;
+  eq('places checked: within the hour quota', [await quota('bob', 12), await quota('bob', 12), await quota('bob', 12), await quota('bob', 12)], [true, true, true, false]);
+  eq('another person has their own quota', await quota('cris', 12), true);
+  await expectFail('a phone cannot use the quota', () => as('bob', `select api_quota($1, 'e-deschis', 1)`, [U.bob]), /permission denied/);
+  eq('the weather: the first caller takes the turn', (await q(`select weather_turn() t`)).rows[0].t, true);
+  eq('the others do not go to Google', (await q(`select weather_turn() t`)).rows[0].t, false);
 
   // the free Plus week: once per phone, not per account (Cornel, 06.10)
   const dev1 = 'a'.repeat(64), dev2 = 'b'.repeat(64), dev3 = 'c'.repeat(64);
@@ -252,6 +299,9 @@ it('keeps every rule of the database', async () => {
   await expectFail('a stranger does not', () => as('cris', `select biz_today($1)`, [nid]), /Nu ești/);
   eq('a stranger does not see the code', (await as('cris', `select count(*)::int n from venue_codes`)).rows[0].n, 0);
 
+  const fresh = (await as('eve', `select * from reservation_request($1, now() + interval '2 days', 2)`, [nid])).rows[0];
+  eq('a brand-new account waits for the place to confirm', fresh.status, 'cerută');
+  await q(`update profiles set created_at = now() - interval '30 days' where id = $1`, [U.ana]);
   const resv = (await as('ana', `select * from reservation_request($1, now() + interval '30 minutes', 2)`, [nid])).rows[0];
   eq('a small table is confirmed by itself', resv.status, 'confirmată');
   const big = (await as('teen', `select * from reservation_request($1, now() + interval '1 day', 9)`, [nid])).rows[0];
@@ -259,14 +309,18 @@ it('keeps every rule of the database', async () => {
   await expectFail('a client cannot confirm', () => as('teen', `select reservation_decide($1, true)`, [big.id]), /Nu ai voie/);
   await expectOk('the place confirms', () => as('bob', `select reservation_decide($1, true)`, [big.id]));
   await expectFail('too soon', () => as('cris', `select reservation_request($1, now() + interval '5 minutes', 2)`, [nid]), /15 minute/);
-  const scan = (await as('ana', `select visit_scan($1, '7', 2) s`, [today.token])).rows[0].s;
+  const scan = (await as('ana', `select visit_scan($1, 44.5657, 25.9261, '7', 2) s`, [today.token])).rows[0].s;
   eq('"Am ajuns" with a reservation: the word of the day', [scan.kind, scan.word, scan.table], ['rezervare', today.word, '7']);
-  eq('scanning again is the same visit', (await as('ana', `select visit_scan($1) s`, [today.token])).rows[0].s.visit, scan.visit);
-  await expectFail('a wrong code', () => as('ana', `select visit_scan('XXXXXXXXXX')`), /nu e al unui local/);
+  eq('scanning again is the same visit', (await as('ana', `select visit_scan($1, 44.5657, 25.9261) s`, [today.token])).rows[0].s.visit, scan.visit);
+  await expectFail('a wrong code', () => as('ana', `select visit_scan('XXXXXXXXXX', 44.5657, 25.9261)`), /nu e al unui local/);
+  await expectFail('a photo of the code, scanned from home', () => as('eve', `select visit_scan($1, 44.43, 26.10)`, [today.token]), /când ești la local/);
+  eq('the app does not see the firm, the CUI or the percent', await as('eve', `select cui from partners`).then(() => 'read', () => 'denied'), 'denied');
+  eq('only what the app needs', (await as('eve', `select venue_id, reservations_on from partners`)).rows.length, 1);
 
   await expectFail('no tobacco in a Live Drop', () => as('bob', `select drop_create($1, 'Narghilea -15%', 15, 20, 10, 60)`, [nid]), /tutun/);
   await expectFail('Plus gets at least 5 points more', () => as('bob', `select drop_create($1, 'Desert -15%', 15, 16, 10, 60)`, [nid]));
   await expectFail('only the owner or the manager', () => as('ana', `select drop_create($1, 'Desert -15%', 15, 20, 10, 60)`, [nid]), /proprietarul/);
+  await expectFail('tobacco written with a zero', () => as('bob', `select drop_create($1, 'N4rghilea -15%', 15, 20, 10, 60)`, [nid]), /tutun/);
   const drop = (await as('bob', `select * from drop_create($1, 'Cocktailuri -15%', 15, 20, 4, 60)`, [nid])).rows[0];
   eq('alcohol means 18+', drop.adult, true);
   await expectFail('not twice at the same time', () => as('bob', `select drop_create($1, 'Desert -15%', 15, 20, 10, 60)`, [nid]), /deja un Live Drop/);
@@ -274,9 +328,9 @@ it('keeps every rule of the database', async () => {
   await expectFail('someone already there today cannot', () => as('ana', `select drop_claim($1, 2)`, [drop.id]), /deja la local/);
   await expectOk('cris takes 3 seats', () => as('cris', `select drop_claim($1, 3)`, [drop.id]));
   await expectFail('one offer at a time', () => as('cris', `select drop_claim($1, 1)`, [drop.id]), /deja o ofertă/);
-  const dropScan = (await as('cris', `select visit_scan($1) s`, [today.token])).rows[0].s;
+  const dropScan = (await as('cris', `select visit_scan($1, 44.5657, 25.9261) s`, [today.token])).rows[0].s;
   eq('"Am ajuns" with the offer', [dropScan.kind, dropScan.discount, dropScan.people], ['drop', 15, 3]);
-  const teenScan = (await as('teen', `select visit_scan($1) s`, [today.token])).rows[0].s;
+  const teenScan = (await as('teen', `select visit_scan($1, 44.5657, 25.9261) s`, [today.token])).rows[0].s;
   eq('without a reservation or an offer: a visit from a plan', [teenScan.kind, teenScan.discount], ['plan', 0]);
 
   await expectFail('a phone cannot put a receipt', () => as('ana', `select visit_receipt($1, $2, '12345678', 200, 20, now())`, [U.ana, scan.visit]), /permission denied/);
@@ -286,6 +340,7 @@ it('keeps every rule of the database', async () => {
   await expectOk('bob adds teen to scan codes', () => as('bob', `select biz_team_set($1, '@teen', 'scanare')`, [nid]));
   await expectFail('the one who scans does not close the evening', () => as('teen', `select visit_close($1, true, 100)`, [scan.visit]), /Nu ai voie/);
   await expectFail('a receipt means they came', () => as('bob', `select visit_close($1, false)`, [scan.visit]), /a venit/);
+  await expectFail('closing without saying if they came', () => as('bob', `select visit_close($1, null, 150)`, [scan.visit]), /au venit/);
   await expectOk('the place closes the evening', () => as('bob', `select visit_close($1, true, 150)`, [scan.visit]));
   await expectOk('and the table from the offer', () => as('bob', `select visit_close($1, true, 300)`, [dropScan.visit]));
   await expectOk('and the visit from a plan', () => as('bob', `select visit_close($1, true, 500)`, [teenScan.visit]));

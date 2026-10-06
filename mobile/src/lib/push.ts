@@ -16,8 +16,12 @@ export async function registerPush(): Promise<void> {
     if (!perm.granted) return;
     const { data: token } = await Notifications.getDevicePushTokenAsync();
     if (!token || token === saved) return;
+    // the phone's token belongs to the account signed in on it now (07.10: after a failed sign-out it stayed with the
+    // old account, which kept getting its notifications here)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (sb() as any).from('push_tokens').upsert({ token, platform: 'android', updated_at: new Date().toISOString() });
+    let { error } = await (sb() as any).rpc('push_token_save', { p_token: token });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (error && /push_token_save|function/i.test(error.message ?? '')) ({ error } = await (sb() as any).from('push_tokens').upsert({ token, platform: 'android', updated_at: new Date().toISOString() }));
     if (!error) saved = token;
   } catch {
     /* no Firebase in this build yet, or no network: try again next time */
@@ -26,6 +30,8 @@ export async function registerPush(): Promise<void> {
 
 /** Signing out: this phone stops getting that account's notifications. */
 export async function forgetPush() {
+  // the receipt reminders name the place: they go too (07.10)
+  await Notifications.cancelAllScheduledNotificationsAsync().catch(() => {});
   if (!saved) return;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (sb() as any).from('push_tokens').delete().eq('token', saved).then(() => {}, () => {});

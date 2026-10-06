@@ -113,10 +113,8 @@ export async function cast(v: VoteFull, me: string, optionId: string, value: Bal
 export function watchVote(id: string, cb: () => void) {
   // a fresh channel name each time: reopening the same vote quickly must not reuse a channel that is still closing
   const ch = sb().channel('vote-' + id + '-' + Math.random().toString(36).slice(2))
-    .on('postgres_changes' as never, { event: 'INSERT', schema: 'public', table: 'ballots', filter: 'session_id=eq.' + id } as never, cb)
-    .on('postgres_changes' as never, { event: 'UPDATE', schema: 'public', table: 'ballots', filter: 'session_id=eq.' + id } as never, cb)
-    // deletes cannot be filtered on the server: check the vote here
-    .on('postgres_changes' as never, { event: 'DELETE', schema: 'public', table: 'ballots' } as never, (e: { old?: { session_id?: string } }) => { if (!e.old?.session_id || e.old.session_id === id) cb(); })
+    // every ballot touches its vote (vote_sessions.changed_at): the ballots themselves are not sent live, because a
+    // deleted row would go to everyone (07.10)
     .on('postgres_changes' as never, { event: 'UPDATE', schema: 'public', table: 'vote_sessions', filter: 'id=eq.' + id } as never, cb)
     .subscribe();
   const poll = setInterval(cb, 15000); // in case the live channel drops (a phone on the move)

@@ -6,6 +6,7 @@ import { Linking, ScrollView, View } from 'react-native';
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useFilters } from '../../lib/filters';
+import { telLink, webLink } from '../../lib/links';
 import { nextSurprise, refreshIfStale, setPlan, usePlans } from '../../lib/planAsk';
 import { Checking, makeTickets } from '../planuri-gata';
 import { APP } from '../../lib/session';
@@ -84,7 +85,7 @@ export default function PlanDeschis() {
                   {s.place.crowd ? <Muted numberOfLines={1} style={{ marginLeft: 58, marginTop: 3 }}>{'Lume: ' + s.place.crowd}</Muted> : null}
                   {s.reason ? <Muted numberOfLines={2} style={{ marginLeft: 58, marginTop: 4 }}>{s.reason}</Muted> : null}
                   <View style={{ marginLeft: 58, marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {c ? <Pill icon={c.site ? 'globe' : 'phone'} label={c.site ? 'Rezervă' : 'Sună'} onPress={() => (c.site ? open(c.site.startsWith('http') ? c.site : 'https://' + c.site) : void Linking.openURL('tel:' + c.phone.replace(/\s/g, '')))} /> : null}
+                    {c ? <Pill icon={c.site ? 'globe' : 'phone'} label={c.site ? 'Rezervă' : 'Sună'} onPress={() => { const w = c.site ? webLink(c.site) : null; const tl = c.site ? null : telLink(c.phone); if (w) open(w); else if (tl) void Linking.openURL(tl); }} /> : null}
                     <Pill icon="map" label="Drum" onPress={() => void Linking.openURL(nav)} />
                     <Pill icon="dice" label={OTHER[s.place.real.cat] ?? 'Altceva'} onPress={() => alt(k)} />
                   </View>

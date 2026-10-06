@@ -6,16 +6,17 @@ import { Linking, Platform, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Muted } from './kit';
 import { useTheme } from './theme';
+import { mapLink } from '../lib/links';
 
 function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable: boolean) {
   const data = JSON.stringify({ p, r, movable }).replace(/</g, '\\u003c');
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
+<link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'}}
 .pin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#FFD43B;border:3px solid #0E1440;box-shadow:0 3px 8px rgba(14,20,64,.35)}
 .err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5A6390;font:600 14px system-ui;text-align:center;padding:20px}</style></head>
 <body><div id="m"></div>
-<script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+<script integrity="sha384-GfxBM9x46BaAFxtCq39Fxir8fNZ4VDnwgfi6Kzi5/F1tAFsm0amuuV8kd+Pxzuf/" crossorigin="anonymous" src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
 <script>
 (function(){
   var D=${data}, map, marker;
@@ -47,7 +48,7 @@ function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable
       fit(); send({ready:true});
     });
   }
-  if(window.maplibregl) start(); else { var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';s.onload=start;s.onerror=start;document.head.appendChild(s); }
+  if(window.maplibregl) start(); else { var s=document.createElement('script');s.integrity='sha384-GfxBM9x46BaAFxtCq39Fxir8fNZ4VDnwgfi6Kzi5/F1tAFsm0amuuV8kd+Pxzuf/';s.crossOrigin='anonymous';s.src='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';s.onload=start;s.onerror=start;document.head.appendChild(s); }
 })();
 </script></body></html>`;
 }
@@ -87,8 +88,8 @@ export function RadiusMap({ point, km, height = 260, movable = true, onMove }: {
         javaScriptEnabled
         nestedScrollEnabled
         setSupportMultipleWindows={false}
-        onShouldStartLoadWithRequest={(req) => { if (/^(about:|data:)/.test(req.url)) return true; Linking.openURL(req.url).catch(() => {}); return false; }}
-        onMessage={(e) => { try { const m = JSON.parse(e.nativeEvent.data); if (m.ready) resend(); if (m.moved && onMove) { shown.current = m.moved; onMove(m.moved); } } catch { /* ignore */ } }}
+        onShouldStartLoadWithRequest={(req) => { if (/^(about:|data:)/.test(req.url)) return true; const u = mapLink(req.url); if (u) Linking.openURL(u).catch(() => {}); return false; }}
+        onMessage={(e) => { try { const m = JSON.parse(e.nativeEvent.data); if (m.ready) resend(); if (m.moved && onMove && Number.isFinite(m.moved.lat) && Number.isFinite(m.moved.lon) && m.moved.lat > 43.9 && m.moved.lat < 45 && m.moved.lon > 25.3 && m.moved.lon < 26.9) { const at = { lat: Number(m.moved.lat), lon: Number(m.moved.lon) }; shown.current = at; onMove(at); } } catch { /* ignore */ } }}
         style={{ backgroundColor: t.bg }}
       />
     </View>

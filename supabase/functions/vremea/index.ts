@@ -11,15 +11,17 @@ const r1 = (n: number | undefined) => (typeof n === 'number' ? Math.round(n * 10
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
-  const { data: row } = await db.from('weather').select('updated_at').eq('id', 1).maybeSingle();
-  if (row && Date.now() - new Date(row.updated_at).getTime() < 50 * 60e3) return json({ fresh: true });
+  // one caller at a time takes the turn (07.10): calls that arrive together, or after Google failed, do not all go to
+  // Google; a turn taken is good for 50 minutes, a failed one is tried again after 10
+  const { data: turn } = await db.rpc('weather_turn');
+  if (!turn) return json({ fresh: true });
   const { data: key } = await db.rpc('google_key');
   if (!key) return json({ error: 'Fără cheie Google.' }, 503);
 
   const hours: unknown[] = [];
   let token = '';
   for (let page = 0; page < 2; page++) {
-    const res = await fetch(`https://weather.googleapis.com/v1/forecast/hours:lookup?key=${key}&${AT}&hours=48&pageSize=24${token ? '&pageToken=' + token : ''}`);
+    const res = await fetch(`https://weather.googleapis.com/v1/forecast/hours:lookup?${AT}&hours=48&pageSize=24${token ? '&pageToken=' + token : ''}`, { headers: { 'X-Goog-Api-Key': key } });
     if (!res.ok) return json({ error: 'Google: ' + res.status }, 502);
     const d = await res.json();
     for (const h of d.forecastHours ?? []) {
@@ -32,7 +34,7 @@ Deno.serve(async (req) => {
     token = d.nextPageToken ?? '';
     if (!token) break;
   }
-  const dres = await fetch(`https://weather.googleapis.com/v1/forecast/days:lookup?key=${key}&${AT}&days=7&pageSize=7`);
+  const dres = await fetch(`https://weather.googleapis.com/v1/forecast/days:lookup?${AT}&days=7&pageSize=7`, { headers: { 'X-Goog-Api-Key': key } });
   if (!dres.ok) return json({ error: 'Google: ' + dres.status }, 502);
   const days = ((await dres.json()).forecastDays ?? []).filter((d: Record<string, any>) => d?.displayDate).map((d: Record<string, any>) => ({
     d: `${d.displayDate.year}-${String(d.displayDate.month).padStart(2, '0')}-${String(d.displayDate.day).padStart(2, '0')}`,

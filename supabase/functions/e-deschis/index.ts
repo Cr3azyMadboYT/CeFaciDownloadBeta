@@ -2,11 +2,16 @@
 // a plan is shown, asks Google Maps whether each place in it is open at the time of its step, for the whole step.
 // Google's opening hours are not kept anywhere (their terms): only the place id, which may be kept, so the next check
 // is one call (public.venue_google). Up to 12 places a call, signed-in people only.
+// Safety (07.10): the phone sends only the place id and the time; the name and the position come from public.venues
+// (otherwise anyone could tie a real place to a closed one on Google, for everyone). Every check counts against a
+// quota (api_quota: per person and for the whole app each day), so nobody can run up the Google bill.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
-type Item = { id: string; name: string; lat: number; lon: number; at: string; until?: string };
+type Ask = { id: string; at: string; until?: string };
+type Item = Ask & { name: string; lat: number; lon: number };
+const okTime = (t: unknown) => typeof t === 'string' && t.length <= 40 && Math.abs(Date.parse(t) - Date.now()) < 9 * 864e5;
 type Point = { day: number; hour: number; minute: number };
 type Period = { open: Point; close?: Point };
 
@@ -44,8 +49,21 @@ Deno.serve(async (req) => {
   const { data: key } = await db.rpc('google_key');
   if (!key) return json({ error: 'Fără cheie Google.' }, 503);
   const body = await req.json().catch(() => ({}));
-  const items: Item[] = (Array.isArray(body.items) ? body.items : []).slice(0, 12)
-    .filter((x: Item) => x && typeof x.id === 'string' && typeof x.name === 'string' && typeof x.lat === 'number' && typeof x.lon === 'number' && x.at);
+  const asks: Ask[] = (Array.isArray(body.items) ? body.items : []).slice(0, 12)
+    .filter((x: Ask) => x && typeof x.id === 'string' && x.id.length <= 80 && okTime(x.at) && (x.until === undefined || okTime(x.until)));
+  const items: Item[] = [];
+  if (asks.length) {
+    const { data } = await db.from('venues').select('id, data, edit, status').in('id', [...new Set(asks.map((x) => x.id))]);
+    const real = new Map((data ?? []).filter((v) => v.status === 'on').map((v) => [v.id as string, { ...(v.data ?? {}), ...(v.edit ?? {}) } as Record<string, unknown>]));
+    for (const x of asks) {
+      const v = real.get(x.id);
+      if (v && typeof v.name === 'string' && typeof v.lat === 'number' && typeof v.lon === 'number') items.push({ id: x.id, at: x.at, until: x.until, name: v.name, lat: v.lat, lon: v.lon });
+    }
+  }
+  if (items.length) {
+    const { data: allowed } = await db.rpc('api_quota', { p_user: who.user.id, p_kind: 'e-deschis', p_n: items.length });
+    if (!allowed) return json({ checked: {}, limit: true }); // not checked: the plan stays as the app made it
+  }
 
   const known = new Map<string, string>();
   if (items.length) {

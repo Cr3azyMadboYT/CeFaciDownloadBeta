@@ -10,6 +10,9 @@ on:
     branches: [claude/new-session-hzbjtf, main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   apk:
     runs-on: ubuntu-latest

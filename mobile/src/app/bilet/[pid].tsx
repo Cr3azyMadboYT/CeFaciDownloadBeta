@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Linking, ScrollView, Share, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { canRate, rateOuting } from '../../lib/rate';
+import { webLink } from '../../lib/links';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
@@ -295,7 +296,7 @@ export default function Bilet() {
             {ct?.phone ? <Big label={'Sună · ' + ct.phone} icon={<Icon name="phone" color="#FFFFFF" />} onPress={() => go('tel:' + ct.phone.replace(/[^\d+]/g, ''), 'telefon')} /> : null}
             {ct?.phone && waNumber(ct.phone) ? <Big label="Scrie-le pe WhatsApp" color="#25D366" ink="#0E1440" icon={<Icon d="M3 21l1.65-4.8A9 9 0 1 1 8 20.2zM9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" color="#0E1440" />}
               onPress={() => go('https://wa.me/' + waNumber(ct.phone) + '?text=' + encodeURIComponent(script), 'WhatsApp')} /> : null}
-            {ct?.site ? <Big label="Rezervă pe site-ul lor" color={t.violet} ink="#0E1440" icon={<Icon name="globe" color="#0E1440" />} onPress={() => go(/^https?:/.test(ct.site) ? ct.site : 'https://' + ct.site, 'site')} /> : null}
+            {ct?.site ? <Big label="Rezervă pe site-ul lor" color={t.violet} ink="#0E1440" icon={<Icon name="globe" color="#0E1440" />} onPress={() => { const w = webLink(ct.site); if (w) go(w, 'site'); }} /> : null}
             {!ct?.phone && !ct?.site ? <Muted>Nu avem încă telefonul sau site-ul lor. Treceți pe acolo sau încercați fără rezervare.</Muted> : null}
             <View style={{ padding: 12, borderRadius: 14, backgroundColor: t.s2 }}>
               <T style={{ fontFamily: F.m, fontSize: 14, lineHeight: 20 }}>{script}</T>

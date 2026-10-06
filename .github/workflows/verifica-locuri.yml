@@ -55,16 +55,18 @@ jobs:
         if: inputs.from_run == ''
         env:
           PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
         run: |
           if [ -z "$PLACES_API_KEY" ]; then echo "Lipsește secretul PLACES_API_KEY: verificarea n-a rulat (locurile rămân ca înainte)." >> "$GITHUB_STEP_SUMMARY"; echo "skip=1" >> "$GITHUB_ENV"; exit 0; fi
-          node scripts/verify-places.mjs ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }}
+          if [ -n "$LIMIT" ]; then [[ "$LIMIT" =~ ^[0-9]+$ ]] || { echo "limit trebuie să fie un număr"; exit 1; }; node scripts/verify-places.mjs --limit "$LIMIT"; else node scripts/verify-places.mjs; fi
           cat docs/verificare-locuri.md >> "$GITHUB_STEP_SUMMARY"
       - name: Locurile bine cotate (nivelul 2)
         if: env.skip != '1' && inputs.rate && inputs.from_run == ''
         env:
           PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
         run: |
-          node scripts/rate-places.mjs ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }}
+          if [ -n "$LIMIT" ]; then [[ "$LIMIT" =~ ^[0-9]+$ ]] || { echo "limit trebuie să fie un număr"; exit 1; }; node scripts/rate-places.mjs --limit "$LIMIT"; else node scripts/rate-places.mjs; fi
           cat docs/locuri-bine-cotate.md >> "$GITHUB_STEP_SUMMARY"
       - name: Localurile fără cele închise
         if: env.skip != '1'
