@@ -56,6 +56,15 @@ const MODELS = {
     // plafon lunar pe local (199 / 499 / 999 lei) — la volumele din simulare nu se atinge
     fee: (founder, groups) => Math.min(avg([199, 499, 999]), groups * GROUP * BILLED_SHARE * 0.95 * perHeadMarket(founder)),
   },
+  procent: {
+    name: 'Procent din bon: 10% (fondatorii 8%), doar la rezervări și Live Drops',
+    attract: 0.9,
+    free: (founder) => (founder ? 3 : 1),
+    // nota mesei (după reducerea din drop), din poza bonului sau din „Închide seara”; cel mult 100 lei pe masă;
+    // 0,95: același om cel mult 3 vizite cu comision pe an la același local
+    fee: (founder, groups) => groups * BILLED_SHARE * 0.95 * Math.min(100, (founder ? 0.08 : 0.10) * GROUP * SPEND * (REZ_OF_BILLED + (1 - REZ_OF_BILLED) * 0.85)),
+    pro: true,
+  },
   peOm: {
     name: 'Doar pe om (varianta v2)',
     attract: 1.0, // cât de ușor semnează un local (1 = cel mai ușor: nu plătește nimic fix)
