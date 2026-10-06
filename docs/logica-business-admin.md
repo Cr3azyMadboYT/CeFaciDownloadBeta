@@ -760,7 +760,7 @@ Orice nepotrivire pune **doar localul respectiv** deoparte (restul firmei se fac
      electronică a administratorului, serviciul de facturare cu e-Factura și serie, contabil, arhivă.
 2. **e-Factura:** fiecare factură către o firmă (și către PFA/II) se urcă în 5 zile (de verificat calendaristice sau
    lucrătoare). Originalul legal e XML-ul din SPV. Stornările sunt facturi separate, care trimit la factura inițială.
-3. **TVA:** nu suntem plătitori sub prag (de verificat: probabil 300.000 lei din septembrie 2025, nu 395.000). **Codul
+3. **TVA:** nu suntem plătitori sub prag: **395.000 lei pe an** (majorat de la 300.000 prin OG 22/2025, din 1 septembrie 2025; verificat 06.10). **Codul
    art. 317 imediat după înființare** (Google Cloud plătit din 3.11.2026, Supabase, Play, Meta, Resend…), trecut în
    conturile furnizorilor, declarația 301 lunar, 21% în plus la serviciile din străinătate. În contract: „Tarifele nu
    includ TVA. CeFaci nu este în prezent înregistrată în scopuri de TVA; dacă devine, TVA se adaugă la cota legală.” În

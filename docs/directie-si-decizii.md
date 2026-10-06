@@ -266,6 +266,14 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
 
 **În business:** tab-ul „Plăți”, ultimul din meniu: lista lunii (cu „ai fi plătit” în lunile gratuite), contestațiile, facturile, treapta cu cifrele ei, tarifele, „fără TVA”. (Canvasul arată încă „5% din bon” și „Închide masa” cu suma notei: se schimbă înainte să-l vadă vreun local; logica, cap. 9.) În Oferte e setarea reducerii Plus.
 
+## Propunerea din 06.10: „Cum câștigăm toți trei” (în așteptarea deciziei lui Cornel)
+
+După „primul an nu e profitabil deloc” am simulat 5 variante de bani × 3 scenarii de creștere, pe 24 de luni, cu costurile reale (`scripts/simulare-bani.mjs`) și am făcut prezentarea PDF `docs/prezentare/CeFaci-cum-castigam-toti-trei.pdf` (`node scripts/prezentare-bani.mjs`).
+- **Recomandarea:** tot plata pe om (nimic fix pentru local), dar la prețul pieței: rezervare / Live Drop 3/4, 7/9, 12/15 lei; fondatorii păstrează prețurile de lansare 2/3, 5/7, 8/10 lei; plafon lunar 199/499/999 lei; același om cel mult 3 vizite plătite pe an; petreceri (11+ oameni) cu taxă fixă 49–399 lei; Business Pro opțional 49 lei/lună din luna 4.
+- **De ce nu abonament:** cu puțini oameni, abonamentele ar lua 14–30% din ce aducem localurilor (cât Glovo); varianta pe om ia ~5–6% mereu și ajunge aproape de ele când avem oameni.
+- **Cifrele (varianta recomandată):** la 25 de oameni noi pe săptămână anul 1 −9.100 lei și anul 2 +8.200; la 75 pe săptămână anul 1 −1.200, anul 2 +62.700, pe plus din luna 7; la 150, anul 1 +15.900 și anul 2 +166.000. Ce contează mai mult decât prețul: creșterea, partenerii într-o singură zonă, verificarea Google doar la planul ales (altfel ~27.000 lei în plus cheltuiți în anul 1 la 75/săpt.).
+- **Lansarea în 3 săptămâni** depinde de testarea închisă Google Play (12 testeri, 14 zile, pornită cât mai repede) și de SRL; planul săptămână cu săptămână e în prezentare.
+
 ## Decizii din 29 septembrie seara
 
 - **Zona:** lansăm direct în tot Bucureștiul și Ilfovul, nu doar în Buftea. Aplicația are toate localurile din prima zi, din date publice gratuite (OpenStreetMap) plus adăugate de mână. Recomandările merg și la localurile nepartenere, iar partenerii își revendică pagina când văd clienți veniți din CeFaci.
@@ -284,7 +292,7 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
 
 Planul complet e în documentul „CeFaci — Banii și taxele: cum nu intrăm în datorii”. Ce schimbă față de cele de mai sus, dacă e aprobat:
 - **Firma:** SRL fără angajat la început, deci impozit pe profit 16%. Salariu (4.418 lei pe lună cost total) abia de la ~790 de ieșiri verificate pe lună. Fără salariu, pragul e ~200 de ieșiri, la ~1.521 lei costuri fixe.
-- **TVA:** nu suntem plătitori sub prag (de verificat: probabil 300.000 lei din septembrie 2025, nu 395.000), dar cerem codul special (art. 317) imediat după înființarea SRL-ului și plătim 21% TVA pe serviciile din străinătate. Contractele spun „Tarifele nu includ TVA. CeFaci nu este în prezent înregistrată în scopuri de TVA; dacă devine, TVA se adaugă la cota legală.”
+- **TVA:** nu suntem plătitori sub 395.000 lei pe an (plafonul din 1 septembrie 2025, OG 22/2025; verificat 06.10), dar cerem codul special (art. 317) imediat după înființarea SRL-ului și plătim 21% TVA pe serviciile din străinătate. Contractele spun „Tarifele nu includ TVA. CeFaci nu este în prezent înregistrată în scopuri de TVA; dacă devine, TVA se adaugă la cota legală.”
 - **Luna (înlocuit 06.10):** lista pe 3, contestații 3 zile lucrătoare, factura prin e-Factura, plata în 15 zile de la validarea ANAF; fără ieșire din recomandări; oprirea rezervărilor și drop-urilor doar pentru sume necontestate de cel puțin 30 de lei, la 30 de zile (logica, cap. 8.7–8.8).
 - **Reducerea Plus neaplicată:** nu mută nimeni bani (logica, cap. 7.5).
 - **Bilete (V2):** vândute „în numele și pe seama localului”, cu procesator care împarte plata (de exemplu Stripe Connect). Localul primește banii la 3 zile după eveniment, nu lunar.
