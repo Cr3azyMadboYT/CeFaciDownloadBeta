@@ -162,7 +162,7 @@ it('keeps every rule of the database', async () => {
   // saved state and the Plus week
   await expectOk('save app state', () => as('bob', `update profile_private set app_state = '{"xp":150}'::jsonb where id = $1`, [U.bob]));
   eq('state saved', (await as('bob', `select app_state->>'xp' x from profile_private`)).rows[0].x, '150');
-  const t1 = (await as('bob', `select start_plus_trial() t`)).rows[0].t;
+  const t1 = (await as('bob', `select start_plus_trial($1) t`, ['d'.repeat(64)])).rows[0].t;
   await db.exec(`select pg_sleep(0.01)`);
   eq('trial cannot restart', String((await as('bob', `select start_plus_trial() t`)).rows[0].t), String(t1));
   await as('bob', `update profile_private set plus_trial_started_at = now() + interval '30 days', birth_date = '2015-01-01' where id = $1`, [U.bob]);
@@ -209,7 +209,7 @@ it('keeps every rule of the database', async () => {
 
   // what the public key (anon) and a signed-in phone can call
   eq('anon can run no function', (await q(`select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute') order by 1`)).rows.map((r) => r.proname), []);
-  eq('server-only functions are closed to the app', (await q(`select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and p.proname in ('import_places', 'xp_bill', 'google_key') and has_function_privilege('authenticated', p.oid, 'execute')`)).rows, []);
+  eq('server-only functions are closed to the app', (await q(`select p.proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and p.proname in ('import_places', 'xp_bill', 'google_key', 'visit_receipt') and has_function_privilege('authenticated', p.oid, 'execute')`)).rows, []);
   eq('every table has row security', (await q(`select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity`)).rows, []);
   await expectFail('the public key cannot import places', async () => { await db.exec(`reset role; set role anon;`); try { await q(`select import_places('[]'::jsonb, now())`); } finally { await db.exec('reset role'); } }, /permission denied/);
   await expectFail('a phone cannot import places', () => as('bob', `select import_places('[]'::jsonb, now())`), /permission denied/);
@@ -223,9 +223,98 @@ it('keeps every rule of the database', async () => {
   await expectFail('rude crew name', () => as('ana', `select create_crew('Gașca de p1zda', 'pizza', '#FF6A4D', array[$1, $2]::uuid[])`, [U.bob, U.teen]), /alt nume/);
   await expectFail('rude crew rename', () => as('bob', `update crews set name = 'cacaturi' where id = $1`, [crew]), /alt nume/);
 
+  // the free Plus week: once per phone, not per account (Cornel, 06.10)
+  const dev1 = 'a'.repeat(64), dev2 = 'b'.repeat(64), dev3 = 'c'.repeat(64);
+  const trial1 = (await as('ana', `select start_plus_trial($1) t`, [dev1])).rows[0].t;
+  eq('the first account on a phone gets the week', !!trial1, true);
+  await expectFail('a second account on the same phone does not', () => as('cris', `select start_plus_trial($1)`, [dev1]), /folosit deja/);
+  eq('the same account on another phone keeps its week', String((await as('ana', `select start_plus_trial($1) t`, [dev2])).rows[0].t), String(trial1));
+  await expectFail('an old app without the phone code', () => as('teen', `select start_plus_trial()`), /Actualizează/);
+  await as('teen', `update profile_private set plus_trial_started_at = now() where id = $1`, [U.teen]);
+  eq('the week cannot be written by hand', (await q(`select plus_trial_started_at t from profile_private where id = $1`, [U.teen])).rows[0].t, null);
+  await as('bob', `update profile_private set plus_until = now() + interval '1 year' where id = $1`, [U.bob]);
+  eq('nor the Plus days', (await q(`select plus_until t from profile_private where id = $1`, [U.bob])).rows[0].t, null);
+  eq('the phone code is not kept as sent', (await q(`select count(*)::int n from private.trial_devices where device in ($1, $2)`, [dev1, dev2])).rows[0].n, 0);
+  eq('a phone cannot read the phones', await as('bob', `select count(*) from private.trial_devices`).then(() => 'read', () => 'denied'), 'denied');
+
+  // partners (06.10): reservations, Live Drops, "Am ajuns", the receipt, "Închide seara", 10% / 8% of the bill
+  await expectFail('a client cannot make a partner', () => as('bob', `select admin_partner_save($1, 'Firma SRL', 'RO123456', true, 'activ', 'bob')`, [nid]), /Nu ai voie/);
+  await expectFail('the place must exist', () => as('ana', `select admin_partner_save('nu-exista', 'Firma SRL', '123456', false)`), /nu există/);
+  const P = (await as('ana', `select * from admin_partner_save($1, 'Calul SRL', 'RO 12345678', true, 'activ', '@bob')`, [nid])).rows[0];
+  eq('a founder pays 8%, from 3 months on', [P.rate, P.cui, P.free_until > P.activated_at], ['0.080', '12345678', true]);
+  eq('the owner is on the team', (await as('bob', `select role from biz_my_venues()`)).rows.map((r) => r.role), ['proprietar']);
+  eq('the partner is logged', (await q(`select count(*)::int n from venue_log where venue_id = $1 and action = 'partener'`, [nid])).rows[0].n, 1);
+  for (let i = 0; i < 19; i++) await q(`insert into partners (venue_id, firm, cui, founder, rate, activated_at, free_until) values ($1, 'F SRL', '1234', true, 0.08, current_date, current_date)`, ['f' + i]);
+  await expectFail('20 founders at most', () => as('ana', `select admin_partner_save('n1', 'Bar SRL', '4321', true)`), /20 de fondatori/);
+  await q(`delete from partners where venue_id like 'f%'`);
+  const today = (await as('bob', `select biz_today($1) t`, [nid])).rows[0].t;
+  eq('the team sees the word of the day and the code', [!!today.word, !!today.token, today.role], [true, true, 'proprietar']);
+  await expectFail('a stranger does not', () => as('cris', `select biz_today($1)`, [nid]), /Nu ești/);
+  eq('a stranger does not see the code', (await as('cris', `select count(*)::int n from venue_codes`)).rows[0].n, 0);
+
+  const resv = (await as('ana', `select * from reservation_request($1, now() + interval '30 minutes', 2)`, [nid])).rows[0];
+  eq('a small table is confirmed by itself', resv.status, 'confirmată');
+  const big = (await as('teen', `select * from reservation_request($1, now() + interval '1 day', 9)`, [nid])).rows[0];
+  eq('a big one waits for the place', big.status, 'cerută');
+  await expectFail('a client cannot confirm', () => as('teen', `select reservation_decide($1, true)`, [big.id]), /Nu ai voie/);
+  await expectOk('the place confirms', () => as('bob', `select reservation_decide($1, true)`, [big.id]));
+  await expectFail('too soon', () => as('cris', `select reservation_request($1, now() + interval '5 minutes', 2)`, [nid]), /15 minute/);
+  const scan = (await as('ana', `select visit_scan($1, '7', 2) s`, [today.token])).rows[0].s;
+  eq('"Am ajuns" with a reservation: the word of the day', [scan.kind, scan.word, scan.table], ['rezervare', today.word, '7']);
+  eq('scanning again is the same visit', (await as('ana', `select visit_scan($1) s`, [today.token])).rows[0].s.visit, scan.visit);
+  await expectFail('a wrong code', () => as('ana', `select visit_scan('XXXXXXXXXX')`), /nu e al unui local/);
+
+  await expectFail('no tobacco in a Live Drop', () => as('bob', `select drop_create($1, 'Narghilea -15%', 15, 20, 10, 60)`, [nid]), /tutun/);
+  await expectFail('Plus gets at least 5 points more', () => as('bob', `select drop_create($1, 'Desert -15%', 15, 16, 10, 60)`, [nid]));
+  await expectFail('only the owner or the manager', () => as('ana', `select drop_create($1, 'Desert -15%', 15, 20, 10, 60)`, [nid]), /proprietarul/);
+  const drop = (await as('bob', `select * from drop_create($1, 'Cocktailuri -15%', 15, 20, 4, 60)`, [nid])).rows[0];
+  eq('alcohol means 18+', drop.adult, true);
+  await expectFail('not twice at the same time', () => as('bob', `select drop_create($1, 'Desert -15%', 15, 20, 10, 60)`, [nid]), /deja un Live Drop/);
+  await expectFail('a minor cannot take it', () => as('teen', `select drop_claim($1, 2)`, [drop.id]), /18 ani/);
+  await expectFail('someone already there today cannot', () => as('ana', `select drop_claim($1, 2)`, [drop.id]), /deja la local/);
+  await expectOk('cris takes 3 seats', () => as('cris', `select drop_claim($1, 3)`, [drop.id]));
+  await expectFail('one offer at a time', () => as('cris', `select drop_claim($1, 1)`, [drop.id]), /deja o ofertă/);
+  const dropScan = (await as('cris', `select visit_scan($1) s`, [today.token])).rows[0].s;
+  eq('"Am ajuns" with the offer', [dropScan.kind, dropScan.discount, dropScan.people], ['drop', 15, 3]);
+  const teenScan = (await as('teen', `select visit_scan($1) s`, [today.token])).rows[0].s;
+  eq('without a reservation or an offer: a visit from a plan', [teenScan.kind, teenScan.discount], ['plan', 0]);
+
+  await expectFail('a phone cannot put a receipt', () => as('ana', `select visit_receipt($1, $2, '12345678', 200, 20, now())`, [U.ana, scan.visit]), /permission denied/);
+  eq('a receipt from another firm', (await q(`select visit_receipt($1, $2, '999', 200, 20, now()) r`, [U.ana, scan.visit])).rows[0].r.ok, false);
+  eq('the receipt sets the bill', (await q(`select visit_receipt($1, $2, 'RO12345678', 200, 20, now()) r`, [U.ana, scan.visit])).rows[0].r, { ok: true, bill: 200, plus_day: false, receipts_this_month: 1 });
+  eq('the same receipt twice', (await q(`select visit_receipt($1, $2, '12345678', 200, 20, now()) r`, [U.ana, scan.visit])).rows[0].r.ok, false);
+  await expectOk('bob adds teen to scan codes', () => as('bob', `select biz_team_set($1, '@teen', 'scanare')`, [nid]));
+  await expectFail('the one who scans does not close the evening', () => as('teen', `select visit_close($1, true, 100)`, [scan.visit]), /Nu ai voie/);
+  await expectFail('a receipt means they came', () => as('bob', `select visit_close($1, false)`, [scan.visit]), /a venit/);
+  await expectOk('the place closes the evening', () => as('bob', `select visit_close($1, true, 150)`, [scan.visit]));
+  await expectOk('and the table from the offer', () => as('bob', `select visit_close($1, true, 300)`, [dropScan.visit]));
+  await expectOk('and the visit from a plan', () => as('bob', `select visit_close($1, true, 500)`, [teenScan.visit]));
+  eq('the receipt beats the place', (await q(`select bill, declared, bill_source from visits where id = $1`, [scan.visit])).rows[0], { bill: '200.00', declared: '150.00', bill_source: 'bon' });
+  const month = (await as('bob', `select biz_month($1) m`, [nid])).rows[0].m;
+  eq('free months: "you would have paid" 8% (plans pay nothing)', [month.fee, month.would_pay, month.lines.length], [0, 40, 2]);
+  await expectFail('someone who only scans does not see the month', () => as('teen', `select biz_month($1)`, [nid]), /Nu ai voie/);
+  await q(`update partners set free_until = current_date - 400 where venue_id = $1`, [nid]);
+  eq('after them, 8% of the bill', (await as('bob', `select biz_month($1) m`, [nid])).rows[0].m.fee, 40);
+  await q(`update visits set bill = 2000 where id = $1`, [dropScan.visit]);
+  eq('at most 100 lei a table', (await as('bob', `select biz_month($1) m`, [nid])).rows[0].m.fee, 116);
+  for (const d of [1, 2, 3]) await q(`insert into visits (venue_id, user_id, kind, work_day, scanned_at, outcome, bill, bill_source) values ($1, $2, 'rezervare', private.work_day(now()) - $3::int, now() - make_interval(days => $3::int), 'a venit', 100, 'local')`, [nid, U.ana, d]);
+  const fees = (await q(`select fee from private.visit_fees($1, private.work_day(now()) - 10, private.work_day(now())) where visit_id in (select id from visits where user_id = $2) order by work_day`, [nid, U.ana])).rows.map((r) => Number(r.fee));
+  eq('the same person: 3 tables a year at the same place', fees, [8, 8, 8, 0]);
+  const before = (await q(`select id from visits where user_id = $1 and work_day = private.work_day(now()) - 1`, [U.ana])).rows[0].id;
+  eq('every 2nd receipt: a Plus day', (await q(`select visit_receipt($1, $2, '12345678', 90, 0, now() - interval '1 day') r`, [U.ana, before])).rows[0].r.plus_day, true);
+  eq('Plus day lands on the account', (await q(`select plus_until > now() p from profile_private where id = $1`, [U.ana])).rows[0].p, true);
+  eq('a client sees only their own visits', (await as('cris', `select count(*)::int n from visits`)).rows[0].n, 1);
+  eq('the admin sees the partner and the month', (await as('ana', `select admin_partners() a`)).rows[0].a[0].month.fee, (await as('bob', `select biz_month($1) m`, [nid])).rows[0].m.fee);
+  await expectFail('a client does not see the partners', () => as('cris', `select admin_partners()`), /Nu ai voie/);
+  await q(`update partners set free_until = current_date + 30 where venue_id = $1`, [nid]);
+
     // account deletion
+  await expectOk('cris takes the week on a third phone', () => as('cris', `select start_plus_trial($1)`, [dev3]));
   await expectOk('delete account', () => as('cris', `select delete_my_account()`));
   eq('cris gone', (await q(`select count(*)::int n from profiles where id = $1`, [U.cris])).rows[0].n, 0);
+  await q('insert into auth.users values ($1) on conflict do nothing', [U.cris]);
+  await expectOk('cris comes back with a new account', () => as('cris', `select * from complete_signup('cris2', 'Cris', '1998-05-05')`));
+  await expectFail('a deleted account does not free the phone', () => as('cris', `select start_plus_trial($1)`, [dev3]), /folosit deja/);
   expect(bad, 'failed checks').toBe(0);
     expect(ok).toBeGreaterThan(40);
   

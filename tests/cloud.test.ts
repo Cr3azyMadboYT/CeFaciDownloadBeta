@@ -62,6 +62,18 @@ describe('cloud sync', () => {
     vi.advanceTimersByTime(3000);
     expect(updates).toHaveLength(1);
   });
+  it('starts the free Plus week with the phone code, and hears when the phone already had it', async () => {
+    const sent: any[] = [];
+    const told: string[] = [];
+    const answer = { data: null, error: { message: 'Săptămâna gratuită de Plus s-a folosit deja pe telefonul ăsta.' } };
+    const db = { ...fake({}).db, rpc: (fn: string, args?: any) => { sent.push([fn, args]); return Promise.resolve(answer); } } as CloudClient;
+    const up = makeUploader(db, 'u1', 3000, { device: async () => 'f'.repeat(64), refused: (m) => told.push(m) });
+    up({ plus: 'trial' }, {});
+    up({ plus: 'trial', xp: 1 }, {});
+    await new Promise((r) => setTimeout(r, 0));
+    expect(sent).toEqual([['start_plus_trial', { p_device: 'f'.repeat(64) }]]);
+    expect(told[0]).toMatch(/folosit deja/);
+  });
   it('explains a taken username', async () => {
     const { db } = fake({}, { complete_signup: { data: null, error: { message: 'duplicate key value violates unique constraint' } } });
     expect(await createAccount(db, { username: 'x', first: 'X', birth: '2000-01-01', prefs: {} })).toMatch(/luat/);

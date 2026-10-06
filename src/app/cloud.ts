@@ -44,8 +44,12 @@ export async function createAccount(db: CloudClient, p: { username: string; firs
   return msg || 'Nu am putut salva contul. Încearcă din nou.';
 }
 
+/** The free Plus week is once per phone, not per account (Cornel, 06.10): `device` gives the phone's code (already
+ * hashed), `refused` is told when the phone has had the week with another account. */
+export interface TrialPhone { device: () => Promise<string | null>; refused: (message: string) => void }
+
 /** Sends the answers and the saved state, at most every few seconds. */
-export function makeUploader(db: CloudClient, userId: string, wait = 3000) {
+export function makeUploader(db: CloudClient, userId: string, wait = 3000, phone?: TrialPhone) {
   let t: ReturnType<typeof setTimeout> | undefined;
   let trialAsked = false;
   let lastSent = '';
@@ -53,10 +57,18 @@ export function makeUploader(db: CloudClient, userId: string, wait = 3000) {
   return (state: Record<string, unknown>, prefs: Record<string, unknown>) => {
     if (state.plus === 'trial' && !trialAsked) {
       trialAsked = true; // the server keeps the first start date; the phone takes it from there
-      db.rpc('start_plus_trial').then(({ data }) => {
+      void (async () => {
+        const device = phone ? await phone.device().catch(() => null) : null;
+        const { data, error } = await db.rpc('start_plus_trial', device ? { p_device: device } : {});
+        if (error) {
+          const msg = String((error as { message?: string }).message ?? '');
+          if (/folosit deja/.test(msg)) phone?.refused(msg);
+          else if (!/Actualizează/.test(msg)) trialAsked = false; // the network: try again with the next save
+          return;
+        }
         if (!data) return;
         const s = read(SKEY); s.plusStart = Date.parse(data); write(SKEY, s);
-      });
+      })().catch(() => { trialAsked = false; });
     }
     const { name, user, birth, google, here, ...answers } = prefs; // these live elsewhere or stay on the phone
     void name; void user; void birth; void google; void here;

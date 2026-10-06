@@ -11,6 +11,7 @@ const M: Record<string, [Mood, string, string, string | null]> = {
   gift: ['yay', 'Poftim: 7 zile de CeFaci Plus, cadou de la mine! Reducerile pornesc când intră primii parteneri. Când se termină, pagina se încețoșează iar, dar o reactivezi oricând.', 'Arată-mi Plus', null],
   day5: ['wink', 'Mai ai 3 zile din săptămâna de Plus. Nu-ți luăm nimic automat la final.', 'Mersi, Bilu!', null],
   expired: ['hi', 'Hei, săptămâna de probă a expirat! Vrei să continui sau ne oprim aici? Poți reveni oricând!', 'Continui cu Plus · 20 lei pe lună', 'Ne oprim aici'],
+  used: ['hi', 'Săptămâna gratuită de Plus s-a folosit deja pe telefonul ăsta, cu alt cont. E una pe telefon, ca să fie corect pentru toți. Plus merge mai departe cu 20 lei pe lună.', 'Am înțeles', null],
   pay: ['wink', 'Plata pentru Plus vine curând, prin Google Play. Până atunci nu-ți luăm niciun ban.', 'Am înțeles', null],
 };
 

@@ -8,6 +8,7 @@ import { APP, initBridge, type Home, type Prefs } from '../../../src/app/bridge'
 import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
+import { phoneCode } from './device';
 import { forgetPush, registerPush } from './push';
 import { loadWeather } from './weather';
 import { deleteAccountEverywhere, emailStart, emailVerify, hasStoredSession, sb, signInWithGoogle, signOutEverywhere, watchAuth, type Who } from './auth';
@@ -231,7 +232,8 @@ async function connect(who: Who) {
   try {
     const r = await restore(sb(), who.id);
     if (signedIn !== who.id) return;
-    const upload = makeUploader(sb(), who.id);
+    // the free Plus week once per phone: a second account on the same phone hears it from Bilu
+    const upload = makeUploader(sb(), who.id, 3000, { device: phoneCode, refused: () => setBoard({ plus: 'off', plusModal: 'used' }) });
     APP.prefs = { ...APP.prefs, ...JSON.parse(localStorage.getItem('cefaci.prefs') || '{}'), google: who.id };
     APP.rebuild();
     APP.onSaved = (state) => { if (snap.known) upload(state, APP.prefs as unknown as Record<string, unknown>); };
