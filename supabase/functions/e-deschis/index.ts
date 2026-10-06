@@ -16,7 +16,7 @@ type Point = { day: number; hour: number; minute: number };
 type Period = { open: Point; close?: Point };
 
 const km = (a: { lat: number; lon: number }, b: { lat: number; lon: number }) => { const r = Math.PI / 180, dl = (b.lat - a.lat) * r, dn = (b.lon - a.lon) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dn / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); };
-const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').trim();
+const fold = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').trim();
 const sameName = (a: string, b: string) => { const fa = fold(a), fb = fold(b); return fa.includes(fb) || fb.includes(fa) || fa.split(' ').some((w) => w.length > 3 && fb.split(' ').includes(w)); };
 
 /** Minute of the week (0 = Sunday 00:00) of a moment, in the place's local time. */

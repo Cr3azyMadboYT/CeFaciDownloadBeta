@@ -22,10 +22,18 @@ begin
   return new;
 end $$;
 
-drop function if exists public.start_plus_trial();
+-- aplicațiile vechi (fără codul telefonului) nu mai pornesc proba pe server
+create or replace function public.start_plus_trial() returns timestamptz
+language plpgsql security definer set search_path = '' as $$
+declare started timestamptz;
+begin
+  select plus_trial_started_at into started from public.profile_private where id = auth.uid();
+  if started is not null then return started; end if;
+  raise exception 'Actualizează aplicația ca să pornești proba gratuită.';
+end $$;
 -- pornește săptămâna gratuită prima dată; după aceea spune doar când a început.
 -- Același cont pe alt telefon: rămâne proba lui. Alt cont pe un telefon care a avut deja proba: nu.
-create or replace function public.start_plus_trial(p_device text default null) returns timestamptz
+create or replace function public.start_plus_trial(p_device text) returns timestamptz
 language plpgsql security definer set search_path = '' as $$
 declare me uuid := auth.uid(); started timestamptz; dev text; owner uuid;
 begin
@@ -44,8 +52,8 @@ begin
   perform set_config('cefaci.trial', 'off', true);
   return started;
 end $$;
-revoke all on function public.start_plus_trial(text) from public, anon;
-grant execute on function public.start_plus_trial(text) to authenticated;
+revoke all on function public.start_plus_trial(text), public.start_plus_trial() from public, anon;
+grant execute on function public.start_plus_trial(text), public.start_plus_trial() to authenticated;
 
 -- la ștergerea contului, telefonul rămâne însemnat, dar fără cont
 create or replace function private.trial_devices_forget() returns trigger
@@ -55,5 +63,4 @@ begin
   return old;
 end $$;
 revoke all on function private.trial_devices_forget() from public;
-drop trigger if exists trial_devices_forget on public.profiles;
-create trigger trial_devices_forget after delete on public.profiles for each row execute function private.trial_devices_forget();
+create or replace trigger trial_devices_forget after delete on public.profiles for each row execute function private.trial_devices_forget();

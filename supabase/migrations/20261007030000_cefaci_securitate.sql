@@ -40,7 +40,6 @@ begin
      and session_user not in ('postgres', 'supabase_admin') then raise exception 'Doar serverul.' using errcode = '42501'; end if;
   if p_user is null or p_n not between 1 and 100 then return false; end if;
   perform pg_advisory_xact_lock(hashtext('cefaci.quota.' || p_kind));
-  delete from private.api_use where kind = p_kind and at < now() - interval '2 days';
   select coalesce(sum(n) filter (where at > now() - interval '1 hour'), 0), coalesce(sum(n), 0) into h, d
   from private.api_use where kind = p_kind and user_id = p_user and at > now() - interval '1 day';
   select coalesce(sum(n), 0) into all_d from private.api_use where kind = p_kind and at > now() - interval '1 day';
@@ -127,7 +126,12 @@ begin
   return jsonb_build_object('ok', true);
 end $$;
 
-drop function if exists public.xp_bill(uuid, text, date);
+-- varianta veche (fără bon) nu mai dă nimic: un check-in dădea două bonuri
+create or replace function public.xp_bill(p_user uuid, p_venue text, p_day date) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+begin
+  return jsonb_build_object('gain', 0, 'error', 'Actualizează aplicația ca să pui bonul.');
+end $$;
 -- +25 pentru bon: după un check-in acolo, o dată pe check-in (nu o dată pe zi aleasă de telefon), o dată pe bon
 create or replace function public.xp_bill(p_user uuid, p_venue text, p_day date, p_receipt text) returns jsonb
 language plpgsql security definer set search_path = '' as $$
@@ -223,16 +227,12 @@ begin
 end $$;
 do $$ declare t text; begin
   foreach t in array array['friendships', 'crew_members', 'plan_members', 'ballots', 'outing_votes', 'crews', 'plans'] loop
-    execute format('drop trigger if exists freeze_keys on public.%I', t);
-    execute format('create trigger freeze_keys before update on public.%I for each row execute function private.freeze_keys()', t);
+    execute format('create or replace trigger freeze_keys before update on public.%I for each row execute function private.freeze_keys()', t);
   end loop;
 end $$;
 
 -- un vot e mereu al votului lui (și în numărătoare: vote_results, plan_from_vote, crew_taste)
-delete from public.ballots b where not exists (select 1 from public.vote_options o where o.id = b.option_id and o.session_id = b.session_id);
-alter table public.vote_options drop constraint if exists vote_options_id_session;
 alter table public.vote_options add constraint vote_options_id_session unique (id, session_id);
-alter table public.ballots drop constraint if exists ballots_option_in_session;
 alter table public.ballots add constraint ballots_option_in_session foreign key (option_id, session_id) references public.vote_options (id, session_id) on delete cascade;
 
 -- gusturile gășcii: fiecare om contează o dată pe loc (nu poate umfla un loc cu zeci de planuri și voturi)
@@ -256,8 +256,7 @@ language sql stable security definer set search_path = '' as $$
 $$;
 
 -- un plan nou e pentru acum sau mai târziu, cu un nume de loc normal (ajunge în notificările altora)
-drop policy if exists plans_create on public.plans;
-create policy plans_create on public.plans for insert to authenticated with check (
+alter policy plans_create on public.plans with check (
   owner_id = (select auth.uid()) and (crew_id is null or private.crew_status(crew_id, (select auth.uid())) = 'member')
   and starts_at > now() - interval '6 hours' and starts_at < now() + interval '60 days'
 );
@@ -271,15 +270,11 @@ begin
   end if;
   return new;
 end $$;
-drop trigger if exists plan_name on public.plans;
-create trigger plan_name before insert or update of venue_id, venue_name on public.plans for each row execute function private.plan_name();
+create or replace trigger plan_name before insert or update of venue_id, venue_name on public.plans for each row execute function private.plan_name();
 
 -- mărimi normale (doar pentru rândurile noi: cele vechi rămân cum sunt)
-alter table public.plans drop constraint if exists plans_sizes;
 alter table public.plans add constraint plans_sizes check (char_length(venue_id) <= 80 and char_length(venue_name) <= 120 and pg_column_size(reservation) <= 2000) not valid;
-alter table public.vote_options drop constraint if exists vote_options_sizes;
 alter table public.vote_options add constraint vote_options_sizes check (char_length(venue_id) <= 80 and char_length(venue_name) <= 120 and pg_column_size(details) <= 4000) not valid;
-alter table public.profile_private drop constraint if exists profile_private_sizes;
 alter table public.profile_private add constraint profile_private_sizes check (pg_column_size(prefs) <= 20000 and pg_column_size(app_state) <= 400000) not valid;
 
 -- votul: cel mult 10 variante, nume normale, cel mult 30 de voturi pornite pe zi (fiecare trimite notificări)
@@ -328,8 +323,7 @@ begin
     raise exception 'Ai făcut destule gășci azi. Mâine mai poți.' using errcode = 'check_violation'; end if;
   return new;
 end $$;
-drop trigger if exists crew_limit on public.crews;
-create trigger crew_limit before insert on public.crews for each row execute function private.crew_limit();
+create or replace trigger crew_limit before insert on public.crews for each row execute function private.crew_limit();
 
 -- când pleacă adminul (și când își șterge contul), gașca primește alt admin dintre membri
 create or replace function private.crew_members_guard() returns trigger
@@ -354,8 +348,7 @@ end $$;
 -- ---------- 5. prietenii și semnalările ----------
 -- cereri de prietenie: direct (după username) doar către adulți — minorii se adaugă doar cu codul lor; cel mult 30 de
 -- cereri care așteaptă și 40 pe zi
-drop policy if exists friendships_ask on public.friendships;
-create policy friendships_ask on public.friendships for insert to authenticated
+alter policy friendships_ask on public.friendships
   with check (requester = (select auth.uid()) and status = 'pending' and accepted_at is null and coalesce(private.age(addressee), 0) >= 18);
 create or replace function private.friend_limit() returns trigger
 language plpgsql security definer set search_path = '' as $$
@@ -366,8 +359,7 @@ begin
     raise exception 'Ai trimis destule cereri de prietenie. Mai încearcă mâine.' using errcode = 'check_violation'; end if;
   return new;
 end $$;
-drop trigger if exists friend_limit on public.friendships;
-create trigger friend_limit before insert on public.friendships for each row execute function private.friend_limit();
+create or replace trigger friend_limit before insert on public.friendships for each row execute function private.friend_limit();
 
 -- prietenii comuni doar cu cineva pe care îl vezi deja (prieten, cerere, aceeași gașcă, același plan sau vot)
 create or replace function public.mutual_friends(p_other uuid)
@@ -402,8 +394,7 @@ begin
   end if;
   return new;
 end $$;
-drop trigger if exists report_guard on public.reports;
-create trigger report_guard before insert on public.reports for each row execute function private.report_guard();
+create or replace trigger report_guard before insert on public.reports for each row execute function private.report_guard();
 
 -- telefonul unui cont: un token de notificări aparține ultimului cont intrat pe el; cel mult 10 telefoane de cont
 create or replace function public.push_token_save(p_token text) returns void
@@ -440,20 +431,14 @@ begin
   end if;
   return null;
 end $$;
-drop trigger if exists touch_parent on public.ballots;
-create trigger touch_parent after insert or update or delete on public.ballots for each row execute function private.touch_parent();
-drop trigger if exists touch_parent on public.plan_members;
-create trigger touch_parent after insert or update or delete on public.plan_members for each row execute function private.touch_parent();
-do $$ declare t text; begin
-  foreach t in array array['friendships', 'crew_members', 'plan_members', 'ballots'] loop
-    begin execute format('alter publication supabase_realtime drop table public.%I', t); exception when others then null; end;
-  end loop;
-end $$;
+create or replace trigger touch_parent after insert or update or delete on public.ballots for each row execute function private.touch_parent();
+create or replace trigger touch_parent after insert or update or delete on public.plan_members for each row execute function private.touch_parent();
+alter publication supabase_realtime set table public.vote_sessions, public.plans, public.reservations, public.visits;
 
 -- ---------- drepturile ----------
 revoke all on function private.quota(text) from public;
 revoke all on function public.api_quota(uuid, text, int), public.weather_turn(), public.xp_bill_ready(uuid, text, date),
-  public.xp_bill(uuid, text, date, text), public.push_hook_secret() from public, anon, authenticated;
+  public.xp_bill(uuid, text, date, text), public.xp_bill(uuid, text, date), public.push_hook_secret() from public, anon, authenticated;
 revoke all on function public.push_token_save(text) from public, anon;
 grant execute on function public.push_token_save(text) to authenticated;
 revoke all on function public.start_vote(uuid, uuid[], jsonb, timestamptz, text), public.crew_taste(uuid), public.mutual_friends(uuid),
