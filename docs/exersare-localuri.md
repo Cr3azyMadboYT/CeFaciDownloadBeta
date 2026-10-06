@@ -24,8 +24,8 @@ CE E CeFaci (informație pentru tine; Andrei nu știe nimic până nu-i spun eu)
 - Partenerii primesc: Live Drops (oferte scurte pe orele goale, cu locuri limitate, pe care le văd oamenii din jur), rezervări din aplicație (și pentru gășci mari), clienți Plus, profilul lor (poze, meniu, evenimente, program), cifre (câți au venit prin CeFaci, nota medie, ce caută lumea în zonă), bilete la evenimente.
 - Reguli Live Drops: reducerea pentru toți e 10–15%; pentru clienții Plus e cu cel puțin 5 puncte mai mult (minim 15%, maxim 30%); reducerile nu se adună.
 - Dovada că omul a venit prin CeFaci: un cod QR CeFaci la bar, scanat de client, plus poza bonului fiscal (aplicația citește totalul). Clientul are motiv să scaneze: primește XP, iar reducerea Plus merge doar prin scanare.
-- Bani: comision 5% doar din nota meselor venite prin CeFaci (rezervări, Live Drops, clienți Plus). 0 lei pentru clienții veniți fără aplicație. 8% din biletele vândute online. Decont lunar.
-- Ofertă pentru localurile fondatoare (primele 15–20): 0% în primele 3 luni, apoi 4% pe viață în loc de 5%, plus insigna „Partener fondator”, scris în contract.
+- Bani: localul plătește doar pentru ce alege el să vândă prin CeFaci: 5 lei pentru fiecare om venit cu o rezervare din aplicație (confirmată de local) și 7 lei pentru fiecare om venit cu un Live Drop. Oamenii care vin din planurile aplicației (fără rezervare sau ofertă) și clienții Plus: 0 lei. 8% din biletele vândute online. Evenimente promovate, scrise clar „Sponsorizat”, separat de recomandări (sumă fixă pe săptămână). Bonul nu intră la plată. Decont lunar, cu lista lunii văzută de local înainte de factură.
+- Ofertă pentru localurile fondatoare (primele 15–20): 3 luni gratis, apoi cu 1 leu mai puțin pe om, pe viață (4 lei la rezervare, 6 lei la Live Drop), plus insigna „Partener fondator”, scris în contract.
 - CeFaci Plus (pentru clienți): 20 lei pe lună, 10–20% reducere la partenere (o dau localurile, pot exclude serile de vârf), pentru client și prietenii de la masă (max. 4).
 
 SCENARIUL (îl aleg eu în primul mesaj)
@@ -59,12 +59,12 @@ Trei lucruri, concret:
 
 **Când întreabă „cât mă costă?”**
 ```
-Primele 3 luni: 0. Nimic. După aceea, 4% doar din nota meselor venite sigur prin CeFaci, adică clientul scanează codul nostru de la bar și pune poza bonului. Cine intră pe ușă fără aplicație: 0 lei. Pentru că sunteți printre primii, 4% rămâne pe viață, scris în contract; cei care vin după plătesc 5%. Ca să comparăm: Glovo ia în jur de 25%, o reclamă pe Facebook o plătiți înainte, fără să știți dacă aduce pe cineva.
+Oamenii care vă găsesc în aplicație și vin din planuri: gratis, mereu, noi sau vechi. Plătiți doar pentru ce puneți dumneavoastră în aplicație: un Live Drop pe o seară goală sau o rezervare confirmată de dumneavoastră, și doar pentru omul care chiar a venit. Primele 3 luni: nimic. După aceea, ca partener fondator, 4 lei de om la rezervare și 6 lei la Live Drop, pe viață, scris în contract; cei care vin după plătesc 5 și 7. Ca să comparăm: Glovo ia în jur de 25%, o reclamă pe Facebook o plătiți înainte, fără să știți dacă aduce pe cineva.
 ```
 
 **Când zice „n-aveți oameni în aplicație”**
 ```
-Aveți dreptate, abia pornim, și de asta e 0% trei luni: nu riscați nimic. Dacă nu vă aducem pe nimeni, nu plătiți nimic. Dacă vă aducem, aveți 4% pe viață, când ceilalți vor plăti 5%. Riscul e al nostru, nu al dumneavoastră.
+Aveți dreptate, abia pornim, și de asta primele 3 luni sunt gratis: nu riscați nimic. Și după aceea plătiți doar pentru omul care a venit cu oferta sau rezervarea dumneavoastră. Dacă nu vine nimeni, nu plătiți nimic. Riscul e al nostru, nu al dumneavoastră.
 ```
 
 **Când zice „ospătarii n-au timp de aplicații”**
@@ -100,12 +100,12 @@ Bună ziua, Cornel de la CeFaci. Nu vă vând nimic azi, vreau doar să vă ară
 
 **Când întreabă „și atunci de ce să plătesc?”**
 ```
-Pentru ce nu primiți acum: oamenii vin doar când îi trimite aplicația singură. Ca partener puteți umple serile goale cu Live Drops, primiți rezervările gășcilor mari și clienții Plus, care caută anume localurile cu reducere. Dacă de la 63 de oameni ajungem la 150 pe lună, la bonul mediu de acum asta înseamnă cam 17.500 lei încasări în plus. 5% din ce vine prin noi e mult sub ce dați pe Glovo sau pe reclame.
+Pentru ce nu primiți acum: oamenii vin doar când îi trimite aplicația singură. Ca partener puteți umple serile goale cu Live Drops, primiți rezervările gășcilor mari și clienții Plus, care caută anume localurile cu reducere. Dacă de la 63 de oameni ajungem la 150 pe lună, la bonul mediu de acum asta înseamnă cam 17.500 lei încasări în plus. Iar cei 63 de acum, care vin singuri din planuri, rămân gratis. Plătiți doar pentru ce umpleți cu oferte și rezervări: 5–7 lei de om, mult sub ce dați pe Glovo sau pe reclame.
 ```
 
-**Când negociază („3%”)**
+**Când negociază („e prea mult”)**
 ```
-Vă înțeleg. Ce pot face: primele 2 luni 0%, ca să vedeți dacă cifrele cresc, apoi 5% doar pe ce vine prin noi. Dacă după 2 luni nu vă aducem mai mulți oameni decât acum, ieșiți fără nicio obligație.
+Vă înțeleg. Ce pot face: prima lună gratis, ca să vedeți dacă ofertele umplu sala, apoi 5 lei la rezervare și 7 la Live Drop, doar pe cine vine. Nu e abonament: lunile în care nu puneți nicio ofertă nu plătiți nimic.
 ```
 
 **Ca să închizi**

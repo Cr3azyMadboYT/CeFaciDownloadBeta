@@ -45,8 +45,9 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 
 ## Bani (decizii)
 - Start ca PFA la primul leu încasat; SRL peste ~50–60k lei/an sau când pornesc biletele.
-- Plus (20 lei/lună) doar prin Google Play / App Store. Netopia pentru comisionul localurilor și bilete.
-- Localuri fondatoare: 0% 3 luni, apoi 4% pe viață. Dovada ieșirii: un cod QR CeFaci la bar + poza bonului fiscal.
+- Plus (20 lei/lună) doar prin Google Play / App Store. Netopia pentru plățile localurilor și bilete.
+- Localurile (06.10, înlocuiește „5% din notă”): plătesc doar ce vând ei prin noi — 5 lei/om venit cu rezervare, 7 lei/om venit cu Live Drop, 0 pentru clienții Plus și pentru cei veniți din planuri, 8% la bilete, evenimente „Sponsorizat” separat de recomandări. Fondatori: 3 luni gratis, apoi cu 1 leu mai puțin pe om, pe viață. Sosirea: codul QR CeFaci de la bar; bonul nu mai intră la plată (XP + statistici).
+- Live Drops: gratis 10–15%, Plus cu ≥5 puncte peste (15–30%), reducerile nu se adună; regula și în baza de date.
 
 ## Aplicația de telefon = `mobile/` (decizie Cornel, 03.10: „aplicație scrisă pentru telefon, nu web app împachetat”)
 - React Native + Expo (SDK 57), ecrane native refăcute după canvas (`mobile/src/app/*`, piese în `mobile/src/ui`). Pachet `ro.cefaci.app`.
@@ -64,7 +65,7 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 
 ## Bonul (decizie Cornel, 03.10)
 - Bonul se citește pe server: funcția Supabase `citeste-bon` (Google Vision, cheia în secretul `VISION_API_KEY`), cititorul în `supabase/functions/citeste-bon/bon.ts` (teste: `tests/bon.test.ts`).
-- Parteneri: QR la bar + bon obligatoriu (comision, Plus). Nepartenere: check-in cu locația, bon opțional pentru +25 XP; totalurile dau prețul real mediu al localului și statistici pentru parteneriat. Detalii: `docs/directie-si-decizii.md`.
+- Parteneri: QR la bar; bonul nu mai intră la plată (06.10). Nepartenere: check-in cu locația, bon opțional pentru +25 XP; totalurile dau prețul real mediu al localului și statistici pentru parteneriat. Detalii: `docs/directie-si-decizii.md`.
 
 ## Amintirea pentru bon (decizie Cornel, 30.09)
 - La 40 de minute după check-in (scanat codul localului sau scanat de ospătar), Bilu trimite notificarea: „Nu uita de bon, ne ajută și pe noi și pe tine :)”.
