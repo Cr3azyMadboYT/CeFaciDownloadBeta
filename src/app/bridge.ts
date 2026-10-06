@@ -60,7 +60,7 @@ const ILFOV_MORE: [string, number, number][] = [
 const PKEY = 'cefaci.prefs';
 const SKEY = 'cefaci.state';
 // what the main board keeps between launches: plans, XP and stamps, theme, the tour seen, the Plus free week
-const KEEP = ['plans', 'theme', 'calm', 'season', 'billRemind', 'doodles', 'xp', 'welcomeXp', 'stamps', 'tut', 'plus', 'plusSaved', 'removed', 'ended', 'dropTaken', 'billXp', 'bills', 'avatar', 'levelUp'];
+const KEEP = ['plans', 'theme', 'calm', 'billRemind', 'doodles', 'xp', 'welcomeXp', 'stamps', 'tut', 'plus', 'plusSaved', 'removed', 'ended', 'dropTaken', 'billXp', 'bills', 'avatar', 'levelUp'];
 const DEFAULTS: Prefs = { zone: 'centru', likes: [], dist: '20', moves: ['walk', 'car'] };
 function loadPrefs(): Prefs {
   try { const raw = localStorage.getItem(PKEY); if (raw) return { ...DEFAULTS, ...JSON.parse(raw) }; } catch { /* storage blocked */ }

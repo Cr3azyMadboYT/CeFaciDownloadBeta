@@ -26,7 +26,7 @@ describe('anotimpul aplicației', () => {
     expect(LOOKS.iarna.hat).toBe('beanie');
   });
 
-  it('Setări poate fixa un aspect', () => {
+  it('un aspect fix (doar pentru previzualizări și teste)', () => {
     expect(lookFor('auto', day(7, 1))).toBe('vara');
     expect(lookFor(undefined, day(7, 1))).toBe('vara');
     expect(lookFor('iarna', day(7, 1))).toBe('iarna');

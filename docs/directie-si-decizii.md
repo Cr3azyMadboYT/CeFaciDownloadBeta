@@ -481,5 +481,11 @@ Ideile de la care am pornit:
   - **Iarnă:** căciulă de iarnă cu ciucure, fular și mănuși albastre; zăpadă care cade și zăpadă pe buton.
   - **Crăciun (1 decembrie – 7 ianuarie):** căciula de Moș Crăciun, fular și mănuși roșii, zăpadă.
 - Momentele noi (Mărțișor, Halloween, Paște…) se adaugă ușor: câștigă peste anotimp cât țin.
-- Iconița pe Android se schimbă abia după ce ieși din aplicație (pe unele telefoane iconița dispare o clipă și reapare). În Setări → Anotimp alegi „Singur” sau un aspect fix.
+- Iconița pe Android se schimbă abia după ce ieși din aplicație (pe unele telefoane iconița dispare o clipă și reapare). Totul se aplică singur, după dată; nu se alege din Setări (Cornel, 06.10).
 - Cu „Mai puține animații”, nimic nu cade: decorul stă pe loc.
+
+## Mici schimbări în aplicația de client (Cornel, 06.10)
+
+- **Creează plan:** o alegere doar se bifează; treci la pasul următor cu „Mai departe” (înainte sărea singur, prea grăbit).
+- **Explorează:** apăsat, un loc deschide detaliile lui (de ce merită, când e lume, programul pe toată săptămâna, adresa, harta, Drum / Sună / Site); planul îl faci de acolo, cu „Fă-mi plan aici”. Pe hartă, butonul din bulă e „Vezi detalii”.
+- **Iconițele:** Bilu e mai mare în iconiță, tot în zona pe care o taie telefonul.

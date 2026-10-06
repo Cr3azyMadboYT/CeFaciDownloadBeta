@@ -81,11 +81,11 @@ async function shot(html, size, file) {
   await pg.screenshot({ path: path.join(OUT, file), omitBackground: true, clip: { x: 0, y: 0, width: size, height: size } });
 }
 for (const [k, o] of Object.entries(LOOKS)) {
-  await shot(page(sky(k, o) + him(o, 4.3), 1024), 1024, k + '.png');
+  await shot(page(sky(k, o) + him(o, 5.0), 1024), 1024, k + '.png');
   await shot(page(sky(k, o), 432), 432, k + '-bg.png');
-  // the safe circle is 66 of 108 units: Bilu (hat and ice cream included) stays inside it
-  await shot(page(him(o, 2.75), 432), 432, k + '-fg.png');
-  await shot(page(sky(k, o) + him(o, 4.3), 192, 42), 192, k + '-legacy.png');
+  // the safe circle is 66 of 108 units: Bilu (hat and ice cream included) stays inside it, as big as it allows (06.10: "zoom")
+  await shot(page(him(o, 3.3), 432), 432, k + '-fg.png');
+  await shot(page(sky(k, o) + him(o, 5.0), 192, 42), 192, k + '-legacy.png');
 }
 await b.close();
 console.log('icons in', OUT);

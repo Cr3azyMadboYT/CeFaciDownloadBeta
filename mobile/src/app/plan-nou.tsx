@@ -54,7 +54,8 @@ export default function PlanNou() {
     void runPlans(x, { save: true }); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata');
   };
   const next = (x = d) => { if (k >= (x.mode === 'eu' ? STEPS.indexOf('buget') : STEPS.length - 1)) finish(x); else setK(k + 1); };
-  const auto = (p: Partial<Draft>) => { const x = { ...d, ...p }; setD(x); setTimeout(() => next(x), 220); };
+  // a choice only marks the answer; "Mai departe" moves on (decision Cornel, 06.10: jumping on by itself felt rushed)
+  const auto = (p: Partial<Draft>) => set(p);
   const back = () => (k > 0 ? setK(k - 1) : router.canGoBack() ? router.back() : router.replace('/acasa'));
   useEffect(() => { const h = BackHandler.addEventListener('hardwareBackPress', () => { back(); return true; }); return () => h.remove(); });
 

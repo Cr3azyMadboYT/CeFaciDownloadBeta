@@ -35,7 +35,7 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
     D.pins.forEach(function(p){
       var el=document.createElement('div');el.className='pin'+(p.hot?' hot':'');el.style.background=p.bg;el.style.color=p.fg;el.textContent=p.n;
       var c=document.createElement('div');c.className='card';
-      c.innerHTML='<b></b><small></small>'+(D.pick?'<button>Asta!</button>':'');c.querySelector('b').textContent=p.name;c.querySelector('small').textContent=p.sub;
+      c.innerHTML='<b></b><small></small>'+(D.pick?'<button>Vezi detalii</button>':'');c.querySelector('b').textContent=p.name;c.querySelector('small').textContent=p.sub;
       if(D.pick) c.querySelector('button').onclick=function(){send({pick:p.id});};
       new maplibregl.Marker({element:el}).setLngLat([p.lon,p.lat]).setPopup(new maplibregl.Popup({offset:18,closeButton:false}).setDOMContent(c)).addTo(map);
       b.extend([p.lon,p.lat]);

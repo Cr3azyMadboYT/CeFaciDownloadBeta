@@ -1,7 +1,8 @@
 // The app's season (decision Cornel, 06.10): spring, summer (as it was), autumn and winter change Bilu's clothes,
 // what falls over Acasă and the app's icon; from 1 December to 7 January Bilu wears Santa's hat, the rest of the
 // winter a knitted one. New moments (Mărțișor, Halloween, Paște…) go in MOMENTS: they win over the season while
-// they last. Setări can fix one look instead of following the date.
+// they last. The look always follows the date (decision Cornel, 06.10: it comes on by itself); `lookFor` takes a
+// fixed look only for previews and tests.
 
 export type Season = 'primavara' | 'vara' | 'toamna' | 'iarna';
 /** What the app looks like: a season, or a moment inside one. */

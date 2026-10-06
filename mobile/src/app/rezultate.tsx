@@ -5,7 +5,6 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
 import { APP, useApp } from '../lib/session';
 import { DIST, WHEN, WHO, fmtDur, listFor, matchesOf, setFilters, setPage, setSearch, summaryOf, useFilters, type Place } from '../lib/filters';
-import { createPlan } from '../lib/plans';
 import { FilterSheet } from '../ui/FilterSheet';
 import { Icon } from '../ui/Icon';
 import { Big, Chip, H1, Muted, Press, T, Tag } from '../ui/kit';
@@ -73,10 +72,8 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
   const first = useRef({ f, sq });
   const tweaks = useMemo(() => tweaksFor(f, sq, items), [f, sq, items, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
   const changed = JSON.stringify(first.current) !== JSON.stringify({ f, sq });
-  const pick = (id: string) => {
-    const pid = createPlan(id, f);
-    router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } });
-  };
+  // a place opens its details first; the plan comes from there (decision Cornel, 06.10: a plan at the first tap was stressful)
+  const pick = (id: string) => router.push({ pathname: '/loc/[id]', params: { id } });
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -146,7 +143,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
             {items.map((p, i) => {
               const r = role(t, i, page, p, nearest, used, tried);
               return (
-                <View key={p.id} style={{ padding: 12, flexDirection: 'row', gap: 12, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
+                <Press key={p.id} onPress={() => pick(p.id)} haptic={false} accessibilityLabel={p.name + ', ' + p.title + '. Vezi detalii'} style={{ padding: 12, flexDirection: 'row', gap: 12, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
                   <View style={{ width: 74, borderRadius: 14, backgroundColor: p.bg, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                     <View style={{ position: 'absolute', right: -16, top: -16, width: 46, height: 46, borderRadius: 99, backgroundColor: p.dot }} />
                     <View style={{ position: 'absolute', left: -10, bottom: -12, width: 30, height: 30, borderRadius: 99, borderWidth: 3, borderColor: p.dot }} />
@@ -174,12 +171,13 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                       <T numberOfLines={3} style={{ flex: 1, fontFamily: F.m, fontSize: 13, lineHeight: 17, color: p.story ? t.ink2 : t.ink3 }}>{p.story ?? APP.reason(p.id) ?? ''}</T>
-                      <Press onPress={() => pick(p.id)} accessibilityLabel={'Alege ' + p.name} style={{ height: 44, paddingHorizontal: 16, borderRadius: 14, backgroundColor: t.blue, justifyContent: 'center' }}>
-                        <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Asta!</T>
+                      <Press onPress={() => pick(p.id)} accessibilityLabel={'Detalii despre ' + p.name} style={{ height: 44, paddingHorizontal: 14, borderRadius: 14, backgroundColor: t.blue, flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                        <T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Detalii</T>
+                        <Icon name="next" size={16} color="#FFFFFF" />
                       </Press>
                     </View>
                   </View>
-                </View>
+                </Press>
               );
             })}
           </View>

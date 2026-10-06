@@ -1,13 +1,12 @@
-// Setări: theme (Zi / Noapte / Ca telefonul), the season's look (on its own, or one fixed), fewer animations, the receipt reminders, the account and the legal bits.
+// Setări: theme (Zi / Noapte / Ca telefonul), fewer animations, the receipt reminders, the account and the legal bits.
 import { Linking, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
 import { setBoard, useApp } from '../lib/session';
 import { Icon } from '../ui/Icon';
-import { Chip, H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';
+import { H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
-import { LOOKS, type Look } from '../lib/season';
 
 function Group({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
   const { t } = useTheme();
@@ -25,7 +24,6 @@ export default function Setari() {
   const ins = useSafeAreaInsets();
   const theme = useApp((s) => s.board.theme ?? 'zi');
   const calm = useApp((s) => !!s.board.calm);
-  const season = useApp((s) => s.board.season ?? 'auto');
   const remind = useApp((s) => s.board.billRemind !== false);
   const who = useApp((s) => s.who);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/profil'));
@@ -40,10 +38,6 @@ export default function Setari() {
           <Seg label="Zi" on={theme === 'zi'} onPress={() => setBoard({ theme: 'zi' })} />
           <Seg label="Noapte" on={theme === 'noapte'} onPress={() => setBoard({ theme: 'noapte' })} />
           <Seg label="Ca telefonul" on={theme === 'auto'} onPress={() => setBoard({ theme: 'auto' })} />
-        </Group>
-        <Group title="Anotimp" note={season === 'auto' ? 'Bilu, Acasă și iconița aplicației se schimbă singure cu anotimpul. Căciula de Moș Crăciun vine de la 1 decembrie la 7 ianuarie.' : 'Rămâne așa până alegi „Singur”. Iconița se schimbă după ce ieși din aplicație.'}>
-          <Chip label="Singur" on={season === 'auto'} onPress={() => setBoard({ season: 'auto' })} />
-          {(Object.keys(LOOKS) as Look[]).map((k) => <Chip key={k} label={LOOKS[k].name} on={season === k} onPress={() => setBoard({ season: k })} />)}
         </Group>
         <Group title="Animații" note="Cu „Mai puține”, Bilu stă cuminte și ecranele nu mai sar. Se pornește singur dacă telefonul are setarea de reducere a mișcării.">
           <Seg label="Normale" on={!calm} onPress={() => setBoard({ calm: false })} />
