@@ -5,14 +5,15 @@
     "scheme": "cefaci",
     "version": "0.3.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/vara.png",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#EEF1FB",
     "android": {
       "package": "ro.cefaci.app",
       "versionCode": 3,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/android-icon-foreground.png",
+        "foregroundImage": "./assets/icons/vara-fg.png",
+        "backgroundImage": "./assets/icons/vara-bg.png",
         "backgroundColor": "#0E1440"
       },
       "permissions": [
@@ -71,7 +72,8 @@
           "color": "#FFD43B"
         }
       ],
-      "./plugins/withSigning"
+      "./plugins/withSigning",
+      "./plugins/withSeasonIcons"
     ],
     "experiments": {
       "typedRoutes": false

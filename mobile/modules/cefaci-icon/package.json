@@ -1,0 +1,7 @@
+{
+  "name": "cefaci-icon",
+  "version": "0.1.0",
+  "description": "The app's launcher icon by season (Android activity-aliases, plugins/withSeasonIcons.js)",
+  "main": "index.ts",
+  "private": true
+}

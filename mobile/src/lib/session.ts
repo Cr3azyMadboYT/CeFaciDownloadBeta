@@ -5,6 +5,7 @@ import { useSyncExternalStore } from 'react';
 import { AppState } from 'react-native';
 import * as Location from 'expo-location';
 import { APP, initBridge, type Home, type Prefs } from '../../../src/app/bridge';
+import type { Look } from '../../../src/app/season';
 import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
@@ -19,6 +20,7 @@ export type { Prefs };
 export interface Board {
   theme?: 'zi' | 'noapte' | 'auto';
   calm?: boolean;      // fewer animations (Setări)
+  season?: 'auto' | Look; // the season's look (Setări): the date's, or one fixed
   billRemind?: boolean; // false = no receipt reminders (Setări)
   plans?: unknown[];
   xp?: number;

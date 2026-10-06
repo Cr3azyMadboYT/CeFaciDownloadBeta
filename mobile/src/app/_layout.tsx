@@ -20,6 +20,7 @@ import { refreshNavFit } from '../ui/insets';
 import { E2E } from '../lib/e2e';
 import '../lib/places'; // the places changed from Admin (Supabase) come in at start
 import { E2EProbe } from '../ui/E2EProbe';
+import { watchIcon } from '../lib/season';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -35,6 +36,7 @@ export default function Root() {
   useEffect(() => { SystemUI.setBackgroundColorAsync(t.bg).catch(() => {}); }, [t.bg]);
   // the phone's buttons on the app's own background (no grey layer), dark on the light theme, light on the dark one;
   // the screens leave the bar's height free at the bottom (ui/insets.ts)
+  useEffect(() => watchIcon(), []); // the season's icon, put on the launcher when the app goes to the background
   useEffect(() => { watchNavBar(!t.dark); const id = setTimeout(refreshNavFit, 400); return () => clearTimeout(id); }, [t.dark]);
   if (!loaded) return null;
   return (

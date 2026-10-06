@@ -25,6 +25,8 @@ import { TopShade } from '../../ui/TopShade';
 import { useBackTwiceToExit } from '../../lib/backTwice';
 import { useWeatherVersion } from '../../lib/weather';
 import { Doodles } from '../../ui/Doodles';
+import { SeasonCta, SeasonFall } from '../../ui/SeasonFall';
+import { LOOKS, useLook } from '../../lib/season';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -75,6 +77,9 @@ export default function Acasa() {
   useBackTwiceToExit();
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
+  const wear = LOOKS[useLook()];
+  const [top, setTop] = useState({ w: 0, h: 0 });
+  const [ctaW, setCtaW] = useState(0);
   const wxv = useWeatherVersion();
   const prefs = useApp((s) => s.prefs);
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
@@ -123,8 +128,10 @@ export default function Acasa() {
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <Doodles />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
-        <View style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 96, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
+        <View onLayout={(e) => setTop({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
+          style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 96, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
           <Sky phase={phase} />
+          <SeasonFall wear={wear} w={top.w} h={top.h} night={phase === 'dusk' || phase === 'night' || phase === 'late'} />
           <TourTarget id="pills">
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
             <Press onPress={() => router.push('/zona')} accessibilityLabel={'Pleci din ' + APP.zoneName() + ', până la ' + APP.radiusKm() + ' km. Schimbă'}
@@ -164,6 +171,7 @@ export default function Acasa() {
             <View style={{ marginBottom: 6 }}><Bilu size={84} mood="hi" shadow={false} /></View>
           </View>
           <TourTarget id="cta" style={{ marginTop: 16 }}>
+            <View onLayout={(e) => setCtaW(e.nativeEvent.layout.width)}>
             <Press onPress={() => router.push('/plan-nou')} accessibilityLabel="Creează plan"
               style={{ minHeight: 84, borderRadius: 24, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 18, shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
               <View style={{ width: 50, height: 50, borderRadius: 16, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={26} color="#FFD43B" width={2.6} /></View>
@@ -173,6 +181,8 @@ export default function Acasa() {
               </View>
               <Icon name="next" size={22} color="#0E1440" />
             </Press>
+            <SeasonCta wear={wear} w={ctaW} />
+            </View>
             <View style={{ marginTop: 10, flexDirection: 'row', gap: 10 }}>
               <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 <Icon name="dice" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Surprinde-mă</T>

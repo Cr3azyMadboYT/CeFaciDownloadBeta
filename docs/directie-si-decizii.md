@@ -454,3 +454,15 @@ Ideile de la care am pornit:
 - **Spune-i lui Bilu**: scrii „cu terasă, după 22”, „mai ieftin”, „fără fum”, „aproape”; Bilu arată ce a înțeles și reface cele 3 planuri.
 - Reparații de motor: ora exactă a planului (nu mai apare o cafenea închisă la 17:00 „pentru diseară”), un pas din seară se termină cel târziu la închiderea localului, bugetul serii e pe toată seara, „aproape / lângă mine” înțeles în căutare.
 - Etapa 2: „O construiesc eu” (alegi vibe-ul pentru fiecare parte a serii, Bilu caută lângă locul de dinainte).
+
+## Anotimpurile (decizie Cornel, 06.10)
+
+- Aplicația se schimbă singură cu anotimpul: Bilu își schimbă hainele, pe Acasă cade ceva, iar iconița aplicației se schimbă și ea.
+  - **Primăvară (martie–mai):** coroniță de flori, petale, flori pe „Creează plan”, fundal verde-turcoaz la iconiță.
+  - **Vară (iunie–august):** ca înainte, plus ochelari de soare și o înghețată; soare (doar ziua) și scântei.
+  - **Toamnă (septembrie–noiembrie):** fular portocaliu și o frunză pe cap; frunze care cad; iconiță vișinie.
+  - **Iarnă:** căciulă de iarnă cu ciucure, fular și mănuși albastre; zăpadă care cade și zăpadă pe buton.
+  - **Crăciun (1 decembrie – 7 ianuarie):** căciula de Moș Crăciun, fular și mănuși roșii, zăpadă.
+- Momentele noi (Mărțișor, Halloween, Paște…) se adaugă ușor: câștigă peste anotimp cât țin.
+- Iconița pe Android se schimbă abia după ce ieși din aplicație (pe unele telefoane iconița dispare o clipă și reapare). În Setări → Anotimp alegi „Singur” sau un aspect fix.
+- Cu „Mai puține animații”, nimic nu cade: decorul stă pe loc.
