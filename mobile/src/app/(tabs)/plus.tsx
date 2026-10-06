@@ -12,11 +12,11 @@ import { blurStyle, useEased } from '../../ui/Magic';
 import { useTour } from '../../lib/tour';
 
 const PERKS: [string, string, string][] = [
-  ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reducere de 10–20% la partenerii CeFaci', 'De fiecare dată când ieși, nu doar la Live Drops.'],
+  ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reducere de 10–20% la partenerii CeFaci', 'La partenerii care o oferă, în zilele alese de ei. La Live Drops, mereu cu cel puțin 5% mai mult decât ceilalți.'],
   ['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75', 'Și pentru gașca ta', 'Până la 4 oameni la aceeași masă, cu codul tău.'],
   ['M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z', 'Live Drops cu 10 minute mai devreme', 'Prinzi reducerile fulger înaintea tuturor.'],
-  ['M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2', 'Fără taxă de serviciu la bilete', 'Și acces la evenimentele doar pentru Plus.'],
-  ['M12 2l2.9 6.9L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.4z', 'Bilu auriu și carnet auriu', 'Să se vadă de departe cine e Plus.'],
+  ['M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2', 'Fără taxă de serviciu la bilete', 'Când pornesc biletele în CeFaci, plus evenimente doar pentru Plus.'],
+  ['M12 2l2.9 6.9L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.4z', 'Bilu auriu și carnet auriu', 'Bilu se face auriu, iar carnetul din Profil primește rama aurie și insigna Plus.'],
 ];
 
 export default function Plus() {

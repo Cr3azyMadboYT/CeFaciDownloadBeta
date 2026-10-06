@@ -221,6 +221,29 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
 - **Cât ar ieși (estimare):** ~1.000 de oameni și ~20 de parteneri cu ~40 de oameni pe lună fiecare, cei mai mulți la treapta din mijloc → ~4.000 lei + Plus ~850 lei; ~10.000 de oameni și ~100 de parteneri → ~30.000 lei + Plus ~8.500 lei, plus biletele. Primul an e despre oameni și localuri, nu despre bani.
 - **Mai târziu, nu acum:** un abonament mic lunar pentru uneltele avansate din Business, când avem destui oameni.
 
+**Ca să nu putem fi păcăliți și să nu pierdem bani (Cornel, 06.10: „da, așa facem”; treptele de preț aprobate tot atunci)**
+- **Câți au venit:** numărul îl dă clientul când rezervă sau ia drop-ul; dacă ospătarul îl scade la scanare, clientul e întrebat „Ați fost 6 sau 4?”, iar taxa se face pe ce confirmă clientul. Diferențele apar în Admin; mai multe la același local = verificare.
+- **Vizita se dovedește și fără cod:** la rezervare contează scanarea, check-in-ul cu locația sau „Am fost acolo” de la „Cum a fost?”. Dacă localul marchează „n-au venit”, clientul e întrebat; dacă zice da și telefonul lui era acolo, vizita se plătește.
+- **Live Drop:** reducerea apare doar după scanare, deci clientul scanează mereu.
+- **Treapta de preț o stabilim noi** (bonurile clienților + meniul), revăzută la 6 luni; localul nu o declară.
+- **Copiii sub 12 îi trece clientul** la rezervare, nu ospătarul.
+- **Lunile gratuite o singură dată pe firmă (CUI)**: ieșitul și reintratul nu le mai dau.
+- **Contestațiile din lista lunii cer motiv**; ce a confirmat clientul (scanare, locație) câștigă. Contestații fără temei, repetate → se pierd lunile gratuite sau localul iese din program.
+- **Ce nu putem opri și acceptăm:** localul care le spune clienților „sunați direct”. De asta rezervarea e ieftină.
+- **Bani scoși de la noi, închiși:**
+  - **Plus:** dacă un local nu aplică reducerea Plus, diferența dată clientului o recuperăm de la local (din bilete sau pe factură), cu plafon; după două refuzuri, localul iese din programul Plus.
+  - **Bilete:** banii ajung la local abia după ce evenimentul a avut loc (rambursările la anulare nu mai rămân pe noi).
+  - **Facturi neplătite:** se scad din banii pe bilete; după 30 de zile de neplată se opresc singure rezervările și Live Drop-urile localului (rămâne în recomandări ca orice local).
+- **Concluzia:** un local care trișează ne poate lua cel mult câțiva lei de comision, iar Admin ne arată diferențele; bani scoși din buzunarul nostru nu se mai pierd.
+
+**Ce promite pagina Plus și cum se ține (06.10):**
+- Reducerea 10–20%: doar la partenerii care o oferă, în zilele alese de ei (scris așa pe pagină); la Live Drops, mereu cu cel puțin 5 puncte peste ceilalți (regula din baza de date).
+- Gașca: până la 4 oameni la aceeași masă, cu codul membrului.
+- Live Drops cu 10 minute mai devreme: de construit odată cu Live Drops în Business.
+- Fără taxă de serviciu la bilete + evenimente doar pentru Plus: când pornesc biletele (scris așa pe pagină).
+- Bilu auriu și carnet auriu: făcute (Bilu se face auriu cu Plus, carnetul din Profil are ramă aurie și insigna Plus).
+- Proba: o săptămână, fără card, nu se ia nimic automat.
+
 **2. CeFaci Plus: 20 de lei pe lună, cu gașca inclusă**
 - **Ce primești:** 10–20% reducere la localurile partenere, pentru membru și prietenii de la aceeași masă (maximum 4); Live Drops cu 10 minute mai devreme; fără taxă de serviciu la bilete; evenimente doar pentru Plus; Bilu și carnet aurii.
 - **Reducerea o dau localurile.** Aleg cât (10, 15 sau 20%) și pot exclude serile de vârf. Se aplică prin același cod QR: la scanare apare „Client Plus · −15% pentru 4 din 6”. CeFaci nu atinge plata la masă.

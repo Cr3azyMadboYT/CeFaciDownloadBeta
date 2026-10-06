@@ -6,6 +6,7 @@ import { Animated, Easing, View } from 'react-native';
 import { useCalm } from '../lib/motion';
 import Svg, { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
 import { LOOKS, useLook, type Look, type LookInfo } from '../lib/season';
+import { useApp } from '../lib/session';
 
 export type Mood = 'rest' | 'hi' | 'up' | 'down' | 'left' | 'wink' | 'yay' | 'oops' | 'magic';
 type Gaze = 'c' | 'up' | 'down' | 'left' | 'right' | 'ul' | 'ur' | 'dl' | 'dr';
@@ -41,6 +42,7 @@ function pose(mood: Mood, look: Gaze) {
 
 const N = '#0E1440';
 const Y = '#FFD43B';
+const GOLD = '#F2B323'; // Bilu with Plus ("Bilu auriu", the Plus page)
 
 type Pose = ReturnType<typeof pose>;
 const VB = '0 0 120 144';
@@ -87,10 +89,11 @@ const ArmR = memo(function ArmR({ W, H, d, x, y, wand, hand = Y, cone }: { W: nu
     </Svg>
   );
 });
-const Body = memo(function Body({ W, H, p, wear }: { W: number; H: number; p: Pose; wear?: LookInfo }) {
+const Body = memo(function Body({ W, H, p, wear, fill = Y }: { W: number; H: number; p: Pose; wear?: LookInfo; fill?: string }) {
   return (
     <Svg width={W} height={H} viewBox={VB} style={{ position: 'absolute' }}>
-      <Path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill={Y} stroke={N} strokeWidth={4} strokeLinejoin="round" />
+      <Path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill={fill} stroke={N} strokeWidth={4} strokeLinejoin="round" />
+      {fill !== Y ? <Path d="M88 20l1.6 3.6 3.8.4-2.9 2.5.9 3.8-3.4-2-3.4 2 .9-3.8-2.9-2.5 3.8-.4z" fill="#FFFFFF" opacity={0.9} /> : null}
       <Path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" strokeWidth={3.5} strokeLinecap="round" opacity={0.55} />
       <Path d="M33 70H87" stroke={N} strokeWidth={3} strokeLinecap="round" strokeDasharray="4 6" opacity={0.35} />
       <Path d="M52 92l3 3 7-7" fill="none" stroke={N} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" opacity={0.28} />
@@ -187,6 +190,8 @@ const Eyes = memo(function Eyes({ W, H, p, shut }: { W: number; H: number; p: Po
 export function Bilu({ size = 120, mood = 'rest', look = 'c', still: stillAsked = false, shadow = true, dress }: { size?: number; mood?: Mood; look?: Gaze; still?: boolean; shadow?: boolean; dress?: Look | 'none' }) {
   const p = useMemo(() => pose(mood, look), [mood, look]);
   const season = useLook();
+  const plus = useApp((st) => st.board.plus === 'trial' || st.board.plus === 'active');
+  const skin = plus ? GOLD : Y;
   const wear = dress === 'none' ? undefined : LOOKS[dress ?? season];
   const still = useCalm() || stillAsked;
   const bob = useRef(new Animated.Value(0)).current;
@@ -240,8 +245,8 @@ export function Bilu({ size = 120, mood = 'rest', look = 'c', still: stillAsked 
   const front = mood === 'oops';
   const arms = (
     <>
-      <View style={layer}><ArmL W={W} H={H} d={p.armL} x={p.hLx} y={p.hLy} hand={wear?.mittens} /></View>
-      <View style={layer}><ArmR W={W} H={H} d={p.armR} x={p.hRx} y={p.hRy} wand={p.wand} hand={wear?.mittens} cone={!!wear?.cone && !p.wand && (mood === 'hi' || mood === 'up' || mood === 'wink')} /></View>
+      <View style={layer}><ArmL W={W} H={H} d={p.armL} x={p.hLx} y={p.hLy} hand={wear?.mittens ?? skin} /></View>
+      <View style={layer}><ArmR W={W} H={H} d={p.armR} x={p.hRx} y={p.hRy} wand={p.wand} hand={wear?.mittens ?? skin} cone={!!wear?.cone && !p.wand && (mood === 'hi' || mood === 'up' || mood === 'wink')} /></View>
     </>
   );
 
@@ -255,7 +260,7 @@ export function Bilu({ size = 120, mood = 'rest', look = 'c', still: stillAsked 
       <Animated.View style={[layer, { transformOrigin: '50% 92%', transform: [{ translateY: lift }, { rotate: rock }] }]}>
         <Legs W={W} H={H} />
         {front ? null : arms}
-        <Body W={W} H={H} p={p} wear={wear} />
+        <Body W={W} H={H} p={p} wear={wear} fill={skin} />
         {wear?.shades ? null : (
           <>
             <Animated.View style={[layer, { opacity: open }]}><Eyes W={W} H={H} p={p} /></Animated.View>

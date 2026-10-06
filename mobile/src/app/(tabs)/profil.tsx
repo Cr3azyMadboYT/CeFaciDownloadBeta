@@ -30,6 +30,7 @@ export default function Profil() {
   const xp = useApp((s) => (s.board.xp as number | undefined) ?? 0);
   const known = useApp((s) => s.known);
   const stamps = useApp((s) => (s.board.stamps as Stamp[] | undefined) ?? NO_STAMPS);
+  const plus = useApp((s) => s.board.plus === 'trial' || s.board.plus === 'active');
   const [arm, setArm] = useState(false);
   const [photoOpen, setPhotoOpen] = useState(false);
   const hasPhoto = useApp((s) => !!s.board.avatar);
@@ -57,7 +58,8 @@ export default function Profil() {
           <Icon name="gear" color={t.ink} />
         </Press>
       </View>
-      <View style={{ marginTop: 10, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 24, backgroundColor: '#2F5BFF' }}>
+      {/* the passport; with Plus it gets a gold frame and the Plus badge ("carnet auriu", the Plus page) */}
+      <View style={{ marginTop: 10, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 24, backgroundColor: '#2F5BFF', borderWidth: plus ? 4 : 0, borderColor: '#F2B323' }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 18 }}>
           <Press onPress={() => setPhotoOpen(true)} accessibilityLabel="Schimbă poza de profil"
             style={{ width: 88, height: 108, padding: 4, borderRadius: 14, backgroundColor: '#FFFFFF', transform: [{ rotate: '-3deg' }], shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 9, shadowOffset: { width: 0, height: 8 }, elevation: 6, alignItems: 'center', justifyContent: 'center' }}>
@@ -68,6 +70,12 @@ export default function Profil() {
           </Press>
           <View style={{ flex: 1 }}>
             <T style={{ fontFamily: F.b, fontSize: 17, color: '#FFFFFF' }}>{prefs.name || 'Tu'}</T>
+            {plus ? (
+              <View style={{ marginTop: 6, alignSelf: 'flex-start', height: 24, paddingLeft: 6, paddingRight: 9, borderRadius: 999, backgroundColor: '#F2B323', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                <Icon name="star" size={14} color="#0E1440" />
+                <T style={{ fontFamily: F.b, fontSize: 12, color: '#0E1440' }}>Plus</T>
+              </View>
+            ) : null}
             {founder ? (
               <View style={{ marginTop: 6, alignSelf: 'flex-start', height: 24, paddingLeft: 6, paddingRight: 9, borderRadius: 999, backgroundColor: '#0E1440', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                 <Icon name="star" size={14} color="#FFD43B" />
