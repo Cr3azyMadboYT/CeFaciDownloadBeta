@@ -192,16 +192,33 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
 
 **1. De la localuri: plătesc doar pentru ce aleg ei să vândă prin noi (decizie Cornel, 06.10; înlocuiește „5% din notă”)**
 - **De ce s-a schimbat:** la exersarea cu un patron („Andrei”) s-a văzut că un comision pe orice vizită venită prin aplicație duce la ceartă lunară: „clientul ăsta vine la mine de 3 ani, nu l-ați adus voi”. Bonul arată ce a consumat omul, nu de când e client.
-- **Gratis pentru local, mereu:** apare în recomandări, iar oamenii care vin din planurile lui Bilu nu costă nimic, noi sau vechi. E reclama care îl convinge să devină partener.
-- **Rezervare prin aplicație:** 5 lei pentru fiecare om care chiar a venit (rezervarea confirmată de local, sosirea cu codul QR CeFaci).
-- **Live Drop:** 7 lei pentru fiecare om venit cu oferta. Localul a ales oferta, ora și locurile; drop-ul umple o masă care altfel stătea goală. Dacă nu vrea clienții de casă, nu pune drop în serile pline sau îl face „doar pentru clienți noi”.
-- **Clienții Plus:** 0 lei. Plus îl plătește clientul.
-- **Bilete:** 8% din biletele vândute online. Banii de bilete trec prin noi, iar localul îi primește lunar, minus comisionul.
+- **Gratis pentru local, mereu:** apare în recomandări, iar oamenii care vin din planurile lui Bilu (fără rezervare și fără ofertă) nu costă nimic, noi sau vechi. E reclama care îl convinge să devină partener.
+- **Se plătește doar pentru două lucruri pe care le pornește localul:** o rezervare primită prin CeFaci și confirmată de el, și un Live Drop pus de el. Un local care nu primește rezervări prin aplicație și nu pune Live Drops nu plătește nimic.
+- **Tariful pe om venit depinde de cât costă localul** (06.10, după a doua exersare: 5 lei la o cafea de 20 de lei ar fi 25%, deci nicio cafenea n-ar semna). Treapta se scrie în contract după prețul mediu de persoană (din aplicație și din bonuri) și se poate revizui cel mult o dată la 6 luni:
+
+  | Localul (de persoană) | Rezervare | Live Drop | Fondator: rezervare / Live Drop |
+  |---|---|---|---|
+  | Sub 50 lei (cafenea, desert, bistro ieftin) | 2 lei | 3 lei | 1 / 2 lei |
+  | 50–150 lei (restaurant, bar, pub) | 5 lei | 7 lei | 4 / 6 lei |
+  | Peste 150 lei (restaurant scump, club cu masă) | 8 lei | 10 lei | 7 / 9 lei |
+
+- **Regulile de calcul** (ca să nu existe nicio întrebare la factură):
+  - **O singură taxă pe om, pe vizită.** Masă cu rezervare și cu Live Drop: se plătește doar Live Drop-ul.
+  - **Doar cine a venit.** Rezervare pentru 6, au venit 4: se plătesc 4. N-a venit nimeni: 0 lei. Live Drop luat și nefolosit: 0 lei, iar locul revine altcuiva după 45 de minute.
+  - **Câți au venit:** clientul scanează codul CeFaci la sosire și confirmă câți sunt; ospătarul vede numărul pe telefon și îl poate corecta pe loc. Dacă nu scanează nimeni, localul poate bifa „au venit” în Rezervări; altfel vizita nu se plătește.
+  - **Copiii sub 12 ani nu se plătesc.**
+  - **Plafon pe masă:** cel mult 10 oameni plătiți la o rezervare sau la un Live Drop (o masă de 20 nu costă dublu).
+  - **Clienții Plus:** 0 lei, iar programul Plus e opțional pentru local (alege dacă dă reducere și în ce zile).
+  - **Bilete:** 8% din biletele vândute online; fondatorii 6%, pe viață. Banii de bilete trec prin noi, iar localul îi primește lunar, minus comisionul. În cele 3 luni gratuite se reține doar costul plății cu cardul (cât ne ia procesatorul). Eveniment anulat de local: banii se întorc oamenilor, iar costul plății îl suportă localul.
+  - **Rezervările doar pe mesele date de local:** el alege câte mese dă prin CeFaci pe oră și poate opri rezervările oricând; atunci aplicația arată telefonul localului, gratis.
+- **Cele 3 luni gratuite ale fondatorilor** încep în ziua în care localul e activ ca partener (profil publicat și cod la bar), scrisă în contract. Dacă în cele 3 luni nu vine niciun om prin rezervare sau Live Drop, perioada gratuită se prelungește până la primul om adus, cel mult încă 3 luni.
+- **Localurile fondatoare (primele 15–20):** tarifele de fondator de mai sus, pe viață, plus insigna „Partener fondator”, în contract. Dacă iese din parteneriat, pierde statutul de fondator.
+- **Ieșirea:** oricând, fără penalizări; se plătește doar ce s-a adunat până atunci. Localul rămâne în recomandări ca orice local.
+- **Factura:** lunar. Cu 3 zile înainte localul primește lista lunii (cine, când, câți, rezervare sau Live Drop) și poate semnala o greșeală; abia apoi se face factura. Sumele sub 30 de lei trec pe luna următoare. Plata în 15 zile.
 - **Evenimente promovate, scrise clar „Sponsorizat”:** sumă fixă (de exemplu 50–150 lei pe săptămână), într-o secțiune separată („Ce e în weekend”), niciodată printre recomandările lui Bilu.
-- **Localurile fondatoare:** 3 luni gratis, apoi cu 1 leu mai puțin pe om, pe viață (4 lei la rezervare, 6 lei la Live Drop), plus insigna „Partener fondator”, în contract.
-- **Bonul nu mai e folosit la facturare:** rămâne pentru XP, prețul real al localului și statistici. Nu ne certăm pe totaluri.
+- **Bonul nu mai e folosit la facturare:** rămâne pentru XP, prețul real al localului (treapta) și statistici.
 - **Decont lunar:** biletele de primit minus ce datorează localul. Rezultatul e fie o sumă de primit, fie una de plătit.
-- **Cât ar ieși (estimare):** ~1.000 de oameni și ~20 de parteneri cu ~40 de oameni pe lună fiecare → ~4.000 lei + Plus ~850 lei; ~10.000 de oameni și ~100 de parteneri → ~30.000 lei + Plus ~8.500 lei, plus biletele. Primul an e despre oameni și localuri, nu despre bani.
+- **Cât ar ieși (estimare):** ~1.000 de oameni și ~20 de parteneri cu ~40 de oameni pe lună fiecare, cei mai mulți la treapta din mijloc → ~4.000 lei + Plus ~850 lei; ~10.000 de oameni și ~100 de parteneri → ~30.000 lei + Plus ~8.500 lei, plus biletele. Primul an e despre oameni și localuri, nu despre bani.
 - **Mai târziu, nu acum:** un abonament mic lunar pentru uneltele avansate din Business, când avem destui oameni.
 
 **2. CeFaci Plus: 20 de lei pe lună, cu gașca inclusă**
@@ -227,7 +244,7 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
 ## Decizii din 29 septembrie seara
 
 - **Zona:** lansăm direct în tot Bucureștiul și Ilfovul, nu doar în Buftea. Aplicația are toate localurile din prima zi, din date publice gratuite (OpenStreetMap) plus adăugate de mână. Recomandările merg și la localurile nepartenere, iar partenerii își revendică pagina când văd clienți veniți din CeFaci.
-- **Localurile fondatoare (15–20):** 0% în primele 3 luni, apoi 4% pe viață în loc de 5%, plus insigna „Partener fondator”. Totul e scris în contract din prima zi. (Schimbat pe 06.10: 3 luni gratis, apoi 4 lei pe om la rezervare și 6 lei la Live Drop, pe viață; vezi „Cum face CeFaci bani”.)
+- **Localurile fondatoare (15–20):** 0% în primele 3 luni, apoi 4% pe viață în loc de 5%, plus insigna „Partener fondator”. Totul e scris în contract din prima zi. (Schimbat pe 06.10: 3 luni gratis, apoi tarifele de fondator pe om venit, pe viață; vezi „Cum face CeFaci bani”.)
 - **Buget minim:** fără salarii, fără SMS la înscriere (Apple, Google sau email), hărți gratuite, fără Plus în primele 3–6 luni, marketing din conținut propriu și ambasadori. Estimare: ~1.700 lei o singură dată și ~550 lei pe lună, deci ~6.000–7.000 lei pentru 6 luni fără venit.
 - **Persoană fizică la început:** e ok cât nu se încasează niciun ban. SRL-ul se face înainte de primul leu încasat, adică înainte să se termine perioada gratuită a fondatorilor.
 - **Dovada ieșirii:** clientul o face, nu ospătarul. La local e un singur cod QR CeFaci, la bar sau la intrare. Clientul îl scanează când ajunge („Am ajuns”), iar dacă nu găsește codul, confirmă cu locația. Oferta sau reducerea Plus apare pe ecranul lui. La plecare pune poza bonului fiscal, iar aplicația citește CUI-ul, ora și totalul. (Schimbat pe 03.10: la nepartenere XP-ul vine la check-in cu locația, iar bonul aduce +25 XP în plus; vezi „Bonul și check-in-ul”.) Scannerul personalului rămâne opțional. În Business, codul e în Profilul localului („Descarcă pentru print”, „Vreau un stand gratuit”), iar mesele apar „Confirmat cu bonul”. Rezervările nu mai au cod QR arătat la intrare.
@@ -395,7 +412,7 @@ Ideile de la care am pornit:
 - Numerele de telefon din demo (0721 000 111 etc.) sunt inventate. În aplicația reală vin din datele publice ale localului și trebuie verificate periodic.
 - În Demo-ul de client, turul arată ce vede un cont nou (Nivel 1, Boboc), iar restul Demo-ului e pe un cont cu istoric (Nivel 3, Radar).
 - Poziția lanternei pe Acasă e calculată pentru ecranul de 390×844. În aplicația reală se ia din poziția elementului.
-- Tarifele (5 lei pe om la rezervare, 7 lei la Live Drop, 8% din bilete), prețul Plus (20 de lei) și reducerile (10–20%) sunt propuneri. Trebuie testate cu primele localuri.
+- Tarifele (pe trepte: 2/5/8 lei pe om la rezervare, 3/7/10 lei la Live Drop, 8% din bilete), prețul Plus (20 de lei) și reducerile (10–20%) sunt propuneri. Trebuie testate cu primele localuri.
 - Facturarea, TVA-ul și banii de bilete care trec prin noi trebuie verificate cu un contabil. Pentru bilete și Plus ne trebuie un procesator de plăți.
 - Cifrele din tab-ul de plăți (1.284 lei comision, 1.836 lei decont, 312 membri Plus) sunt inventate pentru demo.
 - Pragurile de XP sunt estimări. Le calibrăm după câte ieșiri pe lună face un utilizator real.

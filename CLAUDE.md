@@ -47,7 +47,7 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 ## Bani (decizii)
 - Start ca PFA la primul leu încasat; SRL peste ~50–60k lei/an sau când pornesc biletele.
 - Plus (20 lei/lună) doar prin Google Play / App Store. Netopia pentru plățile localurilor și bilete.
-- Localurile (06.10, înlocuiește „5% din notă”): plătesc doar ce vând ei prin noi — 5 lei/om venit cu rezervare, 7 lei/om venit cu Live Drop, 0 pentru clienții Plus și pentru cei veniți din planuri, 8% la bilete, evenimente „Sponsorizat” separat de recomandări. Fondatori: 3 luni gratis, apoi cu 1 leu mai puțin pe om, pe viață. Sosirea: codul QR CeFaci de la bar; bonul nu mai intră la plată (XP + statistici).
+- Localurile (06.10, înlocuiește „5% din notă”): plătesc doar rezervările confirmate și Live Drop-urile puse de ei, pe om venit, după treapta de preț a localului (sub 50 / 50–150 / peste 150 lei de persoană: rezervare 2/5/8 lei, Live Drop 3/7/10 lei; fondatori cu 1 leu mai puțin, pe viață); o taxă pe om pe vizită, doar cei veniți, fără copii sub 12, max 10 pe masă; 0 pentru Plus și pentru cei veniți din planuri; bilete 8% (fondatori 6%); „Sponsorizat” separat. Fondatori: 3 luni gratis de la activare (+ până la 3 luni dacă n-a venit nimeni). Lista lunii înainte de factură. Detalii: `docs/directie-si-decizii.md` → Cum face CeFaci bani.
 - Live Drops: gratis 10–15%, Plus cu ≥5 puncte peste (15–30%), reducerile nu se adună; regula și în baza de date.
 
 ## Aplicația de telefon = `mobile/` (decizie Cornel, 03.10: „aplicație scrisă pentru telefon, nu web app împachetat”)
