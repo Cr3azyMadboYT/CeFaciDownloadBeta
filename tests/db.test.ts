@@ -264,8 +264,9 @@ it('keeps every rule of the database', async () => {
   eq('the phone is now cris\'s', (await q(`select user_id from push_tokens where token = 'tok-telefon-1'`)).rows[0].user_id, U.cris);
   // Google: quotas, and the weather asked once
   const quota = async (who, n) => (await q(`select api_quota($1, 'e-deschis', $2) ok`, [U[who], n])).rows[0].ok;
-  eq('places checked: within the hour quota', [await quota('bob', 12), await quota('bob', 12), await quota('bob', 12), await quota('bob', 12)], [true, true, true, false]);
+  eq('places checked: within the hour quota', [await quota('bob', 6), await quota('bob', 6), await quota('bob', 1)], [true, true, false]);
   eq('another person has their own quota', await quota('cris', 12), true);
+  eq('the whole app stays in Google\'s free part (30 a day)', [await quota('ana', 6), await quota('teen', 1)], [true, false]);
   await expectFail('a phone cannot use the quota', () => as('bob', `select api_quota($1, 'e-deschis', 1)`, [U.bob]), /permission denied/);
   eq('the weather: the first caller takes the turn', (await q(`select weather_turn() t`)).rows[0].t, true);
   eq('the others do not go to Google', (await q(`select weather_turn() t`)).rows[0].t, false);

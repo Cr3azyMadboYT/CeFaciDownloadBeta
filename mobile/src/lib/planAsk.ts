@@ -223,7 +223,9 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
   const ROUNDS = 3;
   for (let round = 0; round < ROUNDS; round++) {
     const items = new Map<string, { id: string; name: string; lat: number; lon: number; at: Date; until?: Date }>();
-    for (const p of s.plans) for (const x of p.steps) {
+    // only the plan shown first is asked (07.10: Google's free part is about 1.000 checks a month, so each plan made
+    // must cost as little as possible); the other two keep Bilu's own check of the opening hours
+    for (const p of [s.plans[s.pick] ?? s.plans[0]].filter(Boolean)) for (const x of p.steps) {
       if (!needsCheck(x.place.real.k, x.place.real.cat) || items.has(x.place.id)) continue;
       const at = new Date(x.at);
       items.set(x.place.id, { id: x.place.id, name: x.place.name, lat: x.place.real.lat, lon: x.place.real.lon, at, until: untilOf(at, x.until) });
