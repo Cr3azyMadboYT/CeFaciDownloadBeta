@@ -1,3 +1,5 @@
+> Actualizare 07.10.2026: regulile de produs de mai jos descriu ținta completă, nu funcționalități deja livrate. Conceptul și starea implementării sunt în `business-v1-concept.md`. Cornel a autorizat varianta echilibrată: tarife per persoană; propunerea „a patra vizită gratuită” nu este activată. Noua bază de calcul este estimare, fără facturare automată.
+
 # CeFaci: cum merg împreună aplicația, Business și Admin
 
 **Versiunea 2 (06.10), după verificare.** Prima versiune a trecut prin trei verificări separate, făcute ca de oameni

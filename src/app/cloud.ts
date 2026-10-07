@@ -17,10 +17,14 @@ const write = (k: string, v: unknown) => { try { localStorage.setItem(k, JSON.st
 export interface Restored { known: boolean; first?: string }
 
 /** After sign-in: if the account already exists, copy it onto the phone (the newer saved state wins). */
-export async function restore(db: CloudClient, userId: string): Promise<Restored> {
-  const { data: prof } = await db.from('profiles').select('username, first_name').eq('id', userId).maybeSingle();
+export async function restore(db: CloudClient, userId: string, active = () => true): Promise<Restored> {
+  const { data: prof, error: profileError } = await db.from('profiles').select('username, first_name').eq('id', userId).maybeSingle();
+  if (profileError) throw profileError;
   if (!prof) return { known: false };
-  const { data: priv } = await db.from('profile_private').select('birth_date, prefs, app_state, plus_trial_started_at').eq('id', userId).maybeSingle();
+  const { data: priv, error: privateError } = await db.from('profile_private').select('birth_date, prefs, app_state, plus_trial_started_at').eq('id', userId).maybeSingle();
+  if (privateError) throw privateError;
+  if (!priv) throw new Error('Profilul privat nu este disponibil.');
+  if (!active()) return { known: false };
   const localP = read(PKEY);
   const remoteP = priv?.prefs ?? {};
   const answers = (localP.prefsAt ?? 0) > (remoteP.prefsAt ?? 0) ? { ...remoteP, ...localP } : { ...localP, ...remoteP }; // the newer answers win
@@ -60,20 +64,46 @@ export function makeUploader(db: CloudClient, userId: string, wait = 3000, phone
   let t: ReturnType<typeof setTimeout> | undefined;
   let trialAsked = false;
   let lastSent = '';
+  let sending = '';
+  let disposed = false;
+  let failures = 0;
   let pending: { app_state: unknown; prefs: unknown; body: string } | undefined;
-  return (state: Record<string, unknown>, prefs: Record<string, unknown>) => {
+  const schedule = (delay: number) => {
+    if (t || sending || disposed || !pending) return;
+    t = setTimeout(async () => {
+      t = undefined;
+      if (disposed || !pending) return;
+      const p = pending; pending = undefined; sending = p.body;
+      try {
+        const result = await db.from('profile_private').update({ app_state: p.app_state, prefs: p.prefs }).eq('id', userId);
+        if (result?.error) throw result.error;
+        lastSent = p.body; failures = 0;
+      } catch {
+        failures++;
+        pending ??= p; // a newer change wins over a failed old upload
+      } finally {
+        sending = '';
+        if (pending?.body === lastSent) pending = undefined;
+        if (failures < 4) schedule(Math.min(30000, Math.max(wait, 1000) * 2 ** failures));
+      }
+    }, delay);
+  };
+  const upload = (state: Record<string, unknown>, prefs: Record<string, unknown>) => {
+    if (disposed) return;
     if (state.plus === 'trial' && !trialAsked) {
       trialAsked = true; // the server keeps the first start date; the phone takes it from there
       void (async () => {
         const device = phone ? await phone.device().catch(() => null) : null;
+        if (disposed) return;
         const { data, error } = await db.rpc('start_plus_trial', device ? { p_device: device } : {});
+        if (disposed) return;
         if (error) {
           const msg = String((error as { message?: string }).message ?? '');
           if (/folosit deja/.test(msg)) phone?.refused(msg);
           else if (!/Actualizează/.test(msg)) trialAsked = false; // the network: try again with the next save
           return;
         }
-        if (!data) return;
+        if (!data || disposed) return;
         const s = read(SKEY); s.plusStart = Date.parse(data); write(SKEY, s);
       })().catch(() => { trialAsked = false; });
     }
@@ -82,13 +112,12 @@ export function makeUploader(db: CloudClient, userId: string, wait = 3000, phone
     const { savedAt, ...rest } = state;
     void savedAt;
     const body = JSON.stringify([rest, coarse(answers)]);
-    if (body === lastSent) return; // the clock ticks every second; only real changes go out
+    if (body === sending) { pending = undefined; return; }
+    if (body === lastSent && !sending) { pending = undefined; return; }
     pending = { app_state: state, prefs: coarse(answers), body };
-    if (t) return; // at most one upload every few seconds
-    t = setTimeout(() => {
-      t = undefined;
-      const p = pending!; pending = undefined; lastSent = p.body;
-      db.from('profile_private').update({ app_state: p.app_state, prefs: p.prefs }).eq('id', userId).then(() => {}, () => { lastSent = ''; });
-    }, wait);
+    failures = 0; // a later save can retry after the bounded automatic attempts
+    schedule(wait);
   };
+  upload.dispose = () => { disposed = true; clearTimeout(t); pending = undefined; };
+  return upload;
 }

@@ -205,7 +205,7 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
   | Peste 150 lei (restaurant scump, club cu masă) | 8 lei | 10 lei | 7 / 9 lei |
 
 - **Regulile de calcul** (ca să nu existe nicio întrebare la factură):
-  - **O singură taxă pe om, pe vizită.** Masă cu rezervare și cu Live Drop: se plătește doar Live Drop-ul.
+  - **O singură taxă pe om, pe vizită.** Masă cu rezervare și Live Drop: oamenii eligibili pentru drop plătesc taxa de drop, restul eligibil pe rezervare taxa de rezervare; niciun om nu se plătește de două ori (logica v2, cap. 5.5).
   - **Doar cine a venit.** Rezervare pentru 6, au venit 4: se plătesc 4. N-a venit nimeni: 0 lei. Live Drop luat și nefolosit: 0 lei, iar locul revine altcuiva după 45 de minute.
   - **Câți au venit:** clientul scanează codul CeFaci la sosire și confirmă câți sunt; localul închide fiecare seară până la 12:00 a doua zi (cine a venit, câți), de obicei cu un singur buton. Cine nu închide pierde rezervările, nu câștigă bani (logica, cap. 5).
   - **Copiii sub 12 ani nu se plătesc.**

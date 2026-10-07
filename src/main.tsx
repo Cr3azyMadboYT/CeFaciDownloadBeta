@@ -81,21 +81,25 @@ function show(name: string) {
   }
 }
 initBridge({
-  restart: () => { try { localStorage.clear(); } catch { /* */ } signedIn = false; accountKnown = false; APP.prefs = { zone: 'centru', likes: [], dist: '20' }; APP.rebuild(); show('Cont'); },
+  restart: () => { try { localStorage.clear(); } catch { /* */ } signedIn = ''; accountKnown = false; APP.prefs = { zone: 'centru', likes: [], dist: '20' }; APP.rebuild(); show('Cont'); },
   deleteAccount: async () => { await deleteAccountEverywhere(); APP.restart(); },
   google: signInWithGoogle, emailStart, emailVerify,
 });
 show(onboarded() ? 'Demo' : 'Cont');
 // After signing in (Google or email): an existing account comes back whole (reinstalling loses nothing);
 // a new one continues the sign-up with the first name filled in. From then on changes go to Supabase.
-let signedIn = false;
+let signedIn = '';
 let accountKnown = false;
+let activeUpload: ReturnType<typeof makeUploader> | undefined;
 watchAuth((who) => {
-  if (!who) { signedIn = false; APP.onSaved = () => {}; return; }
-  if (signedIn) return;
-  signedIn = true;
+  if (!who) { activeUpload?.dispose(); activeUpload = undefined; signedIn = ''; APP.onSaved = () => {}; return; }
+  if (signedIn === who.id) return;
+  activeUpload?.dispose();
+  signedIn = who.id;
   const upload = makeUploader(cloudClient(), who.id);
-  restore(cloudClient(), who.id).then((r) => {
+  activeUpload = upload;
+  restore(cloudClient(), who.id, () => activeUpload === upload).then((r) => {
+    if (activeUpload !== upload) return;
     accountKnown = r.known;
     APP.prefs = { ...APP.prefs, ...JSON.parse(localStorage.getItem('cefaci.prefs') || '{}'), google: who.id };
     APP.rebuild();

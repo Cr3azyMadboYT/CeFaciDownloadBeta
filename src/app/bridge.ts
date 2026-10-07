@@ -482,7 +482,7 @@ export const APP = {
   // ---------- "O construiesc eu" (decision Cornel, 06.10): the evening step by step ----------
   built: { req: null as PlanReq | null, steps: [] as PlanStep[], parts: [] as string[], minor: false },
   /** Places Google just said are closed (the phone sets it; 07.10: a place found closed came back as Bilu's pick). */
-  skipLive: (): string[] => [],
+  skipLive: (_id: string, _at: Date, _until?: Date): boolean => false,
   /** Starts building for these answers (when, how many, the budget). */
   buildStart(a: PlanAsk, crewMinor = false) { this.built = { req: this.planReq({ ...a, mode: 'loc' }), steps: [], parts: [], minor: crewMinor }; },
   buildCtx() { const c = this.ctx(); return { ...c, minor: c.minor || this.built.minor }; },
@@ -492,17 +492,17 @@ export const APP = {
   buildParts() {
     const req = this.built.req; if (!req) return [];
     const prev = this.built.steps[this.built.steps.length - 1] ?? null;
-    const used = [...this.built.steps.map((x) => x.v.id), ...this.skipLive()];
-    return PARTS.map((p) => ({ ...p, ok: buildOptions(VENUES, req, this.buildCtx(), prev, p.id, used, 1).length > 0 }));
+    const used = [...this.built.steps.map((x) => x.v.id)];
+    return PARTS.map((p) => ({ ...p, ok: buildOptions(VENUES, req, this.buildCtx(), prev, p.id, used, 400).some((b) => !this.skipLive(b.step.v.id, b.step.at, b.step.until)) }));
   },
   /** A few places for the next part (`skip`: the ones already shown, for "Altele"). */
   buildOptions(part: string, skip: string[] = []) {
     const req = this.built.req; if (!req) return [];
     const prev = this.built.steps[this.built.steps.length - 1] ?? null;
-    const used = [...this.built.steps.map((x) => x.v.id), ...skip, ...this.skipLive()];
+    const used = [...this.built.steps.map((x) => x.v.id), ...skip];
     const o = this.origin();
     const spent = this.built.steps.reduce((a, x) => a + x.price, 0);
-    return buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, used, 3, spent).map((b) => ({
+    return buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, used, 400, spent).filter((b) => !this.skipLive(b.step.v.id, b.step.at, b.step.until)).slice(0, 3).map((b) => ({
       place: this.byIdMap.get(b.step.v.id) ?? toPlace(b.step.v, o), slot: hhmm(b.step.at), until: hhmm(b.step.until), travel: b.step.travel, by: b.step.by,
       price: b.step.price, open: b.step.open.label, why: b.step.why, km: b.km, reason: b.step.reasons.slice(0, 2).join(' · '),
     }));
@@ -510,9 +510,8 @@ export const APP = {
   buildAdd(part: string, id: string) {
     const req = this.built.req; if (!req) return false;
     const prev = this.built.steps[this.built.steps.length - 1] ?? null;
-    if (this.skipLive().includes(id)) return false;
     const b = buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, this.built.steps.map((x) => x.v.id), 400).find((x) => x.step.v.id === id);
-    if (!b) return false;
+    if (!b || this.skipLive(b.step.v.id, b.step.at, b.step.until)) return false;
     this.built.steps.push(b.step);
     this.built.parts.push(part);
     return true;
