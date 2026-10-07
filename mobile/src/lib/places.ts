@@ -18,7 +18,7 @@ export async function syncPlaces(force = false) {
     const rows: PlaceRow[] = [];
     const page = async (q: (x: unknown) => unknown) => {
       for (let from = 0; ; from += 500) {
-        const { data, error } = await (q(db.from('venues').select('id,data,edit,status,updated_at')) as any).order('updated_at').range(from, from + 499); // eslint-disable-line @typescript-eslint/no-explicit-any
+        const { data, error } = await (q(db.from('venues').select('id,data,edit,status,updated_at')) as any).order('updated_at').order('id').range(from, from + 499); // id: rows of one import share a time // eslint-disable-line @typescript-eslint/no-explicit-any
         if (error || !data) return false;
         rows.push(...(data as PlaceRow[]));
         if (data.length < 500) return true;

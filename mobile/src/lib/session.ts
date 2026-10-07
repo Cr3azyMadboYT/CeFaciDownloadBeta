@@ -214,6 +214,24 @@ const netListeners = new Set<(e: string) => void>();
 export const onSyncTrouble = (f: (e: string) => void) => { netListeners.add(f); f(netErr); return () => { netListeners.delete(f); }; };
 const trouble = (e: string) => { netErr = e; netListeners.forEach((f) => f(e)); };
 
+/** The free Plus week, asked on the server before Bilu gives it in the tour (07.10: the "already used on this phone"
+ *  answer came seconds after the gift, in the middle of the tour). 'later': no account or no network yet. */
+let trialAsk: Promise<'ok' | 'used' | 'later'> | null = null;
+export function claimTrial(): Promise<'ok' | 'used' | 'later'> {
+  if (!snap.known) return Promise.resolve('later');
+  trialAsk ??= (async () => {
+    const device = await phoneCode().catch(() => null);
+    if (!device) return 'later' as const;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (sb() as any).rpc('start_plus_trial', { p_device: device });
+    if (!error) return 'ok' as const;
+    if (/folosit deja/.test(error.message ?? '')) { setBoard({ trialUsed: true }); return 'used' as const; }
+    trialAsk = null;
+    return 'later' as const;
+  })();
+  return trialAsk;
+}
+
 /** Another account was on this phone before (its session ended without "Ieși din cont"): nothing of it may reach the
  *  one signing in now — not its name, plans, XP or Plus (07.10). The places' cache stays: it is the same for everyone. */
 function forgetOtherAccount() {
@@ -252,7 +270,7 @@ async function connect(who: Who) {
     const r = await restore(sb(), who.id);
     if (signedIn !== who.id) return;
     // the free Plus week once per phone: a second account on the same phone hears it from Bilu
-    const upload = makeUploader(sb(), who.id, 3000, { device: phoneCode, refused: () => setBoard({ plus: 'off', plusModal: 'used' }) });
+    const upload = makeUploader(sb(), who.id, 3000, { device: phoneCode, refused: () => setBoard({ plus: 'off', plusModal: 'used', trialUsed: true }) });
     APP.prefs = { ...APP.prefs, ...JSON.parse(localStorage.getItem('cefaci.prefs') || '{}'), google: who.id };
     APP.rebuild();
     APP.onSaved = (state) => { if (snap.known) upload(state, APP.prefs as unknown as Record<string, unknown>); };

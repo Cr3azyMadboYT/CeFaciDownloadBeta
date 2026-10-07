@@ -25,7 +25,10 @@ import { Doodles } from '../ui/Doodles';
 
 /** Makes the tickets for a plan (every step) and opens the first one. With a crew chosen at "Câți sunteți?", the plan
  *  goes to the crew too (Vin / Nu pot), so that after the outing everyone's vote teaches the crew. */
+let making = 0; // a second tap on "Facem așa" while the first is still on its way does nothing (07.10: plan sent twice)
 export function makeTickets(p: Shown, people: number, crew?: { id: string; name: string }) {
+  if (Date.now() - making < 2500) return;
+  making = Date.now();
   const route = p.steps.length > 1 ? 'r' + Date.now() : undefined;
   const pids = p.steps.map((s) => createPlanAt(s.place.id, s.at, people, route ? { route } : {}));
   const me = getApp().who?.id;

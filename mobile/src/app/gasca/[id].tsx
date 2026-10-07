@@ -54,7 +54,7 @@ export default function GascaView() {
               <CrewMark icon={crew.icon} color={ink(crew.color)} size={64} />
               <View style={{ flex: 1 }}>
                 <H1 style={{ fontSize: 28, lineHeight: 30 }}>{crew.name}</H1>
-                <Muted>{'Gașcă permanentă, ' + (crew.members.filter((m) => m.status === 'member').length + 1) + ' membri'}</Muted>
+                <Muted>{'Gașcă permanentă, ' + ((n) => (n === 1 ? 'un membru' : n + ' membri'))(crew.members.filter((m) => m.status === 'member').length + 1)}</Muted>
               </View>
             </View>
             {crew.mine === 'invited' ? (

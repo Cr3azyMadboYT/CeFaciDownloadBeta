@@ -37,11 +37,13 @@ export async function findUser(username: string): Promise<Person | null> {
 export async function ask(me: string, them: string): Promise<string | null> {
   const { error } = await db().from('friendships').insert({ requester: me, addressee: them });
   if (!error) return null;
-  return /duplicate|unique/i.test(error.message) ? 'Sunteți deja prieteni sau cererea e trimisă.' : 'Nu am putut trimite cererea. Încearcă iar.';
+  return /duplicate|unique/i.test(error.message) ? 'Sunteți deja prieteni sau cererea e trimisă.' : serverSays(error.message) ?? 'Nu am putut trimite cererea. Încearcă iar.';
 }
+/** The server's own words when it says why not (a daily limit, a rude name), not a generic "try again" (07.10). */
+export const serverSays = (m: string | undefined) => (m && /^(Ai |Te rog|O gașcă|Votul|Poți|Nu ești)/.test(m) ? m : null);
 export async function addByCode(code: string): Promise<string | null> {
   const { error } = await db().rpc('add_friend_by_code', { p_code: code.trim().toLowerCase() });
-  return error ? 'Codul nu e bun.' : null;
+  return error ? serverSays(error.message) ?? 'Codul nu e bun.' : null;
 }
 export async function accept(me: string, them: string) {
   await db().from('friendships').update({ status: 'accepted', accepted_at: new Date().toISOString() }).eq('requester', them).eq('addressee', me);

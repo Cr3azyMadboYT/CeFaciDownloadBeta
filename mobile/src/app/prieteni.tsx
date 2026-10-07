@@ -58,6 +58,7 @@ export default function Prieteni() {
     if (/^[a-z0-9]{8}$/i.test(x) && !x.includes('.')) {
       const err = await addByCode(x);
       if (!err) { setBusy(false); setQ(''); toast('Cererea a plecat. Vă vedeți după ce o acceptă.'); void load(); return; }
+      if (err !== 'Codul nu e bun.') { setBusy(false); toast(err); return; } // a limit: say it, do not look for a username
     }
     const p = await findUser(x);
     setBusy(false);

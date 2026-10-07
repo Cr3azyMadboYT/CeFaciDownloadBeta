@@ -80,9 +80,9 @@ export default function Plus() {
         <View style={{ position: 'absolute', left: 24, right: 24, top: ins.top + 120, padding: 20, paddingBottom: 22, borderRadius: 26, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', gap: 10, shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 25, shadowOffset: { width: 0, height: 20 }, elevation: 12 }}>
           <Bilu size={st === 'off' ? 104 : 112} mood={st === 'off' ? 'hi' : 'wink'} />
           <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 27, textAlign: 'center' }}>{st === 'off' ? 'Plus s-a oprit' : 'Aici e ascuns un cadou'}</T>
-          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? 'Poți reveni oricând, gratis până intră primii parteneri.' : 'Bilu îl păzește pentru tine. Apasă și vezi ce e.'}</Muted>
+          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? (b.trialUsed ? 'Săptămâna gratuită s-a folosit deja pe telefonul ăsta. Plus merge cu 20 lei pe lună.' : 'Poți reveni oricând, gratis până intră primii parteneri.') : 'Bilu îl păzește pentru tine. Apasă și vezi ce e.'}</Muted>
           <Big style={{ alignSelf: 'stretch', marginTop: 6 }} label={st === 'off' ? 'Reia Plus · 20 lei pe lună' : 'Deschide cadoul'}
-            onPress={() => { if (st === 'off') { setModal('pay'); return; } setBoard({ plus: 'trial', plusDay: 1 }); setModal('gift'); }} />
+            onPress={() => { if (st === 'off' || b.trialUsed) { setModal(b.trialUsed && st !== 'off' ? 'used' : 'pay'); if (b.trialUsed) setBoard({ plus: 'off' }); return; } setBoard({ plus: 'trial', plusDay: 1 }); setModal('gift'); }} />
           {st === 'off' ? <Muted>Poți reveni oricând, fără nicio penalizare.</Muted> : null}
         </View>
       ) : null}

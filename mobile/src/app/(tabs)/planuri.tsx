@@ -17,6 +17,14 @@ import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { Doodles } from '../../ui/Doodles';
 
+/** "la 21:00", "mâine la 21:00", "vineri la 21:00": a vote may close another day (07.10). */
+const WD = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'];
+function untilWords(d: Date, now = new Date()) {
+  const day = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const diff = Math.round((day(d) - day(now)) / 864e5);
+  return (diff <= 0 ? '' : diff === 1 ? 'mâine ' : WD[d.getDay()] + ' ') + 'la ' + d.toTimeString().slice(0, 5);
+}
+
 
 export default function Planuri() {
   const { t } = useTheme();
@@ -76,7 +84,7 @@ export default function Planuri() {
                   <Icon name="users" color={open ? '#FFFFFF' : t.ink} />
                   <View style={{ flex: 1, gap: 2 }}>
                     <T style={{ fontFamily: F.b, fontSize: 16, color: open ? '#FFFFFF' : t.ink }}>{v.title + (v.crewName ? ' · ' + v.crewName : '')}</T>
-                    <T style={{ fontFamily: F.sb, fontSize: 13, color: open ? 'rgba(255,255,255,0.85)' : t.ink2 }}>{open ? 'Votează până la ' + new Date(v.closesAt).toTimeString().slice(0, 5) : 'S-a închis. Vezi cine a câștigat.'}</T>
+                    <T style={{ fontFamily: F.sb, fontSize: 13, color: open ? 'rgba(255,255,255,0.85)' : t.ink2 }}>{open ? 'Votează până ' + untilWords(new Date(v.closesAt)) : 'S-a închis. Vezi cine a câștigat.'}</T>
                   </View>
                   <Icon name="next" size={16} color={open ? '#FFFFFF' : t.ink3} />
                 </Press>

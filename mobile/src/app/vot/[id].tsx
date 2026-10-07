@@ -27,6 +27,7 @@ export default function Vot() {
   const ins = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const who = useApp((s) => s.who);
+  const hasAccount = useApp((s) => s.account); // opened from a notification: the session is still loading
   const [v, setV] = useState<VoteFull | null | undefined>(undefined);
   const [now, setNow] = useState(Date.now());
   const [busy, setBusy] = useState('');
@@ -36,11 +37,12 @@ export default function Vot() {
   useEffect(() => { const k = setInterval(() => setNow(Date.now()), 20000); return () => clearInterval(k); }, []);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/planuri'));
 
+  if (!who && hasAccount) return <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20 }}><Muted>Încarc votul…</Muted></View>;
   if (!who) {
     return (
       <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20, gap: 12 }}>
         <H1>Votul merge cu cont.</H1>
-        <Muted>Intră din Profil → Prieteni, apoi deschide votul din Planuri.</Muted>
+        <Muted>Intră în cont, apoi deschide votul din Planuri.</Muted>
         <Big label="Înapoi" onPress={back} />
       </View>
     );

@@ -23,7 +23,7 @@ export function MissingPlace({ open, onClose, where }: { open: boolean; onClose:
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (sb() as any).from('reports').insert({ venue_id: 'nou', kind: 'altceva', note });
     setBusy(false);
-    if (error) { toast('Nu am putut trimite acum. Încearcă mai târziu.'); return; }
+    if (error) { toast(/^Ai trimis/.test(error.message ?? '') ? error.message : 'Nu am putut trimite acum. Încearcă mai târziu.'); return; }
     toast('Mersi! Îl verificăm și, dacă e bun, apare în aplicație.');
     setName(''); setWhy(''); onClose();
   };

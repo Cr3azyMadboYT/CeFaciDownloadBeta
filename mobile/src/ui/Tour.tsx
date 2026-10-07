@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, Modal, Pressable, View, useWindowDimensions, type GestureResponderEvent } from 'react-native';
 import { router } from 'expo-router';
-import { setBoard, getApp } from '../lib/session';
+import { claimTrial, setBoard, getApp } from '../lib/session';
 import { endTour, tourNext, tourOops, useTour, type Rect } from '../lib/tour';
 import { Bilu, type Mood } from './Bilu';
 import { Big, T } from './kit';
@@ -42,7 +42,9 @@ export function Tour() {
   useEffect(() => {
     if (!tour.on || !st?.magic) return;
     // as in the design: the gift opens just under a second in (the blur starts melting), the next step at 2.9 s
-    const a = setTimeout(() => { if ((getApp().board.plus ?? 'locked') === 'locked') setBoard({ plus: 'trial', plusDay: 1 }); }, 950);
+    // the server is asked first: a phone that already had the week does not get the gift again
+    const asked = claimTrial();
+    const a = setTimeout(() => { void asked.then((r) => { if (r !== 'used' && (getApp().board.plus ?? 'locked') === 'locked') setBoard({ plus: 'trial', plusDay: 1 }); }); }, 950);
     const b = setTimeout(() => tourNext(), 2900);
     return () => { clearTimeout(a); clearTimeout(b); };
   }, [tour.on, st?.magic]);

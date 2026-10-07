@@ -259,7 +259,7 @@ export default function Bilet() {
               if (!me) { toast(k === 'inchis' ? 'Notat: nu ți-l mai arătăm.' : 'Ca să ne trimiți asta, intră în cont din Profil → Prieteni.'); return; }
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const { error } = await (sb() as any).from('reports').insert({ venue_id: p.id, kind: k });
-              toast(error ? 'Nu am putut trimite acum. Încearcă mai târziu.' : 'Mersi! Am notat.' + (k === 'inchis' ? ' Nu ți-l mai arătăm.' : ''));
+              toast(error ? (/^Ai trimis/.test(error.message ?? '') ? error.message : 'Nu am putut trimite acum. Încearcă mai târziu.') : 'Mersi! Am notat.' + (k === 'inchis' ? ' Nu ți-l mai arătăm.' : ''));
             }} />
           ))}
         </View>

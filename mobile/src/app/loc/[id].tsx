@@ -48,7 +48,7 @@ export default function Loc() {
     return (
       <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20, gap: 12 }}>
         <T style={{ fontFamily: F.display, fontSize: 26 }}>Locul ăsta nu mai e în aplicație.</T>
-        <Big label="Înapoi" onPress={() => router.back()} />
+        <Big label="Înapoi" onPress={() => (router.canGoBack() ? router.back() : router.replace('/exploreaza'))} />
       </View>
     );
   }
