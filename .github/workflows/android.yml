@@ -72,10 +72,14 @@ jobs:
           echo "signed=true" >> "$GITHUB_OUTPUT"
       - name: APK (pentru telefon)
         working-directory: mobile/android
+        env:
+          EXPO_PUBLIC_ESRI_MAPS_KEY: ${{ secrets.ESRI_MAPS_KEY }} # harta din satelit (Esri); fără ea, butonul „Satelit” nu apare
         run: ./gradlew assembleRelease --no-daemon
       - name: AAB (pentru Google Play, doar cu cheia reală)
         if: steps.sign.outputs.signed == 'true'
         working-directory: mobile/android
+        env:
+          EXPO_PUBLIC_ESRI_MAPS_KEY: ${{ secrets.ESRI_MAPS_KEY }} # harta din satelit (Esri); fără ea, butonul „Satelit” nu apare
         run: ./gradlew bundleRelease --no-daemon
       - name: Numele fișierului
         run: |

@@ -21,7 +21,7 @@ export function telLink(raw: string | null | undefined): string | null {
 }
 
 /** Hosts a map may open (the map makers' credits). */
-const MAP_HOSTS = /^(www\.)?(openstreetmap\.org|openfreemap\.org|maplibre\.org|openmaptiles\.org)$/;
+const MAP_HOSTS = /^(www\.)?(openstreetmap\.org|openfreemap\.org|maplibre\.org|openmaptiles\.org|esri\.com|arcgis\.com)$/;
 export function mapLink(raw: string): string | null {
   const w = webLink(raw);
   if (!w) return null;

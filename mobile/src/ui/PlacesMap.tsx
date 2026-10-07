@@ -1,6 +1,8 @@
 // The results on a real map (decision Cornel, 04.10): MapLibre with OpenFreeMap's free tiles, inside a WebView, no
 // key and nothing to pay. Numbered pins for the places, a dot for where you start, and for "Seara completă" a line
 // through the steps in order. Tapping a pin opens its card; "Asta!" on the card picks the place.
+// Satellite (Cornel, 07.10: „default satelit”, no button): with the Esri key in the build (EXPO_PUBLIC_ESRI_MAPS_KEY,
+// from the GitHub secret ESRI_MAPS_KEY) the map is Esri's imagery with the street names; without it, OpenFreeMap.
 import { useMemo } from 'react';
 import { Linking, Platform, View } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -8,10 +10,15 @@ import { Muted } from './kit';
 import { useTheme } from './theme';
 import { mapLink } from '../lib/links';
 
+const ESRI = process.env.EXPO_PUBLIC_ESRI_MAPS_KEY ?? '';
+/** The map's look: Esri's satellite photo with labels when the build has the key, else OpenFreeMap's streets. */
+export const MAP_STYLE = ESRI ? 'https://basemapstyles-api.arcgis.com/arcgis/rest/services/styles/v2/styles/arcgis/imagery?language=ro&token=' + encodeURIComponent(ESRI) : 'https://tiles.openfreemap.org/styles/liberty';
+export const MAP_SATELLITE = !!ESRI;
+
 export interface MapPin { id: string; lat: number; lon: number; name: string; sub: string; bg: string; fg: string; n: number; hot?: boolean }
 
 function html(pins: MapPin[], origin: { lat: number; lon: number; label: string }, line: boolean, dark: boolean, pick: boolean) {
-  const data = JSON.stringify({ pins, origin, line, dark, pick }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ pins, origin, line, dark, pick, style: MAP_STYLE, sat: MAP_SATELLITE }).replace(/</g, '\\u003c');
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'};font-family:system-ui,sans-serif}
@@ -29,7 +36,11 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
   function send(x){ window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(x)); }
   function start(){
     if(!window.maplibregl){ document.body.innerHTML='<div class="err">Harta are nevoie de internet. Lista de mai jos merge și fără.</div>'; return; }
-    var map=new maplibregl.Map({container:'m',style:'https://tiles.openfreemap.org/styles/liberty',center:[D.origin.lon,D.origin.lat],zoom:13,attributionControl:false});
+    var map=new maplibregl.Map({container:'m',style:D.style,center:[D.origin.lon,D.origin.lat],zoom:13,attributionControl:false});
+    // the route through the steps (yellow on the satellite photo, where blue would not show)
+    map.on('style.load',function(){ if(D.line&&D.pins.length>1&&!map.getSource('r')){
+      map.addSource('r',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:D.pins.map(function(p){return[p.lon,p.lat];})}}});
+      map.addLayer({id:'r',type:'line',source:'r',paint:{'line-color':D.sat?'#FFD43B':'#2F5BFF','line-width':4,'line-dasharray':[1.5,1.2]}}); } });
     map.addControl(new maplibregl.AttributionControl({compact:true}),'top-right');
     var b=new maplibregl.LngLatBounds();b.extend([D.origin.lon,D.origin.lat]);
     var me=document.createElement('div');me.className='me';new maplibregl.Marker({element:me}).setLngLat([D.origin.lon,D.origin.lat]).setPopup(new maplibregl.Popup({offset:12}).setText(D.origin.label)).addTo(map);
@@ -42,10 +53,6 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
       b.extend([p.lon,p.lat]);
     });
     map.on('load',function(){
-      if(D.line&&D.pins.length>1){
-        map.addSource('r',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:D.pins.map(function(p){return[p.lon,p.lat];})}}});
-        map.addLayer({id:'r',type:'line',source:'r',paint:{'line-color':'#2F5BFF','line-width':4,'line-dasharray':[1.5,1.2]}});
-      }
       if(D.pins.length) map.fitBounds(b,{padding:{top:64,bottom:84,left:48,right:48},maxZoom:15,duration:0});
       // the credit stays a small (i) until tapped, not a box over the map
       var a=document.querySelector('.maplibregl-ctrl-attrib');if(a) a.classList.remove('maplibregl-compact-show');

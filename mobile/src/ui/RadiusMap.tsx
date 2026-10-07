@@ -7,9 +7,10 @@ import { WebView } from 'react-native-webview';
 import { Muted } from './kit';
 import { useTheme } from './theme';
 import { mapLink } from '../lib/links';
+import { MAP_SATELLITE, MAP_STYLE } from './PlacesMap';
 
 function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable: boolean) {
-  const data = JSON.stringify({ p, r, movable }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ p, r, movable, style: MAP_STYLE, sat: MAP_SATELLITE }).replace(/</g, '\\u003c');
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'}}
@@ -36,15 +37,15 @@ function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable
   window.setP=function(lat,lon){ D.p={lat:lat,lon:lon}; if(marker) marker.setLngLat([lon,lat]); if(map&&map.getSource('c')){ draw(); fit(); } };
   function start(){
     if(!window.maplibregl){ document.body.innerHTML='<div class="err">Harta are nevoie de internet. Raza merge și fără ea.</div>'; return; }
-    map=new maplibregl.Map({container:'m',style:'https://tiles.openfreemap.org/styles/liberty',center:[D.p.lon,D.p.lat],zoom:11,attributionControl:{compact:true}});
+    map=new maplibregl.Map({container:'m',style:D.style,center:[D.p.lon,D.p.lat],zoom:11,attributionControl:{compact:true}});
     var el=document.createElement('div');el.className='pin';
     marker=new maplibregl.Marker({element:el,draggable:D.movable,anchor:'bottom'}).setLngLat([D.p.lon,D.p.lat]).addTo(map);
     marker.on('drag',function(){ var q=marker.getLngLat(); D.p={lat:q.lat,lon:q.lng}; draw(); });
     marker.on('dragend',function(){ var q=marker.getLngLat(); send({moved:{lat:q.lat,lon:q.lng}}); });
     map.on('load',function(){
       map.addSource('c',{type:'geojson',data:ring(D.p.lat,D.p.lon,D.r)});
-      map.addLayer({id:'cf',type:'fill',source:'c',paint:{'fill-color':'#2F5BFF','fill-opacity':0.12}});
-      map.addLayer({id:'cl',type:'line',source:'c',paint:{'line-color':'#2F5BFF','line-width':2.5}});
+      map.addLayer({id:'cf',type:'fill',source:'c',paint:{'fill-color':D.sat?'#FFD43B':'#2F5BFF','fill-opacity':D.sat?0.18:0.12}});
+      map.addLayer({id:'cl',type:'line',source:'c',paint:{'line-color':D.sat?'#FFD43B':'#2F5BFF','line-width':2.5}});
       fit(); send({ready:true});
     });
   }
