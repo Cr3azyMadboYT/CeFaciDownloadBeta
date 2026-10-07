@@ -26,7 +26,8 @@ export async function remindBill(placeName: string, at = new Date(), pid?: numbe
       content: { title: 'Bilu de la CeFaci', body: 'Nu uita de bon, ne ajută și pe noi și pe tine :)', data: { kind: 'bon', pid } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 40 * 60, channelId: 'bon' },
     });
-    const noon = new Date(at.getFullYear(), at.getMonth(), at.getDate() + 1, 12, 0);
+    // the next noon: the same day for a check-in after midnight (07.10: it came 35 hours later)
+    const noon = new Date(at.getFullYear(), at.getMonth(), at.getDate() + (at.getHours() < 5 ? 0 : 1), 12, 0);
     const second = await Notifications.scheduleNotificationAsync({
       content: { title: 'Bilu de la CeFaci', body: 'Ai uitat bonul de ' + (at.getHours() >= 17 || at.getHours() < 5 ? 'aseară' : 'ieri') + ' de la ' + placeName + '? Îl mai poți pune până diseară: +25 XP.', data: { kind: 'bon', pid } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: noon, channelId: 'bon' },

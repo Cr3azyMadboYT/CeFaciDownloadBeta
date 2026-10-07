@@ -37,22 +37,30 @@ export function planDay(pl: Plan) {
   if (pl.date) { const [y, m, d] = pl.date.split('-').map(Number); return new Date(y, m - 1, d); }
   return dayFor(pl.when, new Date(pl.createdAt));
 }
-/** "azi", "mâine" or the weekday, as people say it. */
+/** The evening a moment belongs to: the night ends at 05:00, so 00:30 still counts as the evening before (07.10: after
+ *  midnight the evening's earlier tickets vanished, the 22:30 step said "ieri" and check-in was refused). */
+const eveOf = (d: Date) => startOfDay(new Date(d.getTime() - 5 * 3600e3));
+/** The evening of a plan, as its day at 00:00. */
+export function planEvening(pl: Plan) { return eveOf(startsAt(pl)); }
+/** The plan is for this evening (until 05:00 the next morning). */
+export const isTonight = (pl: Plan, now = new Date()) => planEvening(pl).getTime() === eveOf(now).getTime();
+/** "azi", "mâine" or the weekday, as people say it (for the evening the plan is in). */
 export function dayWord(pl: Plan, now = new Date()) {
-  const diff = Math.round((planDay(pl).getTime() - startOfDay(now).getTime()) / 864e5);
-  return diff < 0 ? 'ieri' : diff === 0 ? 'azi' : diff === 1 ? 'mâine' : DAYS[planDay(pl).getDay()];
+  const ev = planEvening(pl);
+  const diff = Math.round((ev.getTime() - eveOf(now).getTime()) / 864e5);
+  return diff < 0 ? 'ieri' : diff === 0 ? 'azi' : diff === 1 ? 'mâine' : DAYS[ev.getDay()];
 }
 /** "azi", "mâine", "sâm.": short, for the little day box. */
 export function dayShort(pl: Plan, now = new Date()) { const w = dayWord(pl, now); return w === 'azi' || w === 'mâine' || w === 'ieri' ? w : w.slice(0, 3) + '.'; }
 /** "Azi, 4 oct.", "Mâine, 5 oct.", "Sâmbătă, 10 oct." */
 export function dateText(pl: Plan, now = new Date()) {
-  const d = planDay(pl);
+  const d = planEvening(pl);
   const w = dayWord(pl, now);
   return w.charAt(0).toUpperCase() + w.slice(1) + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
 }
 /** Plans whose day has not passed, plus yesterday's outing while its receipt can still be added (until tonight). */
 export const upcoming = (list: Plan[], now = new Date()) => list.filter((pl) => {
-  const day = planDay(pl).getTime(), today = startOfDay(now).getTime();
+  const day = planEvening(pl).getTime(), today = eveOf(now).getTime();
   return day >= today || (!!pl.inAt && !pl.bonDone && day >= today - 864e5);
 });
 

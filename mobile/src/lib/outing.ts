@@ -7,7 +7,7 @@ import { APP } from '../../../src/app/bridge';
 import { km } from '../../../src/engine/core';
 import { sb } from './auth';
 import { getApp, setBoard } from './session';
-import { planDay, updPlan, type Plan } from './plans';
+import { isTonight, planDay, updPlan, type Plan } from './plans';
 import { cancelReminders, remindBill } from './remind';
 import { levelOf } from './levels';
 
@@ -36,14 +36,13 @@ const NEAR_M = 250;    // how close counts as "at the place"
 const CAT_WORD: Record<string, string> = { mancare: 'restaurant', cafea: 'cafenea', desert: 'desert', bar: 'bar', club: 'club', film: 'film', teatru: 'teatru', cultura: 'muzeu', activitate: 'o activitate', natura: 'aer liber', sport: 'sport' };
 const within = <T,>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<never>((_, no) => setTimeout(() => no(new Error('timeout')), ms))]);
 const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
 /** "Sunt aici": checks the phone is at the place, then stamps the passport. With an account the server checks it
  *  again and writes the XP (xp_check_in); the phone only shows what the server counted. Returns a message. */
 export async function checkIn(pl: Plan): Promise<{ ok: boolean; msg: string }> {
   const p = APP.byId(pl.placeId);
   if (!p) return { ok: false, msg: 'Nu mai găsim localul ăsta.' };
-  if (!sameDay(planDay(pl), new Date())) return { ok: false, msg: 'Check-in-ul merge în ziua ieșirii, când ajungi la ' + p.name + '.' };
+  if (!isTonight(pl)) return { ok: false, msg: 'Check-in-ul merge în ziua ieșirii, când ajungi la ' + p.name + '.' };
   let here: { lat: number; lon: number; acc: number };
   try {
     const perm = await Location.requestForegroundPermissionsAsync();
@@ -97,6 +96,12 @@ export async function sendBill(pl: Plan, from: 'camera' | 'gallery'): Promise<{ 
   const day = planDay(pl);
   const dayIso = day.getFullYear() + '-' + String(day.getMonth() + 1).padStart(2, '0') + '-' + String(day.getDate()).padStart(2, '0');
   const { data, error } = await sb().functions.invoke('citeste-bon', { body: { image: res.assets[0].base64, venue: pl.placeId, day: dayIso } });
+  // the server said no before reading the photo (no check-in, already put, too late, enough photos today): say why
+  const early = !error ? (data?.xp as { error?: string } | undefined)?.error : undefined;
+  if (early && !data?.bon) {
+    if (/deja/.test(early)) { updPlan(pl.pid, { bonDone: true, remind: [] }); void cancelReminders(pl.remind); return { ok: true, msg: early }; }
+    return { ok: false, msg: early };
+  }
   if (error || !data?.bon) {
     let msg = 'Nu am putut citi bonul acum. Mai încearcă puțin mai târziu.';
     try { const body = await (error as { context?: Response })?.context?.json(); if (body?.error) msg = body.error; } catch { /* keep the general message */ }
@@ -111,8 +116,8 @@ export async function sendBill(pl: Plan, from: 'camera' | 'gallery'): Promise<{ 
   if (bon.date && bon.date !== iso && bon.date !== isoNext) return { ok: false, msg: 'Bonul e din altă zi (' + bon.date.split('-').reverse().join('.') + '). Pune bonul de la ieșirea asta.' };
   // the server writes the +25 only after a check-in there; the receipt still counts for the real prices
   if (xp?.error && !xp.gain) {
-    if (/check-in/.test(xp.error)) return { ok: false, msg: xp.error };
     if (/deja/.test(xp.error)) { updPlan(pl.pid, { bonDone: true, remind: [] }); void cancelReminders(pl.remind); return { ok: true, msg: xp.error }; }
+    return { ok: false, msg: xp.error }; // not confirmed (no check-in, CUI or date not seen, the server busy): no +25 here
   }
   updPlan(pl.pid, { bonDone: true, remind: [] });
   void cancelReminders(pl.remind);

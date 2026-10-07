@@ -9,7 +9,7 @@ import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
 import { phoneCode } from './device';
-import { forgetPush, registerPush } from './push';
+import { forgetPush, registerPush, resetPush } from './push';
 import { loadWeather } from './weather';
 import { deleteAccountEverywhere, emailStart, emailVerify, hasStoredSession, sb, signInWithGoogle, signOutEverywhere, watchAuth, type Who } from './auth';
 
@@ -126,7 +126,7 @@ export async function finishSignup(a: SignupAnswers): Promise<string | null> {
 /** Signs out (and deletes the account, when asked), wipes the phone and starts again from the first screen.
  *  Deleting stops with a message if the server did not confirm, so nothing is left behind by mistake. */
 export async function startOver(deleteAccount: boolean): Promise<string | null> {
-  if (deleteAccount) { const err = await deleteAccountEverywhere(); if (err) return err; }
+  if (deleteAccount) { const err = await deleteAccountEverywhere(); if (err) return err; await resetPush(); }
   else { await Promise.race([forgetPush(), new Promise((ok) => setTimeout(ok, 3000))]); await signOutEverywhere(); }
   try { localStorage.clear(); } catch { /* storage blocked */ }
   APP.prefs = { ...DEFAULT_PREFS };
@@ -214,6 +214,21 @@ const netListeners = new Set<(e: string) => void>();
 export const onSyncTrouble = (f: (e: string) => void) => { netListeners.add(f); f(netErr); return () => { netListeners.delete(f); }; };
 const trouble = (e: string) => { netErr = e; netListeners.forEach((f) => f(e)); };
 
+/** Another account was on this phone before (its session ended without "Ieși din cont"): nothing of it may reach the
+ *  one signing in now — not its name, plans, XP or Plus (07.10). The places' cache stays: it is the same for everyone. */
+function forgetOtherAccount() {
+  try {
+    const keys: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('cefaci.') && k !== 'cefaci.places') keys.push(k); }
+    for (const k of keys) localStorage.removeItem(k);
+  } catch { /* storage blocked */ }
+  void resetPush();
+  APP.prefs = { ...DEFAULT_PREFS };
+  APP.pickVotes.clear(); APP.pickMemo.clear();
+  APP.rebuild();
+  snap = { ...snap, board: {}, prefs: APP.prefs, onboarded: false, known: false };
+}
+
 /** When someone without an account signs in, their phone profile becomes the account (same @username if free). */
 async function adoptPhoneProfile(): Promise<boolean> {
   const p = APP.prefs;
@@ -229,6 +244,10 @@ async function adoptPhoneProfile(): Promise<boolean> {
 let retry: ReturnType<typeof setTimeout> | undefined;
 async function connect(who: Who) {
   clearTimeout(retry);
+  let owner: string | null = null;
+  try { owner = localStorage.getItem('cefaci.owner'); } catch { /* storage blocked */ }
+  if (owner && owner !== who.id) forgetOtherAccount();
+  try { localStorage.setItem('cefaci.owner', who.id); } catch { /* storage blocked */ }
   try {
     const r = await restore(sb(), who.id);
     if (signedIn !== who.id) return;

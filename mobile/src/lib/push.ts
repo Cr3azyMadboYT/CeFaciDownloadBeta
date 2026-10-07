@@ -37,3 +37,9 @@ export async function forgetPush() {
   await (sb() as any).from('push_tokens').delete().eq('token', saved).then(() => {}, () => {});
   saved = '';
 }
+
+/** The account is gone (deleted, or another one signed in on this phone): nothing of it stays here. */
+export async function resetPush() {
+  await Notifications.cancelAllScheduledNotificationsAsync().catch(() => {});
+  saved = '';
+}

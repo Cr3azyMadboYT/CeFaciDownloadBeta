@@ -8,7 +8,7 @@ import { webLink } from '../../lib/links';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
 import { fmtDur } from '../../lib/filters';
-import { clashWith, createPlanAt, dateText, dayWord, planDay, removePlan, startsAt, updPlan, type Plan } from '../../lib/plans';
+import { clashWith, createPlanAt, dateText, dayWord, isTonight, planDay, removePlan, startsAt, updPlan, type Plan } from '../../lib/plans';
 import { dropShared, going, moveShared, sharePlan, watchPlans, type Going } from '../../lib/together';
 import { SendTo, type Target } from '../../ui/SendTo';
 import { checkIn, sendBill } from '../../lib/outing';
@@ -167,7 +167,7 @@ export default function Bilet() {
           ) : null}
           {(() => {
             // check-in at the place (today only), then the receipt photo
-            const today = planDay(pl).toDateString() === new Date().toDateString();
+            const today = isTonight(pl);
             const SCAN = 'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10';
             const BON = 'M5 2v20l2-1.5L9 22l2-1.5L13 22l2-1.5L17 22l2-1.5V2l-2 1.5L15 2l-2 1.5L11 2 9 3.5 7 2 5 3.5ZM9 8h6M9 12h6M9 16h4';
             const OK = 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM8.5 12l2.5 2.5 4.5-5';
