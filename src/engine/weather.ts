@@ -49,7 +49,9 @@ export function wxAt(w: Weather | null | undefined, t: Date): WxAt | null {
   const ms = t.getTime();
   const h = w.hours.find((x) => { const a = Date.parse(x.t); return a <= ms && ms < a + 3600e3; });
   if (h && h.temp !== null) return read(h.c, h.temp, h.feel ?? h.temp, h.rain, h.mm, h.wind, h.storm, h.day);
-  const d = w.days.find((x) => x.d === iso(t));
+  // Google's night of a day runs 19:00 to 07:00 the next morning: 01:00 belongs to the night before
+  const early = t.getHours() < 7;
+  const d = w.days.find((x) => x.d === iso(early ? new Date(t.getFullYear(), t.getMonth(), t.getDate() - 1, 12) : t));
   if (!d || d.max === null || d.min === null) return null;
   const day = t.getHours() >= 7 && t.getHours() < 19;
   const temp = day ? d.max - 2 : d.min + 3; // the hours people go out, not the extremes
@@ -57,12 +59,13 @@ export function wxAt(w: Weather | null | undefined, t: Date): WxAt | null {
 }
 
 // places with no roof, and places that are mostly outdoors
-const OUT = new Set(['park', 'nature_reserve', 'botanical_garden', 'beach_resort', 'golf_course', 'horse_riding', 'miniature_golf', 'zoo', 'theme_park', 'water_park', 'biergarten', 'karting', 'paintball', 'soccer', 'tennis']);
+const OUT = new Set(['square', 'promenade', 'park', 'nature_reserve', 'botanical_garden', 'beach_resort', 'golf_course', 'horse_riding', 'miniature_golf', 'zoo', 'theme_park', 'water_park', 'biergarten', 'karting', 'paintball', 'soccer', 'tennis']);
 const WATER = new Set(['water_park', 'beach_resort', 'swimming']);
 const TERRACE = /teras|gradin|garden|rooftop|beach|curte|summer/;
 const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 export type Exposure = 'out' | 'terrace' | 'in';
 export function exposure(v: Venue): Exposure {
+  if (/^Mall/.test(v.kind ?? '')) return 'in'; // a mall counted as a meeting place: shelter, not a square
   if (OUT.has(v.k)) return 'out';
   if (v.outdoor || TERRACE.test(fold(v.name))) return 'terrace';
   return 'in';

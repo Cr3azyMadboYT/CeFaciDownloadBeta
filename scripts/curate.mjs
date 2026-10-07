@@ -17,6 +17,9 @@ const before = fs.existsSync('src/data/curated.json') ? JSON.parse(fs.readFileSy
 for (const id of Object.keys(before?.keep ?? {})) if (!known.has(id)) known.set(id, { id });
 
 const fold = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const COMMON = new Set(['casa', 'club', 'cafe', 'bistro', 'restaurant', 'the', 'bar', 'pub', 'old', 'city', 'park', 'parc', 'piata', 'strada']);
+/** The two names share a real word (4+ letters, not a common one like "casa" or "club"). */
+const sharesWord = (a, b) => { const w = (x) => new Set(fold(x).split(/[^a-z0-9]+/).filter((t) => t.length >= 4 && !COMMON.has(t))); const A = w(a); return [...w(b)].some((t) => A.has(t)); };
 const slug = (s) => fold(s).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
 const km = (a, b) => { const r = Math.PI / 180, dl = (b.lat - a.lat) * r, dn = (b.lon - a.lon) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dn / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); };
 const VIBES = new Set(['Mâncare bună', 'Chill', 'Party', 'Fun', 'Competitiv', 'Cultură', 'Aer liber']);
@@ -129,7 +132,9 @@ for (const f of files) {
     const id = p.osm_id && known.has(p.osm_id) ? p.osm_id : null;
     if (id) { keep[id] = { ...keep[id], ...facts(p) }; delete drop[id]; continue; }
     // the same place may already be on the map without the research noticing: within 120 m and a name in common
-    const near = typeof p.lat === 'number' ? venues.find((v) => km(v, p) < 0.12 && (fold(v.name).includes(fold(p.name).split(' ')[0]) || fold(p.name).includes(fold(v.name).split(' ')[0]))) : null;
+    // whole words of at least 4 letters, not "el", "la", "the", "casa" (07.10: "Carusel" contains "el", so the
+    // Cărturești Carusel story landed on the shots club El Comandante Junior; "Old City" got Komodo Lounge Old Town)
+    const near = typeof p.lat === 'number' ? venues.find((v) => km(v, p) < 0.12 && sharesWord(v.name, p.name)) : null;
     if (near) { keep[near.id] = { ...keep[near.id], ...facts(p) }; delete drop[near.id]; continue; }
     const k = kindOf(p);
     if (!k || typeof p.lat !== 'number' || typeof p.lon !== 'number' || !p.name) { skipped.push(p.name + ' (fără fel sau poziție)'); continue; }

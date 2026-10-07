@@ -56,6 +56,9 @@ function wkOpen(wk: number[][][], t: Date) {
   const m = minuteOf(t);
   return wk[t.getDay()].some(([a, b]) => a <= m && m < b);
 }
+/** The moment `left` minutes of wall clock after `t` (the table counts 1440 minutes a day; on the nights the clocks
+ *  change a day has 23 or 25 hours, so adding milliseconds gave "open until 06:00" for a place closing at 05:00). */
+const wallAfter = (t: Date, left: number) => { const m = minuteOf(t) + left; return new Date(t.getFullYear(), t.getMonth(), t.getDate() + Math.floor(m / 1440), 0, m % 1440); };
 /** Minutes from `t` to the next change of state, within two days; null if it never changes (24/7, always closed). */
 function wkNext(wk: number[][][], t: Date): number | null {
   const d = t.getDay();
@@ -76,7 +79,7 @@ export function openAt(v: Venue, t: Date): OpenInfo {
   if (v.wk) {
     const open = wkOpen(v.wk, t);
     const left = wkNext(v.wk, t);
-    const next = left === null ? null : new Date(t.getTime() + left * 60000);
+    const next = left === null ? null : wallAfter(t, left);
     const gap = left === null ? Infinity : left * 60000;
     const sameDay = gap < 20 * 3600e3 && !(open && gap > 12 * 3600e3);
     if (open) return { known: true, open: true, label: next && sameDay ? 'Deschis până la ' + hhmm(next) : 'Deschis' };
@@ -99,7 +102,7 @@ export function closesAt(v: Venue, t: Date): Date | null {
   if (v.wk) {
     if (!wkOpen(v.wk, t)) return null;
     const left = wkNext(v.wk, t);
-    return left === null ? null : new Date(t.getTime() + left * 60000);
+    return left === null ? null : wallAfter(t, left);
   }
   const o = oh(v);
   if (!o) return null;
@@ -470,6 +473,7 @@ export function parseQuery(q: string): Parsed {
   const PER = '(?: (?:de )?(?:persoana|pers|om|cap))?';
   take(new RegExp(' (?:intre|de la) ' + NUMW + ' (?:si|la|pana la) ' + NUMW + ' (?:de )?(?:lei|ron)?' + PER + ' '), (m) => { p.budgetMin = num(m[1]); p.budget = num(m[2]); });
   take(new RegExp(' (\\d{2,4}) (\\d{2,4}) (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budgetMin = Number(m[1]); p.budget = Number(m[2]); }); // "50-100 lei"
+  if (p.budgetMin !== undefined && p.budget !== undefined && p.budgetMin > p.budget) [p.budgetMin, p.budget] = [p.budget, p.budgetMin]; // "intre 100 si 50"
   take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana (?:in|la)) ' + NUMW + ' (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budget = num(m[1]); });
   take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana in) (\\d{2,4})' + PER + ' '), (m) => { p.budget = num(m[1]); }); // "sub 50": lei is implied
   take(new RegExp(' ' + NUMW + ' (?:de )?(?:lei|ron)(?: (?:de )?(?:persoana|pers|om|cap))? '), (m) => { p.budget = num(m[1]); });
@@ -512,7 +516,7 @@ export function parseQuery(q: string): Parsed {
   // people
   const setPeople = (n: number) => { if (n >= 1 && n <= 40) p.people = n; };
   if (take(/ (in doi|in 2|cuplu|cu iubita|cu iubitul|cu prietena|cu prietenul|date|intalnire|prima intalnire|romantic|romantica|romantice|romantik|aniversare) /, () => {})) { p.romantic = true; p.people ??= 2; p.vibes.push('Chill'); }
-  take(new RegExp(' ' + NUMW + ' (?:persoane|persoana|pers|oameni|prieteni|prietene|insi|inși|adulti|colegi|baieti|fete) '), (m) => setPeople(num(m[1])));
+  take(new RegExp(' ' + NUMW + ' (?:de )?(?:persoane|persoana|pers|oameni|prieteni|prietene|insi|inși|adulti|colegi|baieti|fete) '), (m) => setPeople(num(m[1]))); // "20 de persoane"
   take(new RegExp(' (?:gasca|grup|grupul|gasca mea|echipa) (?:de )?' + NUMW + ' '), (m) => setPeople(num(m[1])));
   take(new RegExp(' (?:de|pt|pentru|in|cu) ' + NUMW + ' (?!(?:de )?(?:lei|ron|ani)\\b)'), (m) => { const n = num(m[1]); if (n >= 2 && n <= 30) setPeople(n); });
   if (take(/ (singur|singura|solo) /, () => {})) p.people ??= 1;
@@ -585,7 +589,7 @@ export function askTime(t: TimeAsk | undefined, night: number, now: Date, topicH
   else if (hour < 5 && t.day !== undefined && t.day >= 0) d.setDate(d.getDate() + 1); // "friday night, 2am" is saturday 2am
   if (d.getTime() < now.getTime() && (t.day === undefined || t.day === -1 || t.day === now.getDay())) {
     if (t.day === undefined && t.hour !== undefined && now.getTime() - d.getTime() > 3 * 3600e3) d.setDate(d.getDate() + 1);
-    else if (now.getTime() - d.getTime() < 3 * 3600e3) return new Date(now.getTime());
+    else if (now.getTime() - d.getTime() < 3 * 3600e3 || t.hour === undefined) return new Date(now.getTime()); // "azi" at 23:30: now, not 20:00
   }
   return d;
 }
@@ -736,7 +740,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
   if (nameIntent && !wantsSomething) return { results: named.slice(0, limit), parsed: p };
   if (!wantsSomething && !anyModifier && !nameIntent) {
     // nothing understood: loose name matches, so the person still sees something
-    const loose = nameHits.sort((a, b) => b.s - a.s).slice(0, limit);
+    const loose = nameHits.filter(({ v }) => !(ctx.minor && adultOnly(v))).sort((a, b) => b.s - a.s).slice(0, limit); // 07.10: a minor got bars here
     if (loose.length) p.note = 'Nu am înțeles exact, uite ce seamănă.';
     return { results: loose.map(({ v, s }) => { const o = openAt(v, ctx.now); const d = km(origin, v); return { v, score: 100 * s, km: d, open: o, reasons: [o.label, label(d)], parts: empty }; }), parsed: p };
   }
@@ -768,7 +772,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (!p.place && d > (p.near ? 12 : 30)) continue;
       if (p.street && !fold(v.street ?? '').includes(p.street)) continue;
       // how many, how much, with whom
-      if (n && (n > k.max || (n > 1 && n < k.min))) continue;
+      if (n && ((n > k.max && !ROOMY.has(v.k)) || (n > 1 && n < k.min))) continue; // as the planner: a restaurant takes 15
       const price = priceOf(v);
       if (p.budget !== undefined && price > p.budget) continue;
       if (p.budgetMin !== undefined && price < p.budgetMin) continue;

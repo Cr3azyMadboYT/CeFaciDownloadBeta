@@ -191,11 +191,12 @@ export const APP = {
   byIdMap: new Map<string, Place>(),
   reasons: new Map<string, string>(),
   cache: new Map<string, Place[]>(),
+  cacheWhy: new Map<string, Map<string, string>>(),
   weather: null as Weather | null,
   /** New forecast from the server: the lists are made again with it. */
   setWeather(w: Weather | null) {
     if (w?.at === this.weather?.at) return;
-    this.weather = w; this.cache.clear(); this.pickMemo.clear();
+    this.weather = w; this.cache.clear(); this.cacheWhy.clear(); this.pickMemo.clear();
   },
   /** The weather line for Acasă and the moment the "când" filter means. */
   weatherFor(when: string): { line: string; wet: boolean; nice: boolean; icon: string } | null {
@@ -291,7 +292,7 @@ export const APP = {
     for (const v of VENUES) if (!(minor && adultOnly(v))) this.places.push(toPlace(v, o)); // under 18: no clubs, hookah, 18+
     this.byIdMap = new Map(this.places.map((p) => [p.id, p]));
     for (const v of GONE) if (!this.byIdMap.has(v.id)) this.byIdMap.set(v.id, toPlace(v, o));
-    this.cache.clear();
+    this.cache.clear(); this.cacheWhy.clear();
   },
   byId(id: string) { return this.byIdMap.get(id); },
   ctx(): Ctx {
@@ -377,14 +378,16 @@ export const APP = {
   /** The design's matches(f): real ranking from the engine, as PLACES entries. */
   /** `where`: 'in' only places with a roof (rain), 'out' only outside or with a terrace. */
   matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string; km?: number; where?: 'in' | 'out' }): Place[] {
-    const key = JSON.stringify(f) + this.prefs.zone + new Date().getHours();
+    const d = new Date();
+    const key = JSON.stringify(f) + this.prefs.zone + d.toDateString() + d.getHours(); // the date too: not yesterday's list
     const hit = this.cache.get(key);
-    if (hit) return hit;
+    if (hit) { const why = this.cacheWhy.get(key); if (why) for (const [id, r] of why) this.reasons.set(id, r); return hit; } // its own "why" lines back
     const b = budgetRange(f.budget);
     const ask: Ask = { who: WHO_MAP[f.who] ?? '2', when: WHEN_MAP[f.when] ?? 'diseara', budget: b.max, budgetMin: b.min || undefined, maxKm: f.km ?? this.kmFor(f.dist), vibes: f.vibes as Ask['vibes'] };
     const r = recommend(VENUES, ask, this.ctx(), 0, 200);
-    const list = r.picks.filter((s) => info(s.v).hours <= (DUR_MAX[f.dur] ?? 99) && (!f.where || (f.where === 'in') === (exposure(s.v) === 'in'))).map((s) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
-    this.cache.set(key, list);
+    const why = new Map<string, string>();
+    const list = r.picks.filter((s) => info(s.v).hours <= (DUR_MAX[f.dur] ?? 99) && (!f.where || (f.where === 'in') === (exposure(s.v) === 'in'))).flatMap((s) => { const pl = this.byIdMap.get(s.v.id); if (!pl) return []; const w = s.reasons.join(' · '); this.reasons.set(s.v.id, w); why.set(s.v.id, w); return [pl]; });
+    this.cache.set(key, list); this.cacheWhy.set(key, why);
     return list;
   },
   reason(id: string) { return this.reasons.get(id); },
@@ -404,7 +407,7 @@ export const APP = {
   search(q: string, at?: Date): Place[] {
     const ctx = this.ctx();
     const r = search(VENUES, q, at ? { ...ctx, now: at } : ctx, 30);
-    return r.results.map((s: Scored) => { this.reasons.set(s.v.id, s.reasons.join(' · ')); return this.byIdMap.get(s.v.id)!; });
+    return r.results.flatMap((s: Scored) => { const pl = this.byIdMap.get(s.v.id); if (!pl) return []; this.reasons.set(s.v.id, s.reasons.join(' · ')); return [pl]; });
   },
   searchNote(q: string) {
     const n = fold(q).trim();

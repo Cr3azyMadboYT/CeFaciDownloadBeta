@@ -136,6 +136,7 @@ if (curated) {
     // the research saw what it really is: a billiard hall the map calls a bar, a bowling club mapped as its terrace
     if (f.k && KIND_CAT[f.k] && KIND_CAT[f.k][0] !== v.cat) { v.k = f.k; v.cat = KIND_CAT[f.k][0]; v.kind = f.kind || KIND_CAT[f.k][1]; if (f.k !== 'fast_food') delete v.fast; }
     if (f.terrace) v.outdoor = true;
+    if (f.hours) v.hours = f.hours; // hours the research confirmed (07.10: a mall had "open till midnight" by default)
   }
   let added = 0;
   for (const c of curated.add ?? []) {
@@ -152,6 +153,7 @@ if (curated) {
     if (c.vibes?.length) v.vibes = c.vibes;
     if (typeof c.price === 'number') v.price = c.price;
     if (c.terrace) v.outdoor = true;
+    if (c.hours) v.hours = c.hours;
     if (c.k === 'fast_food') v.fast = true;
     out.push(v);
     added++;

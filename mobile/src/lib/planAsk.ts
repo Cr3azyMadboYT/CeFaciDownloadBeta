@@ -245,7 +245,10 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
     };
     if (round === ROUNDS - 1) {
       // still closed ones after the last round: those plans go; the rest stay, checked
-      const keep = withLive(s.plans.filter((p) => !p.steps.some((x) => shut.includes(x.place.id))), live);
+      const ok = (steps: { place?: { id: string }; v?: { id: string } }[]) => !steps.some((x) => shut.includes(x.place?.id ?? x.v?.id ?? ''));
+      const keep = withLive(s.plans.filter((p) => ok(p.steps)), live);
+      // the engine's copy too, so "Schimbă" and "Alt bar" act on the plan on screen (07.10: they changed another one)
+      if (APP.lastPlans.length === s.plans.length) APP.lastPlans = APP.lastPlans.filter((p) => ok(p.steps));
       s = keep.length
         ? { ...s, plans: keep, note: said(closed), pick: Math.min(s.pick, keep.length - 1) }
         : { ...s, plans: [], note: undefined, empty: 'Am verificat pe Google și locurile bune de pe aproape sunt închise la ora asta. Încearcă altă oră sau mai departe.', pick: 0 };
