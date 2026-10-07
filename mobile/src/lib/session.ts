@@ -260,6 +260,7 @@ async function adoptPhoneProfile(): Promise<boolean> {
 }
 
 let retry: ReturnType<typeof setTimeout> | undefined;
+let activeUpload: ReturnType<typeof makeUploader> | undefined;
 async function connect(who: Who) {
   clearTimeout(retry);
   let owner: string | null = null;
@@ -267,15 +268,18 @@ async function connect(who: Who) {
   if (owner && owner !== who.id) forgetOtherAccount();
   try { localStorage.setItem('cefaci.owner', who.id); } catch { /* storage blocked */ }
   try {
-    const r = await restore(sb(), who.id);
+    const r = await restore(sb(), who.id, () => signedIn === who.id);
     if (signedIn !== who.id) return;
+    activeUpload?.dispose();
     // the free Plus week once per phone: a second account on the same phone hears it from Bilu
     const upload = makeUploader(sb(), who.id, 3000, { device: phoneCode, refused: () => setBoard({ plus: 'off', plusModal: 'used', trialUsed: true }) });
+    activeUpload = upload;
     APP.prefs = { ...APP.prefs, ...JSON.parse(localStorage.getItem('cefaci.prefs') || '{}'), google: who.id };
     APP.rebuild();
     APP.onSaved = (state) => { if (snap.known) upload(state, APP.prefs as unknown as Record<string, unknown>); };
     let known = r.known;
     if (!known && snap.onboarded) known = await adoptPhoneProfile();
+    if (signedIn !== who.id) return;
     snap = { ...snap, known, prefs: { ...APP.prefs }, board: r.known ? (APP.loadBoardState() as Board) : snap.board, onboarded: r.known || snap.onboarded };
     emit();
     if (r.known) resetFilters();
@@ -285,6 +289,7 @@ async function connect(who: Who) {
     last = { who, known };
     signInListeners.forEach((f) => f(who, known));
   } catch {
+    if (signedIn !== who.id) return;
     // offline right after signing in: try again in a bit and whenever the app comes back to the front
     trouble('Nu ajung la contul tău acum. Verifică internetul, reîncerc singur.');
     retry = setTimeout(() => { if (signedIn === who.id) void connect(who); }, 10000);
@@ -293,6 +298,7 @@ async function connect(who: Who) {
 AppState.addEventListener('change', (st) => { if (st === 'active' && signedIn && !last && snap.who) void connect(snap.who); });
 
 watchAuth((who) => {
+  if (!who || signedIn !== who.id) { activeUpload?.dispose(); activeUpload = undefined; clearTimeout(retry); APP.onSaved = () => {}; }
   if (!who) { signedIn = ''; last = null; APP.onSaved = () => {}; snap = { ...snap, who: null, known: false, account: hasStoredSession() }; emit(); return; }
   if (signedIn === who.id) return;
   signedIn = who.id;

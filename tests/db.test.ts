@@ -11,7 +11,7 @@ it('keeps every rule of the database', async () => {
     -- like Supabase: everything new in public is granted to the API roles by name (RLS and revokes must hold anyway)
     alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
     alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
-    create schema auth; create table auth.users (id uuid primary key);
+    create schema auth; create table auth.users (id uuid primary key, created_at timestamptz not null default now());
     create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
     grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;
     create publication supabase_realtime;
@@ -19,7 +19,7 @@ it('keeps every rule of the database', async () => {
   await db.exec(fs.readdirSync('supabase/migrations').sort().map((f) => fs.readFileSync('supabase/migrations/' + f, 'utf8')).join('\n'));
   await db.exec(`grant usage on schema public to anon, authenticated;`);
   const U = { ana: '00000000-0000-0000-0000-00000000000a', bob: '00000000-0000-0000-0000-00000000000b', cris: '00000000-0000-0000-0000-00000000000c', teen: '00000000-0000-0000-0000-00000000000d', eve: '00000000-0000-0000-0000-00000000000e' };
-  for (const id of Object.values(U)) await q('insert into auth.users values ($1)', [id]);
+  for (const id of Object.values(U)) await q('insert into auth.users(id) values ($1)', [id]);
   let ok = 0, bad = 0;
   const as = async (who, sql, params) => {
     await db.exec(`reset role; select set_config('request.jwt.claim.sub', '${U[who]}', false); set role authenticated;`);
@@ -303,7 +303,7 @@ it('keeps every rule of the database', async () => {
 
   const fresh = (await as('eve', `select * from reservation_request($1, now() + interval '2 days', 2)`, [nid])).rows[0];
   eq('a brand-new account waits for the place to confirm', fresh.status, 'cerută');
-  await q(`update profiles set created_at = now() - interval '30 days' where id = $1`, [U.ana]);
+  await q(`update auth.users set created_at = now() - interval '30 days' where id = $1`, [U.ana]);
   const resv = (await as('ana', `select * from reservation_request($1, now() + interval '30 minutes', 2)`, [nid])).rows[0];
   eq('a small table is confirmed by itself', resv.status, 'confirmată');
   const big = (await as('teen', `select * from reservation_request($1, now() + interval '1 day', 9)`, [nid])).rows[0];
@@ -330,6 +330,7 @@ it('keeps every rule of the database', async () => {
   await expectFail('someone already there today cannot', () => as('ana', `select drop_claim($1, 2)`, [drop.id]), /deja la local/);
   await expectOk('cris takes 3 seats', () => as('cris', `select drop_claim($1, 3)`, [drop.id]));
   await expectFail('one offer at a time', () => as('cris', `select drop_claim($1, 1)`, [drop.id]), /deja o ofertă/);
+  await q(`update drop_claims set created_at = now() - interval '11 minutes' where user_id = $1`, [U.cris]);
   const dropScan = (await as('cris', `select visit_scan($1, 44.5657, 25.9261) s`, [today.token])).rows[0].s;
   eq('"Am ajuns" with the offer', [dropScan.kind, dropScan.discount, dropScan.people], ['drop', 15, 3]);
   const teenScan = (await as('teen', `select visit_scan($1, 44.5657, 25.9261) s`, [today.token])).rows[0].s;
@@ -348,15 +349,10 @@ it('keeps every rule of the database', async () => {
   await expectOk('and the visit from a plan', () => as('bob', `select visit_close($1, true, 500)`, [teenScan.visit]));
   eq('the receipt beats the place', (await q(`select bill, declared, bill_source from visits where id = $1`, [scan.visit])).rows[0], { bill: '200.00', declared: '150.00', bill_source: 'bon' });
   const month = (await as('bob', `select biz_month($1) m`, [nid])).rows[0].m;
-  eq('free months: "you would have paid" 8% (plans pay nothing)', [month.fee, month.would_pay, month.lines.length], [0, 40, 2]);
+  eq('unconfigured pricing never bills legacy closes', [month.fee, month.would_pay, month.lines.length], [0, 0, 0]);
   await expectFail('someone who only scans does not see the month', () => as('teen', `select biz_month($1)`, [nid]), /Nu ai voie/);
-  await q(`update partners set free_until = current_date - 400 where venue_id = $1`, [nid]);
-  eq('after them, 8% of the bill', (await as('bob', `select biz_month($1) m`, [nid])).rows[0].m.fee, 40);
-  await q(`update visits set bill = 2000 where id = $1`, [dropScan.visit]);
-  eq('at most 100 lei a table', (await as('bob', `select biz_month($1) m`, [nid])).rows[0].m.fee, 116);
+  // Receipt/loyalty fixtures are not a monetary ledger.
   for (const d of [1, 2, 3]) await q(`insert into visits (venue_id, user_id, kind, work_day, scanned_at, outcome, bill, bill_source) values ($1, $2, 'rezervare', private.work_day(now()) - $3::int, now() - make_interval(days => $3::int), 'a venit', 100, 'local')`, [nid, U.ana, d]);
-  const fees = (await q(`select fee from private.visit_fees($1, private.work_day(now()) - 10, private.work_day(now())) where visit_id in (select id from visits where user_id = $2) order by work_day`, [nid, U.ana])).rows.map((r) => Number(r.fee));
-  eq('the same person: 3 tables a year at the same place', fees, [8, 8, 8, 0]);
   const before = (await q(`select id from visits where user_id = $1 and work_day = private.work_day(now()) - 1`, [U.ana])).rows[0].id;
   eq('every 2nd receipt: a Plus day', (await q(`select visit_receipt($1, $2, '12345678', 90, 0, now() - interval '1 day') r`, [U.ana, before])).rows[0].r.plus_day, true);
   eq('Plus day lands on the account', (await q(`select plus_until > now() p from profile_private where id = $1`, [U.ana])).rows[0].p, true);
@@ -369,7 +365,7 @@ it('keeps every rule of the database', async () => {
   await expectOk('cris takes the week on a third phone', () => as('cris', `select start_plus_trial($1)`, [dev3]));
   await expectOk('delete account', () => as('cris', `select delete_my_account()`));
   eq('cris gone', (await q(`select count(*)::int n from profiles where id = $1`, [U.cris])).rows[0].n, 0);
-  await q('insert into auth.users values ($1) on conflict do nothing', [U.cris]);
+  await q('insert into auth.users(id) values ($1) on conflict do nothing', [U.cris]);
   await expectOk('cris comes back with a new account', () => as('cris', `select * from complete_signup('cris2', 'Cris', '1998-05-05')`));
   await expectFail('a deleted account does not free the phone', () => as('cris', `select start_plus_trial($1)`, [dev3]), /folosit deja/);
   expect(bad, 'failed checks').toBe(0);

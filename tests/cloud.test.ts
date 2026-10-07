@@ -79,3 +79,54 @@ describe('cloud sync', () => {
     expect(await createAccount(db, { username: 'x', first: 'X', birth: '2000-01-01', prefs: {} })).toMatch(/luat/);
   });
 });
+
+it('retries a resolved Supabase error without dropping an unchanged save', async () => {
+  vi.useFakeTimers();
+  const result = vi.fn().mockResolvedValueOnce({error:{message:'offline'}}).mockResolvedValue({error:null});
+  const update=vi.fn().mockImplementation(()=>({eq:result}));
+  const db={from:()=>({update}),rpc:vi.fn()} as unknown as CloudClient;
+  const up=makeUploader(db,'u1',10);
+  up({xp:1},{}); await vi.advanceTimersByTimeAsync(10);
+  expect(update).toHaveBeenCalledTimes(1);
+  await vi.advanceTimersByTimeAsync(2000);
+  expect(update).toHaveBeenCalledTimes(2);
+  up({xp:1},{}); await vi.advanceTimersByTimeAsync(2000);
+  expect(update).toHaveBeenCalledTimes(2);
+  up.dispose(); vi.useRealTimers();
+});
+it('serializes uploads, keeps the newest pending state and cancels after sign-out',async () => {
+  vi.useFakeTimers();
+  let finish!: (v: any)=>void;
+  const first=new Promise(resolve=>{finish=resolve;});
+  const result=vi.fn().mockReturnValueOnce(first).mockResolvedValue({error:null});
+  const update=vi.fn().mockImplementation(()=>({eq:result}));
+  const up=makeUploader({from:()=>({update}),rpc:vi.fn()} as unknown as CloudClient,'u1',10);
+  up({xp:1},{}); await vi.advanceTimersByTimeAsync(10);
+  up({xp:2},{}); up({xp:3},{}); await vi.advanceTimersByTimeAsync(20);
+  expect(update).toHaveBeenCalledTimes(1);
+  finish({error:{message:'failed'}}); await vi.advanceTimersByTimeAsync(2001);
+  expect(update.mock.calls[1][0].app_state.xp).toBe(3);
+  up({xp:4},{}); up.dispose(); await vi.advanceTimersByTimeAsync(10000);
+  expect(update).toHaveBeenCalledTimes(2); vi.useRealTimers();
+});
+it('stops bounded retries and lets a later save try again',async () => {
+  vi.useFakeTimers();
+  const eq=vi.fn().mockResolvedValue({error:{message:'offline'}});
+  const up=makeUploader({from:()=>({update:()=>({eq})}),rpc:vi.fn()} as unknown as CloudClient,'u1',10);
+  up({xp:1},{}); await vi.advanceTimersByTimeAsync(60000);
+  expect(eq).toHaveBeenCalledTimes(4);
+  up({xp:1},{}); await vi.advanceTimersByTimeAsync(10);
+  expect(eq).toHaveBeenCalledTimes(5);
+  up.dispose(); vi.useRealTimers();
+});
+it('does not restore an account after its session has changed', async () => {
+  mem.clear();
+  const {db}=fake({profiles:{username:'old',first_name:'Old'},profile_private:{prefs:{},app_state:{}}});
+  expect(await restore(db,'old',()=>false)).toEqual({known:false}); expect(mem.size).toBe(0);
+});
+it('a failed restore is not mistaken for a new account and leaves local data intact',async () => {
+  mem.clear(); mem.set('cefaci.prefs',JSON.stringify({name:'Local'}));
+  const db={from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:null,error:{message:'offline'}})})})}),rpc:vi.fn()} as unknown as CloudClient;
+  await expect(restore(db,'u1')).rejects.toMatchObject({message:'offline'});
+  expect(JSON.parse(mem.get('cefaci.prefs')!).name).toBe('Local');
+});

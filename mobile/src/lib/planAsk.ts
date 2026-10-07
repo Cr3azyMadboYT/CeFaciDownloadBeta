@@ -9,10 +9,10 @@ import type { PlanAsk } from '../../../src/app/bridge';
 import { addDays, dateShort, eveningOf, eveningWord, isoDay, momentOf, whenWords } from '../../../src/engine/time';
 import { APP } from './session';
 import { crewHasMinor, crewTaste } from './crews';
-import { checkOpen, closedNow, closedWhy, needsCheck, type Live } from './liveOpen';
+import { checkOpen, checkedFor, isClosed, closedWhy, needsCheck, type Live } from './liveOpen';
 import type { Taste } from '../../../src/engine/types';
 
-APP.skipLive = closedNow; // the builder leaves out what Google just said is closed (07.10: it came back as Bilu's pick)
+APP.skipLive = isClosed; // the builder leaves out what Google just said is closed (07.10: it came back as Bilu's pick)
 
 export type Made = ReturnType<typeof APP.makePlans>;
 export type Shown = Made['plans'][number];
@@ -178,7 +178,7 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
   return new Promise((done) => void Promise.all([taste, minorQ]).then(([tt, crewMinor]) => setTimeout(() => {
     if (id !== runId) { done(s); return; } // a newer request is on its way: this one is dropped
     // a surprise leaves out the places of the last surprises (two days), as long as something is left
-    const avoid = [...(o.avoid ?? []), ...(o.surprise ? recentSurprises() : []), ...closedNow()];
+    const avoid = [...(o.avoid ?? []), ...(o.surprise ? recentSurprises() : [])];
     let r = APP.makePlans(askOf(d), avoid, tt, crewMinor);
     if (!r.plans.length && avoid.length) r = APP.makePlans(askOf(d), o.avoid ?? [], tt, crewMinor);
     if (!r.plans.length && o.avoid?.length) r = APP.makePlans(askOf(d), [], tt, crewMinor);
@@ -206,7 +206,7 @@ function untilOf(at: Date, until: string): Date {
 export function withLive(plans: Shown[], live: Record<string, Live>): Shown[] {
   return plans.map((p) => {
     const asked = p.steps.filter((x) => needsCheck(x.place.real.k, x.place.real.cat));
-    if (!asked.length || !asked.every((x) => live[x.place.id]?.open === true)) return p;
+    if (!asked.length || !asked.every((x) => live[x.place.id]?.open === true && checkedFor(live[x.place.id], new Date(x.at), untilOf(new Date(x.at), x.until)))) return p;
     const one = asked.length === 1 ? live[asked[0].place.id] : null;
     const text = 'Verificat acum pe Google: ' + (p.steps.length === 1 ? 'deschis' + (one?.closes ? ' până la ' + one.closes : '') : 'toate deschise la ora lor');
     const checks = [{ ok: true, text }, ...p.checks.filter((c) => !/^Deschis la|^Toate deschise|^Program neconfirmat/.test(c.text))];
@@ -245,7 +245,10 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
     };
     if (round === ROUNDS - 1) {
       // still closed ones after the last round: those plans go; the rest stay, checked
-      const ok = (steps: { place?: { id: string }; v?: { id: string } }[]) => !steps.some((x) => shut.includes(x.place?.id ?? x.v?.id ?? ''));
+      const ok = (steps: { place?: { id: string }; v?: { id: string }; at: Date; until: Date | string }[]) => !steps.some((x) => {
+        const v = live[x.place?.id ?? x.v?.id ?? ''];
+        return v?.open === false && checkedFor(v, x.at, typeof x.until === 'string' ? untilOf(x.at, x.until) : x.until);
+      });
       const keep = withLive(s.plans.filter((p) => ok(p.steps)), live);
       // the engine's copy too, so "Schimbă" and "Alt bar" act on the plan on screen (07.10: they changed another one)
       if (APP.lastPlans.length === s.plans.length) APP.lastPlans = APP.lastPlans.filter((p) => ok(p.steps));
