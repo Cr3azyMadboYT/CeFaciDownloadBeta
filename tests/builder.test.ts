@@ -36,6 +36,15 @@ describe('O construiesc eu', () => {
     const b = APP.buildOptions('masa', a.map((x) => x.place.id));
     for (const x of b) expect(a.map((y) => y.place.id)).not.toContain(x.place.id);
   });
+  it('un loc găsit închis pe Google nu mai apare și nu mai poate fi ales (07.10: London Club revenea ca alegerea lui Bilu)', () => {
+    APP.buildStart({ mode: 'loc', at: at(1, 20), people: 2, budget: [0, Infinity], vibes: [] });
+    const first = APP.buildOptions('masa')[0].place.id;
+    APP.skipLive = () => [first];
+    try {
+      expect(APP.buildOptions('masa').map((x) => x.place.id)).not.toContain(first);
+      expect(APP.buildAdd('masa', first)).toBe(false);
+    } finally { APP.skipLive = () => []; }
+  });
   it('pentru o gașcă cu cineva sub 18 ani nu sunt baruri sau cluburi', () => {
     APP.buildStart({ mode: 'loc', at: at(1, 22), people: 4, budget: [0, Infinity], vibes: [] }, true);
     const parts = APP.buildParts();

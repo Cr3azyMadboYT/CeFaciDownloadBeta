@@ -7,7 +7,7 @@ import { BackHandler, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { APP } from '../lib/session';
 import { getPlans, runBuilt, whenText, withLive, budgetLabel } from '../lib/planAsk';
-import { checkOpen, needsCheck } from '../lib/liveOpen';
+import { checkOpen, closedWhy, needsCheck } from '../lib/liveOpen';
 import { toast } from '../lib/toast';
 import { Icon, type IconName } from '../ui/Icon';
 import { useSafeAreaInsets } from '../ui/insets';
@@ -60,7 +60,8 @@ export default function Construiesc() {
     setBusy(false);
     const shut = APP.built.steps.findIndex((x) => live[x.v.id]?.open === false);
     if (shut >= 0) {
-      toast(APP.built.steps[shut].v.name + ' e închis la ora aia (am verificat pe Google). Alege altceva de acolo.');
+      const st = APP.built.steps[shut];
+      toast(closedWhy(st.v.name, live[st.v.id]) + '. Alege altceva în locul lui.');
       cut(shut);
       return;
     }

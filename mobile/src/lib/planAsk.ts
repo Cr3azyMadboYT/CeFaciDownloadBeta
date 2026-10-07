@@ -9,8 +9,10 @@ import type { PlanAsk } from '../../../src/app/bridge';
 import { addDays, dateShort, eveningOf, eveningWord, isoDay, momentOf, whenWords } from '../../../src/engine/time';
 import { APP } from './session';
 import { crewHasMinor, crewTaste } from './crews';
-import { checkOpen, closedNow, needsCheck, type Live } from './liveOpen';
+import { checkOpen, closedNow, closedWhy, needsCheck, type Live } from './liveOpen';
 import type { Taste } from '../../../src/engine/types';
+
+APP.skipLive = closedNow; // the builder leaves out what Google just said is closed (07.10: it came back as Bilu's pick)
 
 export type Made = ReturnType<typeof APP.makePlans>;
 export type Shown = Made['plans'][number];
@@ -217,6 +219,7 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
   // goes out rather than send them to a locked door
   const closed: string[] = [];
   const names = new Map<string, string>();
+  let whyOf: Record<string, Live> = {};
   const ROUNDS = 3;
   for (let round = 0; round < ROUNDS; round++) {
     const items = new Map<string, { id: string; name: string; lat: number; lon: number; at: Date; until?: Date }>();
@@ -231,9 +234,11 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
     const shut = Object.entries(live).filter(([, v]) => v.open === false).map(([k]) => k);
     if (!shut.length) { s = { ...s, plans: withLive(s.plans, live) }; emit(); return; }
     closed.push(...shut);
+    whyOf = { ...whyOf, ...live };
     const said = (ids: string[]) => {
       const n = ids.map((k) => names.get(k)).filter(Boolean) as string[];
-      return n.length === 1 ? n[0] + ' e închis la ora aia (am verificat pe Google), așa că l-am schimbat.'
+      const one = ids.find((k) => names.get(k));
+      return n.length === 1 && one ? closedWhy(n[0], whyOf[one]) + ', așa că l-am schimbat.'
         : 'Am verificat pe Google: ' + n.slice(0, 3).join(', ') + (n.length > 3 ? ' și încă ' + (n.length - 3) : '') + ' sunt închise la ora aia, așa că le-am schimbat.';
     };
     if (round === ROUNDS - 1) {

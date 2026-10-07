@@ -478,6 +478,8 @@ export const APP = {
   },
   // ---------- "O construiesc eu" (decision Cornel, 06.10): the evening step by step ----------
   built: { req: null as PlanReq | null, steps: [] as PlanStep[], parts: [] as string[], minor: false },
+  /** Places Google just said are closed (the phone sets it; 07.10: a place found closed came back as Bilu's pick). */
+  skipLive: (): string[] => [],
   /** Starts building for these answers (when, how many, the budget). */
   buildStart(a: PlanAsk, crewMinor = false) { this.built = { req: this.planReq({ ...a, mode: 'loc' }), steps: [], parts: [], minor: crewMinor }; },
   buildCtx() { const c = this.ctx(); return { ...c, minor: c.minor || this.built.minor }; },
@@ -487,14 +489,14 @@ export const APP = {
   buildParts() {
     const req = this.built.req; if (!req) return [];
     const prev = this.built.steps[this.built.steps.length - 1] ?? null;
-    const used = this.built.steps.map((x) => x.v.id);
+    const used = [...this.built.steps.map((x) => x.v.id), ...this.skipLive()];
     return PARTS.map((p) => ({ ...p, ok: buildOptions(VENUES, req, this.buildCtx(), prev, p.id, used, 1).length > 0 }));
   },
   /** A few places for the next part (`skip`: the ones already shown, for "Altele"). */
   buildOptions(part: string, skip: string[] = []) {
     const req = this.built.req; if (!req) return [];
     const prev = this.built.steps[this.built.steps.length - 1] ?? null;
-    const used = [...this.built.steps.map((x) => x.v.id), ...skip];
+    const used = [...this.built.steps.map((x) => x.v.id), ...skip, ...this.skipLive()];
     const o = this.origin();
     const spent = this.built.steps.reduce((a, x) => a + x.price, 0);
     return buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, used, 3, spent).map((b) => ({
@@ -505,6 +507,7 @@ export const APP = {
   buildAdd(part: string, id: string) {
     const req = this.built.req; if (!req) return false;
     const prev = this.built.steps[this.built.steps.length - 1] ?? null;
+    if (this.skipLive().includes(id)) return false;
     const b = buildOptions(VENUES, req, this.buildCtx(), prev, part as SlotId, this.built.steps.map((x) => x.v.id), 400).find((x) => x.step.v.id === id);
     if (!b) return false;
     this.built.steps.push(b.step);
