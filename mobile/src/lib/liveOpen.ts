@@ -18,6 +18,7 @@ export const needsCheck = (k: string, cat: string) => !OPEN_AIR.has(k) && cat !=
 // what this phone already asked in the last hour (the same place, the same half hour): asked again only after that, so
 // rebuilding a plan or "Altă surpriză" does not ask Google again for the same places (only on the phone, for an hour)
 const asked = new Map<string, { at: number; v: Live }>();
+let pausedUntil = 0;
 const keyOf = (x: { id: string; at: Date; until?: Date }) => x.id + '|' + Math.floor(x.at.getTime() / 18e5) + '|' + (x.until ? Math.floor(x.until.getTime() / 18e5) : '');
 
 /** Why a place cannot be used then, in Bilu's words (it may be open when you arrive but close before you leave). */
@@ -30,11 +31,13 @@ export async function checkOpen(items: { id: string; name: string; lat: number; 
   const now = Date.now();
   const out: Record<string, Live> = {};
   const ask = items.filter((x) => { const h = asked.get(keyOf(x)); if (h && now - h.at < 3600e3) { out[x.id] = h.v; return false; } return true; });
-  if (!ask.length) return out;
+  if (!ask.length || now < pausedUntil) return out;
   try {
     const call = (sb() as any).functions.invoke('e-deschis', { body: { items: ask.slice(0, 12).map((x) => ({ id: x.id, at: x.at.toISOString(), until: x.until?.toISOString() })) } }); // eslint-disable-line @typescript-eslint/no-explicit-any
     const r = await Promise.race([call, new Promise<null>((ok) => setTimeout(() => ok(null), 6000))]);
-    const got = ((r as { data?: { checked?: Record<string, Live> } } | null)?.data?.checked) ?? {};
+    const data = (r as { data?: { checked?: Record<string, Live>; limit?: boolean } } | null)?.data;
+    if (data?.limit) pausedUntil = now + 3600e3; // the day's free checks are used up: no more calls for an hour
+    const got = data?.checked ?? {};
     for (const x of ask) { const v = got[x.id]; if (v && v.open !== null) asked.set(keyOf(x), { at: now, v }); }
     for (const [id, v] of Object.entries(got)) if (v.open === false) closedUntil.set(id, now + 3 * 3600e3);
     return { ...out, ...got };
