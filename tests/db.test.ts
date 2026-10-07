@@ -256,6 +256,7 @@ it('keeps every rule of the database', async () => {
   const anon = async (sql) => { await db.exec('reset role; set role anon;'); try { return await q(sql); } finally { await db.exec('reset role'); } };
   eq('the public key reads the places', (await anon(`select count(*)::int n from venues`)).rows[0].n > 0, true);
   eq('but not who edited them', await anon(`select edited_by from venues limit 1`).then(() => 'read', () => 'denied'), 'denied');
+  eq('the app\'s place sync works without an account', (await anon(`select id, data, edit, status, updated_at from venues where edited_at is not null or status <> 'on' or source = 'admin' order by updated_at`)).rows.length > 0, true);
   eq('nor the profiles', await anon(`select count(*) from profiles`).then(() => 'read', () => 'denied'), 'denied');
   eq('nor the weather', await anon(`select count(*) from weather`).then(() => 'read', () => 'denied'), 'denied');
   // the notifications of a phone follow the account on it

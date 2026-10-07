@@ -415,7 +415,7 @@ end $$;
 revoke all on all tables in schema public from anon;
 alter default privileges in schema public revoke all on tables from anon;
 revoke select on public.venues from anon, authenticated;
-grant select (id, name, cat, lat, lon, data, edit, status, updated_at) on public.venues to anon, authenticated;
+grant select (id, name, cat, lat, lon, data, edit, status, updated_at, edited_at, source) on public.venues to anon, authenticated; -- edited_at/source: sincronizarea aplicației le filtrează
 
 -- evenimentele live de ștergere nu respectă regulile de citire: tabelele cu oameni ies din canalul live; telefonul află
 -- de schimbări din vot (vote_sessions.changed_at) și din plan (plans.changed_at), care respectă regulile
