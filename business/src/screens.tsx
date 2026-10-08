@@ -404,22 +404,25 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
   );
 }
 export function Finances({ venue, act, busy }: ScreenProps) {
+  const request = useRef(0);
   const [from, F] = useState(localTime().slice(0, 7) + "-01"),
     [to, T] = useState(localTime().slice(0, 10)),
     [data, S] = useState<Finance | null>(null);
   useEffect(() => {
     let active = true;
+    const n = ++request.current;
     void call<Finance>("biz_finance_v2", {
       p_venue: venue,
       p_from: from,
       p_to: to,
     })
       .then((v) => {
-        if (active) S(v);
+        if (active && n === request.current) S(v);
       })
       .catch(() => {});
     return () => {
       active = false;
+      request.current++;
       S(null);
     };
   }, [venue]);
@@ -448,15 +451,15 @@ export function Finances({ venue, act, busy }: ScreenProps) {
           label="Vezi financiarul"
           disabled={busy}
           onPress={() =>
-            void act(async () =>
-              S(
-                await call<Finance>("biz_finance_v2", {
+            void act(async () => {
+              const n = ++request.current;
+              const result = await call<Finance>("biz_finance_v2", {
                   p_venue: venue,
                   p_from: from,
                   p_to: to,
-                }),
-              ),
-            )
+                });
+              if (n === request.current) S(result);
+            })
           }
         />
       </Card>
@@ -490,9 +493,8 @@ export function Finances({ venue, act, busy }: ScreenProps) {
                 </Txt>
                 <Txt muted>
                   {l.calculation.drop_billable}{" "}
-                  × {l.calculation.drop_unit} lei Drop; persoane rămase
-                  eligibile rezervării, maximum zece în total ×{" "}
-                  {l.calculation.reservation_unit} lei. Tarife păstrate la
+                  × {l.calculation.drop_unit} lei Drop; {l.calculation.reservation_billable} persoane ×{" "}
+                  {l.calculation.reservation_unit} lei rezervare, maximum zece taxabile în total. Tarife păstrate la
                   sosire.
                 </Txt>
               </View>

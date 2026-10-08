@@ -77,6 +77,7 @@ const finance = {
 };
 let calls = [],
   late = false;
+let firstFinance = true;
 async function ctx(viewport, auth = false) {
   const context = await browser.newContext({ viewport });
   await context.routeWebSocket(/supabase\.co/, (ws) => ws.close());
@@ -118,7 +119,12 @@ async function ctx(viewport, auth = false) {
               plus_program: null,
             }
           : base;
-    } else if (name === "biz_finance_v2") data = finance;
+    } else if (name === "biz_finance_v2") {
+      const outdated = firstFinance;
+      firstFinance = false;
+      if (outdated) await new Promise((r) => setTimeout(r, 1200));
+      data = { ...finance, remaining: outdated ? 999 : 162 };
+    }
     else if (name === "biz_team") data = [];
     else if (name === "biz_scan_v2")
       data = {
@@ -216,7 +222,11 @@ try {
     fullPage: true,
   });
   await app.getByRole("button", { name: "Financiar", exact: true }).click();
+  await app.waitForTimeout(100);
+  await app.getByRole("button", { name: "Vezi financiarul", exact: true }).click();
   await app.getByText("162,00").first().waitFor();
+  await app.waitForTimeout(1400);
+  assert.equal(await app.getByText("999,00", { exact: false }).count(), 0);
   await app.screenshot({
     path: "release/screenshots/business-finance-desktop.png",
     fullPage: true,
