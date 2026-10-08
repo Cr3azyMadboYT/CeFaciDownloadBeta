@@ -34,7 +34,6 @@ jobs:
             mobile/package-lock.json
             business/package-lock.json
       - run: npm ci
-      - run: npx vitest run
       - name: Conexiuni PostgreSQL simultane
         run: node scripts/test-business-concurrency.mjs
         env:
@@ -43,6 +42,7 @@ jobs:
         working-directory: mobile
       - run: npm ci && npm run typecheck
         working-directory: business
+      - run: npx vitest run
       - name: Web static pentru gazduire.net
         working-directory: business
         env:

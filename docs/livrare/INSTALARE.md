@@ -44,6 +44,6 @@ Reducerile sunt afișate fără să modifice scorul de potrivire al motorului de
 
 ## Reconstrucție
 
-La rădăcină: `npm ci` și `npx vitest run`. În `mobile/` și `business/`: `npm ci` și `npm run typecheck`. Export web: `CI=1 EXPO_NO_TELEMETRY=1 npm run web` în `business/`, apoi `node scripts/package-business-web.mjs` la rădăcină. Buildurile native se produc prin workflow, nu prin redenumirea unui bundle JS în APK.
+Instalează întâi toate cele trei lockfile-uri: `npm ci` la rădăcină, în `mobile/` și în `business/`. Apoi `npx vitest run` la rădăcină și `npm run typecheck` în fiecare aplicație. Testele funcțiilor Business au nevoie și de configurația TypeScript Expo din dependințele Business. Export web: `CI=1 EXPO_NO_TELEMETRY=1 npm run web` în `business/`, apoi `node scripts/package-business-web.mjs` la rădăcină. Buildurile native se produc prin workflow, nu prin redenumirea unui bundle JS în APK. La declanșare manuală, opțiunea `app` permite reconstruirea numai a Clientului sau Business; pe push se construiesc ambele.
 
 Concurență reală: PostgreSQL 17 local, `CEFACI_TEST_DATABASE_URL=postgres://postgres@127.0.0.1:55432/postgres node scripts/test-business-concurrency.mjs`. Scriptul acceptă numai localhost, creează o bază efemeră și o șterge la final. Browser: instalează Playwright, servește `business/dist` pe localhost:4173 și execută `scripts/test-business-ui.mjs`; acesta interceptează backendul cu date sintetice, inclusiv WebSocket. Fixture-urile nu sunt incluse în bundle.
