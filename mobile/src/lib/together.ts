@@ -1,6 +1,7 @@
 // Plans shared with a crew or with friends (Supabase plans + plan_members): they answer "Vin" or "Nu pot",
 // and the one who made it sees who comes. A vote's winner arrives here too.
 import { APP } from '../../../src/app/bridge';
+import {AppState} from 'react-native';
 import { sb } from './auth';
 import type { Person } from './friends';
 import { createPlanAt, hhmm, removePlan, startsAt, updPlan, type Plan } from './plans';
@@ -35,6 +36,7 @@ export async function sharePlan(pl: Plan, me: string, to: { crewId?: string | nu
 
 /** Plans other people called me to, from today on. */
 export async function listInvites(me: string): Promise<Invite[]> {
+  const {error}=await db().rpc('plan_expire_mine_v2');if(error)throw new Error(error.message);
   const { data: mine } = await db().from('plan_members').select('plan_id, answer').eq('user_id', me);
   const rows = (mine ?? []) as { plan_id: string; answer: Answer }[];
   if (!rows.length) return [];
@@ -87,8 +89,9 @@ export function watchPlans(me: string, cb: () => void) {
   const ch = sb().channel('plans-' + me + '-' + Math.random().toString(36).slice(2))
     // an answer or a new person on a plan touches the plan (plans.changed_at), which comes only to the people in it
     .on('postgres_changes' as never, { event: 'UPDATE', schema: 'public', table: 'plans' } as never, cb)
-    .subscribe();
-  return () => { void sb().removeChannel(ch); };
+    .subscribe(status=>{if(status==='SUBSCRIBED')cb();});
+  const timer=setInterval(cb,15000);const app=AppState.addEventListener('change',s=>{if(s==='active')cb();});
+  return()=>{clearInterval(timer);app.remove();void sb().removeChannel(ch);};
 }
 
 /** The one who made a shared plan drops it: it is gone for everyone. Someone called to it only leaves. */

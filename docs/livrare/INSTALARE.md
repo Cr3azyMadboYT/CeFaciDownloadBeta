@@ -1,0 +1,48 @@
+# Livrare CeFaci Client + Business
+
+Codul Clientului rămâne React Native/Expo în `mobile/`. Business în `business/` folosește componente React Native, cameră nativă și același Bilu/fonturi/palete. Exportul web reutilizează aceste componente; aplicația Business nu este un WebView. Canvasurile originale și ramurile de backup sunt păstrate.
+
+## Web pe gazduire.net
+
+1. În panoul hostingului, creează subdomeniul **business.cefaci.app**. Document-root trebuie să fie un director separat al acestui subdomeniu, de exemplu `public_html/business`. Folosește directorul indicat efectiv de panou, nu directorul principal al site-ului și nu `admin.cefaci.app`.
+2. Configurează în DNS adresa indicată de gazduire.net și activează certificatul TLS al subdomeniului. Așteaptă emiterea certificatului înainte de testarea camerei.
+3. Dezarhivează `CeFaci-Business-web.zip` direct în document-root. `index.html`, `.htaccess`, `manifest.webmanifest`, `version.json`, `_expo/` și `assets/` trebuie să fie la rădăcină. Activează afișarea fișierelor ascunse pentru a verifica `.htaccess`. Nu este necesar Node/PHP pe shared hosting.
+4. La o actualizare, urcă întâi noile asseturi cu hash, apoi `index.html` și `version.json`. Păstrează temporar asseturile vechi pentru sesiunile deschise. Salvează copia completă a release-ului anterior într-un director privat; nu o lăsa descoperibilă pe web.
+5. Pe Apache/LiteSpeed, `.htaccess` forțează HTTPS, dezactivează listingul și permite fallback-ul aplicației. Indexul și versiunea nu sunt cache-uite; asseturile cu hash pot fi cache-uite un an. Dezactivează cache-ul HTML impus suplimentar din panou/CDN. Dacă hostul refuză `Options -Indexes`, elimină numai această directivă și dezactivează listingul din panou.
+6. Deschide `https://business.cefaci.app/version.json`, verifică SHA-ul release-ului, apoi aplicația pe telefon și desktop. Verifică navigarea/reîncărcarea, zi/noapte, fonturile și lipsa erorilor JS.
+7. Autentificarea Business folosește cod OTP pe email pentru **cont existent** (`shouldCreateUser=false`). Nu creează automat conturi noi sau membri de echipă. După autentificare, serverul returnează numai localurile cu rol activ. Verifică trimiterea/primirea reală a codului cu propriul cont; testele automate nu trimit emailuri oamenilor reali. Pentru un circuit viitor OAuth/magic-link, adaugă domeniul în URL Configuration/redirect allowlist Supabase și configurează separat providerul. OTP-ul introdus în aplicație nu depinde de un callback OAuth.
+8. Permite camera în browser. Camera web cere HTTPS și o permisiune acordată explicit. Dacă aceasta este refuzată sau dispozitivul nu o oferă, introducerea manuală a codului rămâne disponibilă. Verifică bilet valabil, bilet expirat, local greșit și scanare repetată pe date de test într-un mediu separat.
+
+Nu au fost furnizate credențiale gazduire.net/DNS. Livrarea este ZIP-ul pregătit pentru upload; domeniul nu este declarat publicat sau verificat pe infrastructura hostingului.
+
+## Android și iOS
+
+GitHub Actions `.github/workflows/android.yml` instalează lockfile-urile, rulează testele și construiește separat `CeFaci-Client.apk` și `CeFaci-Business.apk` cu Gradle `assembleRelease`. Dacă secretul existent de semnare este disponibil, construiește și AAB-uri semnate. Fișierul `*-build.txt` include commitul, tipul semnării, verificarea criptografică `apksigner` și identitatea pachetului. Nu deduce semnarea de producție doar din numele `release`.
+
+Instalarea APK-ului pe un telefon existent trebuie să respecte certificatul anterior. Dacă Android raportează semnături incompatibile, păstrează datele înaintea oricărei dezinstalări; nu înlocui cheia originală. Buildurile automate nu echivalează cu o testare pe dispozitiv fizic.
+
+Arhivele `*-ios-project.zip` conțin proiectele generate. Pentru iOS: checkout la commitul din `*-build.txt`, `npm ci` la rădăcină și în aplicația respectivă, `npx expo prebuild --platform ios --no-install`, apoi CocoaPods/Xcode pe macOS, selectarea Apple Team/provisioning și Archive/Export. Nu există IPA construit: acest mediu nu are infrastructură Apple/semnare iOS configurată.
+
+## Configurare operațională
+
+Proprietarul/managerul setează capacitatea reală, programul de rezervări, durata ocupării, modul obligatoriu/recomandat/nenecesar și pragul de auto-confirmare. Capacitatea implicită zero nu inventează locuri disponibile. Grupurile de minimum opt cer confirmare manuală. Intervalele pot trece de miezul nopții; timpul și calendarul sunt Europe/Bucharest.
+
+Proprietarul folosește echipa existentă; rolul `scos` revocă accesul pe server chiar dacă sesiunea Auth rămâne validă. Managerul nu poate modifica/acorda proprietari. Recepția și scanarea nu primesc financiarul. Codul localului este afișat proprietarului/managerului și poate fi tipărit. Nu publica accesul proprietarului pentru a demonstra scannerul.
+
+Participanții fără cont sunt numărați explicit. Pentru oferte 18+, organizatorul declară separat vârstele acestora; lipsa vârstelor sau prezența minorilor blochează revendicarea. „Clienți noi” nu poate fi verificat pentru anonimi, deci aceste grupuri nu primesc oferta rezervată clienților noi. GPS-ul este un control declarat de proximitate, nu o dovadă imposibil de falsificat.
+
+Reducerile sunt afișate fără să modifice scorul de potrivire al motorului de recomandări. Nu s-a păstrat un bonus de clasare care să împingă un local nepotrivit în față. Drepturile, procentele și tarifele vizitei sunt calculate și păstrate pe server.
+
+## Stări neconfigurate
+
+- `billing_ready=false`: calculele operaționale sunt disponibile; emiterea fiscală, facturarea, colectarea și providerul de plăți nu sunt configurate.
+- Evenimentele cu bilete/plăți nu simulează o achiziție și nu sunt prezentate ca infrastructură livrată.
+- Push Business în fundal nu este configurat. Realtime, evenimentele persistente, recuperarea la reconectare și pollingul în foreground sincronizează interfețele; push-ul nu este sursa stării.
+- Abonamentul Plus plătit și sincronizarea cu un provider de abonamente nu sunt configurate. Eligibilitatea folosește dreptul existent din backend. Compensațiile pentru refuz sunt separate, limitate și auditate.
+- Testarea OCR reală depinde de secretul Vision și de un bon real valid; nu au fost introduse bonuri sau scenarii de fraudă în datele oamenilor reali.
+
+## Reconstrucție
+
+La rădăcină: `npm ci` și `npx vitest run`. În `mobile/` și `business/`: `npm ci` și `npm run typecheck`. Export web: `CI=1 EXPO_NO_TELEMETRY=1 npm run web` în `business/`, apoi `node scripts/package-business-web.mjs` la rădăcină. Buildurile native se produc prin workflow, nu prin redenumirea unui bundle JS în APK.
+
+Concurență reală: PostgreSQL 17 local, `CEFACI_TEST_DATABASE_URL=postgres://postgres@127.0.0.1:55432/postgres node scripts/test-business-concurrency.mjs`. Scriptul acceptă numai localhost, creează o bază efemeră și o șterge la final. Browser: instalează Playwright, servește `business/dist` pe localhost:4173 și execută `scripts/test-business-ui.mjs`; acesta interceptează backendul cu date sintetice, inclusiv WebSocket. Fixture-urile nu sunt incluse în bundle.

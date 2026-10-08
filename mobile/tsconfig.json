@@ -20,7 +20,8 @@
     "**/*.tsx",
     "../src/engine/*.ts",
     "../src/app/bridge.ts",
-    "../src/app/cloud.ts"
+    "../src/app/cloud.ts",
+    "../shared/**/*.tsx"
   ],
   "exclude": [
     "node_modules",

@@ -1,6 +1,6 @@
 // "Biletul serii": the plan as a yellow ticket, then what's left to do (book a table directly with the place),
 // directions, calendar, sending it to friends.
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { Linking, ScrollView, Share, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { canRate, rateOuting } from '../../lib/rate';
@@ -61,8 +61,9 @@ export default function Bilet() {
   const all = useApp((s) => (s.board.plans as Plan[] | undefined));
   const onTo = useCallback((x: Target | null) => setTo(x), []);
   const sid = pl?.sid;
-  const loadWho = useCallback(() => { if (sid) void going(sid).then(setWho); }, [sid]);
-  useEffect(() => { loadWho(); if (!sid || !me) return; return watchPlans(me.id + '-' + sid, loadWho); }, [sid, me, loadWho]);
+  const whoScope=useRef(0);
+  const loadWho=useCallback(()=>{const gen=++whoScope.current;if(sid)void going(sid).then(rows=>{if(gen===whoScope.current)setWho(rows);}).catch(()=>{});},[sid,me?.id]);
+  useEffect(()=>{setWho([]);loadWho();const stop=sid&&me?watchPlans(me.id+'-'+sid,loadWho):()=>{};return()=>{whoScope.current++;stop();};},[sid,me?.id,loadWho]);
   const p = pl ? APP.byId(pl.placeId) : undefined;
   const close = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
 
@@ -75,7 +76,7 @@ export default function Bilet() {
     );
   }
   const needsRes = p.res !== 'none';
-  const internal=!!p.partner;
+  const internal=!!p.partner || !!APP.partnerInfo(p.id);
   const partner=APP.partnerInfo(p.id);
   const noted = pl.res === 'noted';
   const ct = p.contact;
@@ -147,7 +148,7 @@ export default function Bilet() {
           <Ticket bg={t.bg} d={{
             pid: pl.pid, place: p.name, kind: p.title, area: p.zone, day: pl.slot === 'acum' ? 'Azi' : dateText(pl), hour: pl.slot === 'acum' ? 'acum' : pl.slot, people: pl.people,
             cost: p.price === 0 ? 'Gratuit' : '~' + p.price + ' lei',
-            last: needsRes ? { label: 'Rezervare', value: noted ? 'Prin ' + (pl.resVia ?? 'telefon') : 'De făcut', dot: noted ? '#2F5BFF' : '#D93A1C' } : { label: 'Durată', value: fmtDur(p.dur) },
+            last: internal ? {label:'Grup',value:'Prin CeFaci',dot:'#2F5BFF'} : needsRes ? { label: 'Rezervare', value: noted ? 'Prin ' + (pl.resVia ?? 'telefon') : 'De făcut', dot: noted ? '#2F5BFF' : '#D93A1C' } : { label: 'Durată', value: fmtDur(p.dur) },
           }} />
         </View>
 
@@ -186,7 +187,7 @@ export default function Bilet() {
               return <Row icon={BON} bg={t.blueSoft} ink={t.blueInk} title={'Ești la ' + p.name + ' din ' + pl.inAt} sub="La plecare, pune poza bonului fiscal: +25 XP."
                 btn={busyIn === 'bon' ? 'Citesc…' : 'Pune bonul'} onPress={() => { if (!busyIn) setBonPick(true); }} />;
             }
-            return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="+25 XP în carnet. Mersi că ții CeFaci corect." />;
+            return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="Bon confirmat. XP-ul este acordat separat de verificarea vizitei." />;
           })()}
           {p.real.gone ? (
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
@@ -295,7 +296,7 @@ export default function Bilet() {
               <View style={{ gap: 8 }}>
                 <T style={{ fontFamily: F.sb, fontSize: 15 }}>La ce oră</T>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={() => { updPlan(pl.pid, { slot: s }); void moveShared(pl, s); }} />)}
+                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={()=>void(async()=>{try{await moveShared(pl,s);updPlan(pl.pid,{slot:s});}catch(e){toast((e as Error).message);}})()} />)}
                 </View>
               </View>
             ) : null}

@@ -9,10 +9,14 @@ grant select on public.outing_events to authenticated;
 create policy outing_events_read on public.outing_events for select to authenticated using(private.plan_access(plan_id,(select auth.uid())) or private.member_role(venue_id) is not null);
 create or replace function private.outing_event() returns trigger
 language plpgsql security definer set search_path='' as $$
-declare row_data jsonb:=to_jsonb(new); local_venue text;
+declare row_data jsonb:=to_jsonb(new); local_venue text; local_plan uuid;
 begin
  local_venue:=coalesce(row_data->>'venue_id',(select venue_id from public.plans where id=(row_data->>'plan_id')::uuid));
- insert into public.outing_events(venue_id,plan_id,kind) values(local_venue,case when tg_table_name='plans' then (row_data->>'id')::uuid else (row_data->>'plan_id')::uuid end,tg_table_name);
+ local_plan:=case when tg_table_name='plans' then (row_data->>'id')::uuid else (row_data->>'plan_id')::uuid end;
+ -- Cascading account deletion can update source rows after their plan disappeared.
+ if not exists(select 1 from public.plans where id=local_plan) then local_plan:=null; end if;
+ if local_venue is null then return new; end if;
+ insert into public.outing_events(venue_id,plan_id,kind) values(local_venue,local_plan,tg_table_name);
  return new;
 end $$;
 revoke all on function private.outing_event() from public,anon,authenticated;
@@ -26,6 +30,7 @@ create or replace function public.plan_cancel_v2(p_plan uuid) returns void
 language plpgsql security definer set search_path='' as $$
 declare x public.plans;
 begin
+ perform private.require_v2();
  select * into x from public.plans where id=p_plan for update;
  if auth.uid() is null or x.owner_id is distinct from auth.uid() then raise exception 'Doar organizatorul anulează planul.'; end if;
  perform 1 from public.partners where venue_id=x.venue_id for update;
@@ -47,7 +52,7 @@ begin
  data:=data||jsonb_build_object('settings',jsonb_build_object('mode',cfg.reservation_mode,'on',cfg.reservations_on,'paused',cfg.venue_paused,'capacity',cfg.capacity,'duration',cfg.duration_minutes,'auto',cfg.auto_confirm_max,'hours',cfg.reservation_hours),
  'plus_program',case when r in('proprietar','manager') then jsonb_build_object('current_pct',private.plus_pct_at(p_venue,now()),'today_off',exists(select 1 from private.plus_off_days where venue_id=p_venue and day=(now() at time zone 'Europe/Bucharest')::date),'off_days_this_month',(select count(*) from private.plus_off_days where venue_id=p_venue and date_trunc('month',day)=date_trunc('month',now() at time zone 'Europe/Bucharest')),'next',(select to_jsonb(v)-'by_user' from private.plus_versions v where venue_id=p_venue and effective_date>(now() at time zone 'Europe/Bucharest')::date order by effective_date limit 1)) end,
  'requests',coalesce((select jsonb_agg(jsonb_build_object('id',q.id,'name',p.first_name,'people',q.people,'kids',q.kids,'at',q.at,'status',q.status,'proposal_expires_at',q.proposal_expires_at,'response_due_at',q.response_due_at,'note',q.note) order by q.at) from public.reservations q left join public.profiles p on p.id=q.user_id where r<>'scanare' and q.venue_id=p_venue and q.at between now()-interval '3 hours' and now()+interval '30 days' and q.status in('cerută','confirmată','propusă')),'[]'),
- 'visits',coalesce((select jsonb_agg(jsonb_build_object('id',v.id,'name',p.first_name,'kind',v.kind,'people',v.people,'table',v.table_no,'discount',v.discount_pct,'discount_people',v.discount_people,'scope',v.discount_scope,'plus',v.plus,'at',v.scanned_at,'day',v.work_day,'outcome',v.outcome,'closed_at',v.closed_at,'bill',case when r in('proprietar','manager') then v.bill end,'source',case when r in('proprietar','manager') then v.bill_source end,'count',to_jsonb(c)-'by_user','drop_limit',s.drop_limit,'reservation_limit',s.reservation_limit) order by v.scanned_at) from public.visits v left join public.profiles p on p.id=v.user_id left join private.visit_counts c on c.visit_id=v.id left join private.visit_pricing s on s.visit_id=v.id where v.venue_id=p_venue and v.work_day between today-1 and today),'[]'),
+ 'visits',coalesce((select jsonb_agg(jsonb_build_object('id',v.id,'name',p.first_name,'kind',v.kind,'people',v.people,'table',v.table_no,'discount',v.discount_pct,'discount_people',v.discount_people,'scope',v.discount_scope,'plus',v.plus,'at',v.scanned_at,'day',v.work_day,'outcome',v.outcome,'closed_at',v.closed_at,'bill',case when r in('proprietar','manager') then v.bill end,'source',case when r in('proprietar','manager') then v.bill_source end,'count',to_jsonb(c)-'by_user','benefit',(select to_jsonb(b)-'reporter'-'decided_by' from private.benefit_cases b where b.visit_id=v.id),'drop_limit',s.drop_limit,'reservation_limit',s.reservation_limit) order by v.scanned_at) from public.visits v left join public.profiles p on p.id=v.user_id left join private.visit_counts c on c.visit_id=v.id left join private.visit_pricing s on s.visit_id=v.id where v.venue_id=p_venue and v.work_day between today-1 and today),'[]'),
  'statistics',jsonb_build_object('visits',(select count(*) from public.visits where venue_id=p_venue and work_day>=today-30),'people',(select coalesce(sum(c.people),0) from private.visit_counts c join public.visits v on v.id=c.visit_id where v.venue_id=p_venue and v.work_day>=today-30 and c.state='confirmed'),'unclosed',(select count(*) from public.visits where venue_id=p_venue and closed_at is null),'reservations',(select count(*) from public.reservations where venue_id=p_venue and created_at>now()-interval '30 days')));
  return data;
 end $$;
@@ -64,7 +69,14 @@ begin
  return coalesce((select jsonb_agg(jsonb_build_object('id',d.id,'title',d.title,'pct',case when plus then d.pct_plus else d.pct_all end,'seats',d.seats-(select coalesce(sum(seats),0) from public.drop_claims where drop_id=d.id and(status='folosit' or(status='activ' and expires_at>now()))),'min_group',d.min_group,'starts_at',d.starts_at,'ends_at',d.ends_at,'adult',d.adult,'new_only',d.new_only,'plus',plus))
  from public.drops d join public.partners p on p.venue_id=d.venue_id where d.venue_id=x.venue_id and x.status='active' and d.stopped_at is null and p.status='activ' and not p.venue_paused and not(p.reservation_mode='required' and not p.reservations_on) and d.ends_at>now()+interval '15 minutes' and
  now()>=case when d.immediate then d.starts_at+case when plus then interval '0' else interval '10 minutes' end else d.starts_at-case when plus then interval '10 minutes' else interval '0' end end
- and(not d.adult or not exists(select 1 from public.profile_private where id in(select private.group_users(p_plan)) and birth_date>(now() at time zone 'Europe/Bucharest')::date-interval '18 years'))),'[]');
+
+ and(not d.adult or (x.guests=cardinality(x.guest_ages) and not exists(select 1 from unnest(x.guest_ages) age where age<18) and not exists(select 1 from public.profile_private where id in(select private.group_users(p_plan)) and (birth_date is null or birth_date>(now() at time zone 'Europe/Bucharest')::date-interval '18 years'))))
+ and not exists(select 1 from public.partner_members where venue_id=d.venue_id and active and user_id in(select private.group_users(p_plan)))
+ and not exists(select 1 from public.visits v where v.venue_id=d.venue_id and v.work_day=private.work_day(now()) and (v.user_id in(select private.group_users(p_plan)) or exists(select 1 from private.visit_scanners s where s.visit_id=v.id and s.user_id in(select private.group_users(p_plan)))))
+ and not exists(select 1 from public.xp_log where venue_id=d.venue_id and user_id in(select private.group_users(p_plan)) and created_at>=((private.work_day(now())::timestamp+time '05:00') at time zone 'Europe/Bucharest'))
+ and(not d.new_only or(x.guests=0 and not exists(select 1 from public.visits v where v.venue_id=d.venue_id and v.scanned_at>now()-interval '12 months' and(v.user_id in(select private.group_users(p_plan)) or exists(select 1 from private.visit_scanners s where s.visit_id=v.id and s.user_id in(select private.group_users(p_plan))))) and not exists(select 1 from public.xp_log where venue_id=d.venue_id and user_id in(select private.group_users(p_plan)) and created_at>now()-interval '12 months') and not exists(select 1 from public.receipts where venue_id=d.venue_id and user_id in(select private.group_users(p_plan)) and created_at>now()-interval '12 months')))
+ and d.seats-(select coalesce(sum(seats),0) from public.drop_claims where drop_id=d.id and(status='folosit' or(status='activ' and expires_at>now())))>=d.min_group
+),'[]');
 end $$;
 revoke all on function public.drop_feed_v2(uuid) from public,anon,authenticated;
 grant execute on function public.drop_feed_v2(uuid) to authenticated;
@@ -92,6 +104,7 @@ create or replace function public.visit_receipt_v2(p_user uuid,p_visit uuid,p_cu
 language plpgsql security definer set search_path='' as $$
 declare v public.visits; expected_cui text; issued timestamptz;
 begin
+ perform private.require_v2();
  select * into v from public.visits where id=p_visit for update;
  if v.id is null or now()>((v.work_day+2)::timestamp at time zone 'Europe/Bucharest') or not private.plan_access(v.plan_id,p_user,true) then raise exception 'Nu participi la ieșire.'; end if;
  select s.cui into expected_cui from private.visit_pricing s where s.visit_id=v.id;

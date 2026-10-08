@@ -12,13 +12,15 @@ revoke all on private.plus_versions,private.plus_off_days from public,anon,authe
 
 create or replace function private.plus_pct_at(v text,t timestamptz) returns int
 language plpgsql stable security definer set search_path='' as $$
-declare outing_day date:=(t at time zone 'Europe/Bucharest')::date; cfg private.plus_versions; base int; rule jsonb; local_ts timestamp:=t at time zone 'Europe/Bucharest';
+declare outing_day date:=(t at time zone 'Europe/Bucharest')::date; cfg private.plus_versions; base int; rule jsonb; local_ts timestamp:=t at time zone 'Europe/Bucharest'; interval_day date;
 begin
  if exists(select 1 from private.plus_off_days where venue_id=v and plus_off_days.day=outing_day) then return 0; end if;
  select * into cfg from private.plus_versions where venue_id=v and effective_date<=outing_day order by effective_date desc limit 1;
  if cfg.venue_id is null then select plus_pct into base from public.partners where venue_id=v; else base:=cfg.pct; end if;
  for rule in select value from jsonb_array_elements(coalesce(cfg.schedule,'[]')) loop
-  if (rule->>'day')::int=extract(isodow from local_ts) and local_ts::time >= (rule->>'from')::time and local_ts::time < (rule->>'to')::time then return (rule->>'pct')::int; end if;
+  foreach interval_day in array array[local_ts::date-1,local_ts::date] loop
+   if (rule->>'day')::int=extract(isodow from interval_day) and local_ts >= interval_day+(rule->>'from')::time and local_ts < interval_day+(case when (rule->>'to')::time<=(rule->>'from')::time then 1 else 0 end)+(rule->>'to')::time then return (rule->>'pct')::int;end if;
+  end loop;
  end loop;
  return coalesce(base,0);
 end $$;
@@ -28,12 +30,13 @@ create or replace function public.biz_settings_v2(p_venue text,p_mode text,p_on 
 language plpgsql security definer set search_path='' as $$
 declare h jsonb;
 begin
+ perform private.require_v2();
  perform 1 from public.partners where venue_id=p_venue for update;
  if coalesce(private.member_role(p_venue),'') not in('proprietar','manager') then raise exception 'Nu ai voie.'; end if;
  if p_capacity not between 0 and 5000 or p_duration not between 30 and 480 or p_auto not between 0 and 7 then raise exception 'Capacitate, durată sau auto-confirmare invalidă.'; end if;
  if p_mode is null or p_mode not in('required','recommended','none') or p_on is null or p_paused is null or p_capacity is null or p_duration is null or p_auto is null or p_hours is null or jsonb_typeof(p_hours)<>'array' then raise exception 'Setări invalide.'; end if;
  for h in select value from jsonb_array_elements(p_hours) loop
-  if not(h ?& array['day','from','to']) or (h->>'day')::int not between 1 and 7 or (h->>'from')::time >= (h->>'to')::time then raise exception 'Interval invalid.'; end if;
+  if h->>'day' is null or h->>'from' is null or h->>'to' is null or not(h ?& array['day','from','to']) or (h->>'day')::int not between 1 and 7 or (h->>'from')::time = (h->>'to')::time then raise exception 'Interval invalid.'; end if;
  end loop;
  insert into public.venue_log(venue_id,by_user,action,before,after) select p_venue,auth.uid(),'partener',jsonb_build_object('capacity',capacity,'mode',reservation_mode),jsonb_build_object('capacity',p_capacity,'mode',p_mode) from public.partners where venue_id=p_venue;
  update public.partners set reservation_mode=p_mode,reservations_on=p_on,venue_paused=p_paused,capacity=p_capacity,duration_minutes=p_duration,auto_confirm_max=p_auto,reservation_hours=p_hours where venue_id=p_venue;
@@ -45,11 +48,12 @@ create or replace function public.biz_plus_v2(p_venue text,p_pct int,p_schedule 
 language plpgsql security definer set search_path='' as $$
 declare tomorrow date:=((now() at time zone 'Europe/Bucharest')::date+1); r jsonb;
 begin
+ perform private.require_v2();
  perform 1 from public.partners where venue_id=p_venue for update;
  if coalesce(private.member_role(p_venue),'') not in('proprietar','manager') then raise exception 'Nu ai voie.'; end if;
  if p_pct is not null and p_pct not in(10,15,20) or p_schedule is null or jsonb_typeof(p_schedule)<>'array' or jsonb_array_length(p_schedule)>100 then raise exception 'Program Plus invalid.'; end if;
  for r in select value from jsonb_array_elements(p_schedule) loop
-  if not(r ?& array['day','from','to','pct']) or (r->>'day')::int not between 1 and 7 or (r->>'pct')::int not in(0,10,15,20) or (r->>'from')::time >= (r->>'to')::time then raise exception 'Interval Plus invalid.'; end if;
+  if r->>'day' is null or r->>'from' is null or r->>'to' is null or r->>'pct' is null or not(r ?& array['day','from','to','pct']) or (r->>'day')::int not between 1 and 7 or (r->>'pct')::int not in(0,10,15,20) or (r->>'from')::time = (r->>'to')::time then raise exception 'Interval Plus invalid.'; end if;
  end loop;
  insert into private.plus_versions(venue_id,effective_date,pct,schedule,by_user) values(p_venue,tomorrow,p_pct,p_schedule,auth.uid()) on conflict(venue_id,effective_date) do update set pct=excluded.pct,schedule=excluded.schedule,by_user=excluded.by_user;
  insert into public.venue_log(venue_id,by_user,action,after) values(p_venue,auth.uid(),'partener',jsonb_build_object('plus_effective',tomorrow,'pct',p_pct,'schedule',p_schedule));
@@ -62,6 +66,7 @@ create or replace function public.biz_plus_off_today(p_venue text) returns void
 language plpgsql security definer set search_path='' as $$
 declare d date:=(now() at time zone 'Europe/Bucharest')::date;
 begin
+ perform private.require_v2();
  perform 1 from public.partners where venue_id=p_venue for update;
  if coalesce(private.member_role(p_venue),'') not in('proprietar','manager') then raise exception 'Nu ai voie.'; end if;
  if exists(select 1 from private.plus_off_days where venue_id=p_venue and day=d) then return; end if;
@@ -97,7 +102,7 @@ create index reservations_capacity on public.reservations(venue_id,at) where sta
 
 create or replace function private.capacity_ok(v text,t timestamptz,n int,duration int,skip uuid default null) returns boolean
 language plpgsql security definer set search_path='' as $$
-declare pr public.partners; point timestamptz; used int; local_ts timestamp; h jsonb; valid boolean;
+declare pr public.partners; point timestamptz; used int; local_ts timestamp; h jsonb; valid boolean; interval_day date; open_at timestamptz; close_at timestamptz;
 begin
  select * into pr from public.partners where venue_id=v for update;
  if pr.capacity<n then return false; end if;
@@ -109,9 +114,11 @@ begin
  -- Hours must cover the entire occupancy interval; [] means capacity has not been opened.
  local_ts:=t at time zone 'Europe/Bucharest'; valid:=false;
  for h in select value from jsonb_array_elements(pr.reservation_hours) loop
-  if (h->>'day')::int=extract(isodow from local_ts) and local_ts::time >= (h->>'from')::time
-   and (local_ts+make_interval(mins=>duration))::date=local_ts::date
-   and (local_ts+make_interval(mins=>duration))::time <= (h->>'to')::time then valid:=true; end if;
+  foreach interval_day in array array[local_ts::date-1,local_ts::date] loop
+   open_at:=(interval_day+(h->>'from')::time) at time zone 'Europe/Bucharest';
+   close_at:=(interval_day+(case when (h->>'to')::time<=(h->>'from')::time then 1 else 0 end)+(h->>'to')::time) at time zone 'Europe/Bucharest';
+   if (h->>'day')::int=extract(isodow from interval_day) and t>=open_at and t+make_interval(mins=>duration)<=close_at then valid:=true;end if;
+  end loop;
  end loop;
  return valid;
 end $$;
@@ -121,6 +128,7 @@ create or replace function public.reservation_request_v2(p_plan uuid,p_key text,
 language plpgsql security definer set search_path='' as $$
 declare x public.plans; pr public.partners; r public.reservations; n int; auto boolean;
 begin
+ perform private.require_v2();
  select * into x from public.plans where id=p_plan for update;
  if x.owner_id is distinct from auth.uid() or auth.uid() is null then raise exception 'Doar organizatorul rezervă.'; end if;
  if p_key is null or length(p_key) not between 1 and 100 then raise exception 'Cheie invalidă.'; end if;
@@ -128,7 +136,7 @@ begin
  select * into pr from public.partners where venue_id=x.venue_id for update;
  update public.reservations set status='expirată' where plan_id=p_plan and ((status='propusă' and proposal_expires_at<=now()) or(status='cerută' and response_due_at<=now()));
  select * into r from public.reservations where user_id=auth.uid() and request_key=p_key;
- if r.id is not null then return r; end if;
+ if r.id is not null then if r.plan_id is distinct from p_plan then raise exception 'Cheia aparține altei ieșiri.';end if; return r; end if;
  select * into r from public.reservations where plan_id=p_plan and status in('cerută','confirmată','propusă');
  if r.id is not null then return r; end if;
  n:=private.attendance(p_plan);
@@ -150,6 +158,7 @@ create or replace function public.reservation_decide_v2(p_id uuid,p_action text,
 language plpgsql security definer set search_path='' as $$
 declare r public.reservations;
 begin
+ perform private.require_v2();
  -- Same lock order as client: plan, venue, reservation.
  perform 1 from public.plans where id=(select plan_id from public.reservations where id=p_id) for update;
  perform 1 from public.partners where venue_id=(select venue_id from public.reservations where id=p_id) for update;
@@ -170,6 +179,7 @@ create or replace function public.reservation_proposal_answer(p_id uuid,p_accept
 language plpgsql security definer set search_path='' as $$
 declare r public.reservations;
 begin
+ perform private.require_v2();
  perform 1 from public.plans where id=(select plan_id from public.reservations where id=p_id) for update;
  perform 1 from public.partners where venue_id=(select venue_id from public.reservations where id=p_id) for update;
  select * into r from public.reservations where id=p_id for update;
@@ -187,17 +197,21 @@ create or replace function public.plan_edit_v2(p_plan uuid,p_at timestamptz,p_pe
 language plpgsql security definer set search_path='' as $$
 declare x public.plans;
 begin
+ perform private.require_v2();
  select * into x from public.plans where id=p_plan for update;
  if auth.uid() is null or x.owner_id is distinct from auth.uid() then raise exception 'Nu ai voie.'; end if;
  if x.status<>'active' or p_people is null or p_people not between 1 and 500 or p_at is null or p_at<now()-interval '6 hours' or p_at>now()+interval '1 year' then raise exception 'Plan invalid.'; end if;
  if exists(select 1 from public.visits where plan_id=p_plan) or exists(select 1 from public.drop_claims where plan_id=p_plan and status='activ' and expires_at>now()) or exists(select 1 from public.reservations where plan_id=p_plan and status in('cerută','confirmată','propusă')) or exists(select 1 from public.visits where reservation_id in(select id from public.reservations where plan_id=p_plan)) then raise exception 'Anulează rezervarea înainte de modificare.'; end if;
  if x.shared_at is not null and p_people<>x.people then raise exception 'Numărul unui plan trimis vine din participare.'; end if;
- update public.plans set starts_at=p_at,people=p_people where id=p_plan;
+ update public.plans set starts_at=p_at,people=p_people,
+ guests=case when shared_at is null then p_people-1 else guests end,
+ guest_ages=case when shared_at is null and people<>p_people then '{}'::int[] else guest_ages end where id=p_plan;
 end $$;
 revoke all on function public.plan_edit_v2(uuid,timestamptz,int) from public,anon,authenticated;
 grant execute on function public.plan_edit_v2(uuid,timestamptz,int) to authenticated;
 
-alter table public.drops add column immediate boolean not null default false;
+alter table public.drops add column immediate boolean not null default false,add column request_key text;
+create unique index drops_request_key on public.drops(venue_id,request_key) where request_key is not null;
 alter table public.drop_claims add column plan_id uuid references public.plans(id) on delete set null,
  add column plus_at_claim boolean not null default false,
  add column claimed_pct int,
@@ -217,37 +231,49 @@ create or replace function private.group_plus(p uuid) returns boolean
 language sql stable security definer set search_path='' as $$select exists(select 1 from private.group_users(p) u where private.plus_active(u))$$;
 revoke all on function private.group_plus(uuid) from public,anon,authenticated;
 
-create or replace function public.drop_create_v2(p_venue text,p_title text,p_all int,p_plus int,p_seats int,p_minutes int,p_min int default 1,p_at timestamptz default null,p_adult boolean default false,p_new boolean default false) returns public.drops
+create or replace function public.drop_create_v2(p_venue text,p_title text,p_all int,p_plus int,p_seats int,p_minutes int,p_min int default 1,p_at timestamptz default null,p_adult boolean default false,p_new boolean default false,p_key text default null,p_edit uuid default null) returns public.drops
 language plpgsql security definer set search_path='' as $$
-declare d public.drops; starttime timestamptz:=coalesce(p_at,now()); endtime timestamptz; wk timestamp; weekstart timestamptz; weekend timestamptz; used interval; pr public.partners; title text:=private.plain(p_title);
+declare d public.drops; starttime timestamptz:=coalesce(p_at,now()); endtime timestamptz; wk timestamp; weekstart timestamptz; weekend timestamptz; used interval; pr public.partners; normalized_title text:=private.plain(p_title);
 begin
+ perform private.require_v2();
  select * into pr from public.partners where venue_id=p_venue for update;
  if coalesce(private.member_role(p_venue),'') not in('proprietar','manager') then raise exception 'Doar proprietarul sau managerul.'; end if;
  if pr.status<>'activ' or pr.venue_paused then raise exception 'Localul este în pauză.'; end if;
+ if p_key is not null and length(p_key) not between 1 and 100 then raise exception 'Cheie invalidă.';end if;
+ if p_edit is not null then
+  select * into d from public.drops where id=p_edit and venue_id=p_venue for update;
+  if d.id is null or d.starts_at<=now() or d.stopped_at is not null or exists(select 1 from public.drop_claims where drop_id=p_edit) then raise exception 'Editează numai oferte viitoare, fără revendicări.';end if;
+ else
+  select * into d from public.drops where venue_id=p_venue and request_key=p_key; if d.id is not null then return d;end if;
+ end if;
  if p_minutes is null or p_minutes not between 15 and 240 or p_min is null or p_min not between 1 and 6 or p_adult is null or p_new is null or starttime<now()-interval '1 minute' or starttime>now()+interval '30 days' then raise exception 'Verifică durata și grupul minim (1–6).' ; end if;
- if title~'(tutun|narghil|n4rghil|shisha|sisha|hookah|vape|vapat|tigar|iqos|tobacco|glo)' then raise exception 'Tutunul nu poate fi ofertă.'; end if;
+ if normalized_title~'(tutun|narghil|n4rghil|shisha|sisha|hookah|vape|vapat|tigar|iqos|tobacco|glo)' then raise exception 'Tutunul nu poate fi ofertă.'; end if;
  endtime:=starttime+make_interval(mins=>p_minutes);
  if p_plus<private.plus_pct_at(p_venue,starttime) then raise exception 'Drop Plus nu poate fi sub programul Plus.'; end if;
- if exists(select 1 from public.drops where venue_id=p_venue and starts_at<endtime+interval '2 hours' and ends_at>starttime-interval '2 hours') then raise exception 'Păstrează două ore între oferte.'; end if;
+ if exists(select 1 from public.drops where venue_id=p_venue and id is distinct from p_edit and starts_at<endtime+interval '2 hours' and ends_at>starttime-interval '2 hours') then raise exception 'Păstrează două ore între oferte.'; end if;
  -- Count portions in each local calendar week, including a drop crossing Sunday midnight.
  wk:=date_trunc('week',starttime at time zone 'Europe/Bucharest');
  while wk<(endtime at time zone 'Europe/Bucharest') loop
   weekstart:=wk at time zone 'Europe/Bucharest'; weekend:=(wk+interval '7 days') at time zone 'Europe/Bucharest';
-  select coalesce(sum(least(ends_at,weekend)-greatest(starts_at,weekstart)),interval '0') into used from public.drops where venue_id=p_venue and starts_at<weekend and ends_at>weekstart;
+  select coalesce(sum(least(ends_at,weekend)-greatest(starts_at,weekstart)),interval '0') into used from public.drops where venue_id=p_venue and id is distinct from p_edit and starts_at<weekend and ends_at>weekstart;
   if used+least(endtime,weekend)-greatest(starttime,weekstart)>interval '12 hours' then raise exception 'Maximum 12 ore de Drops pe săptămână.'; end if;
   wk:=wk+interval '7 days';
  end loop;
- insert into public.drops(venue_id,title,pct_all,pct_plus,seats,min_group,starts_at,ends_at,adult,new_only,created_by,immediate)
- values(p_venue,p_title,p_all,p_plus,p_seats,p_min,starttime,endtime,p_adult or title~'(alcool|cocktail|coctail|bere|beri|vin|shot|prosecco|spritz|whisk|vodka|votca|gin|rom|tequila|lichior|palinc|tuica|aperol|happy hour|halba|pahar)',p_new,auth.uid(),p_at is null) returning * into d;
+ if p_edit is not null then
+  update public.drops set title=p_title,pct_all=p_all,pct_plus=p_plus,seats=p_seats,min_group=p_min,starts_at=starttime,ends_at=endtime,adult=p_adult or normalized_title~'(alcool|cocktail|coctail|bere|beri|vin|shot|prosecco|spritz|whisk|vodka|votca|gin|rom|tequila|lichior|palinc|tuica|aperol|happy hour|halba|pahar)',new_only=p_new,immediate=p_at is null where id=p_edit returning * into d;return d;
+ end if;
+ insert into public.drops(venue_id,title,pct_all,pct_plus,seats,min_group,starts_at,ends_at,adult,new_only,created_by,immediate,request_key)
+ values(p_venue,p_title,p_all,p_plus,p_seats,p_min,starttime,endtime,p_adult or normalized_title~'(alcool|cocktail|coctail|bere|beri|vin|shot|prosecco|spritz|whisk|vodka|votca|gin|rom|tequila|lichior|palinc|tuica|aperol|happy hour|halba|pahar)',p_new,auth.uid(),p_at is null,p_key) returning * into d;
  return d;
 end $$;
-revoke all on function public.drop_create_v2(text,text,int,int,int,int,int,timestamptz,boolean,boolean) from public,anon,authenticated;
-grant execute on function public.drop_create_v2(text,text,int,int,int,int,int,timestamptz,boolean,boolean) to authenticated;
+revoke all on function public.drop_create_v2(text,text,int,int,int,int,int,timestamptz,boolean,boolean,text,uuid) from public,anon,authenticated;
+grant execute on function public.drop_create_v2(text,text,int,int,int,int,int,timestamptz,boolean,boolean,text,uuid) to authenticated;
 
 create or replace function public.drop_claim_v2(p_drop uuid,p_plan uuid,p_seats int,p_lat double precision,p_lon double precision,p_key text) returns public.drop_claims
 language plpgsql security definer set search_path='' as $$
 declare x public.plans; d public.drops; c public.drop_claims; pos public.venues; n int; plus boolean; ids uuid[];
 begin
+ perform private.require_v2();
  select * into x from public.plans where id=p_plan for update;
  if auth.uid() is null or x.owner_id is distinct from auth.uid() then raise exception 'Doar organizatorul ia oferta.'; end if;
  n:=private.attendance(p_plan); if n is null then raise exception 'Așteptăm participarea finală.'; end if;
@@ -255,7 +281,7 @@ begin
  -- Lock every participating account in sorted order: overlapping groups cannot take simultaneous claims.
  perform pg_advisory_xact_lock(hashtext('claim-user.'||u)) from unnest(ids) u order by u;
  select * into c from public.drop_claims where user_id=auth.uid() and request_key=p_key;
- if c.id is not null then return c; end if;
+ if c.id is not null then if c.plan_id is distinct from p_plan or c.drop_id is distinct from p_drop then raise exception 'Cheia aparține altei ieșiri.';end if;return c; end if;
  select * into d from public.drops where id=p_drop for update;
  select * into pos from public.venues where id=d.venue_id;
  if p_key is null or length(p_key) not between 1 and 100 or p_seats is null or p_seats not between 1 and 6 or p_seats>n or p_seats<d.min_group then raise exception 'Locuri invalide (maximum șase).' ; end if;
@@ -265,7 +291,7 @@ begin
  if now()<(case when d.immediate then d.starts_at+case when plus then interval '0' else interval '10 minutes' end else d.starts_at-case when plus then interval '10 minutes' else interval '0' end end) then raise exception 'Oferta nu a început pentru grupul tău.'; end if;
  if p_lat is null or p_lon is null or p_lat not between -90 and 90 or p_lon not between -180 and 180 or pos.id is null or private.km(p_lat,p_lon,pos.lat,pos.lon)<0.150 then raise exception 'Ia oferta de la cel puțin 150 m de local.'; end if;
  if exists(select 1 from public.partner_members where venue_id=d.venue_id and active and user_id=any(ids)) then raise exception 'Echipa localului nu poate lua oferta.'; end if;
- if d.adult and (exists(select 1 from public.profile_private where id=any(ids) and birth_date>(now() at time zone 'Europe/Bucharest')::date-interval '18 years') or x.guests>cardinality(x.guest_ages) or exists(select 1 from unnest(x.guest_ages) a where a<18)) then raise exception 'Toți participanții trebuie să aibă 18 ani.'; end if;
+ if d.adult and (exists(select 1 from unnest(ids) u where not exists(select 1 from public.profile_private p where p.id=u and p.birth_date<=(now() at time zone 'Europe/Bucharest')::date-interval '18 years')) or x.guests>cardinality(x.guest_ages) or exists(select 1 from unnest(x.guest_ages) a where a<18)) then raise exception 'Toți participanții trebuie să aibă 18 ani.'; end if;
  if exists(select 1 from public.visits where venue_id=d.venue_id and user_id=any(ids) and work_day=private.work_day(now())) or
  exists(select 1 from private.visit_scanners s join public.visits v on v.id=s.visit_id where s.user_id=any(ids) and v.venue_id=d.venue_id and v.work_day=private.work_day(now())) or
  exists(select 1 from public.xp_log where user_id=any(ids) and venue_id=d.venue_id and created_at>=((private.work_day(now())::timestamp+time '05:00') at time zone 'Europe/Bucharest')) then raise exception 'Grupul are deja o sosire la local.'; end if;

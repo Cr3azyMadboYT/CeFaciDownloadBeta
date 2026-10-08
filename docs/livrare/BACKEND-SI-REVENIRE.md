@@ -1,0 +1,27 @@
+# Backend V2 și revenire
+
+Ținta autorizată este exclusiv **CeFaci2.0**, `vqrmwuarjjntusfbqprx`. Istoricul live a fost inspectat: 30 migrații înainte de V2, ultimele `20261007165417` și `20261007165421`. Timestampurile vechi nu coincid integral cu repositoryul. Nu se execută reset, repair al istoricului sau replay al migrațiilor de bază peste producție.
+
+Cele cinci fișiere V2 sunt:
+
+1. `20261008085951_cefaci_group_v2.sql`
+2. `20261008085952_cefaci_operations_v2.sql`
+3. `20261008085954_cefaci_visits_v2.sql`
+4. `20261008085955_cefaci_legacy_alignment_v2.sql`
+5. `20261008100000_cefaci_review_v2.sql`
+
+Pe instalația existentă se aplică împreună, în aceeași tranzacție, ca migrare `cefaci_client_business_v2_20261008`. Aceasta evită o stare intermediară în care Clientul, Business și API-urile legacy folosesc reguli diferite. Pe o bază nouă de test se execută normal toate fișierele ordonate. Suma SHA-256 a SQL-ului concatenat și versiunea Edge instalată sunt în raportul de livrare.
+
+Migrațiile sunt aditive pentru datele operaționale și istorice. Funcțiile vechi care ar ocoli V2 răspund cu mesaj de actualizare. Istoricul V1 păstrează tarifele sale; V2 salvează tarife și eligibilități per vizită. Noile funcții validează rolul activ, localul, starea, participarea, cheile idempotente și limitele pe server. Backendul nu are nevoie de un serviciu PHP paralel.
+
+`docs/livrare/backend-before-v2.sql` păstrează definițiile funcțiilor suprascrise, extrase înainte de instalare, fără datele utilizatorilor. `docs/livrare/edge-before-v2/` păstrează sursa live `citeste-bon`, versiunea 8, fără valori de secrete. Ramurile de backup păstrează separat codul original. Aceste snapshoturi nu înlocuiesc backupul/PITR al platformei pentru date.
+
+## Revenire sigură
+
+1. Dacă apar probleme, aplică `supabase/rollback/pause-v2.sql` numai pe ținta autorizată. Flagul `private.v2_release.writes_on=false` oprește operațiunile principale V2; citirea istoricului și dovezile rămân disponibile. Nu reseta baza, nu șterge vizite și nu redeschide scrierile V1 retrase.
+2. Pentru web, reinstalează pachetul anterior salvat privat și golește cache-ul HTML. Un Client vechi va primi mesaj de actualizare pentru API-urile retrase; acest comportament este intenționat și mai sigur decât permiterea calculelor vechi peste datele V2.
+3. Dacă problema privește OCR, redeploy al snapshotului Edge v8 cu **verify_jwt=true** poate fi făcut separat, păstrând configurația de secrete existentă. Versiunea veche nu conectează bonurile V2, deci menține pauza fluxului afectat până la corecție.
+4. Analizează evenimentele, versiunile numărului și jurnalul de review, apoi livrează o migrare corectivă. Nu executa orbește toate definițiile vechi peste noile date: ar pierde semantica V2. Pentru revenire completă de date este necesar backup/PITR administrat separat.
+5. După teste și verificări, reactivează `writes_on=true` conform comentariului din script. Billing rămâne false.
+
+În producție verificările folosesc cataloage/permisiuni și apeluri anonime neautorizate. Nu creează conturi/localuri de fraudă, nu trimit notificări și nu introduc bonuri sintetice în datele reale. Deadline-urile/expirările sunt calculate de server și persistate la consultare/operațiune; nu depind de un cron pe telefon.

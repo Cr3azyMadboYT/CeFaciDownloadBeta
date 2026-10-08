@@ -1,4 +1,5 @@
 alter table public.visits add column plan_id uuid references public.plans(id) on delete set null,
+ add column group_visit boolean not null default false,
  add column discount_scope text not null default 'bill' check(discount_scope in('bill','eligible_consumption')),
  add column discount_people int not null default 0,
  add column discount_amount numeric(10,2) check(discount_amount>=0),
@@ -7,7 +8,7 @@ alter table public.visits drop constraint visits_people_check;
 alter table public.visits add constraint visits_people_check check(people between 1 and 500);
 drop index public.visits_one_a_day;
 create unique index visits_one_plan on public.visits(plan_id) where plan_id is not null;
-create unique index visits_legacy_one_day on public.visits(user_id,venue_id,work_day) where plan_id is null;
+create unique index visits_legacy_one_day on public.visits(user_id,venue_id,work_day) where not group_visit;
 create table private.group_tickets(plan_id uuid primary key references public.plans(id) on delete cascade,token text not null unique default replace(gen_random_uuid()::text,'-',''),expires_at timestamptz not null);
 create table private.visit_scanners(visit_id uuid references public.visits(id),user_id uuid references public.profiles(id) on delete cascade,primary key(visit_id,user_id));
 create table private.visit_counts(visit_id uuid primary key references public.visits(id),version int not null default 1,people int not null,adults int not null,drop_adults int not null,state text not null check(state in('confirmed','awaiting','disputed')),deadline timestamptz,reason text,by_user uuid references public.profiles(id) on delete set null);
@@ -19,6 +20,13 @@ alter table private.visit_pricing add column reservation_unit numeric not null d
  add column drop_unit numeric not null default 0,
  add column reservation_limit int not null default 0,
  add column drop_limit int not null default 0;
+
+-- Refusal is separate from person eligibility. Pending cases are blocked; an upheld refusal keeps source fees.
+create table private.benefit_cases(visit_id uuid primary key references public.visits(id),state text not null default 'pending' check(state in('pending','upheld','dismissed')),reason text not null,reporter uuid references public.profiles(id) on delete set null,reported_at timestamptz not null default now(),reply text,version int not null default 1,decision_reason text,decided_by uuid references public.profiles(id) on delete set null,decided_at timestamptz,compensated boolean not null default false);
+create table private.review_log(id bigint generated always as identity primary key,visit_id uuid not null references public.visits(id),by_user uuid references public.profiles(id) on delete set null,kind text not null,before jsonb,after jsonb,reason text not null,at timestamptz not null default now());
+alter table private.benefit_cases enable row level security;
+alter table private.review_log enable row level security;
+revoke all on private.benefit_cases,private.review_log from public,anon,authenticated;
 
 create or replace function private.price_visit() returns trigger
 language plpgsql security definer set search_path='' as $$
@@ -76,8 +84,8 @@ begin
  plus:=private.group_plus(p_plan) or coalesce(c.plus_at_claim,false);
  if plus then pct:=private.plus_pct_at(x.venue_id,x.starts_at); end if;
  if c.id is not null then pct:=greatest(pct,coalesce(c.claimed_pct,0)); end if;
- insert into public.visits(venue_id,user_id,plan_id,kind,reservation_id,claim_id,people,table_no,discount_pct,plus,discount_scope,discount_people,work_day,proof)
- values(x.venue_id,x.owner_id,p_plan,case when c.id is not null then 'drop' when r.id is not null then 'rezervare' when plus and pct>0 then 'plus' else 'plan' end,r.id,c.id,n,p_table,pct,plus,
+ insert into public.visits(venue_id,user_id,plan_id,group_visit,kind,reservation_id,claim_id,people,table_no,discount_pct,plus,discount_scope,discount_people,work_day,proof)
+ values(x.venue_id,x.owner_id,p_plan,true,case when c.id is not null then 'drop' when r.id is not null then 'rezervare' when plus and pct>0 then 'plus' else 'plan' end,r.id,c.id,n,p_table,pct,plus,
  case when c.id is not null and not plus then 'eligible_consumption' else 'bill' end,case when plus then n else coalesce(c.seats,0) end,private.work_day(coalesce(r.at,c.created_at,x.starts_at)),case when p_staff then 'staff_ticket' else 'client_location' end) returning * into v;
  if not p_staff then insert into private.visit_scanners values(v.id,auth.uid()) on conflict do nothing; end if;
  return v;
@@ -88,6 +96,7 @@ create or replace function public.visit_client_arrive_v2(p_plan uuid,p_token tex
 language plpgsql security definer set search_path='' as $$
 declare pos public.venues; venue text;
 begin
+ perform private.require_v2();
  select venue_id into venue from public.venue_codes where token=trim(p_token);
  if venue is null or venue is distinct from(select venue_id from public.plans where id=p_plan) then raise exception 'Codul nu este al localului din bilet.'; end if;
  select * into pos from public.venues where id=venue;
@@ -101,6 +110,7 @@ create or replace function public.biz_scan_v2(p_venue text,p_ticket text,p_table
 language plpgsql security definer set search_path='' as $$
 declare t private.group_tickets; v public.visits; name text;
 begin
+ perform private.require_v2();
  if auth.uid() is null or private.member_role(p_venue) is null then raise exception 'Nu ești în echipa localului.'; end if;
  select * into t from private.group_tickets where token=trim(p_ticket);
  if t.plan_id is null or t.expires_at<=now() or not exists(select 1 from public.plans where id=t.plan_id and venue_id=p_venue and status='active') then raise exception 'Cod greșit, expirat sau pentru alt local.'; end if;
@@ -115,6 +125,7 @@ create or replace function public.biz_close_v2(p_visit uuid,p_people int,p_adult
 language plpgsql security definer set search_path='' as $$
 declare v public.visits; cfg private.visit_counts; snapshot private.visit_pricing; state text; scans int; ver int;
 begin
+ perform private.require_v2();
  select * into v from public.visits where id=p_visit for update;
  if v.id is null or coalesce(private.member_role(v.venue_id),'') not in('proprietar','manager','receptie') then raise exception 'Nu ai voie.'; end if;
  if now()>((v.work_day+1)::timestamp+time '12:00') at time zone 'Europe/Bucharest' then raise exception 'Termenul de închidere a trecut.'; end if;
@@ -124,6 +135,7 @@ begin
  select * into cfg from private.visit_counts where visit_id=p_visit;
  if cfg.visit_id is not null and (cfg.people,cfg.adults,cfg.drop_adults,coalesce(v.declared,-1),coalesce(v.discount_amount,-1)) is not distinct from (p_people,p_adults,p_drop_adults,coalesce(p_bill,-1),coalesce(p_discount,-1)) then return cfg.version; end if;
  state:=case when p_people<v.people or p_adults<greatest(0,v.people-coalesce((select kids from public.reservations where id=v.reservation_id),0)) or p_drop_adults<least(p_adults,snapshot.drop_limit) then 'awaiting' else 'confirmed' end;
+ if cfg.state in('awaiting','disputed') then state:='awaiting';end if;
  if state='awaiting' and length(trim(coalesce(p_reason,'')))<3 then raise exception 'Scrie motivul diferenței de număr.'; end if;
  ver:=coalesce(cfg.version,0)+1;
  insert into private.visit_counts(visit_id,version,people,adults,drop_adults,state,deadline,reason,by_user)
@@ -140,6 +152,7 @@ create or replace function public.visit_count_answer_v2(p_visit uuid,p_version i
 language plpgsql security definer set search_path='' as $$
 declare v public.visits; c private.visit_counts;
 begin
+ perform private.require_v2();
  select * into v from public.visits where id=p_visit for update;
  if not private.plan_access(v.plan_id,auth.uid(),true) then raise exception 'Nu participi la ieșire.'; end if;
  select * into c from private.visit_counts where visit_id=p_visit for update;
@@ -159,6 +172,7 @@ begin
  return jsonb_build_object('attendance',attendance,'reservation',(select to_jsonb(r)-'user_id'-'decided_by' from public.reservations r where plan_id=p_plan order by created_at desc limit 1),
  'claim',(select to_jsonb(c)-'user_id' from public.drop_claims c where plan_id=p_plan order by created_at desc limit 1),
  'visit',(select to_jsonb(v)-'user_id'-'closed_by' from public.visits v where plan_id=p_plan),
+ 'benefit',(select to_jsonb(b)-'reporter'-'decided_by' from private.benefit_cases b join public.visits v on v.id=b.visit_id where v.plan_id=p_plan),
  'count',(select to_jsonb(c)-'by_user' from private.visit_counts c join public.visits v on v.id=c.visit_id where v.plan_id=p_plan));
 end $$;
 revoke all on function public.plan_state_v2(uuid) from public,anon,authenticated;
@@ -174,6 +188,7 @@ language sql stable security definer set search_path='' as $$
  from public.visits x join private.visit_pricing s on s.visit_id=x.id
  left join private.visit_counts c on c.visit_id=x.id left join private.visit_attendance a on a.visit_id=x.id
  where x.venue_id=v and x.work_day between d0 and d1 and x.kind in('rezervare','drop') and s.tier is not null and x.outcome='a venit' and x.closed_at is not null
+ and not exists(select 1 from private.benefit_cases b where b.visit_id=x.id and b.state='pending')
  and ((s.version='per-person-v2' and c.state='confirmed') or(s.version<>'per-person-v2' and a.visit_id is not null))
 $$;
 
@@ -185,11 +200,11 @@ begin
  if p_from is null or p_to is null or p_to<p_from or p_to-p_from>366 then raise exception 'Perioadă invalidă.'; end if;
  select coalesce(sum(bill),0),coalesce(sum(discount_amount),0),count(*) filter(where bill is null or discount_amount is null or closed_at is null) into receipts,reductions,missing from public.visits where venue_id=p_venue and work_day between p_from and p_to and outcome<>'n-a venit';
  select coalesce(sum(fee) filter(where not free),0) into commission from private.visit_fees(p_venue,p_from,p_to);
- select count(*) into blocked from public.visits x left join private.visit_counts c on c.visit_id=x.id left join private.visit_pricing s on s.visit_id=x.id where x.venue_id=p_venue and x.work_day between p_from and p_to and x.kind in('rezervare','drop') and x.outcome<>'n-a venit' and ((s.version='per-person-v2' and c.state is distinct from 'confirmed') or (s.version<>'per-person-v2' and not exists(select 1 from private.visit_attendance where visit_id=x.id)) or s.tier is null or x.closed_at is null);
+ select count(*) into blocked from public.visits x left join private.visit_counts c on c.visit_id=x.id left join private.visit_pricing s on s.visit_id=x.id where x.venue_id=p_venue and x.work_day between p_from and p_to and x.kind in('rezervare','drop') and x.outcome<>'n-a venit' and (exists(select 1 from private.benefit_cases b where b.visit_id=x.id and b.state='pending') or (s.version='per-person-v2' and c.state is distinct from 'confirmed') or (s.version<>'per-person-v2' and not exists(select 1 from private.visit_attendance where visit_id=x.id)) or s.tier is null or x.closed_at is null);
   return jsonb_build_object('billing_ready',false,'estimate',true,'partial',missing>0 or blocked>0,'missing',missing,'blocked',blocked,'revenue',receipts,'discounts',reductions,'fee',commission,'remaining',case when missing=0 and blocked=0 then receipts-commission end,
  'would_pay',(select coalesce(sum(fee) filter(where free),0) from private.visit_fees(p_venue,p_from,p_to)),
  'visits',(select count(*) from public.visits where venue_id=p_venue and work_day between p_from and p_to),
- 'lines',coalesce((select jsonb_agg(jsonb_build_object('visit',f.visit_id,'day',f.work_day,'kind',f.kind,'bill',f.bill,'fee',case when f.free then 0 else f.fee end,'would_pay',case when f.free then f.fee else 0 end,'free',f.free,'calculation',jsonb_build_object('reservation_unit',s.reservation_unit,'drop_unit',s.drop_unit,'reservation_limit',s.reservation_limit,'drop_limit',s.drop_limit,'adults',c.adults,'drop_adults',c.drop_adults))) from private.visit_fees(p_venue,p_from,p_to) f join private.visit_pricing s on s.visit_id=f.visit_id left join private.visit_counts c on c.visit_id=f.visit_id),'[]'));
+ 'lines',coalesce((select jsonb_agg(jsonb_build_object('visit',f.visit_id,'day',f.work_day,'kind',f.kind,'bill',f.bill,'fee',case when f.free then 0 else f.fee end,'would_pay',case when f.free then f.fee else 0 end,'free',f.free,'calculation',jsonb_build_object('drop_billable',least(10,c.drop_adults,s.drop_limit),'reservation_billable',least(greatest(0,10-least(c.drop_adults,s.drop_limit)),greatest(0,c.adults-least(c.drop_adults,s.drop_limit)),s.reservation_limit),'reservation_unit',s.reservation_unit,'drop_unit',s.drop_unit,'reservation_limit',s.reservation_limit,'drop_limit',s.drop_limit,'adults',c.adults,'drop_adults',c.drop_adults))) from private.visit_fees(p_venue,p_from,p_to) f join private.visit_pricing s on s.visit_id=f.visit_id left join private.visit_counts c on c.visit_id=f.visit_id),'[]'));
 end $$;
 revoke all on function public.biz_finance_v2(text,date,date) from public,anon,authenticated;
 grant execute on function public.biz_finance_v2(text,date,date) to authenticated;

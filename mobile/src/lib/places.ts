@@ -34,3 +34,7 @@ export async function syncPlaces(force = false) {
 }
 setTimeout(() => { void syncPlaces(true); }, 2000);
 AppState.addEventListener('change', (st) => { if (st === 'active') void syncPlaces(); });
+
+// Recover public settings for anonymous discovery while foregrounded.
+let catalogBusy=false;const catalog=async()=>{if(catalogBusy||AppState.currentState==='background')return;catalogBusy=true;try{await syncPartners();notify();}catch{/* retain verified catalog offline */}finally{catalogBusy=false;}};
+setInterval(()=>void catalog(),30000);

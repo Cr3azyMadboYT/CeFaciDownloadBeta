@@ -2,6 +2,7 @@ name: Client și Business · builduri reale
 on:
   push:
     branches: [claude/new-session-hzbjtf, main, codex/cefaci-client-business-20261008]
+    paths-ignore: ['docs/**', 'handoff/**', '*.md']
   workflow_dispatch:
 permissions:
   contents: read
@@ -126,6 +127,10 @@ jobs:
           if [ -d "${{ matrix.folder }}/android/app/build/outputs/bundle/release" ]; then cp "${{ matrix.folder }}"/android/app/build/outputs/bundle/release/*.aab "release/${{ matrix.name }}.aab"; fi
           zip -qr "release/${{ matrix.name }}-ios-project.zip" "${{ matrix.folder }}/ios"
           printf '%s\n' "Commit ${{ github.sha }}" "Semnare productie ${{ steps.sign.outputs.signed }}" > "release/${{ matrix.name }}-build.txt"
+          SDK_TOOLS=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
+          "$SDK_TOOLS/apksigner" verify --verbose --print-certs "release/${{ matrix.name }}.apk" >> "release/${{ matrix.name }}-build.txt"
+          "$SDK_TOOLS/aapt" dump badging "release/${{ matrix.name }}.apk" | head -1 >> "release/${{ matrix.name }}-build.txt"
+          sha256sum release/* > "release/${{ matrix.name }}-SHA256.txt"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}-native

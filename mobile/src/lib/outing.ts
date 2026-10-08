@@ -59,7 +59,8 @@ export async function checkIn(pl: Plan, venueToken?:string): Promise<{ ok: boole
   const dist = km(here, p.real) * 1000;
   if (dist > NEAR_M + Math.min(150, here.acc)) return far(dist);
 
-  if(p.partner){
+  const partnerOuting=!!p.partner || !!APP.partnerInfo(p.id);
+  if(partnerOuting){
     if(!venueToken)return {ok:false,msg:'Scanează codul localului din bilet pentru a salva sosirea.'};
     try{await arrivePartner(pl,venueToken,here);}catch(e){return {ok:false,msg:(e as Error).message};}
   }
@@ -71,7 +72,7 @@ export async function checkIn(pl: Plan, venueToken?:string): Promise<{ ok: boole
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (sb() as any).rpc('xp_check_in', { p_venue: p.id, p_lat: here.lat, p_lon: here.lon, p_acc: here.acc, p_cat: p.real.cat, p_vlat: p.real.lat, p_vlon: p.real.lon });
     if (error) {
-      if(p.partner)return {ok:true,msg:'Sosirea este salvată. XP-ul nu a fost acordat: '+error.message};
+      if(partnerOuting)return {ok:true,msg:'Sosirea este salvată. XP-ul nu a fost acordat: '+error.message};
       const m = /departe:(\d+)/.exec(error.message ?? '');
       if (m) return far(Number(m[1]));
       return { ok: false, msg: /fetch|network/i.test(error.message ?? '') ? 'Nu ajung la server. Verifică internetul și mai încearcă.' : String(error.message) };
@@ -105,7 +106,7 @@ export async function sendBill(pl: Plan, from: 'camera' | 'gallery'): Promise<{ 
   // the server said no before reading the photo (no check-in, already put, too late, enough photos today): say why
   const early = !error ? (data?.xp as { error?: string } | undefined)?.error : undefined;
   if (early && !data?.bon) {
-    if (/deja/.test(early)) { updPlan(pl.pid, { bonDone: true, remind: [] }); void cancelReminders(pl.remind); return { ok: true, msg: early }; }
+    if (/Bonul (vizitei|de la locul).*deja pus/i.test(early)) { updPlan(pl.pid, { bonDone: true, remind: [] }); void cancelReminders(pl.remind); return { ok: true, msg: early }; }
     return { ok: false, msg: early };
   }
   if (error || !data?.bon) {
@@ -123,7 +124,7 @@ export async function sendBill(pl: Plan, from: 'camera' | 'gallery'): Promise<{ 
   // the server writes the +25 only after a check-in there; the receipt still counts for the real prices
   if(data.receipt?.ok && (!xp?.gain || xp?.error)){updPlan(pl.pid,{bonDone:true,remind:[]});void cancelReminders(pl.remind);return {ok:true,msg:'Bonul este confirmat în Business. '+(xp?.error??'XP-ul rămâne separat de încasarea localului.')};}
   if (xp?.error && !xp.gain) {
-    if (/deja/.test(xp.error)) { updPlan(pl.pid, { bonDone: true, remind: [] }); void cancelReminders(pl.remind); return { ok: true, msg: xp.error }; }
+    if (/Bonul (vizitei|de la locul).*deja pus/i.test(xp.error)) { updPlan(pl.pid, { bonDone: true, remind: [] }); void cancelReminders(pl.remind); return { ok: true, msg: xp.error }; }
     return { ok: false, msg: xp.error }; // not confirmed (no check-in, CUI or date not seen, the server busy): no +25 here
   }
   updPlan(pl.pid, { bonDone: true, remind: [] });
