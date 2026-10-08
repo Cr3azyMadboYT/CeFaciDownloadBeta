@@ -30,7 +30,7 @@ begin
  end if;
  if exists(select 1 from public.plan_members where plan_id=p and answer='pending') then return null; end if;
  select 1+x.guests+count(*) into n from public.plan_members where plan_id=p and answer='vin';
- update public.plans set attendance_closed_at=coalesce(attendance_closed_at,now()) where id=p;
+ update public.plans set people=n,attendance_closed_at=coalesce(attendance_closed_at,now()) where id=p and (attendance_closed_at is null or people is distinct from n);
  return n;
 end $$;
 revoke all on function private.attendance(uuid) from public,anon,authenticated;
@@ -54,7 +54,7 @@ begin
  select * into x from public.plans where owner_id=me and (client_key=p_key or id=p_existing) for update;
  if x.id is null then
   select coalesce(edit->>'name',name) into title from public.venues where id=p_venue and status='on';
-  if title is null then raise exception 'Localul nu mai este disponibil.'; end if;
+  if title is null or exists(select 1 from public.partners where venue_id=p_venue and(venue_paused or(reservation_mode='required' and not reservations_on))) then raise exception 'Localul nu mai este disponibil.'; end if;
   insert into public.plans(owner_id,crew_id,venue_id,venue_name,starts_at,people,guests,guest_ages,client_key)
    values(me,p_crew,p_venue,title,p_at,p_people,p_guests,p_guest_ages,p_key) returning * into x;
  end if;

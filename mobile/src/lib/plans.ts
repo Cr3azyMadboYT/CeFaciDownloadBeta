@@ -5,6 +5,7 @@ import { getApp, setBoard } from './session';
 import { WHO, type Filters } from './filters';
 
 export interface Plan {
+  visitId?: string; reservationAttempt?: number;
   pid: number; placeId: string; when: string; slot: string; people: number;
   res: 'none' | 'ext' | 'noted'; resVia?: string; createdAt: number;
   date?: string; // yyyy-mm-dd, the real day of the outing
@@ -74,6 +75,7 @@ function slotFor(placeId: string, when: string) {
 
 /** Makes a plan for a venue (or opens the one already made for the same day). Returns its id. */
 export function createPlan(placeId: string, f: Filters): number {
+  if(!APP.canPlan(placeId))throw new Error('Localul nu este disponibil pentru planuri noi.');
   const date = iso(dayFor(f.when));
   const same = plans().find((x) => x.placeId === placeId && iso(planDay(x)) === date);
   if (same) return same.pid;
@@ -94,8 +96,9 @@ export const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + S
 /** A plan for a set moment (a shared plan someone else made, or a vote's winner). Opens the existing one if any. */
 export function createPlanAt(placeId: string, at: Date, people: number, extra: Partial<Plan> = {}): number {
   const date = iso(at);
-  const same = plans().find((x) => (extra.sid && x.sid === extra.sid) || (x.placeId === placeId && iso(planDay(x)) === date));
-  if (same) { if (extra.sid && !same.sid) updPlan(same.pid, extra); return same.pid; }
+  const same = plans().find((x) => (extra.sid && x.sid === extra.sid) || (!extra.sid && !x.sid && x.placeId === placeId && iso(planDay(x)) === date && x.slot===hhmm(at)));
+  if (same) { if(extra.sid)updPlan(same.pid,{...extra,people,slot:hhmm(at),date}); return same.pid; }
+  if(!extra.sid&&!APP.canPlan(placeId))throw new Error('Localul nu este disponibil pentru planuri noi.');
   const pid = Math.max(0, ...plans().map((x) => x.pid)) + 1;
   const diff = Math.round((startOfDay(at).getTime() - startOfDay(new Date()).getTime()) / 864e5);
   const pl: Plan = { pid, placeId, when: diff <= 0 ? 'eve' : diff === 1 ? 'tom' : 'we', date, slot: hhmm(at), people, res: 'none', createdAt: Date.now(), ...extra };

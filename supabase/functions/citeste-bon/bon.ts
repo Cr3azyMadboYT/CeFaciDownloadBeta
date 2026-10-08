@@ -50,3 +50,9 @@ export function parseBon(text: string): Bon {
   }
   return out;
 }
+
+/** Only an explicit aggregate discount in money counts; item percentages are not a bill total. */
+export function parseDiscount(text:string):number|null{
+ const m=text.match(/(?:TOTAL\s+(?:REDUCERI|DISCOUNT)|REDUCERE\s+TOTAL[ĂA]?)\s*[:=]?\s*-?\s*(\d+(?:[.,]\d{2}))\s*(?:LEI|RON)?/i);
+ return m?amount(m[1]):null;
+}

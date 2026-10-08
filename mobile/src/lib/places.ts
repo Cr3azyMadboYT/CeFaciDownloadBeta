@@ -4,6 +4,7 @@
 import { AppState } from 'react-native';
 import type { PlaceRow } from '../../../src/app/places';
 import { sb } from './auth';
+import { syncPartners } from './partner';
 import { APP, notify } from './session';
 
 let busy = false;
@@ -12,6 +13,7 @@ export async function syncPlaces(force = false) {
   if (busy || (!force && Date.now() - lastTry < 10 * 60e3)) return;
   busy = true; lastTry = Date.now();
   try {
+    await syncPartners(); notify();
     const { since, first, builtAt } = APP.placesSince();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = sb() as any;

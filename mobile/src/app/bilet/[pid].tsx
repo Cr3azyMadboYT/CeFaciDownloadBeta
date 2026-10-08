@@ -24,6 +24,7 @@ import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { Ticket } from '../../ui/Ticket';
 import { Doodles } from '../../ui/Doodles';
+import { PartnerTicket } from '../../ui/PartnerTicket';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 /** The chosen time and the half hours around it, for the booking. */
@@ -74,6 +75,8 @@ export default function Bilet() {
     );
   }
   const needsRes = p.res !== 'none';
+  const internal=!!p.partner;
+  const partner=APP.partnerInfo(p.id);
   const noted = pl.res === 'noted';
   const ct = p.contact;
   const day = dayWord(pl);
@@ -104,7 +107,7 @@ export default function Bilet() {
     return best;
   })();
   const clashP = clash ? APP.byId(clash.placeId) : undefined;
-  const drop = () => { void cancelReminders(pl.remind); if (pl.sid && me) void dropShared(pl, me.id); removePlan(pl.pid); toast('Ai renunțat la ' + p.name + (pl.sid ? '. I-am anunțat și pe ceilalți.' : '.')); close(); };
+  const drop = async () => {try {if(pl.sid&&me)await dropShared(pl,me.id);await cancelReminders(pl.remind);removePlan(pl.pid);toast('Planul a fost anulat.');close();}catch(e){toast((e as Error).message);}};
   const shareToCrew = async () => {
     if (!to || !me) return;
     setSending(true);
@@ -148,6 +151,8 @@ export default function Bilet() {
           }} />
         </View>
 
+        {internal ? <PartnerTicket plan={pl}/> : null}
+        {partner?.mode==='recommended'&&!partner.reservations_on?<View style={{padding:20}}><Muted>Poți merge direct. Momentan nu acceptă rezervări.</Muted></View>:null}
         {p.story ? (
           <View style={{ marginTop: 12, marginHorizontal: 20, padding: 14, borderRadius: 18, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, gap: 4 }}>
             <T style={{ fontFamily: F.b, fontSize: 12, letterSpacing: 1.2, color: t.ink3 }}>DE CE MERITĂ</T>
@@ -156,7 +161,7 @@ export default function Bilet() {
           </View>
         ) : null}
         <View style={{ marginTop: 12, marginHorizontal: 20, gap: 10 }}>
-          {needsRes && !noted && !pl.inAt ? (
+          {!internal && needsRes && !noted && !pl.inAt ? (
             <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M12 8v4M12 16h.01" bg={p.res === 'required' ? t.coralSoft : t.yellowSoft} ink={p.res === 'required' ? t.coralInk : t.yellowInk}
               title={p.res === 'required' ? p.name + ' cere rezervare' : 'Se umple repede la ' + p.name} sub="Faceți o rezervare ca să vă asigurați locul." btn="Rezervă" onPress={() => setExt('pick')} />
           ) : null}
@@ -173,6 +178,7 @@ export default function Bilet() {
             const OK = 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM8.5 12l2.5 2.5 4.5-5';
             if (!pl.inAt) {
               if (!today) return null;
+              if(internal)return null;
               return <Row icon={SCAN} bg={t.yellowSoft} ink={t.yellowInk} title={'Ai ajuns la ' + p.name + '?'} sub="Fă check-in când ești acolo: primești ștampila și XP."
                 btn={busyIn === 'in' ? 'Caut…' : 'Sunt aici'} onPress={async () => { if (busyIn) return; setBusyIn('in'); const r = await checkIn(pl); setBusyIn(''); toast(r.msg); }} />;
             }
@@ -283,7 +289,7 @@ export default function Bilet() {
               <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>Câte persoane</T>
               <Press onPress={() => updPlan(pl.pid, { people: Math.max(1, pl.people - 1) })} accessibilityLabel="Mai puține persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>−</T></Press>
               <T style={{ minWidth: 28, textAlign: 'center', fontFamily: F.display, fontSize: 22 }}>{pl.people}</T>
-              <Press onPress={() => updPlan(pl.pid, { people: Math.min(30, pl.people + 1) })} accessibilityLabel="Mai multe persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>+</T></Press>
+              <Press onPress={() => updPlan(pl.pid, { people: Math.min(500, pl.people + 1) })} accessibilityLabel="Mai multe persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>+</T></Press>
             </View>
             {pl.slot !== 'acum' ? (
               <View style={{ gap: 8 }}>

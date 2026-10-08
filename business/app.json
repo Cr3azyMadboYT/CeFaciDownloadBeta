@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "CeFaci Business",
+    "slug": "cefaci-business",
+    "version": "1.0.0",
+    "orientation": "default",
+    "scheme": "cefaci-business",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "app.cefaci.business",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "app.cefaci.business",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Scaneaz\u0103 biletul CeFaci al grupului.",
+        "NSLocationWhenInUseUsageDescription": "Verific\u0103 sosirea la local."
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "name": "CeFaci Business"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Scaneaz\u0103 biletul CeFaci al grupului."
+        }
+      ],
+      "expo-font",
+      "./plugins/withSigning"
+    ],
+    "experiments": {
+      "tsconfigPaths": false
+    }
+  }
+}

@@ -48,7 +48,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "CeFaci folosește locația doar când apeși „Folosește locația mea”, ca să-ți arate locurile din apropiere."
+          "locationWhenInUsePermission": "CeFaci folose\u0219te loca\u021bia doar c\u00e2nd ape\u0219i \u201eFolose\u0219te loca\u021bia mea\u201d, ca s\u0103-\u021bi arate locurile din apropiere."
         }
       ],
       [
@@ -62,8 +62,8 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "CeFaci folosește camera doar când faci poza bonului, ca să-ți confirme ieșirea.",
-          "photosPermission": "CeFaci deschide pozele doar când alegi poza unui bon.",
+          "cameraPermission": "CeFaci folose\u0219te camera doar c\u00e2nd faci poza bonului, ca s\u0103-\u021bi confirme ie\u0219irea.",
+          "photosPermission": "CeFaci deschide pozele doar c\u00e2nd alegi poza unui bon.",
           "microphonePermission": false
         }
       ],
@@ -74,10 +74,19 @@
         }
       ],
       "./plugins/withSigning",
-      "./plugins/withSeasonIcons"
+      "./plugins/withSeasonIcons",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Scaneaz\u0103 codul localului pentru sosirea grupului.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ]
     ],
     "experiments": {
-      "typedRoutes": false
+      "typedRoutes": false,
+      "tsconfigPaths": false
     }
   }
 }

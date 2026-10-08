@@ -1,3 +1,4 @@
+// Historical V1 contract, preserved for backup compatibility; business-v2.test.ts validates the complete current schema and intentional legacy retirement.
 import { beforeAll, afterAll, expect, it } from 'vitest';
 import { PGlite } from '@electric-sql/pglite';
 import fs from 'node:fs';
@@ -17,7 +18,7 @@ beforeAll(async () => {
     create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
     grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;
     create publication supabase_realtime;`);
-  for (const f of fs.readdirSync('supabase/migrations').sort()) await db.exec(fs.readFileSync('supabase/migrations/'+f,'utf8'));
+  for (const f of fs.readdirSync('supabase/migrations').filter(f=>f<'20261008000000').sort()) await db.exec(fs.readFileSync('supabase/migrations/'+f,'utf8'));
   await db.exec('grant usage on schema public to anon,authenticated');
   for(const [name,id] of Object.entries(U)) {
     await q('insert into auth.users(id) values($1)',[id]);

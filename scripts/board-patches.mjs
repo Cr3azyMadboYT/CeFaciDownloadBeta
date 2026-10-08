@@ -73,6 +73,7 @@ export const PATCHES = {
     ['tpl', '@CornaciDev', '@{{meUser}}'],
     ...DEMO_BUDGET,
     ...DEMO_REAL,
+    ['code','Până la 4 oameni la aceeași masă, cu codul tău.','Un participant confirmat cu Plus activează reducerea pentru întreaga notă eligibilă a grupului.'],
   ],
   Cont: [
     ['tpl', '<div style="padding: 14px; border-radius: 18px; background: var(--s1); border: 1px solid var(--line); display: flex; align-items: center; gap: 12px"><span aria-hidden="true" style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #2F5BFF; color: #FFD43B; display: flex; align-items: center; justify-content: center"><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg></span><span class="col" style="flex: 1 1 auto; gap: 3px"><span style="font: 700 17px/1.1 \'Instrument Sans\', system-ui, sans-serif">Buftea</span><span class="muted">Găsit după locație · poți schimba oricând</span></span></div>', '<sc-for list="{{zoneGroups}}" as="g" hint-placeholder-count="2"><div class="col" style="gap: 8px"><p class="lbl">{{g.area}}</p><div style="display: flex; gap: 8px; flex-wrap: wrap"><sc-for list="{{g.zones}}" as="z" hint-placeholder-count="6"><button type="button" class="{{z.cls}}" aria-pressed="{{z.on}}" onClick="{{z.pick}}">{{z.name}}</button></sc-for></div></div></sc-for>'],

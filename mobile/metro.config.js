@@ -5,6 +5,7 @@ const { getDefaultConfig } = require('expo/metro-config');
 
 const root = path.resolve(__dirname, '..');
 const config = getDefaultConfig(__dirname);
-config.watchFolders = [path.join(root, 'src')];
+config.watchFolders = [path.join(root, 'src'), path.join(root, 'shared')];
 config.resolver.nodeModulesPaths = [path.join(__dirname, 'node_modules')];
+config.resolver.disableHierarchicalLookup = true;
 module.exports = config;

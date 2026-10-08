@@ -1,3 +1,4 @@
+// Historical V1 contract, preserved for backup compatibility; business-v2.test.ts validates the complete current schema and intentional legacy retirement.
 // The Supabase schema (supabase/migrations) on a real Postgres (PGlite), with Supabase's auth stubbed:
 // who can see and change what — friends, crews, plans, votes, minors, account deletion.
 import { expect, it } from 'vitest';
@@ -16,7 +17,7 @@ it('keeps every rule of the database', async () => {
     grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;
     create publication supabase_realtime;
   `);
-  await db.exec(fs.readdirSync('supabase/migrations').sort().map((f) => fs.readFileSync('supabase/migrations/' + f, 'utf8')).join('\n'));
+  await db.exec(fs.readdirSync('supabase/migrations').filter(f=>f<'20261008000000').sort().map((f) => fs.readFileSync('supabase/migrations/' + f, 'utf8')).join('\n'));
   await db.exec(`grant usage on schema public to anon, authenticated;`);
   const U = { ana: '00000000-0000-0000-0000-00000000000a', bob: '00000000-0000-0000-0000-00000000000b', cris: '00000000-0000-0000-0000-00000000000c', teen: '00000000-0000-0000-0000-00000000000d', eve: '00000000-0000-0000-0000-00000000000e' };
   for (const id of Object.values(U)) await q('insert into auth.users(id) values ($1)', [id]);

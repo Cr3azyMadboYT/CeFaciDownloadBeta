@@ -1,22 +1,21 @@
-# Builds the Android app on GitHub (no PC needed). The APK is attached to each run under "Artifacts".
-# The app is native (React Native, folder mobile/): real Android screens, not a web page.
-# Signing uses four repository secrets (Settings → Secrets and variables → Actions):
-#   CEFACI_KEYSTORE_B64 (the .jks file, base64), CEFACI_KEYSTORE_PASSWORD, CEFACI_KEY_ALIAS, CEFACI_KEY_PASSWORD.
-# Without them the APK is signed with a test key: it installs and runs, but Google sign-in needs the real key.
-name: Aplicația Android
-
+name: Client și Business · builduri reale
 on:
   push:
-    branches: [claude/new-session-hzbjtf, main]
+    branches: [claude/new-session-hzbjtf, main, codex/cefaci-client-business-20261008]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
-  apk:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['55432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 3s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,33 +25,72 @@ jobs:
           cache-dependency-path: |
             package-lock.json
             mobile/package-lock.json
+            business/package-lock.json
+      - run: npm ci
+      - run: npx vitest run
+      - name: Conexiuni PostgreSQL simultane
+        run: node scripts/test-business-concurrency.mjs
+        env:
+          CEFACI_TEST_DATABASE_URL: postgres://postgres@127.0.0.1:55432/postgres
+      - run: npm ci && npm run typecheck
+        working-directory: mobile
+      - run: npm ci && npm run typecheck
+        working-directory: business
+      - name: Web static pentru gazduire.net
+        working-directory: business
+        env:
+          CI: '1'
+          EXPO_NO_TELEMETRY: '1'
+        run: npm run web
+      - run: node scripts/package-business-web.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CeFaci-Business-web
+          path: release/CeFaci-Business-web.zip
+          if-no-files-found: error
+  native:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - folder: mobile
+            name: CeFaci-Client
+          - folder: business
+            name: CeFaci-Business
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
+            business/package-lock.json
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
       - uses: gradle/actions/setup-gradle@v4
-      - name: Testele (motorul de căutare, contul, baza de date)
-        run: |
-          npm ci
-          npx vitest run
-      - name: Aplicația de telefon (verificare)
-        working-directory: mobile
-        run: |
-          npm ci
-          npx tsc --noEmit
-      - name: Firebase (notificările de la prieteni, din secretul GOOGLE_SERVICES_JSON)
+      - run: npm ci
+      - run: npm ci
+        working-directory: ${{ matrix.folder }}
+      - name: Firebase Client (dacă secretul există)
+        if: matrix.folder == 'mobile'
         working-directory: mobile
         env:
           GS: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: |
-          if [ -n "$GS" ]; then printf '%s' "$GS" > google-services.json; echo "Firebase: da"; else echo "Firebase: încă nu (fără notificări de la prieteni)"; fi
-      - name: Proiectul Android nativ
-        working-directory: mobile
+        run: if [ -n "$GS" ]; then printf '%s' "$GS" > google-services.json; fi
+      - name: Generează proiectele native Android și iOS
+        working-directory: ${{ matrix.folder }}
         env:
           CI: '1'
           EXPO_NO_TELEMETRY: '1'
-        run: npx expo prebuild --platform android --no-install
-      - name: Cheia de semnare (din secrete)
+        run: npx expo prebuild --no-install
+      - name: Cheia de semnare
         id: sign
         env:
           KEYSTORE_B64: ${{ secrets.CEFACI_KEYSTORE_B64 }}
@@ -61,7 +99,7 @@ jobs:
           KEY_PW: ${{ secrets.CEFACI_KEY_PASSWORD }}
         run: |
           if [ -z "$KEYSTORE_B64" ]; then echo "signed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
-          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/cefaci.jks"
+          printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/cefaci.jks"
           mkdir -p ~/.gradle
           {
             echo "CEFACI_KEYSTORE=$RUNNER_TEMP/cefaci.jks"
@@ -70,26 +108,28 @@ jobs:
             echo "CEFACI_KEY_PASSWORD=$KEY_PW"
           } >> ~/.gradle/gradle.properties
           echo "signed=true" >> "$GITHUB_OUTPUT"
-      - name: APK (pentru telefon)
-        working-directory: mobile/android
+      - name: Construiește APK
+        working-directory: ${{ matrix.folder }}/android
         env:
-          EXPO_PUBLIC_ESRI_MAPS_KEY: ${{ secrets.ESRI_MAPS_KEY }} # harta din satelit (Esri); fără ea, butonul „Satelit” nu apare
-        run: ./gradlew assembleRelease --no-daemon
-      - name: AAB (pentru Google Play, doar cu cheia reală)
+          EXPO_PUBLIC_ESRI_MAPS_KEY: ${{ secrets.ESRI_MAPS_KEY }}
+        run: ./gradlew assembleRelease --no-daemon --max-workers=2
+      - name: AAB semnat pentru Play
         if: steps.sign.outputs.signed == 'true'
-        working-directory: mobile/android
+        working-directory: ${{ matrix.folder }}/android
         env:
-          EXPO_PUBLIC_ESRI_MAPS_KEY: ${{ secrets.ESRI_MAPS_KEY }} # harta din satelit (Esri); fără ea, butonul „Satelit” nu apare
-        run: ./gradlew bundleRelease --no-daemon
-      - name: Numele fișierului
+          EXPO_PUBLIC_ESRI_MAPS_KEY: ${{ secrets.ESRI_MAPS_KEY }}
+        run: ./gradlew bundleRelease --no-daemon --max-workers=2
+      - name: Pachetul de livrare
         run: |
-          mkdir -p out
-          cp mobile/android/app/build/outputs/apk/release/app-release.apk "out/CeFaci-${{ github.run_number }}.apk"
-          if [ -d mobile/android/app/build/outputs/bundle/release ]; then cp mobile/android/app/build/outputs/bundle/release/*.aab "out/CeFaci-${{ github.run_number }}.aab"; fi
+          mkdir -p release
+          cp "${{ matrix.folder }}/android/app/build/outputs/apk/release/app-release.apk" "release/${{ matrix.name }}.apk"
+          if [ -d "${{ matrix.folder }}/android/app/build/outputs/bundle/release" ]; then cp "${{ matrix.folder }}"/android/app/build/outputs/bundle/release/*.aab "release/${{ matrix.name }}.aab"; fi
+          zip -qr "release/${{ matrix.name }}-ios-project.zip" "${{ matrix.folder }}/ios"
+          printf '%s\n' "Commit ${{ github.sha }}" "Semnare productie ${{ steps.sign.outputs.signed }}" > "release/${{ matrix.name }}-build.txt"
       - uses: actions/upload-artifact@v4
         with:
-          name: CeFaci-android-${{ github.run_number }}
-          path: out/*
+          name: ${{ matrix.name }}-native
+          path: release/*
           if-no-files-found: error
       - name: Curățenie
         if: always()
