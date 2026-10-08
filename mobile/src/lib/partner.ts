@@ -3,6 +3,7 @@ import * as Location from "expo-location";
 import { APP } from "../../../src/app/bridge";
 import {
   rpc,
+  claimKey,
   type PlanState,
   type Partner,
   type Drop,
@@ -123,7 +124,7 @@ export async function claimDrop(
     p_seats: seats,
     p_lat: fix.lat,
     p_lon: fix.lon,
-    p_key: "claim:" + sid + ":" + drop + ":" + (previousClaim ?? "first"),
+    p_key: claimKey(sid, drop, previousClaim),
   });
   return refreshPartner(pl);
 }

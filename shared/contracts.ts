@@ -1,5 +1,8 @@
 // Shared wire contract; monetary eligibility is calculated by Postgres, never by either client.
 export type Role = "proprietar" | "manager" | "receptie" | "scanare";
+// UUID identities keep retry keys within the server's 100-character bound.
+export const claimKey = (plan: string, drop: string, previousClaim?: string) =>
+  `claim:${previousClaim ?? plan}:${drop}`;
 export type ReservationStatus =
   "cerută" | "confirmată" | "refuzată" | "anulată" | "propusă" | "expirată";
 export interface Attendance {

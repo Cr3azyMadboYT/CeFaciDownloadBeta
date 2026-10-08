@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import { RequestScope, canFinance, canOperate } from "../shared/contracts";
+import { RequestScope, canFinance, canOperate, claimKey } from "../shared/contracts";
 import { bucharestTime, localTime } from "../shared/time";
 import { parseDiscount } from "../supabase/functions/citeste-bon/bon";
 it("rejects previous account/local generations and accepts only active scopes", () => {
@@ -28,4 +28,11 @@ it("uses Bucharest inputs and rejects nonexistent spring DST time", () => {
 it("reads explicit aggregate discounts and avoids item percentages", () => {
   expect(parseDiscount("TOTAL REDUCERI -40,00 LEI")).toBe(40);
   expect(parseDiscount("Reducere 20%\nTOTAL LEI 200,00")).toBeNull();
+});
+it("keeps real UUID claim retry identities within the server bound", () => {
+  const plan="00000000-0000-0000-0000-000000000001", drop="00000000-0000-0000-0000-000000000002", old="00000000-0000-0000-0000-000000000003";
+  expect(claimKey(plan,drop).length).toBeLessThanOrEqual(100);
+  expect(claimKey(plan,drop,old).length).toBeLessThanOrEqual(100);
+  expect(claimKey(plan,drop,old)).not.toBe(claimKey(plan,drop));
+  expect(claimKey(plan,drop,old)).toBe(claimKey(plan,drop,old));
 });
