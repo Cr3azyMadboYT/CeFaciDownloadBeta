@@ -842,4 +842,9 @@ it("preserves financial visits and snapshots when a participant deletes their ac
   expect(
     (await q("select count(*) n from visits where venue_id='v'")).rows[0].n,
   ).toBe(2);
+  const ids=(await q("select id from visits where venue_id='v'")).rows.map(r=>r.id);
+  for(const id of ids){
+    await expect(as('biz','select visit_close($1,true,100)',[id])).rejects.toThrow(/Actualizează/);
+    await expect(as('biz','select biz_visit_attendance($1,1,1)',[id])).rejects.toThrow(/Actualizează/);
+  }
 });
