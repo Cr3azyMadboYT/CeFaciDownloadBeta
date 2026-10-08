@@ -4,6 +4,12 @@ on:
     branches: [claude/new-session-hzbjtf, main, codex/cefaci-client-business-20261008]
     paths-ignore: ['docs/**', 'handoff/**', '*.md']
   workflow_dispatch:
+    inputs:
+      app:
+        description: Aplicația de construit
+        type: choice
+        default: both
+        options: [both, client, business]
 permissions:
   contents: read
 jobs:
@@ -56,11 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - folder: mobile
-            name: CeFaci-Client
-          - folder: business
-            name: CeFaci-Business
+        include: ${{ fromJSON(inputs.app == 'business' && '[{"folder":"business","name":"CeFaci-Business"}]' || inputs.app == 'client' && '[{"folder":"mobile","name":"CeFaci-Client"}]' || '[{"folder":"mobile","name":"CeFaci-Client"},{"folder":"business","name":"CeFaci-Business"}]') }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

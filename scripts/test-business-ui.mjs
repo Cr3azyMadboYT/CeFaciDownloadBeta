@@ -221,6 +221,16 @@ try {
     path: "release/screenshots/business-today-desktop.png",
     fullPage: true,
   });
+  await app.getByRole("button", { name: "Închide vizita", exact: true }).click();
+  await app.getByLabel("Încasare după reduceri (lei)").fill("abc");
+  await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
+  await app.getByText("Scrie o sumă validă, de exemplu 123,45 lei.", {exact:true}).waitFor();
+  assert.equal(calls.filter(x=>x.name==='biz_close_v2').length,0);
+  await app.getByLabel("Încasare după reduceri (lei)").fill("47,50");
+  await app.getByLabel("Reducere efectivă acordată (lei)").fill("2,25");
+  await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
+  await app.getByText("Vizită salvată. Un număr neconfirmat rămâne în afara facturării.",{exact:true}).waitFor();
+  assert(calls.some(x=>x.name==='biz_close_v2' && x.p.p_bill===47.5 && x.p.p_discount===2.25));
   await app.getByRole("button", { name: "Financiar", exact: true }).click();
   await app.waitForTimeout(100);
   await app.getByRole("button", { name: "Vezi financiarul", exact: true }).click();

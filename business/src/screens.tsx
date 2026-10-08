@@ -4,6 +4,7 @@ import QRCode from "react-native-qrcode-svg";
 import { CameraScanner } from "../../shared/CameraScanner";
 import { Card, Txt, Button, Field, Row, Toggle, Empty } from "./ui";
 import { call } from "./backend";
+import { amount } from "./amount";
 import {
   money,
   canFinance,
@@ -288,8 +289,8 @@ function CloseVisit({
                     p_people: Number(people),
                     p_adults: Number(adults),
                     p_drop_adults: Number(drop),
-                    p_bill: bill.trim() ? Number(bill) : null,
-                    p_discount: discount.trim() ? Number(discount) : null,
+                    p_bill: amount(bill),
+                    p_discount: amount(discount),
                     p_reason: reason || null,
                   }),
                 "Vizită salvată. Un număr neconfirmat rămâne în afara facturării.",
