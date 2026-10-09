@@ -29,3 +29,5 @@ Auditul din 09.10.2026 a adăugat fișierul `20261008143201_cefaci_security_audi
 5. După teste și verificări, reactivează `writes_on=true` conform comentariului din script. Billing rămâne false.
 
 În producție verificările folosesc cataloage/permisiuni și apeluri anonime neautorizate. Nu creează conturi/localuri de fraudă, nu trimit notificări și nu introduc bonuri sintetice în datele reale. Deadline-urile/expirările sunt calculate de server și persistate la consultare/operațiune; nu depind de un cron pe telefon.
+
+În audit a fost instalată și funcția `citeste-bon` v10 (ACTIVE, verify_jwt=true), păstrând secretele existente și fixând exclusiv importul Supabase la 2.117.2. Snapshotul v9 este în `edge-before-audit-v3/`; logica V2 a bonului nu a fost schimbată.
