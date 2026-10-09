@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "vitest run"
+    "test": "vitest run",
+    "admin:typecheck": "tsc -p admin/tsconfig.json",
+    "admin:build": "vite build --config admin/vite.config.ts",
+    "admin:package": "node scripts/package-admin-web.mjs"
   },
   "keywords": [],
   "author": "",
