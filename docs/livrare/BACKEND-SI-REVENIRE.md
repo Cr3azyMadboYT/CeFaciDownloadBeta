@@ -20,6 +20,8 @@ Migrațiile sunt aditive pentru datele operaționale și istorice. Funcțiile ve
 
 ## Revenire sigură
 
+Auditul din 09.10.2026 a adăugat fișierul `20261008143201_cefaci_security_audit_v3.sql`, instalat live ca **`20261009075509_cefaci_security_audit_v3`**. SHA-256: `8bbb003c798efc45302e0ff978a7e63f3be037594d192d4c04b292441f1dc9d4`. Corectează înghețarea grupului, verificarea versiunilor null, conversia votului și datele programului Plus. Snapshotul celor șase funcții înainte de această migrare este `backend-before-audit-v3.sql`, fără date personale. Migrațiile deja instalate nu au fost editate sau reluate. Păstrează aceste garduri la orice revenire; preferă pauza fluxului și o corecție aditivă unei restaurări a bypass-urilor.
+
 1. Dacă apar probleme, aplică `supabase/rollback/pause-v2.sql` numai pe ținta autorizată. Flagul `private.v2_release.writes_on=false` oprește operațiunile principale V2; citirea istoricului și dovezile rămân disponibile. Nu reseta baza, nu șterge vizite și nu redeschide scrierile V1 retrase.
 2. Pentru web, reinstalează pachetul anterior salvat privat și golește cache-ul HTML. Un Client vechi va primi mesaj de actualizare pentru API-urile retrase; acest comportament este intenționat și mai sigur decât permiterea calculelor vechi peste datele V2.
 3. Dacă problema privește OCR, redeploy al snapshotului Edge v8 cu **verify_jwt=true** poate fi făcut separat, păstrând configurația de secrete existentă. Versiunea veche nu conectează bonurile V2, deci menține pauza fluxului afectat până la corecție.

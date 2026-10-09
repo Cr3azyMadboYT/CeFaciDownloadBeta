@@ -14,7 +14,7 @@ Codul Clientului rămâne React Native/Expo în `mobile/`. Business în `busines
 7. Autentificarea Business folosește cod OTP pe email pentru **cont existent** (`shouldCreateUser=false`). Nu creează automat conturi noi sau membri de echipă. După autentificare, serverul returnează numai localurile cu rol activ. Verifică trimiterea/primirea reală a codului cu propriul cont; testele automate nu trimit emailuri oamenilor reali. Pentru un circuit viitor OAuth/magic-link, adaugă domeniul în URL Configuration/redirect allowlist Supabase și configurează separat providerul. OTP-ul introdus în aplicație nu depinde de un callback OAuth.
 8. Permite camera în browser. Camera web cere HTTPS și o permisiune acordată explicit. Dacă aceasta este refuzată sau dispozitivul nu o oferă, introducerea manuală a codului rămâne disponibilă. Verifică bilet valabil, bilet expirat, local greșit și scanare repetată pe date de test într-un mediu separat.
 
-Nu au fost furnizate credențiale gazduire.net/DNS. Livrarea este ZIP-ul pregătit pentru upload; domeniul nu este declarat publicat sau verificat pe infrastructura hostingului.
+Nu au fost furnizate credențiale gazduire.net/DNS pentru upload. La 09.10.2026, o verificare HTTP read-only confirmă că `https://business.cefaci.app` este deja online și servește versiunea `4d10d80cea11457d7c14d28d6b12ce5cc7b60ede`, încărcată separat. Noul ZIP din audit trebuie urcat pentru a instala corecțiile și antetele CSP/HSTS. Existența site-ului anterior nu înseamnă că acest update este publicat.
 
 ## Android și iOS
 
