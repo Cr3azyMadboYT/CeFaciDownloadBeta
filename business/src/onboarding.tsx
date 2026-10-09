@@ -56,8 +56,8 @@ const labels: Record<string, string> = {
 const kinds: Record<RequestKind, string> = { claim: "Revendicare", dispute: "Dispută", new: "Adăugare local" };
 const blank: RequestDetails = { requester_name: "", requester_role: "", firm: "", cui: "", phone: "", venue_name: "", address: "", city: "", category: "" };
 
-export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack, accessError }: {
-  session: Session; onRefreshAccess: () => Promise<void>; onSignOut: () => Promise<void>; onBack?: () => void; accessError?: string;
+export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack, onHelp, accessError }: {
+  session: Session; onRefreshAccess: () => Promise<void>; onSignOut: () => Promise<void>; onBack?: () => void; onHelp?: () => void; accessError?: string;
 }) {
   const [stage, Stage] = useState<"home" | "search" | "form">("home"), [query, Q] = useState(""),
     [found, Found] = useState<ClaimVenue[]>([]), [searched, Searched] = useState(false),
@@ -128,6 +128,7 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
   const title = kind === "new" ? "Solicită adăugarea localului" : kind === "dispute" ? "Dispută pentru local" : "Revendică localul";
   return <ScrollView contentContainerStyle={{ padding: 20, gap: 20, width: "100%", maxWidth: 760, alignSelf: "center" }}>
     <View style={{ alignItems: "center", gap: 8 }}><Bilu mood="hi" size={100} still /><Txt big>Hai să găsim localul tău</Txt><Txt muted>{session.user.email ?? "Cont CeFaci confirmat"}</Txt></View>
+    {onHelp && <Card><Txt muted>CeFaci este încă în dezvoltare. Ai găsit o problemă? Spune-ne.</Txt><Button label="Ajutor · Raportează o problemă" secondary disabled={busy} onPress={onHelp} /></Card>}
     {!!accessError && <Card title="Accesul nu a putut fi verificat"><Txt>{accessError}</Txt><Txt muted>Poți reîncerca actualizarea accesului din lista cererilor.</Txt></Card>}
     {!!message && <Card><Txt>{message}</Txt></Card>}
     {!!identityError && <Card title="Verifică profilul contului"><Txt>{identityError}</Txt><Button label="Reîncearcă verificarea profilului" secondary disabled={busy} onPress={() => void run(async () => { await loadIdentity(); })} /></Card>}

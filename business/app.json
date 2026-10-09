@@ -2,7 +2,7 @@
   "expo": {
     "name": "CeFaci Business",
     "slug": "cefaci-business",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "default",
     "scheme": "cefaci-business",
     "userInterfaceStyle": "automatic",
@@ -17,10 +17,13 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "allowBackup": false,
-      "versionCode": 3
+      "versionCode": 4
     },
     "ios": {
       "bundleIdentifier": "app.cefaci.business",
@@ -28,7 +31,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Scanează biletul CeFaci al grupului."
       },
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "web": {
       "bundler": "metro",
@@ -45,6 +48,14 @@
         }
       ],
       "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Alege o poză pentru problema raportată echipei CeFaci.",
+          "cameraPermission": "Scanează biletul CeFaci al grupului.",
+          "microphonePermission": false
+        }
+      ],
       "./plugins/withSigning"
     ],
     "experiments": {

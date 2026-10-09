@@ -33,6 +33,7 @@ import {
 import { backend, call, live } from "./backend";
 import { Card, Txt, Button, Row } from "./ui";
 import { BusinessEntry, BusinessOnboarding, OwnershipDisputes } from "./onboarding";
+import { BusinessHelp } from "./support";
 import {
   Today,
   Reservations,
@@ -55,6 +56,7 @@ function Workspace({ session }: { session: Session }) {
     [message, M] = useState(""),
     [loaded, L] = useState(false),
     [onboarding, Onboarding] = useState(false);
+  const [helpBeforeAccess, HelpBeforeAccess] = useState(false);
   const scope = useRef(new RequestScope()),
     request = useRef(0),
     action = useRef(false),
@@ -158,6 +160,7 @@ function Workspace({ session }: { session: Session }) {
     ...(data && canFinance(data.role)
       ? ["Oferte", "Financiar", "Statistici", "Profil", "Echipă", "Evenimente"]
       : []),
+    "Ajutor",
   ];
   useEffect(() => {
     if (!items.includes(tab)) T("Azi");
@@ -231,6 +234,11 @@ function Workspace({ session }: { session: Session }) {
     return (
       <ActivityIndicator accessibilityLabel="Verific accesul la localuri" />
     );
+  if ((!venues.length || onboarding) && helpBeforeAccess)
+    return <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 760, width: "100%", alignSelf: "center"}}>
+      <Button label="Înapoi la cererile Business" secondary onPress={() => HelpBeforeAccess(false)} />
+      <BusinessHelp key={session.user.id + ":onboarding"} userId={session.user.id} />
+    </ScrollView>;
   if (!venues.length || onboarding)
     return <BusinessOnboarding
       session={session}
@@ -238,9 +246,10 @@ function Workspace({ session }: { session: Session }) {
       onRefreshAccess={loadVenues}
       onSignOut={signOut}
       onBack={venues.length ? () => Onboarding(false) : undefined}
+      onHelp={() => HelpBeforeAccess(true)}
     />;
   const p: ScreenProps = data ? { venue, data, act, busy } : (null as any);
-  const content = data ? (
+  const content = tab === "Ajutor" ? <BusinessHelp key={venue + ":" + session.user.id} userId={session.user.id} venue={data ? venue : undefined} /> : data ? (
     tab === "Azi" ? (
       <Today {...p} />
     ) : tab === "Rezervări" ? (

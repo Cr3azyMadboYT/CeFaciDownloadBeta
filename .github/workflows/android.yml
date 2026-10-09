@@ -54,18 +54,27 @@ jobs:
           EXPO_NO_TELEMETRY: '1'
         run: npm run web
       - run: node scripts/package-business-web.mjs
-      - name: Fluxuri Business reale în browser, cu backend sintetic izolat
+      - name: Export Client pentru verificarea integrării
+        working-directory: mobile
+        env:
+          CI: '1'
+          EXPO_NO_TELEMETRY: '1'
+        run: npx expo export --platform web --output-dir /tmp/cefaci-client-admin-web
+      - name: Fluxuri Client, Business și Admin în browser, cu backend sintetic izolat
         run: |
           npx playwright install --with-deps chromium
           python3 -m http.server 4173 --bind 127.0.0.1 --directory business/dist > /tmp/cefaci-web-test.log 2>&1 &
           WEB_TEST_PID=$!
           python3 -m http.server 4175 --bind 127.0.0.1 --directory admin/dist > /tmp/cefaci-admin-test.log 2>&1 &
           ADMIN_TEST_PID=$!
-          trap 'kill "$WEB_TEST_PID" "$ADMIN_TEST_PID"' EXIT
+          python3 -m http.server 4177 --bind 127.0.0.1 --directory /tmp/cefaci-client-admin-web > /tmp/cefaci-client-test.log 2>&1 &
+          CLIENT_TEST_PID=$!
+          trap 'kill "$WEB_TEST_PID" "$ADMIN_TEST_PID" "$CLIENT_TEST_PID"' EXIT
           node scripts/test-business-ui.mjs
           node scripts/test-business-onboarding-ui.mjs
           node scripts/test-support-ui.mjs
           node scripts/test-admin-ui.mjs
+          node scripts/test-client-support-ui.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: CeFaci-Business-flow-screenshots

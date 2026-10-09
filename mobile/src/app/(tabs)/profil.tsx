@@ -152,6 +152,13 @@ export default function Profil() {
         </View>
         <Icon name="next" size={16} color={t.ink3} />
       </Press>
+      <View style={{marginTop: 16, gap: 8, paddingHorizontal: 4}}>
+        <Muted>CeFaci este încă în dezvoltare. Ai găsit o problemă? Spune-ne.</Muted>
+        <Press accessibilityLabel="Raportează o problemă" onPress={() => router.push('/raporteaza-problema')} style={{minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 8}}>
+          <Icon name="mail" size={18} color={t.blueInk} /><T style={{fontFamily: F.sb, fontSize: 14, color: t.blueInk}}>Raportează o problemă</T>
+          <Icon name="next" size={14} color={t.ink3} />
+        </Press>
+      </View>
       {err ? <View style={{ marginTop: 14 }}><Note kind="err">{err}</Note></View> : null}
       <View style={{ marginTop: 20, gap: 10 }}>
         {who ? (

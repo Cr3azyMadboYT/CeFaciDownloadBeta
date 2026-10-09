@@ -162,17 +162,19 @@ it("reserves once and serializes the last available capacity", async () => {
   ).toBe("anulată");
 });
 it("groups of eight wait for manual confirmation, and expired proposals release capacity", async () => {
-  const p = await plan("big", 8, 300);
+  // A fixed future local noon keeps this capacity test independent of the time of the test run.
+  const p = await value("owner", "select plan_share_v2('big','v',(((now() at time zone 'Europe/Bucharest')::date+1)+time '12:00') at time zone 'Europe/Bucharest',8)");
   const r = await value(
     "owner",
     "select reservation_request_v2($1,'big-key')",
     [p],
   );
   expect(r.status).toBe("cerută");
+  const proposedAt = (await q("select starts_at+interval '3 hours' proposed_at from plans where id=$1", [p])).rows[0].proposed_at;
   await as(
     "biz",
-    "select reservation_decide_v2($1,'propose',now()+interval '6 hours')",
-    [r.id],
+    "select reservation_decide_v2($1,'propose',$2)",
+    [r.id, proposedAt],
   );
   expect(
     (await q("select status from reservations where id=$1", [r.id])).rows[0]

@@ -3,14 +3,14 @@
     "name": "CeFaci",
     "slug": "cefaci",
     "scheme": "cefaci",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "orientation": "portrait",
     "icon": "./assets/icons/vara.png",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#EEF1FB",
     "android": {
       "package": "ro.cefaci.app",
-      "versionCode": 4,
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/vara-fg.png",
         "backgroundImage": "./assets/icons/vara-bg.png",
@@ -31,7 +31,7 @@
     "ios": {
       "bundleIdentifier": "ro.cefaci.app",
       "supportsTablet": false,
-      "buildNumber": "4",
+      "buildNumber": "5",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
@@ -70,7 +70,7 @@
         "expo-image-picker",
         {
           "cameraPermission": "CeFaci folosește camera doar când faci poza bonului, ca să-ți confirme ieșirea.",
-          "photosPermission": "CeFaci deschide pozele doar când alegi poza unui bon.",
+          "photosPermission": "CeFaci deschide pozele doar când alegi un bon sau atașezi o poză unei probleme.",
           "microphonePermission": false
         }
       ],
