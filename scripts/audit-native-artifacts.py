@@ -50,7 +50,7 @@ def compiled_manifest(data):
     return tags
 
 
-for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 4), ("CeFaci-Business", "app.cefaci.business", 2)]:
+for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 4), ("CeFaci-Business", "app.cefaci.business", 3)]:
     if len(sys.argv) > 1 and name not in sys.argv[1:]:
         continue
     apk = pathlib.Path("release") / (name + ".apk")

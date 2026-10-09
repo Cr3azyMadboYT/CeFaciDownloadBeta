@@ -83,6 +83,7 @@ const finance = {
 let calls = [],
   late = false;
 let firstFinance = true, financeRemaining = 162, teamFailure = false, accessFailure = false;
+let disputeReply = null;
 async function ctx(viewport, auth = false) {
   const context = await browser.newContext({ viewport });
   await context.routeWebSocket(/supabase\.co/, (ws) => ws.close());
@@ -132,6 +133,10 @@ async function ctx(viewport, auth = false) {
       if (outdated) await new Promise((r) => setTimeout(r, 1200));
       data = { ...finance, remaining: outdated ? 999 : financeRemaining };
     }
+    else if (name === "biz_partner_requests") data = [];
+    else if (name === "biz_ownership_disputes") data = p.p_venue === "one" ? [{id:"00000000-0000-0000-0000-000000000099",venue_id:"one",venue_name:"Local de test",submitted_at:when,deadline:new Date(Date.now()+3*86400000).toISOString(),response:disputeReply,status:"pending"}] : [];
+    else if (name === "biz_ownership_dispute_reply") {disputeReply=p.p_reply;data=null;}
+    else if (name === "biz_identity_status") data = {has_profile:true,username:"test",first_name:"Owner"};
     else if (name === "biz_team") {
       status = teamFailure ? 503 : 200;
       data = teamFailure ? {message: "Echipa este temporar indisponibilă"} : [];
@@ -206,6 +211,7 @@ try {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(root);
+  await page.getByRole("button", { name: "Ai deja cont? Intră", exact: true }).click();
   await page
     .getByRole("button", { name: "Trimite codul", exact: true })
     .waitFor();
@@ -230,6 +236,10 @@ try {
   app.on("pageerror", (e) => errors.push(e.message));
   await app.goto(root);
   await app.getByRole("button", { name: "Financiar", exact: true }).waitFor();
+  await app.getByLabel("Răspuns pentru verificarea CeFaci", {exact:true}).fill("Firma noastră administrează acest local, documentele sunt disponibile pentru verificare.");
+  await app.getByRole("button", {name:"Trimite răspunsul la dispută",exact:true}).click();
+  await app.getByText("Răspunsul tău a fost trimis", {exact:true}).waitFor();
+  assert(calls.some(x=>x.name==="biz_ownership_dispute_reply"&&x.p.p_id==="00000000-0000-0000-0000-000000000099"));
   await app.screenshot({
     path: "release/screenshots/business-today-desktop.png",
     fullPage: true,
@@ -353,7 +363,7 @@ try {
     .getByRole("button", { name: "Ieși din cont", exact: true })
     .click();
   await mobile
-    .getByRole("button", { name: "Trimite codul", exact: true })
+    .getByRole("button", { name: "Ai deja cont? Intră", exact: true })
     .waitFor();
   assert.equal(
     await mobile.getByText("Rămas localului", { exact: true }).count(),
@@ -368,7 +378,7 @@ try {
   await retry.goto(root);
   await retry.getByText("Acces temporar indisponibil", {exact:true}).waitFor();
   accessFailure = false;
-  await retry.getByRole("button",{name:"Verifică din nou",exact:true}).click();
+  await retry.getByRole("button",{name:"Actualizează cererile și accesul",exact:true}).click();
   await retry.getByRole("button",{name:"Financiar",exact:true}).waitFor();
   await denied.close();
   assert.deepEqual(errors, []);

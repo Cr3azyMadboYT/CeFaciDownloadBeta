@@ -1,0 +1,10 @@
+import { expect, it } from 'vitest';
+// @ts-expect-error JavaScript server runner is intentionally not part of the app bundle.
+import { retainBusinessProofs } from '../scripts/retain-business-proofs.mjs';
+const id='00000000-0000-0000-0000-000000000002';
+const path=`00000000-0000-0000-0000-000000000001/${id}/proof.pdf`;
+function fixture(data:any,status=200){const calls:any[]=[];return {calls,fetcher:async(url:string,opts:any)=>{calls.push({url,method:opts.method,body:JSON.parse(opts.body)});return {ok:status<400,status,json:async()=>calls.length===1?data:[]};}}}
+it('defaults to dry-run and never deletes an object without explicit server execution',async()=>{const f=fixture([{request_id:id,path}]);expect(await retainBusinessProofs({key:'synthetic-server-key',fetcher:f.fetcher})).toEqual({mode:'dry-run',files:1});expect(f.calls).toHaveLength(1);});
+it('physically removes objects before acknowledging a request and groups multiple proofs',async()=>{const f=fixture([{request_id:id,path},{request_id:id,path:path.replace('.pdf','.jpg')}]);await retainBusinessProofs({key:'synthetic-server-key',execute:true,fetcher:f.fetcher});expect(f.calls.map(c=>c.method)).toEqual(['POST','DELETE','DELETE','POST']);expect(f.calls.at(-1).body).toEqual({p_id:id});expect(f.calls[1].body).toEqual({prefixes:[path]});});
+it('does not acknowledge a failed Storage deletion',async()=>{const f=fixture([{request_id:id,path}]);const fetcher=async(url:string,opts:any)=>{const r=await f.fetcher(url,opts);return f.calls.length===2?{...r,ok:false,status:503}:r;};await expect(retainBusinessProofs({key:'synthetic-server-key',execute:true,fetcher})).rejects.toThrow(/503/);expect(f.calls).toHaveLength(2);});
+it('rejects malformed or mismatched paths before any deletion',async()=>{for(const candidate of [{request_id:id,path:'other-bucket/document.pdf'},{request_id:id,path:path.replace(id,'00000000-0000-0000-0000-000000000003')}]){const f=fixture([candidate]);await expect(retainBusinessProofs({key:'synthetic-server-key',execute:true,fetcher:f.fetcher})).rejects.toThrow(/Invalid retention/);expect(f.calls).toHaveLength(1);}});

@@ -8,6 +8,8 @@ Au fost corectate modificarea grupului după rezervare/Drop/sosire, ocolirea ver
 
 ## Cod și construcție
 
+Completarea fluxului Business pentru cont, revendicare, dispută și solicitarea unui local lipsă este descrisă separat în [ONBOARDING-BUSINESS-20261009.md](ONBOARDING-BUSINESS-20261009.md). Această completare necesită un build Business nou; artefactele auditului de mai jos reprezintă checkpointul anterior până la înlocuirea lor verificată.
+
 Ramură: `codex/cefaci-client-business-20261008`; [PR draft #2](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/pull/2).
 
 Implementarea auditului: `a7eea11b31705352f7b46822271b7457d0f1e34f`. Workflow [37901741752](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37901741752) este **SUCCESS**, inclusiv verify și ambele joburi native. Ulterior au fost comise documentația, fixarea versiunilor la aceleași valori din lockfile (`2b50310`) și importul exact în Edge (`87b9d77`). Sursele executabile/configurațiile native și versiunile rezolvate ale dependențelor nu s-au schimbat față de buildul `a7eea11`.

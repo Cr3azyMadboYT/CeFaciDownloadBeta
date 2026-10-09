@@ -10,6 +10,11 @@ assert.ok(key);
 const checks = [
   { name: 'public catalog', path: '/rest/v1/rpc/partner_catalog', statuses: [200], catalog: true },
   { name: 'Business without session', path: '/rest/v1/rpc/biz_dashboard_v2?p_venue=audit-nonexistent', statuses: [401, 403] },
+  { name: 'Business onboarding search without session', path: '/rest/v1/rpc/biz_venue_search?p_query=audit-nonexistent', statuses: [401, 403] },
+  { name: 'Business requests without session', path: '/rest/v1/rpc/biz_partner_requests', statuses: [401, 403] },
+  { name: 'Business identity without session', path: '/rest/v1/rpc/biz_identity_status', statuses: [401, 403] },
+  { name: 'proof retention service only', path: '/rest/v1/rpc/business_proofs_retention_candidates', statuses: [401, 403] },
+  { name: 'partner request schema hidden', path: '/rest/v1/partner_requests?select=*&limit=0', schema: 'private', statuses: [406] },
   { name: 'group without session', path: '/rest/v1/rpc/plan_attendance?p_plan=00000000-0000-0000-0000-000000000000', statuses: [401, 403] },
   { name: 'receipt readiness service only', path: '/rest/v1/rpc/visit_receipt_ready_v2?p_user=00000000-0000-0000-0000-000000000000&p_visit=00000000-0000-0000-0000-000000000000', statuses: [401, 403] },
   { name: 'private schema hidden', path: '/rest/v1/group_tickets?select=*&limit=0', schema: 'private', statuses: [406] },

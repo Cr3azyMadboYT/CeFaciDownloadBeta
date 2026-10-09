@@ -31,7 +31,8 @@ import {
   type VenueAccess,
 } from "../../shared/contracts";
 import { backend, call, live } from "./backend";
-import { Card, Txt, Button, Field, Row } from "./ui";
+import { Card, Txt, Button, Row } from "./ui";
+import { BusinessEntry, BusinessOnboarding, OwnershipDisputes } from "./onboarding";
 import {
   Today,
   Reservations,
@@ -44,93 +45,6 @@ import {
   type ScreenProps,
   type Action,
 } from "./screens";
-function Login() {
-  const [email, E] = useState(""),
-    [code, C] = useState(""),
-    [sent, S] = useState(false),
-    [busy, B] = useState(false),
-    [message, M] = useState("");
-  const run = async (verify: boolean) => {
-    B(true);
-    M("");
-    try {
-      const { error } = verify
-        ? await backend.auth.verifyOtp({
-            email: email.trim(),
-            token: code.trim(),
-            type: "email",
-          })
-        : await backend.auth.signInWithOtp({
-            email: email.trim(),
-            options: { shouldCreateUser: false },
-          });
-      if (error) throw error;
-      if (!verify) {
-        S(true);
-        M("Cod trimis pe adresa contului CeFaci.");
-      }
-    } catch (e) {
-      M(e instanceof Error ? e.message : "Conectarea nu a reușit.");
-    } finally {
-      B(false);
-    }
-  };
-  return (
-    <View
-      style={{
-        width: "100%",
-        maxWidth: 480,
-        alignSelf: "center",
-        gap: 20,
-        padding: 20,
-      }}
-    >
-      <View style={{ alignItems: "center" }}>
-        <Bilu mood="hi" size={130} still />
-        <Txt big>CeFaci Business</Txt>
-      </View>
-      <Card title="Intră cu același cont CeFaci">
-        <Txt muted>
-          Folosește adresa contului existent. Accesul este dat de rolul tău din
-          echipa localului.
-        </Txt>
-        <Field
-          label="Email"
-          editable={!busy}
-          value={email}
-          onChange={(v) => {
-            E(v);
-            S(false);
-            C("");
-          }}
-        />
-        {sent && (
-          <Field
-            label="Codul primit prin email"
-            numeric
-            editable={!busy}
-            value={code}
-            onChange={C}
-          />
-        )}
-        <Button
-          label={busy ? "Așteaptă…" : sent ? "Intră" : "Trimite codul"}
-          disabled={busy || !email.trim() || (sent && !code.trim())}
-          onPress={() => void run(sent)}
-        />
-        {sent && (
-          <Button
-            label="Retrimite codul"
-            secondary
-            disabled={busy}
-            onPress={() => void run(false)}
-          />
-        )}{" "}
-        {!!message && <Txt>{message}</Txt>}
-      </Card>
-    </View>
-  );
-}
 function Workspace({ session }: { session: Session }) {
   const wide = useWindowDimensions().width >= 920;
   const [venues, V] = useState<VenueAccess[]>([]),
@@ -139,7 +53,8 @@ function Workspace({ session }: { session: Session }) {
     [tab, T] = useState("Azi"),
     [busy, B] = useState(false),
     [message, M] = useState(""),
-    [loaded, L] = useState(false);
+    [loaded, L] = useState(false),
+    [onboarding, Onboarding] = useState(false);
   const scope = useRef(new RequestScope()),
     request = useRef(0),
     action = useRef(false),
@@ -231,7 +146,10 @@ function Workspace({ session }: { session: Session }) {
     B(false);
     action.current = false;
     const { error } = await backend.auth.signOut({ scope: "local" });
-    if (error) M("Ieșirea nu s-a încheiat. Reîncearcă online: " + error.message);
+    if (error) {
+      M("Ieșirea nu s-a încheiat. Reîncearcă online: " + error.message);
+      throw error;
+    }
   };
   const items = [
     "Azi",
@@ -298,6 +216,11 @@ function Workspace({ session }: { session: Session }) {
         </View>
       )}
       <Button
+        label="Revendică sau adaugă un local"
+        secondary
+        onPress={() => Onboarding(true)}
+      />
+      <Button
         label="Ieși din cont"
         secondary
         onPress={() => void signOut().catch((e) => M(e instanceof Error ? e.message : "Ieșirea nu s-a încheiat. Reîncearcă."))}
@@ -308,31 +231,14 @@ function Workspace({ session }: { session: Session }) {
     return (
       <ActivityIndicator accessibilityLabel="Verific accesul la localuri" />
     );
-  if (!venues.length)
-    return (
-      <View style={{ padding: 20, gap: 20 }}>
-        <Card title="Niciun local asociat">
-          <Txt>
-            Contul tău nu are un rol activ într-un local partener. Proprietarul
-            te poate adăuga folosind username-ul din CeFaci.
-          </Txt>
-          <Txt muted>
-            Dacă ești proprietar, accesul apare după activarea parteneriatului
-            cu CeFaci și asocierea contului tău cu localul.
-          </Txt>
-          {message && <Txt>{message}</Txt>}
-          <Button
-            label="Verifică din nou"
-            onPress={() => void loadVenues()}
-          />
-          <Button
-            label="Ieși din cont"
-            secondary
-            onPress={() => void signOut().catch((e) => M(e instanceof Error ? e.message : "Ieșirea nu s-a încheiat. Reîncearcă."))}
-          />
-        </Card>
-      </View>
-    );
+  if (!venues.length || onboarding)
+    return <BusinessOnboarding
+      session={session}
+      accessError={message}
+      onRefreshAccess={loadVenues}
+      onSignOut={signOut}
+      onBack={venues.length ? () => Onboarding(false) : undefined}
+    />;
   const p: ScreenProps = data ? { venue, data, act, busy } : (null as any);
   const content = data ? (
     tab === "Azi" ? (
@@ -398,6 +304,7 @@ function Workspace({ session }: { session: Session }) {
             <Txt>{message}</Txt>
           </Card>
         )}
+        {data?.role === "proprietar" && <OwnershipDisputes key={venue + ":" + session.user.id} venue={venue} />}
         <View key={tab + ":" + data?.role} style={{ gap: 20 }}>
           {content}
         </View>
@@ -467,7 +374,7 @@ export default function App() {
             <ScrollView
               contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
             >
-              <Login />
+              <BusinessEntry />
             </ScrollView>
           )}
         </SafeAreaView>

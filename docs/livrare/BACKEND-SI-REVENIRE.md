@@ -31,3 +31,9 @@ Auditul din 09.10.2026 a adăugat fișierul `20261008143201_cefaci_security_audi
 În producție verificările folosesc cataloage/permisiuni și apeluri anonime neautorizate. Nu creează conturi/localuri de fraudă, nu trimit notificări și nu introduc bonuri sintetice în datele reale. Deadline-urile/expirările sunt calculate de server și persistate la consultare/operațiune; nu depind de un cron pe telefon.
 
 În audit a fost instalată și funcția `citeste-bon` v10 (ACTIVE, verify_jwt=true), păstrând secretele existente și fixând exclusiv importul Supabase la 2.117.2. Snapshotul v9 este în `edge-before-audit-v3/`; logica V2 a bonului nu a fost schimbată.
+
+## Completare onboarding Business — 09.10.2026
+
+Migrarea `20261009082804_cefaci_business_onboarding.sql` este aditivă: trei tabele private, API-uri noi și un bucket privat nou pentru documente. Nu înlocuiește funcțiile Client/Business deja instalate. Snapshotul de metadate înainte de instalare este `backend-before-onboarding.json`; nu conține persoane, documente sau secrete. Instalarea și mappingul timestampului live se consemnează în raport după verificare.
+
+Pentru oprirea de urgență a cererilor noi, `supabase/rollback/pause-business-onboarding.sql` revocă scrierile de cerere/decizie și oprește încărcările noi. Citirea cererilor, dovezile și jurnalul sunt păstrate, iar operațiunile anterioare Client/Business nu sunt oprite. Scriptul nu se rulează la instalarea normală. Reactivează numai după corecția verificată; nu șterge tabelele, bucketul sau documentele pentru a reveni la un APK anterior.

@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-09T09:10:09.851445+00:00",
+  "project": "vqrmwuarjjntusfbqprx",
+  "request_table": null,
+  "proof_bucket": null,
+  "storage_policy_count": 0,
+  "counts": { "venues": 1093, "partners": 0, "members": 0 },
+  "note": "Metadata only; no existing functions or tables replaced by onboarding. No user data snapshot."
+}

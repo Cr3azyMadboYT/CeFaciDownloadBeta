@@ -32,6 +32,7 @@ try {
   const errors = [];
   page.on("pageerror", e => errors.push(e.message));
   await page.goto(root);
+  await page.getByRole("button", { name: "Ai deja cont? Intră", exact: true }).click();
   await page.getByRole("button", { name: "Trimite codul", exact: true }).waitFor();
   await page.evaluate(() => document.fonts.ready);
   assert.deepEqual(errors, []);

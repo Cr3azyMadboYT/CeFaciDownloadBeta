@@ -50,6 +50,19 @@ jobs:
           EXPO_NO_TELEMETRY: '1'
         run: npm run web
       - run: node scripts/package-business-web.mjs
+      - name: Fluxuri Business reale în browser, cu backend sintetic izolat
+        run: |
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory business/dist > /tmp/cefaci-web-test.log 2>&1 &
+          WEB_TEST_PID=$!
+          trap 'kill "$WEB_TEST_PID"' EXIT
+          node scripts/test-business-ui.mjs
+          node scripts/test-business-onboarding-ui.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CeFaci-Business-flow-screenshots
+          path: release/screenshots/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: CeFaci-Business-web
