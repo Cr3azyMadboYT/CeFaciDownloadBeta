@@ -1,63 +1,42 @@
-# Livrare Business cu intrare și revendicare — 09.10.2026
+# Livrare Client + Business + Admin — 09.10.2026
 
-Business include acum cont existent/nou, profil CeFaci comun, căutarea și revendicarea localului, solicitarea unui local lipsă și disputa dacă există deja un proprietar. Documentele ajung într-un bucket privat, cererile au stare persistentă și decizie, iar proprietarul actual poate răspunde în Business. Verificarea cererii rămâne separată de contract și activarea accesului. Regulile și limitele sunt în [ONBOARDING-BUSINESS-20261009.md](ONBOARDING-BUSINESS-20261009.md).
-
-Designul CeFaci/Bilu/fonturile și backupurile sunt păstrate. Clientul 0.3.1/code4 și corecțiile auditului anterior rămân disponibile; detaliile acelei livrări sunt în [RAPORT-AUDIT-20261009.md](RAPORT-AUDIT-20261009.md) și [AUDIT-20261009.md](AUDIT-20261009.md).
+Admin este construit și conectat la Client și Business: cereri de local lipsă/parteneriat, raportări cu fotografie privată, răspunsuri, catalog, sosiri și contestații, financiar după rol, Plus de suport, sugestii, echipă și jurnal. Clientul are intrarea discretă în Profil; Business are tabul Ajutor, inclusiv înainte de parteneriat. Designul CeFaci/Bilu/fonturile și backupurile sunt păstrate. [ADMIN-20261009.md](ADMIN-20261009.md) descrie funcțiile, permisiunile și limitele; [ONBOARDING-BUSINESS-20261009.md](ONBOARDING-BUSINESS-20261009.md) descrie revendicarea/verificarea.
 
 ## Cod și builduri
 
-Ramură `codex/cefaci-client-business-20261008`, [PR draft #2](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/pull/2). Implementarea Business este `8b27361b881fd0f4018768bf9b100a88afd38fd3`, împinsă pe remote. Checkpointul `5aa731e` adaugă verificarea concurentă PostgreSQL și indexurile backendului, fără schimbări în sursele executabile/configurația aplicațiilor.
+Ramură `codex/cefaci-client-business-20261008`, [PR draft #2](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/pull/2). Checkpointuri împinse: `47a1744`, `e1e802d`, `ded2cdd`, `1557201`, `11ac445`, apoi documentația. Sursele/configurațiile executabile ale tuturor pachetelor sunt din **`11ac4455f1ad8fba46ac5a308a8c8d9ea74f2974`**; commiturile ulterioare schimbă numai documentația livrării.
 
-Workflow [37909653680](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37909653680): **SUCCESS**, inclusiv verify, APK și AAB Business semnate. Testele din browser și capturile sunt incluse și în CI.
+Workflow [37945951914](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37945951914): **SUCCESS**, verificări înaintea buildurilor, APK/AAB reale Gradle semnate cu cheia originală.
 
-| Pachet | Versiune / commit de build | Artefact GitHub |
-| --- | --- | --- |
-| Client APK/AAB + proiect iOS | `ro.cefaci.app`, 0.3.1/code4, `a7eea11` | `11603147808`, workflow anterior |
-| Business APK/AAB + proiect iOS | `app.cefaci.business`, 1.0.2/code3, `8b27361` | `11606214367` |
-| Business web ZIP | `version.json` = `8b27361` | `11606435446` |
-| Capturi de test Business | date sintetice, telefon/desktop | `11605679696` |
+| Pachet | Versiune | Artefact GitHub |
+|---|---|---|
+| Client APK/AAB + proiect iOS | `ro.cefaci.app`, 0.3.2 / code5 | `11624533396` |
+| Business APK/AAB + proiect iOS | `app.cefaci.business`, 1.0.3 / code4 | `11624147486` |
+| Business web ZIP | `version.json` = `11ac445` | `11623411673` |
+| Admin web ZIP | `version.json` = `11ac445` | `11623916401` |
+| Capturi Client/Business/Admin | backend sintetic izolat | `11624735763` |
 
-APK-ul și AAB-ul noi sunt builduri Gradle reale, descărcate și verificate după digestul artefactului, CRC, checksumurile buildului și certificatul original `d7714280ace4bcb3b37d5738f9334fb1fca9f29ac35024d5d5622d1d26cf853e`. APK Signature Scheme v2 este verificată în CI; certificatul AAB este verificat și local. Manifestul compilat confirmă Business 1.0.2/code3, backup=false, fără debug/cleartext/microfon/overlay/locație/stocare; uploadul folosește selectorul de documente al sistemului. Bundleul Hermes conține API-urile noi și nu conține chei private sau fixture-uri. Webul CI a fost descărcat și verificat după digestul artefactului, CRC, commit, absența cheilor private/fixture-urilor și permisiunile 755/644. A trecut testele Apache și fluxurile de onboarding pe exact pachetul descărcat. Fișierele sunt în `release/`, checksumurile finale în [ARTEFACTE-SHA256.txt](ARTEFACTE-SHA256.txt); metadatele semnării sunt în `builds/`. Artefactele Actions expiră la 07.01.2027. iOS livrează proiectul generat; nu există IPA semnat sau testare pe dispozitiv Apple declarate.
+Toate artefactele au fost descărcate, verificate după digestul GitHub, CRC și SHA-256. APK-urile au certificat original `d7714280ace4bcb3b37d5738f9334fb1fca9f29ac35024d5d5622d1d26cf853e`, semnare v2 verificată în CI; certificatul AAB este verificat și local. Manifestele compilate confirmă versiunile, backup=false, fără debug/cleartext/microfon/overlay; Business nu cere locație sau acces larg la fotografii/stocare. Codul Hermes include noile API-uri, fără chei private sau identități de fixture.
 
-Pachetele auditului anterior sunt păstrate în `release/previous-audit-20261009/`, metadatele în `builds/previous-audit-20261009/`. Backupurile din 08.10 sunt păstrate separat.
+Weburile CI au trecut din nou pe Apache și în browser după descărcare: fallback, rute adânci, HTTPS redirect, CSP/HSTS, MIME, cache, fonturi, mobil. Fișierele publice au permisiuni 644 și directoarele 755. Pachetele sunt în `release/`; checksumurile în [ARTEFACTE-SHA256.txt](ARTEFACTE-SHA256.txt), identitatea buildurilor în `builds/`. Artefactele Actions expiră la **07.01.2027**. Pachetele anterioare sunt păstrate în `release/previous-onboarding-20261009/`, metadatele în `builds/previous-onboarding-20261009/`. Backupurile remote rămân `9d1e02c` și `45ad496`.
 
-## Backend instalat și verificat
+## Backend și verificări
 
-Ținta este exclusiv CeFaci2.0, `vqrmwuarjjntusfbqprx`:
+Cele două migrații sunt instalate exclusiv pe CeFaci2.0 `vqrmwuarjjntusfbqprx`: **`20261009100906_cefaci_admin_support`** și **`20261009143212_cefaci_admin_operations`**. Snapshoturile, SHA-256, mappingul local/live și procedura de pauză sunt în [BACKEND-SI-REVENIRE.md](BACKEND-SI-REVENIRE.md). Migrațiile instalate anterior nu au fost editate sau reluate; V2, onboardingul și gardurile de audit rămân active. Nu s-au șters/restaurat date și nu s-au creat cereri, conturi, parteneriate sau emailuri de test în producție.
 
-- `20261009091138_cefaci_business_onboarding`, fișier local `20261009082804`, SHA-256 `27e3a98c1559eb235cab8a5ec0220ad0f41f32f85b2056657f07e15ea4aea2ac`.
-- `20261009091432_cefaci_business_onboarding_indexes`, fișier local `20261009091301`, SHA-256 `6e7fea19967cd1f892331a34edfcf7487c43ce18daa22df6f1d6cab192f10616`.
-- V2, gardul legacy, auditul V3 și Edge `citeste-bon` v10/verify_jwt=true rămân instalate conform raportului auditului. Migrațiile instalate anterior nu au fost editate sau reluate.
+- **403 teste trecute, un test opțional omis**, local și CI; typecheck Client, Business și Admin.
+- PostgreSQL 17: **11 scenarii de concurență**, inclusiv identitate Client/Business, ultima capacitate, scanare comună, raportare/submit idempotente și hotărâri Admin protejate de versiune.
+- Browser: Client Profil/raportare/local lipsă/răspuns; Business rezervări/scanner/financiar/onboarding/Ajutor/foto/retry/logout; Admin roluri/cozi/poze/catalog/contestații/Plus/revocare. Toate cererile externe și WebSocket sunt interceptate cu date sintetice.
+- API live: catalogul public fără date fiscale; **25 verificări read-only** de acces anonim/refuzul schemelor private/OCR; niciun apel de raportare/decizie/sosire reală.
+- Live: 1.093 localuri, zero parteneri/membri Business, un cont staff păstrat, o semnalare legacy păstrată; zero raportări/compensații noi. Bucket suport privat 5 MiB, roluri/granturi și RLS reverificate.
+- [backend-admin-advisors.json](backend-admin-advisors.json) păstrează rezumatul advisor-urilor live și zero FK noi Admin neindexate. RPC-urile security-definer rămân autorizate explicit; nu se aplică granturi generale pentru a ascunde avertismente.
 
-Cele trei tabele noi sunt private, cu RLS și fără drepturi directe de citire/scriere pentru aplicații. RPC-urile cer sesiune, identitatea/rolul actual și obiectul corect; retenția este exclusiv service-only. Bucketul `business-proofs` este privat, maximum 8 MiB, PDF/JPEG/PNG; documentele sunt imutabile după upload. Conturile anonime Auth sunt refuzate. Verificarea CUI-ului controlează formatul/cifra de control; confirmarea reală a firmei rămâne manuală.
+Prima rulare CI `37945774379` a trecut cele 11 scenarii concurente, dar a eșuat la notificarea de închidere a bazei efemere; fixture-ul a fost reparat în `11ac445`, după care rularea finală a trecut integral. Erorile din operațiunile testate nu sunt ignorate.
 
-Migrarea nu a publicat localuri și nu a acordat roluri. Numărul existent de localuri/parteneri/membri a rămas identic; în producție nu au fost create cereri de test. Snapshotul de metadate, mappingul timestampurilor și pauza reversibilă sunt în [BACKEND-SI-REVENIRE.md](BACKEND-SI-REVENIRE.md).
+## Publicare și limite operaționale
 
-## Verificări
+ZIP-urile sunt pregătite pentru `business.cefaci.app` și `admin.cefaci.app` pe gazduire.net; instrucțiuni în [INSTALARE.md](INSTALARE.md). **Noul update nu este publicat**: nu există credențiale de hosting/DNS în acest mediu. Un site anterior online nu dovedește instalarea acestui release.
 
-- **343 teste trecute**, unul opțional omis; 37 fișiere de teste trecute, local și în verify CI. Include 23 teste SQL pentru onboarding și șapte teste pentru documente/lucrătorul de retenție.
-- Typecheck Client și Business, instalare din lockfile, export web și buildurile configurate în workflow.
-- PostgreSQL 17 cu conexiuni independente: șase scenarii operaționale și creare simultană Client/Business a profilului. Business păstrează username-ul, prenumele și data nașterii salvate de Client.
-- Browser cu întreg traficul Supabase interceptat: opțiuni OTP pentru cont existent/nou, profil, local lipsă, revendicare, dispută, dovadă obligatorie, document invalid, retry idempotent, status/retragere, răspuns proprietar, logout și responsive. Zero erori JS; zero emailuri/documente trimise live.
-- Apache: redirect HTTPS, fallback, cache/MIME, fonturi, CSP/HSTS, blocarea scriptului inline, telefon fără depășirea lățimii.
-- API live read-only: cereri/profil/retention refuzate anonim, scheme private/net neexpuse, catalog whitelist și OCR fără sesiune refuzat.
-- Advisors după instalare: indexurile externe noi sunt acoperite. Tabelele private fără politici sunt închise intenționat, iar funcțiile SECURITY DEFINER autorizate sunt API-uri cu garduri testate, nu granturi anonime către date private.
+iOS livrează proiectele generate; **nu există IPA semnat sau testare pe dispozitiv fizic**. SMTP/OTP real, furnizorii de verificare, contractele/activarea, facturarea/plățile/circuitul fiscal cu doi aprobatori, blocarea globală de cont și statisticile detaliate de consum nu sunt configurate/implementate aici. `billing_ready=false`; niciun buton nu simulează facturi ori activări. Push Business în fundal și abonamentele Plus plătite rămân neconfigurate.
 
-## Configurări operaționale rămase
-
-Site-ul `https://business.cefaci.app` este online, dar ultima verificare read-only arată încă release-ul `4d10d80`. **ZIP-ul nou trebuie urcat pe gazduire.net**; nu există credențiale de upload în mediu. [INSTALARE.md](INSTALARE.md) explică document-root-ul, TLS, cache-ul și verificarea versiunii.
-
-ANAF/ONRC și SMS/apel automat nu sunt configurate: se folosește documentul și verificarea manuală. Contractul final, clauzele speciale, PDF-ul și activarea parteneriatului sunt pași separați de cerere; Admin-ul integral nu este reconstruit. Disputa notifică proprietarul în Business, iar termenul de trei zile începe la prima consultare; nu există notificare email/SMS/push în fundal livrată pentru acest flux.
-
-Lucrătorul server de retenție este livrat și testat, cu simulare implicită și execuție explicită. **Schedulerul și secretul său privat trebuie configurate** pentru ștergerea fizică automată la 90 de zile. Expirarea dreptului de citire este impusă pe server. Fișierele sunt păstrate în Storage privat cu criptarea gestionată de platformă; nu există scanare antivirus sau verificare SHA-256 a documentului pe server declarate.
-
-Facturarea fiscală, plățile, abonamentele Plus plătite, biletele plătite și push Business în fundal rămân neconfigurate; `billing_ready=false`. Nu este declarată testare pe telefon fizic, OTP primit prin email real sau OCR cu bon real. Auditul npm Business rămâne 15 high în dependențe de build, fără critical/moderate și fără downgrade Expo. Problemele platformei și advisory-urile existente sunt documentate în audit; nu se declară securitate absolută.
-
-## Backupuri
-
-Ramurile remote rămân:
-
-- `backup/claude-original-20261008`: `9d1e02c70aa3c1634c298011e50dd6a65e6ea287`.
-- `backup/cefaci-current-20261008`: `45ad4963403283ab234d9811a562979c7f1b8cee`.
-
-Snapshoturile de definiții și ramurile de cod nu înlocuiesc backupul de date/PITR al platformei.
+Fotografiile/documentele sunt private și accesul expiră; workerii de ștergere fizică la retenție sunt livrați/testați, însă schedulerul privat și cheia lui nu sunt configurate. Advisory-urile legacy și auditul dependențelor sunt consemnate separat; nu este promisă securitate absolută.
