@@ -14,7 +14,7 @@ function auth(state){
  const access_token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'+Buffer.from(JSON.stringify({sub:uid,session_id:sid,exp:epoch()+3600,iat:epoch(),role:'authenticated',aal:state.aal,amr:state.aal==='aal2'?[{method:'totp',timestamp:state.proof}]:[{method:'otp',timestamp:epoch()}]})).toString('base64url')+'.fixture';
  return {access_token,refresh_token:'synthetic',expires_in:3600,expires_at:epoch()+3600,token_type:'bearer',user};
 }
-async function fixture(app,{role=app==='admin'?'fondator':'proprietar',aal='aal1',factor=null,active=false,mobile=false,done=false}={}){
+async function fixture(app,{role=app==='admin'?'fondator':'proprietar',aal='aal1',factor=null,active=false,mobile=false,done=false,clock=false}={}){
  const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},reducedMotion:'reduce',extraHTTPHeaders:process.env.CEFACI_TEST_PROXY_HTTPS==='1'?{'X-Forwarded-Proto':'https'}:{}});opened.push(context);
  const state={app,role,aal,factor,proof:epoch()-5,cutoff:0,active,deadline:Date.now()+300000,revoked:false,calls:[],wrong:0};
  await context.routeWebSocket(/supabase\.co/,ws=>ws.close());
@@ -61,7 +61,7 @@ async function fixture(app,{role=app==='admin'?'fondator':'proprietar',aal='aal1
   sessionStorage.setItem(`cefaci-${app}-auth`,JSON.stringify(session));
   if(done)localStorage.setItem(['cefaci',app,'tutorial','1',session.user.id,role,app==='business'?'security-one':''].map(encodeURIComponent).join(':'),'done');
  },{session:auth(state),app,role,done});
- const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(15000);await page.goto(roots[app]);
+ const page=await context.newPage();if(clock)await page.clock.install();page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(15000);await page.goto(roots[app]);
  const result={page,state,context};fixtures.push(result);return result;
 }
 const button=(page,name)=>page.getByRole('button',{name,exact:true});
@@ -100,6 +100,12 @@ try{
   if(app==='admin')await f.page.getByRole('heading',{name:'Acest cont nu are acces la Admin.',exact:true}).waitFor();
   else await button(f.page,'Tur cu Bilu').waitFor();
  }
+ const changed=await fixture('admin',{role:'fondator',aal:'aal2',factor:'verified',active:true,done:true,clock:true});
+ await button(changed.page,'Bani').click();await changed.page.getByRole('heading',{name:'Bani',exact:true}).waitFor();
+ changed.state.role='suport';await changed.page.clock.fastForward(16000);
+ await button(changed.page,'Arată-mi!').waitFor();assert((await changed.page.textContent('body')).includes('rolul de suport'));
+ await button(changed.page,'Închide turul').click();assert.equal(await button(changed.page,'Bani').count(),0);
+ assert.equal(await changed.page.getByRole('heading',{name:'Bani',exact:true}).count(),0);
  for(const role of Object.keys(permissions)){
   const f=await fixture('admin',{role,aal:'aal2',factor:'verified',active:true,mobile:role==='suport'});
   await f.page.getByRole('dialog').waitFor();assert((await f.page.textContent('body')).includes(`rolul de ${role==='admin'?'administrator':role}`));

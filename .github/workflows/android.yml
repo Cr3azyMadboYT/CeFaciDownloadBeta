@@ -9,7 +9,7 @@ on:
         description: Aplicația de construit
         type: choice
         default: both
-        options: [both, client, business]
+        options: [both, client, business, web]
 permissions:
   contents: read
 jobs:
@@ -93,6 +93,7 @@ jobs:
           path: release/CeFaci-Admin-web.zip
           if-no-files-found: error
   native:
+    if: inputs.app != 'web'
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 60
