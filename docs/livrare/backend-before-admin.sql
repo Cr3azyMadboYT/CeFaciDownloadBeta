@@ -1,4 +1,46 @@
 -- Snapshot of function definitions before additive Admin rollout on CeFaci2.0, 2026-10-09. No application data.
+CREATE OR REPLACE FUNCTION public.admin_partners()
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare m0 date := date_trunc('month', (now() at time zone 'Europe/Bucharest')::date)::date;
+begin
+  if not private.can('partners.read') then raise exception 'Nu ai voie.'; end if;
+  return coalesce((select jsonb_agg(jsonb_build_object(
+      'venue_id', p.venue_id, 'name', coalesce(v.edit->>'name', v.name), 'firm', p.firm, 'cui', p.cui, 'founder', p.founder, 'rate', null, 'price_tier', p.price_tier, 'pricing', 'per-person-v2',
+      'status', p.status, 'activated_at', p.activated_at, 'free_until', p.free_until,
+      'team', (select jsonb_agg(jsonb_build_object('username', pr.username, 'role', m.role)) from public.partner_members m join public.profiles pr on pr.id = m.user_id where m.venue_id = p.venue_id and m.active),
+      'month', case when private.can('partners') or private.can('money') then public.biz_finance_v2(p.venue_id,m0,(m0+interval '1 month'-interval '1 day')::date) end,
+      -- de verificat: nota scrisă de local mult sub bon; mese scanate trecute „n-a venit”; seri neînchise
+      'flags', (select count(*) from public.visits x join public.receipts r on r.visit_id = x.id where x.venue_id = p.venue_id and x.declared is not null and x.declared < r.total * 0.9 and x.work_day >= m0),
+      'noshow', (select count(*) from public.visits x where x.venue_id = p.venue_id and x.kind in ('rezervare', 'drop') and x.outcome = 'n-a venit' and x.work_day >= m0),
+      'unclosed', (select count(*) from public.visits x where x.venue_id = p.venue_id and x.kind in ('rezervare', 'drop') and x.outcome = 'deschis' and x.bill is null and x.work_day < private.work_day(now()) - 1)
+    ) order by p.created_at) from public.partners p left join public.venues v on v.id = p.venue_id), '[]');
+end $function$
+
+
+CREATE OR REPLACE FUNCTION public.biz_finance_v2(p_venue text, p_from date, p_to date)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare receipts numeric; reductions numeric; commission numeric; missing int; blocked int;
+begin
+ if coalesce(private.member_role(p_venue),'') not in('proprietar','manager') and not private.can('money') and not private.can('partners') then raise exception 'Nu ai voie.'; end if;
+ if p_from is null or p_to is null or p_to<p_from or p_to-p_from>366 then raise exception 'Perioadă invalidă.'; end if;
+ select coalesce(sum(bill),0),coalesce(sum(discount_amount),0),count(*) filter(where bill is null or discount_amount is null or closed_at is null) into receipts,reductions,missing from public.visits where venue_id=p_venue and work_day between p_from and p_to and outcome<>'n-a venit';
+ select coalesce(sum(fee) filter(where not free),0) into commission from private.visit_fees(p_venue,p_from,p_to);
+ select count(*) into blocked from public.visits x left join private.visit_counts c on c.visit_id=x.id left join private.visit_pricing s on s.visit_id=x.id where x.venue_id=p_venue and x.work_day between p_from and p_to and x.kind in('rezervare','drop') and x.outcome<>'n-a venit' and (exists(select 1 from private.benefit_cases b where b.visit_id=x.id and b.state='pending') or (s.version='per-person-v2' and c.state is distinct from 'confirmed') or (s.version<>'per-person-v2' and not exists(select 1 from private.visit_attendance where visit_id=x.id)) or s.tier is null or x.closed_at is null);
+  return jsonb_build_object('billing_ready',false,'estimate',true,'partial',missing>0 or blocked>0,'missing',missing,'blocked',blocked,'revenue',receipts,'discounts',reductions,'fee',commission,'remaining',case when missing=0 and blocked=0 then receipts-commission end,
+ 'would_pay',(select coalesce(sum(fee) filter(where free),0) from private.visit_fees(p_venue,p_from,p_to)),
+ 'visits',(select count(*) from public.visits where venue_id=p_venue and work_day between p_from and p_to),
+ 'lines',coalesce((select jsonb_agg(jsonb_build_object('visit',f.visit_id,'day',f.work_day,'kind',f.kind,'bill',f.bill,'fee',case when f.free then 0 else f.fee end,'would_pay',case when f.free then f.fee else 0 end,'free',f.free,'calculation',jsonb_build_object('drop_billable',least(10,c.drop_adults,s.drop_limit),'reservation_billable',least(greatest(0,10-least(c.drop_adults,s.drop_limit)),greatest(0,c.adults-least(c.drop_adults,s.drop_limit)),s.reservation_limit),'reservation_unit',s.reservation_unit,'drop_unit',s.drop_unit,'reservation_limit',s.reservation_limit,'drop_limit',s.drop_limit,'adults',c.adults,'drop_adults',c.drop_adults))) from private.visit_fees(p_venue,p_from,p_to) f join private.visit_pricing s on s.visit_id=f.visit_id left join private.visit_counts c on c.visit_id=f.visit_id),'[]'));
+end $function$
+
+-- Previous venue_log_read policy used private.can('staff.read'). Rollback must retain the stricter action filter.
 CREATE OR REPLACE FUNCTION private.partner_request_log_immutable()
  RETURNS trigger
  LANGUAGE plpgsql
