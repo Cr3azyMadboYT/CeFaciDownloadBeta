@@ -1,0 +1,48 @@
+{
+  "project_id": "vqrmwuarjjntusfbqprx",
+  "captured_at": "2026-10-09",
+  "source_commit": "12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94",
+  "counts": {
+    "staff": 2,
+    "members": 0,
+    "partners": 0,
+    "venues": 1093,
+    "legacy_reports": 1,
+    "support_reports": 0,
+    "verified_totp": 0,
+    "founder_preserved": true
+  },
+  "policies": [
+    {
+      "policyname": "outing_events_read",
+      "schemaname": "public",
+      "tablename": "outing_events",
+      "cmd": "SELECT",
+      "permissive": "PERMISSIVE",
+      "roles": "{authenticated}",
+      "qual": "(private.plan_access(plan_id, ( SELECT auth.uid() AS uid)) OR (private.member_role(venue_id) IS NOT NULL))",
+      "with_check": null
+    },
+    {
+      "policyname": "partner_members_own",
+      "schemaname": "public",
+      "tablename": "partner_members",
+      "cmd": "SELECT",
+      "permissive": "PERMISSIVE",
+      "roles": "{authenticated}",
+      "qual": "(user_id = ( SELECT auth.uid() AS uid))",
+      "with_check": null
+    },
+    {
+      "policyname": "staff_read",
+      "schemaname": "public",
+      "tablename": "staff",
+      "cmd": "SELECT",
+      "permissive": "PERMISSIVE",
+      "roles": "{authenticated}",
+      "qual": "((user_id = ( SELECT auth.uid() AS uid)) OR private.can('staff.read'::text))",
+      "with_check": null
+    }
+  ],
+  "note": "Schema/aggregate snapshot only. No Auth JWTs, TOTP secrets, MFA verification or real test submissions."
+}
