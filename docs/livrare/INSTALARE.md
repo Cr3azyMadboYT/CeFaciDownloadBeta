@@ -1,4 +1,12 @@
-# Livrare CeFaci Client + Business
+# Livrare CeFaci Client + Business + Admin
+
+## Admin pe gazduire.net
+
+Creează `admin.cefaci.app` cu document-root separat, de exemplu `public_html/admin`, activează TLS și extrage `CeFaci-Admin-web.zip` direct acolo, inclusiv `.htaccess`. Directoare 755, fișiere 644; nu este necesar Node/PHP. Verifică `version.json`, navigarea directă pe o cale adâncă, fonturile, CSP/HSTS și lipsa cache-ului pe HTML. La update urcă întâi asseturile cu hash, apoi indexul/versiunea; salvează release-ul vechi privat. Admin este construit cu asseturi absolute la rădăcina subdomeniului.
+
+Intrarea folosește un cont CeFaci existent și un rol activ în `public.staff`; conturile obișnuite sunt refuzate. Există deja un cont staff, păstrat intact. Nu se creează un cont administrator demo și nu se publică o cheie service-role. Folosește Echipa pentru acordarea rolurilor în limitele contului autorizat. Configurează/verifică OTP email ca la Business. Interfețele și funcțiile rămase neconfigurate sunt consemnate în [ADMIN-20261009.md](ADMIN-20261009.md).
+
+Reconstrucție Admin: `npm ci` la rădăcină, `npm run admin:typecheck`, `npm run admin:build`, `npm run admin:package`. Pachetul este `release/CeFaci-Admin-web.zip`. Nu au fost furnizate credențiale pentru publicarea acestui update.
 
 Codul Clientului rămâne React Native/Expo în `mobile/`. Business în `business/` folosește componente React Native, cameră nativă și același Bilu/fonturi/palete. Exportul web reutilizează aceste componente; aplicația Business nu este un WebView. Canvasurile originale și ramurile de backup sunt păstrate.
 

@@ -1,5 +1,16 @@
 # Backend V2 și revenire
 
+## Admin și suport — instalate 09.10.2026
+
+| Fișier local | Migrare live | SHA-256 |
+|---|---|---|
+| `20261009095047_cefaci_admin_support.sql` | `20261009100906_cefaci_admin_support` | `267c5b02e46a9cc8988360fcd6423806a1f30f7ed84c2397a2b7f129e0d2d0c1` |
+| `20261009095924_cefaci_admin_operations.sql` | `20261009143212_cefaci_admin_operations` | `e643788e8367d5a9a25979c1b1596fbce822472767f50861568f6b9ecbff8b39` |
+
+Ambele sunt instalate pe CeFaci2.0 și verificate prin metadate și granturi. Snapshoturile înainte de instalare sunt `backend-before-admin.json` și `backend-before-admin.sql`, fără date personale. Tabelele/cozile/jurnalele sunt aditive; funcțiile legacy care ar ocoli auditul/financiarul sunt restrânse. Nu relua aceste fișiere peste live și nu modifica migrațiile instalate.
+
+`supabase/rollback/pause-admin-support.sql` oprește API-urile Admin și scrierile suport/încărcările noi, păstrând datele, documentele și operațiunile existente Client/Business. Este un script de urgență, nu un pas de instalare. Revenirea web folosește pachetul anterior salvat privat. Nu restaura automat vechile funcții care ocoleau auditul sau drepturile financiarului; pentru reluare folosește granturi explicite după corecție și teste. Workerul privat de retenție și limitele operaționale sunt descrise în [ADMIN-20261009.md](ADMIN-20261009.md).
+
 Ținta autorizată este exclusiv **CeFaci2.0**, `vqrmwuarjjntusfbqprx`. Istoricul live a fost inspectat: 30 migrații înainte de V2, ultimele `20261007165417` și `20261007165421`. Timestampurile vechi nu coincid integral cu repositoryul. Nu se execută reset, repair al istoricului sau replay al migrațiilor de bază peste producție.
 
 Cele cinci fișiere V2 sunt:
