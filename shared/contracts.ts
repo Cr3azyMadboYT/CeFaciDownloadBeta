@@ -135,6 +135,8 @@ export interface Dashboard {
   };
   plus_program: {
     current_pct: number;
+    base_pct: number | null;
+    current_schedule: { day: number; from: string; to: string; pct: number }[];
     today_off: boolean;
     off_days_this_month: number;
     next: {

@@ -135,6 +135,7 @@ export function Field({
   numeric = false,
   multiline = false,
   secure = false,
+  editable = true,
 }: {
   label: string;
   value: string;
@@ -142,6 +143,7 @@ export function Field({
   numeric?: boolean;
   multiline?: boolean;
   secure?: boolean;
+  editable?: boolean;
 }) {
   const { t } = useTheme();
   return (
@@ -152,6 +154,7 @@ export function Field({
       <TextInput
         accessibilityLabel={label}
         value={value}
+        editable={editable}
         onChangeText={onChange}
         keyboardType={numeric ? "decimal-pad" : "default"}
         autoCapitalize="none"

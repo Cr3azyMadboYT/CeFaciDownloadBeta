@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -32,8 +32,13 @@
     "pg": "^8.23.1",
     "playwright": "^1.63.0",
     "typescript": "^7.0.2",
-    "vite": "^5.4.21",
+    "vite": "^7.3.7",
     "vite-plugin-singlefile": "^2.3.3",
-    "vitest": "^2.1.9"
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "11.1.1"
+    }
   }
 }

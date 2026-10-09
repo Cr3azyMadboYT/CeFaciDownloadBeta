@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, Modal, Pressable, View, useWindowDimensions, type GestureResponderEvent } from 'react-native';
 import { router } from 'expo-router';
-import { claimTrial, setBoard, getApp } from '../lib/session';
+import { claimTrial, captureAccount, useApp } from '../lib/session';
 import { endTour, tourNext, tourOops, useTour, type Rect } from '../lib/tour';
 import { Bilu, type Mood } from './Bilu';
 import { Big, T } from './kit';
@@ -23,13 +23,14 @@ const STEPS: Step[] = [
   { mood: 'yay', final: 'xp', text: 'Ăsta e carnetul tău: fă check-in când ajungi la local și primești ștampile și XP, iar poza bonului îți mai aduce 25 XP. Și ca să nu pleci cu mâna goală, ai deja 150 XP de bun venit!' },
   { id: 'tab-plus', mood: 'down', hot: 'plus', text: 'Și încă ceva! Iconița încețoșată din dreapta jos ascunde un cadou. Apasă pe ea.', oops: 'Aproape! Iconița încețoșată, ultima din dreapta jos.' },
   { mood: 'magic', magic: true, text: 'Hocus… pocus!' },
-  { mood: 'yay', final: 'gift', text: 'Poftim, cadou de la mine! Reducerile pornesc când intră primii parteneri. Când se termină săptămâna, o reactivezi oricând.' },
+  { mood: 'yay', final: 'gift', text: 'Poftim, cadou de la mine! Verifică reducerile disponibile în Plus. După cele 7 zile nu se încasează nimic automat; abonamentele plătite nu sunt disponibile încă.' },
 ];
 
 const DIM = 'rgba(4,7,24,0.78)';
 
 export function Tour() {
   const tour = useTour();
+  const plus = useApp((s) => s.board.plus);
   const { width: W, height: H } = useWindowDimensions();
   const ins = useModalInsets();
   const steps = tour.replay ? STEPS.slice(0, 7) : STEPS;
@@ -43,10 +44,10 @@ export function Tour() {
     if (!tour.on || !st?.magic) return;
     // as in the design: the gift opens just under a second in (the blur starts melting), the next step at 2.9 s
     // the server is asked first: a phone that already had the week does not get the gift again
-    const asked = claimTrial();
-    const a = setTimeout(() => { void asked.then((r) => { if (r !== 'used' && (getApp().board.plus ?? 'locked') === 'locked') setBoard({ plus: 'trial', plusDay: 1 }); }); }, 950);
-    const b = setTimeout(() => tourNext(), 2900);
-    return () => { clearTimeout(a); clearTimeout(b); };
+    const valid = captureAccount();
+    void claimTrial();
+    const b = setTimeout(() => { if (valid()) tourNext(); }, 2900);
+    return () => { clearTimeout(b); };
   }, [tour.on, st?.magic]);
 
   if (!tour.on || !st) return null;
@@ -79,7 +80,7 @@ export function Tour() {
       <Bilu size={st.final === 'gift' ? 96 : st.final || !hole ? 130 : 92} mood={tour.oops && st.hot ? 'oops' : st.mood} />
       <View style={{ alignSelf: 'stretch', padding: 16, borderRadius: 20, backgroundColor: '#FFFFFF' }}>
         <T style={{ fontFamily: st.magic ? F.display : F.sb, fontSize: st.magic ? 28 : 17, lineHeight: st.magic ? 30 : 24, color: '#0E1440', textAlign: st.magic ? 'center' : 'left' }}>
-          {tour.oops && st.oops ? st.oops : st.text}
+          {st.final === 'gift' && plus !== 'trial' && plus !== 'active' ? 'Cadoul se activează numai după confirmarea serverului. Deschide Plus ca să verifici disponibilitatea probei.' : tour.oops && st.oops ? st.oops : st.text}
         </T>
         {!st.final && !st.magic ? <T style={{ marginTop: 6, fontFamily: F.m, fontSize: 13, color: '#5A6390' }}>{st.hot ? 'Apasă pe zona luminată' : 'Apasă oriunde pe ecran'}</T> : null}
       </View>
@@ -159,11 +160,11 @@ function GiftCard() {
       </View>
       <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 44, lineHeight: 44, letterSpacing: -1.2, color: '#0E1440' }}>7 zile gratis</T>
       <View style={{ marginTop: 10, gap: 6 }}>
-        {['10–20% reducere la localurile partenere', 'Și pentru gașca ta, până la 4 la masă', 'Live Drops cu 10 minute mai devreme'].map((x) => (
+        {['10–20% reducere la localurile partenere', 'Pentru întreaga notă eligibilă a grupului', 'Live Drops cu 10 minute mai devreme'].map((x) => (
           <View key={x} style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><Icon name="check" size={16} color="#0E1440" width={2.6} /><T style={{ flex: 1, fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{x}</T></View>
         ))}
       </View>
-      <T style={{ marginTop: 10, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>Apoi 20 lei pe lună, doar dacă vrei. Nu-ți cerem cardul acum.</T>
+      <T style={{ marginTop: 10, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>Fără plată automată. Abonamentele plătite nu sunt disponibile încă.</T>
     </Animated.View>
   );
 }

@@ -1,6 +1,7 @@
 // Votul cu gașca, through Supabase: up to three places, everyone votes Da / Nu / Super (one Super each) from their own
 // phone, the results move live, and when time is up (or everyone voted) the winner becomes one plan for all.
 import { sb } from './auth';
+import { captureAccount } from './session';
 import type { Person } from './friends';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -124,9 +125,12 @@ export function watchVote(id: string, cb: () => void) {
 /** Turns the winner into one plan for everyone in the vote (made once, whoever asks first, and it closes the vote).
  *  Returns the plan as the server has it, so every phone gets the same place and time. */
 export async function planFromVote(id: string): Promise<{ planId?: string; venueId?: string; startsAt?: string; ownerId?: string; err?: string }> {
+  const valid = captureAccount();
   const { data, error } = await db().rpc('plan_from_vote', { p_session: id });
+  if (!valid()) return { err: 'Contul s-a schimbat.' };
   if (error) return { err: /terminat/.test(error.message ?? '') ? 'Votul nu s-a terminat încă: mai așteptăm voturi.' : 'Nu am putut face planul. Încearcă iar.' };
   const { data: pl } = await db().from('plans').select('id, venue_id, starts_at, owner_id').eq('id', data).maybeSingle();
+  if (!valid()) return { err: 'Contul s-a schimbat.' };
   if (!pl) return { err: 'Planul e făcut, dar nu-l pot citi acum. Încearcă iar.' };
   return { planId: pl.id, venueId: pl.venue_id, startsAt: pl.starts_at, ownerId: pl.owner_id };
 }

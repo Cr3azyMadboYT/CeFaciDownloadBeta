@@ -177,6 +177,22 @@ try {
   console.log(
     "PASS: ultimul răspuns concurent cu rezervarea — număr comun, retry sigur",
   );
+  await venue("groupfreeze", 10);
+  const frozenPlan = await plan(organizer, "groupfreeze", 2, "freeze");
+  const invitationRace = await Promise.allSettled([
+    run(organizer,
+      "select plan_share_v2('freeze','groupfreeze',now()+interval '20 minutes',2,$1,null,0,'{}',$2) id",
+      [[guest], frozenPlan]),
+    run(organizer, "select to_jsonb(reservation_request_v2($1,'freeze-book')) r", [frozenPlan]),
+  ]);
+  assert.equal(invitationRace.filter((r) => r.status === "fulfilled").length, 1);
+  const frozenState = (await pool.query(
+    "select (select count(*)::int from plan_members where plan_id=$1) members,(select count(*)::int from reservations where plan_id=$1) bookings",
+    [frozenPlan],
+  )).rows[0];
+  assert.ok((frozenState.members === 1 && frozenState.bookings === 0) ||
+    (frozenState.members === 0 && frozenState.bookings === 1));
+  console.log("PASS: invitație simultană cu rezervarea — grupul rezervat nu se schimbă");
   await venue("stock", 10);
   const x = await owner("racestocka"),
     y = await owner("racestockb"),

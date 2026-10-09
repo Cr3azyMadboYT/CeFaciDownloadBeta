@@ -96,6 +96,7 @@ function Login() {
         </Txt>
         <Field
           label="Email"
+          editable={!busy}
           value={email}
           onChange={(v) => {
             E(v);
@@ -107,6 +108,7 @@ function Login() {
           <Field
             label="Codul primit prin email"
             numeric
+            editable={!busy}
             value={code}
             onChange={C}
           />
@@ -139,29 +141,32 @@ function Workspace({ session }: { session: Session }) {
     [message, M] = useState(""),
     [loaded, L] = useState(false);
   const scope = useRef(new RequestScope()),
-    request = useRef(0);
+    request = useRef(0),
+    action = useRef(false),
+    accessRequest = useRef(0);
+  const loadVenues = useCallback(async () => {
+    const valid = scope.current.capture(), n = ++accessRequest.current;
+    M("");
+    try {
+      const rows = await call<VenueAccess[]>("biz_my_venues");
+      if (valid() && n === accessRequest.current) {
+        V(rows);
+        S((current) => rows.some((v) => v.venue_id === current) ? current : rows[0]?.venue_id ?? "");
+      }
+    } catch (e) {
+      if (valid() && n === accessRequest.current)
+        M(e instanceof Error ? e.message : "Nu am putut verifica accesul. Reîncearcă online.");
+    } finally {
+      if (valid() && n === accessRequest.current) L(true);
+    }
+  }, []);
   useEffect(() => {
     scope.current.invalidate();
-    let alive = true;
-    void call<VenueAccess[]>("biz_my_venues")
-      .then((rows) => {
-        if (alive) {
-          V(rows);
-          S(rows[0]?.venue_id ?? "");
-          L(true);
-        }
-      })
-      .catch((e) => {
-        if (alive) {
-          M(e.message);
-          L(true);
-        }
-      });
+    void loadVenues();
     return () => {
-      alive = false;
       scope.current.invalidate();
     };
-  }, [session.user.id]);
+  }, [session.user.id, loadVenues]);
   const refresh = useCallback(async () => {
     if (!venue) return;
     const valid = scope.current.capture(),
@@ -170,7 +175,10 @@ function Workspace({ session }: { session: Session }) {
       const next = await call<Dashboard>("biz_dashboard_v2", {
         p_venue: venue,
       });
-      if (valid() && n === request.current) D(next);
+      if (valid() && n === request.current) {
+        D(next);
+        V((rows) => rows.map((v) => v.venue_id === venue ? { ...v, role: next.role } : v));
+      }
     } catch (e) {
       if (valid() && n === request.current) {
         D(null);
@@ -179,17 +187,21 @@ function Workspace({ session }: { session: Session }) {
     }
   }, [venue]);
   useEffect(() => {
+    // No selection yet: do not invalidate the initial access-list request.
+    if (!venue) return;
     scope.current.invalidate();
     D(null);
     M("");
     B(false);
+    action.current = false;
     T("Azi");
     void refresh();
     return live(venue, () => void refresh());
   }, [venue, refresh]);
   const act: Action = async (work, success) => {
-    if (busy) return;
+    if (action.current) return;
     const valid = scope.current.capture();
+    action.current = true;
     B(true);
     M("");
     try {
@@ -206,8 +218,20 @@ function Workspace({ session }: { session: Session }) {
             : "Operațiunea nu a reușit. Reîncearcă online.",
         );
     } finally {
-      if (valid()) B(false);
+      if (valid()) {
+        action.current = false;
+        B(false);
+      }
     }
+  };
+  const signOut = async () => {
+    scope.current.invalidate();
+    D(null);
+    V([]);
+    B(false);
+    action.current = false;
+    const { error } = await backend.auth.signOut({ scope: "local" });
+    if (error) M("Ieșirea nu s-a încheiat. Reîncearcă online: " + error.message);
   };
   const items = [
     "Azi",
@@ -240,6 +264,10 @@ function Workspace({ session }: { session: Session }) {
             label={`${v.name} · ${v.role}`}
             secondary={v.venue_id !== venue}
             onPress={() => {
+              if (v.venue_id === venue) {
+                void refresh();
+                return;
+              }
               scope.current.invalidate();
               D(null);
               S(v.venue_id);
@@ -272,12 +300,7 @@ function Workspace({ session }: { session: Session }) {
       <Button
         label="Ieși din cont"
         secondary
-        onPress={() => {
-          scope.current.invalidate();
-          D(null);
-          V([]);
-          void backend.auth.signOut();
-        }}
+        onPress={() => void signOut().catch((e) => M(e instanceof Error ? e.message : "Ieșirea nu s-a încheiat. Reîncearcă."))}
       />
     </View>
   );
@@ -293,20 +316,19 @@ function Workspace({ session }: { session: Session }) {
             Contul tău nu are un rol activ într-un local partener. Proprietarul
             te poate adăuga folosind username-ul din CeFaci.
           </Txt>
+          <Txt muted>
+            Dacă ești proprietar, accesul apare după activarea parteneriatului
+            cu CeFaci și asocierea contului tău cu localul.
+          </Txt>
           {message && <Txt>{message}</Txt>}
           <Button
             label="Verifică din nou"
-            onPress={() =>
-              void call<VenueAccess[]>("biz_my_venues").then((rows) => {
-                V(rows);
-                S(rows[0]?.venue_id ?? "");
-              })
-            }
+            onPress={() => void loadVenues()}
           />
           <Button
             label="Ieși din cont"
             secondary
-            onPress={() => void backend.auth.signOut()}
+            onPress={() => void signOut().catch((e) => M(e instanceof Error ? e.message : "Ieșirea nu s-a încheiat. Reîncearcă."))}
           />
         </Card>
       </View>
@@ -376,7 +398,7 @@ function Workspace({ session }: { session: Session }) {
             <Txt>{message}</Txt>
           </Card>
         )}
-        <View key={tab} style={{ gap: 20 }}>
+        <View key={tab + ":" + data?.role} style={{ gap: 20 }}>
           {content}
         </View>
       </ScrollView>
@@ -399,7 +421,7 @@ export default function App() {
   useEffect(() => {
     void AsyncStorage.getItem("business-theme").then((v) => {
       if (v === "noapte") T(v);
-    });
+    }).catch(() => { /* Theme preference is optional when local storage is unavailable. */ });
     let changed = false;
     const { data } = backend.auth.onAuthStateChange((_event, next) => {
       changed = true;
@@ -411,7 +433,7 @@ export default function App() {
         S(data.session);
         R(true);
       }
-    });
+    }).catch(() => { if (!changed) R(true); });
     return () => data.subscription.unsubscribe();
   }, []);
   const t = theme === "zi" ? zi : noapte;
@@ -433,7 +455,7 @@ export default function App() {
               onPress={() => {
                 const n = t.dark ? "zi" : "noapte";
                 T(n);
-                void AsyncStorage.setItem("business-theme", n);
+                void AsyncStorage.setItem("business-theme", n).catch(() => {});
               }}
             />
           </View>

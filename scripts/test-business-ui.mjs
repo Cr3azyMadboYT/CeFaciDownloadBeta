@@ -56,7 +56,12 @@ const base = {
   drops: [],
   statistics: { visits: 1, people: 6, unclosed: 1, reservations: 1 },
   plus_program: {
-    current_pct: 15,
+    current_pct: 0,
+    base_pct: 20,
+    current_schedule: [
+      { day: 1, from: "10:00", to: "12:00", pct: 10 },
+      { day: 1, from: "17:00", to: "22:00", pct: 15 },
+    ],
     today_off: false,
     off_days_this_month: 0,
     next: null,
@@ -77,20 +82,22 @@ const finance = {
 };
 let calls = [],
   late = false;
-let firstFinance = true;
+let firstFinance = true, financeRemaining = 162, teamFailure = false, accessFailure = false;
 async function ctx(viewport, auth = false) {
   const context = await browser.newContext({ viewport });
   await context.routeWebSocket(/supabase\.co/, (ws) => ws.close());
   await context.route(/supabase\.co/, async (route) => {
     const req = route.request();
-    let data;
+    let data, status = 200;
     const name = new URL(req.url()).pathname.split("/").pop();
     let p = {};
     try {
       p = req.postDataJSON() ?? {};
     } catch {}
     calls.push({ name, p });
-    if (name === "biz_my_venues")
+    if (name === "biz_my_venues" && accessFailure) {
+      status = 503; data = {message: "Acces temporar indisponibil"};
+    } else if (name === "biz_my_venues")
       data = [
         {
           venue_id: "one",
@@ -123,9 +130,15 @@ async function ctx(viewport, auth = false) {
       const outdated = firstFinance;
       firstFinance = false;
       if (outdated) await new Promise((r) => setTimeout(r, 1200));
-      data = { ...finance, remaining: outdated ? 999 : 162 };
+      data = { ...finance, remaining: outdated ? 999 : financeRemaining };
     }
-    else if (name === "biz_team") data = [];
+    else if (name === "biz_team") {
+      status = teamFailure ? 503 : 200;
+      data = teamFailure ? {message: "Echipa este temporar indisponibilă"} : [];
+    }
+    else if (name === "biz_scan_v2" && p.p_ticket === "invalid-ticket") {
+      status = 400; data = {message: "Biletul este invalid sau expirat"};
+    }
     else if (name === "biz_scan_v2")
       data = {
         visit: "v",
@@ -139,7 +152,7 @@ async function ctx(viewport, auth = false) {
       };
     else data = null;
     await route.fulfill({
-      status: 200,
+      status,
       contentType: "application/json",
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -231,6 +244,20 @@ try {
   await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
   await app.getByText("Vizită salvată. Un număr neconfirmat rămâne în afara facturării.",{exact:true}).waitFor();
   assert(calls.some(x=>x.name==='biz_close_v2' && x.p.p_bill===47.5 && x.p.p_discount===2.25));
+  // Saving a loaded Plus program preserves its base, including a current 0% interval,
+  // and every interval for the same weekday.
+  await app.getByRole("button", { name: "Oferte", exact: true }).click();
+  assert.equal(await app.getByLabel("Luni interval 1 de la", {exact:true}).inputValue(), "10:00");
+  assert.equal(await app.getByLabel("Luni interval 2 de la", {exact:true}).inputValue(), "17:00");
+  await app.getByRole("button", { name: "Salvează pentru mâine", exact: true }).click();
+  await app.getByText("Programul intră în vigoare mâine, în București.", {exact:true}).waitFor();
+  const savedPlus = calls.filter(x=>x.name==='biz_plus_v2').at(-1).p;
+  assert.equal(savedPlus.p_pct,20);
+  assert.deepEqual(savedPlus.p_schedule,base.plus_program.current_schedule);
+  await app.getByLabel("Luni interval 1 până la", {exact:true}).fill("13:00");
+  await app.getByRole("button", { name: "Salvează pentru mâine", exact: true }).click();
+  await app.waitForTimeout(200);
+  assert.equal(calls.filter(x=>x.name==='biz_plus_v2').at(-1).p.p_schedule[1].from,"17:00");
   await app.getByRole("button", { name: "Financiar", exact: true }).click();
   await app.waitForTimeout(100);
   await app.getByRole("button", { name: "Vezi financiarul", exact: true }).click();
@@ -248,6 +275,25 @@ try {
   assert(
     text.indexOf("Încasări și reduceri") < text.indexOf("Comision CeFaci"),
   );
+  // Refresh/realtime updates finance while preserving the selected period.
+  const financeCalls = calls.filter(x=>x.name==='biz_finance_v2').length;
+  financeRemaining = 163;
+  await app.getByRole("button", { name: "Actualizează", exact: true }).click();
+  await app.getByText("163,00").first().waitFor();
+  assert(calls.filter(x=>x.name==='biz_finance_v2').length>financeCalls);
+  const beforeInvalidPeriod = calls.filter(x=>x.name==='biz_finance_v2').length;
+  await app.getByLabel("De la (AAAA-LL-ZZ)").fill("2026-02-29");
+  await app.getByRole("button", { name: "Vezi financiarul", exact: true }).click();
+  await app.getByText("Alege o perioadă validă:", {exact:false}).waitFor();
+  assert.equal(calls.filter(x=>x.name==='biz_finance_v2').length,beforeInvalidPeriod);
+  financeRemaining = 162;
+  teamFailure = true;
+  await app.getByRole("button", { name: "Echipă", exact: true }).click();
+  await app.getByText("Echipa este temporar indisponibilă", {exact:true}).waitFor();
+  teamFailure = false;
+  await app.getByRole("button", { name: "Reîncarcă echipa", exact: true }).click();
+  await app.waitForTimeout(200);
+  assert.equal(await app.getByText("Echipa este temporar indisponibilă", {exact:true}).count(),0);
   await app.getByRole("button", { name: "Scanner", exact: true }).click();
   await app.getByLabel("Codul biletului").fill("synthetic-ticket");
   await app
@@ -255,6 +301,10 @@ try {
     .click();
   await app.getByText("Cuvânt: Bilu.", { exact: false }).waitFor();
   assert(calls.some((x) => x.name === "biz_scan_v2" && x.p.p_venue === "one"));
+  await app.getByLabel("Codul biletului").fill("invalid-ticket");
+  await app.getByRole("button", { name: "Verifică biletul", exact: true }).click();
+  await app.getByText("Biletul este invalid sau expirat", {exact:true}).waitFor();
+  assert.equal(await app.getByText("Cuvânt: Bilu.", {exact:false}).count(),0);
   // A delayed response from the former local must not restore its owner/finance view.
   late = true;
   await app.getByRole("button", { name: "Actualizează", exact: true }).click();
@@ -310,9 +360,20 @@ try {
     0,
   );
   await phone.close();
+  // A rejected initial access lookup is recoverable and does not leak an unhandled promise.
+  accessFailure = true;
+  const denied = await ctx({width:390,height:844},true);
+  const retry = await denied.newPage();
+  retry.on("pageerror",e=>errors.push(e.message));
+  await retry.goto(root);
+  await retry.getByText("Acces temporar indisponibil", {exact:true}).waitFor();
+  accessFailure = false;
+  await retry.getByRole("button",{name:"Verifică din nou",exact:true}).click();
+  await retry.getByRole("button",{name:"Financiar",exact:true}).waitFor();
+  await denied.close();
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: desktop/telefon, zi/noapte, scanner, ordine financiară, logout și răspuns întârziat după schimbarea localului; zero erori JS",
+    "PASS: desktop/telefon, zi/noapte, scanner, ordine/refresh financiar, program Plus păstrat, scan invalid, retry echipă/acces, validări, logout și răspuns întârziat după schimbarea localului; zero erori JS",
   );
 } finally {
   await browser.close();

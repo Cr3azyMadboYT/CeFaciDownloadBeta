@@ -36,7 +36,7 @@ Exclusiv CeFaci2.0, `vqrmwuarjjntusfbqprx`:
 
 Catalogul live verificat nu are parteneri activați. Scenariile pozitive operaționale folosesc date sintetice izolate, nu venituri demonstrative în aplicație. Activarea contractuală a unui local și acordarea rolurilor reale rămân pași operaționali ai proprietarului/adminului.
 
-Nu am executat reseturi sau ștergeri de conturi/date în producție. O citire agregată preinstalare a raportat 9 profile, iar citirile ulterioare au raportat 2 profile și 11 conturi Auth. Migrațiile livrate nu conțin ștergeri de profile/Auth; statisticile cumulative și auditul Auth disponibil nu identifică originea acestei diferențe. Nu declar această comparație dovadă de conservare integrală a datelor și nu am încercat restaurări sau modificări ale persoanelor reale. Tabelele operaționale consultate aveau zero rânduri înainte și după instalare.
+Nu am executat reseturi sau ștergeri de conturi/date în producție. O citire agregată preinstalare a raportat 9 profile, iar citirile ulterioare au raportat 2 profile și 11 conturi Auth. Utilizatorul a confirmat ulterior explicit că el a șters profilele. Diferența este explicată de această intervenție; migrațiile livrate nu conțin ștergeri de profile/Auth și nu am încercat restaurări sau modificări ale persoanelor reale. Tabelele operaționale consultate aveau zero rânduri înainte și după instalare.
 
 Snapshotul funcțiilor pre-V2 și Edge v8, procedura de pauză, mappingul migrațiilor și revenirea fără ștergerea istoricului sunt în [BACKEND-SI-REVENIRE.md](BACKEND-SI-REVENIRE.md).
 

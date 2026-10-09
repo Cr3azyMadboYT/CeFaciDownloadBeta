@@ -5,6 +5,7 @@ import { CameraScanner } from "../../shared/CameraScanner";
 import { Card, Txt, Button, Field, Row, Toggle, Empty } from "./ui";
 import { call } from "./backend";
 import { amount } from "./amount";
+import { financePeriod, whole } from "./validation";
 import {
   money,
   canFinance,
@@ -286,9 +287,9 @@ function CloseVisit({
                 () =>
                   call("biz_close_v2", {
                     p_visit: v.id,
-                    p_people: Number(people),
-                    p_adults: Number(adults),
-                    p_drop_adults: Number(drop),
+                    p_people: whole(people, "Persoane prezente", 1, 500),
+                    p_adults: whole(adults, "Persoane de minimum 12 ani", 0, 500),
+                    p_drop_adults: whole(drop, "Persoane eligibile Drop", 0, 6),
                     p_bill: amount(bill),
                     p_discount: amount(discount),
                     p_reason: reason || null,
@@ -354,7 +355,12 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
     [ticket, T] = useState(""),
     [table, M] = useState(""),
     [result, S] = useState<any>(null);
+  const scanRequest = useRef(0);
+  useEffect(() => () => { scanRequest.current++; }, [venue]);
   const scan = (code: string) => {
+    if (busy) return;
+    const n = ++scanRequest.current;
+    S(null);
     C(false);
     void act(async () => {
       const r = await call("biz_scan_v2", {
@@ -362,7 +368,7 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
         p_ticket: code.trim(),
         p_table: table.trim() || null,
       });
-      S(r);
+      if (n === scanRequest.current) S(r);
     }, "Sosirea este înregistrată.");
   };
   return (
@@ -404,31 +410,35 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
     </>
   );
 }
-export function Finances({ venue, act, busy }: ScreenProps) {
+export function Finances({ venue, data: dashboard, act, busy }: ScreenProps) {
   const request = useRef(0);
   const [from, F] = useState(localTime().slice(0, 7) + "-01"),
     [to, T] = useState(localTime().slice(0, 10)),
-    [data, S] = useState<Finance | null>(null);
+    [data, S] = useState<Finance | null>(null),
+    [error, E] = useState("");
+  const selectedPeriod = useRef({ from, to });
   useEffect(() => {
     let active = true;
     const n = ++request.current;
     void call<Finance>("biz_finance_v2", {
       p_venue: venue,
-      p_from: from,
-      p_to: to,
+      p_from: selectedPeriod.current.from,
+      p_to: selectedPeriod.current.to,
     })
       .then((v) => {
-        if (active && n === request.current) S(v);
+        if (active && n === request.current) { S(v); E(""); }
       })
-      .catch(() => {});
+      .catch((e) => {
+        if (active && n === request.current) { S(null); E(e instanceof Error ? e.message : "Financiarul nu s-a actualizat. Reîncearcă online."); }
+      });
     return () => {
       active = false;
       request.current++;
-      S(null);
     };
-  }, [venue]);
+  }, [venue, dashboard]);
   return (
     <>
+      {!!error && <Card><Txt>{error}</Txt></Card>}
       {data && (
         <Card title="Rămas localului" tint="#FFD43B">
           <Txt big style={{ color: "#0E1440", fontSize: 38, lineHeight: 46 }}>
@@ -453,7 +463,11 @@ export function Finances({ venue, act, busy }: ScreenProps) {
           disabled={busy}
           onPress={() =>
             void act(async () => {
+              const period = financePeriod(from, to);
+              selectedPeriod.current = period;
               const n = ++request.current;
+              S(null);
+              E("");
               const result = await call<Finance>("biz_finance_v2", {
                   p_venue: venue,
                   p_from: from,
@@ -527,62 +541,27 @@ function WeeklyHours({
   return (
     <>
       {names.map((name, i) => {
-        const r = value.find((x) => x.day === i + 1);
-        const put = (field: string, v: any) =>
-          onChange([
-            ...value.filter((x) => x.day !== i + 1),
-            {
-              day: i + 1,
-              from: r?.from ?? "10:00",
-              to: r?.to ?? "23:00",
-              ...(plus ? { pct: r?.pct ?? 15 } : {}),
-              ...r,
-              [field]: v,
-            },
-          ]);
+        const rows = value.map((r, index) => ({ r, index })).filter(({ r }) => r.day === i + 1);
+        const add = () => onChange([...value, {
+          day: i + 1, from: "10:00", to: "23:00", ...(plus ? { pct: 15 } : {}),
+        }]);
         return (
           <View key={name} style={{ gap: 8 }}>
-            <Toggle
-              label={name}
-              value={!!r}
-              onChange={(v) =>
-                onChange(
-                  v
-                    ? [
-                        ...value,
-                        {
-                          day: i + 1,
-                          from: "10:00",
-                          to: "23:00",
-                          ...(plus ? { pct: 15 } : {}),
-                        },
-                      ]
-                    : value.filter((x) => x.day !== i + 1),
-                )
-              }
-            />
-            {r && (
-              <Row>
-                <Field
-                  label={`${name} de la`}
-                  value={r.from}
-                  onChange={(v) => put("from", v)}
-                />
-                <Field
-                  label={`${name} până la`}
-                  value={r.to}
-                  onChange={(v) => put("to", v)}
-                />
-                {plus && (
-                  <Field
-                    label={`${name} reducere %`}
-                    numeric
-                    value={String(r.pct)}
-                    onChange={(v) => put("pct", Number(v))}
-                  />
-                )}
-              </Row>
-            )}
+            <Toggle label={name} value={rows.length > 0}
+              onChange={(enabled) => enabled ? add() : onChange(value.filter((r) => r.day !== i + 1))} />
+            {rows.map(({ r, index }, interval) => {
+              const prefix = rows.length > 1 ? `${name} interval ${interval + 1}` : name;
+              const put = (field: string, v: unknown) => onChange(value.map((rule, n) => n === index ? { ...rule, [field]: v } : rule));
+              return <View key={index} style={{ gap: 8 }}>
+                <Row>
+                  <Field label={`${prefix} de la`} value={r.from} onChange={(v) => put("from", v)} />
+                  <Field label={`${prefix} până la`} value={r.to} onChange={(v) => put("to", v)} />
+                  {plus && <Field label={`${prefix} reducere %`} numeric value={String(r.pct)} onChange={(v) => put("pct", v)} />}
+                </Row>
+                {rows.length > 1 && <Button label={`Șterge ${prefix.toLowerCase()}`} secondary onPress={() => onChange(value.filter((_, n) => n !== index))} />}
+              </View>;
+            })}
+            {!!rows.length && <Button label={`Adaugă interval ${name.toLowerCase()}`} secondary onPress={add} />}
           </View>
         );
       })}
@@ -590,8 +569,12 @@ function WeeklyHours({
   );
 }
 export function Offers({ venue, data, act, busy }: ScreenProps) {
-  const [pct, P] = useState(data.plus_program?.current_pct || 15),
-    [schedule, S] = useState<any[]>([]),
+  const program = data.plus_program;
+  const initialPct = program ? (program.next ? program.next.pct : program.base_pct) : 15;
+  const initialSchedule = Array.isArray(program?.next?.schedule)
+    ? program.next.schedule : program?.current_schedule ?? [];
+  const [pct, P] = useState(initialPct),
+    [schedule, S] = useState<any[]>(initialSchedule),
     [title, T] = useState(""),
     [free, F] = useState("10"),
     [plus, Q] = useState("20"),
@@ -602,6 +585,11 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
     [adult, E] = useState(true),
     [only, O] = useState(false),
     [edit, J] = useState<string | null>(null);
+  const dirty = useRef(false);
+  const programSignature = JSON.stringify([initialPct, initialSchedule]);
+  useEffect(() => {
+    if (!dirty.current) { P(initialPct); S(initialSchedule); }
+  }, [programSignature]);
   const key = useRef("drop:" + Date.now() + ":" + Math.random());
   return (
     <>
@@ -618,12 +606,12 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
           </Txt>
         )}
         <Row>
-          {[10, 15, 20].map((n) => (
+          {[null, 10, 15, 20].map((n) => (
             <Button
-              key={n}
-              label={`${n}%`}
+              key={n ?? "off"}
+              label={n === null ? "Bază oprită" : `${n}%`}
               secondary={n !== pct}
-              onPress={() => P(n)}
+              onPress={() => { dirty.current = true; P(n); }}
             />
           ))}
         </Row>
@@ -631,18 +619,20 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
           Intervale opționale: procentul din interval înlocuiește baza. În afara
           lor se aplică baza. O valoare de 0 oprește Plus în acel interval.
         </Txt>
-        <WeeklyHours plus value={schedule} onChange={S} />
+        <WeeklyHours plus value={schedule} onChange={(v) => { dirty.current = true; S(v); }} />
         <Button
           label="Salvează pentru mâine"
           disabled={busy}
           onPress={() =>
             void act(
-              () =>
-                call("biz_plus_v2", {
+              async () => {
+                await call("biz_plus_v2", {
                   p_venue: venue,
                   p_pct: pct,
-                  p_schedule: schedule,
-                }),
+                  p_schedule: schedule.map((r) => ({ ...r, pct: whole(String(r.pct), "Reducere în interval", 0, 20) })),
+                });
+                dirty.current = false;
+              },
               "Programul intră în vigoare mâine, în București.",
             )
           }
@@ -708,11 +698,11 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
               await call("drop_create_v2", {
                 p_venue: venue,
                 p_title: title,
-                p_all: Number(free),
-                p_plus: Number(plus),
-                p_seats: Number(seats),
-                p_minutes: Number(minutes),
-                p_min: Number(min),
+                p_all: whole(free, "Reducere Free", 0, 100),
+                p_plus: whole(plus, "Reducere Plus", 0, 100),
+                p_seats: whole(seats, "Locuri totale", 4, 40),
+                p_minutes: whole(minutes, "Durată", 15, 240),
+                p_min: whole(min, "Grup minim", 1, 6),
                 p_at: at ? bucharestTime(at) : null,
                 p_adult: adult,
                 p_new: only,
@@ -779,7 +769,10 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
   );
 }
 export function Profile({ venue, data, act, busy }: ScreenProps) {
-  const [c, S] = useState<Settings>(data.settings);
+  const [c, S] = useState<Settings>(data.settings),
+    [capacity, C] = useState(String(data.settings.capacity)),
+    [duration, D] = useState(String(data.settings.duration)),
+    [auto, A] = useState(String(data.settings.auto));
   const update = (p: Partial<Settings>) => S({ ...c, ...p });
   return (
     <>
@@ -819,20 +812,20 @@ export function Profile({ venue, data, act, busy }: ScreenProps) {
         <Field
           label="Capacitate persoane"
           numeric
-          value={String(c.capacity)}
-          onChange={(v) => update({ capacity: Number(v) })}
+          value={capacity}
+          onChange={C}
         />
         <Field
           label="Durată rezervare (minute)"
           numeric
-          value={String(c.duration)}
-          onChange={(v) => update({ duration: Number(v) })}
+          value={duration}
+          onChange={D}
         />
         <Field
           label="Auto-confirmare până la (maximum 7)"
           numeric
-          value={String(c.auto)}
-          onChange={(v) => update({ auto: Number(v) })}
+          value={auto}
+          onChange={A}
         />
         <WeeklyHours value={c.hours} onChange={(hours) => update({ hours })} />
         <Button
@@ -846,9 +839,9 @@ export function Profile({ venue, data, act, busy }: ScreenProps) {
                   p_mode: c.mode,
                   p_on: c.on,
                   p_paused: c.paused,
-                  p_capacity: c.capacity,
-                  p_duration: c.duration,
-                  p_auto: c.auto,
+                  p_capacity: whole(capacity, "Capacitate", 0, 5000),
+                  p_duration: whole(duration, "Durată", 30, 480),
+                  p_auto: whole(auto, "Auto-confirmare", 0, 7),
                   p_hours: c.hours,
                 }),
               "Setări salvate.",
@@ -880,20 +873,30 @@ export function Profile({ venue, data, act, busy }: ScreenProps) {
 export function Team({ venue, data, act, busy }: ScreenProps) {
   const [rows, S] = useState<any[]>([]),
     [username, U] = useState(""),
-    [role, R] = useState<Role>("receptie");
-  const load = async () => S(await call<any[]>("biz_team", { p_venue: venue }));
+    [role, R] = useState<Role>("receptie"),
+    [error, E] = useState("");
+  const request = useRef(0);
+  const load = async () => {
+    const n = ++request.current;
+    try {
+      const rows = await call<any[]>("biz_team", { p_venue: venue });
+      if (n === request.current) { S(rows); E(""); }
+    } catch (e) {
+      if (n === request.current) {
+        S([]);
+        E(e instanceof Error ? e.message : "Echipa nu s-a actualizat. Reîncearcă online.");
+      }
+    }
+  };
   useEffect(() => {
-    let alive = true;
-    void call<any[]>("biz_team", { p_venue: venue }).then((v) => {
-      if (alive) S(v);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [venue]);
+    void load();
+    return () => { request.current++; };
+  }, [venue, data]);
   return (
     <>
       <Card title="Echipa localului">
+        {!!error && <Txt>{error}</Txt>}
+        <Button label="Reîncarcă echipa" secondary disabled={busy} onPress={() => void load()} />
         <Txt muted>
           Persoana folosește același cont CeFaci. Recepția lucrează cu rezervări
           și sosiri; scanarea doar cu sosiri. Revocarea se aplică imediat pe

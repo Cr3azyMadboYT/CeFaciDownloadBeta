@@ -89,7 +89,7 @@ export function startsAt(pl: Pick<Plan, 'slot'> & Partial<Plan>, now = new Date(
   if (pl.slot === 'acum') return pl.createdAt ? new Date(pl.createdAt) : now;
   const d = pl.date || pl.when ? planDay(pl as Plan) : startOfDay(now);
   const [h, m] = pl.slot.split(':').map(Number);
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), h || 20, m || 0);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), Number.isInteger(h) && h >= 0 && h < 24 ? h : 20, Number.isInteger(m) && m >= 0 && m < 60 ? m : 0);
 }
 /** "20:00" for a moment, local time. */
 export const hhmm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');

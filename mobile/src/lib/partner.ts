@@ -11,9 +11,10 @@ import {
   type RpcClient,
 } from "../../../shared/contracts";
 import { sb } from "./auth";
-import { getApp } from "./session";
+import { captureAccount, getApp } from "./session";
 import { startsAt, updPlan, type Plan } from "./plans";
 const client = () => sb() as unknown as RpcClient;
+const assertAccount = (valid: () => boolean) => { if (!valid()) throw new Error("Contul s-a schimbat. Reia operațiunea din contul curent."); };
 const serial = new Map<string, Promise<unknown>>();
 function lane<T>(key: string, work: () => Promise<T>): Promise<T> {
   const next = (serial.get(key) ?? Promise.resolve())
@@ -31,12 +32,14 @@ export async function ensurePlan(
   pl: Plan,
   to: { crewId?: string | null; friendIds?: string[]; guests?: number } = {},
 ): Promise<string> {
+  const valid = captureAccount();
   const user = getApp().who?.id;
   if (!user) throw new Error("Intră în cont.");
   return lane(user + ":" + pl.createdAt + ":" + pl.pid, async () => {
+    assertAccount(valid);
     const current =
       ((getApp().board.plans as Plan[] | undefined) ?? []).find(
-        (p) => p.pid === pl.pid,
+        (p) => p.pid === pl.pid && p.createdAt === pl.createdAt,
       ) ?? pl;
     if (current.sid && !to.crewId && !to.friendIds?.length) return current.sid;
     const ids = to.friendIds ?? [];
@@ -50,7 +53,7 @@ export async function ensurePlan(
       p_guests: to.guests ?? 0,
       p_existing: current.sid ?? null,
     });
-    if (getApp().who?.id !== user) throw new Error("Contul s-a schimbat.");
+    assertAccount(valid);
     updPlan(pl.pid, { sid: id, owner: true });
     return id;
   });
@@ -58,10 +61,12 @@ export async function ensurePlan(
 export const stateOf = (sid: string) =>
   rpc<PlanState>(client(), "plan_state_v2", { p_plan: sid });
 export async function refreshPartner(pl: Plan) {
+  const valid = captureAccount();
   const user = getApp().who?.id;
   const sid = await ensurePlan(pl);
+  assertAccount(valid);
   const state = await stateOf(sid);
-  if (user !== getApp().who?.id) throw new Error("Contul s-a schimbat.");
+  assertAccount(valid);
   if (state.attendance) updPlan(pl.pid, { people: state.attendance.people });
   if (state.visit)
     updPlan(pl.pid, {
@@ -76,12 +81,15 @@ export async function refreshPartner(pl: Plan) {
   return state;
 }
 export async function requestReservation(pl: Plan, kids = 0) {
+  const valid = captureAccount();
   const sid = await ensurePlan(pl);
+  assertAccount(valid);
   await rpc(client(), "reservation_request_v2", {
     p_plan: sid,
     p_key: "reserve:" + sid + ":" + (pl.reservationAttempt ?? 0),
     p_kids: kids,
   });
+  assertAccount(valid);
   return refreshPartner(pl);
 }
 export const proposalAnswer = (id: string, accept: boolean) =>
@@ -116,8 +124,11 @@ export async function claimDrop(
   seats: number,
   previousClaim?: string,
 ) {
+  const valid = captureAccount();
   const sid = await ensurePlan(pl);
+  assertAccount(valid);
   const fix = await position();
+  assertAccount(valid);
   await rpc(client(), "drop_claim_v2", {
     p_drop: drop,
     p_plan: sid,
@@ -126,6 +137,7 @@ export async function claimDrop(
     p_lon: fix.lon,
     p_key: claimKey(sid, drop, previousClaim),
   });
+  assertAccount(valid);
   return refreshPartner(pl);
 }
 export async function arrivePartner(
@@ -133,15 +145,16 @@ export async function arrivePartner(
   token: string,
   fix: { lat: number; lon: number },
 ) {
+  const valid = captureAccount();
   const sid = await ensurePlan(pl);
-  const user = getApp().who?.id;
+  assertAccount(valid);
   const v = await rpc<Visit>(client(), "visit_client_arrive_v2", {
     p_plan: sid,
     p_token: token,
     p_lat: fix.lat,
     p_lon: fix.lon,
   });
-  if (user !== getApp().who?.id) throw new Error("Contul s-a schimbat.");
+  assertAccount(valid);
   updPlan(pl.pid, {
     visitId: v.id,
     inAt: new Date().toLocaleTimeString("ro-RO", {

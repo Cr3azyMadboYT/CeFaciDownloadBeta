@@ -5,7 +5,7 @@ import {AppState} from 'react-native';
 import { sb } from './auth';
 import type { Person } from './friends';
 import { createPlanAt, hhmm, removePlan, startsAt, updPlan, type Plan } from './plans';
-import { getApp } from './session';
+import { captureAccount, getApp } from './session';
 import { ensurePlan, stateOf } from './partner';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,18 +55,19 @@ export async function listInvites(me: string): Promise<Invite[]> {
 
 /** "Vin" puts the plan in my Planuri too; "Nu pot" only tells the others. */
 export async function answer(inv: Invite, me: string, a: 'vin' | 'nu_pot'): Promise<string | null> {
+  const valid = captureAccount();
+  if (getApp().who?.id !== me) return 'Contul s-a schimbat.';
   const {data, error}=await db().rpc('plan_answer_v2',{p_plan:inv.planId,p_answer:a});
+  if (!valid()) return 'Contul s-a schimbat.';
   if(error)return error.message;
+  if (a === 'nu_pot') {
+    for (const pl of (getApp().board.plans as Plan[] | undefined) ?? []) if (pl.sid === inv.planId && pl.owner === false) removePlan(pl.pid);
+  }
   if(a==='vin' && APP.byId(inv.venueId)) {
     const state=await stateOf(inv.planId);
-    if(getApp().who?.id===me)createPlanAt(inv.venueId,new Date(inv.startsAt),state.attendance?.people ?? data ?? 1,{sid:inv.planId,owner:false});
+    if(valid())createPlanAt(inv.venueId,new Date(inv.startsAt),state.attendance?.people ?? data ?? 1,{sid:inv.planId,owner:false});
   }
   return null;
-}
-
-/** I opened a shared plan from its vote: that counts as "Vin" (no-op for the one who made it). */
-export async function comeTo(sid: string, me: string) {
-  const {error}=await db().rpc('plan_answer_v2',{p_plan:sid,p_answer:'vin'});if(error)throw new Error(error.message);
 }
 
 /** Who was called to a shared plan and what they answered (the one who made it first). */
