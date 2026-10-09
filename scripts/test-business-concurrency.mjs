@@ -67,6 +67,33 @@ try {
     }
     return id;
   };
+  // Client creates an uncommitted profile while Business sees no profile yet.
+  // Business must wait for the unique key and preserve Client's real identity.
+  const identity = crypto.randomUUID();
+  await pool.query("insert into auth.users(id) values($1)", [identity]);
+  const clientIdentity = await pool.connect();
+  try {
+    await clientIdentity.query("begin");
+    await clientIdentity.query("select set_config('request.jwt.claim.sub',$1,true)", [identity]);
+    await clientIdentity.query("set local role authenticated");
+    await clientIdentity.query("select complete_signup('clientrace','Client','1990-01-01')");
+    const businessIdentity = run(identity, "select biz_identity_complete('businessrace','Business','1991-01-01') p");
+    const deadline = Date.now() + 5000;
+    let blocked = false;
+    while (Date.now() < deadline) {
+      blocked = (await pool.query("select exists(select 1 from pg_stat_activity where wait_event_type='Lock' and query like '%select biz_identity_complete(%') b")).rows[0].b;
+      if (blocked) break;
+      await new Promise(resolve => setTimeout(resolve, 25));
+    }
+    assert(blocked, "Business must actually overlap the uncommitted Client signup");
+    await clientIdentity.query("commit");
+    assert.deepEqual((await businessIdentity)[0].p, {has_profile:true,username:"clientrace",first_name:"Client"});
+    assert.equal((await pool.query("select birth_date::text d from profile_private where id=$1", [identity])).rows[0].d, "1990-01-01");
+    console.log("PASS: profil Client creat simultan cu Business — identitatea existentă nu este suprascrisă");
+  } finally {
+    await clientIdentity.query("rollback");
+    clientIdentity.release();
+  }
   const biz = await owner("racebiz");
   const venue = async (id, capacity = 2) => {
     await pool.query(
