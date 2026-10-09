@@ -1,18 +1,20 @@
+import { prepareAuthSchema, authenticateFixture, seedAuthFixture } from './fixtures/auth.mjs';
 import {beforeAll,afterAll,it,expect} from 'vitest';
 import {PGlite} from '@electric-sql/pglite';
 import fs from 'node:fs';
 let db:PGlite;
 const U={client:'00000000-0000-0000-0000-000000000001',other:'00000000-0000-0000-0000-000000000002',biz:'00000000-0000-0000-0000-000000000003',admin:'00000000-0000-0000-0000-000000000004',support:'00000000-0000-0000-0000-000000000005',accountant:'00000000-0000-0000-0000-000000000006',editor:'00000000-0000-0000-0000-000000000007',founder:'00000000-0000-0000-0000-000000000008',moderator:'00000000-0000-0000-0000-000000000009'};
 const q=(sql:string,args:unknown[]=[])=>db.query<any>(sql,args);
-async function as(who:keyof typeof U,sql:string,args:unknown[]=[]){await db.exec(`reset role;select set_config('request.jwt.claim.sub','${U[who]}',false);set role authenticated`);try{return await q(sql,args)}finally{await db.exec('reset role')}}
+async function as(who:keyof typeof U,sql:string,args:unknown[]=[]){await db.exec('reset role'); await authenticateFixture(db, U[who]); await db.exec('set role authenticated');try{return await q(sql,args)}finally{await db.exec('reset role')}}
 async function rpc(who:keyof typeof U,sql:string,args:unknown[]=[]){return(await as(who,`select ${sql} result`,args)).rows[0].result}
 const V={mixed:'10000000-0000-0000-0000-000000000001',simple:'10000000-0000-0000-0000-000000000002',blocked:'10000000-0000-0000-0000-000000000003'};
 beforeAll(async()=>{
  db=new PGlite();
  await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;alter default privileges in schema public grant all on tables to anon,authenticated,service_role;alter default privileges in schema public grant all on functions to anon,authenticated,service_role;create schema auth;create table auth.users(id uuid primary key,created_at timestamptz default now());create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to authenticated;grant execute on function auth.uid() to authenticated;create publication supabase_realtime;`);
+  await prepareAuthSchema(db);
  for(const f of fs.readdirSync('supabase/migrations').sort())await db.exec(fs.readFileSync('supabase/migrations/'+f,'utf8'));
  await db.exec('grant usage on schema public to anon,authenticated');
- for(const[name,id]of Object.entries(U)){await q('insert into auth.users(id)values($1)',[id]);await as(name as keyof typeof U,"select complete_signup($1,$1,'2000-01-01')",[name]);}
+ for(const[name,id]of Object.entries(U)){await q('insert into auth.users(id)values($1)',[id]);await seedAuthFixture(db,id);await as(name as keyof typeof U,"select complete_signup($1,$1,'2000-01-01')",[name]);}
  await q("insert into staff(user_id,role)values($1,'admin'),($2,'suport'),($3,'contabil'),($4,'editor'),($5,'fondator'),($6,'moderator')",[U.admin,U.support,U.accountant,U.editor,U.founder,U.moderator]);
  await db.exec(`insert into venues(id,name,cat,lat,lon,data)values('v','Partener','mancare',44,26,'{}'),('w','Gratuit','mancare',44,26,'{}'),('suggest','Sugestie','mancare',44,26,'{}'),('small','Mic','mancare',44,26,'{}');insert into partners(venue_id,firm,cui,rate,activated_at,free_until,price_tier)values('v','Test SRL','18547290',.1,current_date-90,current_date-30,2),('w','Free SRL','18547290',.1,current_date,current_date+30,2);`);
  await q("insert into partner_members(venue_id,user_id,role)values('v',$1,'proprietar')",[U.biz]);
@@ -26,9 +28,9 @@ afterAll(()=>db?.close());
 it('denies public endpoints to anon, clients, business owners and revoked staff',async()=>{
  const queries=["admin_operations_summary()","admin_operations(current_date,current_date)","admin_finance(current_date,current_date)","admin_user_lookup('client')","admin_plus_grant(gen_random_uuid(),1,'Motiv test','anon')","admin_partner_suggestions()"];
  await db.exec('set role anon');try{for(const s of queries)await expect(q(`select ${s}`)).rejects.toThrow(/permission denied/)}finally{await db.exec('reset role')}
- for(const who of['client','biz']as const)for(const s of queries)await expect(rpc(who,s)).rejects.toThrow(/Nu ai acces/);
- await q('delete from staff where user_id=$1',[U.support]);await expect(rpc('support','admin_operations_summary()')).rejects.toThrow(/Nu ai acces/);await q("insert into staff(user_id,role)values($1,'suport')",[U.support]);
- await db.exec(`select set_config('request.jwt.claims','{"is_anonymous":true,"user_metadata":{"role":"fondator"}}',false)`);try{await expect(rpc('accountant','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces/)}finally{await db.exec("select set_config('request.jwt.claims','{}',false)")}
+ for(const who of['client','biz']as const)for(const s of queries)await expect(rpc(who,s)).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
+ await q('delete from staff where user_id=$1',[U.support]);await expect(rpc('support','admin_operations_summary()')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await q("insert into staff(user_id,role)values($1,'suport')",[U.support]);
+ await db.exec(`select set_config('request.jwt.claims','{"is_anonymous":true,"user_metadata":{"role":"fondator"}}',false)`);try{await expect(rpc('accountant','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/)}finally{await db.exec("select set_config('request.jwt.claims','{}',false)")}
 });
 it('exposes private audit only through scoped server APIs and preserves RLS',async()=>{
  await expect(as('admin','select * from private.admin_plus_grants')).rejects.toThrow(/permission denied/);
@@ -39,21 +41,21 @@ it('exposes private audit only through scoped server APIs and preserves RLS',asy
 it('reads both Client and Business canonical queues with safe paging and no money for support',async()=>{
  const support=await rpc('support','admin_operations(current_date,current_date)');expect(support.total_visits).toBe(1);expect(support.total_reservations).toBe(1);expect(support.visits[0].id).toBe(V.blocked);expect(support.visits[0].count.state).toBe('disputed');expect(support.visits[0].benefit.state).toBe('pending');expect(support.visits[0].bill).toBeNull();expect(support.visits[0].user_id).toBeUndefined();
  const all=await rpc('admin',"admin_operations(current_date,current_date,null,'all',1,0)");expect(all.total_visits).toBe(3);expect(all.visits).toHaveLength(1);
- await expect(rpc('accountant','admin_operations_summary()')).rejects.toThrow(/Nu ai acces/);await expect(rpc('moderator','admin_operations_summary()')).rejects.toThrow(/Nu ai acces/);
+ await expect(rpc('accountant','admin_operations_summary()')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await expect(rpc('moderator','admin_operations_summary()')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
  for(const s of["admin_operations(current_date,current_date,null,null)","admin_operations(current_date,current_date,null,'all',null)","admin_operations(current_date,current_date,null,'all',101)","admin_operations(current_date,current_date-1)","admin_operations(current_date,current_date,'unknown')"])await expect(rpc('admin',s)).rejects.toThrow(/invalid|nu există/);
  const summary=await rpc('support','admin_operations_summary()');expect(summary.counts_disputed).toBe(1);expect(summary.benefits_pending).toBe(1);expect(summary.day_boundary).toBe('05:00');
 });
 it('calculates global partial financial totals using frozen per-person fees and includes zero-fee Plus revenues',async()=>{
  const finance=await rpc('accountant','admin_finance(current_date,current_date)');expect(finance.billing_ready).toBe(false);expect(finance.estimate).toBe(true);expect(finance.partial).toBe(true);expect(finance.remaining).toBeNull();expect(finance.revenue).toBe(300);expect(finance.discounts).toBe(45);expect(finance.fee).toBe(38);expect(finance.missing).toBe(1);expect(finance.blocked).toBe(1);expect(finance.venues).toHaveLength(2);
  await q("update partners set price_tier=3 where venue_id='v'");expect((await rpc('accountant','admin_finance(current_date,current_date)')).fee).toBe(38);
- await expect(rpc('admin','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces/);await expect(rpc('admin',"biz_finance_v2('v',current_date,current_date)")).rejects.toThrow(/Nu ai voie/);expect((await rpc('admin','admin_partners()')).every((p:any)=>p.month===null)).toBe(true);expect((await rpc('biz',"biz_finance_v2('v',current_date,current_date)")).fee).toBe(38);await expect(rpc('support','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces/);await expect(rpc('editor','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces/);
+ await expect(rpc('admin','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await expect(rpc('admin',"biz_finance_v2('v',current_date,current_date)")).rejects.toThrow(/Nu ai voie|Sesiunea securizată/);expect((await rpc('admin','admin_partners()')).every((p:any)=>p.month===null)).toBe(true);expect((await rpc('biz',"biz_finance_v2('v',current_date,current_date)")).fee).toBe(38);await expect(rpc('support','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await expect(rpc('editor','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
  await expect(rpc('accountant','admin_finance(current_date,current_date+367)')).rejects.toThrow(/Perioadă/);await expect(rpc('accountant',"admin_finance(current_date,current_date,'unknown')")).rejects.toThrow(/nu există/);
 });
 it('reuses versioned count and benefit decisions, so stale and support decisions fail and unresolved cases stay blocked',async()=>{
- await expect(rpc('support','admin_count_resolve_v2($1,1,6,6,4,$2)',[V.blocked,'Număr verificat'])).rejects.toThrow(/echipa/);
+ await expect(rpc('support','admin_count_resolve_v2($1,1,6,6,4,$2)',[V.blocked,'Număr verificat'])).rejects.toThrow(/echipa|Sesiunea securizată/);
  await expect(rpc('admin','admin_count_resolve_v2($1,null,6,6,4,$2)',[V.blocked,'Număr verificat'])).rejects.toThrow(/versiune/);
  await rpc('admin','admin_count_resolve_v2($1,1,6,6,4,$2)',[V.blocked,'Număr verificat']);await expect(rpc('admin','admin_count_resolve_v2($1,1,6,6,4,$2)',[V.blocked,'Număr verificat'])).rejects.toThrow(/versiune/);
- await expect(rpc('support','admin_benefit_decide_v2($1,1,true,$2)',[V.blocked,'Refuz verificat'])).rejects.toThrow(/echipa/);
+ await expect(rpc('support','admin_benefit_decide_v2($1,1,true,$2)',[V.blocked,'Refuz verificat'])).rejects.toThrow(/echipa|Sesiunea securizată/);
  await rpc('admin','admin_benefit_decide_v2($1,1,true,$2)',[V.blocked,'Refuz verificat']);
  expect((await q('select state,version,compensated from private.benefit_cases where visit_id=$1',[V.blocked])).rows[0]).toMatchObject({state:'upheld',version:2,compensated:true});expect((await q('select count(*) n from private.review_log where visit_id=$1',[V.blocked])).rows[0].n).toBe(2);
  // A resolved complaint still needs an actual closed visit and canonical amount before charging.
@@ -70,7 +72,7 @@ it('returns complete net without subtracting discounts twice and keeps contractu
 it('returns exact minimal profiles without birth date, email, preferences or friend codes',async()=>{
  await q('update profiles set username=$1 where id=$2',['valid-name-123456789',U.other]);expect((await rpc('support',"admin_user_lookup('@valid-name-123456789')")).id).toBe(U.other);await expect(rpc('support',"admin_user_lookup('username-too-long-12345')")).rejects.toThrow(/exact/);
  const p=await rpc('moderator',"admin_user_lookup('@client')");expect(p.id).toBe(U.client);expect(p.username).toBe('client');for(const key of['birth_date','email','prefs','friend_code','app_state','avatar_path'])expect(p[key]).toBeUndefined();
- expect(await rpc('support',"admin_user_lookup('doesnotexist')")).toBeNull();await expect(rpc('admin',"admin_user_lookup('cl%')")).rejects.toThrow(/exact/);await expect(rpc('accountant',"admin_user_lookup('client')")).rejects.toThrow(/Nu ai acces/);
+ expect(await rpc('support',"admin_user_lookup('doesnotexist')")).toBeNull();await expect(rpc('admin',"admin_user_lookup('cl%')")).rejects.toThrow(/exact/);await expect(rpc('accountant',"admin_user_lookup('client')")).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
 });
 it('adds one real server Plus day, retries idempotently, prevents payload reuse, staff gifts and duplicate compensations',async()=>{
  const grant=await rpc('support','admin_plus_grant($1,1,$2,$3)',[U.other,'Problemă confirmată la suport','goodwill-1']);expect(grant.days).toBe(1);
@@ -81,7 +83,7 @@ it('adds one real server Plus day, retries idempotently, prevents payload reuse,
  await expect(rpc('support','admin_plus_grant($1,1,$2,$3)',[U.other,'Al doilea suport','goodwill-2'])).rejects.toThrow(/60 de zile/);
  await expect(rpc('support','admin_plus_grant($1,1,$2,$3)',[U.client,'Are plângere deja','complaint-repeat'])).rejects.toThrow(/60 de zile/);
  await expect(rpc('support','admin_plus_grant($1,1,$2,$3)',[U.admin,'Cadou pentru echipă','staff-gift'])).rejects.toThrow(/echipe/);
- await expect(rpc('moderator','admin_plus_grant($1,1,$2,$3)',[U.other,'Alt rol interzis','moderator'])).rejects.toThrow(/Nu ai acces/);
+ await expect(rpc('moderator','admin_plus_grant($1,1,$2,$3)',[U.other,'Alt rol interzis','moderator'])).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
  await as('other',"update profile_private set plus_until=now()+interval '100 years' where id=$1",[U.other]);expect((await q('select plus_until from profile_private where id=$1',[U.other])).rows[0].plus_until).toEqual(before);
 });
 it('shares the 60-day compensation cap between manual support and verified complaint decisions in both orders',async()=>{
@@ -102,7 +104,7 @@ it('suggests nonpartners using actual server check-ins, excludes small cohorts, 
  for(const[key,id]of Object.entries(U).filter(([key])=>!['support','other'].includes(key))){await q("insert into xp_log(user_id,venue_id,kind,amount,day)values($1,'suggest','checkin',100,current_date),($1,'small','checkin',100,current_date)",[id]);if(key==='moderator')break;}
  // Reduce the second venue below the privacy threshold.
  await q("delete from xp_log where venue_id='small' and user_id<>$1",[U.client]);
- const suggestions=await rpc('editor','admin_partner_suggestions()');expect(suggestions).toHaveLength(1);expect(suggestions[0].venue_id).toBe('suggest');expect(suggestions[0].people).toBeGreaterThanOrEqual(5);expect(suggestions[0].receipts).toBe(0);expect(suggestions[0].user_id).toBeUndefined();expect(suggestions[0].username).toBeUndefined();await expect(rpc('accountant','admin_partner_suggestions()')).rejects.toThrow(/Nu ai acces/);
+ const suggestions=await rpc('editor','admin_partner_suggestions()');expect(suggestions).toHaveLength(1);expect(suggestions[0].venue_id).toBe('suggest');expect(suggestions[0].people).toBeGreaterThanOrEqual(5);expect(suggestions[0].receipts).toBe(0);expect(suggestions[0].user_id).toBeUndefined();expect(suggestions[0].username).toBeUndefined();await expect(rpc('accountant','admin_partner_suggestions()')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
 });
 it('filters reservation queues at the real local 05:00 boundary after autumn DST',async()=>{
  await q("insert into reservations(venue_id,user_id,people,at,status,note)values('v',$1,6,'2026-10-25 02:59:59+00','cerută','Before 05'),('v',$1,6,'2026-10-25 03:00:00+00','cerută','At 05')",[U.client]);

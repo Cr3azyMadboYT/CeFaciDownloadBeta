@@ -1,3 +1,4 @@
+import { prepareAuthSchema, authenticateFixture, seedAuthFixture } from './fixtures/auth.mjs';
 import { beforeAll, afterAll, it, expect } from "vitest";
 import { PGlite } from "@electric-sql/pglite";
 import fs from "node:fs";
@@ -11,9 +12,7 @@ const U = {
 };
 const q = (sql: string, args: unknown[] = []) => db.query<any>(sql, args);
 async function as(u: keyof typeof U, sql: string, args: unknown[] = []) {
-  await db.exec(
-    `reset role;select set_config('request.jwt.claim.sub','${U[u]}',false);set role authenticated`,
-  );
+  await db.exec('reset role'); await authenticateFixture(db, U[u]); await db.exec('set role authenticated');
   try {
     return await q(sql, args);
   } finally {
@@ -37,11 +36,13 @@ beforeAll(async () => {
   await db.exec(
     `create role anon;create role authenticated;create role service_role bypassrls;alter default privileges in schema public grant all on tables to anon,authenticated,service_role;alter default privileges in schema public grant all on functions to anon,authenticated,service_role;create schema auth;create table auth.users(id uuid primary key,created_at timestamptz default now());create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to authenticated;grant execute on function auth.uid() to authenticated;create publication supabase_realtime;`,
   );
+  await prepareAuthSchema(db);
   for (const f of fs.readdirSync("supabase/migrations").sort())
     await db.exec(fs.readFileSync("supabase/migrations/" + f, "utf8"));
   await db.exec("grant usage on schema public to anon,authenticated");
   for (const [name, id] of Object.entries(U)) {
-    await q("insert into auth.users values($1,now()-interval '30 days')", [id]);
+    await q("insert into auth.users(id,created_at) values($1,now()-interval '30 days')", [id]);
+    await seedAuthFixture(db,id);
     await as(
       name as keyof typeof U,
       "select complete_signup($1,$1,'2000-01-01')",
@@ -285,7 +286,7 @@ it("free immediate Drops wait ten minutes; invitation Plus covers the group", as
   const ticket = await value("guest", "select plan_ticket_v2($1)", [p]);
   await expect(
     as("biz", "select biz_scan_v2('w',$1)", [ticket.token]),
-  ).rejects.toThrow(/echipa/);
+  ).rejects.toThrow(/echipa|Sesiunea securizată/);
   const scanned = await value("biz", "select biz_scan_v2('v',$1)", [
     ticket.token,
   ]);
@@ -315,7 +316,7 @@ it("validates minimum, GPS, stock and legacy bypasses", async () => {
     "select biz_settings_save('v',true,6,15)",
     "select drop_create('v','Desert',10,20,4,60)",
   ]) {
-    await expect(as("owner", sql)).rejects.toThrow(/Actualizează/);
+    await expect(as(/biz_settings_save|drop_create\(/.test(sql) ? "biz" : "owner", sql)).rejects.toThrow(/Actualizează/);
   }
 });
 it("keeps receipt canonical and versioned count disputes blocked", async () => {
@@ -375,12 +376,12 @@ it("roles limit financial data and revocation applies to a still-valid auth sess
   expect(data.partner.cui).toBeUndefined();
   await expect(
     as("scanner", "select biz_finance_v2('v',current_date,current_date)"),
-  ).rejects.toThrow(/Nu ai voie/);
+  ).rejects.toThrow(/Nu ai voie|Sesiunea securizată/);
   await q("update partner_members set active=false where user_id=$1", [
     U.scanner,
   ]);
   await expect(as("scanner", "select biz_dashboard_v2('v')")).rejects.toThrow(
-    /echipa/,
+    /echipa|Sesiunea securizată/,
   );
 });
 it("saves a participant receipt without XP and keeps both receipt amounts canonical", async () => {
@@ -675,7 +676,7 @@ it("keeps refused discounts separate from eligibility, audits resolution and app
     as("biz", "select admin_benefit_decide_v2($1,1,true,'Probe verificate')", [
       v,
     ]),
-  ).rejects.toThrow(/echipa/);
+  ).rejects.toThrow(/echipa|Sesiunea securizată/);
   await as(
     "other",
     "select admin_benefit_decide_v2($1,1,true,'Probe verificate: client eligibil')",

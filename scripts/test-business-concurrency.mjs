@@ -1,3 +1,4 @@
+import { prepareAuthSchema, authenticateFixture, seedAuthFixture } from '../tests/fixtures/auth.mjs';
 // Real, independent PostgreSQL connections. Only an isolated localhost database may be used.
 import pg from "pg";
 import fs from "node:fs";
@@ -26,15 +27,14 @@ try {
   await pool.query(`DO $$ BEGIN IF NOT EXISTS(select 1 from pg_roles where rolname='anon') THEN CREATE ROLE anon; END IF; IF NOT EXISTS(select 1 from pg_roles where rolname='authenticated') THEN CREATE ROLE authenticated; END IF; IF NOT EXISTS(select 1 from pg_roles where rolname='service_role') THEN CREATE ROLE service_role; END IF; END $$;
  alter default privileges in schema public grant all on tables to anon,authenticated,service_role;alter default privileges in schema public grant all on functions to anon,authenticated,service_role;
  create schema auth;create table auth.users(id uuid primary key,created_at timestamptz default now());create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to authenticated;grant execute on function auth.uid() to authenticated;create publication supabase_realtime;`);
+  await prepareAuthSchema(pool);
   for (const file of fs.readdirSync("supabase/migrations").sort())
     await pool.query(fs.readFileSync("supabase/migrations/" + file, "utf8"));
   const run = async (user, sql, args = []) => {
     const c = await pool.connect();
     try {
       await c.query("begin");
-      await c.query("select set_config('request.jwt.claim.sub',$1,true)", [
-        user,
-      ]);
+      await authenticateFixture(c, user, {local:true});
       await c.query("set local role authenticated");
       const r = await c.query(sql, args);
       await c.query("commit");
@@ -49,9 +49,10 @@ try {
   const owner = async (name) => {
     const id = crypto.randomUUID();
     await pool.query(
-      "insert into auth.users values($1,now()-interval '30 days')",
+      "insert into auth.users(id,created_at) values($1,now()-interval '30 days')",
       [id],
     );
+    await seedAuthFixture(pool,id);
     await run(id, "select complete_signup($1,$1,'2000-01-01')", [name]);
     await pool.query("select set_config('cefaci.plus','on',false)");
     const c = await pool.connect();
@@ -71,10 +72,12 @@ try {
   // Business must wait for the unique key and preserve Client's real identity.
   const identity = crypto.randomUUID();
   await pool.query("insert into auth.users(id) values($1)", [identity]);
+  await seedAuthFixture(pool,identity);
+  await authenticateFixture(pool, identity, {scopes:false});
   const clientIdentity = await pool.connect();
   try {
     await clientIdentity.query("begin");
-    await clientIdentity.query("select set_config('request.jwt.claim.sub',$1,true)", [identity]);
+    await authenticateFixture(clientIdentity, identity, {local:true, scopes:false});
     await clientIdentity.query("set local role authenticated");
     await clientIdentity.query("select complete_signup('clientrace','Client','1990-01-01')");
     const businessIdentity = run(identity, "select biz_identity_complete('businessrace','Business','1991-01-01') p");
@@ -282,6 +285,17 @@ try {
   console.log(
     "PASS: Client + două scannere Business simultane — o singură sosire",
   );
+  await pool.query("update private.security_sessions set touched_at=now()-interval '31 minutes' where user_id=$1 and scope='business'",[biz]);
+  await assert.rejects(run(biz,"select biz_dashboard_v2('stock')"),/Sesiunea securizată/);
+  const expired=(await run(biz,"select secure_session_touch('business') state"))[0].state;
+  assert.equal(expired.active,false);assert.equal(expired.reason,'expired');
+  console.log('PASS: expirarea Business este verificată de server; touch nu reactivează sesiunea.');
+  // Removing the verified TOTP factor must revoke access without affecting Client aal1 capability.
+  await pool.query('delete from auth.mfa_factors where user_id=$1',[biz]);
+  await assert.rejects(run(biz,"select biz_scan_v2('stock',$1)",[ticket]),/Sesiunea securizată/);
+  assert.equal((await pool.query('select count(*)::int n from auth.mfa_factors where user_id=$1',[biz])).rows[0].n,0);
+  assert.equal((await run(winner.u,'select secure_access_status() state'))[0].state.business_access,false);
+  console.log('PASS: factorul TOTP șters nu este recreat; Clientul păstrează accesul aal1.');
 } finally {
   closing = true;
   await pool?.end();

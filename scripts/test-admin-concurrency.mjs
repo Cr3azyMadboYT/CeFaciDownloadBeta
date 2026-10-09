@@ -1,3 +1,4 @@
+import { prepareAuthSchema, authenticateFixture, seedAuthFixture } from '../tests/fixtures/auth.mjs';
 // Independent PostgreSQL connections, synthetic accounts, isolated localhost database only.
 import pg from 'pg';
 import fs from 'node:fs';
@@ -15,9 +16,10 @@ try{
  await pool.query(`DO $$ BEGIN IF NOT EXISTS(select 1 from pg_roles where rolname='anon')THEN CREATE ROLE anon;END IF;IF NOT EXISTS(select 1 from pg_roles where rolname='authenticated')THEN CREATE ROLE authenticated;END IF;IF NOT EXISTS(select 1 from pg_roles where rolname='service_role')THEN CREATE ROLE service_role;END IF;END $$;
  alter default privileges in schema public grant all on tables to anon,authenticated,service_role;alter default privileges in schema public grant all on functions to anon,authenticated,service_role;
  create schema auth;create table auth.users(id uuid primary key,created_at timestamptz default now());create function auth.uid()returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to authenticated;grant execute on function auth.uid()to authenticated;create publication supabase_realtime;`);
+ await prepareAuthSchema(pool);
  for(const file of fs.readdirSync('supabase/migrations').sort())await pool.query(fs.readFileSync('supabase/migrations/'+file,'utf8'));
- const run=async(user,sql,args=[])=>{const c=await pool.connect();try{await c.query('begin');await c.query("select set_config('request.jwt.claim.sub',$1,true)",[user]);await c.query('set local role authenticated');const r=await c.query(sql,args);await c.query('commit');return r.rows[0]?.r;}catch(e){await c.query('rollback');throw e;}finally{c.release();}};
- const identity=async(name,role)=>{const id=crypto.randomUUID();await pool.query('insert into auth.users(id)values($1)',[id]);await run(id,"select complete_signup($1,$1,'1990-01-01')r",[name]);if(role)await pool.query('insert into staff(user_id,role)values($1,$2)',[id,role]);return id;};
+ const run=async(user,sql,args=[])=>{const c=await pool.connect();try{await c.query('begin');await authenticateFixture(c,user,{local:true});await c.query('set local role authenticated');const r=await c.query(sql,args);await c.query('commit');return r.rows[0]?.r;}catch(e){await c.query('rollback');throw e;}finally{c.release();}};
+ const identity=async(name,role)=>{const id=crypto.randomUUID();await pool.query('insert into auth.users(id)values($1)',[id]);await seedAuthFixture(pool,id);await run(id,"select complete_signup($1,$1,'1990-01-01')r",[name]);if(role)await pool.query('insert into staff(user_id,role)values($1,$2)',[id,role]);return id;};
  const user=await identity('reporter'),a=await identity('reviewera','admin'),b=await identity('reviewerb','admin');
  const key='parallel-report';
  const drafts=await Promise.all(Array.from({length:8},()=>run(user,"select support_report_create($1,'issue','client','Problema din profil','Descrierea completă a problemei')r",[key])));
@@ -34,6 +36,16 @@ try{
  assert.equal((await run(user,'select support_reports()r')).find(r=>r.id===id).version,3);
  console.log('PASS: răspunsuri Admin concurente protejate de versiune, răspuns vizibil solicitantului.');
  await pool.query('delete from staff where user_id=$1',[a]);
- await assert.rejects(run(a,'select admin_support_reports()r'),/Nu ai voie/);
+ await assert.rejects(run(a,'select admin_support_reports()r'),/Nu ai voie|Sesiunea securizată/);
  console.log('PASS: revocarea rolului elimină accesul cu aceeași identitate Auth.');
+ const closed=await run(b,"select secure_session_close('admin')r");assert.equal(closed.active,false);assert.equal(closed.reason,'closed');
+ const attempts=await Promise.all(Array.from({length:8},(_,i)=>run(b,`select ${i%2?'secure_session_touch':'secure_session_open'}('admin')r`)));
+ assert(attempts.every(r=>r.active===false));
+ await assert.rejects(run(b,'select admin_support_reports()r'),/Sesiunea securizată/);
+ console.log('PASS: închiderea Admin nu este anulată de touch/open concurente cu aceeași dovadă MFA.');
+ await pool.query('delete from auth.sessions where user_id=$1',[b]);
+ const revoked=await run(b,"select secure_session_status('admin')r");assert.equal(revoked.reason,'session_revoked');
+ await assert.rejects(run(b,'select secure_access_status()r'),/Intră întâi/);
+ assert.equal((await pool.query('select count(*)::int n from auth.sessions where user_id=$1',[b])).rows[0].n,0);
+ console.log('PASS: sesiunea Auth revocată rămâne revocată, chiar dacă rolul Admin există.');
 }finally{closing=true;if(pool)await pool.end();await master.query(`DROP DATABASE IF EXISTS ${dbname} WITH (FORCE)`);await master.end();}

@@ -1,3 +1,4 @@
+import { prepareAuthSchema, authenticateFixture, seedAuthFixture } from './fixtures/auth.mjs';
 import {beforeAll, afterAll, it, expect} from 'vitest';
 import {PGlite} from '@electric-sql/pglite';
 import fs from 'node:fs';
@@ -6,7 +7,7 @@ let db: PGlite;
 const ids = {client: '90000000-0000-0000-0000-000000000001', editor: '90000000-0000-0000-0000-000000000002', support: '90000000-0000-0000-0000-000000000003', accountant: '90000000-0000-0000-0000-000000000004', admin: '90000000-0000-0000-0000-000000000005', quota: '90000000-0000-0000-0000-000000000006'};
 const q = (sql: string, args: unknown[] = []) => db.query<any>(sql, args);
 async function as(who: keyof typeof ids, sql: string, args: unknown[] = []) {
-  await q("select set_config('request.jwt.claim.sub',$1,false)", [ids[who]]);
+  await authenticateFixture(db, ids[who]);
   await db.exec('set role authenticated');
   try { return await q(sql, args); } finally { await db.exec('reset role'); }
 }
@@ -19,11 +20,13 @@ beforeAll(async () => {
     create function auth.uid() returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
     grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;
     create publication supabase_realtime;`);
+  await prepareAuthSchema(db);
   for (const file of fs.readdirSync('supabase/migrations').sort())
     await db.exec(fs.readFileSync('supabase/migrations/' + file, 'utf8'));
   await db.exec('grant usage on schema public to anon,authenticated');
   for (const [name, id] of Object.entries(ids)) {
     await q('insert into auth.users(id) values($1)', [id]);
+    await seedAuthFixture(db,id);
     await as(name as keyof typeof ids, "select complete_signup($1,$1,'2000-01-01')", ['review' + name]);
   }
   for (const [name, role] of [['editor','editor'], ['support','suport'], ['accountant','contabil'], ['admin','admin']] as const)
