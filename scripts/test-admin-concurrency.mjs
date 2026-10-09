@@ -8,9 +8,10 @@ if(!url)throw new Error('Setează CEFACI_TEST_DATABASE_URL către PostgreSQL 17 
 const target=new URL(url);
 if(!['127.0.0.1','localhost'].includes(target.hostname))throw new Error('Testele concurente sunt limitate la localhost.');
 const master=new pg.Client({connectionString:url});await master.connect();
-const dbname='cefaci_admin_test_'+process.pid+'_'+Date.now();let pool;
+const dbname='cefaci_admin_test_'+process.pid+'_'+Date.now();let pool,closing=false;
 try{
  await master.query(`CREATE DATABASE ${dbname}`);target.pathname='/'+dbname;pool=new pg.Pool({connectionString:target.toString(),max:12});
+ pool.on('error',e=>{if(!closing||e.code!=='57P01')throw e;});
  await pool.query(`DO $$ BEGIN IF NOT EXISTS(select 1 from pg_roles where rolname='anon')THEN CREATE ROLE anon;END IF;IF NOT EXISTS(select 1 from pg_roles where rolname='authenticated')THEN CREATE ROLE authenticated;END IF;IF NOT EXISTS(select 1 from pg_roles where rolname='service_role')THEN CREATE ROLE service_role;END IF;END $$;
  alter default privileges in schema public grant all on tables to anon,authenticated,service_role;alter default privileges in schema public grant all on functions to anon,authenticated,service_role;
  create schema auth;create table auth.users(id uuid primary key,created_at timestamptz default now());create function auth.uid()returns uuid language sql as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth to authenticated;grant execute on function auth.uid()to authenticated;create publication supabase_realtime;`);
@@ -35,4 +36,4 @@ try{
  await pool.query('delete from staff where user_id=$1',[a]);
  await assert.rejects(run(a,'select admin_support_reports()r'),/Nu ai voie/);
  console.log('PASS: revocarea rolului elimină accesul cu aceeași identitate Auth.');
-}finally{if(pool)await pool.end();await master.query(`DROP DATABASE IF EXISTS ${dbname} WITH (FORCE)`);await master.end();}
+}finally{closing=true;if(pool)await pool.end();await master.query(`DROP DATABASE IF EXISTS ${dbname} WITH (FORCE)`);await master.end();}
