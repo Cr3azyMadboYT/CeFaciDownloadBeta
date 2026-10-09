@@ -55,6 +55,14 @@ async function chooseDocument(valid=true){
 }
 try {
   await page.goto(root);
+  await button('Revendică localul').waitFor();
+  await page.screenshot({path:'release/screenshots/business-entry-phone.png',fullPage:true});
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+  await button('Mod noapte').click();
+  await page.screenshot({path:'release/screenshots/business-entry-phone-night.png',fullPage:true});
+  await button('Mod zi').click();await page.setViewportSize({width:1440,height:1000});
+  await page.screenshot({path:'release/screenshots/business-entry-desktop.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});
   await button('Ai deja cont? Intră').click();
   await page.getByLabel('Email',{exact:true}).fill(user.email);
   await button('Trimite codul').click();await page.getByLabel('Codul primit prin email',{exact:true}).waitFor();
