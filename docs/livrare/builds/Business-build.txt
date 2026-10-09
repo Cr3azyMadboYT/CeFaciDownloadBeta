@@ -1,4 +1,4 @@
-Commit 11ac4455f1ad8fba46ac5a308a8c8d9ea74f2974
+Commit 12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94
 Semnare productie true
 Verifies
 Verified using v1 scheme (JAR signing): false
@@ -18,4 +18,4 @@ V2 Signer: key size (bits): 2048
 V2 Signer: public key SHA-256 digest: 9671ad75faa8ef078f73fcdfb1bfbed83a2f39603b2981410a91aee2dc44b9ef
 V2 Signer: public key SHA-1 digest: 9f59ad9a4aed6d0d6c43980356237872131253b3
 V2 Signer: public key MD5 digest: 18b5f09e43422877ab9823bf9c3e8a4c
-package: name='app.cefaci.business' versionCode='4' versionName='1.0.3' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+package: name='app.cefaci.business' versionCode='5' versionName='1.0.4' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'

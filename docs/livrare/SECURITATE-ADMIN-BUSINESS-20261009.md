@@ -1,6 +1,6 @@
 # Admin și Business: acces securizat și tururi pe rol
 
-Codul verificat este `12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94`, workflow [37996015334](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37996015334). Migrarea live `20261009215832` este instalată; weburile CI au trecut testele Apache și browser cu CSP activ. Buildul nativ este încă în curs la acest checkpoint; rezultatul final va fi consemnat în raport.
+Codul verificat este `12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94`, workflow [37996015334](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37996015334). Migrarea live `20261009215832` este instalată; weburile CI au trecut testele Apache și browser cu CSP activ. Business nativ 1.0.4/code5 este construit, semnat și verificat; ultima ajustare Admin privind schimbarea rolului este verificată separat în workflowul web.
 
 ## Accesul la date
 
@@ -31,7 +31,7 @@ Contul `contact@cornacidev.ro` păstrează rolul **fondator** acordat anterior. 
 
 Admin și Business web folosesc `sessionStorage` pentru autentificare. Business șterge vechea sesiune persistentă din `localStorage`; prima actualizare cere relogare. Browserul trebuie să permită stocarea de sesiune. Nu sunt pretinse cookie-uri HttpOnly într-o aplicație statică care folosește SDK-ul Auth în browser.
 
-Business nativ folosește Expo SecureStore, cu acces când dispozitivul este deblocat și fără transferul cheilor pe alt dispozitiv. Sesiunile vechi din AsyncStorage sunt eliminate. Segmentele sunt limitate în octeți UTF-8, operațiunile sunt serializate, manifestul este scris ultimul și un eșec nu înlocuiește sesiunea completă precedentă. Nu există fallback de token în clar.
+Business nativ folosește Expo SecureStore: Keychain pe iOS, cu `WHEN_UNLOCKED_THIS_DEVICE_ONLY`, și stocare criptată prin Android Keystore pe Android. Nu se pretinde un prompt biometric la fiecare citire pe Android; autentificarea aplicației rămâne OTP + TOTP și sesiune verificată pe server. Sesiunile vechi din AsyncStorage sunt eliminate. Segmentele sunt limitate în octeți UTF-8, operațiunile sunt serializate, manifestul este scris ultimul și un eșec nu înlocuiește sesiunea completă precedentă. Nu există fallback de token în clar.
 
 Pachetele web păstrează HTTPS, CSP fără script inline/eval, HSTS, interzicerea embeddingului, MIME sigur și lipsa cache-ului pe HTML/versiune. QR-ul Admin este reconstruit dintr-o listă strictă de elemente/atribute SVG; nu folosește inserare HTML arbitrară. Nu există chei service-role, parole sau secrete de semnare în web/native.
 
@@ -45,3 +45,8 @@ Nu există test pe telefon fizic sau IPA semnat în acest mediu. Buildul Android
 
 
 Advisory-urile live sunt rezumate în [backend-security-advisors.json](backend-security-advisors.json). Tabelul privat de sesiuni are RLS fără policy directă și fără grant de citire, intenționat deny-by-default; API-urile security-definer validează accesul. Protecția Supabase pentru parole compromise rămâne dezactivată în configurația existentă; nu exista un instrument de administrare Auth pentru activarea ei în acest mediu. Intrarea Admin/Business construită aici folosește OTP email și TOTP obligatoriu. [Setarea și explicația Supabase](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
+
+
+Business APK/AAB real din `12ce83b`: checksumurile și CRC corespund artefactului GitHub `11647715789`, iar certificatul este cel original. APK-ul verifică semnarea v2 în CI; AAB-ul verifică local semnătura PKCS7 și toate cele 1.314 digesturi de intrări. Manifestul compilat confirmă code5, backup=false, fără debug/cleartext/microfon/locație/stocare largă. SDK-ul SecureStore/AndroidX declară și permisiunile normale de biometrie; interfața construită nu folosește biometria pentru ocolirea MFA și nu primește date biometrice. Bundle-ul Hermes real include MFA, sesiunile server, SecureStore și tururile, fără conturile sau cheia sintetică din teste.
+
+La schimbarea rolului Admin, datele și turul vechi sunt retrase înainte de încărcarea permisiunilor actuale; există regresie în browser pentru trecerea de la fondator la suport, fără a aștepta pollingul mai lent al dashboardului. Buildul final web are sursa `a2e6d5b51ae87981043ac41f785e626caa4ce0ab`; Business nativ și backendul nu diferă de sursa `12ce83b`.
