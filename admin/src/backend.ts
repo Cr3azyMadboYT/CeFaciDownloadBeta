@@ -1,4 +1,5 @@
 import {createClient} from '@supabase/supabase-js';
+import {publishSecurityFailure} from '../../shared/security-events';
 export const supabase = createClient('https://vqrmwuarjjntusfbqprx.supabase.co','sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O',{
   auth:{storageKey:'cefaci-admin-auth',storage:window.sessionStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,flowType:'pkce'},
 });
@@ -6,7 +7,10 @@ export async function rpc<T>(name:string,args:Record<string,unknown>={},signal?:
   let request = supabase.rpc(name,args);
   if(signal) request=request.abortSignal(signal);
   const {data,error}=await request;
-  if(error) throw new Error(error.message||'Nu am putut comunica cu serverul.');
+  if(error) {
+    if(!name.startsWith('secure_')&&['42501','28000','PGRST301','PGRST302'].includes(error.code)) publishSecurityFailure('admin');
+    throw new Error(error.message||'Nu am putut comunica cu serverul.');
+  }
   return data as T;
 }
 export function message(e:unknown){return e instanceof Error?e.message:'A apărut o problemă. Încearcă din nou.';}

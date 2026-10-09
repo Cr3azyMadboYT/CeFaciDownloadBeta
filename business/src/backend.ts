@@ -1,18 +1,20 @@
 import "react-native-url-polyfill/auto";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {authStorage} from './auth-storage';
 import { AppState, Platform } from "react-native";
 import { createClient } from "@supabase/supabase-js";
 import { rpc, type RpcClient } from "../../shared/contracts";
+import {publishSecurityFailure} from '../../shared/security-events';
 export const backend = createClient(
   "https://vqrmwuarjjntusfbqprx.supabase.co",
   "sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O",
   {
     auth: {
-      storage: AsyncStorage,
+      storage: authStorage,
       storageKey: "cefaci-business-auth",
       persistSession: true,
       autoRefreshToken: true,
-      detectSessionInUrl: Platform.OS === "web",
+      detectSessionInUrl: false,
+      flowType: 'pkce',
     },
   },
 );
@@ -22,8 +24,13 @@ if (Platform.OS !== "web")
       ? backend.auth.startAutoRefresh()
       : backend.auth.stopAutoRefresh(),
   );
-export const call = <T>(name: string, args: Record<string, unknown> = {}) =>
-  rpc<T>(backend as unknown as RpcClient, name, args);
+export const call = async <T>(name: string, args: Record<string, unknown> = {}) => {
+  try {return await rpc<T>(backend as unknown as RpcClient, name, args);}
+  catch(error) {
+    if(!name.startsWith('secure_') && error instanceof Error && /securizat|autentific|Nu ai voie|Nu ai acces|echipa localului/i.test(error.message)) publishSecurityFailure('business');
+    throw error;
+  }
+};
 export function live(venue: string, refresh: () => void) {
   const c = backend
     .channel("business-" + venue)

@@ -4,6 +4,8 @@ import {
   ScrollView,
   useWindowDimensions,
   ActivityIndicator,
+  AppState,
+  Platform,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -34,6 +36,10 @@ import { backend, call, live } from "./backend";
 import { Card, Txt, Button, Row } from "./ui";
 import { BusinessEntry, BusinessOnboarding, OwnershipDisputes } from "./onboarding";
 import { BusinessHelp } from "./support";
+import { BusinessSecurityGate } from "./security";
+import { BusinessTutorial } from "./tutorial";
+import { useSecureAccess } from "../../shared/use-secure-access";
+import { securitySessionKey } from "../../shared/security-mfa";
 import {
   Today,
   Reservations,
@@ -46,8 +52,9 @@ import {
   type ScreenProps,
   type Action,
 } from "./screens";
-function Workspace({ session }: { session: Session }) {
+function Workspace({ session, hasAccess, checkAccess, logout }: { session: Session; hasAccess: boolean; checkAccess: () => Promise<void>; logout: () => Promise<void> }) {
   const wide = useWindowDimensions().width >= 920;
+  const [tourReplay, TourReplay] = useState(0), [tourHighlight, TourHighlight] = useState<string | null>(null);
   const [venues, V] = useState<VenueAccess[]>([]),
     [venue, S] = useState(""),
     [data, D] = useState<Dashboard | null>(null),
@@ -62,6 +69,7 @@ function Workspace({ session }: { session: Session }) {
     action = useRef(false),
     accessRequest = useRef(0);
   const loadVenues = useCallback(async () => {
+    if (!hasAccess) { V([]); S(""); L(true); await checkAccess(); return; }
     const valid = scope.current.capture(), n = ++accessRequest.current;
     M("");
     try {
@@ -76,7 +84,7 @@ function Workspace({ session }: { session: Session }) {
     } finally {
       if (valid() && n === accessRequest.current) L(true);
     }
-  }, []);
+  }, [hasAccess, checkAccess]);
   useEffect(() => {
     scope.current.invalidate();
     void loadVenues();
@@ -147,11 +155,7 @@ function Workspace({ session }: { session: Session }) {
     V([]);
     B(false);
     action.current = false;
-    const { error } = await backend.auth.signOut({ scope: "local" });
-    if (error) {
-      M("Ieșirea nu s-a încheiat. Reîncearcă online: " + error.message);
-      throw error;
-    }
+    await logout();
   };
   const items = [
     "Azi",
@@ -204,13 +208,13 @@ function Workspace({ session }: { session: Session }) {
         }}
       >
         {items.map((item) => (
-          <Button
+          <View key={item} style={tourHighlight === item ? {borderWidth: 2, borderColor: "#FFD43B", borderRadius: 16} : undefined}><Button
             key={item}
             label={item}
             nav
             secondary={item !== tab}
             onPress={() => T(item)}
-          />
+          /></View>
         ))}
       </ScrollView>
       {wide && (
@@ -218,6 +222,7 @@ function Workspace({ session }: { session: Session }) {
           <Bilu mood="up" size={105} still />
         </View>
       )}
+      <Button label="Tur cu Bilu" secondary onPress={() => TourReplay(v => v + 1)} />
       <Button
         label="Revendică sau adaugă un local"
         secondary
@@ -234,20 +239,14 @@ function Workspace({ session }: { session: Session }) {
     return (
       <ActivityIndicator accessibilityLabel="Verific accesul la localuri" />
     );
-  if ((!venues.length || onboarding) && helpBeforeAccess)
-    return <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 760, width: "100%", alignSelf: "center"}}>
+  if (!venues.length || onboarding) return <View style={{flex: 1}}>
+    <Button label="Tur cu Bilu" secondary onPress={() => TourReplay(v => v + 1)} />
+    {helpBeforeAccess ? <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 760, width: "100%", alignSelf: "center"}}>
       <Button label="Înapoi la cererile Business" secondary onPress={() => HelpBeforeAccess(false)} />
       <BusinessHelp key={session.user.id + ":onboarding"} userId={session.user.id} />
-    </ScrollView>;
-  if (!venues.length || onboarding)
-    return <BusinessOnboarding
-      session={session}
-      accessError={message}
-      onRefreshAccess={loadVenues}
-      onSignOut={signOut}
-      onBack={venues.length ? () => Onboarding(false) : undefined}
-      onHelp={() => HelpBeforeAccess(true)}
-    />;
+    </ScrollView> : <BusinessOnboarding session={session} accessError={message} onRefreshAccess={loadVenues} onSignOut={signOut} onBack={venues.length ? () => Onboarding(false) : undefined} onHelp={() => HelpBeforeAccess(true)} />}
+    <BusinessTutorial userId={session.user.id} role="applicant" availableTabs={["Cereri","Ajutor"]} replayToken={tourReplay} onNavigate={tab => HelpBeforeAccess(tab === "Ajutor")} />
+  </View>;
   const p: ScreenProps = data ? { venue, data, act, busy } : (null as any);
   const content = tab === "Ajutor" ? <BusinessHelp key={venue + ":" + session.user.id} userId={session.user.id} venue={data ? venue : undefined} /> : data ? (
     tab === "Azi" ? (
@@ -318,6 +317,7 @@ function Workspace({ session }: { session: Session }) {
           {content}
         </View>
       </ScrollView>
+      {data && <BusinessTutorial userId={session.user.id} role={data.role} venueId={venue} availableTabs={items} replayToken={tourReplay} onNavigate={T} onHighlight={TourHighlight} />}
     </View>
   );
 }
@@ -352,11 +352,20 @@ export default function App() {
     }).catch(() => { if (!changed) R(true); });
     return () => data.subscription.unsubscribe();
   }, []);
+  const security = useSecureAccess(session?.user.id ?? "", "business", call, session ? securitySessionKey(session) : '');
+  const logout = async () => { security.lock(); try { await call("secure_session_close", {p_scope: "business"}); } finally { const {error} = await backend.auth.signOut({scope: "local"}); if (error) throw error; } };
+  useEffect(() => {
+    const listener = AppState.addEventListener("change", state => {if (state === "active") void security.check();});
+    if (Platform.OS !== "web") return () => listener.remove();
+    const activity = () => security.activity(), focus = () => void security.check();
+    window.addEventListener("pointerdown", activity); window.addEventListener("keydown", activity); window.addEventListener("focus", focus);
+    return () => {listener.remove();window.removeEventListener("pointerdown", activity);window.removeEventListener("keydown", activity);window.removeEventListener("focus", focus);};
+  }, [security.activity, security.check]);
   const t = theme === "zi" ? zi : noapte;
   return (
     <SafeAreaProvider>
       <ThemeCtx.Provider value={{ t, name: theme, set: T }}>
-        <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }} onTouchStart={security.activity}>
           <StatusBar style={t.dark ? "light" : "dark"} />
           <View
             style={{
@@ -378,7 +387,7 @@ export default function App() {
           {!fonts || !ready ? (
             <ActivityIndicator accessibilityLabel="Se încarcă CeFaci Business" />
           ) : session ? (
-            <Workspace key={session.user.id} session={session} />
+            security.error || !security.identity ? <Card><Txt big>Verificăm accesul…</Txt><Txt>{security.error || "Verificăm contul și rolul tău."}</Txt><Button label="Verifică din nou" onPress={() => void security.check()}/><Button label="Ieși din cont" secondary onPress={() => void logout().catch(() => {})}/></Card> : security.identity.business_access && !security.active ? <BusinessSecurityGate session={session} forcedChallenge={security.forcedChallenge} onVerified={security.verified} onLogout={logout}/> : <Workspace key={session.user.id + ":" + security.identity.business_access} session={session} hasAccess={security.active} checkAccess={security.check} logout={logout} />
           ) : (
             <ScrollView
               contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
