@@ -61,6 +61,6 @@ Concurență reală: PostgreSQL 17 local, `CEFACI_TEST_DATABASE_URL=postgres://p
 
 ## Actualizare MFA și tururi pe rol
 
-Backendul MFA `20261009215832` este instalat. Folosește noile ZIP-uri la sursa `12ce83b` și Business Android **1.0.4/code5**, nu release-ul anterior care nu are ecranul MFA. Rolul fondator pentru `contact@cornacidev.ro` este păstrat. La prima intrare configurează Google Authenticator/2FAS/Microsoft Authenticator prin ecranul aplicației; nu există cod precreat sau secret în repository. Webul cere relogare și păstrează autentificarea numai în sesiunea browserului. Pe dispozitivul nativ, update-ul șterge vechea sesiune în clar și folosește SecureStore.
+Backendul MFA `20261009215832` este instalat. Folosește ZIP-urile web finale la sursa `a2e6d5b` și Business Android **1.0.4/code5** la sursa `12ce83b`, nu release-ul anterior care nu are ecranul MFA. Rolul fondator pentru `contact@cornacidev.ro` este păstrat. La prima intrare configurează Google Authenticator/2FAS/Microsoft Authenticator prin ecranul aplicației; nu există cod precreat sau secret în repository. Webul cere relogare și păstrează autentificarea numai în sesiunea browserului. Pe dispozitivul nativ, update-ul șterge vechea sesiune în clar și folosește SecureStore.
 
 Tururile Bilu pornesc după accesul verificat, sunt adaptate la rol și local și se reiau din **Tur cu Bilu**. Vezi [SECURITATE-ADMIN-BUSINESS-20261009.md](SECURITATE-ADMIN-BUSINESS-20261009.md). Publicarea efectivă a noului web nu este realizată fără credențiale gazduire.net.

@@ -1,6 +1,6 @@
 # Admin și Business: acces securizat și tururi pe rol
 
-Codul verificat este `12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94`, workflow [37996015334](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37996015334). Migrarea live `20261009215832` este instalată; weburile CI au trecut testele Apache și browser cu CSP activ. Business nativ 1.0.4/code5 este construit, semnat și verificat; ultima ajustare Admin privind schimbarea rolului este verificată separat în workflowul web.
+Business nativ verificat este la sursa `12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94`, workflow [37996015334](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37996015334) **SUCCESS**. Weburile finale sunt la sursa `a2e6d5b51ae87981043ac41f785e626caa4ce0ab`, workflow [37997554929](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37997554929) **SUCCESS**, inclusiv regresia schimbării rolului Admin. Migrarea live `20261009215832` este instalată; ZIP-urile web finale au trecut testele Apache și browser cu CSP activ. Business nativ 1.0.4/code5 este construit, semnat și verificat.
 
 ## Accesul la date
 
