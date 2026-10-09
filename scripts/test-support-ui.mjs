@@ -2,13 +2,14 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {fixtureClaims,fixtureFactors,fixtureSecureStatus,seedCompletedTutorials} from './security-fixtures.mjs';
 const root=process.env.CEFACI_TEST_WEB_URL??'http://127.0.0.1:4173';
 if(!['localhost','127.0.0.1'].includes(new URL(root).hostname))throw new Error('Use isolated localhost fixtures.');
 const browser=await chromium.launch({headless:true});
 fs.mkdirSync('release/screenshots',{recursive:true});
 const now=new Date().toISOString(),uid='00000000-0000-0000-0000-000000000201';
-const user={id:uid,email:'owner@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:now};
-const token='eyJhbGciOiJIUzI1NiJ9.'+Buffer.from(JSON.stringify({sub:uid,exp:Math.floor(Date.now()/1000)+3600,role:'authenticated'})).toString('base64url')+'.fixture';
+const user={id:uid,email:'owner@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:now,factors:fixtureFactors()};
+const token='eyJhbGciOiJIUzI1NiJ9.'+Buffer.from(JSON.stringify(fixtureClaims(uid))).toString('base64url')+'.fixture';
 const session={access_token:token,refresh_token:'synthetic',expires_in:3600,expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user};
 const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aL1sAAAAASUVORK5CYII=','base64');
 const calls=[],unexpected=[],errors=[],contexts=[];
@@ -27,6 +28,8 @@ async function create({venue=false,failCreate=false,failUpload=false}={}){
     let data=null,status=200;
     if(name==='user')data=user;
     else if(name==='logout')data={};
+    else if(name==='secure_access_status')data={admin_role:null,business_access:venue};
+    else if(['secure_session_status','secure_session_open','secure_session_touch','secure_session_close'].includes(name))data=fixtureSecureStatus(p.p_scope);
     else if(name==='biz_identity_status')data={has_profile:true,username:'owner_test',first_name:'Ana'};
     else if(name==='biz_partner_requests'||name==='biz_ownership_disputes')data=[];
     else if(name==='biz_my_venues')data=venue?[{venue_id:'local-test',name:'Local de test',role:'proprietar',status:'activ'}]:[];
@@ -57,7 +60,8 @@ async function create({venue=false,failCreate=false,failUpload=false}={}){
     else {unexpected.push(`${req.method()} ${path}`);status=418;data={message:`Unexpected fixture endpoint ${name}`};}
     await route.fulfill({status,contentType:'application/json',headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'*'},body:JSON.stringify(data)});
   });
-  await context.addInitScript(s=>localStorage.setItem('cefaci-business-auth',JSON.stringify(s)),session);
+  await context.addInitScript(s=>sessionStorage.setItem('cefaci-business-auth',JSON.stringify(s)),session);
+  await context.addInitScript(seedCompletedTutorials,[{app:'business',userId:uid,role:'applicant'},{app:'business',userId:uid,role:'proprietar',venueId:'local-test'}]);
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(15000);
   return {page,state,context};
 }
@@ -99,6 +103,10 @@ try{
   await button(page,'Actualizează cererile').click();await button(page,'Retrage ciorna').click();
   await page.getByText('Ciorna a fost retrasă.',{exact:true}).waitFor();
   assert.equal(onboarding.state.reports.at(-1).status,'cancelled');
+  await page.waitForFunction(()=>{
+    const input=document.querySelector('[aria-label="Titlul problemei"]');
+    return input&&!input.disabled&&!input.readOnly;
+  });
   assert.equal(await page.getByLabel('Titlul problemei',{exact:true}).isEditable(),true);
   assert.equal(await page.getByLabel('Titlul problemei',{exact:true}).inputValue(),'');
   assert.equal(await button(page,'Retrage ciorna').count(),0);

@@ -74,6 +74,8 @@ jobs:
           node scripts/test-business-onboarding-ui.mjs
           node scripts/test-support-ui.mjs
           node scripts/test-admin-ui.mjs
+          node scripts/test-security-tutorial-ui.mjs
+          node scripts/test-security-hook-ui.mjs
           node scripts/test-client-support-ui.mjs
       - uses: actions/upload-artifact@v4
         with:

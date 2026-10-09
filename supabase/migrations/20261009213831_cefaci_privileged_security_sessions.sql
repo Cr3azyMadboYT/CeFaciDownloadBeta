@@ -99,7 +99,7 @@ begin
  when x.closed_at is not null then 'closed' when x.session_id is not null and(x.absolute_expires_at<=now() or x.touched_at+make_interval(secs=>idle)<=now()) then 'expired'
  when private.totp_proof() is null then 'mfa_required' when not active then 'not_open' else null end;
  return jsonb_build_object('active',active,'scope',p_scope,'reason',reason,
- 'reauthentication_required',reason in('closed','expired','not_open','mfa_required'),
+ 'reauthentication_required',coalesce(reason in('closed','expired','not_open','mfa_required'),false),
  'idle_seconds',idle,'absolute_seconds',absolute,'idle_expires_at',x.touched_at+make_interval(secs=>idle),
  'absolute_expires_at',x.absolute_expires_at,'expires_at',least(x.absolute_expires_at,x.touched_at+make_interval(secs=>idle)));
 end $$;

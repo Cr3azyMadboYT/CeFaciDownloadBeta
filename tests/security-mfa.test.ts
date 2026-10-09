@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
-import { normalizeTotp, securityError, SecurityMfaCoordinator, type SecurityMfaState } from '../shared/security-mfa';
+import { normalizeTotp, securityError, securitySessionKey, SecurityMfaCoordinator, type SecurityMfaState } from '../shared/security-mfa';
 
 const account = '00000000-0000-4000-8000-000000000123';
 const factorId = '00000000-0000-4000-8000-000000000456';
@@ -112,5 +112,35 @@ describe('mandatory dashboard MFA coordination', () => {
     expect(normalizeTotp('12 34-56 789')).toBe('123456');
     expect(securityError({ code: 'rate_limit_exceeded', status: 429 })).toContain('Prea multe încercări');
     expect(securityError(new Error('private token details'))).not.toContain('private token');
+  });
+  it('keeps the lifecycle key stable across refresh and distinguishes same-user sessions', () => {
+    const jwt = (session_id: string, exp: number) => `header.${Buffer.from(JSON.stringify({session_id, exp})).toString('base64url')}.signature`;
+    const first = {user: {id: account}, access_token: jwt(account, 123)} as Session;
+    const refreshed = {...first, access_token: jwt(account, 456)};
+    const another = {...first, access_token: jwt(factorId, 456)};
+    expect(securitySessionKey(first)).toBe(securitySessionKey(refreshed));
+    expect(securitySessionKey(first)).not.toBe(securitySessionKey(another));
+    expect(securitySessionKey({...first, access_token: 'malformed'})).not.toBe(securitySessionKey(first));
+  });
+  it('blocks a replacement Auth session for the same account before challenging', async () => {
+    const f = fixture(true), jwt = (id: string) => `header.${Buffer.from(JSON.stringify({session_id: id})).toString('base64url')}.signature`;
+    const initial = {user: {id: account}, access_token: jwt(account)} as Session;
+    f.auth.getSession.mockResolvedValueOnce({data: {session: initial}, error: null});
+    f.auth.getSession.mockResolvedValueOnce({data: {session: initial}, error: null});
+    f.auth.getSession.mockResolvedValueOnce({data: {session: initial}, error: null});
+    await f.coordinator.load();
+    f.auth.getSession.mockResolvedValueOnce({data: {session: {...initial, access_token: jwt(factorId)}}, error: null});
+    await f.coordinator.verify('123456'); expect(f.auth.mfa.challenge).not.toHaveBeenCalled(); expect(f.onVerified).not.toHaveBeenCalled();
+  });
+  it('does not remove an owned factor while its verification is in flight during unmount', async () => {
+    const f = fixture(); await f.coordinator.load(); await f.coordinator.enroll();
+    let release!: () => void; const delayed = new Promise<void>(resolve => {release = resolve;});
+    const original = f.auth.mfa.verify.getMockImplementation()!;
+    f.auth.mfa.verify.mockImplementationOnce(async params => {await delayed; return original(params);});
+    const verifying = f.coordinator.verify('123456');
+    for (let i = 0; i < 8; i++) await Promise.resolve();
+    expect(f.auth.mfa.verify).toHaveBeenCalled(); f.coordinator.dispose();
+    expect(f.auth.mfa.unenroll).not.toHaveBeenCalled(); release(); await verifying;
+    expect(f.auth.mfa.unenroll).not.toHaveBeenCalled(); expect(f.onVerified).not.toHaveBeenCalled();
   });
 });

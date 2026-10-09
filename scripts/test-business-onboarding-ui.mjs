@@ -2,18 +2,23 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {fixtureClaims,fixtureFactors,fixtureSecureStatus,seedCompletedTutorials} from './security-fixtures.mjs';
 const root = process.env.CEFACI_TEST_WEB_URL ?? 'http://127.0.0.1:4173';
 if (!['localhost','127.0.0.1'].includes(new URL(root).hostname)) throw new Error('Use isolated localhost fixtures.');
 const browser = await chromium.launch({headless:true});
-const user = {id:'00000000-0000-0000-0000-000000000011',email:'owner@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:new Date().toISOString()};
-const token = 'eyJhbGciOiJIUzI1NiJ9.' + Buffer.from(JSON.stringify({sub:user.id,exp:Math.floor(Date.now()/1000)+3600,role:'authenticated'})).toString('base64url') + '.fixture';
+const user = {id:'00000000-0000-0000-0000-000000000011',email:'owner@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:new Date().toISOString(),factors:fixtureFactors()};
+const token = 'eyJhbGciOiJIUzI1NiJ9.' + Buffer.from(JSON.stringify(fixtureClaims(user.id))).toString('base64url') + '.fixture';
 const session = {access_token:token,refresh_token:'synthetic',expires_in:3600,expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user};
 const calls = [], requests = [];
+const unexpected = [];
 let failUpload = true, profileReady = false;
 const context = await browser.newContext({viewport:{width:390,height:844}});
+await context.addInitScript(seedCompletedTutorials,[{app:'business',userId:user.id,role:'applicant'}]);
 await context.routeWebSocket(/supabase\.co/, ws=>ws.close());
-await context.route(/supabase\.co/, async route=>{
-  const req=route.request(), path=new URL(req.url()).pathname, name=path.split('/').pop();
+await context.route('**/*', async route=>{
+  const req=route.request(), url=new URL(req.url()), path=url.pathname, name=path.split('/').pop();
+  if (['localhost','127.0.0.1'].includes(url.hostname)) return route.continue();
+  if (url.hostname!=='vqrmwuarjjntusfbqprx.supabase.co') {unexpected.push(`${req.method()} ${url.origin}${path}`);return route.abort();}
   let p={};try {p=req.postDataJSON()??{};} catch {}
   calls.push({name,path,p,method:req.method()});
   let data=null,status=200;
@@ -21,6 +26,8 @@ await context.route(/supabase\.co/, async route=>{
   else if (name==='verify') data=session;
   else if (name==='user') data=user;
   else if (name==='logout') data={};
+  else if (name==='secure_access_status') data={admin_role:null,business_access:false};
+  else if (['secure_session_status','secure_session_open','secure_session_touch','secure_session_close'].includes(name)) data=fixtureSecureStatus(p.p_scope);
   else if (name==='biz_identity_status') data={has_profile:profileReady,username:profileReady?'patron_test':null,first_name:profileReady?'Ana':null};
   else if (name==='biz_identity_complete') { profileReady=true;data={has_profile:true,username:p.p_username,first_name:p.p_first_name}; }
   else if (name==='biz_my_venues') data=[];
@@ -111,5 +118,7 @@ try {
   await button('Retrage cererea').first().click();await page.getByText('Cerere retrasă',{exact:false}).waitFor();
   await button('Ieși din cont').click();await button('Ai deja cont? Intră').waitFor();assert.equal(await page.getByText('Cererile tale',{exact:true}).count(),0);
   assert.deepEqual(errors,[]);assert.equal(calls.filter(c=>c.name==='complete_signup').length,0);
+  assert.deepEqual(unexpected,[]);
+  assert.equal(calls.filter(c=>c.name==='biz_my_venues').length,0,'Pending applicants never query protected venue access.');
   console.log('PASS: existing/new OTP options, missing-venue request, claim/dispute proof, invalid document, upload retry/idempotence, statuses/cancel, no premature access, responsive layout and logout; zero live writes.');
 }finally{await context.close();await browser.close();}

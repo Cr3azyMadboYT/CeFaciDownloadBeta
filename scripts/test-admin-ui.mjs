@@ -2,6 +2,7 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {fixtureClaims, fixtureFactors, fixtureSecureStatus, seedCompletedTutorials} from './security-fixtures.mjs';
 
 const root = process.env.CEFACI_TEST_ADMIN_URL ?? 'http://127.0.0.1:4175';
 if (!['localhost', '127.0.0.1'].includes(new URL(root).hostname)) throw new Error('Use isolated localhost fixtures.');
@@ -28,8 +29,8 @@ const partnerRequest = {id:partnerId,kind:'claim',status:'pending',venue_id:'loc
 const visit={id:'00000000-0000-0000-0000-000000000104',venue_id:'local-test',venue_name:'Local de test',work_day:'2026-10-09',created_at:now,kind:'drop',people:6,outcome:'deschis',closed_at:null,proof:'staff_ticket',discount_pct:20,discount_scope:'bill',bill:null,discount_amount:null,count:{version:2,people:6,adults:6,drop_adults:4,state:'disputed',deadline:now,reason:'Localul și grupul declară numere diferite.'},benefit:{version:1,state:'pending',reason:'Reducerea promisă nu a fost acordată.',reply:'Verificăm cu echipa.',decision_reason:null}};
 
 function session() {
-  const user={id:uid,email:'staff@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:now};
-  const access_token='eyJhbGciOiJIUzI1NiJ9.'+Buffer.from(JSON.stringify({sub:uid,exp:Math.floor(Date.now()/1000)+3600,role:'authenticated'})).toString('base64url')+'.fixture';
+  const user={id:uid,email:'staff@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{},created_at:now,factors:fixtureFactors()};
+  const access_token='eyJhbGciOiJIUzI1NiJ9.'+Buffer.from(JSON.stringify(fixtureClaims(uid))).toString('base64url')+'.fixture';
   return {access_token,refresh_token:'synthetic',expires_at:Math.floor(Date.now()/1000)+3600,expires_in:3600,token_type:'bearer',user};
 }
 
@@ -50,6 +51,8 @@ async function context({role='admin',auth=true,viewport={width:1440,height:1000}
     else if(name==='logout')data={};
     else if(name==='otp')data={};
     else if(name==='verify')data=session();
+    else if(name==='secure_access_status')data={admin_role:state.revoked||!permissions[state.role]?null:state.role,business_access:false};
+    else if(['secure_session_status','secure_session_open','secure_session_touch','secure_session_close'].includes(name))data=fixtureSecureStatus(p.p_scope);
     else if(name==='admin_me') {
       if(state.revoked||!permissions[state.role]){status=403;data={message:'Accesul în Admin este rezervat echipei CeFaci.',code:'42501'};}
       else data={user_id:uid,username:'staff_test',role:state.role,permissions:permissions[state.role]};
@@ -96,6 +99,7 @@ async function context({role='admin',auth=true,viewport={width:1440,height:1000}
     await route.fulfill({status,contentType:'application/json',headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'*'},body:JSON.stringify(data)});
   });
   if(auth)await ctx.addInitScript(s=>sessionStorage.setItem('cefaci-admin-auth',JSON.stringify(s)),session());
+  await ctx.addInitScript(seedCompletedTutorials,[{app:'admin',userId:uid,role}]);
   await ctx.addInitScript(()=>{
     window.__objectURLs={created:[],revoked:[]};
     const create=URL.createObjectURL.bind(URL),revoke=URL.revokeObjectURL.bind(URL);
@@ -118,8 +122,9 @@ try {
   await login.page.screenshot({path:'release/screenshots/admin-login-desktop.png',fullPage:true});
 
   const denied=await context({role:'ordinary'});opened.push(denied.ctx);await denied.page.goto(root);
-  await denied.page.getByText('Accesul în Admin este rezervat echipei CeFaci.',{exact:false}).waitFor();
+  await denied.page.getByText('Acest cont nu are acces la Admin.',{exact:true}).waitFor();
   assert.equal(await button(denied.page,'Semnalări').count(),0);
+  assert.equal(calls.some(c=>c.role==='ordinary'&&c.name==='admin_me'),false);
 
   const admin=await context({conflict:true});opened.push(admin.ctx);const page=admin.page;await page.goto(root);
   await button(page,'Semnalări').waitFor();

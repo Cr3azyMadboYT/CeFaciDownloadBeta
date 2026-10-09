@@ -37,7 +37,7 @@ export async function authenticateFixture(db, user, {local = false, scopes = tru
   if(exists){
     session=(await db.query('select aal,updated_at from auth.sessions where id=$1',[sessionId])).rows[0];
     privileged=(await db.query(`select exists(select 1 from public.staff where user_id=$1) admin,
-      exists(select 1 from public.partner_members m join public.partners p on p.venue_id=m.venue_id where m.user_id=$1 and m.active and p.status='activ') business`,[user])).rows[0];
+      exists(select 1 from public.partner_members m where m.user_id=$1 and m.active) business`,[user])).rows[0];
     if(session&&session.aal==='aal1'&&scopes&&(privileged.admin||privileged.business)){
       await db.query("insert into auth.mfa_factors(id,user_id,factor_type,status) values($1,$2,'totp','verified') on conflict(id) do nothing",[factorId,user]);
       await db.query("update auth.sessions set factor_id=$2,aal='aal2',updated_at=now() where id=$1 and aal<>'aal2'",[sessionId,factorId]);

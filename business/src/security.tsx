@@ -21,6 +21,7 @@ function BusinessSecurityScreen({ session, onVerified, onLogout, forcedChallenge
   const [logoutBusy, setLogoutBusy] = useState(false), [logoutError, setLogoutError] = useState('');
   const coordinator = useRef<SecurityMfaCoordinator | null>(null);
   const alive = useRef(false);
+  const currentEnrollment = useRef(state.enrollment?.id); currentEnrollment.current = state.enrollment?.id;
   const verified = useRef(onVerified); verified.current = onVerified;
   useEffect(() => {
     const controller = new SecurityMfaCoordinator(backend, session.user.id, 'business', setState, next => verified.current(next), forcedChallenge, session);
@@ -32,11 +33,12 @@ function BusinessSecurityScreen({ session, onVerified, onLogout, forcedChallenge
   useEffect(() => { setCode(''); setVisible(false); setCopied(false); }, [state.enrollment?.id, state.selected]);
   async function copySecret() {
     if (!state.enrollment) return;
+    const id = state.enrollment.id;
     const browser = globalThis as unknown as { navigator?: { clipboard?: { writeText: (value: string) => Promise<void> } } };
     if (Platform.OS === 'web' && browser.navigator?.clipboard) {
-      try { await browser.navigator.clipboard.writeText(state.enrollment.secret); if (alive.current) setCopied(true); return; } catch { /* Manual selection remains available. */ }
+      try { await browser.navigator.clipboard.writeText(state.enrollment.secret); if (alive.current && id === currentEnrollment.current) setCopied(true); return; } catch { /* Manual selection remains available. */ }
     }
-    if (alive.current) setVisible(true);
+    if (alive.current && id === currentEnrollment.current) setVisible(true);
   }
   async function logout() {
     if (logoutBusy) return; setLogoutBusy(true); setLogoutError('');

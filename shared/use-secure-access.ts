@@ -1,4 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
+import {subscribeSecurityFailure} from './security-events';
 
 export type SecureScope = 'admin' | 'business';
 export type AccessIdentity = {admin_role: string | null; business_access: boolean};
@@ -82,6 +83,12 @@ export function useSecureAccess(userId: string, scope: SecureScope, call: Call, 
     epoch.current++; sequence.current++;
     setState({binding: current.current, identity: null, status: null, error: ''});
   }, []);
+  useEffect(() => subscribeSecurityFailure(scope, () => {
+    if (!userId || current.current !== binding) return;
+    sequence.current++;
+    setState(previous => previous.binding === binding ? {...previous, status: {active: false, reason: 'access_changed', reauthentication_required: true}} : previous);
+    void check();
+  }), [scope, userId, binding, check]);
   return {
     identity: visible.identity, active,
     forcedChallenge: !!visible.status?.reauthentication_required || ['expired', 'closed', 'proof_expired'].includes(visible.status?.reason ?? ''),

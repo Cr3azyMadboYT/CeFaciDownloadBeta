@@ -23,6 +23,7 @@ function AdminSecurityScreen({ session, onVerified, onLogout, forcedChallenge = 
   const [logoutBusy, setLogoutBusy] = useState(false), [logoutError, setLogoutError] = useState('');
   const coordinator = useRef<SecurityMfaCoordinator | null>(null);
   const alive = useRef(false);
+  const currentEnrollment = useRef(state.enrollment?.id); currentEnrollment.current = state.enrollment?.id;
   const verified = useRef(onVerified); verified.current = onVerified;
   useEffect(() => {
     const controller = new SecurityMfaCoordinator(supabase, session.user.id, 'admin', setState, next => verified.current(next), forcedChallenge, session);
@@ -37,8 +38,8 @@ function AdminSecurityScreen({ session, onVerified, onLogout, forcedChallenge = 
     const secret = state.enrollment?.secret;
     if (!secret) return;
     const id = state.enrollment?.id;
-    try { await navigator.clipboard.writeText(secret); if (alive.current && coordinator.current && id === state.enrollment?.id) setCopied(true); }
-    catch { if (alive.current && coordinator.current) { setCopied(false); setVisible(true); } }
+    try { await navigator.clipboard.writeText(secret); if (alive.current && id === currentEnrollment.current) setCopied(true); }
+    catch { if (alive.current && id === currentEnrollment.current) { setCopied(false); setVisible(true); } }
   }
   async function logout() {
     if (logoutBusy) return; setLogoutBusy(true); setLogoutError('');

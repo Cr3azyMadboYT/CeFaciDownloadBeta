@@ -2,7 +2,9 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import {fixtureClaims,fixtureFactors,fixtureSecureStatus,seedCompletedTutorials} from "./security-fixtures.mjs";
 const root = process.env.CEFACI_TEST_WEB_URL ?? "http://127.0.0.1:4173";
+if (!["localhost","127.0.0.1"].includes(new URL(root).hostname)) throw new Error("Use isolated localhost fixtures.");
 const browser = await chromium.launch({ headless: true });
 fs.mkdirSync("release/screenshots", { recursive: true });
 const when = new Date().toISOString();
@@ -84,11 +86,17 @@ let calls = [],
   late = false;
 let firstFinance = true, financeRemaining = 162, teamFailure = false, accessFailure = false;
 let disputeReply = null;
+const unexpected = [];
 async function ctx(viewport, auth = false) {
   const context = await browser.newContext({ viewport });
   await context.routeWebSocket(/supabase\.co/, (ws) => ws.close());
-  await context.route(/supabase\.co/, async (route) => {
+  await context.route('**/*', async (route) => {
     const req = route.request();
+    const url = new URL(req.url());
+    if (["localhost","127.0.0.1"].includes(url.hostname)) return route.continue();
+    if (url.hostname !== "vqrmwuarjjntusfbqprx.supabase.co") {
+      unexpected.push(`${req.method()} ${url.origin}${url.pathname}`); return route.abort();
+    }
     let data, status = 200;
     const name = new URL(req.url()).pathname.split("/").pop();
     let p = {};
@@ -96,7 +104,9 @@ async function ctx(viewport, auth = false) {
       p = req.postDataJSON() ?? {};
     } catch {}
     calls.push({ name, p });
-    if (name === "biz_my_venues" && accessFailure) {
+    if (name === "secure_access_status") data = {admin_role:null,business_access:true};
+    else if (["secure_session_status","secure_session_open","secure_session_touch","secure_session_close"].includes(name)) data = fixtureSecureStatus(p.p_scope);
+    else if (name === "biz_my_venues" && accessFailure) {
       status = 503; data = {message: "Acces temporar indisponibil"};
     } else if (name === "biz_my_venues")
       data = [
@@ -168,7 +178,7 @@ async function ctx(viewport, auth = false) {
   });
   if (auth)
     await context.addInitScript(
-      ({ when }) => {
+      ({ when, claims, factors }) => {
         const user = {
           id: "00000000-0000-0000-0000-000000000001",
           aud: "authenticated",
@@ -177,19 +187,15 @@ async function ctx(viewport, auth = false) {
           app_metadata: {},
           user_metadata: {},
           created_at: when,
+          factors,
         };
         const token =
           "eyJhbGciOiJIUzI1NiJ9." +
           btoa(
-            JSON.stringify({
-              sub: user.id,
-              exp: Math.floor(Date.now() / 1000) + 3600,
-              iat: Math.floor(Date.now() / 1000),
-              role: "authenticated",
-            }),
+            JSON.stringify(claims),
           ) +
           ".test";
-        localStorage.setItem(
+        sessionStorage.setItem(
           "cefaci-business-auth",
           JSON.stringify({
             access_token: token,
@@ -201,8 +207,13 @@ async function ctx(viewport, auth = false) {
           }),
         );
       },
-      { when },
+      { when, claims:fixtureClaims("00000000-0000-0000-0000-000000000001"), factors:fixtureFactors() },
     );
+  await context.addInitScript(seedCompletedTutorials,[
+    {app:"business",userId:"00000000-0000-0000-0000-000000000001",role:"proprietar",venueId:"one"},
+    {app:"business",userId:"00000000-0000-0000-0000-000000000001",role:"scanare",venueId:"two"},
+    {app:"business",userId:"00000000-0000-0000-0000-000000000001",role:"applicant"},
+  ]);
   return context;
 }
 try {
@@ -382,6 +393,7 @@ try {
   await retry.getByRole("button",{name:"Financiar",exact:true}).waitFor();
   await denied.close();
   assert.deepEqual(errors, []);
+  assert.deepEqual(unexpected, []);
   console.log(
     "PASS: desktop/telefon, zi/noapte, scanner, ordine/refresh financiar, program Plus păstrat, scan invalid, retry echipă/acces, validări, logout și răspuns întârziat după schimbarea localului; zero erori JS",
   );

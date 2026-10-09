@@ -34,7 +34,7 @@ it('bootstrap is minimal at aal1 and neither metadata nor aal claim alone create
  await jwt(C,V,'aal2');expect((await api("secure_session_open('admin')")).active).toBe(false);await expect(api('admin_me()')).rejects.toThrow(/rezervat/);
 });
 it('verified TOTP plus signed session and AMR opens only the authorized scope and retains absolute expiry',async()=>{
- const s=await api("secure_session_open('admin')");expect(s.active).toBe(true);expect(s.idle_seconds).toBe(900);expect(s.absolute_seconds).toBe(28800);expect((await api('admin_me()')).permissions).toContain('partners');
+ const s=await api("secure_session_open('admin')");expect(s.active).toBe(true);expect(s.reauthentication_required).toBe(false);expect(s.idle_seconds).toBe(900);expect(s.absolute_seconds).toBe(28800);expect((await api('admin_me()')).permissions).toContain('partners');
  expect((await api("secure_session_open('business')")).active).toBe(false);expect((await api("secure_session_touch('admin')")).absolute_expires_at).toEqual(s.absolute_expires_at);
  await jwt(B,T);const b=await api("secure_session_open('business')");expect(b.active).toBe(true);expect(b.idle_seconds).toBe(1800);expect(b.absolute_seconds).toBe(43200);
  expect((await api('to_jsonb(biz_my_venues())')).venue_id).toBe('secure-v');
