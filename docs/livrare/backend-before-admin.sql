@@ -1,4 +1,30 @@
 -- Snapshot of function definitions before additive Admin rollout on CeFaci2.0, 2026-10-09. No application data.
+CREATE OR REPLACE FUNCTION private.partner_request_log_immutable()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SET search_path TO ''
+AS $function$
+begin
+ if tg_op='UPDATE' and new.by_user is null and old.by_user is not null and to_jsonb(new)-'by_user'=to_jsonb(old)-'by_user' then return new; end if;
+ raise exception 'Jurnalul de verificare nu se poate modifica sau șterge.';
+end $function$
+
+
+CREATE OR REPLACE FUNCTION private.report_guard()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+begin
+if current_user = 'authenticated' or (select auth.uid()) is not null then
+new.user_id := (select auth.uid()); new.status := 'nou'; new.handled_by := null; new.handled_at := null; new.answer := null; new.created_at := now();
+if (select count(*) from public.reports where user_id = new.user_id and created_at > now() - interval '1 day') >= 20 then
+raise exception 'Ai trimis destule semnalări azi. Mulțumim! Mâine mai poți.' using errcode = 'check_violation'; end if;
+end if;
+return new;
+end $function$
+
 CREATE OR REPLACE FUNCTION private.can(perm text)
  RETURNS boolean
  LANGUAGE sql
