@@ -15,7 +15,7 @@ function auth(state){
  return {access_token,refresh_token:'synthetic',expires_in:3600,expires_at:epoch()+3600,token_type:'bearer',user};
 }
 async function fixture(app,{role=app==='admin'?'fondator':'proprietar',aal='aal1',factor=null,active=false,mobile=false,done=false}={}){
- const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},reducedMotion:'reduce'});opened.push(context);
+ const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},reducedMotion:'reduce',extraHTTPHeaders:process.env.CEFACI_TEST_PROXY_HTTPS==='1'?{'X-Forwarded-Proto':'https'}:{}});opened.push(context);
  const state={app,role,aal,factor,proof:epoch()-5,cutoff:0,active,deadline:Date.now()+300000,revoked:false,calls:[],wrong:0};
  await context.routeWebSocket(/supabase\.co/,ws=>ws.close());
  const secure=()=>({scope:app,active:state.active&&!state.revoked&&Date.now()<state.deadline,reason:state.revoked?'role_revoked':state.active&&Date.now()>=state.deadline?'expired':state.active?null:'not_open',reauthentication_required:!state.active||Date.now()>=state.deadline,idle_expires_at:new Date(state.deadline).toISOString(),expires_at:new Date(state.deadline).toISOString(),absolute_expires_at:new Date(Date.now()+3600000).toISOString()});

@@ -8,6 +8,10 @@ const key = config.match(/sb_publishable_[A-Za-z0-9_-]+/)?.[0];
 assert.equal(base, 'https://vqrmwuarjjntusfbqprx.supabase.co');
 assert.ok(key);
 const checks = [
+  { name: 'privileged access bootstrap without session', path: '/rest/v1/rpc/secure_access_status', statuses: [401, 403] },
+  { name: 'Admin scoped session status without session', path: '/rest/v1/rpc/secure_session_status?p_scope=admin', statuses: [401, 403] },
+  { name: 'Business scoped session status without session', path: '/rest/v1/rpc/secure_session_status?p_scope=business', statuses: [401, 403] },
+  { name: 'scoped sessions schema hidden', path: '/rest/v1/security_sessions?select=*&limit=0', schema: 'private', statuses: [406] },
   { name: 'public catalog', path: '/rest/v1/rpc/partner_catalog', statuses: [200], catalog: true },
   { name: 'Business without session', path: '/rest/v1/rpc/biz_dashboard_v2?p_venue=audit-nonexistent', statuses: [401, 403] },
   { name: 'Business onboarding search without session', path: '/rest/v1/rpc/biz_venue_search?p_query=audit-nonexistent', statuses: [401, 403] },

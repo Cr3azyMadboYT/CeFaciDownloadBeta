@@ -4,7 +4,7 @@
 
 Creează `admin.cefaci.app` cu document-root separat, de exemplu `public_html/admin`, activează TLS și extrage `CeFaci-Admin-web.zip` direct acolo, inclusiv `.htaccess`. Directoare 755, fișiere 644; nu este necesar Node/PHP. Verifică `version.json`, navigarea directă pe o cale adâncă, fonturile, CSP/HSTS și lipsa cache-ului pe HTML. La update urcă întâi asseturile cu hash, apoi indexul/versiunea; salvează release-ul vechi privat. Admin este construit cu asseturi absolute la rădăcina subdomeniului.
 
-Intrarea folosește un cont CeFaci existent și un rol activ în `public.staff`; conturile obișnuite sunt refuzate. Există deja un cont staff, păstrat intact. Nu se creează un cont administrator demo și nu se publică o cheie service-role. Folosește Echipa pentru acordarea rolurilor în limitele contului autorizat. Configurează/verifică OTP email ca la Business. Interfețele și funcțiile rămase neconfigurate sunt consemnate în [ADMIN-20261009.md](ADMIN-20261009.md).
+Intrarea folosește un cont CeFaci existent și un rol activ în `public.staff`; conturile obișnuite sunt refuzate. Cele două roluri staff sunt păstrate; `contact@cornacidev.ro` are rolul fondator. Nu se creează un cont administrator demo și nu se publică o cheie service-role. Folosește Echipa pentru acordarea rolurilor în limitele contului autorizat. Configurează/verifică OTP email ca la Business. Noul release cere apoi autentificator TOTP pentru toate rolurile Admin și Business operaționale; la prima intrare configurează personal factorul, apoi folosește codul lui la fiecare verificare cerută. Interfețele și funcțiile rămase neconfigurate sunt consemnate în [ADMIN-20261009.md](ADMIN-20261009.md).
 
 Reconstrucție Admin: `npm ci` la rădăcină, `npm run admin:typecheck`, `npm run admin:build`, `npm run admin:package`. Pachetul este `release/CeFaci-Admin-web.zip`. Nu au fost furnizate credențiale pentru publicarea acestui update.
 
@@ -57,3 +57,10 @@ Reducerile sunt afișate fără să modifice scorul de potrivire al motorului de
 Instalează întâi toate cele trei lockfile-uri: `npm ci` la rădăcină, în `mobile/` și în `business/`. Apoi `npx vitest run` la rădăcină și `npm run typecheck` în fiecare aplicație. Testele funcțiilor Business au nevoie și de configurația TypeScript Expo din dependențele Business. Export web: `CI=1 EXPO_NO_TELEMETRY=1 npm run web` în `business/`, apoi `node scripts/package-business-web.mjs` la rădăcină. Buildurile native se produc prin workflow, nu prin redenumirea unui bundle JS în APK. La declanșare manuală, opțiunea `app` permite reconstruirea numai a Clientului sau Business; pe push se construiesc ambele.
 
 Concurență reală: PostgreSQL 17 local, `CEFACI_TEST_DATABASE_URL=postgres://postgres@127.0.0.1:55432/postgres node scripts/test-business-concurrency.mjs`. Scriptul acceptă numai localhost, creează o bază efemeră și o șterge la final. Browser: instalează Playwright, servește `business/dist` pe localhost:4173 și execută `scripts/test-business-ui.mjs`; acesta interceptează backendul cu date sintetice, inclusiv WebSocket. Fixture-urile nu sunt incluse în bundle.
+
+
+## Actualizare MFA și tururi pe rol
+
+Backendul MFA `20261009215832` este instalat. Folosește noile ZIP-uri la sursa `12ce83b` și Business Android **1.0.4/code5**, nu release-ul anterior care nu are ecranul MFA. Rolul fondator pentru `contact@cornacidev.ro` este păstrat. La prima intrare configurează Google Authenticator/2FAS/Microsoft Authenticator prin ecranul aplicației; nu există cod precreat sau secret în repository. Webul cere relogare și păstrează autentificarea numai în sesiunea browserului. Pe dispozitivul nativ, update-ul șterge vechea sesiune în clar și folosește SecureStore.
+
+Tururile Bilu pornesc după accesul verificat, sunt adaptate la rol și local și se reiau din **Tur cu Bilu**. Vezi [SECURITATE-ADMIN-BUSINESS-20261009.md](SECURITATE-ADMIN-BUSINESS-20261009.md). Publicarea efectivă a noului web nu este realizată fără credențiale gazduire.net.

@@ -1,6 +1,6 @@
 # Admin și Business: acces securizat și tururi pe rol
 
-Codul verificat este `12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94`, workflow [37996015334](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37996015334). La acest checkpoint buildurile și instalarea live sunt încă în curs; rezultatul final va fi consemnat în raport.
+Codul verificat este `12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94`, workflow [37996015334](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/37996015334). Migrarea live `20261009215832` este instalată; weburile CI au trecut testele Apache și browser cu CSP activ. Buildul nativ este încă în curs la acest checkpoint; rezultatul final va fi consemnat în raport.
 
 ## Accesul la date
 
@@ -42,3 +42,6 @@ Pachetele web păstrează HTTPS, CSP fără script inline/eval, HSTS, interzicer
 Local au trecut **459 teste, cu un test opțional omis**, typecheck Admin/Business și **15 scenarii concurente pe PostgreSQL 17**. Browserul verifică MFA fără acces prematur la date, configurare explicită, cod greșit, dispariția cheii, expirare cu challenge nou, revocare, șase roluri Admin și patru Business, replay și absența modificărilor de date din tur. Harnessul separat verifică schimbarea contului/sesiunii, răspunsuri întârziate, refuzul final al accesului și opt atacuri SVG. Fluxurile anterioare Client/Business/Admin rămân testate. Toate fixture-urile sunt locale și traficul extern este interceptat; nu au fost trimise emailuri sau raportări reale de test.
 
 Nu există test pe telefon fizic sau IPA semnat în acest mediu. Buildul Android real și verificarea pachetelor CI urmează aceste teste. Publicarea pe gazduire.net cere uploadul noilor ZIP-uri; vechile versiuni Admin/Business nu pot ocoli noua politică MFA și trebuie actualizate împreună cu backendul.
+
+
+Advisory-urile live sunt rezumate în [backend-security-advisors.json](backend-security-advisors.json). Tabelul privat de sesiuni are RLS fără policy directă și fără grant de citire, intenționat deny-by-default; API-urile security-definer validează accesul. Protecția Supabase pentru parole compromise rămâne dezactivată în configurația existentă; nu exista un instrument de administrare Auth pentru activarea ei în acest mediu. Intrarea Admin/Business construită aici folosește OTP email și TOTP obligatoriu. [Setarea și explicația Supabase](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection).
