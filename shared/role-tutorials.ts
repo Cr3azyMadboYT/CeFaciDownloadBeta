@@ -1,12 +1,13 @@
 /** Guidance only. Access is always checked by the API, never by tutorial progress. */
 export const TUTORIAL_VERSION = 1;
-export type AdminTourTab = 'home'|'requests'|'reports'|'places'|'partners'|'operations'|'finance'|'plus'|'suggestions'|'people'|'staff'|'journal';
+export type AdminTourTab = 'home'|'requests'|'reports'|'places'|'partners'|'operations'|'finance'|'plus'|'suggestions'|'people'|'staff'|'journal'|'launch';
 export type TutorialStep = {id:string;title:string;text:string;tip?:string;tab?:string;action?:string};
 export const adminRoleLabels:Record<string,string> = {fondator:'fondator',admin:'administrator',editor:'editor',moderator:'moderator',suport:'suport',contabil:'contabil'};
 export const businessRoleLabels:Record<string,string> = {proprietar:'proprietar',manager:'manager',receptie:'recepție',scanare:'scanare',applicant:'solicitant'};
 type AdminEntry = TutorialStep & {permission?:string};
 const adminSteps:AdminEntry[] = [
  {id:'overview',tab:'home',title:'Totul începe de aici.',text:'Pe Acasă vezi cifrele și listele disponibile rolului tău. Deschide o listă ca să ajungi direct la ce ai de rezolvat.',action:'Deschide Acasă'},
+ {id:'launch',tab:'launch',title:'Ce zic oamenii despre lansare?',text:'În Lansare CeFaci vezi voturile și numele alese în turul public. Emailul este opțional, cu acord separat pentru anunțul lansării.',tip:'Doar fondatorul și administratorii au acces. Adresele nu sunt verificate; lista nu este o campanie de email activă.',action:'Deschide răspunsurile'},
  {id:'requests',tab:'requests',permission:'partners',title:'Cine stă în spatele localului?',text:'În Cereri Business verifici solicitantul, localul și dovada. Citește și răspunsul proprietarului existent înainte să decizi.',tip:'Verificarea cererii nu activează automat parteneriatul sau dreptul de proprietar.',action:'Deschide cererile'},
  {id:'reports',tab:'reports',permission:'reports.read',title:'Un răspuns care chiar ajută.',text:'Semnalările reunesc problemele și localurile lipsă din Client și Business. Citește descrierea și poza privată, apoi verifică istoricul.',tip:'Răspunde clar cu ce ai verificat și ce urmează. Acțiunile disponibile depind de permisiunile tale.',action:'Deschide semnalările'},
  {id:'places',tab:'places',permission:'staff.read',title:'Catalogul pe care îl văd oamenii.',text:'Caută localul în Locuri și verifică informațiile existente. Dacă ai drept de editare, schimbă numai ce ai confirmat.',tip:'Localurile ascunse rămân în catalogul Admin pentru verificare.',action:'Deschide localurile'},
@@ -21,7 +22,7 @@ const adminSteps:AdminEntry[] = [
 ];
 export function adminTutorial(role:string,permissions:readonly string[],availableTabs?:readonly string[]):TutorialStep[] {
  if (!Object.prototype.hasOwnProperty.call(adminRoleLabels,role)) return [];
- const allowed=adminSteps.filter(s=>(!s.permission||permissions.includes(s.permission))&&(!availableTabs||!s.tab||availableTabs.includes(s.tab)));
+ const allowed=adminSteps.filter(s=>(s.tab!=='launch'||['fondator','admin'].includes(role))&&(!s.permission||permissions.includes(s.permission))&&(!availableTabs||!s.tab||availableTabs.includes(s.tab)));
  return [{id:'welcome',title:'Salut! Bilu la datorie.',text:`Îți arăt Adminul pentru rolul de ${adminRoleLabels[role]}. Un tur scurt, prin ecranele la care ai acces.`,tip:'Folosim paginile reale. Turul nu trimite răspunsuri și nu schimbă date.'},...allowed.map(({permission:_,...step})=>step),{id:'finish',title:'Gata. Acum știi pe unde mergi.',text:'Ai un caz concret? Începe din lista potrivită și verifică întâi contextul.',tip:'Poți relua turul oricând. Pe un dispozitiv comun, ieși din cont când ai terminat.'}];
 }
 const businessSteps:TutorialStep[] = [

@@ -57,6 +57,8 @@ async function context({role='admin',auth=true,viewport={width:1440,height:1000}
       if(state.revoked||!permissions[state.role]){status=403;data={message:'Accesul în Admin este rezervat echipei CeFaci.',code:'42501'};}
       else data={user_id:uid,username:'staff_test',role:state.role,permissions:permissions[state.role]};
     }
+    else if(name==='admin_launch_interests')data={summary:{total:1,yes:1,maybe:0,no:0,email:1},rows:[{id:issueId,vote:'yes',name:'Vizitator quiz',email:'quiz@example.invalid',created_at:now,email_consent_at:now,expires_at:now,consent_text:'Acord de test pentru anunțul lansării.',notice_version:'launch-test'}]};
+    else if(name==='admin_launch_interest_delete')data=null;
     else if(name==='admin_dashboard')data={support_new:1,support_in_progress:0,missing_place_new:0,legacy_new:1,partner_pending:1,places:1093,partners:0,open_visits:1,contested_visits:1,unclosed_visits:1,pending_reservations:1,founder_places:0};
     else if(name==='admin_support_reports') {
       if(state.late)await new Promise(r=>setTimeout(r,1200));
@@ -130,6 +132,11 @@ try {
   await button(page,'Semnalări').waitFor();
   await page.getByText('1093',{exact:true}).waitFor();
   await page.screenshot({path:'release/screenshots/admin-dashboard-desktop.png',fullPage:true});
+  await button(page,'Lansare CeFaci').click();await page.getByRole('heading',{name:'Vizitator quiz',exact:true}).waitFor();
+  await page.getByText('quiz@example.invalid',{exact:true}).waitFor();await page.screenshot({path:'release/screenshots/admin-launch-desktop.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);await page.screenshot({path:'release/screenshots/admin-launch-phone.png',fullPage:true});await page.setViewportSize({width:1440,height:1000});
+  await button(page,'Șterge răspunsul').click();assert.equal(calls.filter(c=>c.name==='admin_launch_interest_delete').length,0);await button(page,'Păstrează răspunsul').click();
+  await button(page,'Șterge răspunsul').click();await button(page,'Confirmă ștergerea răspunsului').click();await page.getByText('Răspunsul și datele asociate au fost șterse.',{exact:true}).waitFor();assert.equal(calls.filter(c=>c.name==='admin_launch_interest_delete').length,1);
   await button(page,'Semnalări').click();
   await button(page,'Deschide: Scannerul nu deschide camera').click();
   await button(page,'Vezi poza').click();
@@ -205,6 +212,7 @@ try {
 
   const support=await context({role:'suport'});opened.push(support.ctx);await support.page.goto(root);
   await button(support.page,'Semnalări').waitFor();
+  assert.equal(await button(support.page,'Lansare CeFaci').count(),0);
   assert.equal(await button(support.page,'Bani').count(),0);assert.equal(await button(support.page,'Jurnal').count(),0);
   assert.equal(await button(support.page,'Cereri Business').count(),0);
   await button(support.page,'Echipa').click();await support.page.getByRole('heading',{name:'Echipa CeFaci',exact:true}).waitFor();

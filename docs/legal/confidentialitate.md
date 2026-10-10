@@ -8,6 +8,18 @@ Proiect CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Con
 
 Această informare acoperă site-ul cefaci.app, aplicația Client, Business și dashboardul Admin. Localurile pot avea propriile obligații de operator pentru rezervări, servire și evidențe legale; informarea lor se aplică separat acelor activități. Un eventual rol de împuternicit al CeFaci pentru un local necesită un acord distinct, nu rezultă automat din folosirea Business.
 
+## Turul interactiv și anunțul lansării
+
+Turul de la cefaci.app/descopera poate fi parcurs fără cont și fără trimiterea datelor. Alegerile despre atmosferă și companie rămân în memoria paginii și nu se transmit. Dacă trimiți răspunsul final, păstrăm votul, numele sau aliasul ales, momentul trimiterii și textul acordului. Numele nu este o identitate verificată; nu cerem numele complet. Participarea este voluntară, pentru persoane de cel puțin 16 ani, pe baza acordului separat afișat în formular (art. 6 alin. (1) lit. a GDPR).
+
+Emailul este opțional și este păstrat numai dacă bifezi separat că dorești anunțul lansării. Nu condiționăm votul de acest acord, nu folosim adresa pentru alte campanii și nu creăm un cont. Acordul este înregistrat, dar adresa nu este încă verificată; trimiterea efectivă a anunțului de lansare va necesita configurarea serviciului de email și verificările aplicabile.
+
+Datele sunt stocate prin Supabase și accesibile în Admin numai fondatorului și administratorilor cu sesiune validă și MFA. Răspunsurile nu sunt publice. Sunt șterse din baza activă cel târziu la rularea zilnică după 180 de zile sau mai devreme la retragere. Nu promitem ștergerea instantanee din backupurile furnizorului; evidențele restaurate trebuie reconciliate cu retragerile.
+
+După trimitere primești un link privat care permite ștergerea votului, numelui, emailului și acordului fără cont. Păstrează-l și nu-l distribui; oricine îl deține poate retrage răspunsul. Deschiderea linkului nu șterge nimic până la confirmare. Îți poți exercita drepturile și la contact@cornacidev.ro. Retragerea nu afectează legalitatea prelucrării anterioare.
+
+Nu folosim identificatori de vizitator, cookies sau pixeli pentru quiz. O cheie aleatoare este creată doar când trimiți formularul, pentru reîncercări fără duplicare și retragere; în baza de date păstrăm numai amprenta ei. După retragere păstrăm doar amprenta cheii timp de 180 de zile pentru a bloca reîncercările întârziate, fără nume, email sau vot. Cheia și formularul rămân în memoria paginii, fără salvarea numelui sau emailului în stocarea browserului. Furnizorii pot procesa jurnale tehnice, inclusiv IP-ul, pentru funcționare și securitate.
+
 ## 2. Cont, profil și funcțiile sociale
 
 Folosim adresa de e-mail, identificatorul contului și informațiile furnizate la autentificarea Google, prenumele, username-ul, data nașterii, preferințele declarate și starea salvată în aplicație. E-mailul sau Google permit autentificarea; numele, prietenii, găștile, invitațiile, planurile, voturile, biletele, XP-ul și ștampilele permit funcțiile cerute de tine. Temeiul este executarea serviciului solicitat, art. 6 alin. (1) lit. b GDPR.

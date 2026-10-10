@@ -7,7 +7,7 @@ process.chdir(root);
 if(!fs.existsSync('scripts/generate-legal-pages.mjs'))throw new Error('Lipsește generatorul documentelor legale; pachetul nu poate fi livrat incomplet.');
 execFileSync(process.execPath,['scripts/generate-legal-pages.mjs'],{stdio:'inherit'});
 const source='website',output='website/dist';
-const required=['confidentialitate','termeni','cookies','business/termeni','admin/reguli','drepturile-tale','securitate','contact','sterge-contul'];
+const required=['descopera','confidentialitate','termeni','cookies','business/termeni','admin/reguli','drepturile-tale','securitate','contact','sterge-contul'];
 for(const page of required)if(!fs.existsSync(`${source}/${page}/index.html`))throw new Error(`Lipsește pagina /${page}/.`);
 fs.mkdirSync(output,{recursive:true});
 for(const entry of fs.readdirSync(output))fs.rmSync(path.join(output,entry),{recursive:true,force:true});

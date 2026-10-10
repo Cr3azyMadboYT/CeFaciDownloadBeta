@@ -11,7 +11,7 @@ describe('role-aware dashboard tutorials',()=>{
   expect(tabs.includes('plus')).toBe(permissions.includes('plus.manage'));
   expect(tabs.includes('reports')).toBe(permissions.includes('reports.read'));
  });
- it('uses current permissions rather than assumed founder powers',()=>{expect(adminTutorial('fondator',[]).flatMap(s=>s.tab?[s.tab]:[])).toEqual(['home']);});
+ it('uses permissions for operational pages and explicit roles for launch responses',()=>{expect(adminTutorial('fondator',[]).flatMap(s=>s.tab?[s.tab]:[])).toEqual(['home','launch']);expect(adminTutorial('suport',[]).flatMap(s=>s.tab?[s.tab]:[])).toEqual(['home']);});
  it('does not teach hidden Admin pages, even if permissions contain stale names',()=>{expect(adminTutorial('fondator',cases.fondator,['home','reports']).flatMap(s=>s.tab?[s.tab]:[])).toEqual(['home','reports']);});
  it('has no tutorial for unauthorized or unknown roles',()=>{expect(adminTutorial('client',cases.fondator)).toEqual([]);expect(adminTutorial('constructor',cases.fondator)).toEqual([]);expect(businessTutorial('admin',['Azi'])).toEqual([]);});
  const businessTabs=['Azi','Rezervări','Scanner','Oferte','Financiar','Statistici','Profil','Echipă','Ajutor'];
