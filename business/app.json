@@ -1,0 +1,73 @@
+{
+  "expo": {
+    "name": "CeFaci Business",
+    "slug": "cefaci-business",
+    "version": "1.0.6",
+    "orientation": "default",
+    "scheme": "cefaci-business",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "app.cefaci.business",
+      "permissions": [
+        "CAMERA"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ],
+      "allowBackup": false,
+      "versionCode": 7,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/toamna-fg.png",
+        "backgroundImage": "./assets/icons/toamna-bg.png"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "app.cefaci.business",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Scanează biletul CeFaci al grupului."
+      },
+      "buildNumber": "7"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "name": "CeFaci Business",
+      "favicon": "./assets/icons/toamna.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Scanează biletul CeFaci al grupului.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Alege o poză pentru problema raportată echipei CeFaci.",
+          "cameraPermission": "Scanează biletul CeFaci al grupului.",
+          "microphonePermission": false
+        }
+      ],
+      "./plugins/withSigning",
+      "expo-secure-store",
+      "./plugins/withSeasonIcons"
+    ],
+    "experiments": {
+      "tsconfigPaths": false
+    },
+    "icon": "./assets/icons/toamna.png"
+  }
+}

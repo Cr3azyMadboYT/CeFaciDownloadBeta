@@ -1,0 +1,69 @@
+{
+  "project_id": "vqrmwuarjjntusfbqprx",
+  "checked_at": "2026-10-09T21:59:34Z",
+  "security": [
+    {
+      "name": "rls_enabled_no_policy",
+      "level": "INFO",
+      "count": 30,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+    },
+    {
+      "name": "extension_in_public",
+      "level": "WARN",
+      "count": 1,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public"
+    },
+    {
+      "name": "anon_security_definer_function_executable",
+      "level": "WARN",
+      "count": 1,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable"
+    },
+    {
+      "name": "authenticated_security_definer_function_executable",
+      "level": "WARN",
+      "count": 109,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+    },
+    {
+      "name": "auth_leaked_password_protection",
+      "level": "WARN",
+      "count": 1,
+      "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+    }
+  ],
+  "performance": [
+    {
+      "name": "unindexed_foreign_keys",
+      "level": "INFO",
+      "count": 31,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys"
+    },
+    {
+      "name": "no_primary_key",
+      "level": "INFO",
+      "count": 2,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0004_no_primary_key"
+    },
+    {
+      "name": "unused_index",
+      "level": "INFO",
+      "count": 36,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index"
+    },
+    {
+      "name": "multiple_permissive_policies",
+      "level": "WARN",
+      "count": 1,
+      "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies"
+    }
+  ],
+  "new_security_table_unindexed_foreign_keys": 0,
+  "interpretation": {
+    "rls_no_policy": "Private deny-by-default table; no direct anon/authenticated grants. Guarded SECURITY DEFINER RPCs own access.",
+    "anon_definer": "Only partner_catalog intentionally public with whitelisted non-sensitive fields.",
+    "authenticated_definers": "Explicit RPC authorization is required and tested; execute does not by itself grant Admin/venue access.",
+    "leaked_password_protection": "Existing Supabase Auth setting remains disabled; current Admin/Business UI uses email OTP and mandatory TOTP. No Auth management configuration capability was available to enable it."
+  }
+}

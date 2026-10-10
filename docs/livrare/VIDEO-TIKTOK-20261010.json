@@ -1,0 +1,39 @@
+{
+  "created_for": "CeFaci Client pre-launch TikTok Ads creative",
+  "source_commit": "52267b2e1d64dec5d1ad011b45e26810f9e8fcb1",
+  "duration_seconds": 48,
+  "width": 1080,
+  "height": 1920,
+  "aspect_ratio": "9:16",
+  "fps": 30,
+  "frames": 1440,
+  "video_codec": "h264",
+  "pixel_format": "yuv420p",
+  "color_space": "bt709",
+  "color_range": "tv",
+  "video_bitrate": 1269858,
+  "audio_codec": "aac",
+  "audio_sample_rate": 48000,
+  "audio_channels": 2,
+  "size_bytes": 8882875,
+  "full_decode_passed": true,
+  "integrated_lufs": -16.97,
+  "true_peak_dbtp": -1.44,
+  "soundtrack": "Original procedural synthesis; no imported samples or voices",
+  "platform_approval": "Not submitted; no guarantee of TikTok review outcome",
+  "website_status": "New web ZIP prepared; hosting upload and complete operator identity still required",
+  "files": {
+    "CeFaci-Client-teaser-48s.mp4": "9ed6b5befc975d3215a07e36f07111da39ad9b2dc26b533edf3730a9015d113e",
+    "CeFaci-Client-teaser-cover.jpg": "02b65be87d92f689abaf435aeff7d32f9bbf97ba675cf7e9ac3e1e25ea9d8a1c",
+    "CeFaci-original-soundtrack.wav": "89cb40f434f51ef25119cb77c2c5032dec6d63aca3e25e9a78e441d43a25d8c6"
+  },
+  "inputs": {
+    "marketing/client-teaser/scene.html": "9ad3a9ccdb3f6c8faa9f7678abf47a6a0d5bd31db13c40043c81dab8c95e6b24",
+    "marketing/client-teaser/bilu.svg": "c95fcd2ec0b360f012e4645ec7cf33e2b1a9b47a7994a3e108349adbf6bfd1bb",
+    "marketing/client-teaser/soundtrack.py": "970ac8b6fb9e352ed815db41aa2dd454b4bd49bbec10a8aafc71886638168603",
+    "scripts/render-client-teaser.mjs": "1ef7264c9c76c95a4ca7093abbb96ab0a3dcdc13b602e9daa6828dfa4bff9ba3",
+    "website/assets/acasa.webp": "bffbadf1d9f672c9ca8b1f570dc4518b5a83436c34585357b205883e1a9798cf",
+    "website/assets/plan.webp": "2ce0a6ad22d4c6aca69d1b0d080bc0d3ef7dfe8e03bc806c1fea57bf7162359d",
+    "website/assets/surpriza.webp": "82c1d02306e9015a64b5c3486d9fd415da88572bec67fd2a281fb3818b51434c"
+  }
+}

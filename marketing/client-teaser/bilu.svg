@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -18 130 162">
+<!-- Vector paths reused from mobile/src/ui/Bilu.tsx: hi pose, autumn scarf/leaf. -->
+<g stroke="#0E1440" stroke-linecap="round" stroke-linejoin="round">
+<path d="M48 110L46 127M72 110L74 127" fill="none" stroke-width="6"/>
+<ellipse cx="44" cy="130" rx="8" ry="4.5" fill="#0E1440" stroke="none"/><ellipse cx="76" cy="130" rx="8" ry="4.5" fill="#0E1440" stroke="none"/>
+<path d="M24 88Q12 94 13 106M96 86Q112 76 112 58" fill="none" stroke-width="6"/>
+<circle cx="13" cy="107" r="6.5" fill="#FFD43B" stroke-width="3.5"/><circle cx="112" cy="56" r="6.5" fill="#FFD43B" stroke-width="3.5"/>
+<path d="M38 14H82A16 16 0 0 1 98 30V61A9 9 0 0 0 98 79V98A16 16 0 0 1 82 114H38A16 16 0 0 1 22 98V79A9 9 0 0 0 22 61V30A16 16 0 0 1 38 14Z" fill="#FFD43B" stroke-width="4"/>
+<path d="M26 26Q30 18 40 17" fill="none" stroke="#FFFFFF" stroke-width="3.5" opacity=".55"/>
+<path d="M33 70H87" stroke-width="3" stroke-dasharray="4 6" opacity=".35"/>
+<path d="M52 92l3 3 7-7" fill="none" stroke-width="3" opacity=".28"/>
+<ellipse cx="35" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" stroke="none" opacity=".55"/><ellipse cx="85" cy="55" rx="5.5" ry="3.2" fill="#FF6A4D" stroke="none" opacity=".55"/>
+<ellipse cx="46" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke-width="3"/><ellipse cx="74" cy="40" rx="9" ry="11" fill="#FFFFFF" stroke-width="3"/>
+<circle cx="46" cy="41" r="5" fill="#0E1440" stroke="none"/><circle cx="74" cy="41" r="5" fill="#0E1440" stroke="none"/>
+<circle cx="47.6" cy="38.6" r="1.8" fill="#FFFFFF" stroke="none"/><circle cx="75.6" cy="38.6" r="1.8" fill="#FFFFFF" stroke="none"/>
+<path d="M48 52Q60 70 72 52Z" fill="#0E1440" stroke="none"/><path d="M53 60Q60 67 67 60Q60 57 53 60Z" fill="#FF6A4D" stroke="none"/>
+<path d="M74 72l4 30 11-2-3-28z" fill="#F28C28" stroke-width="2.5"/>
+<path d="M77 84l10-2M78 92l10-2" stroke="#FFFFFF" stroke-width="2.5" opacity=".7"/>
+<path d="M76 100l2 6M81 99l2 6M86 98l2 6" stroke-width="2"/>
+<rect x="18" y="63" width="84" height="13" rx="6.5" fill="#F28C28" stroke-width="2.5"/>
+<path d="M34 63v13M50 63v13M66 63v13M82 63v13" stroke="#FFFFFF" stroke-width="2.5" opacity=".6"/>
+<g transform="rotate(-25 82 8)"><path d="M82 -6c10 4 14 14 8 24c-10-2-14-12-8-24z" fill="#F28C28" stroke-width="2.5"/><path d="M84 0l3 16" stroke-width="2"/></g>
+</g></svg>

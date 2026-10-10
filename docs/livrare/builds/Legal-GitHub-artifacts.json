@@ -1,0 +1,149 @@
+{
+  "run_id": 38033998387,
+  "source_commit": "b98721b5c576cfe8f158520f969650b5a63a764a",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 114160558648,
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114161193333,
+      "name": "native (business, CeFaci-Business)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114161193363,
+      "name": "native (mobile, CeFaci-Client)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 11664105062,
+      "name": "CeFaci-Client-native",
+      "size_in_bytes": 149464230,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11664105062",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11664105062/zip",
+      "expired": false,
+      "created_at": "2026-10-10T07:38:44Z",
+      "expires_at": "2027-01-08T07:18:54Z",
+      "updated_at": "2026-10-10T07:38:44Z",
+      "digest": "sha256:e68f05e57250579c7925e98124cf66d0136b8d8dbb5de2bc5e3c5289fc78aeb1",
+      "workflow_run": {
+        "id": 38033998387,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "b98721b5c576cfe8f158520f969650b5a63a764a"
+      }
+    },
+    {
+      "id": 11664065002,
+      "name": "CeFaci-Business-native",
+      "size_in_bytes": 114099949,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11664065002",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11664065002/zip",
+      "expired": false,
+      "created_at": "2026-10-10T07:32:34Z",
+      "expires_at": "2027-01-08T07:18:54Z",
+      "updated_at": "2026-10-10T07:32:34Z",
+      "digest": "sha256:7a71c822ce3cc9a58511062d14c01136ee3c524ba78d3403343898b40882122c",
+      "workflow_run": {
+        "id": 38033998387,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "b98721b5c576cfe8f158520f969650b5a63a764a"
+      }
+    },
+    {
+      "id": 11662999079,
+      "name": "CeFaci-Business-web",
+      "size_in_bytes": 1586279,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662999079",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662999079/zip",
+      "expired": false,
+      "created_at": "2026-10-10T07:22:35Z",
+      "expires_at": "2027-01-08T07:18:54Z",
+      "updated_at": "2026-10-10T07:22:35Z",
+      "digest": "sha256:7958f1225cba31d575dc5acdac0e0c7725d6627083868fd01ef35ead2d72d741",
+      "workflow_run": {
+        "id": 38033998387,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "b98721b5c576cfe8f158520f969650b5a63a764a"
+      }
+    },
+    {
+      "id": 11662944092,
+      "name": "CeFaci-Admin-web",
+      "size_in_bytes": 367079,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662944092",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662944092/zip",
+      "expired": false,
+      "created_at": "2026-10-10T07:22:36Z",
+      "expires_at": "2027-01-08T07:18:54Z",
+      "updated_at": "2026-10-10T07:22:36Z",
+      "digest": "sha256:33a3476fe82879f0b8996bcaa92287f31cd1b8a748d861a89f61d61bd67d5d25",
+      "workflow_run": {
+        "id": 38033998387,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "b98721b5c576cfe8f158520f969650b5a63a764a"
+      }
+    },
+    {
+      "id": 11662744196,
+      "name": "CeFaci-Business-flow-screenshots",
+      "size_in_bytes": 1998762,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662744196",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662744196/zip",
+      "expired": false,
+      "created_at": "2026-10-10T07:22:35Z",
+      "expires_at": "2027-01-08T07:18:54Z",
+      "updated_at": "2026-10-10T07:22:35Z",
+      "digest": "sha256:c7add4bf4405fb398ad4e95848bca6612ee65075f9b34449118e616ae5c01711",
+      "workflow_run": {
+        "id": 38033998387,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "b98721b5c576cfe8f158520f969650b5a63a764a"
+      }
+    },
+    {
+      "id": 11662699455,
+      "name": "CeFaci-site-web",
+      "size_in_bytes": 516741,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662699455",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11662699455/zip",
+      "expired": false,
+      "created_at": "2026-10-10T07:22:37Z",
+      "expires_at": "2027-01-08T07:18:54Z",
+      "updated_at": "2026-10-10T07:22:37Z",
+      "digest": "sha256:706c270bffb145dbccbe8e6cc0d4f0c095abd70f871fb195af80ca6976dd5034",
+      "workflow_run": {
+        "id": 38033998387,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "b98721b5c576cfe8f158520f969650b5a63a764a"
+      }
+    }
+  ],
+  "site_final_package": {
+    "source_commit": "9eb728c254a5a678db18e2984e6970d27a461aa7",
+    "sha256": "d31f8e6bf0fae1b560dbf1cbc8ad781b80a2e3ed77a93189911bc54b8726ddb4",
+    "path": "release/CeFaci-site-web.zip",
+    "reason": "Update only displayed verified Client/Business versions after actual native build completion",
+    "verification": "Actual ZIP and Apache .htaccess/CSP/browser tests passed; CI baseline retained separately",
+    "ci_baseline_artifact_id": 11662699455
+  }
+}

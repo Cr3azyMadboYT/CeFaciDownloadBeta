@@ -1,0 +1,4 @@
+5354847ad2c9dc1f8e01faa6288217a95ffb3f95de01d822b210156582e51b80  release/CeFaci-Client-build.txt
+8f6aed7eea4427088b33fe3f0e096b6ce828b727c70c9338a3e008f572c17a60  release/CeFaci-Client-ios-project.zip
+726c3a1c47f167122f6907baa13e11346e05c5e7da0a6d83937da3a3137d656a  release/CeFaci-Client.aab
+1747bbded713183358b47d966552ee80c877adb009b291a49e95e54280cd43d2  release/CeFaci-Client.apk

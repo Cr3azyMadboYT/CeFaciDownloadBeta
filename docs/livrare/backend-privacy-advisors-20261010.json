@@ -1,0 +1,234 @@
+{
+  "project": "vqrmwuarjjntusfbqprx",
+  "migration": {
+    "name": "cefaci_privacy_rights",
+    "version": "20261010072621"
+  },
+  "notes": [
+    "Private tables have RLS, no direct anon/authenticated grants and RPC-only authorization.",
+    "Leaked-password protection is an existing disabled Auth setting; current UI uses OTP plus mandatory TOTP for operational dashboards.",
+    "No new privacy table foreign key index or mutable search_path warning."
+  ],
+  "security": {
+    "counts": {
+      "rls_enabled_no_policy": 32,
+      "extension_in_public": 1,
+      "anon_security_definer_function_executable": 1,
+      "authenticated_security_definer_function_executable": 115,
+      "auth_leaked_password_protection": 1
+    },
+    "privacy_related": [
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+        "detail": "Table \\`private.privacy_request_log\\` has RLS enabled, but no policies exist",
+        "metadata": {
+          "name": "privacy_request_log",
+          "type": "table",
+          "schema": "private"
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      },
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy",
+        "detail": "Table \\`private.privacy_requests\\` has RLS enabled, but no policies exist",
+        "metadata": {
+          "name": "privacy_requests",
+          "type": "table",
+          "schema": "private"
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "detail": "Function `public.admin_privacy_request_detail(p_id uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/admin_privacy_request_detail`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+        "metadata": {
+          "name": "admin_privacy_request_detail",
+          "schema": "public",
+          "language": "plpgsql",
+          "arguments": "p_id uuid",
+          "security_definer": true
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "detail": "Function `public.admin_privacy_request_respond(p_id uuid, p_expected_version integer, p_status text, p_response text, p_extension_months integer)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/admin_privacy_request_respond`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+        "metadata": {
+          "name": "admin_privacy_request_respond",
+          "schema": "public",
+          "language": "plpgsql",
+          "arguments": "p_id uuid, p_expected_version integer, p_status text, p_response text, p_extension_months integer",
+          "security_definer": true
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "detail": "Function `public.admin_privacy_requests(p_status text, p_limit integer, p_offset integer)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/admin_privacy_requests`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+        "metadata": {
+          "name": "admin_privacy_requests",
+          "schema": "public",
+          "language": "plpgsql",
+          "arguments": "p_status text, p_limit integer, p_offset integer",
+          "security_definer": true
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "detail": "Function `public.privacy_export_my_data()` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/privacy_export_my_data`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+        "metadata": {
+          "name": "privacy_export_my_data",
+          "schema": "public",
+          "language": "plpgsql",
+          "arguments": "",
+          "security_definer": true
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "detail": "Function `public.privacy_my_requests(p_scope text, p_limit integer, p_offset integer)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/privacy_my_requests`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+        "metadata": {
+          "name": "privacy_my_requests",
+          "schema": "public",
+          "language": "plpgsql",
+          "arguments": "p_scope text, p_limit integer, p_offset integer",
+          "security_definer": true
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable",
+        "detail": "Function `public.privacy_request_submit(p_scope text, p_kind text, p_description text, p_request_key uuid)` can be executed by the `authenticated` role as a `SECURITY DEFINER` function via `/rest/v1/rpc/privacy_request_submit`. Revoke `EXECUTE` or switch it to `SECURITY INVOKER` if that is not intentional.",
+        "metadata": {
+          "name": "privacy_request_submit",
+          "schema": "public",
+          "language": "plpgsql",
+          "arguments": "p_scope text, p_kind text, p_description text, p_request_key uuid",
+          "security_definer": true
+        },
+        "observed_at": "2026-10-10T07:27:31.763Z"
+      }
+    ],
+    "configuration_notices": [
+      {
+        "name": "extension_in_public",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public",
+        "findings": [
+          {
+            "detail": "Extension \\`pg_net\\` is installed in the public schema. Move it to another schema.",
+            "metadata": {
+              "name": "pg_net",
+              "type": "extension",
+              "schema": "public"
+            },
+            "observed_at": "2026-10-10T07:27:31.763Z"
+          }
+        ]
+      },
+      {
+        "name": "auth_leaked_password_protection",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection",
+        "findings": [
+          {
+            "detail": "Supabase Auth prevents the use of compromised passwords by checking against HaveIBeenPwned.org. Enable this feature to enhance security.",
+            "metadata": {
+              "type": "auth",
+              "entity": "Auth"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "performance": {
+    "counts": {
+      "unindexed_foreign_keys": 31,
+      "no_primary_key": 2,
+      "unused_index": 41,
+      "multiple_permissive_policies": 1
+    },
+    "privacy_related": [
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+        "detail": "Index \\`privacy_requests_queue\\` on table \\`private.privacy_requests\\` has not been used",
+        "metadata": {
+          "name": "privacy_requests",
+          "type": "table",
+          "schema": "private"
+        },
+        "observed_at": "2026-10-10T07:27:31.918Z"
+      },
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+        "detail": "Index \\`privacy_requests_own\\` on table \\`private.privacy_requests\\` has not been used",
+        "metadata": {
+          "name": "privacy_requests",
+          "type": "table",
+          "schema": "private"
+        },
+        "observed_at": "2026-10-10T07:27:31.918Z"
+      },
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+        "detail": "Index \\`privacy_requests_handler\\` on table \\`private.privacy_requests\\` has not been used",
+        "metadata": {
+          "name": "privacy_requests",
+          "type": "table",
+          "schema": "private"
+        },
+        "observed_at": "2026-10-10T07:27:31.918Z"
+      },
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+        "detail": "Index \\`privacy_request_log_request\\` on table \\`private.privacy_request_log\\` has not been used",
+        "metadata": {
+          "name": "privacy_request_log",
+          "type": "table",
+          "schema": "private"
+        },
+        "observed_at": "2026-10-10T07:27:31.918Z"
+      },
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index",
+        "detail": "Index \\`privacy_request_log_actor\\` on table \\`private.privacy_request_log\\` has not been used",
+        "metadata": {
+          "name": "privacy_request_log",
+          "type": "table",
+          "schema": "private"
+        },
+        "observed_at": "2026-10-10T07:27:31.918Z"
+      }
+    ],
+    "configuration_notices": []
+  }
+}

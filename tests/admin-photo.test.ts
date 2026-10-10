@@ -1,0 +1,7 @@
+import {expect,it} from 'vitest';
+import {validateAttachment} from '../admin/src/photo';
+const png=Uint8Array.from(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aL1sAAAAASUVORK5CYII=','base64'));
+it('allows a real small private image and bounded PDF proof',async()=>{await expect(validateAttachment(new Blob([png],{type:'image/png'}),false)).resolves.toBeUndefined();await expect(validateAttachment(new Blob(['%PDF-1.7\nbody\n%%EOF'],{type:'application/pdf'}),true)).resolves.toBeUndefined();});
+it('rejects forged MIME and file signatures before a blob URL is rendered',async()=>{for(const blob of [new Blob(['<svg onload="alert(1)"/>'],{type:'image/png'}),new Blob([png],{type:'image/jpeg'}),new Blob(['%PDF-1.7 body'],{type:'application/pdf'}),new Blob([png],{type:'image/svg+xml'})])await expect(validateAttachment(blob,true)).rejects.toThrow();});
+it('rejects oversized images and unexpected PDFs on problem reports',async()=>{await expect(validateAttachment(new Blob([new Uint8Array(5*1024*1024+1)],{type:'image/png'}),false)).rejects.toThrow(/limita/);await expect(validateAttachment(new Blob(['%PDF-1.7\nbody\n%%EOF'],{type:'application/pdf'}),false)).rejects.toThrow(/format/);});
+it('rejects extreme image dimensions before browser decoding',async()=>{const huge=png.slice();new DataView(huge.buffer).setUint32(16,100000);await expect(validateAttachment(new Blob([huge],{type:'image/png'}),false)).rejects.toThrow(/4096/);});

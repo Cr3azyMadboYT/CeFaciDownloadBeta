@@ -50,6 +50,7 @@ export default function Setari() {
         <Lbl style={{ marginTop: 8 }}>Contul</Lbl>
         <Muted style={{ fontSize: 14 }}>{who ? 'Contul: ' + (who.email ?? 'Google') + '. Ieșirea din cont și ștergerea sunt jos în Profil.' : 'Nu ești în cont.'}</Muted>
         <Lbl style={{ marginTop: 8 }}>Despre</Lbl>
+        <Press accessibilityLabel="Termeni și confidențialitate" onPress={() => router.push('/confidentialitate')} style={{minHeight: 44, justifyContent: 'center'}}><T style={{fontFamily: F.sb, color: t.blueInk}}>Termeni · Confidențialitate · Datele mele</T></Press>
         <Muted style={{ fontSize: 14 }}>
           {'Datele localurilor: © contribuitorii '}
           <T style={{ fontFamily: F.m, fontSize: 14, color: t.ink2, textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://www.openstreetmap.org/copyright')}>OpenStreetMap</T>

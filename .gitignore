@@ -5,3 +5,16 @@ android-release.jks
 android/assets/index.html
 *.jks
 *.keystore
+
+supabase/.temp/
+business/node_modules/
+business/android/
+business/ios/
+business/.expo/
+mobile/.expo/
+mobile/android/
+mobile/ios/
+*.zip
+release/
+mobile/dist-android/
+livrare-cornel/

@@ -1,6 +1,6 @@
 // "Biletul serii": the plan as a yellow ticket, then what's left to do (book a table directly with the place),
 // directions, calendar, sending it to friends.
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { Linking, ScrollView, Share, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { canRate, rateOuting } from '../../lib/rate';
@@ -24,6 +24,7 @@ import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { Ticket } from '../../ui/Ticket';
 import { Doodles } from '../../ui/Doodles';
+import { PartnerTicket } from '../../ui/PartnerTicket';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 /** The chosen time and the half hours around it, for the booking. */
@@ -60,8 +61,9 @@ export default function Bilet() {
   const all = useApp((s) => (s.board.plans as Plan[] | undefined));
   const onTo = useCallback((x: Target | null) => setTo(x), []);
   const sid = pl?.sid;
-  const loadWho = useCallback(() => { if (sid) void going(sid).then(setWho); }, [sid]);
-  useEffect(() => { loadWho(); if (!sid || !me) return; return watchPlans(me.id + '-' + sid, loadWho); }, [sid, me, loadWho]);
+  const whoScope=useRef(0);
+  const loadWho=useCallback(()=>{const gen=++whoScope.current;if(sid)void going(sid).then(rows=>{if(gen===whoScope.current)setWho(rows);}).catch(()=>{});},[sid,me?.id]);
+  useEffect(()=>{setWho([]);loadWho();const stop=sid&&me?watchPlans(me.id+'-'+sid,loadWho):()=>{};return()=>{whoScope.current++;stop();};},[sid,me?.id,loadWho]);
   const p = pl ? APP.byId(pl.placeId) : undefined;
   const close = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
 
@@ -74,6 +76,8 @@ export default function Bilet() {
     );
   }
   const needsRes = p.res !== 'none';
+  const internal=!!p.partner || !!APP.partnerInfo(p.id);
+  const partner=APP.partnerInfo(p.id);
   const noted = pl.res === 'noted';
   const ct = p.contact;
   const day = dayWord(pl);
@@ -104,7 +108,7 @@ export default function Bilet() {
     return best;
   })();
   const clashP = clash ? APP.byId(clash.placeId) : undefined;
-  const drop = () => { void cancelReminders(pl.remind); if (pl.sid && me) void dropShared(pl, me.id); removePlan(pl.pid); toast('Ai renunțat la ' + p.name + (pl.sid ? '. I-am anunțat și pe ceilalți.' : '.')); close(); };
+  const drop = async () => {try {if(pl.sid&&me)await dropShared(pl,me.id);await cancelReminders(pl.remind);removePlan(pl.pid);toast('Planul a fost anulat.');close();}catch(e){toast((e as Error).message);}};
   const shareToCrew = async () => {
     if (!to || !me) return;
     setSending(true);
@@ -144,10 +148,12 @@ export default function Bilet() {
           <Ticket bg={t.bg} d={{
             pid: pl.pid, place: p.name, kind: p.title, area: p.zone, day: pl.slot === 'acum' ? 'Azi' : dateText(pl), hour: pl.slot === 'acum' ? 'acum' : pl.slot, people: pl.people,
             cost: p.price === 0 ? 'Gratuit' : '~' + p.price + ' lei',
-            last: needsRes ? { label: 'Rezervare', value: noted ? 'Prin ' + (pl.resVia ?? 'telefon') : 'De făcut', dot: noted ? '#2F5BFF' : '#D93A1C' } : { label: 'Durată', value: fmtDur(p.dur) },
+            last: internal ? {label:'Grup',value:'Prin CeFaci',dot:'#2F5BFF'} : needsRes ? { label: 'Rezervare', value: noted ? 'Prin ' + (pl.resVia ?? 'telefon') : 'De făcut', dot: noted ? '#2F5BFF' : '#D93A1C' } : { label: 'Durată', value: fmtDur(p.dur) },
           }} />
         </View>
 
+        {internal ? <PartnerTicket plan={pl}/> : null}
+        {partner?.mode==='recommended'&&!partner.reservations_on?<View style={{padding:20}}><Muted>Poți merge direct. Momentan nu acceptă rezervări.</Muted></View>:null}
         {p.story ? (
           <View style={{ marginTop: 12, marginHorizontal: 20, padding: 14, borderRadius: 18, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, gap: 4 }}>
             <T style={{ fontFamily: F.b, fontSize: 12, letterSpacing: 1.2, color: t.ink3 }}>DE CE MERITĂ</T>
@@ -156,7 +162,7 @@ export default function Bilet() {
           </View>
         ) : null}
         <View style={{ marginTop: 12, marginHorizontal: 20, gap: 10 }}>
-          {needsRes && !noted && !pl.inAt ? (
+          {!internal && needsRes && !noted && !pl.inAt ? (
             <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M12 8v4M12 16h.01" bg={p.res === 'required' ? t.coralSoft : t.yellowSoft} ink={p.res === 'required' ? t.coralInk : t.yellowInk}
               title={p.res === 'required' ? p.name + ' cere rezervare' : 'Se umple repede la ' + p.name} sub="Faceți o rezervare ca să vă asigurați locul." btn="Rezervă" onPress={() => setExt('pick')} />
           ) : null}
@@ -173,6 +179,7 @@ export default function Bilet() {
             const OK = 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM8.5 12l2.5 2.5 4.5-5';
             if (!pl.inAt) {
               if (!today) return null;
+              if(internal)return null;
               return <Row icon={SCAN} bg={t.yellowSoft} ink={t.yellowInk} title={'Ai ajuns la ' + p.name + '?'} sub="Fă check-in când ești acolo: primești ștampila și XP."
                 btn={busyIn === 'in' ? 'Caut…' : 'Sunt aici'} onPress={async () => { if (busyIn) return; setBusyIn('in'); const r = await checkIn(pl); setBusyIn(''); toast(r.msg); }} />;
             }
@@ -180,7 +187,7 @@ export default function Bilet() {
               return <Row icon={BON} bg={t.blueSoft} ink={t.blueInk} title={'Ești la ' + p.name + ' din ' + pl.inAt} sub="La plecare, pune poza bonului fiscal: +25 XP."
                 btn={busyIn === 'bon' ? 'Citesc…' : 'Pune bonul'} onPress={() => { if (!busyIn) setBonPick(true); }} />;
             }
-            return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="+25 XP în carnet. Mersi că ții CeFaci corect." />;
+            return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="Bon confirmat. XP-ul este acordat separat de verificarea vizitei." />;
           })()}
           {p.real.gone ? (
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
@@ -283,13 +290,13 @@ export default function Bilet() {
               <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>Câte persoane</T>
               <Press onPress={() => updPlan(pl.pid, { people: Math.max(1, pl.people - 1) })} accessibilityLabel="Mai puține persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>−</T></Press>
               <T style={{ minWidth: 28, textAlign: 'center', fontFamily: F.display, fontSize: 22 }}>{pl.people}</T>
-              <Press onPress={() => updPlan(pl.pid, { people: Math.min(30, pl.people + 1) })} accessibilityLabel="Mai multe persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>+</T></Press>
+              <Press onPress={() => updPlan(pl.pid, { people: Math.min(500, pl.people + 1) })} accessibilityLabel="Mai multe persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>+</T></Press>
             </View>
             {pl.slot !== 'acum' ? (
               <View style={{ gap: 8 }}>
                 <T style={{ fontFamily: F.sb, fontSize: 15 }}>La ce oră</T>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={() => { updPlan(pl.pid, { slot: s }); void moveShared(pl, s); }} />)}
+                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={()=>void(async()=>{try{await moveShared(pl,s);updPlan(pl.pid,{slot:s});}catch(e){toast((e as Error).message);}})()} />)}
                 </View>
               </View>
             ) : null}

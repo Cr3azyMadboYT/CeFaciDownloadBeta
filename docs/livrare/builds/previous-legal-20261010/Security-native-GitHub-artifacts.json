@@ -1,0 +1,83 @@
+{
+  "run_id": 37996015334,
+  "source_commit": "12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94",
+  "conclusion": "success",
+  "artifacts": [
+    {
+      "id": 11647715789,
+      "name": "CeFaci-Business-native",
+      "size_in_bytes": 114046110,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11647715789",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11647715789/zip",
+      "expired": false,
+      "created_at": "2026-10-09T22:05:07Z",
+      "expires_at": "2027-01-07T21:52:24Z",
+      "updated_at": "2026-10-09T22:05:07Z",
+      "digest": "sha256:672e0d8df2db7347cb2d271b682b924d2f81f0b78f0221fe2ea2fc47254d1417",
+      "workflow_run": {
+        "id": 37996015334,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94"
+      }
+    },
+    {
+      "id": 11646214779,
+      "name": "CeFaci-Business-flow-screenshots",
+      "size_in_bytes": 1796131,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11646214779",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11646214779/zip",
+      "expired": false,
+      "created_at": "2026-10-09T21:55:24Z",
+      "expires_at": "2027-01-07T21:52:24Z",
+      "updated_at": "2026-10-09T21:55:24Z",
+      "digest": "sha256:430f830f9fd6c2e9287c098eba1500cadbd383c9d5115d66836bbd4e29694c52",
+      "workflow_run": {
+        "id": 37996015334,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94"
+      }
+    },
+    {
+      "id": 11646144877,
+      "name": "CeFaci-Business-web",
+      "size_in_bytes": 1567138,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11646144877",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11646144877/zip",
+      "expired": false,
+      "created_at": "2026-10-09T21:55:25Z",
+      "expires_at": "2027-01-07T21:52:24Z",
+      "updated_at": "2026-10-09T21:55:25Z",
+      "digest": "sha256:99907eb49853907f914ba3b29f4ff2f8aced9d4f425bdc50327738e2e6742326",
+      "workflow_run": {
+        "id": 37996015334,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94"
+      }
+    },
+    {
+      "id": 11646139971,
+      "name": "CeFaci-Admin-web",
+      "size_in_bytes": 349741,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11646139971",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11646139971/zip",
+      "expired": false,
+      "created_at": "2026-10-09T21:55:26Z",
+      "expires_at": "2027-01-07T21:52:24Z",
+      "updated_at": "2026-10-09T21:55:26Z",
+      "digest": "sha256:0f64c894daddc523287e261b5240c9354dd7880afee9513dc054cb67744ee6b9",
+      "workflow_run": {
+        "id": 37996015334,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94"
+      }
+    }
+  ]
+}

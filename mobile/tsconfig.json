@@ -3,8 +3,28 @@
   "compilerOptions": {
     "strict": true,
     "resolveJsonModule": true,
-    "paths": { "@shared/*": ["../src/*"] }
+    "paths": {
+      "react": [
+        "./node_modules/@types/react"
+      ],
+      "react/*": [
+        "./node_modules/@types/react/*"
+      ],
+      "*": [
+        "./node_modules/*"
+      ]
+    }
   },
-  "include": ["**/*.ts", "**/*.tsx", "../src/engine/*.ts", "../src/app/bridge.ts", "../src/app/cloud.ts"],
-  "exclude": ["node_modules", "../src/**/*.test.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../src/engine/*.ts",
+    "../src/app/bridge.ts",
+    "../src/app/cloud.ts",
+    "../shared/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "../src/**/*.test.ts"
+  ]
 }

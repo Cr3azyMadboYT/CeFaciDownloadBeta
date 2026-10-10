@@ -6,6 +6,7 @@ import { APP } from '../lib/session';
 import { onSyncTrouble } from '../lib/session';
 import { Big, Field, Lbl, Muted, Note } from './kit';
 import { useTheme } from './theme';
+import { LegalLinks } from './LegalLinks';
 
 export function SignIn() {
   const { t } = useTheme();
@@ -28,6 +29,7 @@ export function SignIn() {
   };
   return (
     <View style={{ gap: 10 }}>
+      <LegalLinks />
       <Big label="Continuă cu Google" color="#FFD43B" ink="#0E1440" disabled={busy} onPress={async () => { setErr(''); setBusy(true); const e = await APP.google(); setBusy(false); if (e) setErr(e); }} />
       <Lbl style={{ marginTop: 6 }}>Sau cu emailul</Lbl>
       <Field value={mail} onChangeText={(x) => { setMail(x.slice(0, 80)); setSent(false); setCode(''); }} placeholder="nume@exemplu.ro" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} autoComplete="email"
