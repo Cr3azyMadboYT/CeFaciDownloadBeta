@@ -2,7 +2,7 @@
   "expo": {
     "name": "CeFaci Business",
     "slug": "cefaci-business",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "default",
     "scheme": "cefaci-business",
     "userInterfaceStyle": "automatic",
@@ -23,7 +23,11 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "allowBackup": false,
-      "versionCode": 6
+      "versionCode": 7,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/toamna-fg.png",
+        "backgroundImage": "./assets/icons/toamna-bg.png"
+      }
     },
     "ios": {
       "bundleIdentifier": "app.cefaci.business",
@@ -31,12 +35,13 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Scanează biletul CeFaci al grupului."
       },
-      "buildNumber": "6"
+      "buildNumber": "7"
     },
     "web": {
       "bundler": "metro",
       "output": "single",
-      "name": "CeFaci Business"
+      "name": "CeFaci Business",
+      "favicon": "./assets/icons/toamna.png"
     },
     "plugins": [
       [
@@ -57,10 +62,12 @@
         }
       ],
       "./plugins/withSigning",
-      "expo-secure-store"
+      "expo-secure-store",
+      "./plugins/withSeasonIcons"
     ],
     "experiments": {
       "tsconfigPaths": false
-    }
+    },
+    "icon": "./assets/icons/toamna.png"
   }
 }

@@ -71,6 +71,32 @@ async function download(p,state){const event=p.waitForEvent('download');await bu
 try{
  fs.mkdirSync('release/screenshots',{recursive:true});
  for(const app of ['admin','business','client']){const f=await fixture(app,{signed:false});if(app!=='client')await entry(f.page).click();else{await f.page.goto(roots.client+'/cont');await button(f.page,'Termeni și confidențialitate').click();}await f.page.getByText('Intră în cont pentru cereri și exportul datelor tale.',{exact:app==='admin'}).waitFor();await button(f.page,'Politica de confidențialitate').click();await f.page.getByRole('heading',{name:'Politica de confidențialitate',exact:true}).waitFor();assert(!f.state.calls.some(c=>c.name.startsWith('privacy_')||c.name.startsWith('admin_privacy')));await f.context.close();}
+ // Account notice: direct correct documents, no authentication side effects, form survives closing.
+ for(const app of ['client','business']){
+  const f=await fixture(app,{signed:false});
+  if(app==='client')await f.page.goto(roots.client+'/cont');
+  else await button(f.page,'Revendică localul').click();
+  await f.page.getByText('Prin crearea contului accepți Termenii de utilizare și confirmi că ai citit Politica de confidențialitate.',{exact:true}).waitFor();
+  if(app==='business')await f.page.getByLabel('Email',{exact:true}).fill('notice@example.invalid');
+  const callsBefore=f.state.calls.length;
+  for(const [label,title] of [['Termenii de utilizare',app==='client'?'Termeni de utilizare Client':'Reguli și termeni Business beta'],['Politica de confidențialitate','Politica de confidențialitate']]){
+   await f.page.getByRole('link',{name:label,exact:true}).click();
+   await f.page.getByRole('heading',{name:title,exact:true}).waitFor();
+   await button(f.page,'Închide documentele contului').click();
+  }
+  assert.equal(f.state.calls.length,callsBefore,'Opening legal documents must not authenticate or submit requests');
+  if(app==='business')assert.equal(await f.page.getByLabel('Email',{exact:true}).inputValue(),'notice@example.invalid');
+  else {
+   await button(f.page,'Continuă cu email').click();
+   await f.page.getByLabel('Adresa de email',{exact:true}).fill('notice@example.invalid');
+   await f.page.getByRole('link',{name:'Termenii de utilizare',exact:true}).click();
+   await f.page.getByRole('heading',{name:'Termeni de utilizare Client',exact:true}).waitFor();
+   await button(f.page,'Închide documentele contului').click();
+   assert.equal(await f.page.getByLabel('Adresa de email',{exact:true}).inputValue(),'notice@example.invalid');
+  }
+  assert(await f.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+  await f.page.screenshot({path:`release/screenshots/legal-notice-${app}.png`,fullPage:true});await f.context.close();
+ }
  const c=await fixture('client',{lost:true});await c.page.getByLabel('Detaliile cererii privind datele',{exact:true}).waitFor();await c.page.getByLabel('Detaliile cererii privind datele',{exact:true}).fill('Doresc să verific datele și preferințele proprii din contul meu.');await button(c.page,'Trimite cererea privind datele').click();await c.page.getByText('Răspuns de rețea pierdut după primirea cererii.',{exact:true}).waitFor();assert.equal(await c.page.getByLabel('Detaliile cererii privind datele',{exact:true}).isEditable(),false);await button(c.page,'Reîncearcă cererea').click();await c.page.getByText('Cererea a fost primită. Starea și răspunsul echipei apar mai jos.',{exact:true}).waitFor();assert.equal(c.state.requests.length,1);assert.equal(new Set(c.state.calls.filter(x=>x.name==='privacy_request_submit').map(x=>x.p.p_request_key)).size,1);await download(c.page,c.state);
  c.state.requests[0].status='answered';c.state.requests[0].response='Am verificat cererea și ți-am trimis informațiile solicitate.';await button(c.page,'Actualizează cererile privind datele').click();await c.page.getByText('Răspuns CeFaci: '+c.state.requests[0].response,{exact:true}).waitFor();assert(await c.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await c.page.screenshot({path:'release/screenshots/privacy-client-phone.png',fullPage:true});await c.context.close();
  const pages=await fixture('client',{many:true});await button(pages.page,'Mai multe cereri privind datele').click();await pages.page.waitForFunction(()=>!Array.from(document.querySelectorAll('[role=button]')).some(x=>x.textContent==='Mai multe cereri privind datele'));assert(pages.state.calls.some(c=>c.name==='privacy_my_requests'&&c.p.p_offset===100));await download(pages.page,pages.state);await pages.context.close();
@@ -79,6 +105,6 @@ try{
  for(const role of ['proprietar','manager','receptie','scanare']){const f=await fixture('business',{active:true,role});await button(f.page,'Confidențialitate').click();await f.page.getByLabel('Detaliile cererii privind datele',{exact:true}).waitFor();assert(!f.state.calls.some(c=>c.name.startsWith('admin_privacy')));await f.context.close();}
  const downgrade=await fixture('admin',{active:true,role:'fondator',clock:true});await downgrade.page.getByRole('heading',{name:'Bună, echipa CeFaci.',exact:true}).waitFor();downgrade.state.requests=[row('client')];await button(downgrade.page,'Date personale').click();await downgrade.page.getByText('Acces la date · @privacy_test · client',{exact:true}).click();await downgrade.page.getByText('Solicit o copie a datelor mele proprii.',{exact:true}).waitFor();downgrade.state.role='suport';await downgrade.page.clock.fastForward(15050);await downgrade.page.waitForFunction(()=>!Array.from(document.querySelectorAll('button')).some(x=>x.textContent==='Date personale'));assert.equal(await downgrade.page.getByText('Solicit o copie a datelor mele proprii.',{exact:true}).count(),0);await downgrade.context.close();
  const stale=await fixture('business',{active:false});await entry(stale.page).click();await stale.page.getByLabel('Detaliile cererii privind datele',{exact:true}).waitFor();stale.state.delayExport=true;let downloads=0;stale.page.on('download',()=>downloads++);await button(stale.page,'Exportă datele mele de bază').click();await stale.page.waitForTimeout(100);assert(stale.state.releaseExport);await button(stale.page,'Înapoi la Business').click();stale.state.releaseExport();await stale.page.waitForTimeout(250);assert.equal(downloads,0);await stale.context.close();
- assert.deepEqual(unexpected,[]);assert.deepEqual(errors,[]);console.log('PASS: offline legal docs before auth across all 3 apps; own rights/export through MFA gates; stable-key retry after lost response; paginated own history; bounded curated JSON download; Admin queue role restriction/versioned response; all Business role entries; role downgrade clears private queue; stale export cannot save after screen unmount; zero live writes.');
+ assert.deepEqual(unexpected,[]);assert.deepEqual(errors,[]);console.log('PASS: signup notices open correct offline documents without auth side effects and preserve Client/Business forms; offline legal docs before auth across all 3 apps; own rights/export through MFA gates; stable-key retry after lost response; paginated own history; bounded curated JSON download; Admin queue role restriction/versioned response; all Business role entries; role downgrade clears private queue; stale export cannot save after screen unmount; zero live writes.');
 }catch(e){console.error('Unexpected:',unexpected,'Page errors:',errors);throw e;}
 finally{await Promise.all(contexts.map(c=>c.close().catch(()=>{})));await browser.close();await Promise.all(servers.map(s=>new Promise(resolve=>s.close(resolve))));}

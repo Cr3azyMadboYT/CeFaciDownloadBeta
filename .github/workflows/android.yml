@@ -143,6 +143,9 @@ jobs:
           CI: '1'
           EXPO_NO_TELEMETRY: '1'
         run: npx expo prebuild --no-install
+      - name: Verifică resursele sezoniere Business și autolinking
+        if: matrix.folder == 'business'
+        run: python3 scripts/audit-business-season-icons.py
       - name: Cheia de semnare
         id: sign
         env:
@@ -178,6 +181,7 @@ jobs:
           cp "${{ matrix.folder }}/android/app/build/outputs/apk/release/app-release.apk" "release/${{ matrix.name }}.apk"
           if [ -d "${{ matrix.folder }}/android/app/build/outputs/bundle/release" ]; then cp "${{ matrix.folder }}"/android/app/build/outputs/bundle/release/*.aab "release/${{ matrix.name }}.aab"; fi
           zip -qr "release/${{ matrix.name }}-ios-project.zip" "${{ matrix.folder }}/ios"
+          if [ "${{ matrix.folder }}" = "business" ]; then zip -qr "release/${{ matrix.name }}-ios-project.zip" business/modules/cefaci-business-icon; fi
           printf '%s\n' "Commit ${{ github.sha }}" "Semnare productie ${{ steps.sign.outputs.signed }}" > "release/${{ matrix.name }}-build.txt"
           SDK_TOOLS=$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)
           "$SDK_TOOLS/apksigner" verify --verbose --print-certs "release/${{ matrix.name }}.apk" >> "release/${{ matrix.name }}-build.txt"

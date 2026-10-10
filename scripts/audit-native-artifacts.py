@@ -50,7 +50,7 @@ def compiled_manifest(data):
     return tags
 
 
-for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 6), ("CeFaci-Business", "app.cefaci.business", 6)]:
+for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 7), ("CeFaci-Business", "app.cefaci.business", 7)]:
     if len(sys.argv) > 1 and name not in sys.argv[1:]:
         continue
     apk = pathlib.Path("release") / (name + ".apk")
@@ -73,4 +73,9 @@ for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 6), ("CeFaci-B
     if name == "CeFaci-Business":
         assert not permissions & {"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"}
         assert "android.permission.CAMERA" in permissions
+        aliases = [attrs for tag, attrs in tags if tag == "activity-alias" and ".Icon_" in attrs.get("name", "")]
+        assert {a["name"].split(".Icon_")[1] for a in aliases} == {"primavara", "vara", "toamna", "iarna", "craciun"}
+        assert [a["name"].split(".Icon_")[1] for a in aliases if a.get("enabled", True)] == ["toamna"]
+        assert all(a.get("icon") and a.get("roundIcon") for a in aliases), "Missing packaged seasonal icon resources"
+
     print(json.dumps({"apk": name, "package": package, "versionCode": version, "allowBackup": application["allowBackup"], "permissions": sorted(permissions)}, ensure_ascii=False))

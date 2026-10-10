@@ -1,3 +1,4 @@
+import {watchBusinessIcon} from "./season-icon";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
@@ -323,6 +324,7 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
   );
 }
 export default function App() {
+  useEffect(() => watchBusinessIcon(), []);
   const [privacyOpen, PrivacyOpen] = useState(false);
   const [fonts] = useFonts({
     BricolageGrotesque_800ExtraBold,

@@ -2,8 +2,8 @@ import {useState} from 'react';
 import {Text, View, Pressable} from 'react-native';
 import {LEGAL_DOCUMENTS, LEGAL_VERSION, LEGAL_CONTACT_EMAIL} from './legal-content';
 import type {Theme} from './theme';
-export function LegalReaderNative({audience, theme}: {audience: 'client'|'business'|'admin'; theme: Theme}) {
-  const [selected, select] = useState('');
+export function LegalReaderNative({audience, theme, initialDocument = ''}: {audience: 'client'|'business'|'admin'; theme: Theme; initialDocument?: string}) {
+  const [selected, select] = useState(initialDocument);
   const documents = LEGAL_DOCUMENTS.filter(d => d.audience.includes(audience));
   const doc = documents.find(d => d.id === selected);
   const text = {color: theme.ink, fontFamily: 'InstrumentSans_400Regular', fontSize: 15, lineHeight: 23};

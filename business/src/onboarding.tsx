@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { View, ScrollView } from "react-native";
 import type { Session } from "@supabase/supabase-js";
+import {AccountLegalNotice} from "../../shared/AccountLegalNotice";
+import {useTheme} from "../../shared/theme";
 import { Bilu } from "../../shared/Bilu";
 import { RequestScope } from "../../shared/contracts";
 import { backend, call } from "./backend";
@@ -10,6 +12,7 @@ import { chooseProof, requestKey, uploadProof, type ClaimVenue, type PartnerRequ
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : "Nu am putut încheia pasul. Reîncearcă online.";
 
 export function BusinessEntry() {
+  const {t} = useTheme();
   const [mode, setMode] = useState<"start" | "existing" | "new">("start");
   const [email, E] = useState(""), [code, C] = useState(""), [sent, S] = useState(false),
     [busy, B] = useState(false), [message, M] = useState("");
@@ -38,6 +41,7 @@ export function BusinessEntry() {
       <Txt muted>{mode === "existing" ? "Folosește adresa contului CeFaci. Dacă ești în echipa unui local, intri cu rolul acordat de proprietar." : "Confirmă adresa de email. Poți folosi contul CeFaci existent sau crea unul aici. Cererea de parteneriat se verifică separat."}</Txt>
       <Field label="Email" editable={!busy} value={email} onChange={(v) => { E(v); S(false); C(""); M(""); }} />
       {sent && <Field label="Codul primit prin email" numeric editable={!busy} value={code} onChange={C} />}
+      <AccountLegalNotice audience="business" theme={t} creating={mode === "new"}/>
       <Button label={busy ? "Așteaptă…" : sent ? "Intră" : "Trimite codul"} disabled={busy || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || (sent && !code.trim())} onPress={() => void run(sent)} />
       {sent && <Button label="Retrimite codul" secondary disabled={busy} onPress={() => void run(false)} />}
       {!!message && <Txt>{message}</Txt>}

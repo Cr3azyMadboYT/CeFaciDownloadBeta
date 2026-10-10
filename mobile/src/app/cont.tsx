@@ -19,6 +19,7 @@ import { Icon } from '../ui/Icon';
 import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { Doodles } from '../ui/Doodles';
+import {AccountLegalNotice} from '../../../shared/AccountLegalNotice';
 import { LegalLinks } from '../ui/LegalLinks';
 import { isRudeName, RUDE_SAY } from '../../../src/app/names';
 
@@ -265,7 +266,8 @@ export default function Cont() {
           <T style={{ marginTop: 12, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: 16, lineHeight: 23, color: '#C9CEE6' }}>{returning ? 'Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.' : 'Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.'}</T>
           <View style={{ flex: 1, minHeight: 24 }} />
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 10 }}>
-            <LegalLinks dark />
+            <AccountLegalNotice audience="client" theme={t} dark creating={!returning}/>
+            <LegalLinks dark compact />
             <Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}
               style={{ height: 56, borderRadius: 18, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <GoogleG />
@@ -277,7 +279,7 @@ export default function Cont() {
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>Continuă cu email</T>
             </Press>
             {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
-            <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ai deja cont? Intră la fel, cu Google sau cu emailul. Continuând, accepți Termenii și Politica de confidențialitate.</T>
+            <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ai deja cont? Intră la fel, cu Google sau cu emailul.</T>
           </View>
         </ScrollView>
       </Slide>
@@ -320,7 +322,7 @@ export default function Cont() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Slide k="email">
-          <StepScreen k={1} onBack={back} foot={<Big label={busy ? 'O clipă…' : sent ? 'Confirmă codul' : 'Trimite-mi codul'} disabled={off} onPress={sendOrVerify} />}>
+          <StepScreen k={1} onBack={back} foot={<View style={{gap: 8}}>{!sent && <AccountLegalNotice audience="client" theme={t} creating={!returning}/>}<Big label={busy ? 'O clipă…' : sent ? 'Confirmă codul' : 'Trimite-mi codul'} disabled={off} onPress={sendOrVerify} /></View>}>
             {bubble}
             <H1>Emailul tău</H1>
             <View style={{ marginTop: 14, gap: 8 }}>

@@ -3,14 +3,14 @@
     "name": "CeFaci",
     "slug": "cefaci",
     "scheme": "cefaci",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "orientation": "portrait",
     "icon": "./assets/icons/vara.png",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#EEF1FB",
     "android": {
       "package": "ro.cefaci.app",
-      "versionCode": 6,
+      "versionCode": 7,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/vara-fg.png",
         "backgroundImage": "./assets/icons/vara-bg.png",
@@ -36,7 +36,7 @@
     "ios": {
       "bundleIdentifier": "ro.cefaci.app",
       "supportsTablet": false,
-      "buildNumber": "6",
+      "buildNumber": "7",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
