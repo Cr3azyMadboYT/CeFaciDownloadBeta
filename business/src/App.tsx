@@ -1,3 +1,5 @@
+import {rememberedAuth} from './auth-storage';
+import {useRememberedWebAuth} from '../../shared/use-remembered-web-auth';
 import {watchBusinessIcon} from "./season-icon";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -358,6 +360,7 @@ export default function App() {
   }, []);
   const security = useSecureAccess(session?.user.id ?? "", "business", call, session ? securitySessionKey(session) : '');
   const logout = async () => { security.lock(); try { await call("secure_session_close", {p_scope: "business"}); } finally { const {error} = await backend.auth.signOut({scope: "local"}); if (error) throw error; } };
+  const rememberNotice=useRememberedWebAuth(rememberedAuth,session,logout);
   useEffect(() => {
     const listener = AppState.addEventListener("change", state => {if (state === "active") void security.check();});
     if (Platform.OS !== "web") return () => listener.remove();
@@ -388,6 +391,7 @@ export default function App() {
               }}
             />
           </View>
+          {!!rememberNotice&&<Txt>{rememberNotice}</Txt>}
           {privacyOpen && fonts && ready ? <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
             <ActivityIndicator accessibilityLabel="Se încarcă CeFaci Business" />
           ) : session ? (

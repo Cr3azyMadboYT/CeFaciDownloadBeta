@@ -109,11 +109,12 @@ try {
         id,
         capacity,
         JSON.stringify(
-          Array.from({ length: 7 }, (_, i) => ({
+          // Overlapping all-day windows keep near-now race fixtures valid across midnight.
+          Array.from({ length: 7 }, (_, i) => ["00:00", "12:00"].map(hour => ({
             day: i + 1,
-            from: "00:00",
-            to: "23:59",
-          })),
+            from: hour,
+            to: hour,
+          }))).flat(),
         ),
       ],
     );

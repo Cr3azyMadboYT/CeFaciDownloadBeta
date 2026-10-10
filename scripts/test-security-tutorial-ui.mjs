@@ -46,6 +46,7 @@ async function fixture(app,{role=app==='admin'?'fondator':'proprietar',aal='aal1
   else if(path===`/auth/v1/factors/${fid}`&&req.method()==='DELETE'){assert.equal(state.factor,'unverified');state.factor=null;data={id:fid};}
   else if(name==='admin_me'&&state.revoked){status=403;data={message:'Accesul în Admin este rezervat echipei CeFaci.',code:'42501'};}
   else if(name==='admin_me')data={user_id:uid,username:'synthetic',role:state.role,permissions:permissions[state.role]??[]};
+  else if(name==='admin_launch_interests')data={summary:{total:0,yes:0,maybe:0,no:0,email:0},rows:[]};
   else if(name==='admin_dashboard')data={support_new:0,support_in_progress:0,missing_place_new:0,legacy_new:0,partner_pending:0,places:1};
   else if(name==='admin_operations_summary')data={visits_today:0,reservations_pending:0,counts_awaiting:0,counts_disputed:0,benefits_pending:0,unclosed:0};
   else if(name==='admin_operations')data={visits:[],reservations:[],total_visits:0,total_reservations:0};

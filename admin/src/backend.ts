@@ -1,7 +1,9 @@
 import {createClient} from '@supabase/supabase-js';
+import {browserRememberedAuth} from '../../shared/remembered-web-auth';
 import {publishSecurityFailure} from '../../shared/security-events';
+export const rememberedAuth=browserRememberedAuth('cefaci-admin-auth','admin');
 export const supabase = createClient('https://vqrmwuarjjntusfbqprx.supabase.co','sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O',{
-  auth:{storageKey:'cefaci-admin-auth',storage:window.sessionStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,flowType:'pkce'},
+  auth:{storageKey:'cefaci-admin-auth',storage:rememberedAuth,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,flowType:'pkce'},
 });
 export async function rpc<T>(name:string,args:Record<string,unknown>={},signal?:AbortSignal):Promise<T>{
   let request = supabase.rpc(name,args);

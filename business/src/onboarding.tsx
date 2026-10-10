@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Platform } from "react-native";
 import type { Session } from "@supabase/supabase-js";
 import {AccountLegalNotice} from "../../shared/AccountLegalNotice";
 import {useTheme} from "../../shared/theme";
 import { Bilu } from "../../shared/Bilu";
 import { RequestScope } from "../../shared/contracts";
+import {rememberedAuth} from './auth-storage';
+import {confirmRememberedLogin} from '../../shared/remembered-web-auth';
 import { backend, call } from "./backend";
-import { Button, Card, Field, Txt } from "./ui";
+import { Button, Card, Field, Txt, Toggle } from "./ui";
 import { chooseProof, requestKey, uploadProof, type ClaimVenue, type PartnerRequest, type Proof, type RequestDetails, type RequestKind } from "./onboarding-api";
 
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : "Nu am putut încheia pasul. Reîncearcă online.";
@@ -14,6 +16,7 @@ const errorMessage = (e: unknown) => e instanceof Error ? e.message : "Nu am put
 export function BusinessEntry() {
   const {t} = useTheme();
   const [mode, setMode] = useState<"start" | "existing" | "new">("start");
+  const [remember, Remember] = useState(false);
   const [email, E] = useState(""), [code, C] = useState(""), [sent, S] = useState(false),
     [busy, B] = useState(false), [message, M] = useState("");
   const mounted = useRef(true);
@@ -22,10 +25,12 @@ export function BusinessEntry() {
   const run = async (verify: boolean) => {
     B(true); M("");
     try {
-      const { error } = verify
+      if(verify)rememberedAuth?.choose(remember);
+      const result = verify
         ? await backend.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "email" })
         : await backend.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: mode === "new" } });
-      if (error) throw error;
+      if (result.error) {if(verify)rememberedAuth?.choose(false);throw result.error;}
+      if(verify&&"session"in result.data)await confirmRememberedLogin(rememberedAuth,result.data.session,call);
       if (!verify && mounted.current) { S(true); M("Verifică emailul și introdu codul primit."); }
     } catch (e) { if (mounted.current) M(errorMessage(e)); }
     finally { if (mounted.current) B(false); }
@@ -41,6 +46,7 @@ export function BusinessEntry() {
       <Txt muted>{mode === "existing" ? "Folosește adresa contului CeFaci. Dacă ești în echipa unui local, intri cu rolul acordat de proprietar." : "Confirmă adresa de email. Poți folosi contul CeFaci existent sau crea unul aici. Cererea de parteneriat se verifică separat."}</Txt>
       <Field label="Email" editable={!busy} value={email} onChange={(v) => { E(v); S(false); C(""); M(""); }} />
       {sent && <Field label="Codul primit prin email" numeric editable={!busy} value={code} onChange={C} />}
+      {Platform.OS==='web'&&<><Toggle label="Ține-mă minte 15 zile pe acest dispozitiv" value={remember} onChange={Remember}/><Txt muted style={{fontSize:12}}>Folosește opțiunea pe dispozitivul tău. După inactivitate, accesul la date se redeschide prin MFA.</Txt></>}
       <AccountLegalNotice audience="business" theme={t} creating={mode === "new"}/>
       <Button label={busy ? "Așteaptă…" : sent ? "Intră" : "Trimite codul"} disabled={busy || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || (sent && !code.trim())} onPress={() => void run(sent)} />
       {sent && <Button label="Retrimite codul" secondary disabled={busy} onPress={() => void run(false)} />}
