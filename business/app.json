@@ -35,7 +35,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Scanează biletul CeFaci al grupului."
       },
-      "buildNumber": "7"
+      "buildNumber": "8"
     },
     "web": {
       "bundler": "metro",
@@ -62,7 +62,12 @@
         }
       ],
       "./plugins/withSigning",
-      "expo-secure-store",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": false
+        }
+      ],
       "./plugins/withSeasonIcons"
     ],
     "experiments": {

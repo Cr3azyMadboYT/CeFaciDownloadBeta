@@ -7,6 +7,8 @@ const URL = 'https://vqrmwuarjjntusfbqprx.supabase.co';
 const KEY = 'sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O';
 // The "Web client" ID from Google Cloud → Credentials (the same one set in Supabase → Auth → Google).
 const GOOGLE_WEB_CLIENT_ID = '9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com';
+// iOS OAuth/Sign in with Apple are not configured; offer the working email flow there.
+export const googleSignInAvailable = Platform.OS !== 'ios';
 
 // where supabase-js keeps the session on the phone (sb-<project>-auth-token)
 const SESSION_KEY = 'sb-' + URL.replace(/^https?:\/\//, '').split('.')[0] + '-auth-token';
@@ -21,6 +23,7 @@ export const sb = () => (client ??= createClient(URL, KEY, {
 
 /** Google's own sign-in sheet on the phone; Google gives an ID token and Supabase turns it into a session. */
 export async function signInWithGoogle(): Promise<string | null> {
+  if (!googleSignInAvailable) return 'Pe iOS, intră cu emailul.';
   if (Platform.OS === 'web') return 'Google merge în aplicația de pe telefon. Aici intră cu emailul.';
   try {
     const { GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } = await import('@react-native-google-signin/google-signin');

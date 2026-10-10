@@ -1,0 +1,108 @@
+name: iOS Client și Business · Xcode și simulator
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: Aplicația iOS
+        type: choice
+        default: both
+        options: [both, client, business]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
+            business/package-lock.json
+      - run: npm ci
+      - run: npm ci && npm run typecheck
+        working-directory: mobile
+      - run: npm ci && npm run typecheck
+        working-directory: business
+      - run: npm run admin:typecheck && npm test
+      - name: Generează și verifică proiectele iOS înainte de compilare
+        env:
+          CI: '1'
+          EXPO_NO_TELEMETRY: '1'
+        run: |
+          (cd mobile && npx expo prebuild --platform ios --clean --no-install)
+          (cd business && npx expo prebuild --platform ios --clean --no-install)
+          python3 scripts/audit-ios-project.py mobile
+          python3 scripts/audit-ios-project.py business
+  ios:
+    needs: verify
+    runs-on: macos-15
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(inputs.app == 'client' && '[{"folder":"mobile","name":"CeFaci-Client"}]' || inputs.app == 'business' && '[{"folder":"business","name":"CeFaci-Business"}]' || '[{"folder":"mobile","name":"CeFaci-Client"},{"folder":"business","name":"CeFaci-Business"}]') }}
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+      EXPO_PUBLIC_E2E: '0'
+      MAESTRO_CLI_NO_ANALYTICS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
+            business/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Xcode stabil, compilare fără credențiale Apple
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
+          xcodebuild -version
+          uname -m
+      - run: npm ci
+      - run: npm ci
+        working-directory: ${{ matrix.folder }}
+      - name: Prebuild iOS și verificarea proiectului
+        run: |
+          (cd "${{ matrix.folder }}" && npx expo prebuild --platform ios --clean --no-install)
+          python3 scripts/audit-ios-project.py "${{ matrix.folder }}"
+      - name: CocoaPods
+        working-directory: ${{ matrix.folder }}/ios
+        run: pod install --repo-update
+      - name: Release pentru simulator și arhivă device nesemnată
+        run: bash scripts/build-ios.sh "${{ matrix.folder }}"
+      - name: Maestro verificat prin SHA256
+        run: |
+          curl --fail --location --retry 3 https://github.com/mobile-dev-inc/maestro/releases/download/cli-2.11.0/maestro.zip -o "$RUNNER_TEMP/maestro.zip"
+          printf '%s  %s\n' '5384593cb4e7a106489e75a821d157dd43f4e438df6bc308b72e82c685e1283a' "$RUNNER_TEMP/maestro.zip" | shasum -a 256 -c -
+          unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP/maestro-cli"
+          chmod +x "$RUNNER_TEMP/maestro-cli/maestro/bin/maestro"
+          printf '%s\n' "$RUNNER_TEMP/maestro-cli/maestro/bin" >> "$GITHUB_PATH"
+      - name: Teste reale de interfață pe simulator, fără OTP sau date fictive live
+        run: python3 scripts/test-ios-simulator.py "${{ matrix.folder }}"
+      - name: Împachetează aplicațiile și dovezile
+        run: python3 scripts/package-ios.py "${{ matrix.folder }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}-ios
+          path: release/${{ matrix.name }}-ios*
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.name }}-ios-diagnostics
+          path: |
+            release/ios-diagnostics/
+            release/ios-screenshots/
+          if-no-files-found: ignore
