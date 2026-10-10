@@ -50,9 +50,11 @@ def compiled_manifest(data):
     return tags
 
 
-for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 7), ("CeFaci-Business", "app.cefaci.business", 7)]:
+for name, package, folder in [("CeFaci-Client", "ro.cefaci.app", "mobile"), ("CeFaci-Business", "app.cefaci.business", "business")]:
     if len(sys.argv) > 1 and name not in sys.argv[1:]:
         continue
+    config = json.loads((pathlib.Path(folder) / "app.json").read_text())["expo"]
+    version = config["android"]["versionCode"]
     apk = pathlib.Path("release") / (name + ".apk")
     with zipfile.ZipFile(apk) as archive:
         assert archive.testzip() is None, apk
@@ -64,6 +66,7 @@ for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 7), ("CeFaci-B
     application = next(attrs for tag, attrs in tags if tag == "application")
     permissions = {attrs["name"] for tag, attrs in tags if tag.startswith("uses-permission")}
     assert manifest["package"] == package and manifest["versionCode"] == version, manifest
+    assert manifest["versionName"] == config["version"], "APK version differs from the source configuration"
     assert application.get("allowBackup", True) is False, "Android backup remains enabled"
     assert application.get("debuggable", False) is False, "Release APK is debuggable"
     assert application.get("usesCleartextTraffic", False) is False, "Cleartext traffic enabled"
