@@ -76,18 +76,20 @@ Teaser Client **48 secunde, vertical 1080×1920**, cu Bilu și ecrane reale de t
 
 Fișiere: `release/video/CeFaci-Client-teaser-48s.mp4`, `release/video/CeFaci-TikTok-Ads-kit.zip`; surse `marketing/client-teaser/`; drepturi `RIGHTS.md`. Checksumuri în `docs/livrare/VIDEO-TIKTOK-SHA256.txt`.
 
-## 8. Modificarea curentă — NU confunda codul cu builduri finalizate
+## 8. Ultima livrare — iconițe sezoniere și nota juridică de cont
 
 Utilizatorul a aprobat Bilu Business cu **servietă mai mare**. Propunerea de toamnă și versiunea originală sunt păstrate în `design/proposals/business-icon/`, commituri `09888ed` / `2de3227`.
 
-În lucru după aceste aprobări:
+Finalizat după aceste aprobări:
 
 - Cinci iconițe Business: primăvară, vară, toamnă, iarnă și Crăciun, toate cu servietă mare; foreground transparent și fundaluri din familia Clientului. Nu înlocuim iconițele Clientului.
 - Schimbare sezonieră nativă Business, calendar comun Client: Android alias în fundal; iOS API public pentru alternate icons în prim-plan, cu notificarea standard posibilă a sistemului. Aplicația închisă nu poate executa singură cod pentru schimbarea iconiței.
 - Text discret la crearea contului în Client și Business: **„Prin crearea contului accepți Termenii de utilizare și confirmi că ai citit Politica de confidențialitate.”** Linkurile deschid documentele locale corecte; închiderea păstrează formularul. Nu transformăm informarea GDPR în consimțământ universal pentru marketing.
-- Buildul curent este pornit la sursa `26591508a442cfa4b9787afc0a661d3ef9f08668`, workflow `38053659611`. Prima rulare `38053584400` a fost anulată înaintea compilării pentru a include manifestul explicit al modulului local.
-- Versiuni pregătite în surse: Client **0.3.4/code7**, Business **1.0.6/code7**. Până la confirmarea workflowului și a artefactelor reale, acestea NU sunt declarate builduri livrate.
-- 492 teste unitare/integrate locale trecute + un test opțional omis, inclusiv opt regresii pentru iconițe; typecheck trecute. Verificările browser și noua construcție Android mai trebuie încheiate.
+- Buildul Android final este la sursa `26591508a442cfa4b9787afc0a661d3ef9f08668`, workflow `38053659611` **SUCCESS** pentru verificări, Client și Business. Prima rulare `38053584400` a fost anulată înaintea compilării pentru a include manifestul explicit al modulului local.
+- Versiuni livrate: Client **0.3.4/code7**, Business **1.0.6/code7**, APK/AAB reale semnate cu cheia originală. Digesturi GitHub, CRC, SHA-256, manifestele binare și semnăturile APK/AAB sunt verificate.
+- 492 teste trecute + un test opțional omis, inclusiv opt regresii pentru iconițe; typecheck toate trei, 19 scenarii concurente PostgreSQL și toate verificările browser au trecut în CI înainte de Gradle. Weburile CI au fost retestate pe Apache/CSP.
+- Proiectul iOS Business este generat local din `3c922ab6ec3a3a09bc80ed1145bdab491a27e1cb`, cu iconițe RGB fără alpha, necesare App Store. Nu este IPA. Originalul CI este păstrat separat; corecția iOS nu schimbă outputurile Android.
+- Site final `011748c477632130c6bac93c8d12e7d1f6b03e0f`, cu versiunile confirmate; pachetele sunt în `release/`, checksumurile și toate mappingurile în `docs/livrare/RAPORT.md`.
 
 Pentru starea exactă ulterioară acestui rezumat, citește `docs/livrare/RAPORT.md`, metadatele în `docs/livrare/builds/`, ultimul workflow și istoricul Git. Nu atribui noile funcții APK-urilor vechi.
 

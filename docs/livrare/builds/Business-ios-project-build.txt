@@ -1,0 +1,7 @@
+Business iOS project source 3c922ab6ec3a3a09bc80ed1145bdab491a27e1cb
+Generated locally via Expo prebuild on Ubuntu; no Apple compilation, signing or physical-device test.
+Android APK/AAB remain workflow 38053659611 source 26591508a442cfa4b9787afc0a661d3ef9f08668.
+iOS-only packaging correction removes alpha channels from alternate icon PNGs.
+Local audit confirms primary + four alternate assets are RGB, Xcode build settings and Android/Apple module autolinking.
+Android resize outputs are byte-for-byte unchanged.
+Original CI iOS ZIP and CI checksums are retained separately.

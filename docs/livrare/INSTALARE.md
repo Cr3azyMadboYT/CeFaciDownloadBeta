@@ -1,6 +1,10 @@
 # Livrare CeFaci Client + Business + Admin
 
-## Release site și GDPR — 10.10.2026
+## Release iconițe Business și nota contului — 10.10.2026
+
+Client **0.3.4/code7**, Business **1.0.6/code7**, Admin/Business web: APK/AAB și weburi din `26591508a442cfa4b9787afc0a661d3ef9f08668`, workflow 38053659611 SUCCESS. Business iOS este proiectul local corectat din `3c922ab`, fără IPA; site-ul final este `011748c477632130c6bac93c8d12e7d1f6b03e0f`. Folosește pachetele și checksumurile din [raportul actual](RAPORT.md). Textele juridice sunt în Client/Business înainte de crearea contului; documentele se deschid offline fără pierderea formularului. Calendarul iconițelor native Business este comun Clientului. Backendul și instrucțiunile de instalare de mai jos rămân valabile; istoricul code6 este arhivat.
+
+## Release site și GDPR — 10.10.2026 (istoric)
 
 Client **0.3.3/code6**, Business **1.0.5/code6**, Admin web și Business web provin din `b98721b5c576cfe8f158520f969650b5a63a764a`. Site-ul final provine din `9eb728c254a5a678db18e2984e6970d27a461aa7`: include versiunile confirmate după build și a fost reîmpachetat/retestat pe Apache. [Raportul curent](RAPORT.md), [checksumurile](ARTEFACTE-SHA256.txt) și `builds/Legal-GitHub-artifacts.json` identifică livrarea; versiunile precedente din jurnal sunt istorice.
 
