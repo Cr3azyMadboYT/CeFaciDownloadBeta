@@ -1,0 +1,65 @@
+<!doctype html><html lang="ro"><meta charset="utf-8"><title>CeFaci — Vineri, 20:30</title><style>body{margin:0;background:#10143d}canvas{display:block;width:100%;height:auto}</style><canvas id="film"></canvas><script>
+// CeFaci — „Vineri, 20:30” (56 s, 1080×1920). Ecrane reale din aplicație (versiunea de test), numele localurilor blurate.
+// Textul important stă în zona sigură TikTok (aprox. x 70–960, y 210–1480); jos rămâne liber pentru interfața TikTok.
+const W=1080,H=1920,DURATION=56,c=document.querySelector('canvas'),ctx=c.getContext('2d');
+const P={ink:'#11143f',night:'#1d1a57',blue:'#3455ff',yellow:'#ffdc40',paper:'#eff0f8',mint:'#62d6a2',orange:'#ff7651',lilac:'#b9a8ff',white:'#ffffff'};
+const CUTS=[4.5,8.5,14,26,33,39,45,50];
+const assets={};
+window.ready=(async()=>{
+ for(const [name,base] of [['Bricolage','bricolage-grotesque'],['Instrument','instrument-sans'],['Caveat','caveat']]){for(const subset of ['latin','latin-ext']){const file=base==='caveat'?`${base}-${subset}-wght-normal.woff2`:`${base}-${subset}-standard-normal.woff2`;const unicodeRange=subset==='latin'?'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD':'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';const f=new FontFace(name,`url(/website/assets/${file})`,{weight:'100 900',unicodeRange});await f.load();document.fonts.add(f);}}
+ for(const name of ['bilu','acasa','p1','p2','p3','p4','p5','p6','p7','s1']){const im=new Image();im.src=name==='bilu'?'/marketing/client-teaser-v2/bilu.svg':`/marketing/client-teaser-v2/screens/${name}.webp`;await im.decode();assets[name]=im;}
+ const grain=document.createElement('canvas');grain.width=180;grain.height=320;const g=grain.getContext('2d');let seed=211;for(let i=0;i<3500;i++){seed=(seed*1664525+1013904223)>>>0;g.fillStyle=i%2?'#fff':'#10143f';g.globalAlpha=.045;g.fillRect(seed%180,(seed>>>8)%320,1,1);}assets.grain=grain;
+ return true;
+})();
+const clamp=x=>Math.max(0,Math.min(1,x)),ease=x=>1-Math.pow(1-clamp(x),4),inout=x=>{x=clamp(x);return x<.5?8*x*x*x*x:1-Math.pow(-2*x+2,4)/2},pop=x=>{x=clamp(x);return 1+2.70158*Math.pow(x-1,3)+1.70158*Math.pow(x-1,2)};
+function rr(x,y,w,h,r=30){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
+function text(s,x,y,size=80,color=P.ink,weight=800,align='left',font='Bricolage'){ctx.fillStyle=color;ctx.font=`${weight} ${size}px ${font}, sans-serif`;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(s,x,y);}
+function circle(x,y,r,col){ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+function star(x,y,r,col,rotation=0){ctx.save();ctx.translate(x,y);ctx.rotate(rotation);ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rad=i%2?r*.23:r;ctx.lineTo(Math.cos(a)*rad,Math.sin(a)*rad);}ctx.closePath();ctx.fill();ctx.restore();}
+function pill(s,x,y,w,col=P.yellow,ink=P.ink,angle=0,size=31){ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.fillStyle=col;rr(-w/2,-36,w,72,36);ctx.fill();text(s,0,size*.42,size,ink,700,'center','Instrument');ctx.restore();}
+function bg(col){ctx.fillStyle=col;ctx.fillRect(0,0,W,H);ctx.globalAlpha=.6;ctx.drawImage(assets.grain,0,0,W,H);ctx.globalAlpha=1;}
+function header(s,col=P.ink){text('CeFaci.',80,190,44,col);text(s,1000,190,22,col,600,'right','Instrument');ctx.globalAlpha=.25;ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(80,228);ctx.lineTo(1000,228);ctx.stroke();ctx.globalAlpha=1;}
+// Titlu animat: fiecare rând urcă pe rând.
+function title(rows,x,y,size,col,u,delay=0,align='left'){rows.forEach((s,i)=>{const p=ease((u-delay-i*.12)/.45);ctx.save();ctx.globalAlpha=p;ctx.translate(0,40*(1-p));const [str,c2]=Array.isArray(s)?s:[s,col];text(str,x,y+i*size*1.04,size,c2,800,align);ctx.restore();});}
+function bilu(x,y,w,t,angle=0){ctx.save();ctx.translate(x,y+Math.sin(t*3)*10);ctx.rotate(angle+Math.sin(t*2)*.025);ctx.drawImage(assets.bilu,-w/2,-w*.67,w,w*1.34);ctx.restore();}
+// Telefon cu un ecran real; pan = cât din ecran urcă (0..1 din partea care nu încape).
+function device(name,x,y,w,angle=0,zoom=1,pan=0){const h=w*2.16;ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.scale(zoom,zoom);ctx.shadowColor='#02062d66';ctx.shadowBlur=50;ctx.shadowOffsetY=36;ctx.fillStyle='#080b25';rr(-w/2-14,-h/2-14,w+28,h+28,64);ctx.fill();ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.save();rr(-w/2,-h/2,w,h,52);ctx.clip();ctx.fillStyle=P.paper;ctx.fillRect(-w/2,-h/2,w,h);const im=assets[name],ih=w*im.height/im.width;ctx.drawImage(im,-w/2,-h/2-Math.max(0,ih-h)*pan,w,ih);ctx.restore();ctx.strokeStyle='#ffffff40';ctx.lineWidth=3;rr(-w/2-14,-h/2-14,w+28,h+28,64);ctx.stroke();ctx.fillStyle='#080b25';rr(-65,-h/2+10,130,26,20);ctx.fill();ctx.restore();return {x,y,w,h,zoom,pan,name};}
+// Degetul care apasă: fx, fy = poziția pe ecran (0..1); p = 0..1 în timpul apăsării.
+function tap(d,fx,fy,p){if(p<=0||p>=1)return;const im=assets[d.name],ih=d.w*im.height/im.width,off=Math.max(0,ih-d.h)*d.pan;const x=d.x+(fx-.5)*d.w*d.zoom,y=d.y+(-d.h/2-off+fy*ih)*d.zoom;const a=Math.sin(Math.PI*p);ctx.save();ctx.globalAlpha=.85*a;circle(x,y,34+10*(1-a),'#ffffffcc');ctx.globalAlpha=.55*(1-p);ctx.strokeStyle=P.yellow;ctx.lineWidth=8;ctx.beginPath();ctx.arc(x,y,40+90*p,0,Math.PI*2);ctx.stroke();ctx.restore();}
+function bubble(s,x,y,w,col,ink,angle,p,size=48){ctx.save();ctx.translate(x,y+60*(1-ease(p)));ctx.rotate(angle);ctx.globalAlpha=ease(p);ctx.shadowColor='#11143f22';ctx.shadowBlur=22;ctx.fillStyle=col;rr(-w/2,-62,w,124,36);ctx.fill();ctx.shadowBlur=0;text(s,0,17,size,ink,650,'center','Instrument');ctx.restore();}
+function check(s,x,y,p,col=P.mint){if(p<=0)return;const e=pop(p);ctx.save();ctx.translate(x,y);ctx.scale(e,e);ctx.globalAlpha=clamp(p*2);ctx.font='700 32px Instrument, sans-serif';const w=ctx.measureText(s).width+110;ctx.fillStyle=P.white;ctx.shadowColor='#11143f33';ctx.shadowBlur=24;rr(-w/2,-40,w,80,40);ctx.fill();ctx.shadowBlur=0;circle(-w/2+40,0,22,col);text('✓',-w/2+40,11,28,P.ink,800,'center','Instrument');text(s,-w/2+72,11,32,P.ink,700,'left','Instrument');ctx.restore();}
+function scene(t){
+ // 0–4,5: cârligul — conversația de vineri seara
+ if(t<4.5){bg(P.paper);header('VINERI, 20:30');text('Grupul „Gașca”',540,330,30,'#666982',600,'center','Instrument');
+  bubble('Ce facem diseară?',470,520,760,P.ink,P.white,-.03,t/.4);bubble('Nu știu. Tu?',640,700,560,P.white,P.ink,.025,(t-.7)/.4);bubble('Oriunde, numai să ieșim',480,880,860,P.blue,P.white,-.02,(t-1.4)/.4,44);bubble('…',640,1060,260,P.white,P.ink,.02,(t-2.1)/.4);
+  const p=ease((t-2.9)/.5);ctx.save();ctx.translate(540,1300);ctx.scale(pop(p),pop(p));ctx.globalAlpha=clamp(p*2);pill('45 de minute mai târziu: tot acasă.',0,0,800,P.yellow,P.ink,-.03,32);ctx.restore();}
+ // 4,5–8,5: Bilu intră
+ else if(t<8.5){const u=t-4.5;bg(P.blue);header('STAI. AM O IDEE.',P.white);circle(980,1350,520,'#4564ff');star(860,430,110,P.yellow,u*.3);title(['Lasă-l','pe Bilu.'],80,520,150,P.white,u);pill('Îți face planul în sub un minut.',470,900,800,P.yellow,P.ink,-.04,32);const b=ease((u-.4)/.7);bilu(700,1260+300*(1-b),360,t,.06);}
+ // 8,5–14: Acasă, apasă „Creează plan”
+ else if(t<14){const u=t-8.5;bg(P.night);header('01 / DESCHIZI APLICAȚIA',P.white);title(['Un buton.',['Atât.',P.yellow]],80,370,104,P.white,u);circle(1060,1150,560,'#2a2670');const p=ease(u/.7);const d=device('acasa',580,1120+160*(1-p),520,-.03,.98+.02*p,0);tap(d,.5,.37,(u-2.6)/.8);pill('Creează plan',250,1500-0*u,330,P.yellow,P.ink,-.06);}
+ // 14–26: cele 5 întrebări, repede
+ else if(t<26){const u=t-14,k=Math.min(4,Math.floor(u/2.4)),v=u-k*2.4;bg(P.paper);header('02 / 5 ÎNTREBĂRI · SUB UN MINUT');
+  const steps=[['p1','Toată seara',.5,.42],['p2','Acum, diseară',.17,.3],['p3','Suntem 4',.58,.26],['p4','Până în 100 lei',.5,.94],['p5','Party + Chill',.73,.28]];const [name,cap,fx,fy]=steps[k];
+  text(`${k+1}/5`,80,330,40,P.blue,800,'left','Instrument');title([cap],80,440,100,P.ink,v,0);
+  const slide=ease(v/.35);const d=device(name,560+(1-slide)*260,1140,500,.025*(k%2?1:-1),1,0);tap(d,fx,fy,(v-1.1)/.7);
+  for(let i=0;i<5;i++){ctx.fillStyle=i<=k?P.blue:'#cfd3ea';rr(80+i*96,1520,80,12,6);ctx.fill();}
+  bilu(185,1340,170,t,-.12);}
+ // 26–33: cele 3 planuri, verificate
+ else if(t<33){const u=t-26;bg(P.blue);header('03 / GATA',P.white);title(['3 planuri.','Verificate.'],80,370,104,P.white,u);const p=ease(u/.6);const d=device('p6',620,1150+140*(1-p),470,.03,1,0);tap(d,.28,.55,(u-5.6)/.8);
+  check('Deschis la ora lui',300,830,(u-1.2)/.4);check('Drumul socotit',280,960,(u-1.9)/.4);check('În bugetul vostru',300,1090,(u-2.6)/.4);check('Cu vremea în minte',290,1220,(u-3.3)/.4);}
+ // 33–39: gașca votează
+ else if(t<39){const u=t-33;bg(P.yellow);header('04 / NU VĂ HOTĂRÂȚI?');title(['Votați.',['Ca o gașcă.',P.blue]],80,370,112,P.ink,u);const d=device('p6',600,1180,480,-.03,1,1);tap(d,.5,.94,(u-1.6)/.8);
+  bubble('Eu zic 1!',260,1000,330,P.white,P.ink,-.06,(u-2.4)/.4,40);bubble('1 sau 3?',300,1180,360,P.ink,P.white,.05,(u-3)/.4,40);bubble('Am votat ✓',250,1360,340,P.blue,P.white,-.04,(u-3.6)/.4,40);}
+ // 39–45: biletul
+ else if(t<45){const u=t-39;bg(P.night);header('05 / BILETUL TĂU DE IEȘIT',P.white);title(['Un bilet','pentru fiecare loc.'],80,370,96,P.white,u);const p=ease(u/.6);ctx.save();ctx.translate(0,0);device('p7',560,1170+150*(1-p),500,-.02+.01*Math.sin(u),1,0);ctx.restore();pill('Check-in = ștampilă + XP',330,1540,560,P.mint,P.ink,-.04,30);star(930,560,60,P.yellow,u*.3);}
+ // 45–50: Surprinde-mă
+ else if(t<50){const u=t-45;bg(P.lilac);header('06 / FĂRĂ CHEF DE ÎNTREBĂRI?');title(['Surprinde-mă,',['Bilu.',P.blue]],80,370,108,P.ink,u);device('s1',600,1170,480,.03,1,clamp(u/4.5)*.6+.18);bilu(210,1330,230,t,-.1);}
+ // 50–56: finalul
+ else{const u=t-50;bg(P.blue);circle(540,760,470,'#4263ff');star(900,500,66,P.yellow,u*.25);const p=ease(u/.5);ctx.save();ctx.globalAlpha=p;text('CeFaci.',540,450,180,P.white,850,'center');ctx.restore();bilu(540,820,280,t);
+  text('ÎN CURÂND',540,1140,74,P.yellow,800,'center');pill('Android',350,1260,330,P.white,P.ink);pill('iOS',730,1260,330,P.white,P.ink);
+  text('București & Ilfov',540,1390,50,P.white,750,'center');text('cefaci.app',540,1480,44,'#dde3ff',650,'center','Instrument');
+  text('Aplicație în dezvoltare · Ecrane din versiunea de test',540,1560,22,'#c9d1ff',500,'center','Instrument');text('Numele localurilor sunt ascunse',540,1595,22,'#c9d1ff',500,'center','Instrument');}
+ for(const cut of CUTS){const dt=t-cut;if(dt>=0&&dt<.2){ctx.fillStyle=P.ink;ctx.fillRect(W*ease(dt/.2),0,W,H);}}
+}
+window.renderFrame=(t,width=1080,height=1920)=>{if(c.width!==width||c.height!==height){c.width=width;c.height=height;}ctx.setTransform(width/W,0,0,height/H,0,0);ctx.globalAlpha=1;scene(t);return c.toDataURL('image/jpeg',.94).split(',')[1];};
+</script></html>
