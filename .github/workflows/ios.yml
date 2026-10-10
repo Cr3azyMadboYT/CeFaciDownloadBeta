@@ -43,7 +43,7 @@ jobs:
           python3 scripts/audit-ios-project.py business
   ios:
     needs: verify
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -70,9 +70,9 @@ jobs:
           java-version: 21
       - name: Xcode stabil, compilare fără credențiale Apple
         run: |
-          sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
+          sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
           xcodebuild -version
-          uname -m
+          test "$(uname -m)" = arm64
       - run: npm ci
       - run: npm ci
         working-directory: ${{ matrix.folder }}
