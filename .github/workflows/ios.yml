@@ -1,5 +1,8 @@
 name: iOS Client și Business · Xcode și simulator
 on:
+  push:
+    branches: [codex/cefaci-client-business-20261008]
+    paths: ['.github/workflows/ios.yml']
   workflow_dispatch:
     inputs:
       app:
