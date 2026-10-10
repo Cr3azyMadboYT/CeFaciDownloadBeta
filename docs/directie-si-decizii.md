@@ -522,3 +522,9 @@ Ideile de la care am pornit:
 - **Creează plan:** o alegere doar se bifează; treci la pasul următor cu „Mai departe” (înainte sărea singur, prea grăbit).
 - **Explorează:** apăsat, un loc deschide detaliile lui (de ce merită, când e lume, programul pe toată săptămâna, adresa, harta, Drum / Sună / Site); planul îl faci de acolo, cu „Fă-mi plan aici”. Pe hartă, butonul din bulă e „Vezi detalii”.
 - **Iconițele:** Bilu e mai mare în iconiță, tot în zona pe care o taie telefonul.
+
+## „Liber acum” (Free now) — de făcut după lansare (Cornel, 10.10)
+- Apeși „Sunt liber acum” → ești liber 2–3 ore, apoi se stinge singur.
+- Te văd doar prietenii (sau o gașcă aleasă), niciodată străinii; sub 18 doar cu prietenii lor.
+- Prietenii primesc „X e liber acum”; „Ies și eu” → Bilu face pe loc un plan din ce e deschis și aproape pentru cei liberi.
+- Se construiește după verificarea de buguri / după lansare, nu înainte.
