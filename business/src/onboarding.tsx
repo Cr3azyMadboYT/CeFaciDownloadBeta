@@ -9,6 +9,7 @@ import {rememberedAuth} from './auth-storage';
 import {confirmRememberedLogin} from '../../shared/remembered-web-auth';
 import { backend, call } from "./backend";
 import { Button, Card, Field, Txt, Toggle } from "./ui";
+import {normalizeUsername, validUsername, validateBirthDate} from "./identity-validation";
 import { chooseProof, requestKey, uploadProof, type ClaimVenue, type PartnerRequest, type Proof, type RequestDetails, type RequestKind } from "./onboarding-api";
 
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : "Nu am putut încheia pasul. Reîncearcă online.";
@@ -77,7 +78,22 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     [message, M] = useState(""), [listError, ListError] = useState(""),
     [identity, Identity] = useState<{ has_profile: boolean; username: string | null; first_name: string | null } | null>(null),
     [identityError, IdentityError] = useState(""), [firstName, FirstName] = useState(""),
-    [username, Username] = useState(""), [birthDate, BirthDate] = useState("");
+    [username, Username] = useState(""), [day, Day] = useState(""), [month, Month] = useState(""), [year, Year] = useState("");
+  const normalized = normalizeUsername(username), birth = validateBirthDate(day, month, year);
+  const [availability, Availability] = useState<{user: string; owner: string; status: "free" | "taken" | "error"} | null>(null);
+  const [checkRetry, CheckRetry] = useState(0);
+  const checked = availability?.user === normalized && availability.owner === session.user.id ? availability.status : null;
+  useEffect(() => {
+    let active = true;
+    Availability(null);
+    if (!identity || identity.has_profile || !validUsername(normalized)) return;
+    const timer = setTimeout(() => {
+      void call<boolean>("username_available", {p_username: normalized}).then(free => {
+        if (active) Availability({user: normalized, owner: session.user.id, status: free === true ? "free" : free === false ? "taken" : "error"});
+      }).catch(() => { if (active) Availability({user: normalized, owner: session.user.id, status: "error"}); });
+    }, 400);
+    return () => { active = false; clearTimeout(timer); };
+  }, [normalized, session.user.id, identity?.has_profile, checkRetry]);
   const scope = useRef(new RequestScope()), lock = useRef(false), searchGeneration = useRef(0), listGeneration = useRef(0),
     draft = useRef<PartnerRequest | null>(null), key = useRef(requestKey());
   const load = async () => {
@@ -146,10 +162,25 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
       <Txt>Ai confirmat emailul. Completează profilul contului pe care îl vei folosi în Client și Business. Acest pas nu acordă acces la un local.</Txt>
       <Field label="Prenume" value={firstName} editable={!busy} onChange={FirstName} />
       <Field label="Username CeFaci" value={username} editable={!busy} onChange={(v) => Username(v.toLowerCase())} />
-      <Field label="Data nașterii (AAAA-LL-ZZ)" value={birthDate} editable={!busy} onChange={BirthDate} />
+      {!!username && <Txt muted>{!validUsername(normalized) ? "Folosește 3–20 de caractere: litere, cifre, punct, cratimă sau _." : checked === "free" ? "Username disponibil." : checked === "taken" ? "Username ocupat. Alege altul." : checked === "error" ? "Nu am putut verifica username-ul. Reîncearcă online." : "Verificăm username-ul…"}</Txt>}
+      {checked === "error" && <Button label="Reverifică username-ul" secondary disabled={busy} onPress={() => CheckRetry(v => v + 1)}/>}
+      <Txt muted>Data nașterii</Txt>
+      <View style={{flexDirection: "row", gap: 10}}>
+        <View style={{flex: 1, minWidth: 0}}><Field label="Zi" numeric value={day} editable={!busy} onChange={v => Day(v.replace(/\D/g, '').slice(0, 2))}/></View>
+        <View style={{flex: 1, minWidth: 0}}><Field label="Lună" numeric value={month} editable={!busy} onChange={v => Month(v.replace(/\D/g, '').slice(0, 2))}/></View>
+        <View style={{flex: 1.4, minWidth: 0}}><Field label="An" numeric value={year} editable={!busy} onChange={v => Year(v.replace(/\D/g, '').slice(0, 4))}/></View>
+      </View>
+      {!!day && !!month && year.length === 4 && !!birth.error && <Txt>{birth.error}</Txt>}
       <Txt muted>Contul CeFaci este disponibil de la 16 ani. Data nașterii nu apare pe profilul public.</Txt>
-      <Button label="Salvează profilul contului" disabled={busy || firstName.trim().length < 2 || username.trim().length < 3 || !/^\d{4}-\d{2}-\d{2}$/.test(birthDate)} onPress={() => void run(async (valid) => {
-        await call("biz_identity_complete", { p_username: username.trim(), p_first_name: firstName.trim(), p_birth_date: birthDate });
+      <Button label="Salvează profilul contului" disabled={busy || firstName.trim().length < 2 || !validUsername(normalized) || checked !== "free" || !birth.iso} onPress={() => void run(async (valid) => {
+        try {await call("biz_identity_complete", { p_username: normalized, p_first_name: firstName.trim(), p_birth_date: birth.iso });}
+        catch (e) {
+          if (valid() && e instanceof Error && /username|duplicate key|deja luat/i.test(e.message)) {
+            Availability({user: normalized, owner: session.user.id, status: "taken"});
+            throw new Error("Username-ul a fost ocupat între timp. Alege altul.");
+          }
+          throw e;
+        }
         if (!valid()) return;
         await loadIdentity();
         if (valid()) M("Profilul contului CeFaci a fost completat. Cererea pentru local se verifică separat.");

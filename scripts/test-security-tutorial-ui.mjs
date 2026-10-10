@@ -89,17 +89,17 @@ try{
   await f.page.getByLabel('Codul din aplicația de autentificare',{exact:true}).fill('000000');await button(f.page,'Activează protecția').click();
   await f.page.getByText('Codul nu este valid sau a expirat.',{exact:false}).waitFor();assert.equal(privateCalls(f.state).length,0);
   await f.page.getByLabel('Codul din aplicația de autentificare',{exact:true}).fill('123456');await button(f.page,'Activează protecția').click();
-  await button(f.page,'Tur cu Bilu').waitFor();assert(privateCalls(f.state).length>0);assert(!(await f.page.textContent('body')).includes('JBSWY3DPEHPK3PXP'));
+  await button(f.page,app==='business'?'Ajutor':'Tur cu Bilu').waitFor();assert(privateCalls(f.state).length>0);assert(!(await f.page.textContent('body')).includes('JBSWY3DPEHPK3PXP'));
   assert.equal(await f.page.evaluate(app=>localStorage.getItem(`cefaci-${app}-auth`),app),null);
   f.state.deadline=Date.now()+800;await f.page.evaluate(()=>window.dispatchEvent(new Event('focus')));
   await button(f.page,'Verifică și continuă').waitFor();assert.equal(await button(f.page,'Tur cu Bilu').count(),0);
   const opens=f.state.calls.filter(c=>c.name==='secure_session_open').length;
   await f.page.waitForTimeout(100);assert.equal(f.state.calls.filter(c=>c.name==='secure_session_open').length,opens);
-  await verify(f.page);await button(f.page,'Tur cu Bilu').waitFor();
+  await verify(f.page);await button(f.page,app==='business'?'Ajutor':'Tur cu Bilu').waitFor();
   await f.page.screenshot({path:`release/screenshots/${app}-secured-dashboard.png`,fullPage:true});
   f.state.revoked=true;await f.page.evaluate(()=>window.dispatchEvent(new Event('focus')));
   if(app==='admin')await f.page.getByRole('heading',{name:'Acest cont nu are acces la Admin.',exact:true}).waitFor();
-  else await button(f.page,'Tur cu Bilu').waitFor();
+  else await button(f.page,'Ajutor · Raportează o problemă').waitFor();
  }
  const changed=await fixture('admin',{role:'fondator',aal:'aal2',factor:'verified',active:true,done:true,clock:true});
  await button(changed.page,'Bani').click();await changed.page.getByRole('heading',{name:'Bani',exact:true}).waitFor();
@@ -121,7 +121,7 @@ try{
   await button(f.page,'Arată-mi!').waitFor();await tour(f.page);
   if(['receptie','scanare'].includes(role))assert.equal(await button(f.page,'Financiar').count(),0);
   if(role==='scanare')assert.equal(await button(f.page,'Rezervări').count(),0);
-  await button(f.page,'Tur cu Bilu').click();await button(f.page,'Arată-mi!').waitFor();await button(f.page,'Închide turul').click();
+  await button(f.page,'Opțiuni Business').click();await button(f.page,'Tur cu Bilu').click();await button(f.page,'Arată-mi!').waitFor();await button(f.page,'Închide turul').click();
   assert(!f.state.calls.some(c=>/_(save|change|update|decide|grant|set|scan_v2)$/.test(c.name)));
   await f.page.screenshot({path:`release/screenshots/business-role-${role}.png`,fullPage:true});
  }

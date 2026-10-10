@@ -11,7 +11,7 @@ const token = 'eyJhbGciOiJIUzI1NiJ9.' + Buffer.from(JSON.stringify(fixtureClaims
 const session = {access_token:token,refresh_token:'synthetic',expires_in:3600,expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user};
 const calls = [], requests = [];
 const unexpected = [];
-let failUpload = true, profileReady = false;
+let failUpload = true, profileReady = false, failUsername = true, collide = true;
 const context = await browser.newContext({viewport:{width:390,height:844}});
 await context.addInitScript(seedCompletedTutorials,[{app:'business',userId:user.id,role:'applicant'}]);
 await context.routeWebSocket(/supabase\.co/, ws=>ws.close());
@@ -29,7 +29,15 @@ await context.route('**/*', async route=>{
   else if (name==='secure_access_status') data={admin_role:null,business_access:false};
   else if (['secure_session_status','secure_session_open','secure_session_touch','secure_session_close'].includes(name)) data=fixtureSecureStatus(p.p_scope);
   else if (name==='biz_identity_status') data={has_profile:profileReady,username:profileReady?'patron_test':null,first_name:profileReady?'Ana':null};
-  else if (name==='biz_identity_complete') { profileReady=true;data={has_profile:true,username:p.p_username,first_name:p.p_first_name}; }
+  else if (name==='username_available') {
+    if(p.p_username==='slow_free')await new Promise(resolve=>setTimeout(resolve,1700));
+    if(p.p_username==='network_test'&&failUsername){status=503;data={message:'Conexiune indisponibilă'};failUsername=false;}
+    else data=p.p_username!=='ocupat';
+  }
+  else if (name==='biz_identity_complete') {
+    if(collide){collide=false;status=409;data={code:'23505',message:'duplicate key value violates unique constraint profiles_username_key'};}
+    else {profileReady=true;data={has_profile:true,username:p.p_username,first_name:p.p_first_name};}
+  }
   else if (name==='biz_my_venues') data=[];
   else if (name==='biz_partner_requests') data=requests;
   else if (name==='biz_venue_search') data=p.p_query==='Lipsa'?[]:[{id:'unclaimed',name:'Local disponibil',address:'Strada Test 1',city:'București',claimed:false},{id:'claimed',name:'Local revendicat',address:'Strada Test 2',city:'București',claimed:true}];
@@ -65,9 +73,9 @@ try {
   await button('Revendică localul').waitFor();
   await page.screenshot({path:'release/screenshots/business-entry-phone.png',fullPage:true});
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-  await button('Mod noapte').click();
+  await button('Opțiuni Business').click();await button('Mod noapte').click();
   await page.screenshot({path:'release/screenshots/business-entry-phone-night.png',fullPage:true});
-  await button('Mod zi').click();await page.setViewportSize({width:1440,height:1000});
+  await button('Opțiuni Business').click();await button('Mod zi').click();await page.setViewportSize({width:1440,height:1000});
   await page.screenshot({path:'release/screenshots/business-entry-desktop.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});
   await button('Ai deja cont? Intră').click();
@@ -84,9 +92,24 @@ try {
   await profileCard.waitFor();
   {
     await page.getByLabel('Prenume',{exact:true}).fill('Ana');
-    await page.getByLabel('Username CeFaci',{exact:true}).fill('patron_test');
-    await page.getByLabel('Data nașterii (AAAA-LL-ZZ)',{exact:true}).fill('1990-01-01');
-    await button('Salvează profilul contului').click();
+    assert.equal(await button('Tur cu Bilu').count(),0,'Replay is not a permanent bar');
+    assert.equal(await button('Termeni · Confidențialitate · Datele mele').count(),0,'Documents do not occupy a permanent footer');
+    for(const [label,value] of [['Zi','31'],['Lună','2'],['An','1990']])await page.getByLabel(label,{exact:true}).fill(value);
+    await page.getByText('Completează o dată de naștere validă.',{exact:true}).waitFor();
+    await page.getByLabel('Zi',{exact:true}).fill('1');await page.getByLabel('Lună',{exact:true}).fill('1');
+    const uname=page.getByLabel('Username CeFaci',{exact:true}),save=button('Salvează profilul contului');
+    await uname.fill('x');assert(await save.isDisabled());
+    await uname.fill('ocupat');await page.getByText('Username ocupat. Alege altul.',{exact:true}).waitFor();assert(await save.isDisabled());
+    await uname.fill('network_test');await page.getByText('Nu am putut verifica username-ul. Reîncearcă online.',{exact:true}).waitFor();assert(await save.isDisabled());
+    await button('Reverifică username-ul').click();await page.getByText('Username disponibil.',{exact:true}).waitFor();
+    await uname.fill('slow_free');await page.waitForTimeout(500);await uname.fill('ocupat');
+    await page.getByText('Username ocupat. Alege altul.',{exact:true}).waitFor();await page.waitForTimeout(1500);assert(await save.isDisabled(),'Old availability must not enable the occupied username');
+    await uname.fill('patron_test');await page.getByText('Username disponibil.',{exact:true}).waitFor();
+    await page.getByLabel('An',{exact:true}).fill('2020');assert(await save.isDisabled());await page.getByLabel('An',{exact:true}).fill('1990');
+    await page.screenshot({path:'release/screenshots/business-profile-phone-fixed.png',fullPage:true});
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+    await save.click();await page.getByText('Username-ul a fost ocupat între timp. Alege altul.',{exact:true}).waitFor();assert(await save.isDisabled());
+    await uname.fill('patron_test2');await page.getByText('Username disponibil.',{exact:true}).waitFor();await save.click();
     await page.waitForFunction(()=>!document.body.innerText.includes('Salvează profilul contului'));
     assert(calls.some(c=>c.name==='biz_identity_complete'&&c.p.p_birth_date==='1990-01-01'));
   }
