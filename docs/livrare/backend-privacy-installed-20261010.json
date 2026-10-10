@@ -1,0 +1,104 @@
+{
+  "counts": {
+    "staff": 2,
+    "venues": 1093,
+    "members": 0,
+    "privacy_log": 0,
+    "privacy_requests": 0,
+    "new_support_reports": 0
+  },
+  "tables": [
+    {
+      "rls": true,
+      "table": "privacy_request_log",
+      "anon_select": false,
+      "authenticated_select": false
+    },
+    {
+      "rls": true,
+      "table": "privacy_requests",
+      "anon_select": false,
+      "authenticated_select": false
+    }
+  ],
+  "project": "vqrmwuarjjntusfbqprx",
+  "functions": [
+    {
+      "name": "admin_privacy_request_detail",
+      "config": [
+        "search_path=\"\""
+      ],
+      "identity": "p_id uuid",
+      "anon_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "name": "admin_privacy_request_respond",
+      "config": [
+        "search_path=\"\""
+      ],
+      "identity": "p_id uuid, p_expected_version integer, p_status text, p_response text, p_extension_months integer",
+      "anon_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "name": "admin_privacy_requests",
+      "config": [
+        "search_path=\"\""
+      ],
+      "identity": "p_status text, p_limit integer, p_offset integer",
+      "anon_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "name": "delete_my_account",
+      "config": [
+        "search_path=\"\""
+      ],
+      "identity": "",
+      "anon_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "name": "privacy_export_my_data",
+      "config": [
+        "search_path=\"\""
+      ],
+      "identity": "",
+      "anon_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "name": "privacy_my_requests",
+      "config": [
+        "search_path=\"\""
+      ],
+      "identity": "p_scope text, p_limit integer, p_offset integer",
+      "anon_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    },
+    {
+      "name": "privacy_request_submit",
+      "config": [
+        "search_path=\"\""
+      ],
+      "identity": "p_scope text, p_kind text, p_description text, p_request_key uuid",
+      "anon_execute": false,
+      "security_definer": true,
+      "authenticated_execute": true
+    }
+  ],
+  "migration": {
+    "name": "cefaci_privacy_rights",
+    "version": "20261010072621"
+  },
+  "verified_at": "2026-10-10T07:26:58.049347+00:00",
+  "delete_live_guard": true,
+  "founder_preserved": true
+}

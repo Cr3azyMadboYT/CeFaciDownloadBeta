@@ -1,0 +1,44 @@
+{
+  "project": "vqrmwuarjjntusfbqprx",
+  "migration": {
+    "name": "cefaci_privacy_rights",
+    "version": "20261010072621"
+  },
+  "notes": [
+    "Private tables have RLS, no direct anon/authenticated grants and RPC-only authorization.",
+    "Leaked-password protection is an existing disabled Auth setting; current UI uses OTP plus mandatory TOTP for operational dashboards.",
+    "No new privacy table foreign key index or mutable search_path warning."
+  ],
+  "security": {
+    "counts": {
+      "rls_enabled_no_policy": 1,
+      "extension_in_public": 1,
+      "anon_security_definer_function_executable": 1,
+      "authenticated_security_definer_function_executable": 1,
+      "auth_leaked_password_protection": 1
+    },
+    "privacy_related": [],
+    "configuration_notices": [
+      {
+        "name": "extension_in_public",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public"
+      },
+      {
+        "name": "auth_leaked_password_protection",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+      }
+    ]
+  },
+  "performance": {
+    "counts": {
+      "unindexed_foreign_keys": 1,
+      "no_primary_key": 1,
+      "unused_index": 1,
+      "multiple_permissive_policies": 1
+    },
+    "privacy_related": [],
+    "configuration_notices": []
+  }
+}

@@ -7,6 +7,8 @@ import http from 'node:http';
 const dirs={admin:process.env.CEFACI_TEST_ADMIN_DIST??'admin/dist',business:process.env.CEFACI_TEST_BUSINESS_DIST??'/tmp/cefaci-privacy-business',client:process.env.CEFACI_TEST_CLIENT_DIST??'/tmp/cefaci-privacy-client'};
 const servers=[],roots={};
 for(const [app,dir] of Object.entries(dirs)){
+ const supplied=process.env[`CEFACI_TEST_PRIVACY_${app.toUpperCase()}_URL`];
+ if(supplied){const url=new URL(supplied);assert(['127.0.0.1','localhost'].includes(url.hostname),'Privacy UI tests require isolated localhost fixtures.');roots[app]=supplied.replace(/\/$/,'');continue;}
  const base=path.resolve(dir);assert(fs.existsSync(path.join(base,'index.html')),`Missing ${app} web export: ${base}`);
  const server=http.createServer((req,res)=>{const pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname),file=path.resolve(base,'.'+pathname);if(!file.startsWith(base+path.sep)&&file!==base){res.writeHead(403).end();return;}const actual=fs.existsSync(file)&&fs.statSync(file).isFile()?file:path.join(base,'index.html');const ext=path.extname(actual);res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.woff2':'font/woff2','.svg':'image/svg+xml'})[ext]??'application/octet-stream');fs.createReadStream(actual).pipe(res);});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));servers.push(server);roots[app]=`http://127.0.0.1:${server.address().port}`;
@@ -18,7 +20,7 @@ const prefs={name:'Ana',user:'privacy_test',google:uid,zone:'centru',dist:'20',m
 function session(state){const user={id:uid,email:'privacy@example.invalid',aud:'authenticated',role:'authenticated',app_metadata:{},user_metadata:{given_name:'Ana'},created_at:now,factors:[{id:'78000000-0000-0000-0000-000000000001',factor_type:'totp',status:'verified',friendly_name:'Test',created_at:now}]};const access_token='eyJhbGciOiJIUzI1NiJ9.'+Buffer.from(JSON.stringify({sub:uid,session_id:sid,exp:epoch()+3600,iat:epoch(),role:'authenticated',aal:state.active?'aal2':'aal1',amr:[{method:state.active?'totp':'otp',timestamp:epoch()}]})).toString('base64url')+'.fixture';return {access_token,refresh_token:'synthetic',expires_at:epoch()+3600,expires_in:3600,token_type:'bearer',user};}
 const row=(scope,index=0)=>({id:`79000000-0000-0000-0000-${String(index+1).padStart(12,'0')}`,scope,kind:'access',description:'Solicit o copie a datelor mele proprii.',status:'new',version:1,created_at:now,updated_at:now,due_at:new Date(Date.now()+30*86400000).toISOString(),original_due_at:new Date(Date.now()+30*86400000).toISOString(),response:null,extension_reason:null,extension_months:0});
 async function fixture(app,{signed=true,active=false,role=app==='admin'?'fondator':'proprietar',lost=false,many=false,clock=false}={}){
- const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce',acceptDownloads:true});contexts.push(context);
+ const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce',acceptDownloads:true,...(process.env.CEFACI_TEST_PROXY_HTTPS==='1'?{extraHTTPHeaders:{'X-Forwarded-Proto':'https'}}:{})});contexts.push(context);
  const state={app,signed,active,role,lost,calls:[],requests:many?Array.from({length:101},(_,i)=>row(app,i)):[],releaseExport:null,delayExport:false};
  await context.routeWebSocket(/supabase\.co/,ws=>ws.close());
  await context.route('**/*',async route=>{
