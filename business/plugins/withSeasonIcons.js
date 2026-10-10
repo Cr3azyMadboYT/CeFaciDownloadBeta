@@ -19,8 +19,8 @@ function applyAliases(manifest) {
   });
   return manifest;
 }
-async function resized(root, src, size) {
-  return (await generateImageAsync({projectRoot: root, cacheType: 'business-season-icons'}, {src, width: size, height: size, resizeMode: 'cover'})).source;
+async function resized(root, src, size, removeTransparency = false) {
+  return (await generateImageAsync({projectRoot: root, cacheType: removeTransparency ? 'business-season-icons-ios-opaque' : 'business-season-icons'}, {src, width: size, height: size, resizeMode: 'cover', removeTransparency})).source;
 }
 module.exports = function withSeasonIcons(config) {
   config = withAndroidManifest(config, cfg => {cfg.modResults.manifest = applyAliases(cfg.modResults.manifest); return cfg;});
@@ -47,7 +47,7 @@ module.exports = function withSeasonIcons(config) {
     if (candidates.length !== 1) throw new Error('Business seasonal icons: expected exactly one asset catalog');
     for(const look of ALTERNATES) {
       const catalog=path.join(native,candidates[0],'Images.xcassets','Icon_'+look+'.appiconset');fs.mkdirSync(catalog,{recursive:true});
-      fs.writeFileSync(path.join(catalog,'icon.png'),await resized(root,path.join(root,'assets/icons',look+'.png'),1024));
+      fs.writeFileSync(path.join(catalog,'icon.png'),await resized(root,path.join(root,'assets/icons',look+'.png'),1024,true));
       fs.writeFileSync(path.join(catalog,'Contents.json'),JSON.stringify({images:[{filename:'icon.png',idiom:'universal',platform:'ios',size:'1024x1024'}],info:{version:1,author:'expo'}},null,2));
     }
     return cfg;

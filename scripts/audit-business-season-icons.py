@@ -32,7 +32,9 @@ for name in alternate:
     catalog = ios/'Images.xcassets'/(name+'.appiconset')
     image = json.loads((catalog/'Contents.json').read_text())['images'][0]
     assert image['size'] == '1024x1024'
-    assert (catalog/image['filename']).read_bytes()[:8] == b'\x89PNG\r\n\x1a\n'
+    png = (catalog/image['filename']).read_bytes()
+    assert png[:8] == b'\x89PNG\r\n\x1a\n'
+    assert png[25] == 2, 'App Store icon PNG must have RGB pixels without an alpha channel'
 project = (root/'ios/CeFaciBusiness.xcodeproj/project.pbxproj').read_text()
 assert 'ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES' in project
 for name in alternate:

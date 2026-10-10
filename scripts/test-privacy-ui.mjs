@@ -83,6 +83,7 @@ try{
    await f.page.getByRole('link',{name:label,exact:true}).click();
    await f.page.getByRole('heading',{name:title,exact:true}).waitFor();
    await button(f.page,'Închide documentele contului').click();
+   await button(f.page,'Închide documentele contului').waitFor({state:'hidden'});
   }
   assert.equal(f.state.calls.length,callsBefore,'Opening legal documents must not authenticate or submit requests');
   if(app==='business')assert.equal(await f.page.getByLabel('Email',{exact:true}).inputValue(),'notice@example.invalid');
@@ -92,6 +93,7 @@ try{
    await f.page.getByRole('link',{name:'Termenii de utilizare',exact:true}).click();
    await f.page.getByRole('heading',{name:'Termeni de utilizare Client',exact:true}).waitFor();
    await button(f.page,'Închide documentele contului').click();
+   await button(f.page,'Închide documentele contului').waitFor({state:'hidden'});
    assert.equal(await f.page.getByLabel('Adresa de email',{exact:true}).inputValue(),'notice@example.invalid');
   }
   assert(await f.page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
