@@ -38,6 +38,7 @@ import { BusinessEntry, BusinessOnboarding, OwnershipDisputes } from "./onboardi
 import { BusinessHelp } from "./support";
 import { BusinessSecurityGate } from "./security";
 import { BusinessTutorial } from "./tutorial";
+import { BusinessPrivacy } from "./privacy";
 import { useSecureAccess } from "../../shared/use-secure-access";
 import { securitySessionKey } from "../../shared/security-mfa";
 import {
@@ -164,7 +165,7 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
     ...(data && canFinance(data.role)
       ? ["Oferte", "Financiar", "Statistici", "Profil", "Echipă", "Evenimente"]
       : []),
-    "Ajutor",
+    "Ajutor", "Confidențialitate",
   ];
   useEffect(() => {
     if (!items.includes(tab)) T("Azi");
@@ -248,7 +249,7 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
     <BusinessTutorial userId={session.user.id} role="applicant" availableTabs={["Cereri","Ajutor"]} replayToken={tourReplay} onNavigate={tab => HelpBeforeAccess(tab === "Ajutor")} />
   </View>;
   const p: ScreenProps = data ? { venue, data, act, busy } : (null as any);
-  const content = tab === "Ajutor" ? <BusinessHelp key={venue + ":" + session.user.id} userId={session.user.id} venue={data ? venue : undefined} /> : data ? (
+  const content = tab === "Confidențialitate" ? <BusinessPrivacy identity={securitySessionKey(session)}/> : tab === "Ajutor" ? <BusinessHelp key={venue + ":" + session.user.id} userId={session.user.id} venue={data ? venue : undefined} /> : data ? (
     tab === "Azi" ? (
       <Today {...p} />
     ) : tab === "Rezervări" ? (
@@ -322,6 +323,7 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
   );
 }
 export default function App() {
+  const [privacyOpen, PrivacyOpen] = useState(false);
   const [fonts] = useFonts({
     BricolageGrotesque_800ExtraBold,
     BricolageGrotesque_700Bold,
@@ -384,7 +386,7 @@ export default function App() {
               }}
             />
           </View>
-          {!fonts || !ready ? (
+          {privacyOpen && fonts && ready ? <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
             <ActivityIndicator accessibilityLabel="Se încarcă CeFaci Business" />
           ) : session ? (
             security.error || !security.identity ? <Card><Txt big>Verificăm accesul…</Txt><Txt>{security.error || "Verificăm contul și rolul tău."}</Txt><Button label="Verifică din nou" onPress={() => void security.check()}/><Button label="Ieși din cont" secondary onPress={() => void logout().catch(() => {})}/></Card> : security.identity.business_access && !security.active ? <BusinessSecurityGate session={session} forcedChallenge={security.forcedChallenge} onVerified={security.verified} onLogout={logout}/> : <Workspace key={session.user.id + ":" + security.identity.business_access} session={session} hasAccess={security.active} checkAccess={security.check} logout={logout} />
@@ -395,6 +397,7 @@ export default function App() {
               <BusinessEntry />
             </ScrollView>
           )}
+          {!privacyOpen && fonts && ready && <View style={{paddingHorizontal: 16, paddingVertical: 6}}><Button label="Termeni · Confidențialitate · Datele mele" secondary onPress={() => PrivacyOpen(true)}/></View>}
         </SafeAreaView>
       </ThemeCtx.Provider>
     </SafeAreaProvider>

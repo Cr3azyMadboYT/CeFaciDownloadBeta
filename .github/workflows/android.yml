@@ -38,6 +38,7 @@ jobs:
         run: |
           node scripts/test-business-concurrency.mjs
           node scripts/test-admin-concurrency.mjs
+          node scripts/test-privacy-concurrency.mjs
         env:
           CEFACI_TEST_DATABASE_URL: postgres://postgres@127.0.0.1:55432/postgres
       - run: npm ci && npm run typecheck
@@ -45,6 +46,8 @@ jobs:
       - run: npm ci && npm run typecheck
         working-directory: business
       - run: npx vitest run
+      - name: Verifică și clientul web de referință
+        run: npx vite build
       - name: Admin static pentru gazduire.net
         run: npm run admin:typecheck && npm run admin:build && npm run admin:package
       - name: Web static pentru gazduire.net
@@ -54,6 +57,8 @@ jobs:
           EXPO_NO_TELEMETRY: '1'
         run: npm run web
       - run: node scripts/package-business-web.mjs
+      - name: Site public și documente legale pentru gazduire.net
+        run: npm run site:package
       - name: Export Client pentru verificarea integrării
         working-directory: mobile
         env:
@@ -77,6 +82,8 @@ jobs:
           node scripts/test-security-tutorial-ui.mjs
           node scripts/test-security-hook-ui.mjs
           node scripts/test-client-support-ui.mjs
+          CEFACI_TEST_BUSINESS_DIST=business/dist CEFACI_TEST_CLIENT_DIST=/tmp/cefaci-client-admin-web node scripts/test-privacy-ui.mjs
+          node scripts/test-site-ui.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: CeFaci-Business-flow-screenshots
@@ -91,6 +98,11 @@ jobs:
         with:
           name: CeFaci-Admin-web
           path: release/CeFaci-Admin-web.zip
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CeFaci-site-web
+          path: release/CeFaci-site-web.zip
           if-no-files-found: error
   native:
     if: inputs.app != 'web'
@@ -139,7 +151,7 @@ jobs:
           ALIAS: ${{ secrets.CEFACI_KEY_ALIAS }}
           KEY_PW: ${{ secrets.CEFACI_KEY_PASSWORD }}
         run: |
-          if [ -z "$KEYSTORE_B64" ]; then echo "signed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ -z "$KEYSTORE_B64" ]; then echo "Lipsește cheia de producție; nu livrăm un build cu semnare de test." >&2; exit 1; fi
           printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/cefaci.jks"
           mkdir -p ~/.gradle
           {
@@ -171,6 +183,10 @@ jobs:
           "$SDK_TOOLS/apksigner" verify --verbose --print-certs "release/${{ matrix.name }}.apk" >> "release/${{ matrix.name }}-build.txt"
           "$SDK_TOOLS/aapt" dump badging "release/${{ matrix.name }}.apk" | head -1 >> "release/${{ matrix.name }}-build.txt"
           sha256sum release/* > "release/${{ matrix.name }}-SHA256.txt"
+      - name: Verifică manifestul și semnătura AAB de producție
+        run: |
+          python3 scripts/audit-native-artifacts.py "${{ matrix.name }}"
+          python3 scripts/verify-aab-signature.py "${{ matrix.name }}"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}-native

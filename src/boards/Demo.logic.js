@@ -1121,7 +1121,7 @@ class Component extends DCLogic {
       sqClear: () => this.setState({ sq: '', page: 0 }),
       sqExamples: ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'].map((label) => ({ label, pick: () => this.setState({ sq: label, page: 0 }) })),
       tut: this.tutVals(heroWord, summary), tutReplay: () => this.tutStart(true),
-      delAccLabel: s.accDelArm ? 'Apasă din nou: șterg tot, definitiv' : 'Șterge-mi contul', delAccBg: s.accDelArm ? 'var(--coral-soft, #FFE1DA)' : 'transparent', delAccFg: s.accDelArm ? 'var(--coral-ink, #B3261E)' : 'var(--ink2)',
+      delAccLabel: s.accDelArm ? 'Apasă din nou: șterge contul' : 'Șterge-mi contul', delAccBg: s.accDelArm ? 'var(--coral-soft, #FFE1DA)' : 'transparent', delAccFg: s.accDelArm ? 'var(--coral-ink, #B3261E)' : 'var(--ink2)',
       delAccount: () => { if (!this.state.accDelArm) { this.setState({ accDelArm: true }); this.later(() => this.setState({ accDelArm: false }), 5000); return; } APP.deleteAccount(); }, bluIdle: biluPose('wink', 'c'),
       ...this.billVals(s), isPlus: s.screen === 'plus', pl: this.plusVals(s), pm: this.plusModalVals(s),
       plusTabCls: 'tab plus' + (s.plus === 'locked' || s.plus === 'off' ? ' veil' : '') + (s.screen === 'plus' ? ' on' : ''),

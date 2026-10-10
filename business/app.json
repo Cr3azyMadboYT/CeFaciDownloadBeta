@@ -2,7 +2,7 @@
   "expo": {
     "name": "CeFaci Business",
     "slug": "cefaci-business",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "default",
     "scheme": "cefaci-business",
     "userInterfaceStyle": "automatic",
@@ -23,7 +23,7 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "allowBackup": false,
-      "versionCode": 5
+      "versionCode": 6
     },
     "ios": {
       "bundleIdentifier": "app.cefaci.business",
@@ -31,7 +31,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Scanează biletul CeFaci al grupului."
       },
-      "buildNumber": "5"
+      "buildNumber": "6"
     },
     "web": {
       "bundler": "metro",

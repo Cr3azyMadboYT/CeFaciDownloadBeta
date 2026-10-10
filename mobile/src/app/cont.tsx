@@ -19,6 +19,7 @@ import { Icon } from '../ui/Icon';
 import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { Doodles } from '../ui/Doodles';
+import { LegalLinks } from '../ui/LegalLinks';
 import { isRudeName, RUDE_SAY } from '../../../src/app/names';
 
 const STEPS = ['start', 'name', 'zone', 'radius', 'likes', 'style', 'picks', 'friends', 'done'] as const;
@@ -264,6 +265,7 @@ export default function Cont() {
           <T style={{ marginTop: 12, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: 16, lineHeight: 23, color: '#C9CEE6' }}>{returning ? 'Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.' : 'Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.'}</T>
           <View style={{ flex: 1, minHeight: 24 }} />
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 10 }}>
+            <LegalLinks dark />
             <Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}
               style={{ height: 56, borderRadius: 18, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <GoogleG />

@@ -3,14 +3,14 @@
     "name": "CeFaci",
     "slug": "cefaci",
     "scheme": "cefaci",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "orientation": "portrait",
     "icon": "./assets/icons/vara.png",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#EEF1FB",
     "android": {
       "package": "ro.cefaci.app",
-      "versionCode": 5,
+      "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/vara-fg.png",
         "backgroundImage": "./assets/icons/vara-bg.png",
@@ -22,7 +22,12 @@
       ],
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO",
-        "android.permission.SYSTEM_ALERT_WINDOW"
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "softwareKeyboardLayoutMode": "resize",
       "predictiveBackGestureEnabled": false,
@@ -31,7 +36,7 @@
     "ios": {
       "bundleIdentifier": "ro.cefaci.app",
       "supportsTablet": false,
-      "buildNumber": "5",
+      "buildNumber": "6",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
@@ -55,7 +60,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "CeFaci folosește locația doar când apeși „Folosește locația mea”, ca să-ți arate locurile din apropiere."
+          "locationWhenInUsePermission": "CeFaci folosește locația la cererea ta pentru locuri apropiate, revendicarea ofertelor și verificarea sosirii. La aceste verificări, coordonatele sunt trimise serverului."
         }
       ],
       [
@@ -69,7 +74,7 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "CeFaci folosește camera doar când faci poza bonului, ca să-ți confirme ieșirea.",
+          "cameraPermission": "CeFaci deschide camera când fotografiezi un bon, avatarul sau o problemă raportată.",
           "photosPermission": "CeFaci deschide pozele doar când alegi un bon sau atașezi o poză unei probleme.",
           "microphonePermission": false
         }

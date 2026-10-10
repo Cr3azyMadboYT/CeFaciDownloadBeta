@@ -102,10 +102,10 @@ export async function checkIn(pl: Plan, venueToken?:string): Promise<{ ok: boole
 export async function sendBill(pl: Plan, from: 'camera' | 'gallery'): Promise<{ ok: boolean; msg: string } | null> {
   const valid = captureAccount();
   if (!getApp().known) return { ok: false, msg: 'Bonul se citește doar cu cont. Intră din Profil → Prieteni.' };
-  const perm = from === 'camera' ? await ImagePicker.requestCameraPermissionsAsync() : await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const perm = from === 'camera' ? await ImagePicker.requestCameraPermissionsAsync() : null;
   if (!valid()) return accountChanged();
-  if (!perm.granted) return { ok: false, msg: from === 'camera' ? 'Pentru poza bonului avem nevoie de cameră.' : 'Pentru poza bonului avem nevoie de acces la poze.' };
-  const opts: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], base64: true, quality: 0.6, allowsEditing: false };
+  if (perm && !perm.granted) return { ok: false, msg: 'Pentru poza bonului avem nevoie de cameră.' };
+  const opts: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], base64: true, quality: 0.6, allowsEditing: false, exif: false };
   const res = from === 'camera' ? await ImagePicker.launchCameraAsync(opts) : await ImagePicker.launchImageLibraryAsync(opts);
   if (!valid()) return accountChanged();
   if (res.canceled || !res.assets?.[0]?.base64) return null;

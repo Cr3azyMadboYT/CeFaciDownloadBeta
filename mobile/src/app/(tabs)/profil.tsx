@@ -159,6 +159,7 @@ export default function Profil() {
           <Icon name="next" size={14} color={t.ink3} />
         </Press>
       </View>
+      <Press accessibilityLabel="Confidențialitate și datele mele" onPress={() => router.push('/confidentialitate')} style={{minHeight: 44, marginTop: 8, paddingHorizontal: 4, justifyContent: 'center'}}><T style={{fontFamily: F.sb, fontSize: 14, color: t.blueInk}}>Confidențialitate · Termeni · Datele mele</T></Press>
       {err ? <View style={{ marginTop: 14 }}><Note kind="err">{err}</Note></View> : null}
       <View style={{ marginTop: 20, gap: 10 }}>
         {who ? (
@@ -166,7 +167,8 @@ export default function Profil() {
             style={{ borderWidth: 1, borderColor: t.line }}
             onPress={async () => { setBusy('out'); setErr(''); await startOver(false); setBusy(''); router.replace('/cont'); }} />
         ) : null}
-        <Big label={busy === 'del' ? 'Șterg contul…' : arm ? 'Apasă din nou: șterg tot, definitiv' : 'Șterge-mi contul'} color="#D93A1C" disabled={!!busy}
+        {arm && <Muted>Ștergerea închide contul și elimină datele asociate prin serviciul de conturi. Înregistrările ce trebuie păstrate legal sau pentru protecția drepturilor pot rămâne pe perioada justificată. Pentru detalii sau o cerere privind toate datele, deschide „Datele mele”.</Muted>}
+        <Big label={busy === 'del' ? 'Șterg contul…' : arm ? 'Confirmă ștergerea contului' : 'Șterge-mi contul'} color="#D93A1C" disabled={!!busy}
           onPress={async () => {
             if (!arm) { setArm(true); setErr(''); return; }
             setBusy('del');

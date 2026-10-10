@@ -96,9 +96,11 @@ export async function deleteAccountEverywhere(): Promise<string | null> {
   const fail = 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
   try {
     const { data } = await sb().auth.getSession();
+    if (!data.session) return 'Intră în cont pentru a solicita ștergerea lui. Datele locale nu au fost șterse.';
     if (data.session) {
       const r = await within(sb().rpc('delete_my_account'), 15000);
-      if (r === 'timeout' || r.error) return fail;
+      if (r === 'timeout') return fail;
+      if (r.error) return r.error.message || fail;
       await within(sb().auth.signOut({ scope: 'local' }), 2000).catch(() => null);
     }
     await googleSignOut();

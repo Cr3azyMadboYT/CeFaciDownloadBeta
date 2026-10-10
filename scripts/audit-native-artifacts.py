@@ -50,7 +50,7 @@ def compiled_manifest(data):
     return tags
 
 
-for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 5), ("CeFaci-Business", "app.cefaci.business", 5)]:
+for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 6), ("CeFaci-Business", "app.cefaci.business", 6)]:
     if len(sys.argv) > 1 and name not in sys.argv[1:]:
         continue
     apk = pathlib.Path("release") / (name + ".apk")
@@ -69,6 +69,7 @@ for name, package, version in [("CeFaci-Client", "ro.cefaci.app", 5), ("CeFaci-B
     assert application.get("usesCleartextTraffic", False) is False, "Cleartext traffic enabled"
     assert "android.permission.RECORD_AUDIO" not in permissions
     assert "android.permission.SYSTEM_ALERT_WINDOW" not in permissions
+    assert not permissions & {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_MEDIA_IMAGES", "android.permission.READ_MEDIA_VIDEO", "android.permission.ACCESS_MEDIA_LOCATION"}
     if name == "CeFaci-Business":
         assert not permissions & {"android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"}
         assert "android.permission.CAMERA" in permissions
