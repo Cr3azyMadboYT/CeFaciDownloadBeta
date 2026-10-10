@@ -10,6 +10,7 @@ import {confirmRememberedLogin} from '../../shared/remembered-web-auth';
 import { backend, call } from "./backend";
 import { Button, Card, Field, Txt, Toggle } from "./ui";
 import {normalizeUsername, validUsername, validateBirthDate} from "./identity-validation";
+import {partnerValidation} from './partner-validation';
 import { chooseProof, requestKey, uploadProof, type ClaimVenue, type PartnerRequest, type Proof, type RequestDetails, type RequestKind } from "./onboarding-api";
 
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : "Nu am putut încheia pasul. Reîncearcă online.";
@@ -126,9 +127,10 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     Kind(next); Chosen(venue); M(""); Stage("form");
   };
   const field = (name: keyof RequestDetails, value: string) => Details((old) => ({ ...old, [name]: value }));
-  const canSubmit = !!proof && [details.requester_name, details.requester_role, details.firm, details.cui, details.phone].every((v) => !!v.trim()) &&
-    (kind !== "new" || [details.venue_name, details.address, details.city, details.category].every((v) => !!v?.trim()));
+  const scroll = useRef<ScrollView>(null);
+  const validation = partnerValidation(kind, details, !!proof);
   const submit = () => run(async (valid) => {
+    if (validation) throw new Error(validation);
     if (!proof) throw new Error("Alege documentul care dovedește legătura dintre local și firmă.");
     {
       const created = await call<PartnerRequest>("biz_partner_request_create", { p_key: key.current, p_kind: kind, p_venue: chosen?.id ?? null, p_details: details });
@@ -139,11 +141,14 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     if (draft.current.status === "draft") {
       const path = await uploadProof(session.user.id, draft.current.id, proof);
       if (!valid()) return;
-      await call("biz_partner_request_submit", { p_id: draft.current.id, p_path: path });
+      const receipt = await call<PartnerRequest>("biz_partner_request_submit", { p_id: draft.current.id, p_path: path });
       if (!valid()) return;
+      if (receipt?.id !== draft.current.id || receipt.status !== 'pending')
+        throw new Error('Nu am primit confirmarea trimiterii. Reîncearcă; cererea păstrează aceeași referință.');
     }
     draft.current = null; ProofState(null); Stage("home");
     M("Cererea și documentul au fost trimise. Urmărește decizia aici; localul rămâne neschimbat până la aprobare.");
+    scroll.current?.scrollTo({y: 0, animated: true});
     await load();
   });
   const cancelDraft = () => run(async (valid) => {
@@ -152,11 +157,11 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     draft.current = null; ProofState(null); Stage("home"); await load();
   });
   const title = kind === "new" ? "Solicită adăugarea localului" : kind === "dispute" ? "Dispută pentru local" : "Revendică localul";
-  return <ScrollView contentContainerStyle={{ padding: 20, gap: 20, width: "100%", maxWidth: 760, alignSelf: "center" }}>
+  return <ScrollView ref={scroll} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 20, width: "100%", maxWidth: 760, alignSelf: "center" }}>
     <View style={{ alignItems: "center", gap: 8 }}><Bilu mood="hi" size={100} still /><Txt big>Hai să găsim localul tău</Txt><Txt muted>{session.user.email ?? "Cont CeFaci confirmat"}</Txt></View>
     {onHelp && <Card><Txt muted>CeFaci este încă în dezvoltare. Ai găsit o problemă? Spune-ne.</Txt><Button label="Ajutor · Raportează o problemă" secondary disabled={busy} onPress={onHelp} /></Card>}
     {!!accessError && <Card title="Accesul nu a putut fi verificat"><Txt>{accessError}</Txt><Txt muted>Poți reîncerca actualizarea accesului din lista cererilor.</Txt></Card>}
-    {!!message && <Card><Txt>{message}</Txt></Card>}
+    {!!message && stage !== 'form' && (!identity || identity.has_profile) && <Card><Txt>{message}</Txt></Card>}
     {!!identityError && <Card title="Verifică profilul contului"><Txt>{identityError}</Txt><Button label="Reîncearcă verificarea profilului" secondary disabled={busy} onPress={() => void run(async () => { await loadIdentity(); })} /></Card>}
     {identity && !identity.has_profile && <Card title="Completează contul CeFaci">
       <Txt>Ai confirmat emailul. Completează profilul contului pe care îl vei folosi în Client și Business. Acest pas nu acordă acces la un local.</Txt>
@@ -172,6 +177,7 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
       </View>
       {!!day && !!month && year.length === 4 && !!birth.error && <Txt>{birth.error}</Txt>}
       <Txt muted>Contul CeFaci este disponibil de la 16 ani. Data nașterii nu apare pe profilul public.</Txt>
+      {!!message && <View accessibilityLiveRegion="polite"><Txt>{message}</Txt></View>}
       <Button label="Salvează profilul contului" disabled={busy || firstName.trim().length < 2 || !validUsername(normalized) || checked !== "free" || !birth.iso} onPress={() => void run(async (valid) => {
         try {await call("biz_identity_complete", { p_username: normalized, p_first_name: firstName.trim(), p_birth_date: birth.iso });}
         catch (e) {
@@ -233,7 +239,12 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
         <Button label={proof ? "Schimbă documentul" : "Încarcă documentul"} secondary disabled={busy || !!draft.current} onPress={() => void run(async (valid) => { const next = await chooseProof(); if (valid() && next) ProofState(next); })} />
         {proof && <Txt>{proof.name} · {Math.ceil(proof.bytes.byteLength / 1024)} KB</Txt>}
         {draft.current && <Txt muted>Ciorna este salvată. Reîncearcă trimiterea documentului; pentru alte date, renunță la ciornă și începe din nou.</Txt>}
-        <Button label={busy ? "Se trimite…" : "Trimite cererea pentru verificare"} disabled={busy || !canSubmit} onPress={() => void submit()} />
+        <View testID="partner-submit-feedback" accessibilityLiveRegion="polite">
+          {!!message && <Txt>{message}</Txt>}
+          {!!validation && <Txt muted>{validation}</Txt>}
+          {busy && <Txt muted>Se verifică datele și se trimite documentul. Așteaptă confirmarea înainte să închizi pagina.</Txt>}
+        </View>
+        <Button label={busy ? "Se trimite…" : "Trimite cererea pentru verificare"} disabled={busy || !!validation} onPress={() => void submit()} />
         <Button label={draft.current ? "Renunță la ciornă" : "Înapoi"} secondary disabled={busy} onPress={() => void cancelDraft()} />
       </Card>
     </>}

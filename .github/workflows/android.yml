@@ -37,6 +37,7 @@ jobs:
       - name: Conexiuni PostgreSQL simultane
         run: |
           node scripts/test-business-concurrency.mjs
+          node scripts/test-business-admin-delivery.mjs
           node scripts/test-admin-concurrency.mjs
           node scripts/test-privacy-concurrency.mjs
           node scripts/test-launch-concurrency.mjs

@@ -206,7 +206,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
           />
         ))}
       </View>
-      <ScrollView
+      <ScrollView keyboardShouldPersistTaps="handled"
         horizontal={!wide}
         contentContainerStyle={{
           gap: 8,
@@ -245,7 +245,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
       <ActivityIndicator accessibilityLabel="Verific accesul la localuri" />
     );
   if (!venues.length || onboarding) return <View style={{flex: 1}}>
-    {helpBeforeAccess ? <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 760, width: "100%", alignSelf: "center"}}>
+    {helpBeforeAccess ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{padding: 20, gap: 20, maxWidth: 760, width: "100%", alignSelf: "center"}}>
       <Button label="Înapoi la cererile Business" secondary onPress={() => HelpBeforeAccess(false)} />
       <BusinessHelp key={session.user.id + ":onboarding"} userId={session.user.id} />
     </ScrollView> : <BusinessOnboarding session={session} accessError={message} onRefreshAccess={loadVenues} onSignOut={signOut} onBack={venues.length ? () => Onboarding(false) : undefined} onHelp={() => HelpBeforeAccess(true)} />}
@@ -287,7 +287,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
   return (
     <View style={{ flex: 1, flexDirection: wide ? "row" : "column" }}>
       {nav}
-      <ScrollView
+      <ScrollView keyboardShouldPersistTaps="handled"
         key={venue + ":" + session.user.id}
         contentContainerStyle={{
           padding: wide ? 32 : 16,
@@ -396,12 +396,12 @@ export default function App() {
             </Pressable>
           </Modal>
           {!!rememberNotice&&<Txt>{rememberNotice}</Txt>}
-          {privacyOpen && fonts && ready ? <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
+          {privacyOpen && fonts && ready ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
             <ActivityIndicator accessibilityLabel="Se încarcă CeFaci Business" />
           ) : session ? (
             security.error || !security.identity ? <Card><Txt big>Verificăm accesul…</Txt><Txt>{security.error || "Verificăm contul și rolul tău."}</Txt><Button label="Verifică din nou" onPress={() => void security.check()}/><Button label="Ieși din cont" secondary onPress={() => void logout().catch(() => {})}/></Card> : security.identity.business_access && !security.active ? <BusinessSecurityGate session={session} forcedChallenge={security.forcedChallenge} onVerified={security.verified} onLogout={logout}/> : <Workspace key={session.user.id + ":" + security.identity.business_access} session={session} hasAccess={security.active} checkAccess={security.check} logout={logout} replayToken={replayToken} />
           ) : (
-            <ScrollView
+            <ScrollView keyboardShouldPersistTaps="handled"
               contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
             >
               <BusinessEntry />

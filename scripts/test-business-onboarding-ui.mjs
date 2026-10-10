@@ -11,7 +11,7 @@ const token = 'eyJhbGciOiJIUzI1NiJ9.' + Buffer.from(JSON.stringify(fixtureClaims
 const session = {access_token:token,refresh_token:'synthetic',expires_in:3600,expires_at:Math.floor(Date.now()/1000)+3600,token_type:'bearer',user};
 const calls = [], requests = [];
 const unexpected = [];
-let failUpload = true, profileReady = false, failUsername = true, collide = true;
+let failUpload = true, profileReady = false, failUsername = true, collide = true, failCreate = true, failReceipt = true;
 const context = await browser.newContext({viewport:{width:390,height:844}});
 await context.addInitScript(seedCompletedTutorials,[{app:'business',userId:user.id,role:'applicant'}]);
 await context.routeWebSocket(/supabase\.co/, ws=>ws.close());
@@ -42,6 +42,7 @@ await context.route('**/*', async route=>{
   else if (name==='biz_partner_requests') data=requests;
   else if (name==='biz_venue_search') data=p.p_query==='Lipsa'?[]:[{id:'unclaimed',name:'Local disponibil',address:'Strada Test 1',city:'București',claimed:false},{id:'claimed',name:'Local revendicat',address:'Strada Test 2',city:'București',claimed:true}];
   else if (name==='biz_partner_request_create') {
+    if (failCreate) {failCreate=false;await route.fulfill({status:400,contentType:'application/json',body:JSON.stringify({message:'Datele cererii au fost respinse. Verifică telefonul de contact.'})});return;}
     data=requests.find(r=>r.key===p.p_key);
     if(!data) {data={id:`00000000-0000-0000-0000-${String(requests.length+1).padStart(12,'0')}`,key:p.p_key,kind:p.p_kind,venue_id:p.p_venue,venue_name:p.p_venue==='claimed'?'Local revendicat':p.p_venue==='unclaimed'?'Local disponibil':p.p_details.venue_name,details:p.p_details,status:'draft',created_at:new Date().toISOString()}; requests.push(data);}
   }
@@ -52,7 +53,7 @@ await context.route('**/*', async route=>{
     if(failUpload) {failUpload=false;status=503;data={statusCode:'503',message:'Încărcarea este temporar indisponibilă'};}
     else data={Key:path};
   }
-  else if (name==='biz_partner_request_submit') { data=requests.find(r=>r.id===p.p_id);assert(p.p_path.endsWith('/proof.pdf'));data.status='pending';if(data.kind==='dispute')data.owner_response_deadline=new Date(Date.now()+3*86400000).toISOString(); }
+  else if (name==='biz_partner_request_submit') { data=requests.find(r=>r.id===p.p_id);assert(p.p_path.endsWith('/proof.pdf'));if(failReceipt){failReceipt=false;data={...data,status:'draft'};}else{data.status='pending';if(data.kind==='dispute')data.owner_response_deadline=new Date(Date.now()+3*86400000).toISOString();} }
   else if (name==='biz_partner_request_cancel') { data=requests.find(r=>r.id===p.p_id);data.status='cancelled'; }
   else throw new Error(`Unexpected backend call ${req.method()} ${path}`);
   await route.fulfill({status,contentType:'application/json',headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'*'},body:JSON.stringify(data)});
@@ -118,10 +119,23 @@ try {
   await button('Nu găsesc localul · Solicit adăugarea').click();
   for(const [label,value] of [['Numele localului','Local nou de test'],['Adresa completă','Strada Test 3'],['Oraș','București'],['Categoria localului','Restaurant']]) await page.getByLabel(label,{exact:true}).fill(value);
   await fillCompany();assert(await button('Trimite cererea pentru verificare').isDisabled());
+  await page.getByTestId('partner-submit-feedback').getByText('Atașează documentul justificativ',{exact:false}).waitFor();
+  await page.getByLabel('Telefonul tău de contact',{exact:true}).fill('telefon invalid');
+  await page.getByTestId('partner-submit-feedback').getByText('Telefonul de contact:',{exact:false}).waitFor();
+  assert(await button('Trimite cererea pentru verificare').isDisabled());
+  await page.getByLabel('Telefonul tău de contact',{exact:true}).fill('0712345678');
   await chooseDocument(false);await page.getByText('Tipul fișierului nu este recunoscut.',{exact:false}).waitFor();assert.equal(calls.filter(c=>c.name==='biz_partner_request_create').length,0);
   await chooseDocument();await page.getByText('certificat.pdf',{exact:false}).waitFor();
+  await button('Trimite cererea pentru verificare').click();
+  const feedback=page.getByTestId('partner-submit-feedback');
+  await feedback.getByText('Datele cererii au fost respinse.',{exact:false}).waitFor();
+  const rect=await feedback.boundingBox();assert(rect.y>=0 && rect.y<844,'The error is visible next to submit without scrolling to the top');
+  assert.equal(requests.length,0,'A rejected create is never reported as received');
   await button('Trimite cererea pentru verificare').click();await page.getByText('Încărcarea este temporar indisponibilă',{exact:false}).waitFor();
   assert(await button('Schimbă documentul').isDisabled());
+  await button('Trimite cererea pentru verificare').click();
+  await feedback.getByText('Nu am primit confirmarea trimiterii.',{exact:false}).waitFor();
+  assert.equal(requests[0].status,'draft');
   await button('Trimite cererea pentru verificare').click();
   await page.getByText('Adăugare local · În verificare',{exact:true}).waitFor();
   const newCalls=calls.filter(c=>c.name==='biz_partner_request_create');assert.equal(new Set(newCalls.map(c=>c.p.p_key)).size,1);assert.equal(requests.length,1);assert.equal(requests[0].kind,'new');

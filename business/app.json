@@ -2,7 +2,7 @@
   "expo": {
     "name": "CeFaci Business",
     "slug": "cefaci-business",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "default",
     "scheme": "cefaci-business",
     "userInterfaceStyle": "automatic",
@@ -23,7 +23,7 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "allowBackup": false,
-      "versionCode": 8,
+      "versionCode": 9,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/toamna-fg.png",
         "backgroundImage": "./assets/icons/toamna-bg.png"
@@ -35,7 +35,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Scanează biletul CeFaci al grupului."
       },
-      "buildNumber": "8"
+      "buildNumber": "9"
     },
     "web": {
       "bundler": "metro",

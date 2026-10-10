@@ -4,10 +4,11 @@ from pathlib import Path
 folder=sys.argv[1]
 name,scheme,bundle=('CeFaci-Client','CeFaci','ro.cefaci.app') if folder=='mobile' else ('CeFaci-Business','CeFaciBusiness','app.cefaci.business')
 root=Path(os.environ['RUNNER_TEMP'])/name
+config=json.loads(Path(folder,'app.json').read_text())['expo']
 results=[]
 for kind,app in [('simulator',root/'simulator/Build/Products/Release-iphonesimulator'/f'{scheme}.app'),('device-unsigned',root/f'{name}.xcarchive/Products/Applications'/f'{scheme}.app')]:
     info=plistlib.loads((app/'Info.plist').read_bytes())
-    assert info['CFBundleIdentifier']==bundle and info['CFBundleVersion']=='8'
+    assert info['CFBundleIdentifier']==bundle and info['CFBundleVersion']==config['ios']['buildNumber'] and info['CFBundleShortVersionString']==config['version']
     assert info['NSAppTransportSecurity']['NSAllowsArbitraryLoads'] is False
     assert 'NSMicrophoneUsageDescription' not in info and 'NSLocationAlwaysUsageDescription' not in info
     assert (app/'main.jsbundle').stat().st_size>100_000, 'Release must include its offline JS bundle'

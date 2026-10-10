@@ -27,6 +27,19 @@ beforeAll(async()=>{
 },60000);
 beforeEach(async()=>{await q("update private.partner_requests set created_at=now()-interval '2 days'");});
 afterAll(()=>db?.close());
+it('delivers only submitted requests to the Admin queue, once, for all Business entry flows',async()=>{
+ for(const kind of ['claim','new','dispute']){
+  const venue=kind==='new'?null:kind==='claim'?'unclaimed':'claimed';
+  const r=await create('queue-'+kind,kind,venue,{venue_name:'Queue Local',address:'Strada Test 1',city:'Buftea',category:'Restaurant',phone:'0712345678'});
+  expect((await rpc('admin',"admin_partner_requests('pending')")).some((x:any)=>x.id===r.id)).toBe(false);
+  const path=await uploaded(r.id);await rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,path]);
+  await rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,path]);
+  const queue=await rpc('admin',"admin_partner_requests('pending')");
+  expect(queue.filter((x:any)=>x.id===r.id)).toHaveLength(1);
+  expect(queue.find((x:any)=>x.id===r.id).kind).toBe(kind);
+  await rpc('applicant','biz_partner_request_cancel($1)',[r.id]);
+ }
+});
 it('provides whitelisted authenticated unclaimed/claimed search, without hidden venues or owner/company identities',async()=>{
  const results=await rpc('applicant',"biz_venue_search('Local')");expect(results).toHaveLength(2);expect(results.find((x:any)=>x.id==='claimed').claimed).toBe(true);expect(results.find((x:any)=>x.id==='unclaimed').claimed).toBe(false);expect(Object.keys(results[0]).sort()).toEqual(['address','city','claimed','id','name']);expect(await rpc('applicant',"biz_venue_search('%')")).toEqual([]);expect(await rpc('applicant',"biz_venue_search('')")).toEqual([]);
 });
