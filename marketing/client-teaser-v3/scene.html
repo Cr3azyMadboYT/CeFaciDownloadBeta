@@ -1,0 +1,116 @@
+<!doctype html><html lang="ro"><meta charset="utf-8"><title>CeFaci — Biletul de ieșit</title><style>body{margin:0;background:#11143f}canvas{display:block;width:100%;height:auto}</style><canvas id="film"></canvas><script>
+// CeFaci — „Biletul de ieșit”, reclamă de pre-lansare (55,2 s, 1080×1920, 124 BPM, tăieturile cad pe măsură).
+// Limbajul vizual vine din aplicație: biletul galben cu perforație și cod de bare, ștampila lui Bilu, întrebările
+// de pe fundalul aplicației (Doodles.tsx). Ecranele din telefon sunt reale (versiunea de test), cu numele localurilor
+// blurate. Fără interfețe de sistem imitate, fără promisiuni de descărcare; finalul cere părerea în comentarii.
+// Textul important stă în zona sigură TikTok (x 70–900, y 200–1460).
+const W=1080,H=1920,BPM=124,B=60/BPM,BAR=4*B,DURATION=+(BAR*28.5).toFixed(2);
+const T=n=>n*BAR; // începutul măsurii n
+const CUTS=[T(3),T(4),T(6),T(7),T(8),T(9),T(10),T(11),T(12),T(16),T(19),T(22),T(24.5)];
+const P={ink:'#0E1440',night:'#1b1856',blue:'#3455ff',yellow:'#FFD43B',cream:'#fff7dc',paper:'#eff0f8',mint:'#62d6a2',orange:'#FF6A4D',amber:'#F28C28',lilac:'#b9a8ff',pink:'#ff9fc4',white:'#ffffff'};
+const QS=['Ce facem?','Unde mergem?','Cu cine ies?','Unde ieșim?','Când ieșim?','Vine cineva?','Ieșim diseară?','Cine mai vine?','Pe la ce oră?','Unde ne vedem?','Facem ceva?','O bere?','Ce zici?','Băgăm un film?','Cine conduce?','Avem rezervare?','Câți suntem?','Și după?','Mâncăm ceva?','Mai stăm?','Unde e lumea?','Ce e nou?','Hai afară?','La ce oră vii?','Mai e deschis?','Club sau terasă?','Bowling?','Karaoke?','Mergem pe jos?','Iau mașina?','Ce chef ai?','Vii și tu?','Weekendul ăsta?','Când ne vedem?','Plecăm acum?','Ne strângem toți?','Pizza sau shaorma?','Cine organizează?'];
+const c=document.querySelector('canvas'),ctx=c.getContext('2d'),A={};
+window.ready=(async()=>{
+ for(const [name,base] of [['Bricolage','bricolage-grotesque'],['Instrument','instrument-sans'],['Caveat','caveat']]){for(const subset of ['latin','latin-ext']){const file=base==='caveat'?`${base}-${subset}-wght-normal.woff2`:`${base}-${subset}-standard-normal.woff2`;const unicodeRange=subset==='latin'?'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD':'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';const f=new FontFace(name,`url(/website/assets/${file})`,{weight:'100 900',unicodeRange});await f.load();document.fonts.add(f);}}
+ for(const n of ['hi','yay','wink','oops']){const im=new Image();im.src=`/marketing/client-teaser-v3/bilu-${n}.svg`;await im.decode();A['bilu-'+n]=im;}
+ for(const n of ['acasa','p1','p2','p3','p4','p5','p6']){const im=new Image();im.src=`/marketing/client-teaser-v3/screens/${n}.webp`;await im.decode();A[n]=im;}
+ const g=document.createElement('canvas');g.width=180;g.height=320;const x=g.getContext('2d');let s=311;for(let i=0;i<3600;i++){s=(s*1664525+1013904223)>>>0;x.fillStyle=i%2?'#fff':'#0E1440';x.globalAlpha=.05;x.fillRect(s%180,(s>>>8)%320,1,1);}A.grain=g;
+ return true;
+})();
+// ——— unelte ———
+const clamp=x=>Math.max(0,Math.min(1,x)),ease=x=>1-Math.pow(1-clamp(x),4),easeIn=x=>Math.pow(clamp(x),3),inout=x=>{x=clamp(x);return x<.5?8*x**4:1-Math.pow(-2*x+2,4)/2},back=x=>{x=clamp(x);return 1+2.70158*Math.pow(x-1,3)+1.70158*Math.pow(x-1,2)};
+const rnd=i=>{let s=(i*2654435761)>>>0;s^=s>>>15;s=Math.imul(s,2246822519)>>>0;s^=s>>>13;return (s>>>0)/4294967296;};
+const pulse=t=>Math.exp(-((t%B)/B)*7); // lovitura pe fiecare bătaie
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
+function font(size,weight=800,f='Bricolage'){ctx.font=`${weight} ${size}px ${f}, sans-serif`;}
+function text(s,x,y,size,color,weight=800,align='left',f='Bricolage'){font(size,weight,f);ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(s,x,y);}
+function fitSize(s,max,size,weight=800,f='Bricolage'){font(size,weight,f);const w=ctx.measureText(s).width;return w>max?size*max/w:size;}
+function circle(x,y,r,col){ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();}
+function star(x,y,r,col,rot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rad=i%2?r*.23:r;ctx.lineTo(Math.cos(a)*rad,Math.sin(a)*rad);}ctx.closePath();ctx.fill();ctx.restore();}
+function bg(col){ctx.fillStyle=col;ctx.fillRect(-60,-60,W+120,H+120);}
+function grain(){ctx.save();ctx.setTransform(c.width/W,0,0,c.height/H,0,0);ctx.globalAlpha=.7;ctx.drawImage(A.grain,0,0,W,H);ctx.restore();}
+// rând de titlu care iese de sub o mască (ca o bandă de bilet)
+function reveal(s,x,y,size,col,p,align='left',weight=800,f='Bricolage'){if(p<=0)return;const e=ease(p);ctx.save();font(size,weight,f);const w=ctx.measureText(s).width,x0=align==='center'?x-w/2:x;ctx.beginPath();ctx.rect(x0-20,y-size*1.05,w+40,size*1.35);ctx.clip();text(s,x,y+size*1.1*(1-e),size,col,weight,align,f);ctx.restore();}
+function bilu(pose,x,y,w,t,rot=0,bob=1){const im=A['bilu-'+pose];ctx.save();ctx.translate(x,y+Math.sin(t*Math.PI*2/B/2)*8*bob);ctx.rotate(rot+Math.sin(t*2)*.03*bob);ctx.drawImage(im,-w/2,-w*.62,w,w*162/130);ctx.restore();}
+// biletul: dreptunghi rotunjit cu două crestături în dreptul perforației
+function ticketPath(x,y,w,h,r,cut){const n=26;ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+cut-n);ctx.arc(x+w,y+cut,n,-Math.PI/2,Math.PI/2,true);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+cut+n);ctx.arc(x,y+cut,n,Math.PI/2,-Math.PI/2,true);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();}
+function perforation(x1,x2,y,col){ctx.save();ctx.strokeStyle=col;ctx.lineWidth=5;ctx.setLineDash([18,16]);ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.stroke();ctx.restore();}
+function barcode(x,y,w,h,seed,col){let px=x,i=0;ctx.fillStyle=col;while(px<x+w){const bw=2+Math.floor(rnd(seed+i)*4)*2.5;if(i%2===0)ctx.fillRect(px,y,bw,h);px+=bw+1.5;i++;}}
+// ștampila rotundă a lui Bilu: cade de sus, se lovește de hârtie și rămâne puțin strâmbă
+function stamp(lines,x,y,r,col,p,rot=-.22){if(p<=0)return;const k=p<.35?1.9-.9*easeIn(p/.35):1+.06*Math.sin((p-.35)*30)*Math.exp(-(p-.35)*9);ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.scale(k,k);ctx.globalAlpha=clamp(p*4)*.95;ctx.strokeStyle=col;ctx.lineWidth=r*.07;ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.stroke();ctx.lineWidth=r*.025;ctx.beginPath();ctx.arc(0,0,r*.83,0,Math.PI*2);ctx.stroke();const [a,b2,c2]=lines;text(a,0,-r*.3,r*.2,col,800,'center','Instrument');text(b2,0,r*.13,r*.38,col,800,'center','Caveat');text(c2,0,r*.45,r*.17,col,800,'center','Instrument');ctx.restore();}
+// telefon cu un ecran real din aplicație
+function phone(name,x,y,w,rot=0,pan=0,shadow=1){const h=w*2.16;ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.shadowColor='#02062d77';ctx.shadowBlur=60*shadow;ctx.shadowOffsetY=40*shadow;ctx.fillStyle='#080b25';rr(-w/2-14,-h/2-14,w+28,h+28,64);ctx.fill();ctx.shadowColor='transparent';ctx.save();rr(-w/2,-h/2,w,h,52);ctx.clip();ctx.fillStyle=P.paper;ctx.fillRect(-w/2,-h/2,w,h);const im=A[name],ih=w*im.height/im.width;ctx.drawImage(im,-w/2,-h/2-Math.max(0,ih-h)*pan,w,ih);ctx.restore();ctx.strokeStyle='#ffffff38';ctx.lineWidth=3;rr(-w/2-14,-h/2-14,w+28,h+28,64);ctx.stroke();ctx.fillStyle='#080b25';rr(-62,-h/2+10,124,26,20);ctx.fill();ctx.restore();return{x,y,w,h,rot,pan,name};}
+function tap(d,fx,fy,p){if(p<=0||p>=1)return;const im=A[d.name],ih=d.w*im.height/im.width,off=Math.max(0,ih-d.h)*d.pan;let lx=(fx-.5)*d.w,ly=-d.h/2-off+fy*ih;const x=d.x+lx*Math.cos(d.rot)-ly*Math.sin(d.rot),y=d.y+lx*Math.sin(d.rot)+ly*Math.cos(d.rot);const a=Math.sin(Math.PI*clamp(p*1.6));ctx.save();ctx.globalAlpha=.9*a;circle(x,y,30+8*(1-a),'#ffffffd0');ctx.globalAlpha=.7*(1-p);ctx.strokeStyle=P.yellow;ctx.lineWidth=9;ctx.beginPath();ctx.arc(x,y,36+110*ease(p),0,Math.PI*2);ctx.stroke();ctx.restore();}
+function pill(s,x,y,col,ink,size=34,rot=0,p=1,align='left'){if(p<=0)return;font(size,700,'Instrument');const w=ctx.measureText(s).width+size*1.5,h=size*2;ctx.save();ctx.translate(x,y);ctx.rotate(rot);const k=back(p);ctx.scale(k,k);ctx.globalAlpha=clamp(p*3);const x0=align==='center'?-w/2:0;ctx.fillStyle=col;rr(x0,-h/2,w,h,h/2);ctx.fill();text(s,x0+w/2,size*.36,size,ink,700,'center','Instrument');ctx.restore();return w;}
+function chip(s,x,y,p,col=P.mint){if(p<=0)return;const e=ease(p);ctx.save();ctx.translate(x-220*(1-e),y);ctx.globalAlpha=clamp(p*2.5);font(36,700,'Instrument');const w=ctx.measureText(s).width+120;ctx.fillStyle=P.white;ctx.shadowColor='#0b0f3a55';ctx.shadowBlur=30;ctx.shadowOffsetY=12;rr(0,-44,w,88,44);ctx.fill();ctx.shadowColor='transparent';circle(44,0,24,col);text('✓',44,12,30,P.ink,800,'center','Instrument');text(s,82,12,36,P.ink,700,'left','Instrument');ctx.restore();}
+function doodles(t,n,alpha,col,seed=0,drift=1){ctx.save();for(let i=0;i<n;i++){const q=QS[(i*7+seed)%QS.length];const x=60+rnd(i*3+1+seed)*900,y=230+rnd(i*3+2+seed)*1500,rot=(rnd(i*3+3+seed)-.5)*.5,size=40+rnd(i+77+seed)*46;ctx.save();ctx.translate(x+Math.sin(t*.6+i)*6*drift,y+Math.cos(t*.5+i)*6*drift);ctx.rotate(rot);ctx.globalAlpha=alpha;text(q,0,0,size,col,700,'center','Caveat');ctx.restore();}ctx.restore();}
+function header(label,col){text('CeFaci.',80,190,42,col,800);text(label,1000,190,22,col,700,'right','Instrument');ctx.save();ctx.globalAlpha=.3;perforation(80,1000,226,col);ctx.restore();}
+// ——— scenele ———
+function scene(t){
+ // 1. Cârligul: aceleași întrebări, din nou și din nou (fundalul din aplicație, scăpat de sub control)
+ if(t<T(3)){bg(P.ink);const n=Math.floor(3+Math.pow(t/T(3),1.6)*70);for(let i=0;i<n;i++){const born=Math.pow(i/73,1/1.6)*T(3),p=ease((t-born)/.25);const q=QS[(i*11)%QS.length];const x=90+rnd(i*5+1)*900,y=250+rnd(i*5+2)*1450,rot=(rnd(i*5+3)-.5)*.6,size=44+rnd(i*5+4)*60;ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.scale(back(p),back(p));ctx.globalAlpha=clamp(p)*(i<10?.9:.55);text(q,0,0,size,i%5===0?P.yellow:'#c9cdf5',700,'center','Caveat');ctx.restore();}
+  ctx.save();ctx.fillStyle='#0E1440d0';rr(60,700,960,480,40);ctx.fill();ctx.restore();
+  const shake=t>T(2)?Math.sin(t*90)*6*((t-T(2))/BAR):0;ctx.save();ctx.translate(shake,0);
+  if(t<T(1))reveal('Vineri.',540,980,190,P.white,(t-.1)/.4,'center');
+  else if(t<T(2)){reveal('20:30.',540,980,200,P.white,(t-T(1))/.35,'center');}
+  else{reveal('Iar',540,880,110,P.white,(t-T(2))/.3,'center');reveal('„ce facem?”',540,1060,150,P.yellow,(t-T(2)-.25)/.35,'center');}
+  ctx.restore();text('o mie de întrebări · zero planuri',540,1260,34,'#9aa1db',600,'center','Instrument');}
+ // 2. Stai. Un bilet galben intră peste haos.
+ else if(t<T(4)){const u=t-T(3);bg(P.ink);doodles(t,60,.35,'#c9cdf5',3,0);const e=ease(u/.55);const y=1920*(1-e)+120;ctx.save();ctx.translate(0,y);ctx.shadowColor='#0008';ctx.shadowBlur=60;ticketPath(60,0,960,1500,60,1050);ctx.fillStyle=P.yellow;ctx.fill();ctx.shadowColor='transparent';perforation(110,970,1050,'#0E144055');text('CeFaci',120,120,46,P.ink,800);text('• BILET DE IEȘIT',300,118,26,P.ink,700,'left','Instrument');reveal('Stai.',120,430,220,P.ink,(u-.45)/.35);reveal('Am eu',120,600,120,P.ink,(u-.75)/.3);reveal('un plan.',120,730,120,P.blue,(u-.95)/.3);barcode(120,1130,520,120,5,P.ink);text('CF-000001 · ÎN CURÂND',120,1320,30,P.ink,700,'left','Instrument');ctx.restore();bilu('wink',800,y+1220,300,t,.08,0);
+  // ruptura: în ultima jumătate de bătaie biletul se rupe pe perforație
+  if(u>BAR-B*.5){const k=easeIn((u-(BAR-B*.5))/(B*.5));ctx.fillStyle=P.blue;ctx.fillRect(0,y+1050-8-k*900,W,k*1800+16);}}
+ // 3. Drop: CeFaci.
+ else if(t<T(6)){const u=t-T(4);bg(P.blue);circle(540,1000,560+pulse(t)*30,'#4566ff');for(let i=0;i<26;i++){const x=rnd(i+400)*W,sp=200+rnd(i+500)*300,y=((u*sp+rnd(i+600)*2000)%2200)-150,r=(rnd(i+700)-.5)*2+u*(rnd(i)-.5)*3;ctx.save();ctx.translate(x,y);ctx.rotate(r);ticketPath(-34,-20,68,40,8,20);ctx.fillStyle=[P.yellow,P.white,P.pink,P.mint][i%4];ctx.globalAlpha=.85;ctx.fill();ctx.restore();}
+  const k=1+.05*pulse(t),e=back(u/.45);ctx.save();ctx.translate(540,560);ctx.scale(k*e,k*e);text('CeFaci.',0,0,230,P.white,850,'center');ctx.restore();bilu('yay',540,1060+30*(1-ease(u/.5)),420,t,0);
+  reveal('Bilu face planul.',540,1420,64,P.white,(u-B*2)/.3,'center');reveal('Voi doar ieșiți.',540,1510,64,P.yellow,(u-B*3)/.3,'center');}
+ // 4. Cinci întrebări, sub un minut
+ else if(t<T(7)){const u=t-T(6);bg(P.yellow);doodles(t,22,.13,P.ink,9);header('CUM MERGE',P.ink);reveal('5 întrebări.',80,520,140,P.ink,u/.3);reveal('Sub un minut.',80,680,120,P.blue,(u-B)/.3);
+  // cronometru care se umple
+  const p=clamp((u-B*1.5)/(B*2.2));ctx.save();ctx.translate(780,1150);ctx.lineWidth=34;ctx.strokeStyle='#0E144022';ctx.beginPath();ctx.arc(0,0,190,0,Math.PI*2);ctx.stroke();ctx.strokeStyle=P.ink;ctx.lineCap='round';ctx.beginPath();ctx.arc(0,0,190,-Math.PI/2,-Math.PI/2+Math.PI*2*inout(p));ctx.stroke();text('<1',0,40,130,P.ink,850,'center');text('MINUT',0,105,30,P.ink,700,'center','Instrument');ctx.restore();bilu('hi',260,1230,300,t,-.08);}
+ else if(t<T(12)){const k=Math.floor((t-T(7))/BAR),u=t-T(7)-k*BAR;
+  const Q=[['p1','Ce plan vrei?','Toată seara',.5,.42,P.lilac],['p2','Când ieșiți?','Acum',.17,.3,P.mint],['p3','Câți sunteți?','4 prieteni',.58,.26,P.pink],['p4','Cât dați?','Până în 100 lei',.42,.27,P.orange],['p5','Ce chef aveți?','Party + Chill',.73,.28,P.yellow]][k];
+  const [scr,q,a,fx,fy,col]=Q;bg(col);doodles(t,18,.12,P.ink,k*5);header('ÎNTREBAREA '+(k+1)+' / 5',P.ink);
+  // numărul mare din fundal
+  ctx.save();ctx.globalAlpha=.12;text(String(k+1),1010,1180,760,P.ink,850,'right');ctx.restore();
+  const s1=fitSize(q,820,118);reveal(q,80,470,s1,P.ink,u/.28);
+  const d=phone(scr,690+120*(1-ease(u/.45)),1260,440,.07+.02*Math.sin(u*2),0,1);tap(d,fx,fy,(u-B*1.4)/(B*1.4));
+  pill(a+'  ✓',80,640,P.ink,P.white,46,-.03,(u-B*2.1)/.35);
+  for(let i=0;i<5;i++){ctx.fillStyle=i<=k?P.ink:'#0E144030';rr(80+i*70,1430,56,14,7);ctx.fill();}}
+ // 5. Gata: trei planuri verificate
+ else if(t<T(16)){const u=t-T(12);bg(P.night);doodles(t,20,.08,P.white,21);header('GATA',P.white);reveal('3 planuri.',80,440,140,P.white,u/.3);reveal('Verificate.',80,590,140,P.yellow,(u-B)/.3);
+  const e=ease((u-.2)/.7);const d=phone('p6',700,1250+260*(1-e),470,.06-.04*e,clamp((u-BAR*1.5)/(BAR*2))*.35,1);
+  ['Deschis la ora lui','Drumul socotit','În bugetul vostru','Cu vremea în minte'].forEach((s,i)=>chip(s,70,760+i*120,(u-B*(3+i*2))/.4,[P.mint,P.yellow,P.pink,P.lilac][i]));
+  stamp(['BILU','aprobă','✓ VERIFICAT'],820,960,150,P.orange,(u-BAR*3.25)/.6);}
+ // 6. Gașca votează
+ else if(t<T(19)){const u=t-T(16);bg(P.yellow);doodles(t,16,.12,P.ink,31);header('GAȘCA',P.ink);reveal('Nu vă hotărâți?',80,440,fitSize('Nu vă hotărâți?',900,120),P.ink,u/.3);reveal('Votați.',80,600,150,P.blue,(u-B)/.3);
+  const plans=[['Cină + desert','20:40 – 23:10',3],['Film + un pahar','20:45 – 00:50',1],['Plimbare + ceva dulce','20:50 – 22:40',0]];const win=u>BAR*2.25;
+  plans.forEach(([name,time,votes],i)=>{const p=ease((u-B*(1.5+i*.5))/.4);const y=830+i*210;const big=win&&i===0?1+.04*ease((u-BAR*2.25)/.3):1;ctx.save();ctx.translate(80+600*(1-p),y);ctx.scale(big,big);ctx.globalAlpha=clamp(p*2)*(win&&i>0?.55:1);ctx.shadowColor='#0E144033';ctx.shadowBlur=24;ctx.shadowOffsetY=10;ticketPath(0,0,800,170,30,85);ctx.fillStyle=i===0&&win?P.ink:P.white;ctx.fill();ctx.shadowColor='transparent';const ink=i===0&&win?P.white:P.ink;circle(70,85,38,i===0?P.yellow:i===1?P.lilac:P.mint);text(String(i+1),70,100,40,P.ink,850,'center');text(name,130,78,44,ink,800);text(time,130,124,28,i===0&&win?'#c9cdf5':'#6a6f96',600,'left','Instrument');
+   for(let v=0;v<votes;v++){const vp=ease((u-B*(4+v*.8+i*.3))/.3);if(vp>0){const cx=650+v*48,cy=85;ctx.globalAlpha=vp;circle(cx,cy-60*(1-vp),22,[P.orange,P.blue,P.mint][v%3]);text('✓',cx,cy-60*(1-vp)+10,24,P.white,800,'center','Instrument');}}ctx.restore();});
+  stamp(['GAȘCA A','ales!','✓ VOT GATA'],880,1430,120,P.orange,(u-BAR*2.3)/.6,.18);bilu('yay',170,1640,220,t,-.1);}
+ // 7. Planul devine bilet
+ else if(t<T(22)){const u=t-T(19);bg(P.blue);doodles(t,18,.1,P.white,41);header('BILETUL TĂU',P.white);reveal('Planul',80,410,140,P.white,u/.3);reveal('devine bilet.',80,560,140,P.yellow,(u-B)/.3);
+  const e=ease((u-.3)/.7),flip=Math.max(.02,Math.abs(Math.cos((1-e)*Math.PI*.5)));ctx.save();ctx.translate(540,1110+200*(1-e));ctx.rotate(-.05*e);ctx.scale(flip,1);const x=-430,y=-380,w=860,h=760;ctx.shadowColor='#0007';ctx.shadowBlur=60;ctx.shadowOffsetY=30;ticketPath(x,y,w,h,50,y+540-y);ctx.fillStyle=P.yellow;ctx.fill();ctx.shadowColor='transparent';
+   ctx.save();ctx.globalAlpha=.07;for(let r=0;r<8;r++)text('CeFaci CeFaci CeFaci',x-40+(r%2)*90,y+90+r*95,74,P.ink,850);ctx.restore();
+   text('CeFaci',x+50,y+80,44,P.ink,850);text('• BILET DE IEȘIT',x+215,y+78,24,P.ink,700,'left','Instrument');ctx.strokeStyle=P.ink;ctx.lineWidth=3;rr(x+w-230,y+40,180,54,14);ctx.stroke();text('INTRARE 4',x+w-140,y+77,24,P.ink,800,'center','Instrument');
+   text('Cină și desert',x+50,y+200,86,P.ink,850);text('ZIUA',x+50,y+275,24,P.ink,700,'left','Instrument');text('Vineri',x+50,y+325,46,P.ink,800);text('ORA',x+330,y+275,24,P.ink,700,'left','Instrument');text('20:40',x+330,y+325,46,P.ink,800);text('INTRARE',x+580,y+275,24,P.ink,700,'left','Instrument');text('4 pers.',x+580,y+325,46,P.ink,800);
+   text('DE PERSOANĂ',x+50,y+395,24,P.ink,700,'left','Instrument');text('~50 lei',x+50,y+445,46,P.ink,800);text('DURATĂ',x+330,y+395,24,P.ink,700,'left','Instrument');text('2 h 30',x+330,y+445,46,P.ink,800);
+   perforation(x+40,x+w-40,y+540,'#0E144066');barcode(x+50,y+585,440,100,19,P.ink);text('CF-000001 · 20:40',x+50,y+725,26,P.ink,700,'left','Instrument');ctx.restore();
+  stamp(['BILU','aprobă','✓ VERIFICAT'],810,1500,115,P.orange,(u-BAR*1.25)/.6);pill('Check-in la local = ștampilă + XP',80,1610,P.ink,P.white,34,-.02,(u-BAR*2)/.35);}
+ // 8. Surprinde-mă: ruleta lui Bilu
+ else if(t<T(24.5)){const u=t-T(22);bg(P.lilac);doodles(t,18,.12,P.ink,51);header('SURPRINDE-MĂ',P.ink);reveal('Fără chef',80,430,130,P.ink,u/.3);reveal('de întrebări?',80,570,130,P.ink,(u-B*.8)/.3);
+  const R=['Karaoke','Bowling','Rooftop','Teatru','Escape room','Film + pizza','Concert','Biliard','Patinoar','Stand-up','Terasă','Karaoke + shaorma'];const dur=BAR*1.8,p=clamp(u/dur),pos=(1-Math.pow(1-p,3))*(R.length-1);
+  ctx.save();ctx.translate(540,1010);ctx.shadowColor='#0E144044';ctx.shadowBlur=40;ticketPath(-460,-170,920,340,40,170);ctx.fillStyle=P.white;ctx.fill();ctx.shadowColor='transparent';ctx.beginPath();ctx.rect(-440,-150,880,300);ctx.clip();for(let i=Math.max(0,Math.floor(pos)-1);i<=Math.min(R.length-1,Math.floor(pos)+1);i++){const off=(i-pos)*220;const s=R[i];text(s,0,off+40,fitSize(s,800,110),i===R.length-1&&p>=1?P.blue:P.ink,850,'center');}ctx.restore();
+  if(p>=1){stamp(['BILU','zice:','HAI!'],860,1230,110,P.orange,(u-dur)/.5,.2);}bilu(p>=1?'yay':'wink',220,1380,260,t,-.08);pill('Surprinde-mă',540,1450,P.ink,P.white,44,0,(u-.6)/.3,'center');}
+ // 9. Final: în curând + părerea ta
+ else{const u=t-T(24.5);bg(P.ink);for(let i=0;i<14;i++){const a=i/14*Math.PI*2+u*.15;ctx.save();ctx.translate(540,700);ctx.rotate(a);ctx.fillStyle=i%2?'#1c2160':'#151a52';ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,1500,0,Math.PI/7);ctx.closePath();ctx.fill();ctx.restore();}
+  const e=ease(u/.5),sh=ease((u-BAR*2)/.6);ctx.save();ctx.translate(540,250+1920*(1-e)-120*sh);const sc=1-.18*sh;ctx.scale(sc,sc);const x=-450,w=900,h=860;ctx.shadowColor='#000a';ctx.shadowBlur=70;ticketPath(x,0,w,h,56,620);ctx.fillStyle=P.yellow;ctx.fill();ctx.shadowColor='transparent';
+   text('CeFaci.',0,200,200,P.ink,850,'center');text('ÎN CURÂND',0,310,72,P.blue,850,'center');text('Android  ·  iOS',0,400,52,P.ink,800,'center');text('București & Ilfov',0,480,48,P.ink,700,'center','Instrument');text('cefaci.app',0,560,40,P.ink,700,'center','Instrument');perforation(x+40,x+w-40,620,'#0E144066');barcode(x+60,660,360,110,77,P.ink);text('CF-2026 · BILET DE IEȘIT',x+60,815,24,P.ink,700,'left','Instrument');ctx.restore();
+  bilu('hi',830,250+1920*(1-e)-120*sh+780,250,t,.08);
+  reveal('Tu ai folosi-o?',540,1250,fitSize('Tu ai folosi-o?',900,120),P.white,(u-BAR*2.1)/.35,'center');reveal('Zi-ne în comentarii ↓',540,1360,58,P.yellow,(u-BAR*2.5)/.35,'center',700,'Instrument');
+  text('Aplicație în dezvoltare · Ecrane din versiunea de test',540,1450,24,'#9aa1db',500,'center','Instrument');}
+ // tranziție: o bandă de bilet cu margine zimțată trece peste tăietură (fără flash)
+ for(const cut of CUTS){const dt=t-cut;if(dt>=-.12&&dt<.14){const p=(dt+.12)/.26,x=-W*.2+W*1.6*inout(p);ctx.save();ctx.fillStyle=P.ink;ctx.beginPath();ctx.moveTo(x-900,0);ctx.lineTo(x,0);for(let y=0;y<=H;y+=60)ctx.lineTo(x+(y/60%2?36:0),y);ctx.lineTo(x-900,H);ctx.closePath();ctx.fill();ctx.restore();}}
+}
+window.DURATION=DURATION;
+window.renderFrame=(t,width=1080,height=1920)=>{if(c.width!==width||c.height!==height){c.width=width;c.height=height;}ctx.setTransform(width/W,0,0,height/H,0,0);ctx.globalAlpha=1;scene(t);grain();return c.toDataURL('image/jpeg',.94).split(',')[1];};
+</script></html>
