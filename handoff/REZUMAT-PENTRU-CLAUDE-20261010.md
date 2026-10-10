@@ -85,6 +85,7 @@ Utilizatorul a aprobat Bilu Business cu **servietă mai mare**. Propunerea de to
 - Cinci iconițe Business: primăvară, vară, toamnă, iarnă și Crăciun, toate cu servietă mare; foreground transparent și fundaluri din familia Clientului. Nu înlocuim iconițele Clientului.
 - Schimbare sezonieră nativă Business, calendar comun Client: Android alias în fundal; iOS API public pentru alternate icons în prim-plan, cu notificarea standard posibilă a sistemului. Aplicația închisă nu poate executa singură cod pentru schimbarea iconiței.
 - Text discret la crearea contului în Client și Business: **„Prin crearea contului accepți Termenii de utilizare și confirmi că ai citit Politica de confidențialitate.”** Linkurile deschid documentele locale corecte; închiderea păstrează formularul. Nu transformăm informarea GDPR în consimțământ universal pentru marketing.
+- Buildul curent este pornit la sursa `26591508a442cfa4b9787afc0a661d3ef9f08668`, workflow `38053659611`. Prima rulare `38053584400` a fost anulată înaintea compilării pentru a include manifestul explicit al modulului local.
 - Versiuni pregătite în surse: Client **0.3.4/code7**, Business **1.0.6/code7**. Până la confirmarea workflowului și a artefactelor reale, acestea NU sunt declarate builduri livrate.
 - 492 teste unitare/integrate locale trecute + un test opțional omis, inclusiv opt regresii pentru iconițe; typecheck trecute. Verificările browser și noua construcție Android mai trebuie încheiate.
 
@@ -93,5 +94,9 @@ Pentru starea exactă ulterioară acestui rezumat, citește `docs/livrare/RAPORT
 ## 9. Backupuri și pași operaționali rămași
 
 Backupuri remote păstrate: `backup/claude-original-20261008` (`9d1e02c`), `backup/cefaci-current-20261008` (`45ad496`), `backup/cefaci-security-20261010` (`fc91382`). Livrările vechi și metadatele rămân în subdirectoare `previous-*`; înainte de iconițe s-a salvat `previous-season-icons-20261010`.
+
+Au fost discutate și costul contului Apple Developer și trecerea ulterioară la firmă; acestea sunt informații/pași de cont Apple, nu o integrare activată în proiect. Utilizatorul a trimis și `studio-update-v12.zip` pentru comparația cu Studio cornacidev.ro; acest handoff nu atribuie arhivei un verdict de securitate fără raportul comparativ verificabil.
+
+Limite Admin din livrarea documentată: blocarea globală a conturilor și statisticile detaliate de consum din roadmap nu sunt implementate; nu există acțiuni care să simuleze aceste rezultate.
 
 Rămân externe livrării: upload hosting/DNS, identitatea operatorului și firma/modelul comercial, contracte și activarea reală a partenerilor, furnizori ANAF/ONRC/SMS/apel/notificări, facturare/plăți/Plus plătit, scheduler de ștergere fizică și configurări de retenție, circuit Apple/macOS și testare fizică. Nu inventa aceste integrări și nu elimina gardurile serverului pentru a face demonstrații.

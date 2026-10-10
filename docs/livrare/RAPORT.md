@@ -1,8 +1,8 @@
 # Actualizare în curs — iconițe Business și nota juridică de cont
 
-Sursa nouă `ce0d56019c1bfb9ff19a7c95e738a02496e97f49` este salvată și împinsă. Client 0.3.4/code7 și Business 1.0.6/code7 sunt pregătite în cod, cu cinci iconițe Business sezoniere, module native și linkuri juridice la creare cont. Local: 492 teste trecute + un test opțional omis, typecheck toate trei, audit proiecte native și teste browser GDPR/notă cont trecute.
+Sursa nouă `26591508a442cfa4b9787afc0a661d3ef9f08668` este salvată și împinsă. Client 0.3.4/code7 și Business 1.0.6/code7 sunt pregătite în cod, cu cinci iconițe Business sezoniere, module native și linkuri juridice la creare cont. Local: 492 teste trecute + un test opțional omis, typecheck toate trei, audit proiecte native și teste browser GDPR/notă cont trecute.
 
-[Workflow 38053584400](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38053584400) este pornit pentru ambele aplicații. **Până la verificarea artefactelor, pachetele livrate rămân cele code6 din raportul de mai jos.** Backupurile sunt în `release/previous-season-icons-20261010/`, metadatele în `builds/previous-season-icons-20261010/`, raportul precedent în `RAPORT-GDPR-20261010.md`.
+[Workflow 38053659611](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38053659611) este pornit pentru ambele aplicații. **Până la verificarea artefactelor, pachetele livrate rămân cele code6 din raportul de mai jos.** Backupurile sunt în `release/previous-season-icons-20261010/`, metadatele în `builds/previous-season-icons-20261010/`, raportul precedent în `RAPORT-GDPR-20261010.md`.
 
 Rezumatul întregii colaborări: [handoff pentru Claude](../../handoff/REZUMAT-PENTRU-CLAUDE-20261010.md).
 
