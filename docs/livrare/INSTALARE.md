@@ -2,7 +2,7 @@
 
 ## Release site și GDPR — 10.10.2026
 
-Folosește pachetele de la sursa `b98721b5c576cfe8f158520f969650b5a63a764a`: Client **0.3.3/code6**, Business **1.0.5/code6**, Admin web, Business web și noul site public. [Raportul curent](RAPORT.md), [checksumurile](ARTEFACTE-SHA256.txt) și `builds/Legal-GitHub-artifacts.json` identifică livrarea; versiunile precedente din jurnal sunt istorice.
+Client **0.3.3/code6**, Business **1.0.5/code6**, Admin web și Business web provin din `b98721b5c576cfe8f158520f969650b5a63a764a`. Site-ul final provine din `9eb728c254a5a678db18e2984e6970d27a461aa7`: include versiunile confirmate după build și a fost reîmpachetat/retestat pe Apache. [Raportul curent](RAPORT.md), [checksumurile](ARTEFACTE-SHA256.txt) și `builds/Legal-GitHub-artifacts.json` identifică livrarea; versiunile precedente din jurnal sunt istorice.
 
 Pentru `cefaci.app`, extrage `CeFaci-site-web.zip` în document-root-ul domeniului principal conform [SITE-CEFACI-20261010.md](SITE-CEFACI-20261010.md). Admin și Business au document-root-uri separate, descrise mai jos. Nu extrage repository-ul, SQL-ul sau backupurile în hosting. Toate cele trei weburi necesită upload; această sesiune nu are acces la gazduire.net.
 

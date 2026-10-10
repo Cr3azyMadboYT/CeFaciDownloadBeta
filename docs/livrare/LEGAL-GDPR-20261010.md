@@ -1,6 +1,6 @@
 # Site și drepturi GDPR — 10.10.2026
 
-Implementarea este salvată în `b98721b5c576cfe8f158520f969650b5a63a764a`. [Workflow 38033998387](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38033998387) verifică sursa înainte de buildurile semnate Client și Business. La acest checkpoint, pipelineul este în curs; buildurile noi nu sunt încă declarate livrate.
+Implementarea este salvată în `b98721b5c576cfe8f158520f969650b5a63a764a`. [Workflow 38033998387](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38033998387) verifică sursa înainte de buildurile semnate Client și Business. Pipelineul este **SUCCESS**: verificările, Client și Business au trecut. APK/AAB și proiectele iOS reale au fost descărcate și verificate; weburile Admin/Business sunt din aceeași sursă. Site-ul a fost reîmpachetat și retestat după actualizarea versiunilor afișate la 0.3.3/1.0.5; mappingul precis este în [raportul final](RAPORT.md), iar [checksumurile](ARTEFACTE-SHA256.txt) identifică pachetele.
 
 ## Ce este implementat
 
