@@ -380,9 +380,9 @@ export default function App() {
               <Txt style={{fontSize: 14}}>••• Opțiuni</Txt>
             </Pressable>
           </View>
-          <Modal visible={optionsOpen} transparent animationType="fade" onRequestClose={() => OptionsOpen(false)}>
-            <Pressable accessibilityLabel="Închide opțiunile" onPress={() => OptionsOpen(false)} style={{flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", padding: 20}}>
-              <Pressable accessibilityViewIsModal onPress={() => {}} style={{width: "100%", maxWidth: 400, alignSelf: "center", backgroundColor: t.bg, borderRadius: 20, padding: 20, gap: 12}}>
+          <Modal visible={optionsOpen} transparent animationType="none" onRequestClose={() => OptionsOpen(false)}>
+            <Pressable accessible={false} onPress={() => OptionsOpen(false)} style={{flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", padding: 20}}>
+              <Pressable accessible={false} accessibilityViewIsModal onPress={() => {}} style={{width: "100%", maxWidth: 400, alignSelf: "center", backgroundColor: t.bg, borderRadius: 20, padding: 20, gap: 12}}>
                 <Txt big>Opțiuni Business</Txt>
                 <Button label={t.dark ? "Mod zi" : "Mod noapte"} secondary onPress={() => {
                   const next = t.dark ? "zi" : "noapte";
