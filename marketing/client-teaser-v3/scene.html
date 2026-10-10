@@ -8,7 +8,7 @@ const W=1080,H=1920,BPM=124,B=60/BPM,BAR=4*B,DURATION=+(BAR*28.5).toFixed(2);
 const T=n=>n*BAR; // începutul măsurii n
 const CUTS=[T(3),T(4),T(6),T(7),T(8),T(9),T(10),T(11),T(12),T(16),T(19),T(22),T(24.5)];
 const P={ink:'#0E1440',night:'#1b1856',blue:'#3455ff',yellow:'#FFD43B',cream:'#fff7dc',paper:'#eff0f8',mint:'#62d6a2',orange:'#FF6A4D',amber:'#F28C28',lilac:'#b9a8ff',pink:'#ff9fc4',white:'#ffffff'};
-const QS=['Ce facem?','Unde mergem?','Cu cine ies?','Unde ieșim?','Când ieșim?','Vine cineva?','Ieșim diseară?','Cine mai vine?','Pe la ce oră?','Unde ne vedem?','Facem ceva?','O bere?','Ce zici?','Băgăm un film?','Cine conduce?','Avem rezervare?','Câți suntem?','Și după?','Mâncăm ceva?','Mai stăm?','Unde e lumea?','Ce e nou?','Hai afară?','La ce oră vii?','Mai e deschis?','Club sau terasă?','Bowling?','Karaoke?','Mergem pe jos?','Iau mașina?','Ce chef ai?','Vii și tu?','Weekendul ăsta?','Când ne vedem?','Plecăm acum?','Ne strângem toți?','Pizza sau shaorma?','Cine organizează?'];
+const QS=['Ce facem?','Unde mergem?','Cu cine ies?','Unde ieșim?','Când ieșim?','Vine cineva?','Ieșim diseară?','Cine mai vine?','Pe la ce oră?','Unde ne vedem?','Facem ceva?','Ce zici?','Băgăm un film?','Avem rezervare?','Câți suntem?','Și după?','Mâncăm ceva?','Unde e lumea?','Ce e nou?','Hai afară?','La ce oră vii?','Bowling?','Karaoke?','Mergem pe jos?','Ce chef ai?','Vii și tu?','Weekendul ăsta?','Când ne vedem?','Plecăm acum?','Ne strângem toți?','Pizza sau shaorma?','Cine organizează?'];
 const c=document.querySelector('canvas'),ctx=c.getContext('2d'),A={};
 window.ready=(async()=>{
  for(const [name,base] of [['Bricolage','bricolage-grotesque'],['Instrument','instrument-sans'],['Caveat','caveat']]){for(const subset of ['latin','latin-ext']){const file=base==='caveat'?`${base}-${subset}-wght-normal.woff2`:`${base}-${subset}-standard-normal.woff2`;const unicodeRange=subset==='latin'?'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD':'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';const f=new FontFace(name,`url(/website/assets/${file})`,{weight:'100 900',unicodeRange});await f.load();document.fonts.add(f);}}
@@ -68,7 +68,7 @@ function scene(t){
   // cronometru care se umple
   const p=clamp((u-B*1.5)/(B*2.2));ctx.save();ctx.translate(780,1150);ctx.lineWidth=34;ctx.strokeStyle='#0E144022';ctx.beginPath();ctx.arc(0,0,190,0,Math.PI*2);ctx.stroke();ctx.strokeStyle=P.ink;ctx.lineCap='round';ctx.beginPath();ctx.arc(0,0,190,-Math.PI/2,-Math.PI/2+Math.PI*2*inout(p));ctx.stroke();text('<1',0,40,130,P.ink,850,'center');text('MINUT',0,105,30,P.ink,700,'center','Instrument');ctx.restore();bilu('hi',260,1230,300,t,-.08);}
  else if(t<T(12)){const k=Math.floor((t-T(7))/BAR),u=t-T(7)-k*BAR;
-  const Q=[['p1','Ce plan vrei?','Toată seara',.5,.42,P.lilac],['p2','Când ieșiți?','Acum',.17,.3,P.mint],['p3','Câți sunteți?','4 prieteni',.58,.26,P.pink],['p4','Cât dați?','Până în 100 lei',.42,.27,P.orange],['p5','Ce chef aveți?','Party + Chill',.73,.28,P.yellow]][k];
+  const Q=[['p1','Ce plan vrei?','Toată seara',.5,.42,P.lilac],['p2','Când ieșiți?','Acum',.17,.3,P.mint],['p3','Câți sunteți?','4 prieteni',.58,.26,P.pink],['p4','Cât dați?','Până în 100 lei',.42,.27,P.orange],['p5','Ce chef aveți?','Mâncare + Cultură',.73,.39,P.yellow]][k];
   const [scr,q,a,fx,fy,col]=Q;bg(col);doodles(t,18,.12,P.ink,k*5);header('ÎNTREBAREA '+(k+1)+' / 5',P.ink);
   // numărul mare din fundal
   ctx.save();ctx.globalAlpha=.12;text(String(k+1),1010,1180,760,P.ink,850,'right');ctx.restore();
@@ -83,7 +83,7 @@ function scene(t){
   stamp(['BILU','aprobă','✓ VERIFICAT'],820,960,150,P.orange,(u-BAR*3.25)/.6);}
  // 6. Gașca votează
  else if(t<T(19)){const u=t-T(16);bg(P.yellow);doodles(t,16,.12,P.ink,31);header('GAȘCA',P.ink);reveal('Nu vă hotărâți?',80,440,fitSize('Nu vă hotărâți?',900,120),P.ink,u/.3);reveal('Votați.',80,600,150,P.blue,(u-B)/.3);
-  const plans=[['Cină + desert','20:40 – 23:10',3],['Film + un pahar','20:45 – 00:50',1],['Plimbare + ceva dulce','20:50 – 22:40',0]];const win=u>BAR*2.25;
+  const plans=[['Cină + desert','20:40 – 23:10',3],['Film + popcorn','20:15 – 22:40',1],['Plimbare + ceva dulce','20:50 – 22:40',0]];const win=u>BAR*2.25;
   plans.forEach(([name,time,votes],i)=>{const p=ease((u-B*(1.5+i*.5))/.4);const y=830+i*210;const big=win&&i===0?1+.04*ease((u-BAR*2.25)/.3):1;ctx.save();ctx.translate(80+600*(1-p),y);ctx.scale(big,big);ctx.globalAlpha=clamp(p*2)*(win&&i>0?.55:1);ctx.shadowColor='#0E144033';ctx.shadowBlur=24;ctx.shadowOffsetY=10;ticketPath(0,0,800,170,30,85);ctx.fillStyle=i===0&&win?P.ink:P.white;ctx.fill();ctx.shadowColor='transparent';const ink=i===0&&win?P.white:P.ink;circle(70,85,38,i===0?P.yellow:i===1?P.lilac:P.mint);text(String(i+1),70,100,40,P.ink,850,'center');text(name,130,78,44,ink,800);text(time,130,124,28,i===0&&win?'#c9cdf5':'#6a6f96',600,'left','Instrument');
    for(let v=0;v<votes;v++){const vp=ease((u-B*(4+v*.8+i*.3))/.3);if(vp>0){const cx=650+v*48,cy=85;ctx.globalAlpha=vp;circle(cx,cy-60*(1-vp),22,[P.orange,P.blue,P.mint][v%3]);text('✓',cx,cy-60*(1-vp)+10,24,P.white,800,'center','Instrument');}}ctx.restore();});
   stamp(['GAȘCA A','ales!','✓ VOT GATA'],880,1430,120,P.orange,(u-BAR*2.3)/.6,.18);bilu('yay',170,1640,220,t,-.1);}
@@ -98,7 +98,7 @@ function scene(t){
   stamp(['BILU','aprobă','✓ VERIFICAT'],810,1500,115,P.orange,(u-BAR*1.25)/.6);pill('Check-in la local = ștampilă + XP',80,1610,P.ink,P.white,34,-.02,(u-BAR*2)/.35);}
  // 8. Surprinde-mă: ruleta lui Bilu
  else if(t<T(24.5)){const u=t-T(22);bg(P.lilac);doodles(t,18,.12,P.ink,51);header('SURPRINDE-MĂ',P.ink);reveal('Fără chef',80,430,130,P.ink,u/.3);reveal('de întrebări?',80,570,130,P.ink,(u-B*.8)/.3);
-  const R=['Karaoke','Bowling','Rooftop','Teatru','Escape room','Film + pizza','Concert','Biliard','Patinoar','Stand-up','Terasă','Karaoke + shaorma'];const dur=BAR*1.8,p=clamp(u/dur),pos=(1-Math.pow(1-p,3))*(R.length-1);
+  const R=['Karaoke','Bowling','Parc de aventură','Teatru','Escape room','Film + pizza','Concert','Biliard','Patinoar','Stand-up','Terasă','Karaoke + pizza'];const dur=BAR*1.8,p=clamp(u/dur),pos=(1-Math.pow(1-p,3))*(R.length-1);
   ctx.save();ctx.translate(540,1010);ctx.shadowColor='#0E144044';ctx.shadowBlur=40;ticketPath(-460,-170,920,340,40,170);ctx.fillStyle=P.white;ctx.fill();ctx.shadowColor='transparent';ctx.beginPath();ctx.rect(-440,-150,880,300);ctx.clip();for(let i=Math.max(0,Math.floor(pos)-1);i<=Math.min(R.length-1,Math.floor(pos)+1);i++){const off=(i-pos)*220;const s=R[i];text(s,0,off+40,fitSize(s,800,110),i===R.length-1&&p>=1?P.blue:P.ink,850,'center');}ctx.restore();
   if(p>=1){stamp(['BILU','zice:','HAI!'],860,1230,110,P.orange,(u-dur)/.5,.2);}bilu(p>=1?'yay':'wink',220,1380,260,t,-.08);pill('Surprinde-mă',540,1450,P.ink,P.white,44,0,(u-.6)/.3,'center');}
  // 9. Final: în curând + părerea ta
