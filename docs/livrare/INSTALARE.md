@@ -1,5 +1,15 @@
 # Livrare CeFaci Client + Business + Admin
 
+## Release site și GDPR — 10.10.2026
+
+Folosește pachetele de la sursa `b98721b5c576cfe8f158520f969650b5a63a764a`: Client **0.3.3/code6**, Business **1.0.5/code6**, Admin web, Business web și noul site public. [Raportul curent](RAPORT.md), [checksumurile](ARTEFACTE-SHA256.txt) și `builds/Legal-GitHub-artifacts.json` identifică livrarea; versiunile precedente din jurnal sunt istorice.
+
+Pentru `cefaci.app`, extrage `CeFaci-site-web.zip` în document-root-ul domeniului principal conform [SITE-CEFACI-20261010.md](SITE-CEFACI-20261010.md). Admin și Business au document-root-uri separate, descrise mai jos. Nu extrage repository-ul, SQL-ul sau backupurile în hosting. Toate cele trei weburi necesită upload; această sesiune nu are acces la gazduire.net.
+
+Backendul drepturilor GDPR este instalat ca `20261010072621_cefaci_privacy_rights`, peste MFA existent. În Admin, **Date personale** apare numai pentru fondator/admin cu MFA; celelalte roluri au acces doar la propriile drepturi. Documentele și cererile proprii sunt disponibile înaintea verificării MFA operaționale, fără a acorda acces la local ori dashboard. Verifică o cerere cu propriul cont și răspunsul în inbox după publicare, fără date fictive în producție. Păstrează cererile/jurnalele și gardurile serverului la revenirea vizuală.
+
+Titularul a ales să nu publice încă numele/adresa și nu are firmă. Contact: `contact@cornacidev.ro`; documentele publice marchează identitatea incompletă. [Dosarul juridic/fiscal](../legal/operational/README.md) explică pașii rămași. Nu activa facturarea, plățile ori ANAF pe baza unor date de firmă inventate.
+
 ## Admin pe gazduire.net
 
 Creează `admin.cefaci.app` cu document-root separat, de exemplu `public_html/admin`, activează TLS și extrage `CeFaci-Admin-web.zip` direct acolo, inclusiv `.htaccess`. Directoare 755, fișiere 644; nu este necesar Node/PHP. Verifică `version.json`, navigarea directă pe o cale adâncă, fonturile, CSP/HSTS și lipsa cache-ului pe HTML. La update urcă întâi asseturile cu hash, apoi indexul/versiunea; salvează release-ul vechi privat. Admin este construit cu asseturi absolute la rădăcina subdomeniului.
@@ -28,7 +38,7 @@ Nu au fost furnizate credențiale gazduire.net/DNS pentru upload. La 09.10.2026,
 
 ## Android și iOS
 
-GitHub Actions `.github/workflows/android.yml` instalează lockfile-urile, rulează testele și construiește separat `CeFaci-Client.apk` și `CeFaci-Business.apk` cu Gradle `assembleRelease`. Dacă secretul existent de semnare este disponibil, construiește și AAB-uri semnate. Fișierul `*-build.txt` include commitul, tipul semnării, verificarea criptografică `apksigner` și identitatea pachetului. Nu deduce semnarea de producție doar din numele `release`.
+GitHub Actions `.github/workflows/android.yml` instalează lockfile-urile, rulează testele și construiește separat `CeFaci-Client.apk` și `CeFaci-Business.apk` cu Gradle `assembleRelease`, apoi AAB-urile cu `bundleRelease`. Cheia originală de producție este obligatorie: workflowul eșuează dacă secretul lipsește. Fișierul `*-build.txt` include commitul, tipul semnării, verificarea criptografică `apksigner` și identitatea pachetului. Nu deduce semnarea de producție doar din numele `release`.
 
 Instalarea APK-ului pe un telefon existent trebuie să respecte certificatul anterior. Dacă Android raportează semnături incompatibile, păstrează datele înaintea oricărei dezinstalări; nu înlocui cheia originală. Buildurile automate nu echivalează cu o testare pe dispozitiv fizic.
 
@@ -59,8 +69,8 @@ Instalează întâi toate cele trei lockfile-uri: `npm ci` la rădăcină, în `
 Concurență reală: PostgreSQL 17 local, `CEFACI_TEST_DATABASE_URL=postgres://postgres@127.0.0.1:55432/postgres node scripts/test-business-concurrency.mjs`. Scriptul acceptă numai localhost, creează o bază efemeră și o șterge la final. Browser: instalează Playwright, servește `business/dist` pe localhost:4173 și execută `scripts/test-business-ui.mjs`; acesta interceptează backendul cu date sintetice, inclusiv WebSocket. Fixture-urile nu sunt incluse în bundle.
 
 
-## Actualizare MFA și tururi pe rol
+## Actualizare MFA și tururi pe rol — istoric 09.10.2026
 
-Backendul MFA `20261009215832` este instalat. Folosește ZIP-urile web finale la sursa `a2e6d5b` și Business Android **1.0.4/code5** la sursa `12ce83b`, nu release-ul anterior care nu are ecranul MFA. Rolul fondator pentru `contact@cornacidev.ro` este păstrat. La prima intrare configurează Google Authenticator/2FAS/Microsoft Authenticator prin ecranul aplicației; nu există cod precreat sau secret în repository. Webul cere relogare și păstrează autentificarea numai în sesiunea browserului. Pe dispozitivul nativ, update-ul șterge vechea sesiune în clar și folosește SecureStore.
+Backendul MFA `20261009215832` este instalat și păstrat de release-ul GDPR curent. Livrarea precedentă folosea weburile `a2e6d5b` și Business Android **1.0.4/code5** la `12ce83b`; folosește acum pachetele enumerate la începutul documentului. Rolul fondator pentru `contact@cornacidev.ro` este păstrat. La prima intrare configurează Google Authenticator/2FAS/Microsoft Authenticator prin ecranul aplicației; nu există cod precreat sau secret în repository. Webul cere relogare și păstrează autentificarea numai în sesiunea browserului. Pe dispozitivul nativ, update-ul șterge vechea sesiune în clar și folosește SecureStore.
 
 Tururile Bilu pornesc după accesul verificat, sunt adaptate la rol și local și se reiau din **Tur cu Bilu**. Vezi [SECURITATE-ADMIN-BUSINESS-20261009.md](SECURITATE-ADMIN-BUSINESS-20261009.md). Publicarea efectivă a noului web nu este realizată fără credențiale gazduire.net.
