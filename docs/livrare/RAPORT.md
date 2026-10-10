@@ -1,4 +1,14 @@
-# Livrare CeFaci — turul de lansare și memorarea loginului — 10.10.2026
+# Livrare CeFaci — Business corectat și iOS — 10.10.2026
+
+Business 1.0.7 elimină barele permanente pentru Tur cu Bilu/documente, verifică username-ul online înainte de salvare și folosește Zi/Lună/An pentru data nașterii. Meniul compact păstrează tema, turul și documentele. Backendul nu a fost migrat pentru această corecție; MFA, rolurile și unicitatea serverului rămân active. [Detalii Business](BUSINESS-PROFILE-FIX-20261010.md).
+
+Sursa buildurilor curente: **7d36324d1113fcfcc8e935f05471bd39680e62f2**. Verificările locale: **517 teste trecute + 1 opțional omis**, typecheck, audit proiecte iOS și regresiile browser Client/Business/Admin/quiz. [CI Android 38087018183](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38087018183) **SUCCESS**, cu verificările complete înainte de compilare. Business APK/AAB **1.0.7/code8** sunt descărcate din CI și auditate: manifest, permisiuni, Release, backup/cleartext dezactivate, hash/CRC, PKCS7 și certificat de producție identic versiunii precedente. Dovezi: `builds/Business-profile-Android-GitHub-run.json` și `builds/Business-profile-Android-GitHub-artifacts.json`. Rezultatele iOS sunt în curs de verificare și vor fi consemnate înainte de livrare.
+
+Actualizarea web necesită numai Business: `release/CeFaci-Business-web.zip`. Admin și site-ul rămân pachetele precedente. Publicarea pe hosting nu este efectuată; versiunea live Business verificată încă indică ab97354. Backupul este `release/previous-business-profile-20261010/`. Kitul istoric de quiz nu înlocuiește acest ZIP Business actual.
+
+Pentru iOS sunt pregătite Client 0.3.4/build8 și Business 1.0.7/build8, compilează Xcode 26.6 pe macOS 26 Apple Silicon. Pachetele simulator și arhivele device nesemnate sunt distincte de IPA/TestFlight. Nu există încă Apple Developer sau provisioning personal. [Ghid iOS](IOS-CEFACI-20261010.md).
+
+## Istoricul livrării web precedente — tur și memorare login
 
 Site-ul include `/descopera/`, Bilu, capturi reale (inclusiv inline pe mobil), vot Da/Poate/Nu, apoi nume/alias și email opțional cu acord separat. Admin primește **Lansare CeFaci**, restrânsă fondatorului și administratorilor prin rol curent, sesiune validă și MFA. Story-ul generat se publică în Instagram cu sticker Link adăugat manual.
 

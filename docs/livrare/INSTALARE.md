@@ -1,5 +1,13 @@
 # Livrare CeFaci Client + Business + Admin
 
+## Actualizare Business 1.0.7 — formular și meniu
+
+Pentru corecția din captura de telefon înlocuiește **numai Business web**, cu `CeFaci-Business-web.zip` din sursa `7d36324d1113fcfcc8e935f05471bd39680e62f2`. Admin și site-ul rămân release-ul web precedent. Nu folosi Business-ul inclus în kitul istoric de quiz pentru acest update.
+
+Android: instalează `CeFaci-Business.apk` **1.0.7/code8** peste code7; semnătura de producție este aceeași. `CeFaci-Business.aab` este pachetul semnat pentru Google Play, fără publicare automată. Nu dezinstala aplicația pentru acest upgrade. Backupuri: `release/previous-business-profile-20261010/`. [Verificări și instalare](BUSINESS-PROFILE-FIX-20261010.md).
+
+Pentru Client și Business iOS folosește [ghidul dedicat](IOS-CEFACI-20261010.md). Pachetul de simulator, arhiva device nesemnată și proiectul Xcode au utilizări diferite. Nu există încă Apple Developer; nu se livrează un IPA instalabil/TestFlight.
+
 ## Release web: tur interactiv și memorare login — 10.10.2026
 
 Admin, Business și site-ul public sunt recompilate din **ab97354c90919108fba8c19daf6be2dcbacb878d**. Înlocuiește weburile cu ZIP-urile actuale din `release/`, inclusiv `.htaccess`, în document-root-urile corespunzătoare descrise mai jos. Backendul pentru voturi și memorarea loginului este deja aplicat. Vezi [raportul actual](RAPORT.md), [turul](QUIZ-CEFACI-20261010.md) și [memorarea](REMEMBER-LOGIN-20261010.md).

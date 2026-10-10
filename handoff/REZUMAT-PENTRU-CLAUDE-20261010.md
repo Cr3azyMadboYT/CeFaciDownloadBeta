@@ -2,6 +2,12 @@
 
 Citește întâi `handoff/PROMPT-CODEX-CLOUD.md`, apoi acest rezumat și `docs/livrare/RAPORT.md`. Repo: `Cr3azyMadboYT/CeFaciDownloadBeta`, ramură de lucru `codex/cefaci-client-business-20261008`, PR draft #2. Nu modifica ramurile backup, nu reseta datele și nu redesena Clientul. Istoricul conține commituri și pushuri reale pentru fiecare etapă. Documentele de livrare descriu sursele exacte ale artefactelor; commitul HEAD nu este automat commitul dintr-un APK mai vechi.
 
+## 0. Ultima corecție Business și pregătirea iOS
+
+Sursa aplicațiilor curente este `7d36324d1113fcfcc8e935f05471bd39680e62f2`. Business **1.0.7/code8**, cu username verificat debounced prin RPC existent, invalid/taken/network/stale/race blocate, Zi/Lună/An validate și meniu Opțiuni pentru temă/tur/documente. Nicio migrare nouă. Android și Business web sunt reale din CI **38087018183 SUCCESS**, cu 517 teste + un opțional omis, integrare și certificatul de producție existent. Admin/site și Client Android 0.3.4/code7 sunt păstrate. Folosește ZIP-ul Business actual, nu cel din kitul istoric de quiz.
+
+Client iOS adaugă modul Swift pentru iconițe și folosește email OTP; Google iOS nu este configurat și butonul este ascuns numai pe iOS. Business păstrează SecureStore/MFA. Xcode **26.6** pe macOS26 ARM64 corectează incompatibilitatea ExpoModulesJSI din Xcode26.3. Workflow-ul preîncălzește simulatorul și păstrează auditul produselor reale, fără auth bypass. Nu există încă Apple Developer: simulator și arhivă device nesemnată, fără IPA/TestFlight. Rezultatele finale sunt consemnate în `docs/livrare/RAPORT.md` și `IOS-CEFACI-20261010.md` la livrare.
+
 ## 1. Client și motorul comun
 
 Clientul real este `mobile/`, React Native + Expo, nu pagina web veche. Familia vizuală Claude/CeFaci a fost păstrată: Bilu, fonturi Bricolage Grotesque / Instrument Sans / Caveat, culori, carduri, bilete, zi/noapte și canvasuri. `src/` conține motorul și regulile comune; `shared/` componente/contracte pentru aplicații.
