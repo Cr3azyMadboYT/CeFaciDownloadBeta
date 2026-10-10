@@ -163,12 +163,14 @@ try {
   await page.getByLabel('Telefon',{exact:true}).fill('0712345678');
   await page.getByLabel('Motivul modificării',{exact:true}).fill('Telefon verificat cu reprezentantul localului.');
   await button(page,'Salvează localul').click();
+  await button(page,'Salvează localul').waitFor({state:'hidden'});
   await button(page,'Editează localul: Local de test').click();
   assert.equal(await page.getByLabel('Telefon',{exact:true}).inputValue(),'0712345678');
   const edit=calls.filter(c=>c.name==='admin_place_save').at(-1);assert.equal(edit.p.p_id,'local-test');assert.equal(edit.p.p_edit.phone,'0712345678');
   assert.equal('lat' in edit.p.p_edit,false);assert.equal('lon' in edit.p.p_edit,false);
   await page.getByLabel('Motivul modificării',{exact:true}).fill('Ascundem temporar localul pentru verificare.');
   await button(page,'Ascunde localul').click();
+  await button(page,'Ascunde localul').waitFor({state:'hidden'});
   await button(page,'Editează localul: Local de test').click();
   await button(page,'Arată localul').waitFor();
   assert(calls.some(c=>c.name==='admin_place_status'&&c.p.p_hidden===true));
