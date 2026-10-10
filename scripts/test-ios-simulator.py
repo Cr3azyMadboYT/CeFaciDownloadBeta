@@ -11,14 +11,27 @@ for prefix in (['iPhone'] if folder=='mobile' else ['iPhone','iPad']):
     assert matches,f'No available {prefix} simulator'
     selected.append(matches[0])
 Path('release/ios-screenshots').mkdir(parents=True,exist_ok=True)
+Path('release/ios-diagnostics').mkdir(parents=True,exist_ok=True)
+if len(sys.argv)>2 and sys.argv[2]=='--prepare':
+    # The first boot migrates a fresh runtime; let it run while Xcode compiles.
+    first=selected[0]
+    if first['state']!='Booted':subprocess.run(['xcrun','simctl','boot',first['udid']],check=True,timeout=180)
+    print(f"Preparing {first['name']} in parallel with the native build.")
+    sys.exit(0)
 for d in selected:
     sid=d['udid']
-    subprocess.run(['xcrun','simctl','boot',sid],check=True)
+    if d['state']!='Booted':subprocess.run(['xcrun','simctl','boot',sid],check=True,timeout=180)
     try:
-        subprocess.run(['xcrun','simctl','bootstatus',sid,'-b'],check=True,timeout=180)
+        bootlog=Path(f"release/ios-diagnostics/{name}-{sid}-boot.log")
+        print(f"Waiting for {d['name']} to finish runtime migration.",flush=True)
+        with bootlog.open('w') as output:
+            try:subprocess.run(['xcrun','simctl','bootstatus',sid,'-b'],check=True,timeout=600,stdout=output,stderr=subprocess.STDOUT)
+            except (subprocess.CalledProcessError,subprocess.TimeoutExpired):
+                print('\n'.join(bootlog.read_text().splitlines()[-25:]),flush=True)
+                raise
         subprocess.run(['xcrun','simctl','install',sid,str(app)],check=True)
         subprocess.run(['xcrun','simctl','status_bar',sid,'override','--time','9:41','--batteryState','charged','--batteryLevel','100'],check=True)
         screenshots=f"release/ios-screenshots/{name}-{'ipad' if d['name'].startswith('iPad') else 'iphone'}"
-        subprocess.run(['maestro','--device',sid,'test','--format','junit','--output',f'{screenshots}-results.xml','-e',f'SCREENSHOT_PREFIX={screenshots}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=240)
+        subprocess.run(['maestro','--device',sid,'test','--format','junit','--output',f'{screenshots}-results.xml','-e',f'SCREENSHOT_PREFIX={screenshots}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
         print(f"PASS: {name} pre-login/legal navigation on {d['name']} ({sid}); no OTP requested.")
     finally:subprocess.run(['xcrun','simctl','shutdown',sid],check=False)

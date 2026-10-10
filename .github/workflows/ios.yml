@@ -73,6 +73,8 @@ jobs:
           sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
           xcodebuild -version
           test "$(uname -m)" = arm64
+      - name: Prima pornire a simulatorului în paralel cu buildul
+        run: python3 scripts/test-ios-simulator.py "${{ matrix.folder }}" --prepare
       - run: npm ci
       - run: npm ci
         working-directory: ${{ matrix.folder }}
