@@ -1,6 +1,12 @@
 # Livrare CeFaci Client + Business + Admin
 
-## Release iconițe Business și nota contului — 10.10.2026
+## Release web: tur interactiv și memorare login — 10.10.2026
+
+Admin, Business și site-ul public sunt recompilate din **ab97354c90919108fba8c19daf6be2dcbacb878d**. Înlocuiește weburile cu ZIP-urile actuale din `release/`, inclusiv `.htaccess`, în document-root-urile corespunzătoare descrise mai jos. Backendul pentru voturi și memorarea loginului este deja aplicat. Vezi [raportul actual](RAPORT.md), [turul](QUIZ-CEFACI-20261010.md) și [memorarea](REMEMBER-LOGIN-20261010.md).
+
+După upload, verifică `version.json`, intrarea cu propriul cont și opțiunea nebifată implicit **Ține-mă minte 15 zile pe acest dispozitiv**. Bifată, păstrează autentificarea în același browser; rolurile și MFA rămân verificate. Redeschide tabul și verifică logoutul pe dispozitivul personal. În Admin, doar fondator/admin vede **Lansare CeFaci**. Nu introduce voturi de test în producție. Story-ul se publică numai după ce `https://cefaci.app/descopera/` funcționează, cu stickerul Link adăugat în Instagram.
+
+## Release iconițe Business și nota contului — 10.10.2026 (istoric)
 
 Client **0.3.4/code7**, Business **1.0.6/code7**, Admin/Business web: APK/AAB și weburi din `26591508a442cfa4b9787afc0a661d3ef9f08668`, workflow 38053659611 SUCCESS. Business iOS este proiectul local corectat din `3c922ab`, fără IPA; site-ul final este `011748c477632130c6bac93c8d12e7d1f6b03e0f`. Folosește pachetele și checksumurile din [raportul actual](RAPORT.md). Textele juridice sunt în Client/Business înainte de crearea contului; documentele se deschid offline fără pierderea formularului. Calendarul iconițelor native Business este comun Clientului. Backendul și instrucțiunile de instalare de mai jos rămân valabile; istoricul code6 este arhivat.
 

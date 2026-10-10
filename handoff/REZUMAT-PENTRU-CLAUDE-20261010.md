@@ -102,3 +102,22 @@ Au fost discutate și costul contului Apple Developer și trecerea ulterioară l
 Limite Admin din livrarea documentată: blocarea globală a conturilor și statisticile detaliate de consum din roadmap nu sunt implementate; nu există acțiuni care să simuleze aceste rezultate.
 
 Rămân externe livrării: upload hosting/DNS, identitatea operatorului și firma/modelul comercial, contracte și activarea reală a partenerilor, furnizori ANAF/ONRC/SMS/apel/notificări, facturare/plăți/Plus plătit, scheduler de ștergere fizică și configurări de retenție, circuit Apple/macOS și testare fizică. Nu inventa aceste integrări și nu elimina gardurile serverului pentru a face demonstrații.
+
+
+## Actualizare ulterioară: tur interactiv și voturi de lansare
+
+Sursă **eba9a79**: noul `/descopera/`, prezentare interactivă Client cu Bilu, capturi reale și vot. Nume/alias cerut după alegerea votului; email opțional cu acord separat nebifat. Nicio trimitere de date în timpul pașilor de prezentare. Imaginea Story este în `marketing/launch-quiz/`; în Instagram trebuie adăugat stickerul Link.
+
+Admin → **Lansare CeFaci**, doar fondator/admin cu MFA: statistici pe răspunsuri, nume/email/acorduri, căutare, filtre, paginare și ștergere confirmată. Migrare live **20261010143619**, local **20261010142524_cefaci_launch_quiz.sql**; stocare privată, retenție zilnică 180 zile, RPC publice numai pentru trimitere/retragere. Cheie privată hashed, reîncercări idempotente și amprente de retragere pentru blocarea cererilor întârziate. Nu se pretinde unicitatea votanților; adresele nu sunt verificate și emailul de lansare nu are serviciu de trimitere activ.
+
+Site/Admin noi sunt împachetate; hostingul gazduire.net încă necesită upload. Backendul a fost aplicat, fără voturi fictive în producție. Detalii actuale: `docs/livrare/QUIZ-CEFACI-20261010.md` și `docs/livrare/RAPORT.md`. Buildurile native anterioare și backupurile rămân păstrate.
+
+## Memorarea autentificării Admin și Business web
+
+La cererea utilizatorului: checkbox nebifat implicit **Ține-mă minte 15 zile pe acest dispozitiv**, în ambele loginuri web. Sesiunea este persistentă numai după OTP și confirmarea backendului. Termenul fix este Auth session created_at +15 zile, fără reînnoire la refresh; logoutul șterge memorarea aplicației respective. MFA și blocarea la inactivitate/maxim absolut rămân obligatorii. Native SecureStore este păstrat.
+
+Migrare live **20261010201619**, local `20261010200458_cefaci_remembered_web_auth.sql`; tabel privat RLS, RPC doar authenticated pentru sesiunea proprie, expirare în `private.live_auth_session`. HTTP anon 401, tabel privat 404. Politica cookies actualizată. Detalii: `docs/livrare/REMEMBER-LOGIN-20261010.md`.
+
+ZIP-urile noi trimise de utilizator provin din **8f2df4f**; am integrat capturile inline în quiz și commitul **818c508** din remote. Implementare **968be91**, pachete finale web la **ab97354**. Suite locale: 513 teste +1 omis, typecheck toate trei, 23 scenarii concurente și opt fluxuri browser de memorare incluzând expirarea tabului deschis. Originalele sunt în `release/previous-remember-login-20261010/`. Hostingul necesită încărcarea noilor pachete; nu se pretinde că ZIP-urile au fost publicate. Vezi raportul curent pentru rezultatul final CI.
+
+CI web **38083160863 SUCCESS** la sursa **ab97354**, cu toate testele și fluxurile integrate. Metadatele rulării și artefactelor sunt în `docs/livrare/builds/Remember-web-GitHub-*.json`. Pachetele locale sunt construite din aceeași sursă; timestampurile de build diferă de cele CI.
