@@ -1,12 +1,14 @@
-# Livrare CeFaci — Business corectat și iOS — 10.10.2026
+# Livrare CeFaci — Business și iOS — 10.10.2026
 
-Business 1.0.7 elimină barele permanente pentru Tur cu Bilu/documente, verifică username-ul online înainte de salvare și folosește Zi/Lună/An pentru data nașterii. Meniul compact păstrează tema, turul și documentele. Backendul nu a fost migrat pentru această corecție; MFA, rolurile și unicitatea serverului rămân active. [Detalii Business](BUSINESS-PROFILE-FIX-20261010.md).
+Business 1.0.8/code9/build iOS9 include corecția trimiterii: câmpuri validate explicit, erori lângă buton, apăsare cu tastatura deschisă și succes numai după confirmarea serverului. Logurile live confirmă că vechile încercări erau respinse HTTP400 la validarea datelor, înainte de salvare. Detalii și probe: [Business submit](BUSINESS-SUBMIT-FIX-20261010.md).
 
-Sursa buildurilor curente: **7d36324d1113fcfcc8e935f05471bd39680e62f2**. Verificările locale: **517 teste trecute + 1 opțional omis**, typecheck, audit proiecte iOS și regresiile browser Client/Business/Admin/quiz. [CI Android 38087018183](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38087018183) **SUCCESS**, cu verificările complete înainte de compilare. Business APK/AAB **1.0.7/code8** sunt descărcate din CI și auditate: manifest, permisiuni, Release, backup/cleartext dezactivate, hash/CRC, PKCS7 și certificat de producție identic versiunii precedente. Dovezi: `builds/Business-profile-Android-GitHub-run.json` și `builds/Business-profile-Android-GitHub-artifacts.json`. Rezultatele iOS sunt în curs de verificare și vor fi consemnate înainte de livrare.
+Sursa nouă Business: **794710b927a1e1f2bc6e33394cf69bf360d96b5d**. 520 teste automate trecute, un opțional omis, typecheck, regresii browser și PostgreSQL real: revendicare/local nou/dispută și raportări cu/fără poză ajung o singură dată la Admin după trimitere; ciornele și documentele altui cont sunt refuzate. Nicio cerere falsă nu a fost creată în producție. CI Android **38090188021**, CI Business iOS **38090190410** în curs; CI Client iOS **38089793167**, sursa **6fa10304614fcab5ce4752da54cdbe1425fa3a3e**, în curs.
 
-Actualizarea web necesită numai Business: `release/CeFaci-Business-web.zip`. Admin și site-ul rămân pachetele precedente. Publicarea pe hosting nu este efectuată; versiunea live Business verificată încă indică ab97354. Backupul este `release/previous-business-profile-20261010/`. Kitul istoric de quiz nu înlocuiește acest ZIP Business actual.
+Actualizarea web necesită numai Business: `release/CeFaci-Business-web.zip`. Admin și site-ul păstrează pachetele precedente; nu există migrație SQL nouă. Versiunea live Business verificată la începutul investigației indica 7d36324 (1.0.7), deci actualizarea 1.0.8 trebuie instalată. Backupurile includ `release/previous-business-profile-20261010/` și `release/previous-business-submit-20261010/`.
 
-Pentru iOS sunt pregătite Client 0.3.4/build8 și Business 1.0.7/build8, compilează Xcode 26.6 pe macOS 26 Apple Silicon. Pachetele simulator și arhivele device nesemnate sunt distincte de IPA/TestFlight. Nu există încă Apple Developer sau provisioning personal. [Ghid iOS](IOS-CEFACI-20261010.md).
+Corecțiile anterioare ale meniului, username-ului și datei nașterii sunt păstrate: [Business profil](BUSINESS-PROFILE-FIX-20261010.md). Business iOS1.0.7/build8 din CI **38087020465**, job **114315828957**, a trecut compilarea nativă, auditul și testele Maestro iPhone/iPad; arhiva este păstrată ca backup, precedând corecția trimiterii.
+
+Client iOS0.3.4/build8 și Business iOS1.0.8/build9 sunt compilate pe macOS26/Xcode26.6. Simulatorul și arhiva device nesemnată sunt distincte de IPA/TestFlight. Nu există încă Apple Developer sau provisioning personal. [Ghid iOS](IOS-CEFACI-20261010.md).
 
 ## Istoricul livrării web precedente — tur și memorare login
 

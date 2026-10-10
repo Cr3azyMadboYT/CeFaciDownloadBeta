@@ -4,7 +4,7 @@
 
 Utilizatorul a cerut implementarea iOS și a confirmat că **nu are încă Apple Developer**. Livrarea pregătește ambele aplicații native, cu același design și aceleași verificări ale serverului. Compilarea se execută pe GitHub Actions macOS 26 Apple Silicon cu Xcode 26.6, nu printr-un export JavaScript pe Ubuntu. Rezultatele rulării și artefactele vor fi consemnate după verificare.
 
-Client: **0.3.4, build iOS 8**, bundle `ro.cefaci.app`. Business: **1.0.7, build iOS 8**, bundle `app.cefaci.business`, iPhone și iPad. Client Android/code7, Admin și site-ul livrate anterior sunt păstrate. Business Android este actualizat separat la code8; un pachet iOS nu se încarcă pe gazduire.net.
+Client: **0.3.4, build iOS 8**, bundle `ro.cefaci.app`. Business: **1.0.8, build iOS 9**, bundle `app.cefaci.business`, iPhone și iPad. Client Android/code7, Admin și site-ul livrate anterior sunt păstrate. Business Android este actualizat separat la code9; un pachet iOS nu se încarcă pe gazduire.net.
 
 ## Completări iOS
 
