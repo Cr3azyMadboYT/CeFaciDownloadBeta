@@ -32,6 +32,9 @@ for d in selected:
         subprocess.run(['xcrun','simctl','install',sid,str(app)],check=True)
         subprocess.run(['xcrun','simctl','status_bar',sid,'override','--time','9:41','--batteryState','charged','--batteryLevel','100'],check=True)
         screenshots=f"release/ios-screenshots/{name}-{'ipad' if d['name'].startswith('iPad') else 'iphone'}"
-        subprocess.run(['maestro','--device',sid,'test','--format','junit','--output',f'{screenshots}-results.xml','-e',f'SCREENSHOT_PREFIX={screenshots}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
+        subprocess.run(['maestro','--device',sid,'test','--format','junit','--output',f'{screenshots}-results.xml','--debug-output',f'release/ios-diagnostics/{name}-{sid}-maestro','-e',f'SCREENSHOT_PREFIX={screenshots}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
         print(f"PASS: {name} pre-login/legal navigation on {d['name']} ({sid}); no OTP requested.")
+    except Exception:
+        subprocess.run(['xcrun','simctl','io',sid,'screenshot',f'release/ios-diagnostics/{name}-{sid}-failure.png'],check=False,timeout=30)
+        raise
     finally:subprocess.run(['xcrun','simctl','shutdown',sid],check=False)
