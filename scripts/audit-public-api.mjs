@@ -8,6 +8,11 @@ const key = config.match(/sb_publishable_[A-Za-z0-9_-]+/)?.[0];
 assert.equal(base, 'https://vqrmwuarjjntusfbqprx.supabase.co');
 assert.ok(key);
 const checks = [
+  { name: 'own privacy requests without session', path: '/rest/v1/rpc/privacy_my_requests', statuses: [401, 403] },
+  { name: 'own curated data export without session', path: '/rest/v1/rpc/privacy_export_my_data', statuses: [401, 403] },
+  { name: 'Admin privacy inbox without session', path: '/rest/v1/rpc/admin_privacy_requests', statuses: [401, 403] },
+  { name: 'private privacy inbox schema hidden', path: '/rest/v1/privacy_requests?select=*&limit=0', schema: 'private', statuses: [406] },
+  { name: 'private privacy log schema hidden', path: '/rest/v1/privacy_request_log?select=*&limit=0', schema: 'private', statuses: [406] },
   { name: 'privileged access bootstrap without session', path: '/rest/v1/rpc/secure_access_status', statuses: [401, 403] },
   { name: 'Admin scoped session status without session', path: '/rest/v1/rpc/secure_session_status?p_scope=admin', statuses: [401, 403] },
   { name: 'Business scoped session status without session', path: '/rest/v1/rpc/secure_session_status?p_scope=business', statuses: [401, 403] },

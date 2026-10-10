@@ -6,7 +6,7 @@ Consultate prin căutare și acces la surse oficiale la 9–10 octombrie 2026. D
 | --- | --- |
 | [GDPR, Regulamentul (UE) 2016/679](https://eur-lex.europa.eu/eli/reg/2016/679/) | Art. 5–6 minimizare/temeiuri; 12–22 drepturi; 28 DPA; 30 registru; 32 securitate; 33–34 incidente; 35–37 DPIA/DPO; capitolul V transferuri. EUR-Lex a oferit rezultate indexate; o versiune RO a afișat verificare JavaScript, deci nu pretindem că acel răspuns a furnizat textul integral. |
 | [Legea 506/2004, forma consolidată](https://legislatie.just.ro/Public/DetaliiDocumentAfis/214211) | Art. 4: informare/acord pentru stocare și acces la terminal, excepțiile aplicabile. Nu orice cheie locală este automat exceptată. |
-| [Legea 365/2002, forma consolidată](https://legislatie.just.ro/Public/DetaliiDocument/153252) | Art. 5: identitatea și contactul efectiv al furnizorului. No firm/date nepublicate sunt puncte deschise, nu conformitate completă. |
+| [Legea 365/2002, forma consolidată](https://legislatie.just.ro/Public/DetaliiDocument/153252) | Art. 5: identitatea și contactul efectiv al furnizorului. Absența firmei și datele operatorului nepublicate sunt puncte deschise, nu conformitate completă. |
 | [OUG 34/2014, forma consolidată](https://legislatie.just.ro/Public/DetaliiDocument/158913) | Informare consumatori, retragere și excepții. Aplicabilitatea se verifică pe contractul real. |
 | [OUG 141/2021](https://legislatie.just.ro/Public/FormaPrintabila/00000G0B1RD4AHD7FVE3SGMUQRWMXOG5) | Servicii/conținut digital și situații cu date personale furnizate de consumator; gratuitatea nu este exceptare universală. |
 | [SAL — ANPC](https://anpc.ro/sal/) | Canal funcțional de soluționare alternativă și informare. |
