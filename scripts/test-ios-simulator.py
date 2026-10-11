@@ -37,7 +37,8 @@ for d in selected:
         # Maestro 2.11 confines screenshots to the configured run's takeScreenshot folder.
         # A basename is resolved there; an absolute path outside it is rejected.
         subprocess.run(['maestro','--device',sid,'test','--test-output-dir',str(output),'--format','junit','--output',str(output/'results.xml'),'--debug-output',f'release/ios-diagnostics/{name}-{sid}-maestro','-e',f'SCREENSHOT_PREFIX={prefix}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
-        captures=list((output/'takeScreenshot').rglob('*.png'))
+        # Maestro adds a timestamp and flow directory under the configured output root.
+        captures=list(output.rglob(f'{prefix}-*.png'))
         assert len(captures)>=(4 if folder=='mobile' else 3), 'Expected actual native screenshots in the declared output folder'
         print(f"PASS: {name} pre-login/legal navigation on {d['name']} ({sid}); no OTP requested.")
     except Exception:
