@@ -21,7 +21,7 @@ export function jpegInfo(bytes: Uint8Array): {width: number; height: number; end
     if (length < 2 || i + length > bytes.length) return fail();
     if ([0xc0,0xc1,0xc2,0xc3,0xc5,0xc6,0xc7,0xc9,0xca,0xcb,0xcd,0xce,0xcf].includes(marker)) {
       if (length < 8) return fail();
-      height = bytes[i + 3] * 256 + bytes[i + 4]; width = bytes[i + 5] * 256 + bytes[i + 6];
+      height = Math.max(height, bytes[i + 3] * 256 + bytes[i + 4]); width = Math.max(width, bytes[i + 5] * 256 + bytes[i + 6]);
     }
     i += length;
     if (marker === 0xda) scan = true;

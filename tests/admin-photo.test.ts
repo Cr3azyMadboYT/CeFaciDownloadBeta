@@ -22,3 +22,12 @@ it('accepts a real one-page PDF and rejects JPEG bytes mislabeled as PDF',async(
  await expect(validateAttachment(new Blob([fs.readFileSync('tests/fixtures/attachments/document.pdf')],{type:'application/pdf'}),true)).resolves.toBeUndefined();
  await expect(validateAttachment(new Blob([fs.readFileSync('tests/fixtures/attachments/baseline.jpg')],{type:'application/pdf'}),true)).rejects.toThrow(/PDF/);
 });
+
+it('does not let a later JPEG frame hide oversized earlier dimensions',async()=>{
+ const original=new Uint8Array(fs.readFileSync('tests/fixtures/attachments/baseline.jpg'));
+ const sof=original.findIndex((v,i)=>v===255&&original[i+1]===0xc0);expect(sof).toBeGreaterThan(0);
+ const length=original[sof+2]*256+original[sof+3];const frame=original.slice(sof,sof+2+length);
+ const bomb=original.slice();bomb[sof+5]=255;bomb[sof+6]=255;bomb[sof+7]=255;bomb[sof+8]=255;
+ const parts=[bomb.slice(0,-2),frame,bomb.slice(-2)];
+ await expect(validateAttachment(new Blob(parts,{type:'image/jpeg'}),true)).rejects.toThrow(/4096/);
+});
