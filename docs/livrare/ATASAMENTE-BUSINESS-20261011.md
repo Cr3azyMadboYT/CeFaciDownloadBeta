@@ -24,7 +24,11 @@ Fixture-urile JPEG/PNG/PDF din teste sunt sintetice. Au trecut parserul, selecț
 
 Migrarea este aplicată în CeFaci2.0. Verificarea live confirmă bucket privat, RLS activ, păstrarea celor 2 dosare existente și refuz HTTP 401 pentru toate cele 3 operații noi fără autentificare. Detaliile și notificările existente ale Supabase Advisor sunt în builds/Business-private-files-backend-checks.json. Notificările pentru RPC-uri SECURITY DEFINER autentificate sunt evaluate împreună cu verificările de rol și RLS; noile RPC-uri nu sunt executabile de anon.
 
-PDF-urile sunt validate prin octeți ASCII, fără dependență de TextDecoder în mediul nativ. Pachetele web CI corespund fișierelor testate local, cu excepția orei de împachetare; JPEG, PDF și normalizarea pozelor au trecut și cu CSP activ. Sursa aplicațiilor pentru buildurile finale este 8336a5f242eaa7cc68d9cf065d837e5af6bb0bc4. Dovezile native sunt completate la încheierea CI. Testele native pe simulator acoperă ecranele pre-login și documentele publice; selecția de documente pe un telefon fizic rămâne o verificare suplimentară utilă.
+PDF-urile sunt validate prin octeți ASCII, fără dependență de TextDecoder în mediul nativ. Codul și asseturile pachetelor web CI corespund octet cu octet fișierelor testate local; împachetarea adaugă manifestul, antetele de găzduire și metadatele versiunii. JPEG, PDF și normalizarea pozelor au trecut și cu CSP activ. Parserul verifică și cea mai mare dimensiune declarată în toate cadrele JPEG, înainte să creeze un URL Blob.
+
+Pachetele web finale provin din sursa `78c5408ea9c2175858c9875f93eda1d1bc8b9a7f`: [CI 38147753688](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38147753688). Au trecut 528 de teste, verificările PostgreSQL concurente și toate fluxurile de browser; un test pentru fixture-uri de catalog absente este omis explicit. Digesturile GitHub, CRC-urile, version.json, CSP și lipsa JavaScriptului inline sunt verificate. Dovezi: builds/Business-private-files-web-*.
+
+Android a fost compilat din `8336a5f242eaa7cc68d9cf065d837e5af6bb0bc4`. Sursa iOS este `4da0eac07ef8bdb37eef96e22d60ac01ed0ef7d2`; diferența față de Android corectează calea capturilor din testul Maestro. Modificarea web ulterioară privește parserul JPEG folosit de Admin și nu schimbă codul Business nativ. Testele native pe simulator acoperă ecranele pre-login și documentele publice; selecția de documente pe un telefon fizic rămâne o verificare suplimentară utilă.
 
 
 ## Notificări Supabase Advisor
