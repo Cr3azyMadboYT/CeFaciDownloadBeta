@@ -1,0 +1,19 @@
+{
+  "CeFaci-Admin-web.zip": {
+    "sha256": "7d5e3ba920d90d2ffd9840e77dba7aa2a6bd26fea98b633d281d436d3746f281",
+    "size": 372619,
+    "version": {
+      "app": "CeFaci Admin",
+      "commit": "8336a5f242eaa7cc68d9cf065d837e5af6bb0bc4",
+      "build": "2026-10-11T13:37:46.501Z"
+    }
+  },
+  "CeFaci-Business-web.zip": {
+    "sha256": "6c6ec5013103bb69d551c40bd4a460adc76d58ae1a841847c08180b0a52634bb",
+    "size": 1609514,
+    "version": {
+      "commit": "8336a5f242eaa7cc68d9cf065d837e5af6bb0bc4",
+      "build": "2026-10-11T13:37:58.142Z"
+    }
+  }
+}
