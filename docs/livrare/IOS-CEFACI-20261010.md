@@ -2,7 +2,7 @@
 
 ## Scop și stare
 
-Utilizatorul a cerut implementarea iOS și a confirmat că **nu are încă Apple Developer**. Livrarea pregătește ambele aplicații native, cu același design și aceleași verificări ale serverului. Compilarea se execută pe GitHub Actions macOS 26 Apple Silicon cu Xcode 26.6, nu printr-un export JavaScript pe Ubuntu. Rezultatele rulării și artefactele vor fi consemnate după verificare.
+Utilizatorul a cerut implementarea iOS și a confirmat că **nu are încă Apple Developer**. Livrarea pregătește ambele aplicații native, cu același design și aceleași verificări ale serverului. Compilarea se execută pe GitHub Actions macOS 26 Apple Silicon cu Xcode 26.6, nu printr-un export JavaScript pe Ubuntu. Verificarea finală din 11.10.2026 confirmă compilări și teste reușite: [Client CI 38089793167](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38089793167) și [Business CI 38090190410](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38090190410). Pachetele au fost descărcate și verificate prin digestul artefactului GitHub, checksumurile interioare, CRC și Info.plist real.
 
 Client: **0.3.4, build iOS 8**, bundle `ro.cefaci.app`. Business: **1.0.8, build iOS 9**, bundle `app.cefaci.business`, iPhone și iPad. Client Android/code7, Admin și site-ul livrate anterior sunt păstrate. Business Android este actualizat separat la code9; un pachet iOS nu se încarcă pe gazduire.net.
 
@@ -27,7 +27,7 @@ Username-ul se verifică online după 400 ms, numai pentru formatul valid. Salva
 
 `*-ios-project.zip`: proiectul Xcode generat, Podfile/lockfile rezultat și modulele native locale. Nu include Pods/node_modules, credențiale sau calea locală de Node a runnerului. Folosește sursele din `CeFaci-iOS-source.zip`, cu structura monorepo intactă.
 
-`*-ios-audit.json`, `*-ios-build.txt`, checksumuri și capturi: dovezi ale produselor compilate și ale testelor. Pachetele există doar când verificările native trec; nu se atribuie un rezultat de compilare unui proiect generat pe Linux.
+`*-ios-audit.json`, `*-ios-build.txt`, checksumuri și rapoarte Maestro/JUnit: dovezi ale produselor compilate și ale testelor. Pachetele există doar când verificările native trec; nu se atribuie un rezultat de compilare unui proiect generat pe Linux.
 
 ## Folosirea simulatorului și reconstruirea
 
@@ -48,3 +48,9 @@ Pentru un test local pe propriul iPhone există și Personal Team în Xcode, cu 
 5. Completează metadata App Store, suport/confidențialitate, declarațiile App Privacy conform datelor efectiv folosite și dosarul operatorului. Alegerea unui cont personal Apple poate afișa identitatea personală a vânzătorului. Furnizează echipei Apple instrucțiuni de review și accesul legitim necesar pentru funcții Business fără a elimina MFA/RLS sau a pune conturi demo privilegiate în aplicație.
 
 Referințe oficiale: [builduri iOS Expo](https://docs.expo.dev/build-reference/ios-builds/), [simulator fără semnare Distribution](https://docs.expo.dev/build-reference/simulators/), [Google iOS în Expo](https://react-native-google-signin.github.io/docs/setting-up/expo), [Supabase Google nativ](https://supabase.com/docs/guides/auth/social-login/auth-google), [cerințele Apple pentru login](https://developer.apple.com/app-store/review/guidelines/#login-services), [imagini macOS GitHub](https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md).
+
+## Rezultatele reale livrate
+
+Client: sursa `6fa10304614fcab5ce4752da54cdbe1425fa3a3e`, 0.3.4/build8, ARM64 simulator și device. Maestro a trecut start → email → documente → întoarcere pe iPhone17Pro/iOS26.4. Business: sursa `794710b927a1e1f2bc6e33394cf69bf360d96b5d`, 1.0.8/build9, ARM64 simulator și device; login și documente testate pe iPhone17Pro și iPadPro13-inch/iOS26.4. Toate rapoartele au zero failures. Nu s-au cerut OTP-uri reale.
+
+Arhivele din `release/` sunt produse Xcode Release, nu doar proiecte generate. Auditul verifică Mach-O, modulul Swift al iconițelor sezoniere, TLS, manifestele de confidențialitate și semnarea ad-hoc a simulatorului; device rămâne nesemnat. Proiectele iOS livrate sunt cele împachetate pe macOS, cu Podfile.lock; proiectul Linux din artefactul Android rămâne numai în ZIP-ul CI original. `CeFaci-Business-SHA256.txt` acoperă produsele Android, iar `CeFaci-Business-ios-SHA256.txt` acoperă separat proiectul și produsele iOS reale. Dovezile originale GitHub și auditurile sunt păstrate în `docs/livrare/builds/`.

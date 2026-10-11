@@ -1,6 +1,6 @@
 # Actualizare Business 1.0.8 — trimitere cereri
 
-Folosește `release/CeFaci-Business-web.zip` pentru business.cefaci.app. Admin și cefaci.app nu trebuie înlocuite pentru această corecție. Nu rula SQL suplimentar. Înlocuiește APK Business după finalizarea buildului 1.0.8/code9. Păstrează datele hostingului și backupul anterior; extrage conținutul ZIP-ului în rădăcina subdomeniului, inclusiv `.htaccess`. Verifică `/version.json` cu commit 794710b și golește cache-ul/PWA dacă folosești aplicația web.
+Folosește `release/CeFaci-Business-web.zip` pentru business.cefaci.app. Admin și cefaci.app nu trebuie înlocuite pentru această corecție. Nu rula SQL suplimentar. Înlocuiește APK Business cu buildul verificat 1.0.8/code9. Păstrează datele hostingului și backupul anterior; extrage conținutul ZIP-ului în rădăcina subdomeniului, inclusiv `.htaccess`. Verifică `/version.json` cu commit 794710b și golește cache-ul/PWA dacă folosești aplicația web.
 
 Detalii: [corecție trimitere](BUSINESS-SUBMIT-FIX-20261010.md). Pentru iOS: [ghid separat](IOS-CEFACI-20261010.md); arhiva nesemnată nu este IPA instalabilă.
 

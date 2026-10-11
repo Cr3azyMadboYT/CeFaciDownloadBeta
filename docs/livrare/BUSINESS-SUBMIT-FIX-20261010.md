@@ -27,10 +27,10 @@ Validările instalate pentru telefon/extensie au fost verificate direct din func
 
 ## Instalare și limite
 
-Înlocuiește Business web cu noul ZIP și aplicația Android cu APK code 9 după finalizarea buildului. Admin și site-ul public nu necesită înlocuire pentru această corecție; nu există migrație SQL nouă.
+Înlocuiește Business web cu noul ZIP și aplicația Android cu APK code 9 din buildul final verificat. Admin și site-ul public nu necesită înlocuire pentru această corecție; nu există migrație SQL nouă.
 
-În Admin: revendicări/localuri noi/dispute la „Cereri Business”, raportări la secțiunea pentru probleme și localuri lipsă, conform rolului. O ciornă nu este o cerere trimisă.
+În Admin: revendicări/localuri noi/dispute la „Cereri Business”, raportări la „Semnalări”, conform rolului. O ciornă nu este o cerere trimisă.
 
-Testele autentificate folosesc identități sintetice în baze locale. Nu s-au creat conturi sau cereri false în producție. Nu pretindem o trimitere autentificată reală în numele utilizatorului; corecția trebuie instalată pe dispozitivul folosit.
+Testele autentificate folosesc identități sintetice în baze locale. Nu s-au creat conturi sau cereri false în producție. Verificarea HTTP anonimă în live a refuzat cu 401/42501 crearea/citirea cererilor Business, coada Admin și raportările. Nu pretindem o trimitere autentificată reală în numele utilizatorului; corecția trebuie instalată pe dispozitivul folosit.
 
-Buildurile native noi și hashurile vor fi consemnate după compilare și verificare; arhivele precedente sunt păstrate în `release/previous-business-submit-20261010/`.
+Builduri finale verificate la 11.10.2026: [Android 38090188021 SUCCESS](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38090188021), [Business iOS 38090190410 SUCCESS](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38090190410). Sursa `794710b927a1e1f2bc6e33394cf69bf360d96b5d`. APK/AAB 1.0.8/code9 cu certificat de producție păstrat; iOS1.0.8/build9 are simulator Release și xcarchive device nesemnat, cu Maestro iPhone/iPad trecut. Hashuri și rapoarte: `ARTEFACTE-SHA256.txt`, `builds/Business-submit-*`. Arhivele precedente sunt păstrate în `release/previous-business-submit-20261010/`.
