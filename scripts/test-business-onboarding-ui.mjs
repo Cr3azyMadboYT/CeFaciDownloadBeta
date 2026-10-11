@@ -46,10 +46,16 @@ await context.route('**/*', async route=>{
     data=requests.find(r=>r.key===p.p_key);
     if(!data) {data={id:`00000000-0000-0000-0000-${String(requests.length+1).padStart(12,'0')}`,key:p.p_key,kind:p.p_kind,venue_id:p.p_venue,venue_name:p.p_venue==='claimed'?'Local revendicat':p.p_venue==='unclaimed'?'Local disponibil':p.p_details.venue_name,details:p.p_details,status:'draft',created_at:new Date().toISOString()}; requests.push(data);}
   }
+  else if (name==='biz_partner_request_files') {
+    assert(p.p_files.length>=1&&p.p_files.length<=5);
+    data=p.p_files.map((f,i)=>({...f,index:i+1,path:`${user.id}/${p.p_id}/proof${i?'-'+(i+1):''}.${f.content_type==='application/pdf'?'pdf':'jpg'}`}));
+    requests.find(r=>r.id===p.p_id).files=data;
+  }
   else if (path.includes('/storage/v1/object/business-proofs/')) {
     assert(path.includes(user.id+'/'));assert.equal(req.headers()['x-upsert'],'false');
-    assert.equal(req.headers()['content-type'],'application/pdf');
-    assert(req.postDataBuffer().subarray(0,5).equals(Buffer.from('%PDF-')));
+    const mime=req.headers()['content-type'];assert(['application/pdf','image/jpeg'].includes(mime));
+    if(mime==='application/pdf')assert(req.postDataBuffer().subarray(0,5).equals(Buffer.from('%PDF-')));
+    else assert(req.postDataBuffer().subarray(0,3).equals(Buffer.from([255,216,255])));
     if(failUpload) {failUpload=false;status=503;data={statusCode:'503',message:'Încărcarea este temporar indisponibilă'};}
     else data={Key:path};
   }
@@ -126,6 +132,12 @@ try {
   await page.getByLabel('Telefonul tău de contact',{exact:true}).fill('0712345678');
   await chooseDocument(false);await page.getByText('Tipul fișierului nu este recunoscut.',{exact:false}).waitFor();assert.equal(calls.filter(c=>c.name==='biz_partner_request_create').length,0);
   await chooseDocument();await page.getByText('certificat.pdf',{exact:false}).waitFor();
+  {
+    const choice=page.waitForEvent('filechooser');await button('Adaugă alt fișier (opțional)').click();
+    await (await choice).setFiles([{name:'Motion Photo.jpg',mimeType:'image/jpeg',buffer:Buffer.concat([fs.readFileSync('tests/fixtures/attachments/baseline.jpg'),Buffer.from('motion-video')])},{name:'Delegare.pdf',mimeType:'application/pdf',buffer:fs.readFileSync('tests/fixtures/attachments/document.pdf')}]);
+    await button('Scoate fișierul 3').waitFor();await button('Scoate fișierul 3').click();
+    await page.getByText('Motion Photo.jpg',{exact:false}).waitFor();assert.equal(await button('Scoate fișierul 3').count(),0);
+  }
   await button('Trimite cererea pentru verificare').click();
   const feedback=page.getByTestId('partner-submit-feedback');
   await feedback.getByText('Datele cererii au fost respinse.',{exact:false}).waitFor();
@@ -138,7 +150,7 @@ try {
   assert.equal(requests[0].status,'draft');
   await button('Trimite cererea pentru verificare').click();
   await page.getByText('Adăugare local · În verificare',{exact:true}).waitFor();
-  const newCalls=calls.filter(c=>c.name==='biz_partner_request_create');assert.equal(new Set(newCalls.map(c=>c.p.p_key)).size,1);assert.equal(requests.length,1);assert.equal(requests[0].kind,'new');
+  const newCalls=calls.filter(c=>c.name==='biz_partner_request_create');assert.equal(new Set(newCalls.map(c=>c.p.p_key)).size,1);assert.equal(requests.length,1);assert.equal(requests[0].kind,'new');assert.equal(requests[0].files.length,2);assert(calls.some(c=>c.path.endsWith('/proof-2.jpg')));
   await page.screenshot({path:'release/screenshots/business-onboarding-pending-phone.png',fullPage:true});
   await button('Revendică localul').click();await page.getByLabel('Numele localului sau orașul',{exact:true}).fill('Local');await button('Caută').click();
   await button('Deschide dispută').click();await page.getByText('Proprietarul actual are 3 zile să răspundă',{exact:false}).first().waitFor();

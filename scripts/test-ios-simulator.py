@@ -31,7 +31,7 @@ for d in selected:
                 raise
         subprocess.run(['xcrun','simctl','install',sid,str(app)],check=True)
         subprocess.run(['xcrun','simctl','status_bar',sid,'override','--time','9:41','--batteryState','charged','--batteryLevel','100'],check=True)
-        screenshots=f"release/ios-screenshots/{name}-{'ipad' if d['name'].startswith('iPad') else 'iphone'}"
+        screenshots=str(Path(f"release/ios-screenshots/{name}-{'ipad' if d['name'].startswith('iPad') else 'iphone'}").resolve())
         subprocess.run(['maestro','--device',sid,'test','--format','junit','--output',f'{screenshots}-results.xml','--debug-output',f'release/ios-diagnostics/{name}-{sid}-maestro','-e',f'SCREENSHOT_PREFIX={screenshots}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
         print(f"PASS: {name} pre-login/legal navigation on {d['name']} ({sid}); no OTP requested.")
     except Exception:

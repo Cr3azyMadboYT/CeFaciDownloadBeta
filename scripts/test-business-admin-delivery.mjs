@@ -56,7 +56,23 @@ try{
   assert(!(await rpc('other','biz_partner_requests()')).some(x=>x.id===r.id));
   console.log(`PASS: ${kind} ${ext} → Admin once; drafts/missing proof/foreign upload denied.`);
  }
+ {
+  const r=await rpc('applicant','biz_partner_request_create($1,$2,$3,$4)',['delivery-multiple','new',null,{...details,venue_name:'Multiple files'}]);
+  const files=[{name:'Firma.pdf',content_type:'application/pdf',size:100},{name:'Foto.jpg',content_type:'image/jpeg',size:100}];
+  const manifest=await rpc('applicant','biz_partner_request_files($1,$2)',[r.id,JSON.stringify(files)]);
+  for(const [i,f] of manifest.entries()){
+   await as('applicant',"insert into storage.objects(bucket_id,name,metadata)values('business-proofs',$1,$2)",[f.path,{size:f.size,mimetype:f.content_type,eTag:'synthetic'}]);
+   if(i===0)await assert.rejects(rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,manifest[0].path]),/toate fișierele/);
+  }
+  assert.equal((await rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,manifest[0].path])).status,'pending');
+  assert.equal((await rpc('admin','biz_partner_proof_files($1)',[r.id])).length,2);
+  await assert.rejects(rpc('other','biz_partner_proof_file_access($1,2)',[r.id]),/disponibil/);
+  assert.equal((await rpc('admin','biz_partner_proof_file_access($1,2)',[r.id])).path,manifest[1].path);
+  assert.equal((await as('other','select * from storage.objects where name=$1',[manifest[1].path])).rows.length,0);
+  console.log('PASS: two-file dossier → Admin; incomplete uploads and foreign reads denied.');
+ }
  for(const photo of [false,true]){
+
   const r=await rpc('applicant','support_report_create($1,$2,$3,$4,$5,$6,$7)',['issue-'+photo,'issue','business','Problemă test','Descriere sintetică pentru test',null,photo?'image/jpeg':null]);
   assert(!(await rpc('admin','admin_support_reports()')).some(x=>x.id===r.id));
   if(photo)await as('applicant',"insert into storage.objects(bucket_id,name,metadata)values('support-photos',$1,$2)",[r.photo_path,{size:100,mimetype:'image/jpeg',eTag:'synthetic'}]);

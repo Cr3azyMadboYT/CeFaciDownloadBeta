@@ -70,10 +70,14 @@ async function context({role='admin',auth=true,viewport={width:1440,height:1000}
       else {assert.equal(p.p_version,report.version);report.status=p.p_status;report.answer=p.p_answer;report.version++;data=report;}
     }
     else if(name==='support_report_photo_access')data={bucket:'support-photos',path:`${uid}/${issueId}/photo.png`,expires_in:300};
+    else if(name==='biz_partner_proof_files')data=[{index:1,name:'Motion Photo.jpg',content_type:'image/jpeg'},{index:2,name:'Progresiv.jpg',content_type:'image/jpeg'},{index:3,name:'Delegare.pdf',content_type:'application/pdf'}];
+    else if(name==='biz_partner_proof_file_access')data={bucket:'business-proofs',path:`${uid}/${partnerId}/proof${p.p_index===1?'':'-'+p.p_index}.${p.p_index===3?'pdf':'jpg'}`,expires_in:300};
     else if(name==='biz_partner_proof_access')data={bucket:'business-proofs',path:`${uid}/${partnerId}/proof.png`,expires_in:300};
     else if(/^\/storage\/v1\/object\/(?:authenticated\/)?(?:support-photos|business-proofs)\//.test(path)) {
       assert.equal(req.method(),'GET');assert(req.headers().authorization?.startsWith('Bearer '));
       assert(!path.includes('/public/')&&!path.includes('/sign/'));
+      if(path.endsWith('.pdf'))return route.fulfill({status:200,contentType:'application/pdf',body:fs.readFileSync('tests/fixtures/attachments/document.pdf')});
+      if(path.endsWith('.jpg'))return route.fulfill({status:200,contentType:'image/jpeg',body:Buffer.concat([fs.readFileSync(`tests/fixtures/attachments/${path.endsWith('proof-2.jpg')?'progressive':'baseline'}.jpg`),Buffer.from('motion-video')])});
       return route.fulfill({status:200,contentType:'image/png',body:png});
     }
     else if(name==='admin_partner_requests')data=(p.p_status??'pending')===partnerRequest.status?[partnerRequest]:[];
@@ -178,7 +182,16 @@ try {
 
   await button(page,'Cereri Business').click();await button(page,'Deschide cererea: Local de test').click();
   assert(await button(page,'Verifică dosarul').isDisabled());
-  await button(page,'Vezi dovada').click();await page.getByAltText('Dovada solicitantului',{exact:true}).waitFor();
+  await button(page,'Vezi dovada').click();
+  for(const index of [1,2]){
+    await button(page,'Deschide fișierul '+index).click();const img=page.getByAltText('Dovada solicitantului',{exact:true});await img.waitFor();
+    await img.evaluate(el=>el.decode());assert.equal(await img.evaluate(el=>el.naturalWidth),32);
+    await button(page,'Închide fișierul '+index).click();
+  }
+  await button(page,'Deschide fișierul 3').click();await page.getByRole('link',{name:'Deschide documentul PDF',exact:true}).waitFor();
+  const downloadWait=page.waitForEvent('download');await page.getByRole('link',{name:'Descarcă PDF',exact:true}).click();const download=await downloadWait;
+  assert(fs.readFileSync(await download.path()).equals(fs.readFileSync('tests/fixtures/attachments/document.pdf')));
+  await page.screenshot({path:'release/screenshots/admin-business-proof-files.png',fullPage:true});
   await page.getByLabel('Am verificat manual firma, reprezentarea și documentul solicitantului.',{exact:true}).check();
   await page.getByLabel('Răspunsul deciziei',{exact:true}).fill('Documentele și firma sunt verificate. Contractul urmează separat.');
   await button(page,'Verifică dosarul').click();await button(page,'Deschide cererea: Local de test').waitFor({state:'hidden'});

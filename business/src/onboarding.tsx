@@ -11,7 +11,7 @@ import { backend, call } from "./backend";
 import { Button, Card, Field, Txt, Toggle } from "./ui";
 import {normalizeUsername, validUsername, validateBirthDate} from "./identity-validation";
 import {partnerValidation} from './partner-validation';
-import { chooseProof, requestKey, uploadProof, type ClaimVenue, type PartnerRequest, type Proof, type RequestDetails, type RequestKind } from "./onboarding-api";
+import { chooseProofs, MAX_PROOF_FILES, MAX_PROOF_TOTAL_BYTES, requestKey, uploadProof, type ClaimVenue, type PartnerRequest, type Proof, type RequestDetails, type RequestKind } from "./onboarding-api";
 
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : "Nu am putut încheia pasul. Reîncearcă online.";
 
@@ -74,7 +74,7 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
   const [stage, Stage] = useState<"home" | "search" | "form">("home"), [query, Q] = useState(""),
     [found, Found] = useState<ClaimVenue[]>([]), [searched, Searched] = useState(false),
     [chosen, Chosen] = useState<ClaimVenue | null>(null), [kind, Kind] = useState<RequestKind>("claim"),
-    [details, Details] = useState<RequestDetails>({ ...blank }), [proof, ProofState] = useState<Proof | null>(null),
+    [details, Details] = useState<RequestDetails>({ ...blank }), [proofs, ProofState] = useState<Proof[]>([]),
     [requests, Requests] = useState<PartnerRequest[]>([]), [busy, B] = useState(false),
     [message, M] = useState(""), [listError, ListError] = useState(""),
     [identity, Identity] = useState<{ has_profile: boolean; username: string | null; first_name: string | null } | null>(null),
@@ -123,15 +123,15 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     finally { if (valid()) { lock.current = false; B(false); } }
   };
   const form = (next: RequestKind, venue: ClaimVenue | null) => {
-    draft.current = null; key.current = requestKey(); ProofState(null); Details({ ...blank });
+    draft.current = null; key.current = requestKey(); ProofState([]); Details({ ...blank });
     Kind(next); Chosen(venue); M(""); Stage("form");
   };
   const field = (name: keyof RequestDetails, value: string) => Details((old) => ({ ...old, [name]: value }));
   const scroll = useRef<ScrollView>(null);
-  const validation = partnerValidation(kind, details, !!proof);
+  const validation = partnerValidation(kind, details, proofs.length > 0);
   const submit = () => run(async (valid) => {
     if (validation) throw new Error(validation);
-    if (!proof) throw new Error("Alege documentul care dovedește legătura dintre local și firmă.");
+    if (!proofs.length) throw new Error("Alege documentul care dovedește legătura dintre local și firmă.");
     {
       const created = await call<PartnerRequest>("biz_partner_request_create", { p_key: key.current, p_kind: kind, p_venue: chosen?.id ?? null, p_details: details });
       if (!valid()) return; draft.current = created;
@@ -139,14 +139,21 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     if (draft.current.status !== "draft" && draft.current.status !== "pending")
       throw new Error("Această cerere a fost deja încheiată. Verifică lista cererilor tale.");
     if (draft.current.status === "draft") {
-      const path = await uploadProof(session.user.id, draft.current.id, proof);
+      await call('biz_partner_request_files', {p_id: draft.current.id, p_files: proofs.map(p => ({name:p.name,content_type:p.contentType,size:p.bytes.byteLength}))});
+      if (!valid()) return;
+      let path = '';
+      for (const [index, proof] of proofs.entries()) {
+        const uploaded = await uploadProof(session.user.id, draft.current.id, proof, index + 1);
+        if (!valid()) return;
+        if (index === 0) path = uploaded;
+      }
       if (!valid()) return;
       const receipt = await call<PartnerRequest>("biz_partner_request_submit", { p_id: draft.current.id, p_path: path });
       if (!valid()) return;
       if (receipt?.id !== draft.current.id || receipt.status !== 'pending')
         throw new Error('Nu am primit confirmarea trimiterii. Reîncearcă; cererea păstrează aceeași referință.');
     }
-    draft.current = null; ProofState(null); Stage("home");
+    draft.current = null; ProofState([]); Stage("home");
     M("Cererea și documentul au fost trimise. Urmărește decizia aici; localul rămâne neschimbat până la aprobare.");
     scroll.current?.scrollTo({y: 0, animated: true});
     await load();
@@ -154,7 +161,7 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
   const cancelDraft = () => run(async (valid) => {
     if (draft.current) await call("biz_partner_request_cancel", { p_id: draft.current.id });
     if (!valid()) return;
-    draft.current = null; ProofState(null); Stage("home"); await load();
+    draft.current = null; ProofState([]); Stage("home"); await load();
   });
   const title = kind === "new" ? "Solicită adăugarea localului" : kind === "dispute" ? "Dispută pentru local" : "Revendică localul";
   return <ScrollView ref={scroll} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 20, width: "100%", maxWidth: 760, alignSelf: "center" }}>
@@ -236,8 +243,15 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
       <Card title={kind === "new" ? "3. Documentul justificativ" : "2. Documentul justificativ"}>
         <Txt>Certificat constatator ONRC, certificat de înregistrare, contract de închiriere sau autorizație. Acoperă CNP-ul și datele personale care nu sunt necesare verificării.</Txt>
         <Txt muted>PDF, JPEG sau PNG, maximum 8 MB. Documentul este privat, accesibil pentru verificarea cererii.</Txt>
-        <Button label={proof ? "Schimbă documentul" : "Încarcă documentul"} secondary disabled={busy || !!draft.current} onPress={() => void run(async (valid) => { const next = await chooseProof(); if (valid() && next) ProofState(next); })} />
-        {proof && <Txt>{proof.name} · {Math.ceil(proof.bytes.byteLength / 1024)} KB</Txt>}
+        <Txt muted>Un fișier este suficient. Dacă ai nevoie, poți adăuga până la 5 fișiere; maximum 20 MB în total. Pozele sunt pregătite pentru citire în Admin.</Txt>
+        <Button label={proofs.length ? "Schimbă documentul" : "Încarcă documentul"} secondary disabled={busy || !!draft.current} onPress={() => void run(async (valid) => { const next = await chooseProofs(); if (valid() && next.length) ProofState(next); })} />
+        {proofs.map((proof,index) => <View key={index} style={{gap:8}}><Txt>{index+1}. {proof.name} · {Math.ceil(proof.bytes.byteLength / 1024)} KB</Txt><Button label={`Scoate fișierul ${index+1}`} secondary disabled={busy || !!draft.current} onPress={() => ProofState(old=>old.filter((_,i)=>i!==index))}/></View>)}
+        {!!proofs.length && proofs.length < MAX_PROOF_FILES && <Button label="Adaugă alt fișier (opțional)" secondary disabled={busy || !!draft.current} onPress={() => void run(async valid => {
+          const next=await chooseProofs(MAX_PROOF_FILES-proofs.length);
+          if (!valid() || !next.length) return;
+          if([...proofs,...next].reduce((sum,p)=>sum+p.bytes.byteLength,0)>MAX_PROOF_TOTAL_BYTES) throw new Error('Fișierele din dosar pot avea cel mult 20 MB împreună.');
+          ProofState(old=>[...old,...next]);
+        })}/>}
         {draft.current && <Txt muted>Ciorna este salvată. Reîncearcă trimiterea documentului; pentru alte date, renunță la ciornă și începe din nou.</Txt>}
         <View testID="partner-submit-feedback" accessibilityLiveRegion="polite">
           {!!message && <Txt>{message}</Txt>}
