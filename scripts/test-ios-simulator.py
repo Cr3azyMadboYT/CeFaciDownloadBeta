@@ -36,7 +36,11 @@ for d in selected:
         output.mkdir(parents=True,exist_ok=True)
         # Maestro 2.11 confines screenshots to the configured run's takeScreenshot folder.
         # A basename is resolved there; an absolute path outside it is rejected.
-        subprocess.run(['maestro','--device',sid,'test','--test-output-dir',str(output),'--format','junit','--output',str(output/'results.xml'),'--debug-output',f'release/ios-diagnostics/{name}-{sid}-maestro','-e',f'SCREENSHOT_PREFIX={prefix}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
+        # A fresh iPad/Xcode 26 runner can take more than Maestro's default 120s
+        # to compile and start XCTest. This only extends driver startup, not UI assertions.
+        maestro_env=dict(os.environ)
+        maestro_env.setdefault('MAESTRO_DRIVER_STARTUP_TIMEOUT','300000')
+        subprocess.run(['maestro','--device',sid,'test','--test-output-dir',str(output),'--format','junit','--output',str(output/'results.xml'),'--debug-output',f'release/ios-diagnostics/{name}-{sid}-maestro','-e',f'SCREENSHOT_PREFIX={prefix}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=600,env=maestro_env)
         # Maestro adds a timestamp and flow directory under the configured output root.
         captures=list(output.rglob(f'{prefix}-*.png'))
         assert len(captures)>=(4 if folder=='mobile' else 3), 'Expected actual native screenshots in the declared output folder'
