@@ -56,7 +56,7 @@ export async function chooseProofs(limit = MAX_PROOF_FILES): Promise<Proof[]> {
       const type = identifyProof(raw);
       const name = asset.name.replace(/[\x00-\x1f\x7f]/g, '').trim() || 'Document';
       if (type.extension === 'pdf') {
-        if (raw.byteLength < 12 || !new TextDecoder().decode(new Uint8Array(raw).slice(-1024)).includes('%%EOF'))
+        if (raw.byteLength < 12 || !String.fromCharCode(...new Uint8Array(raw).slice(-1024)).includes('%%EOF'))
           throw new Error('Documentul PDF pare incomplet. Alege fișierul original.');
         result.push({name: name.slice(0,146).replace(/[.]pdf$/i,'')+'.pdf', bytes: raw, ...type});
       } else {

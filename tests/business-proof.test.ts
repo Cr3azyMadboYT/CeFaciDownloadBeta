@@ -51,3 +51,10 @@ it('rejects extra picks and an incomplete PDF before any upload',async()=>{
  vi.mocked(Picker.getDocumentAsync).mockResolvedValue({canceled:false,assets:[{uri:'file:pdf',name:'Doc.pdf',file:{arrayBuffer:async()=>new TextEncoder().encode('%PDF-1.7 incomplete').buffer}}]} as any);
  await expect(chooseProofs()).rejects.toThrow(/PDF pare incomplet/);
 });
+
+it('validates PDFs without a TextDecoder global on the native JS runtime',async()=>{
+ const pdf=fs.readFileSync('tests/fixtures/attachments/document.pdf');
+ vi.mocked(Picker.getDocumentAsync).mockResolvedValue({canceled:false,assets:[{uri:'file:pdf',name:'Document.pdf',file:{arrayBuffer:async()=>new Uint8Array(pdf).buffer}}]} as any);
+ vi.stubGlobal('TextDecoder',undefined);
+ try {expect((await chooseProofs())[0].extension).toBe('pdf');} finally {vi.unstubAllGlobals();}
+});
