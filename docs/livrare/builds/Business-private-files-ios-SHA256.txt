@@ -1,0 +1,5 @@
+f0348b7c5c93676d90f718f99f7faea0754b532d292995ef829e346ae7e58090  release/CeFaci-Business-ios-audit.json
+eeb937ce754c508bbd25995c665033e96b40bbcaf25a8929b2ffafb950f6ccd3  release/CeFaci-Business-ios-build.txt
+daf7a70375e9b7f9ef069b6f4491700ef4c60749c5ff29705f976df268d77ab7  release/CeFaci-Business-ios-device-unsigned.zip
+2c76088be8006c665b5689f5932cd1566116aebeb19dcfdbc260b873df109d97  release/CeFaci-Business-ios-project.zip
+cd10f2214295ee049f147c3873f235772d4f4d35399a946fb32ad441ab01a5fc  release/CeFaci-Business-ios-simulator.zip

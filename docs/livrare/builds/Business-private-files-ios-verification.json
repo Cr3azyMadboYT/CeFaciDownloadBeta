@@ -1,0 +1,71 @@
+{
+  "source": "6eab8f948803f12a8fd610765f446fab3406f36b",
+  "run": 38149422547,
+  "artifact_sha256": "a16fa8331e807d9bfcfb82f64b9a8de0dccd988c2af538b6c1d467ff22d624f3",
+  "products": [
+    {
+      "kind": "simulator",
+      "version": "1.0.9",
+      "build": "10",
+      "architecture": "arm64",
+      "offline_bundle_bytes": 3387459,
+      "signature_files_present": true
+    },
+    {
+      "kind": "device-unsigned",
+      "version": "1.0.9",
+      "build": "10",
+      "architecture": "arm64",
+      "offline_bundle_bytes": 3387516,
+      "signature_files_present": false
+    }
+  ],
+  "junit": [
+    {
+      "report": "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-iphone/results.xml",
+      "testcases": 1,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "report": "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-ipad/results.xml",
+      "testcases": 1,
+      "failures": 0,
+      "errors": 0
+    }
+  ],
+  "screenshots": [
+    "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-iphone/2026-10-11_151834/business/takeScreenshot/CeFaci-Business-iphone-legal.png",
+    "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-iphone/2026-10-11_151834/business/takeScreenshot/CeFaci-Business-iphone-login.png",
+    "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-iphone/2026-10-11_151834/business/takeScreenshot/CeFaci-Business-iphone-start.png",
+    "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-ipad/2026-10-11_152218/business/takeScreenshot/CeFaci-Business-ipad-login.png",
+    "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-ipad/2026-10-11_152218/business/takeScreenshot/CeFaci-Business-ipad-start.png",
+    "ios-private-files-diagnostics/ios-screenshots/CeFaci-Business-ipad/2026-10-11_152218/business/takeScreenshot/CeFaci-Business-ipad-legal.png"
+  ],
+  "files": {
+    "CeFaci-Business-ios-simulator.zip": {
+      "sha256": "cd10f2214295ee049f147c3873f235772d4f4d35399a946fb32ad441ab01a5fc",
+      "size": 23482879
+    },
+    "CeFaci-Business-ios-device-unsigned.zip": {
+      "sha256": "daf7a70375e9b7f9ef069b6f4491700ef4c60749c5ff29705f976df268d77ab7",
+      "size": 39220352
+    },
+    "CeFaci-Business-ios-project.zip": {
+      "sha256": "2c76088be8006c665b5689f5932cd1566116aebeb19dcfdbc260b873df109d97",
+      "size": 3857381
+    },
+    "CeFaci-Business-ios-audit.json": {
+      "sha256": "f0348b7c5c93676d90f718f99f7faea0754b532d292995ef829e346ae7e58090",
+      "size": 499
+    },
+    "CeFaci-Business-ios-build.txt": {
+      "sha256": "eeb937ce754c508bbd25995c665033e96b40bbcaf25a8929b2ffafb950f6ccd3",
+      "size": 272
+    },
+    "CeFaci-Business-ios-SHA256.txt": {
+      "sha256": "f3aa5a3d7e412c05fdcde8e2e4f3283bb1af74f381d82d46c2bf5b5a0fa69441",
+      "size": 537
+    }
+  }
+}

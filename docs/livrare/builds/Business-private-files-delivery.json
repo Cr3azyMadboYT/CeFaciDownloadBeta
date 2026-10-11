@@ -1,0 +1,44 @@
+{
+  "version": "Business 1.0.9",
+  "android_code": 10,
+  "ios_build": 10,
+  "web_source": "78c5408ea9c2175858c9875f93eda1d1bc8b9a7f",
+  "android_source": "8336a5f242eaa7cc68d9cf065d837e5af6bb0bc4",
+  "ios_source": "6eab8f948803f12a8fd610765f446fab3406f36b",
+  "ios_device_distribution_signed": false,
+  "client_site_update_required": false,
+  "files": {
+    "CeFaci-Admin-web.zip": {
+      "sha256": "da7b713fb33d311c30dd88d727c15e30642276e5222c3af4fdf92898454033ea",
+      "size": 372627
+    },
+    "CeFaci-Business-web.zip": {
+      "sha256": "236fa54ae034071626540f506e420eca0476a1979d0122fef9304f3e18b8701d",
+      "size": 1609513
+    },
+    "CeFaci-Business.apk": {
+      "sha256": "dbea8f87d224c5514f64a97c50a9110c42ba1c90135a884b02c512bb708d8536",
+      "size": 107970258
+    },
+    "CeFaci-Business.aab": {
+      "sha256": "db79e5df54db69ee822db816c4490bd059d35c8e2f2ec295d7efac2b77647f56",
+      "size": 70453002
+    },
+    "CeFaci-Business-ios-simulator.zip": {
+      "sha256": "cd10f2214295ee049f147c3873f235772d4f4d35399a946fb32ad441ab01a5fc",
+      "size": 23482879
+    },
+    "CeFaci-Business-ios-device-unsigned.zip": {
+      "sha256": "daf7a70375e9b7f9ef069b6f4491700ef4c60749c5ff29705f976df268d77ab7",
+      "size": 39220352
+    },
+    "CeFaci-Business-ios-project.zip": {
+      "sha256": "2c76088be8006c665b5689f5932cd1566116aebeb19dcfdbc260b873df109d97",
+      "size": 3857381
+    },
+    "CeFaci-iOS-source.zip": {
+      "sha256": "510a95663a430d55dc37d70dc9d561d0a241ffc46da2593cbe347c4bc2889365",
+      "size": 23871595
+    }
+  }
+}

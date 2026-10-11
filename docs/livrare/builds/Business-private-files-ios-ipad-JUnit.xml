@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="iPad Pro 13-inch (M5) - iOS 26.4 - B385244C-CB83-424B-92FD-32C1867E3F14" tests="1" failures="0" time="56.464" timestamp="2026-10-11T15:23:05">
+    <testcase id="business" name="business" classname="business" file=".maestro/ios/business.yaml" time="56.026" timestamp="2026-10-11T15:23:06" status="SUCCESS"/>
+  </testsuite>
+</testsuites>

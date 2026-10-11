@@ -41,3 +41,7 @@ Advisor păstrează notificările preexistente pentru pg_net în public, 3 func�
 ## Android livrat
 
 Business **1.0.9 / code10**, APK și AAB reale: [CI 38143849800](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38143849800), sursa 8336a5f. Artefactul a fost descărcat și verificat prin digest GitHub, CRC, checksumurile interioare, manifestul Android compilat și certificatul de producție existent. AAB a trecut și verificarea criptografică PKCS7 și a tuturor celor 1346 de intrări semnate. Dovezi în builds/Business-private-files-Android-*.
+
+## iOS livrat
+
+Business **1.0.9 / build10**, simulator și arhivă device ARM64 reale: [CI 38149422547](https://github.com/Cr3azyMadboYT/CeFaciDownloadBeta/actions/runs/38149422547), sursa `6eab8f948803f12a8fd610765f446fab3406f36b`. Au trecut pre-loginul și documentele pe iPhone 17 Pro și iPad Pro 13-inch: două rapoarte JUnit, zero erori/eșecuri și șase capturi reale. Produsele descărcate au trecut verificarea digestului GitHub, checksumurilor interioare, CRC, Info.plist, Mach-O ARM64, bundle-ului offline și modulului nativ al iconițelor. Simulatorul are semnare ad-hoc verificată în CI; arhiva device rămâne **nesemnată**, fără IPA/TestFlight instalabil. Proiectul livrat este cel macOS, cu Podfile.lock și cinci iconițe. Sursa reproductibilă este în CeFaci-iOS-source.zip. Vezi IOS-CEFACI-20261010.md și builds/Business-private-files-ios-*.
