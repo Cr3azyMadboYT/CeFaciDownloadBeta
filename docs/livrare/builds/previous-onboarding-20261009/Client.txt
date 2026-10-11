@@ -1,0 +1,21 @@
+Commit a7eea11b31705352f7b46822271b7457d0f1e34f
+Semnare productie true
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+V2 Signer: certificate DN: CN=CeFaci, O=CeFaci, C=RO
+V2 Signer: certificate SHA-256 digest: d7714280ace4bcb3b37d5738f9334fb1fca9f29ac35024d5d5622d1d26cf853e
+V2 Signer: certificate SHA-1 digest: 1763e7b29c4a3fea986821b74da4398adbf1e06f
+V2 Signer: certificate MD5 digest: 3a9e4daaf59eacf7488955004b9d2511
+V2 Signer: key algorithm: RSA
+V2 Signer: key size (bits): 2048
+V2 Signer: public key SHA-256 digest: 9671ad75faa8ef078f73fcdfb1bfbed83a2f39603b2981410a91aee2dc44b9ef
+V2 Signer: public key SHA-1 digest: 9f59ad9a4aed6d0d6c43980356237872131253b3
+V2 Signer: public key MD5 digest: 18b5f09e43422877ab9823bf9c3e8a4c
+package: name='ro.cefaci.app' versionCode='4' versionName='0.3.1' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'

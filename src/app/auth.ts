@@ -71,10 +71,17 @@ export function watchAuth(cb: (who: Who | null) => void) {
   sb().auth.onAuthStateChange((_e, s) => cb(whoOf(s)));
 }
 
-/** GDPR: removes the account and all it holds on the server, then signs out. */
-export async function deleteAccountEverywhere(): Promise<void> {
+/** Only a confirmed server deletion permits clearing local account state. */
+export async function deleteAccountEverywhere(): Promise<string | null> {
   try {
-    const { data } = await sb().auth.getSession();
-    if (data.session) { await sb().rpc('delete_my_account'); await sb().auth.signOut(); }
-  } catch { /* offline: the phone is still cleared */ }
+    const { data, error } = await sb().auth.getSession();
+    if (error) return 'Sesiunea nu a putut fi verificată. Contul nu a fost șters.';
+    if (!data.session) return 'Intră din nou în cont înainte de a solicita ștergerea.';
+    if (data.session) {
+      const { error: deletionError } = await sb().rpc('delete_my_account');
+      if (deletionError) return deletionError.message;
+      await sb().auth.signOut({ scope: 'local' });
+    }
+    return null;
+  } catch { return 'Serverul nu a confirmat ștergerea. Verifică internetul și încearcă din nou.'; }
 }

@@ -169,7 +169,7 @@ export default function PlanNou() {
                 <T style={{ flex: 1, fontFamily: F.m, fontSize: 14, color: t.ink2 }}>Câți sunteți, cu tot cu tine?</T>
                 <Press onPress={() => set({ people: Math.max(6, d.people - 1) })} accessibilityLabel="Mai puțini" style={{ width: 44, height: 44, borderRadius: 12, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22 }}>−</T></Press>
                 <T style={{ width: 36, textAlign: 'center', fontFamily: F.display, fontSize: 22 }}>{String(d.people)}</T>
-                <Press onPress={() => set({ people: Math.min(40, d.people + 1) })} accessibilityLabel="Mai mulți" style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22, color: '#FFFFFF' }}>+</T></Press>
+                <Press onPress={() => set({ people: Math.min(500, d.people + 1) })} accessibilityLabel="Mai mulți" style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22, color: '#FFFFFF' }}>+</T></Press>
               </View>
             ) : null}
             {crews.length ? (

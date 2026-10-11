@@ -1,6 +1,6 @@
 // Planuri: the tickets you made, soonest first, and your crews (Supabase).
 import { ScrollView, View } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP, useApp } from '../../lib/session';
@@ -36,12 +36,15 @@ export default function Planuri() {
   const [votes, setVotes] = useState<VoteRow[]>([]);
   const [invites, setInvites] = useState<Invite[]>([]);
   const [busy, setBusy] = useState('');
+  const scope=useRef(0);
+  useEffect(()=>{scope.current++;setCrews(null);setVotes([]);setInvites([]);setBusy('');return()=>{scope.current++;};},[who?.id]);
   const refresh = useCallback(() => {
     if (!who || !known) { setCrews(null); setVotes([]); setInvites([]); return; }
-    void listCrews(who.id).then(setCrews);
-    void listVotes().then(setVotes);
-    void listInvites(who.id).then(setInvites);
-    void syncShared().then((gone) => { if (gone.length) toast('S-a anulat planul de la ' + gone.join(', ') + '.'); });
+    const n=++scope.current;const valid=()=>n===scope.current;
+    void listCrews(who.id).then(v=>{if(valid())setCrews(v);}).catch(()=>{});
+    void listVotes().then(v=>{if(valid())setVotes(v);}).catch(()=>{});
+    void listInvites(who.id).then(v=>{if(valid())setInvites(v);}).catch(()=>{});
+    void syncShared().then((gone) => { if (valid()&&gone.length) toast('S-a anulat planul de la ' + gone.join(', ') + '.'); });
   }, [who, known]);
   useFocusEffect(refresh);
   useEffect(() => (who && known ? watchPlans(who.id, refresh) : undefined), [who, known, refresh]);

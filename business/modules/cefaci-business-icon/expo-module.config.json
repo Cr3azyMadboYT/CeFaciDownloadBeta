@@ -1,0 +1,16 @@
+{
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "android": {
+    "modules": [
+      "expo.modules.cefacibusinessicon.CefaciBusinessIconModule"
+    ]
+  },
+  "ios": {
+    "modules": [
+      "CefaciBusinessIconModule"
+    ]
+  }
+}

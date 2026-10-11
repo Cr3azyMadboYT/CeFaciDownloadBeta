@@ -7,6 +7,8 @@ const URL = 'https://vqrmwuarjjntusfbqprx.supabase.co';
 const KEY = 'sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O';
 // The "Web client" ID from Google Cloud → Credentials (the same one set in Supabase → Auth → Google).
 const GOOGLE_WEB_CLIENT_ID = '9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com';
+// iOS OAuth/Sign in with Apple are not configured; offer the working email flow there.
+export const googleSignInAvailable = Platform.OS !== 'ios';
 
 // where supabase-js keeps the session on the phone (sb-<project>-auth-token)
 const SESSION_KEY = 'sb-' + URL.replace(/^https?:\/\//, '').split('.')[0] + '-auth-token';
@@ -21,6 +23,7 @@ export const sb = () => (client ??= createClient(URL, KEY, {
 
 /** Google's own sign-in sheet on the phone; Google gives an ID token and Supabase turns it into a session. */
 export async function signInWithGoogle(): Promise<string | null> {
+  if (!googleSignInAvailable) return 'Pe iOS, intră cu emailul.';
   if (Platform.OS === 'web') return 'Google merge în aplicația de pe telefon. Aici intră cu emailul.';
   try {
     const { GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } = await import('@react-native-google-signin/google-signin');
@@ -96,9 +99,11 @@ export async function deleteAccountEverywhere(): Promise<string | null> {
   const fail = 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
   try {
     const { data } = await sb().auth.getSession();
+    if (!data.session) return 'Intră în cont pentru a solicita ștergerea lui. Datele locale nu au fost șterse.';
     if (data.session) {
       const r = await within(sb().rpc('delete_my_account'), 15000);
-      if (r === 'timeout' || r.error) return fail;
+      if (r === 'timeout') return fail;
+      if (r.error) return r.error.message || fail;
       await within(sb().auth.signOut({ scope: 'local' }), 2000).catch(() => null);
     }
     await googleSignOut();

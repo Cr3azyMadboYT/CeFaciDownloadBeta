@@ -1,0 +1,23 @@
+{
+  "url": "https://cefaci.app/",
+  "captured": "2026-10-09",
+  "scope": "Explicit public HTML asset and font URLs only; no authenticated data",
+  "files": {
+    "index.html": "acc0218fd3b173afa62fcb13ee83e0c540731bfc200c0dbc0634114289c66b4f",
+    "assets/fonts.css": "88a1080c3104823485d87a1f8f60e21b1e86996d2aae4a4cdaef5d5710b4a8ac",
+    "assets/site.css": "fed6e3bd2d715e9d3a4e0a67e37e59f465cc3f37cc047c882938b12531bdf677",
+    "assets/site.js": "530abf126427949f0d1c0d46c5cbdf96971cd741cbc662cabc8f37c57b7ad8d9",
+    "assets/favicon.png": "7b7648cde2f96fe5956572017f90116ed3a16749d0f7c335a515c70ef5a6a4d9",
+    "assets/bilu.webp": "1a1dc1990ce9b78d0c499cb0751fbad1cec5082d2397bf46fbe58e7849c08849",
+    "assets/acasa.webp": "bffbadf1d9f672c9ca8b1f570dc4518b5a83436c34585357b205883e1a9798cf",
+    "assets/plan.webp": "2ce0a6ad22d4c6aca69d1b0d080bc0d3ef7dfe8e03bc806c1fea57bf7162359d",
+    "assets/surpriza.webp": "82c1d02306e9015a64b5c3486d9fd415da88572bec67fd2a281fb3818b51434c",
+    "assets/loc.webp": "efb55dc936590baf7ae359c14b83159b44c0562ab911b45a91b5a4f9dbcd2e71",
+    "assets/bricolage-grotesque-latin-ext-standard-normal.woff2": "5f75ca89accb29459145ebef61fee75b14095bb0d6ef210331025486d5995b00",
+    "assets/bricolage-grotesque-latin-standard-normal.woff2": "16c140ba45ab3024986296d4bef251ded18614191faf4503dd7536b4e4613344",
+    "assets/instrument-sans-latin-ext-standard-normal.woff2": "98db9a2d9acb596be853ffa4a08803e0bd14994fcbc0cee269eea685c341a4b9",
+    "assets/instrument-sans-latin-standard-normal.woff2": "663e3fe454136c06899fae0cc1f4b589ae59a261161592def3552105309cfed9",
+    "assets/caveat-latin-ext-wght-normal.woff2": "17dad10116b5078e638c515f1b3e606941d7fe0f64b93064701b51eda27398b1",
+    "assets/caveat-latin-wght-normal.woff2": "62930c7d5e33cd09a654ec8c5fc45bdab4c8860d5e48f7aebf6c06ca3933a23f"
+  }
+}

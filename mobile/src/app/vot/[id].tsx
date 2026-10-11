@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from '../../ui/insets';
-import { APP, useApp } from '../../lib/session';
+import { APP, captureAccount, useApp } from '../../lib/session';
 import { createPlanAt } from '../../lib/plans';
-import { comeTo } from '../../lib/together';
+import { stateOf } from '../../lib/partner';
 import { toast } from '../../lib/toast';
 import { cast, getVote, isOver, planFromVote, scores, votedAll, watchVote, winner, type Ballot, type VoteFull } from '../../lib/votes';
 import { Icon } from '../../ui/Icon';
@@ -32,7 +32,7 @@ export default function Vot() {
   const [now, setNow] = useState(Date.now());
   const [busy, setBusy] = useState('');
   const [err, setErr] = useState('');
-  const load = useCallback(() => { if (id) void getVote(id).then(setV); }, [id]);
+  const load = useCallback(() => { const valid = captureAccount(); if (id) void getVote(id).then((next) => { if (valid()) setV(next); }).catch(() => { if (valid()) setErr('Nu pot încărca votul. Verifică internetul.'); }); }, [id, who?.id]);
   useEffect(() => { if (!id || !who) return; load(); return watchVote(id, load); }, [id, who, load]);
   useEffect(() => { const k = setInterval(() => setNow(Date.now()), 20000); return () => clearInterval(k); }, []);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/planuri'));
@@ -75,24 +75,38 @@ export default function Vot() {
   };
   const makePlan = async () => {
     if (!win) return;
+    const valid = captureAccount();
     setBusy('plan'); setErr('');
     const r = await planFromVote(v.id);
+    if (!valid()) return;
     setBusy('');
     if (r.err) { setErr(r.err); return; }
     if (!APP.byId(r.venueId!)) { toast('Planul e făcut, dar locul nu mai e în lista noastră.'); back(); return; }
-    void comeTo(r.planId!, me);
+    // A vote selects an activity; invited people answer Vin / Nu pot separately.
+    if (r.ownerId !== me) {
+      toast('Planul este în Planuri. Confirmă separat cu Vin sau Nu pot.');
+      router.replace('/planuri');
+      return;
+    }
+    let people: number;
+    try {
+      const state = await stateOf(r.planId!);
+      if (!valid()) return;
+      if (!state.attendance) throw new Error('Numărul grupului nu este disponibil. Reîncearcă.');
+      people = state.attendance.people;
+    } catch (e) { if (valid()) setErr((e as Error).message); return; }
     // two evenings can start at the same restaurant: the winner is the option this vote picked
     const opt = win.venueId === r.venueId ? win : v.options.find((o) => o.venueId === r.venueId) ?? win;
     const route = opt.details.route;
     if (route && route.length > 1) {
       // a whole evening won: a ticket for every step, the first one is the shared plan
-      route.forEach((s, i) => { if (APP.byId(s.id)) createPlanAt(s.id, new Date(s.starts_at), v.voters.length, { route: r.planId, ...(i === 0 ? { sid: r.planId, owner: r.ownerId === me } : {}) }); });
+      route.forEach((s, i) => { if (APP.byId(s.id)) createPlanAt(s.id, new Date(s.starts_at), people, { route: r.planId, ...(i === 0 ? { sid: r.planId, owner: r.ownerId === me } : {}) }); });
       toast('Gata! Seara e în Planuri, pas cu pas.');
       router.replace('/planuri');
       return;
     }
-    const pid = createPlanAt(r.venueId!, new Date(r.startsAt!), v.voters.length, { sid: r.planId, owner: r.ownerId === me });
-    toast('Gata! Toți din vot au primit planul în Planuri.');
+    const pid = createPlanAt(r.venueId!, new Date(r.startsAt!), people, { sid: r.planId, owner: r.ownerId === me });
+    toast('Gata! Invitații confirmă separat participarea în Planuri.');
     router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pid) } });
   };
 

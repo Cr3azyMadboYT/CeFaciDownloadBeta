@@ -8,11 +8,11 @@ import { Big, T } from './kit';
 import { F } from './theme';
 
 const M: Record<string, [Mood, string, string, string | null]> = {
-  gift: ['yay', 'Poftim: 7 zile de CeFaci Plus, cadou de la mine! Reducerile pornesc când intră primii parteneri. Când se termină, pagina se încețoșează iar, dar o reactivezi oricând.', 'Arată-mi Plus', null],
+  gift: ['yay', 'Poftim: 7 zile de CeFaci Plus, cadou de la mine! Vezi în Plus localurile și reducerile disponibile. La final nu se încasează nimic automat.', 'Arată-mi Plus', null],
   day5: ['wink', 'Mai ai 3 zile din săptămâna de Plus. Nu-ți luăm nimic automat la final.', 'Mersi, Bilu!', null],
-  expired: ['hi', 'Hei, săptămâna de probă a expirat! Vrei să continui sau ne oprim aici? Poți reveni oricând!', 'Continui cu Plus · 20 lei pe lună', 'Ne oprim aici'],
-  used: ['hi', 'Săptămâna gratuită de Plus s-a folosit deja pe telefonul ăsta, cu alt cont. E una pe telefon, ca să fie corect pentru toți. Plus merge mai departe cu 20 lei pe lună.', 'Am înțeles', null],
-  pay: ['wink', 'Plata pentru Plus vine curând, prin Google Play. Până atunci nu-ți luăm niciun ban.', 'Am înțeles', null],
+  expired: ['hi', 'Săptămâna de probă a expirat. Abonamentele plătite nu sunt disponibile încă. Nu ai nimic de plătit.', 'Despre disponibilitatea Plus', 'Am înțeles'],
+  used: ['hi', 'Proba gratuită a fost deja folosită de acest cont sau pe acest telefon. Abonamentele plătite nu sunt disponibile încă.', 'Am înțeles', null],
+  pay: ['wink', 'Abonamentele plătite Plus nu sunt disponibile încă. Nu poți cumpăra sau reactiva Plus prin plată în această versiune.', 'Am înțeles', null],
 };
 
 export function PlusNotice() {
@@ -22,7 +22,7 @@ export function PlusNotice() {
     if (cur === 'expired') {
       if (go) { setBoard({ plusModal: 'pay' }); return; }
       setBoard({ plusModal: undefined, plus: 'off' });
-      toast('Ne oprim aici. Poți reveni oricând din tab-ul Plus.');
+      toast('Am înțeles. Poți reveni oricând din tab-ul Plus.');
       return;
     }
     setBoard({ plusModal: undefined });

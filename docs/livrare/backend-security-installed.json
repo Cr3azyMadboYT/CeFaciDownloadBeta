@@ -1,0 +1,132 @@
+{
+  "project_id": "vqrmwuarjjntusfbqprx",
+  "checked_at": "2026-10-09T22:00:00Z",
+  "source_commit": "12ce83b7e6ec6d5fc870de2c8cd8dd8b6b4b2b94",
+  "local_file": "20261009213831_cefaci_privileged_security_sessions.sql",
+  "migration_sha256": "cbca3d395a5a233eb3a4ffa84ce0988e7126fa774259564c178315f8ff1fb182",
+  "metadata": {
+    "table": {
+      "anon_read": false,
+      "relrowsecurity": true,
+      "authenticated_read": false
+    },
+    "functions": [
+      {
+        "nspname": "private",
+        "proname": "live_auth_session",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "nspname": "private",
+        "proname": "security_scope_eligible",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "nspname": "private",
+        "proname": "totp_proof",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "nspname": "private",
+        "proname": "require_secure_scope",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "nspname": "private",
+        "proname": "can_raw",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "nspname": "public",
+        "proname": "secure_access_status",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": true
+      },
+      {
+        "nspname": "public",
+        "proname": "secure_session_close",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": true
+      },
+      {
+        "nspname": "public",
+        "proname": "secure_session_open",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": true
+      },
+      {
+        "nspname": "public",
+        "proname": "secure_session_status",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": true
+      },
+      {
+        "nspname": "public",
+        "proname": "secure_session_touch",
+        "proconfig": [
+          "search_path=\"\""
+        ],
+        "prosecdef": true,
+        "anon_execute": false,
+        "authenticated_execute": true
+      }
+    ],
+    "migration": {
+      "name": "cefaci_privileged_security_sessions",
+      "version": "20261009215832"
+    }
+  },
+  "counts": {
+    "staff": 2,
+    "members": 0,
+    "partners": 0,
+    "venues": 1093,
+    "legacy_reports": 1,
+    "support_reports": 0,
+    "scoped_sessions": 0,
+    "founder_preserved": true
+  },
+  "public_http_checks": 22,
+  "note": "Read-only metadata and anonymous HTTP checks. No live Auth account, TOTP factor, request or privileged scoped session created."
+}

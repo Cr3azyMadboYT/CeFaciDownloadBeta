@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "admin:typecheck": "tsc -p admin/tsconfig.json",
+    "admin:build": "vite build --config admin/vite.config.ts",
+    "admin:package": "node scripts/package-admin-web.mjs",
+    "site:generate": "node scripts/generate-legal-pages.mjs",
+    "site:package": "node scripts/package-site-web.mjs",
+    "site:test": "node scripts/test-site-ui.mjs"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +22,7 @@
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/caveat": "^5.3.0",
     "@fontsource-variable/instrument-sans": "^5.3.0",
-    "@supabase/supabase-js": "^2.117.2",
+    "@supabase/supabase-js": "2.117.2",
     "fuse.js": "^7.5.0",
     "opening_hours": "^3.15.0",
     "preact": "^10.29.8",
@@ -29,10 +35,16 @@
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
+    "pg": "^8.23.1",
     "playwright": "^1.63.0",
     "typescript": "^7.0.2",
-    "vite": "^5.4.21",
+    "vite": "^7.3.7",
     "vite-plugin-singlefile": "^2.3.3",
-    "vitest": "^2.1.9"
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "11.1.1"
+    }
   }
 }

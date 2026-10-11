@@ -1,28 +1,34 @@
 // CeFaci Plus: a closed gift from Bilu at first (7 free days, no card), then the trial, then "oprit".
-// Paying is not live yet (it goes through Google Play); nothing is charged.
+// Paid subscriptions are not configured; only the server-confirmed free trial can start.
+import { useState } from 'react';
+import { router } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from '../../ui/insets';
-import { setBoard, useApp } from '../../lib/session';
+import { APP, captureAccount, claimTrial, setBoard, useApp } from '../../lib/session';
 import { Bilu } from '../../ui/Bilu';
 import { Icon } from '../../ui/Icon';
-import { Big, H1, Muted, T, Tag } from '../../ui/kit';
+import { Big, H1, Muted, Press, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { blurStyle, useEased } from '../../ui/Magic';
 import { useTour } from '../../lib/tour';
+import { toast } from '../../lib/toast';
+import { plusOffers } from '../../lib/plus';
 
 const PERKS: [string, string, string][] = [
-  ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reducere de 10–20% la partenerii CeFaci', 'La partenerii care o oferă, în zilele alese de ei. La Live Drops, mereu cu cel puțin 5% mai mult decât ceilalți.'],
-  ['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75', 'Și pentru gașca ta', 'Până la 4 oameni la aceeași masă, cu codul tău.'],
-  ['M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z', 'Live Drops cu 10 minute mai devreme', 'Prinzi reducerile fulger înaintea tuturor.'],
-  ['M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2ZM13 5v2M13 17v2M13 11v2', 'Fără taxă de serviciu la bilete', 'Când pornesc biletele în CeFaci, plus evenimente doar pentru Plus.'],
+  ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reducere de 10–20% la partenerii CeFaci', 'La localurile și în intervalele care oferă Plus. Reducerea valabilă pentru ieșirea ta apare în bilet.'],
+  ['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75', 'Și pentru gașca ta', 'Un participant confirmat cu Plus activează reducerea pentru întreaga notă eligibilă a grupului, fără limită de patru.'],
+  ['M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z', 'Live Drops cu 10 minute mai devreme', 'Acces cu 10 minute înainte de Free, în limita locurilor și a condițiilor ofertei.'],
   ['M12 2l2.9 6.9L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.4z', 'Bilu auriu și carnet auriu', 'Bilu se face auriu, iar carnetul din Profil primește rama aurie și insigna Plus.'],
 ];
 
 export default function Plus() {
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
-  const b = useApp((s) => s.board);
+  const app = useApp((s) => s);
+  const b = app.board;
+  const offers = plusOffers(APP.places, (id) => APP.partnerInfo(id));
+  const [opening, setOpening] = useState(false);
   const st = b.plus ?? 'locked';
   const day = b.plusDay ?? 1;
   const left = Math.max(1, 8 - day);
@@ -43,21 +49,21 @@ export default function Plus() {
           <Tag text={tag[0]} bg={tag[1]} fg={tag[2]} />
         </View>
         <View style={{ marginTop: 10, padding: 18, borderRadius: 22, backgroundColor: '#FFD43B' }}>
-          <T style={{ fontFamily: F.b, fontSize: 13, color: '#3A4270' }}>{st === 'trial' || st === 'locked' ? 'Probă gratuită · ziua ' + (st === 'locked' ? 1 : day) + ' din 7' : st === 'active' ? 'Plus activ · 20 lei pe lună' : 'Plus e oprit'}</T>
-          <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 54, lineHeight: 52, letterSpacing: -1.6, color: '#0E1440' }}>0 lei</T>
-          <T style={{ fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{st === 'off' ? 'economisiți cât ai avut Plus' : 'economisiți cu Plus până acum'}</T>
+          <T style={{ fontFamily: F.b, fontSize: 13, color: '#3A4270' }}>{st === 'trial' || st === 'locked' ? 'Probă gratuită · ziua ' + (st === 'locked' ? 1 : day) + ' din 7' : st === 'active' ? 'Plus activ' : 'Plus e oprit'}</T>
+          <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 54, lineHeight: 52, letterSpacing: -1.6, color: '#0E1440' }}>—</T>
+          <T style={{ fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>Economii: total indisponibil</T>
           {st === 'trial' || st === 'locked' ? (
             <View style={{ marginTop: 14, flexDirection: 'row', gap: 5 }} accessibilityLabel={'Ziua ' + day + ' din 7 de probă'}>
               {[1, 2, 3, 4, 5, 6, 7].map((d) => <View key={d} style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: d <= day ? '#0E1440' : 'rgba(14,20,64,0.18)' }} />)}
             </View>
           ) : null}
           <T style={{ marginTop: 12, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>
-            {st === 'off' ? 'Poți reveni oricând.' : 'Reducerile pornesc când intră primii parteneri. După probă, 20 lei pe lună; nu-ți cerem cardul și nu-ți luăm nimic automat.'}
+            Reducerile se confirmă pe nota localului. Nu afișăm un total până când istoricul verificat este disponibil. Abonamentele plătite nu sunt disponibile încă.
           </T>
         </View>
         <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>Ce primești</T>
-          <Tag text="cu primii parteneri" bg={t.yellowSoft} fg={t.yellowInk} />
+          <Tag text="la localurile eligibile" bg={t.yellowSoft} fg={t.yellowInk} />
         </View>
         <View style={{ marginTop: 10, gap: 8 }}>
           {PERKS.map(([icon, title, sub]) => (
@@ -71,8 +77,16 @@ export default function Plus() {
           ))}
         </View>
         <T accessibilityRole="header" style={{ marginTop: 22, fontFamily: F.display, fontSize: 22 }}>Reduceri Plus</T>
-        <View style={{ marginTop: 10, padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
-          <Muted style={{ fontSize: 14, lineHeight: 20 }}>Primele localuri partenere intră curând. Reducerile lor apar aici.</Muted>
+        <View style={{ marginTop: 10, gap: 8 }}>
+          {offers.length ? offers.map((offer) => (
+            <Press key={offer.id} onPress={() => router.push({ pathname: '/loc/[id]', params: { id: offer.id } })}
+              style={{ padding: 14, gap: 5, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
+              <T style={{ fontFamily: F.sb, fontSize: 16 }}>{offer.name}</T>
+              <Muted>{offer.percent > 0 ? offer.percent + '% Plus acum · verifică în bilet reducerea la ora ieșirii' : 'Plus nu este disponibil acum la acest local.'}</Muted>
+            </Press>
+          )) : <View style={{ padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
+            <Muted style={{ fontSize: 14, lineHeight: 20 }}>Nu sunt localuri partenere disponibile în catalogul încărcat. Lista se actualizează când revii online.</Muted>
+          </View>}
         </View>
       </ScrollView>
 
@@ -80,10 +94,10 @@ export default function Plus() {
         <View style={{ position: 'absolute', left: 24, right: 24, top: ins.top + 120, padding: 20, paddingBottom: 22, borderRadius: 26, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', gap: 10, shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 25, shadowOffset: { width: 0, height: 20 }, elevation: 12 }}>
           <Bilu size={st === 'off' ? 104 : 112} mood={st === 'off' ? 'hi' : 'wink'} />
           <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 27, textAlign: 'center' }}>{st === 'off' ? 'Plus s-a oprit' : 'Aici e ascuns un cadou'}</T>
-          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? (b.trialUsed ? 'Săptămâna gratuită s-a folosit deja pe telefonul ăsta. Plus merge cu 20 lei pe lună.' : 'Poți reveni oricând, gratis până intră primii parteneri.') : 'Bilu îl păzește pentru tine. Apasă și vezi ce e.'}</Muted>
-          <Big style={{ alignSelf: 'stretch', marginTop: 6 }} label={st === 'off' ? 'Reia Plus · 20 lei pe lună' : 'Deschide cadoul'}
-            onPress={() => { if (st === 'off' || b.trialUsed) { setModal(b.trialUsed && st !== 'off' ? 'used' : 'pay'); if (b.trialUsed) setBoard({ plus: 'off' }); return; } setBoard({ plus: 'trial', plusDay: 1 }); setModal('gift'); }} />
-          {st === 'off' ? <Muted>Poți reveni oricând, fără nicio penalizare.</Muted> : null}
+          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? 'Proba gratuită s-a încheiat sau a fost deja folosită. Abonamentele plătite nu sunt disponibile încă.' : 'Bilu îl păzește pentru tine. Apasă și vezi ce e.'}</Muted>
+          <Big style={{ alignSelf: 'stretch', marginTop: 6 }} disabled={opening} label={opening ? 'Verific disponibilitatea…' : st === 'off' ? 'Disponibilitatea Plus' : 'Deschide cadoul'}
+            onPress={async () => { if (st === 'off' || b.trialUsed) { setModal(b.trialUsed && st !== 'off' ? 'used' : 'pay'); return; } const valid = captureAccount(); setOpening(true); const result = await claimTrial(); if (!valid()) return; setOpening(false); if (result === 'ok') setModal('gift'); else if (result === 'used') setModal('used'); else toast('Nu pot confirma proba acum. Verifică internetul și reîncearcă.'); }} />
+          {st === 'off' ? <Muted>Nu se încasează nimic automat.</Muted> : null}
         </View>
       ) : null}
 

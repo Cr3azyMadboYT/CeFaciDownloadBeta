@@ -28,6 +28,7 @@ import { Doodles } from '../ui/Doodles';
 let making = 0; // a second tap on "Facem așa" while the first is still on its way does nothing (07.10: plan sent twice)
 export function makeTickets(p: Shown, people: number, crew?: { id: string; name: string }) {
   if (Date.now() - making < 2500) return;
+  if(p.steps.some(s=>!APP.canPlan(s.place.id))){toast('Un local nu mai este disponibil pentru planuri noi. Actualizează recomandările.');return;}
   making = Date.now();
   const route = p.steps.length > 1 ? 'r' + Date.now() : undefined;
   const pids = p.steps.map((s) => createPlanAt(s.place.id, s.at, people, route ? { route } : {}));

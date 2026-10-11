@@ -1,0 +1,42 @@
+{
+  "artifacts": [
+    {
+      "id": 11706504518,
+      "name": "CeFaci-Business-ios",
+      "size_in_bytes": 66190914,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11706504518",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11706504518/zip",
+      "expired": false,
+      "created_at": "2026-10-11T15:24:40Z",
+      "expires_at": "2027-01-09T14:59:39Z",
+      "updated_at": "2026-10-11T15:24:40Z",
+      "digest": "sha256:a16fa8331e807d9bfcfb82f64b9a8de0dccd988c2af538b6c1d467ff22d624f3",
+      "workflow_run": {
+        "id": 38149422547,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "6eab8f948803f12a8fd610765f446fab3406f36b"
+      }
+    },
+    {
+      "id": 11706329955,
+      "name": "CeFaci-Business-ios-diagnostics",
+      "size_in_bytes": 10581240,
+      "url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11706329955",
+      "archive_download_url": "https://api.github.com/repos/Cr3azyMadboYT/CeFaciDownloadBeta/actions/artifacts/11706329955/zip",
+      "expired": false,
+      "created_at": "2026-10-11T15:24:41Z",
+      "expires_at": "2027-01-09T14:59:39Z",
+      "updated_at": "2026-10-11T15:24:41Z",
+      "digest": "sha256:da5b5407a049bbc8feb1fea66910e10db29bc8f4e1be476601a5e5ed8092cab7",
+      "workflow_run": {
+        "id": 38149422547,
+        "repository_id": 1194492368,
+        "head_repository_id": 1194492368,
+        "head_branch": "codex/cefaci-client-business-20261008",
+        "head_sha": "6eab8f948803f12a8fd610765f446fab3406f36b"
+      }
+    }
+  ]
+}

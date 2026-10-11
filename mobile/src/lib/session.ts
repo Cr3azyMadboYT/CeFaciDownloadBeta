@@ -54,6 +54,12 @@ export function notify() { snap = { ...snap }; emit(); }
 const subscribe = (f: () => void) => { subs.add(f); return () => { subs.delete(f); }; };
 export const useApp = <S,>(pick: (s: Snap) => S): S => useSyncExternalStore(subscribe, () => pick(snap), () => pick(snap));
 export const getApp = () => snap;
+// Invalidate work even for A → sign-out → A: matching only the user ID is insufficient.
+let accountRevision = 0;
+export function captureAccount() {
+  const revision = accountRevision, user = snap.who?.id;
+  return () => revision === accountRevision && user === snap.who?.id;
+}
 
 function readOnboarded() { try { return localStorage.getItem('cefaci.onboarded') === '1'; } catch { return false; } }
 
@@ -67,9 +73,10 @@ export function setBoard(patch: Partial<Board> | ((b: Board) => Partial<Board>))
 }
 // XP lives on the server (xp_log → profiles.xp): with an account, the phone shows the server's number
 async function pullXp(id: string) {
+  const valid = captureAccount();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data } = await (sb() as any).from('profiles').select('xp').eq('id', id).maybeSingle();
-  if (data && typeof data.xp === 'number' && data.xp !== snap.board.xp) setBoard({ xp: data.xp });
+  if (valid() && snap.who?.id === id && data && typeof data.xp === 'number' && data.xp !== snap.board.xp) setBoard({ xp: data.xp });
 }
 export function savePrefs(p: Partial<Prefs>) {
   APP.savePrefs({ ...p, prefsAt: Date.now() } as Partial<Prefs>); // the newer copy (phone or account) wins on restore
@@ -126,6 +133,7 @@ export async function finishSignup(a: SignupAnswers): Promise<string | null> {
 /** Signs out (and deletes the account, when asked), wipes the phone and starts again from the first screen.
  *  Deleting stops with a message if the server did not confirm, so nothing is left behind by mistake. */
 export async function startOver(deleteAccount: boolean): Promise<string | null> {
+  accountRevision++; trialAsk = null; clearTimeout(saveT);
   if (deleteAccount) { const err = await deleteAccountEverywhere(); if (err) return err; await resetPush(); }
   else { await Promise.race([forgetPush(), new Promise((ok) => setTimeout(ok, 3000))]); await signOutEverywhere(); }
   try { localStorage.clear(); } catch { /* storage blocked */ }
@@ -219,17 +227,28 @@ const trouble = (e: string) => { netErr = e; netListeners.forEach((f) => f(e)); 
 let trialAsk: Promise<'ok' | 'used' | 'later'> | null = null;
 export function claimTrial(): Promise<'ok' | 'used' | 'later'> {
   if (!snap.known) return Promise.resolve('later');
-  trialAsk ??= (async () => {
+  if (trialAsk) return trialAsk;
+  const valid = captureAccount();
+  const ask = (async () => {
     const device = await phoneCode().catch(() => null);
-    if (!device) return 'later' as const;
+    if (!device || !valid()) return 'later' as const;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (sb() as any).rpc('start_plus_trial', { p_device: device });
-    if (!error) return 'ok' as const;
-    if (/folosit deja/.test(error.message ?? '')) { setBoard({ trialUsed: true }); return 'used' as const; }
-    trialAsk = null;
+    const { data, error } = await (sb() as any).rpc('start_plus_trial', { p_device: device });
+    if (!valid()) return 'later' as const;
+    if (!error) {
+      const started = Date.parse(data);
+      if (!Number.isFinite(started)) return 'later' as const;
+      const day = Math.max(1, Math.floor((Date.now() - started) / 864e5) + 1);
+      if (day > 7) { setBoard({ plus: 'off', trialUsed: true }); return 'used' as const; }
+      setBoard({ plus: 'trial', plusDay: day });
+      return 'ok' as const;
+    }
+    if (/folosit deja/.test(error.message ?? '')) { setBoard({ plus: 'off', trialUsed: true }); return 'used' as const; }
     return 'later' as const;
-  })();
-  return trialAsk;
+  })().catch(() => 'later' as const);
+  trialAsk = ask;
+  void ask.finally(() => { if (trialAsk === ask) trialAsk = null; });
+  return ask;
 }
 
 /** Another account was on this phone before (its session ended without "Ieși din cont"): nothing of it may reach the
@@ -298,6 +317,7 @@ async function connect(who: Who) {
 AppState.addEventListener('change', (st) => { if (st === 'active' && signedIn && !last && snap.who) void connect(snap.who); });
 
 watchAuth((who) => {
+  if (snap.who?.id !== who?.id) { accountRevision++; trialAsk = null; clearTimeout(saveT); }
   if (!who || signedIn !== who.id) { activeUpload?.dispose(); activeUpload = undefined; clearTimeout(retry); APP.onSaved = () => {}; }
   if (!who) { signedIn = ''; last = null; APP.onSaved = () => {}; snap = { ...snap, who: null, known: false, account: hasStoredSession() }; emit(); return; }
   if (signedIn === who.id) return;

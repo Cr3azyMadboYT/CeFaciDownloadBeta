@@ -1,3 +1,4 @@
+import type { Partner } from '../../shared/contracts';
 // The bridge between the design boards' logic and the real app: real venues, the engine, saved preferences.
 import venuesJson from '../data/venues.json';
 import goneJson from '../data/gone.json';
@@ -23,6 +24,8 @@ function readPlaceCache(): PlaceCache {
 let placeCache = readPlaceCache();
 let VENUES = (() => { try { return mergePlaces(BUNDLED, Object.values(placeCache.rows)); } catch { placeCache = { at: '', rows: {} }; return BUNDLED; } })();
 // places that left the map (closed): never recommended, but old plans and stamps still find them
+let partnerCatalog = new Map<string, Partner>();
+let archivedVenues = VENUES;
 const GONE = goneJson as Venue[];
 const BY_ID = new Map([...GONE, ...BUNDLED, ...VENUES].map((v) => [v.id, v]));
 
@@ -126,7 +129,7 @@ function toPlace(v: Venue, origin: { lat: number; lon: number }) {
   return {
     id: v.id, name: v.name, title, icon: CUISINE_ICON[v.cuisines[0]] ?? ICON_OF[v.k] ?? 'star', bg, fg, dot,
     price: priceOf(v), dur: k.hours, dist: Math.max(3, Math.round(3 + d * 2.4)), km: d, vibes: vibesOf(v), min: k.min, max: k.max,
-    when: ['now', 'eve', 'tom', 'we'], res: phone || v.website ? needsRes : 'none', verified: false, partner: false,
+    when: ['now', 'eve', 'tom', 'we'], res: partnerCatalog.get(v.id)?.mode ?? (phone || v.website ? needsRes : 'none'), verified: false, partner: partnerCatalog.get(v.id)?.partner ?? false,
     age: v.k === 'nightclub', t: SLOT[k.night], zone: zoneById(v.zone).name, real: v, story: v.story, crowd: v.crowd,
     contact: phone || v.website ? { phone, wa: false, web: !!v.website, site: v.website ?? '', unit: v.cat === 'activitate' || v.cat === 'sport' ? (v.cat === 'sport' && v.k !== 'swimming' ? 'un teren' : 'o rezervare') : 'o masă' } : undefined,
   };
@@ -285,12 +288,21 @@ export const APP = {
     });
   },
   zones() { return ZONES; },
+  setPartnerCatalog(rows: Partner[]) {
+    partnerCatalog=new Map(rows.map(p=>[p.venue_id,p]));
+    archivedVenues=mergePlaces(BUNDLED,Object.values(placeCache.rows));
+    VENUES=archivedVenues.filter(v=>partnerCatalog.get(v.id)?.discoverable!==false);
+    this.rebuild();
+  },
+  partnerInfo(id:string) { return partnerCatalog.get(id); },
+  canPlan(id:string) { return partnerCatalog.get(id)?.discoverable!==false; },
   rebuild() {
     const o = this.origin();
     this.places.length = 0; // the boards hold this array, so it is refilled in place
     const minor = this.isMinor();
     for (const v of VENUES) if (!(minor && adultOnly(v))) this.places.push(toPlace(v, o)); // under 18: no clubs, hookah, 18+
     this.byIdMap = new Map(this.places.map((p) => [p.id, p]));
+    for (const v of archivedVenues) if (!this.byIdMap.has(v.id)) this.byIdMap.set(v.id,toPlace(v,o));
     for (const v of GONE) if (!this.byIdMap.has(v.id)) this.byIdMap.set(v.id, toPlace(v, o));
     this.cache.clear(); this.cacheWhy.clear();
   },
@@ -647,7 +659,7 @@ export const APP = {
     if (!rows.length) { if (!placeCache.at) { placeCache = { at: BUILT_AT, rows: {} }; try { localStorage.setItem(PLACES_KEY, JSON.stringify(placeCache)); } catch { /* storage blocked */ } } return 0; }
     placeCache = addRows(placeCache.at ? placeCache : { at: BUILT_AT, rows: {} }, rows);
     try { localStorage.setItem(PLACES_KEY, JSON.stringify(placeCache)); } catch { /* storage blocked */ }
-    VENUES = mergePlaces(BUNDLED, Object.values(placeCache.rows));
+    archivedVenues = mergePlaces(BUNDLED, Object.values(placeCache.rows)); VENUES=archivedVenues.filter(v=>partnerCatalog.get(v.id)?.discoverable!==false);
     for (const v of VENUES) BY_ID.set(v.id, v);
     this.rebuild();
     return rows.length;

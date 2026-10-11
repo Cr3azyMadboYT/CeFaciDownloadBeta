@@ -1,4 +1,5 @@
 // Sign in from inside the app (for people who started "fără cont"): Google or an email code.
+import {googleSignInAvailable} from '../lib/auth';
 // After it works, the phone profile becomes the account (session.ts → adoptPhoneProfile).
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
@@ -6,6 +7,7 @@ import { APP } from '../lib/session';
 import { onSyncTrouble } from '../lib/session';
 import { Big, Field, Lbl, Muted, Note } from './kit';
 import { useTheme } from './theme';
+import { LegalLinks } from './LegalLinks';
 
 export function SignIn() {
   const { t } = useTheme();
@@ -28,8 +30,9 @@ export function SignIn() {
   };
   return (
     <View style={{ gap: 10 }}>
-      <Big label="Continuă cu Google" color="#FFD43B" ink="#0E1440" disabled={busy} onPress={async () => { setErr(''); setBusy(true); const e = await APP.google(); setBusy(false); if (e) setErr(e); }} />
-      <Lbl style={{ marginTop: 6 }}>Sau cu emailul</Lbl>
+      <LegalLinks />
+      {googleSignInAvailable&&<Big label="Continuă cu Google" color="#FFD43B" ink="#0E1440" disabled={busy} onPress={async () => { setErr(''); setBusy(true); const e = await APP.google(); setBusy(false); if (e) setErr(e); }} />}
+      <Lbl style={{ marginTop: 6 }}>{googleSignInAvailable?'Sau cu emailul':'Intră cu emailul'}</Lbl>
       <Field value={mail} onChangeText={(x) => { setMail(x.slice(0, 80)); setSent(false); setCode(''); }} placeholder="nume@exemplu.ro" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} autoComplete="email"
         accessibilityLabel="Adresa de email" focused={focus === 'm'} onFocus={() => setFocus('m')} onBlur={() => setFocus('')} />
       {sent ? (

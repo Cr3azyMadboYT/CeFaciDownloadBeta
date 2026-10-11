@@ -1,0 +1,22 @@
+{
+  "commit": "6fa10304614fcab5ce4752da54cdbe1425fa3a3e",
+  "e2e_enabled": false,
+  "products": [
+    {
+      "kind": "simulator",
+      "bundle": "ro.cefaci.app",
+      "version": "0.3.4",
+      "build": "8",
+      "architecture": "arm64",
+      "offline_bundle_bytes": 6438248
+    },
+    {
+      "kind": "device-unsigned",
+      "bundle": "ro.cefaci.app",
+      "version": "0.3.4",
+      "build": "8",
+      "architecture": "arm64",
+      "offline_bundle_bytes": 6438297
+    }
+  ]
+}

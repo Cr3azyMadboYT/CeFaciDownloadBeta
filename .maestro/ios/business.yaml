@@ -1,0 +1,20 @@
+appId: app.cefaci.business
+---
+- launchApp:
+    clearState: true
+- tapOn:
+    text: "OK"
+    optional: true
+- extendedWaitUntil:
+    visible: 'Ai deja cont\? Intră'
+    timeout: 60000
+- takeScreenshot: ${SCREENSHOT_PREFIX}-start
+- tapOn: 'Ai deja cont\? Intră'
+- assertVisible: "Intră cu același cont CeFaci"
+- assertVisible: "Trimite codul"
+- assertNotVisible: ".*Ține-mă minte.*"
+- takeScreenshot: ${SCREENSHOT_PREFIX}-login
+- tapOn: "Opțiuni Business"
+- tapOn: "Termeni · Confidențialitate · Datele mele"
+- assertVisible: "Confidențialitate și termeni"
+- takeScreenshot: ${SCREENSHOT_PREFIX}-legal

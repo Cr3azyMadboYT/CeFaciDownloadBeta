@@ -1,0 +1,11 @@
+2026-10-11T15:01:21.6939210Z Xcode 26.6
+2026-10-11T15:17:36.8531380Z PASS: actual Mach-O products, native icon module, offline bundle, privacy manifests, simulator ad-hoc signature and unsigned device archive.
+2026-10-11T15:17:59.9149030Z Waiting for iPhone 17 Pro to finish runtime migration.
+2026-10-11T15:19:17.6376390Z Waiting for flows to complete...
+2026-10-11T15:19:57.6270240Z 1/1 Flow Passed in 40s
+2026-10-11T15:20:10.3367550Z PASS: CeFaci-Business pre-login/legal navigation on iPhone 17 Pro (4E3A6BB3-F417-4829-8DF5-0EA652541F40); no OTP requested.
+2026-10-11T15:20:10.3369130Z Waiting for iPad Pro 13-inch (M5) to finish runtime migration.
+2026-10-11T15:23:06.0087850Z Waiting for flows to complete...
+2026-10-11T15:24:02.1749750Z 1/1 Flow Passed in 56s
+2026-10-11T15:24:27.6996170Z PASS: CeFaci-Business pre-login/legal navigation on iPad Pro 13-inch (M5) (B385244C-CB83-424B-92FD-32C1867E3F14); no OTP requested.
+2026-10-11T15:24:36.9484020Z Packaged CeFaci-Business: simulator app, unsigned device archive, generated project and build evidence.

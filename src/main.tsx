@@ -82,7 +82,11 @@ function show(name: string) {
 }
 initBridge({
   restart: () => { try { localStorage.clear(); } catch { /* */ } signedIn = ''; accountKnown = false; APP.prefs = { zone: 'centru', likes: [], dist: '20' }; APP.rebuild(); show('Cont'); },
-  deleteAccount: async () => { await deleteAccountEverywhere(); APP.restart(); },
+  deleteAccount: async () => {
+    const err = await deleteAccountEverywhere();
+    if (err) { (current?.comp as unknown as { toast?: (t: string) => void })?.toast?.(err); return; }
+    APP.restart();
+  },
   google: signInWithGoogle, emailStart, emailVerify,
 });
 show(onboarded() ? 'Demo' : 'Cont');

@@ -1,0 +1,37 @@
+{
+  "counts": {
+    "staff": 2,
+    "venues": 1093,
+    "members": 0,
+    "new_support_reports": 0
+  },
+  "project": "vqrmwuarjjntusfbqprx",
+  "captured_at": "2026-10-10T07:05:04.539146+00:00",
+  "definitions": [
+    {
+      "name": "business_authenticated",
+      "schema": "private",
+      "identity": "",
+      "definition": "CREATE OR REPLACE FUNCTION private.business_authenticated()\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$select private.live_auth_session() is not null$function$\n"
+    },
+    {
+      "name": "delete_my_account",
+      "schema": "public",
+      "identity": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.delete_my_account()\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO ''\nAS $function$\nbegin\n  if auth.uid() is null then return; end if;\n    delete from auth.users where id = auth.uid();\n    end $function$\n"
+    },
+    {
+      "name": "can",
+      "schema": "private",
+      "identity": "perm text",
+      "definition": "CREATE OR REPLACE FUNCTION private.can(perm text)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$\n select private.secure_scope_active('admin') and private.can_raw(perm)\n$function$\n"
+    },
+    {
+      "name": "admin_me",
+      "schema": "public",
+      "identity": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.admin_me()\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO ''\nAS $function$\ndeclare role text:=private.staff_role(auth.uid()); perms jsonb;\nbegin\n if not private.business_authenticated() or role is null then raise exception 'Accesul în Admin este rezervat echipei CeFaci.' using errcode='42501'; end if;\n select jsonb_agg(p) into perms from unnest(array['staff.read','places.edit','places.hide','reports.read','reports.close','support.manage','staff.manage','partners','partners.read','founder','money','operations.read','operations.decide','money.read','users.read','plus.manage','suggestions.read','audit.read'])p where private.can(p);\n return jsonb_build_object('user_id',auth.uid(),'username',case when private.secure_scope_active('admin') then(select username from public.profiles where id=auth.uid())end,'role',role,'permissions',coalesce(perms,'[]'));\nend $function$\n"
+    }
+  ],
+  "privacy_schema_exists": false
+}

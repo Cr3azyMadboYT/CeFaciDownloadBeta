@@ -1,0 +1,42 @@
+2026-10-11T13:36:55.2461772Z PASS: profil Client creat simultan cu Business — identitatea existentă nu este suprascrisă
+2026-10-11T13:36:55.2777406Z PASS: ultima capacitate — o singură rezervare, fără supraocupare
+2026-10-11T13:36:55.4203253Z PASS: opt cereri simultane cu aceeași identitate — un singur rând
+2026-10-11T13:36:55.4527487Z PASS: ultimul răspuns concurent cu rezervarea — număr comun, retry sigur
+2026-10-11T13:36:55.4752538Z PASS: invitație simultană cu rezervarea — grupul rezervat nu se schimbă
+2026-10-11T13:36:55.5122458Z PASS: ultimele locuri Drop — revendicare atomică
+2026-10-11T13:36:55.5272905Z PASS: Client + două scannere Business simultane — o singură sosire
+2026-10-11T13:36:55.5356174Z PASS: expirarea Business este verificată de server; touch nu reactivează sesiunea.
+2026-10-11T13:36:55.5413454Z PASS: factorul TOTP șters nu este recreat; Clientul păstrează accesul aal1.
+2026-10-11T13:36:56.0534664Z PASS: claim pdf → Admin once; drafts/missing proof/foreign upload denied.
+2026-10-11T13:36:56.0769808Z PASS: new jpg → Admin once; drafts/missing proof/foreign upload denied.
+2026-10-11T13:36:56.0996012Z PASS: dispute png → Admin once; drafts/missing proof/foreign upload denied.
+2026-10-11T13:36:56.1279084Z PASS: two-file dossier → Admin; incomplete uploads and foreign reads denied.
+2026-10-11T13:36:56.1433638Z PASS: Business issue photo=false → Admin once; draft hidden.
+2026-10-11T13:36:56.1615912Z PASS: Business issue photo=true → Admin once; draft hidden.
+2026-10-11T13:36:56.1616603Z PASS: actual PostgreSQL Business → Admin delivery; no production data or email writes.
+2026-10-11T13:36:56.4806184Z PASS: 8 trimiteri simultane creează o singură raportare.
+2026-10-11T13:36:56.4923342Z PASS: submit simultan este idempotent, cu un singur eveniment.
+2026-10-11T13:36:56.5062207Z PASS: răspunsuri Admin concurente protejate de versiune, răspuns vizibil solicitantului.
+2026-10-11T13:36:56.5095213Z PASS: revocarea rolului elimină accesul cu aceeași identitate Auth.
+2026-10-11T13:36:56.5394184Z PASS: închiderea Admin nu este anulată de touch/open concurente cu aceeași dovadă MFA.
+2026-10-11T13:36:56.5463707Z PASS: sesiunea Auth revocată rămâne revocată, chiar dacă rolul Admin există.
+2026-10-11T13:36:56.8518847Z PASS: 8 cereri simultane folosesc o singură înregistrare și un singur eveniment; payloadul este imuabil.
+2026-10-11T13:36:56.8865254Z PASS: răspunsuri concurente au un singur câștigător, conflictul de versiune nu pierde răspunsuri.
+2026-10-11T13:36:56.8942562Z PASS: 8 citiri/exporturi cu sesiunea revocată sunt respinse și nu recreează sesiunea.
+2026-10-11T13:36:56.9106052Z PASS: retrogradarea Admin la suport blochează imediat toate citirile GDPR cu aceeași sesiune MFA.
+2026-10-11T13:36:57.2961016Z PASS: 8 concurrent submissions produce one vote, one consent and one quota increment.
+2026-10-11T13:36:57.3049044Z PASS: concurrent withdrawal wins against retries; deleted consent never reappears.
+2026-10-11T13:36:57.3250398Z PASS: shared submission cap is atomic across connections.
+2026-10-11T13:36:57.3504594Z PASS: private list authorized with MFA; role downgrade takes effect immediately.
+2026-10-11T13:37:42.6963635Z  Test Files  56 passed | 1 skipped (57)
+2026-10-11T13:37:42.6965419Z       Tests  527 passed | 1 skipped (528)
+2026-10-11T13:38:46.4042267Z PASS: desktop/telefon, zi/noapte, scanner, ordine/refresh financiar, program Plus păstrat, scan invalid, retry echipă/acces, validări, logout și răspuns întârziat după schimbarea localului; zero erori JS
+2026-10-11T13:38:58.1859939Z PASS: existing/new OTP options, missing-venue request, claim/dispute proof, invalid document, upload retry/idempotence, statuses/cancel, no premature access, responsive layout and logout; zero live writes.
+2026-10-11T13:39:03.8210890Z PASS: Business Ajutor before partnership and in workspace, required fields, optional photo recompression/private immutable upload, lost create/upload retries with stable keys, legacy missing-place answer, own report/status/answer history, responsive layout and stale result after logout; zero live writes.
+2026-10-11T13:39:10.6902995Z PASS: Admin staff access, noncreating OTP, server permissions, real dashboard counts, private attachment/download revocation, optimistic report conflict and reply, accountant/support separation and responsive layout; zero live writes.
+2026-10-11T13:39:22.0628692Z PASS: MFA enrollment/wrong code/fresh challenge/expiry/role revocation; no private fetch before gate; 6 Admin + 4 Business role tutorials, replay and no data mutation.
+2026-10-11T13:39:27.2598085Z PASS: Admin/Business opt-in unchecked, tab-only default, server-confirmed persistent login, reopening browser tab without OTP, fixed deadline, open-tab expiry after 15 days, failed-registration fallback, scoped logout and phone layout.
+2026-10-11T13:39:29.8519940Z PASS: Client Profile entry, required fields, lost-response stable-key retry, own history and Admin answer, responsive layout, missing-place submission and shared history; zero live writes.
+2026-10-11T13:39:41.7155631Z PASS: signup notices open correct offline documents without auth side effects and preserve Client/Business forms; offline legal docs before auth across all 3 apps; own rights/export through MFA gates; stable-key retry after lost response; paginated own history; bounded curated JSON download; Admin queue role restriction/versioned response; all Business role entries; role downgrade clears private queue; stale export cannot save after screen unmount; zero live writes.
+2026-10-11T13:39:44.1795072Z PASS: site/legal navigation, 4 viewport widths, keyboard/Escape dialog, persisted theme/scoped reset, no cookies/tracking requests, CSP blocking inline script and real 404.
+2026-10-11T13:39:49.1857763Z PASS: quiz 4 widths/light+dark, every answer, keyboard/back, screenshots, no pre-submit requests or storage, optional email/separate consent, lost-response idempotent retry, private withdrawal with network recovery; real CSP enforced.

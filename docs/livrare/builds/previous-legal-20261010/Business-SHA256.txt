@@ -1,0 +1,4 @@
+604d2776d09409a0202ae5d12ac962fe043d025d67a6374f12f4a9866a3b6455  release/CeFaci-Business-build.txt
+aacef63a8d25d29b6ee9b7b979e36107dd5c997c2735df16bf8a54fc4c9c03fc  release/CeFaci-Business-ios-project.zip
+a4a7bbed5c9f681e9b217cef4909faf6e395576942cc8db0540f3525d45fb878  release/CeFaci-Business.aab
+7e196a139f9268ce81c2edf8597809c9f86b154506236cc6418f9aafe8bd5ebe  release/CeFaci-Business.apk
