@@ -31,8 +31,14 @@ for d in selected:
                 raise
         subprocess.run(['xcrun','simctl','install',sid,str(app)],check=True)
         subprocess.run(['xcrun','simctl','status_bar',sid,'override','--time','9:41','--batteryState','charged','--batteryLevel','100'],check=True)
-        screenshots=str(Path(f"release/ios-screenshots/{name}-{'ipad' if d['name'].startswith('iPad') else 'iphone'}").resolve())
-        subprocess.run(['maestro','--device',sid,'test','--format','junit','--output',f'{screenshots}-results.xml','--debug-output',f'release/ios-diagnostics/{name}-{sid}-maestro','-e',f'SCREENSHOT_PREFIX={screenshots}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
+        prefix=f"{name}-{'ipad' if d['name'].startswith('iPad') else 'iphone'}"
+        output=Path('release/ios-screenshots')/prefix
+        output.mkdir(parents=True,exist_ok=True)
+        # Maestro 2.11 confines screenshots to the configured run's takeScreenshot folder.
+        # A basename is resolved there; an absolute path outside it is rejected.
+        subprocess.run(['maestro','--device',sid,'test','--test-output-dir',str(output),'--format','junit','--output',str(output/'results.xml'),'--debug-output',f'release/ios-diagnostics/{name}-{sid}-maestro','-e',f'SCREENSHOT_PREFIX={prefix}',f'.maestro/ios/{folder}.yaml'],check=True,timeout=420)
+        captures=list((output/'takeScreenshot').rglob('*.png'))
+        assert len(captures)>=(4 if folder=='mobile' else 3), 'Expected actual native screenshots in the declared output folder'
         print(f"PASS: {name} pre-login/legal navigation on {d['name']} ({sid}); no OTP requested.")
     except Exception:
         subprocess.run(['xcrun','simctl','io',sid,'screenshot',f'release/ios-diagnostics/{name}-{sid}-failure.png'],check=False,timeout=30)
