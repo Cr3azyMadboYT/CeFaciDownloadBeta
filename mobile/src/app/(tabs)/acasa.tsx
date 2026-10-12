@@ -28,7 +28,10 @@ import { useWeatherVersion } from '../../lib/weather';
 import { Doodles } from '../../ui/Doodles';
 import { SeasonCta, SeasonFall } from '../../ui/SeasonFall';
 import { LOOKS, useLook } from '../../lib/season';
-import { refreshFreeNow, spanText, useFreeNow } from '../../lib/freeNow';
+import { quickStart, refreshFreeNow, spanText, useFreeNow } from '../../lib/freeNow';
+import { useCalm } from '../../lib/motion';
+import { toast } from '../../lib/toast';
+import * as Haptics from 'expo-haptics';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -87,7 +90,6 @@ export default function Acasa() {
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
   const now = useClock();
   useLightBar();
-  const fnLook = FN_LOOK();
   // turul lui Bilu: ținta e sus pe cer, Acasă stă sus cât arată Bilu spre ea
   const scroll = useRef<ScrollView>(null);
   const tour = useTour();
@@ -140,7 +142,7 @@ export default function Acasa() {
       <Doodles />
       <ScrollView ref={scroll} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
         <View onLayout={(e) => setTop({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
-          style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 96, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
+          style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 4, paddingHorizontal: 20, paddingBottom: 92, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
           <Sky phase={phase} />
           <SeasonFall wear={wear} w={top.w} h={top.h} night={phase === 'dusk' || phase === 'night' || phase === 'late'} />
           <TourTarget id="pills">
@@ -148,21 +150,18 @@ export default function Acasa() {
             <Press onPress={() => router.push('/zona')} accessibilityLabel={'Pleci din ' + APP.zoneName() + ', până la ' + APP.radiusKm() + ' km. Schimbă'}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 44, marginLeft: -10, paddingLeft: 10, paddingRight: 12, borderRadius: 14 }}>
               <Icon name="pin" size={16} color="#FFD43B" />
-              <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF', maxWidth: fnLook === 'top' ? 150 : 230 }}>{APP.zoneName() + ' · ' + APP.radiusKm() + ' km'}</T>
+              <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF', maxWidth: 230 }}>{APP.zoneName() + ' · ' + APP.radiusKm() + ' km'}</T>
               <View style={{ opacity: 0.7 }}><Icon name="down" size={16} color="#FFFFFF" /></View>
             </Press>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              {fnLook === 'top' ? <TourTarget id="freenow"><FreeNowPill /></TourTarget> : null}
-              <Press onPress={() => router.push('/profil')} accessibilityLabel="Profilul tău" style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
-                <Avatar size={34} />
-              </Press>
-            </View>
+            <Press onPress={() => router.push('/profil')} accessibilityLabel="Profilul tău" style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
+              <Avatar size={34} />
+            </Press>
           </View>
-          <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
-            <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={40} color="#FFD43B" />
+          <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
+            <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={34} color="#FFD43B" />
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-                {nowWx ? <T style={{ fontFamily: F.display, fontSize: 32, lineHeight: 36, color: '#FFFFFF' }}>{nowWx.temp + '°'}</T> : null}
+                {nowWx ? <T style={{ fontFamily: F.display, fontSize: 28, lineHeight: 32, color: '#FFFFFF' }}>{nowWx.temp + '°'}</T> : null}
                 <T style={{ fontFamily: F.sb, fontSize: nowWx ? 15 : 22, color: '#FFFFFF' }}>{nowWx ? nowWx.text.charAt(0).toUpperCase() + nowWx.text.slice(1) : clock}</T>
               </View>
               <T style={{ fontFamily: F.m, fontSize: 13.5, color: 'rgba(255,255,255,0.9)' }}>{APP.todayText() + (nowWx ? ' · ' + clock : '')}</T>
@@ -175,46 +174,41 @@ export default function Acasa() {
             ) : null}
           </View>
           </TourTarget>
-          <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'flex-end' }}>
+          <View style={{ marginTop: 14, flexDirection: 'row', alignItems: 'flex-end' }}>
             <View style={{ flex: 1 }}>
-              <T accessibilityRole="header" style={{ color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 44 : 56, lineHeight: (word.length > 10 ? 44 : 56) * 0.95, letterSpacing: -1.6 }}>
+              <T accessibilityRole="header" maxFontSizeMultiplier={1.1} style={{ color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 40 : 48, lineHeight: (word.length > 10 ? 40 : 48) * 0.95, letterSpacing: -1.4 }}>
                 {'Ce facem\n' + word}
               </T>
               <FlipWords words={FLIP[phase].flip} />
             </View>
-            <View style={{ marginBottom: 6 }}><Bilu size={84} mood="hi" shadow={false} /></View>
+            <View style={{ marginBottom: 4 }}><Bilu size={72} mood="hi" shadow={false} /></View>
           </View>
-          <TourTarget id="cta" style={{ marginTop: 16 }}>
+          <TourTarget id="cta" style={{ marginTop: 12 }}>
             <View onLayout={(e) => setCtaW(e.nativeEvent.layout.width)}>
             <Press onPress={() => router.push('/plan-nou')} accessibilityLabel="Creează plan"
-              style={{ minHeight: 84, borderRadius: 24, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 18, shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
-              <View style={{ width: 50, height: 50, borderRadius: 16, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={26} color="#FFD43B" width={2.6} /></View>
+              style={{ minHeight: 72, borderRadius: 22, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
+              <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={24} color="#FFD43B" width={2.6} /></View>
               <View style={{ flex: 1 }}>
-                <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#0E1440' }}>Creează plan</T>
+                <T style={{ fontFamily: F.display, fontSize: 24, lineHeight: 26, color: '#0E1440' }}>Creează plan</T>
                 <T style={{ fontFamily: F.sb, fontSize: 13.5, color: 'rgba(14,20,64,0.75)' }}>5 întrebări, sub un minut</T>
               </View>
               <Icon name="next" size={22} color="#0E1440" />
             </Press>
             <SeasonCta wear={wear} w={ctaW} />
             </View>
-            {fnLook === 'row' ? (
-              <View style={{ marginTop: 10, flexDirection: 'row', gap: 8 }}>
-                <Tile label="Surprinde-mă" onPress={surprise} icon={<Icon name="dice" size={20} color="#FFFFFF" />} />
-                {last ? <Tile label="Ca data trecută" onPress={again} icon={<Icon d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" size={20} color="#FFFFFF" />} /> : null}
-                <TourTarget id="freenow" style={{ flex: 1 }}><FreeNowTile /></TourTarget>
-              </View>
-            ) : (
             <View style={{ marginTop: 10, flexDirection: 'row', gap: 10 }}>
-              <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ flex: 1, height: 46, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 <Icon name="dice" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Surprinde-mă</T>
               </Press>
               {last ? (
-                <Press onPress={again} accessibilityLabel="Ca data trecută" style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <Press onPress={again} accessibilityLabel="Ca data trecută" style={{ flex: 1, height: 46, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                   <Icon d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Ca data trecută</T>
                 </Press>
               ) : null}
             </View>
-            )}
+          </TourTarget>
+          <TourTarget id="freenow" style={{ marginTop: 10 }}>
+            <HoldFreeNow />
           </TourTarget>
         </View>
 
@@ -298,59 +292,84 @@ export default function Acasa() {
   );
 }
 
-/** FreeNow (Cornel, 12.10) pe cerul de pe Acasă, fără să acopere orașul. Două variante de test (`cefaci.fnstyle`):
- *  „top” = pastila galbenă ⚡ lângă poza ta; „row” = a treia piesă lângă Surprinde-mă și Ca data trecută. */
-const FN_LOOK = (): 'top' | 'row' => { try { return localStorage.getItem('cefaci.fnstyle') === 'row' ? 'row' : 'top'; } catch { return 'top'; } };
-function useFreeNowHome() {
+/** FreeNow (Cornel, 12.10) pe cer, deasupra orașului: ții apăsat și butonul se umple; la capăt Bilu zboară în sus și
+ *  ești pe FreeNow cu alegerile de data trecută (prietenii tăi află). O apăsare scurtă deschide ecranul FreeNow. */
+const HOLD_MS = 900;
+function HoldFreeNow() {
   const who = useApp((s) => s.who);
   const known = useApp((s) => s.known);
   const st = useFreeNow();
+  const calm = useCalm();
+  const fill = useRef(new Animated.Value(0)).current;
+  const fly = useRef(new Animated.Value(0)).current;
+  const [w, setW] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const done = useRef(false);
   useFocusEffect(useCallback(() => {
     if (!who || !known) return undefined;
     void refreshFreeNow();
     const id = setInterval(() => { void refreshFreeNow(); }, 60000);
     return () => clearInterval(id);
   }, [who, known]));
-  const others = st.people.filter((p) => !p.outing?.mine).length;
+  const others = st.people.filter((p) => !p.outing?.mine);
   const on = !!(st.me || st.outing);
-  const label = st.outing ? 'FreeNow: ieșiți ' + st.outing.members.length : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : others ? 'FreeNow: ' + others + ' prieteni au timp acum' : 'Intră pe FreeNow';
-  return { others, on, label };
-}
-function Badge({ n }: { n: number }) {
-  if (!n) return null;
+  const open = () => router.push('/freenow');
+  const go = async () => {
+    setBusy(true);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+    if (!calm) Animated.timing(fly, { toValue: 1, duration: 1500, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start(() => fly.setValue(0));
+    const r = await quickStart();
+    setBusy(false);
+    Animated.timing(fill, { toValue: 0, duration: 250, useNativeDriver: false }).start();
+    if (r.err) { toast(r.err); open(); return; }
+    toast(r.notified ? 'Ești pe FreeNow! Am anunțat ' + (r.notified === 1 ? '1 om.' : r.notified + ' oameni.') : 'Ești pe FreeNow! Cine deschide aplicația te vede.');
+  };
+  const pressIn = () => {
+    done.current = false;
+    if (on || busy || !who || !known) return;
+    Haptics.selectionAsync().catch(() => {});
+    Animated.timing(fill, { toValue: 1, duration: HOLD_MS, easing: Easing.linear, useNativeDriver: false }).start(({ finished }) => {
+      if (finished && !done.current) { done.current = true; void go(); }
+    });
+  };
+  const pressOut = () => { if (done.current || on) return; fill.stopAnimation(); Animated.spring(fill, { toValue: 0, useNativeDriver: false, speed: 20 }).start(); };
+  const names = others.slice(0, 2).map((p) => p.first_name).join(', ') + (others.length > 2 ? ' +' + (others.length - 2) : '');
+  const title = st.outing ? (st.outing.plan ? 'Mergeți la ' + st.outing.plan.venue_name : 'Ieșiți: ' + st.outing.members.length + ' oameni')
+    : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : busy ? 'Bilu îi anunță…' : 'Ține apăsat: FreeNow';
+  const sub = on ? (others.length ? 'Au timp și ' + names : 'Apasă să vezi cine vine') : others.length ? names + (others.length === 1 ? ' are timp acum' : ' au timp acum') : 'Le dai de veste prietenilor că ai timp';
+  const row = (dark: boolean) => (
+    <>
+      <View style={{ width: 40, height: 40, borderRadius: 13, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
+        <Animated.View style={{ transform: [{ scale: fill.interpolate({ inputRange: [0, 1], outputRange: [1, 1.3] }) }] }}><T style={{ fontSize: 19 }}>⚡</T></Animated.View>
+        {others.length ? <View style={{ position: 'absolute', top: -5, right: -5, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 99, backgroundColor: '#FF6A4D', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 11, color: '#FFFFFF' }}>{String(others.length)}</T></View> : null}
+      </View>
+      <View style={{ flex: 1 }}>
+        <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 16, color: dark ? '#0E1440' : '#FFFFFF' }}>{title}</T>
+        <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 12.5, color: dark ? 'rgba(14,20,64,0.8)' : 'rgba(255,255,255,0.8)' }}>{sub}</T>
+      </View>
+      <Icon name="next" size={18} color={dark ? '#0E1440' : '#FFD43B'} />
+    </>
+  );
   return (
-    <View style={{ position: 'absolute', top: -5, right: -5, minWidth: 20, height: 20, paddingHorizontal: 5, borderRadius: 99, backgroundColor: '#FF6A4D', borderWidth: 2, borderColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
-      <T style={{ fontFamily: F.b, fontSize: 11, color: '#FFFFFF' }}>{String(n)}</T>
+    <View onLayout={(e) => setW(e.nativeEvent.layout.width)}>
+      <Press onPress={() => { if (!done.current) open(); }} onPressIn={pressIn} onPressOut={pressOut} delayLongPress={HOLD_MS + 400}
+        accessibilityLabel={title + '. ' + sub} accessibilityHint={on ? undefined : 'Ține apăsat ca să intri pe FreeNow; o apăsare deschide FreeNow.'}
+        style={{ height: 56, borderRadius: 18, overflow: 'hidden', borderWidth: 1.5, borderColor: on ? '#5FD39A' : '#FFD43B', backgroundColor: on ? '#5FD39A' : 'rgba(255,212,59,0.10)', flexDirection: 'row', alignItems: 'center', paddingLeft: 8, paddingRight: 14, gap: 10 }}>
+        {row(on)}
+        {/* umplerea: aceeași față, galbenă cu scris închis, tăiată cât ai ținut apăsat */}
+        {!on ? (
+          <Animated.View pointerEvents="none" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, overflow: 'hidden', backgroundColor: '#FFD43B', width: fill.interpolate({ inputRange: [0, 1], outputRange: [0, w || 400] }) }}>
+            <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: w || 400, flexDirection: 'row', alignItems: 'center', paddingLeft: 8, paddingRight: 14, gap: 10 }}>{row(true)}</View>
+          </Animated.View>
+        ) : null}
+      </Press>
+      {/* Bilu își ia zborul din buton */}
+      <Animated.View pointerEvents="none" style={{ position: 'absolute', left: 8, top: 0, opacity: fly.interpolate({ inputRange: [0, 0.04, 0.85, 1], outputRange: [0, 1, 1, 0] }),
+        transform: [{ translateY: fly.interpolate({ inputRange: [0, 1], outputRange: [-20, -420] }) }, { translateX: fly.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 90, 160] }) },
+          { rotate: fly.interpolate({ inputRange: [0, 0.5, 1], outputRange: ['0deg', '-12deg', '10deg'] }) }, { scale: fly.interpolate({ inputRange: [0, 0.3, 1], outputRange: [0.6, 1.1, 0.8] }) }] }}>
+        <Bilu size={76} mood="yay" shadow={false} still />
+      </Animated.View>
     </View>
-  );
-}
-function FreeNowPill() {
-  const f = useFreeNowHome();
-  return (
-    <Press onPress={() => router.push('/freenow')} accessibilityLabel={f.label}
-      style={{ height: 36, paddingHorizontal: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: f.on ? '#5FD39A' : '#FFD43B' }}>
-      <T style={{ fontSize: 15 }}>⚡</T>
-      <T style={{ fontFamily: F.b, fontSize: 14, color: '#0E1440' }}>FreeNow</T>
-      <Badge n={f.others} />
-    </Press>
-  );
-}
-function Tile({ label, icon, onPress }: { label: string; icon: React.ReactNode; onPress: () => void }) {
-  return (
-    <Press onPress={onPress} accessibilityLabel={label} style={{ flex: 1, height: 64, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-      {icon}<T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 13, color: '#FFFFFF' }}>{label}</T>
-    </Press>
-  );
-}
-function FreeNowTile() {
-  const f = useFreeNowHome();
-  return (
-    <Press onPress={() => router.push('/freenow')} accessibilityLabel={f.label}
-      style={{ flex: 1, height: 64, borderRadius: 16, backgroundColor: f.on ? '#5FD39A' : '#FFD43B', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-      <T style={{ fontSize: 19 }}>⚡</T>
-      <T style={{ fontFamily: F.b, fontSize: 13, color: '#0E1440' }}>FreeNow</T>
-      <Badge n={f.others} />
-    </Press>
   );
 }
 

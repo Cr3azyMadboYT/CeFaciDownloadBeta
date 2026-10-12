@@ -34,8 +34,8 @@ export function Press({ style, children, onPress, disabled, haptic = true, ...re
       {...rest}
       style={outer as ViewStyle}
       disabled={disabled}
-      onPressIn={() => to(0.97)}
-      onPressOut={() => to(1)}
+      onPressIn={(e) => { to(0.97); rest.onPressIn?.(e); }}
+      onPressOut={(e) => { to(1); rest.onPressOut?.(e); }}
       onPress={(e) => { if (haptic) tap(); onPress?.(e); }}
       accessibilityRole={rest.accessibilityRole ?? 'button'}
       accessibilityState={{ disabled: !!disabled, ...rest.accessibilityState }}

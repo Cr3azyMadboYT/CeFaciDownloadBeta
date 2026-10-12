@@ -176,3 +176,19 @@ export function spanText(starts: string, ends: string, now = new Date()) {
 }
 /** Zona din cont, fără poziție: „prin Sector 2”. */
 export const myZone = () => { const z = APP.zoneName(); return z && !/locația mea|aproape/i.test(z) ? z : null; };
+
+/** „Toată seara” (hours = 0) = până la 02:00 (serverul taie la 05:00 și, sub 18, la 23:00). */
+export function endFor(start: Date, hours: number) {
+  if (hours) return new Date(start.getTime() + hours * 3600e3);
+  const e = new Date(start); e.setHours(2, 0, 0, 0);
+  if (e.getTime() <= start.getTime() + 3600e3) e.setDate(e.getDate() + 1);
+  if (e.getTime() - start.getTime() > 12 * 3600e3) return new Date(start.getTime() + 4 * 3600e3);
+  return e;
+}
+/** Ții apăsat pe FreeNow (Acasă): intri acum, cu alegerile de data trecută (prima dată: 2 ore, orice, prietenii și prietenii lor). */
+export function quickStart() {
+  const l = loadLastStart();
+  const now = new Date();
+  return startFreeNow({ startsAt: null, endsAt: endFor(now, l.hours > 3 ? 0 : l.hours || 2), moods: l.moods?.length ? l.moods : ['orice'], audience: l.audience,
+    crewId: l.crewId ?? null, picked: l.picked ?? [], zone: l.zone ? myZone() : null });
+}

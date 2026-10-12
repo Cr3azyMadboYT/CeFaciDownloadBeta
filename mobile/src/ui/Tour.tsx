@@ -18,7 +18,7 @@ export const STEPS: Step[] = [
   { mood: 'wink', text: 'Înainte de toate, un mic tur prin aplicație. Durează jumătate de minut, promit.' },
   { id: 'pills', mood: 'up', text: 'Sus vezi de unde pleci, vremea, ziua și ora. Apasă pe zonă ca s-o schimbi.' },
   { id: 'cta', mood: 'up', text: 'Butonul magic: Creează plan. Îmi răspunzi la 5 întrebări rapide și primești 3 planuri gata, verificate. Surprinde-mă e pentru curajoși.' },
-  { id: 'freenow', mood: 'up', text: 'Ai timp și n-ai idee? Intră pe FreeNow și le dai de veste prietenilor tăi și prietenilor lor. Cine are chef vine cu tine, iar eu aleg locul.' },
+  { id: 'freenow', mood: 'up', text: 'Ai timp și n-ai idee? Ține apăsat pe FreeNow și le dau de veste prietenilor tăi și prietenilor lor. Cine are chef vine cu tine, iar eu aleg locul.' },
   { id: 'tab-planuri', mood: 'down', text: 'În Planuri ai tot ce ai stabilit: biletele serii, rezervările și gășcile tale.' },
   { id: 'tab-profil', mood: 'down', hot: 'profil', text: 'Acum apasă tu pe Profil. Acolo sunt carnetul, prietenii și ștampilele tale.', oops: 'Aproape! Profil e al patrulea de jos, unde e lumină.' },
   { mood: 'yay', final: 'xp', text: 'Ăsta e carnetul tău: fă check-in când ajungi la local și primești ștampile și XP, iar poza bonului îți mai aduce 25 XP. Și ca să nu pleci cu mâna goală, ai deja 150 XP de bun venit!' },

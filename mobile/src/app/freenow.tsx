@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from '../ui/insets';
 import { useApp } from '../lib/session';
 import { listFriends } from '../lib/friends';
 import {
-  AUDIENCES, MOODS, endVoteNow, extendFreeNow, joinFree, leaveOuting, loadLastStart, moodOf, moodWords, muteFree, myZone,
+  AUDIENCES, MOODS, endFor, endVoteNow, extendFreeNow, joinFree, leaveOuting, loadLastStart, moodOf, moodWords, muteFree, myZone,
   refreshFreeNow, setOutingOpen, spanText, startFreeNow, startOutingVote, stopFreeNow, useFreeNow, watchOuting,
   type Audience, type Free, type Mood,
 } from '../lib/freeNow';
@@ -43,15 +43,6 @@ function startChoices(now = new Date()) {
   return out;
 }
 const LENGTHS: { label: string; hours: number }[] = [{ label: '1 oră', hours: 1 }, { label: '2 ore', hours: 2 }, { label: '3 ore', hours: 3 }, { label: 'Toată seara', hours: 0 }];
-/** „Toată seara” = până la 02:00 (serverul taie la 05:00 și, sub 18, la 23:00). */
-function endFor(start: Date, hours: number) {
-  if (hours) return new Date(start.getTime() + hours * 3600e3);
-  const e = new Date(start); e.setHours(2, 0, 0, 0);
-  if (e.getTime() <= start.getTime() + 3600e3) e.setDate(e.getDate() + 1);
-  if (e.getTime() - start.getTime() > 12 * 3600e3) return new Date(start.getTime() + 4 * 3600e3);
-  return e;
-}
-
 function StartForm({ friends }: { friends: number | null }) {
   const { t } = useTheme();
   const last = useMemo(() => loadLastStart(), []);
