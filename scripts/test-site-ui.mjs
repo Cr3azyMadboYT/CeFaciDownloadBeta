@@ -30,7 +30,7 @@ try{
   context.on('request',request=>{if(new URL(request.url()).origin!==new URL(root).origin)external.push(request.url());});
   await context.route('**/*',route=>new URL(route.request().url()).origin===new URL(root).origin?route.continue():route.abort());
   const response=await page.goto(root);assert.equal(response.status(),200);assert.match(response.headers()['content-security-policy'],/connect-src 'none'/);
-  await page.evaluate(()=>document.fonts.ready);await page.getByRole('heading',{name:'Planuri bune. Oameni faini. Hai că mergem.'}).waitFor();
+  await page.evaluate(()=>document.fonts.ready);await page.getByRole('heading',{name:'Ce facem în seara asta?'}).waitFor();
   assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).scrollBehavior),'auto','Reduced motion disables smooth scrolling');
   for(const asset of await page.locator('[src]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('src'))))if(asset.startsWith('/'))assert.equal((await fetch(root+asset,{headers})).status,200,asset);
   assert.equal((await context.cookies()).length,0);assert.deepEqual(await page.evaluate(()=>Object.keys(localStorage)),[]);
