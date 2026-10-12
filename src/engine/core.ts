@@ -121,8 +121,11 @@ export function targetTime(when: When, night: number, now: Date): Date {
   const hour = night === 0 ? 15 : night === 1 ? 20 : 23;
   const min = night === 2 ? 30 : 0;
   if (when === 'maine') t.setDate(t.getDate() + 1);
-  if (when === 'weekend') { const add = (6 - t.getDay() + 7) % 7; t.setDate(t.getDate() + (add === 0 && now.getHours() >= 22 ? 7 : add)); }
+  if (when === 'weekend') t.setDate(t.getDate() + (6 - t.getDay() + 7) % 7);
   t.setHours(hour, min, 0, 0);
+  // Saturday's evening already over (or not reachable any more): next Saturday
+  if (when === 'weekend' && t.getTime() < now.getTime() && now.getHours() >= 5) t.setDate(t.getDate() + 7);
+  if (when === 'weekend' && t.getTime() < now.getTime()) return new Date(now.getTime());
   if (when === 'diseara' && t.getTime() < now.getTime()) return new Date(now.getTime());
   return t;
 }

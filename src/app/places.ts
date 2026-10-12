@@ -11,6 +11,9 @@ export interface PlaceCache { at: string; rows: Record<string, PlaceRow> }
 
 /** The places with the changes put over them: hidden or gone ones out, changed ones replaced, new ones in. A row that
  *  would not make a usable place (no name, unknown kind, no position) leaves the place as it was. */
+const goodWk = (x: unknown) => Array.isArray(x) && x.length === 7 && x.every((d) => Array.isArray(d)
+  && d.every((p) => Array.isArray(p) && p.length === 2 && p.every((n) => typeof n === 'number' && Number.isFinite(n)) && p[0] >= 0 && p[0] < p[1] && p[1] <= 2880));
+
 export function mergePlaces(base: Venue[], rows: PlaceRow[]): Venue[] {
   const byId = new Map(base.map((v) => [v.id, v]));
   const sample = base[0] as unknown as Record<string, unknown> | undefined;
@@ -28,6 +31,8 @@ export function mergePlaces(base: Venue[], rows: PlaceRow[]): Venue[] {
           if (k === '__proto__' || k === 'constructor' || k === 'prototype' || x === null || x === undefined) continue;
           const ref = had?.[k] ?? sample?.[k];
           if (ref !== undefined && (Array.isArray(ref) !== Array.isArray(x) || typeof ref !== typeof x)) continue;
+          if (k === 'wk' && !goodWk(x)) continue; // 7 days of [from, to] minutes, or the hour checks would crash
+          if ((k === 'price' || k === 'minAge') && (typeof x !== 'number' || !Number.isFinite(x))) continue;
           v[k] = x;
         }
       }

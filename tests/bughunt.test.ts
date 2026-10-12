@@ -54,3 +54,24 @@ describe('vânătoarea de buguri, 07.10', () => {
     expect(V.find((v) => v.name === 'Sun Plaza')?.hours).toBe('Mo-Su 10:00-22:00');
   });
 });
+
+// Verificarea din 12.10
+describe('verificarea din 12.10', () => {
+  it('weekend sâmbătă la 22:30 rămâne în seara asta, nu sare o săptămână', async () => {
+    const { targetTime } = await import('../src/engine/core');
+    const t = targetTime('weekend', 2, new Date(2026, 9, 10, 22, 30));
+    expect(t.getDate()).toBe(10);
+  });
+  it('seara completă „diseară” după miezul nopții începe acum', async () => {
+    const { startOf } = await import('../src/engine/evening');
+    const now = new Date(2026, 9, 11, 1, 0);
+    expect(startOf('diseara', 20, now).getTime() - now.getTime()).toBeLessThan(30 * 60e3);
+  });
+  it('un program săptămânal stricat din Admin nu intră în aplicație', async () => {
+    const { mergePlaces } = await import('../src/app/places');
+    const base = (await import('../src/data/venues.json')).default as never[];
+    const v = (base as { id: string; wk?: unknown }[]).find((x) => x.wk)!;
+    const out = mergePlaces(base as never, [{ id: v.id, status: 'on', edit: { wk: [] } }] as never) as { id: string; wk: unknown }[];
+    expect((out.find((x) => x.id === v.id)!.wk as unknown[]).length).toBe(7);
+  });
+});

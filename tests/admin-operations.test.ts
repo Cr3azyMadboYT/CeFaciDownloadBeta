@@ -22,7 +22,7 @@ beforeAll(async()=>{
  await q("update private.visit_pricing set reservation_unit=5,drop_unit=7,reservation_limit=2,drop_limit=4 where visit_id in($1,$2)",[V.mixed,V.blocked]);
  await q("insert into private.visit_counts(visit_id,people,adults,drop_adults,state)values($1,6,6,4,'confirmed'),($2,6,6,0,'confirmed'),($3,6,6,4,'disputed')",[V.mixed,V.simple,V.blocked]);
  await q("insert into private.benefit_cases(visit_id,reason,reporter)values($1,'Reducere refuzată',$2)",[V.blocked,U.client]);
- await q("insert into reservations(venue_id,user_id,people,at,status)values('v',$1,6,now(),'cerută')",[U.client]);
+ await q("insert into reservations(venue_id,user_id,people,at,status)values('v',$1,6,(current_date+interval '12 hours') at time zone 'Europe/Bucharest','cerută')",[U.client]);
 },60000);
 afterAll(()=>db?.close());
 it('denies public endpoints to anon, clients, business owners and revoked staff',async()=>{

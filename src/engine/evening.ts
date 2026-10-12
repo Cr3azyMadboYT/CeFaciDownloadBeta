@@ -81,7 +81,10 @@ const roundUp15 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0
 /** When the evening starts: now (rounded up), or the template's usual hour on the chosen day. */
 export function startOf(when: When, hour: number, now: Date): Date {
   if (when === 'acum') return roundUp15(new Date(now.getTime() + 10 * 60e3));
+  // after midnight "diseară" is the night still going (same rule as targetTime): start now
+  if (when === 'diseara' && now.getHours() < 5) return roundUp15(new Date(now.getTime() + 10 * 60e3));
   const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (now.getHours() < 5) d.setDate(d.getDate() - 1); // the day turns at 05:00
   if (when === 'maine') d.setDate(d.getDate() + 1);
   if (when === 'weekend') d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7));
   d.setHours(Math.floor(hour), Math.round((hour % 1) * 60), 0, 0);
