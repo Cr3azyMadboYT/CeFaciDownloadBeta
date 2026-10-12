@@ -37,6 +37,7 @@ jobs:
       - name: Conexiuni PostgreSQL simultane
         run: |
           node scripts/test-business-concurrency.mjs
+          node scripts/test-business-admin-delivery.mjs
           node scripts/test-admin-concurrency.mjs
           node scripts/test-privacy-concurrency.mjs
           node scripts/test-launch-concurrency.mjs
@@ -81,6 +82,7 @@ jobs:
           node scripts/test-support-ui.mjs
           node scripts/test-admin-ui.mjs
           node scripts/test-security-tutorial-ui.mjs
+          node scripts/test-remembered-auth-ui.mjs
           node scripts/test-security-hook-ui.mjs
           node scripts/test-client-support-ui.mjs
           CEFACI_TEST_BUSINESS_DIST=business/dist CEFACI_TEST_CLIENT_DIST=/tmp/cefaci-client-admin-web node scripts/test-privacy-ui.mjs

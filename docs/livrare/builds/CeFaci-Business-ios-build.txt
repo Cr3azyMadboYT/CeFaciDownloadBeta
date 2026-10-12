@@ -1,0 +1,6 @@
+Source 794710b927a1e1f2bc6e33394cf69bf360d96b5d
+Xcode Release simulator .app (ad-hoc simulator signature only)
+Xcode Release device .xcarchive UNSIGNED; not installable on an iPhone or TestFlight
+EXPO_PUBLIC_E2E=0; no authentication bypass
+Xcode 26.6
+Build version 17F113

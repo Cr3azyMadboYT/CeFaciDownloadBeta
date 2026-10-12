@@ -1,0 +1,27 @@
+appId: ro.cefaci.app
+---
+- launchApp:
+    clearState: true
+- takeScreenshot: ${SCREENSHOT_PREFIX}-launch
+- extendedWaitUntil:
+    visible: '(?s).*(Nu mai stai acasă|OK).*'
+    timeout: 60000
+- tapOn:
+    text: "OK"
+    optional: true
+- scrollUntilVisible:
+    element: "Continuă cu email"
+    direction: DOWN
+    timeout: 60000
+- assertNotVisible: "Continuă cu Google"
+- takeScreenshot: ${SCREENSHOT_PREFIX}-start
+- tapOn: "Continuă cu email"
+- assertVisible: "Emailul tău"
+- takeScreenshot: ${SCREENSHOT_PREFIX}-email
+- tapOn: "Înapoi"
+- tapOn: "Termeni și confidențialitate"
+- assertVisible: "Confidențialitate și termeni"
+- assertVisible: "Politica de confidențialitate"
+- takeScreenshot: ${SCREENSHOT_PREFIX}-legal
+- tapOn: "Înapoi"
+- assertVisible: "Continuă cu email"

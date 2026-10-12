@@ -1,6 +1,16 @@
 {
-  "platforms": ["android"],
+  "platforms": [
+    "android",
+    "ios"
+  ],
   "android": {
-    "modules": ["expo.modules.cefaciicon.CefaciIconModule"]
+    "modules": [
+      "expo.modules.cefaciicon.CefaciIconModule"
+    ]
+  },
+  "ios": {
+    "modules": [
+      "CefaciIconModule"
+    ]
   }
 }

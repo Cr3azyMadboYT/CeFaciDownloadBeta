@@ -49,9 +49,13 @@ export function BusinessHelp({userId, venue}: {userId: string; venue?: string}) 
       <Button label={photo ? "Schimbă poza" : "Atașează o poză"} secondary disabled={busy || frozen} onPress={() => void run(async valid => {const next = await chooseSupportPhoto(); if(valid() && next) Photo(next);})} />
       {photo && <><Image source={{uri: photo.uri}} accessibilityLabel="Poza atașată problemei" style={{height: 180, borderRadius: 12}} resizeMode="contain" /><Txt muted>{Math.ceil(photo.bytes.byteLength / 1024)} KB · JPEG · privat</Txt><Button label="Scoate poza" secondary disabled={busy || frozen} onPress={() => Photo(null)} /></>}
       {!!error && <Txt>{error}</Txt>}{!!message && <Txt>{message}</Txt>}
+      {title.trim().length < 3 && <Txt muted>Titlul problemei trebuie să aibă cel puțin 3 caractere.</Txt>}
+      {description.trim().length < 10 && <Txt muted>Descrierea problemei trebuie să aibă cel puțin 10 caractere.</Txt>}
       {frozen && <Txt muted>Conținutul este păstrat pentru reîncercare, ca să nu trimitem cererea de două ori.</Txt>}
       <Button label={busy ? "Trimit…" : frozen ? "Reîncearcă trimiterea" : "Trimite problema"} disabled={busy || title.trim().length < 3 || description.trim().length < 10} onPress={() => void run(async valid => {
-        await attempt.current.submit(client, {key: key.current, kind: "issue", source: "business", title, description, venue, photo}, valid);
+        const receipt = await attempt.current.submit(client, {key: key.current, kind: "issue", source: "business", title, description, venue, photo}, valid);
+        if (!receipt?.id || !['new','in_progress','resolved','rejected'].includes(receipt.status))
+          throw new Error('Nu am primit confirmarea raportării. Reîncearcă trimiterea; conținutul este păstrat.');
         if(!valid()) return; reset(); Message("Problema a fost trimisă echipei CeFaci. Răspunsul va apărea mai jos."); await load();
       })} />
       {frozen && <Button label="Renunță la ciornă" secondary disabled={busy} onPress={() => void run(async valid => {

@@ -365,6 +365,7 @@ try {
   );
   await mobile.getByRole("button", { name: "Financiar", exact: true }).click();
   await mobile.getByText("162,00").first().waitFor();
+  await mobile.getByRole("button", { name: "Opțiuni Business", exact: true }).click();
   await mobile.getByRole("button", { name: "Mod noapte", exact: true }).click();
   await mobile.screenshot({
     path: "release/screenshots/business-finance-phone-night.png",

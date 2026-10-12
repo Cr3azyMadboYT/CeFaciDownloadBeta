@@ -56,6 +56,8 @@ beforeAll(async () => {
     "insert into partner_members(venue_id,user_id,role) values('v',$1,'proprietar'),('v',$2,'scanare')",
     [U.biz, U.scanner],
   );
+  // Overlapping 24-hour fixture windows also cover near-now bookings that cross midnight.
+  await db.exec(`update partners set reservation_hours=(select jsonb_agg(jsonb_build_object('day',d,'from',h,'to',h)) from generate_series(1,7) d cross join (values('00:00'),('12:00')) hours(h)) where venue_id='v'`);
   await q(
     "insert into friendships(requester,addressee,status) values($1,$2,'accepted')",
     [U.owner, U.guest],

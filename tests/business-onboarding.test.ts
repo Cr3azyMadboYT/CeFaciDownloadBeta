@@ -27,11 +27,61 @@ beforeAll(async()=>{
 },60000);
 beforeEach(async()=>{await q("update private.partner_requests set created_at=now()-interval '2 days'");});
 afterAll(()=>db?.close());
+it('requires every declared private file before submission and isolates the complete dossier',async()=>{
+ const r=await create('multi-files');
+ const files=[{name:'Firma.pdf',content_type:'application/pdf',size:1000},{name:'Foto.jpg',content_type:'image/jpeg',size:1000},{name:'Delegare.png',content_type:'image/png',size:1000}];
+ await expect(rpc('other','biz_partner_request_files($1,$2)',[r.id,files])).rejects.toThrow(/Ciorna/);
+ const manifest=await rpc('applicant','biz_partner_request_files($1,$2)',[r.id,files]);
+ expect(manifest.map((f:any)=>f.path.split('/').pop())).toEqual(['proof.pdf','proof-2.jpg','proof-3.png']);
+ expect(await rpc('applicant','biz_partner_request_files($1,$2)',[r.id,files])).toEqual(manifest);
+ await expect(rpc('applicant','biz_partner_request_files($1,$2)',[r.id,files.slice(0,1)])).rejects.toThrow(/reîncercare/);
+ const path=await uploaded(r.id);
+ await expect(rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,path])).rejects.toThrow(/toate fișierele/);
+ expect((await rpc('admin',"admin_partner_requests('pending')")).some((x:any)=>x.id===r.id)).toBe(false);
+ for(const f of manifest.slice(1))await as('applicant',"insert into storage.objects(bucket_id,name,metadata) values('business-proofs',$1,$2)",[f.path,{size:f.size,mimetype:f.content_type}]);
+ await expect(as('applicant',"insert into storage.objects(bucket_id,name,metadata) values('business-proofs',$1,'{}')",[`${U.applicant}/${r.id}/proof-4.jpg`])).rejects.toThrow(/row-level security/);
+ expect((await rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,path])).status).toBe('pending');
+ const listed=await rpc('admin','biz_partner_proof_files($1)',[r.id]);expect(listed).toHaveLength(3);expect(listed[1].name).toBe('Foto.jpg');expect(listed[1].path).toBeUndefined();
+ await expect(rpc('other','biz_partner_proof_files($1)',[r.id])).rejects.toThrow(/disponibile/);
+ await expect(rpc('admin','biz_partner_proof_file_access($1,6)',[r.id])).rejects.toThrow(/disponibil/);
+ expect((await as('admin','select * from storage.objects where name=$1',[manifest[1].path])).rows).toEqual([]);
+ expect((await rpc('admin','biz_partner_proof_file_access($1,2)',[r.id])).path).toBe(manifest[1].path);
+ expect((await as('admin','select * from storage.objects where name=$1',[manifest[1].path])).rows).toHaveLength(1);
+ expect((await as('other','select * from storage.objects where name=$1',[manifest[1].path])).rows).toEqual([]);
+ await q('delete from staff where user_id=$1',[U.admin]);
+ await expect(rpc('admin','biz_partner_proof_file_access($1,2)',[r.id])).rejects.toThrow(/disponibil/);
+ expect((await as('admin','select * from storage.objects where name=$1',[manifest[1].path])).rows).toEqual([]);
+ await q("insert into staff(user_id,role)values($1,'admin')",[U.admin]);
+ await q("update private.partner_proof_access set expires_at=now()-interval '1 second' where request_id=$1",[r.id]);
+ expect((await as('admin','select * from storage.objects where name=$1',[manifest[1].path])).rows).toEqual([]);
+ await rpc('applicant','biz_partner_request_cancel($1)',[r.id]);
+});
+it('rejects invalid manifests, excessive total bytes and uploaded metadata mismatches',async()=>{
+ const r=await create('multi-invalid'),f={name:'Document.pdf',content_type:'application/pdf',size:1000};
+ for(const files of [[],Array(6).fill(f),[{...f,content_type:'image/svg+xml'}],[{...f,size:8388609}],Array(3).fill({...f,size:8388608}),[{...f,name:'bad\nname'}],[{...f,size:'1000'}]])
+  await expect(rpc('applicant','biz_partner_request_files($1,$2)',[r.id,files])).rejects.toThrow();
+ await rpc('applicant','biz_partner_request_files($1,$2)',[r.id,[f]]);const path=await uploaded(r.id,'applicant','application/pdf',999);
+ await expect(rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,path])).rejects.toThrow(/nu corespunde/);
+ await rpc('applicant','biz_partner_request_cancel($1)',[r.id]);
+});
+it('delivers only submitted requests to the Admin queue, once, for all Business entry flows',async()=>{
+ for(const kind of ['claim','new','dispute']){
+  const venue=kind==='new'?null:kind==='claim'?'unclaimed':'claimed';
+  const r=await create('queue-'+kind,kind,venue,{venue_name:'Queue Local',address:'Strada Test 1',city:'Buftea',category:'Restaurant',phone:'0712345678'});
+  expect((await rpc('admin',"admin_partner_requests('pending')")).some((x:any)=>x.id===r.id)).toBe(false);
+  const path=await uploaded(r.id);await rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,path]);
+  await rpc('applicant','biz_partner_request_submit($1,$2)',[r.id,path]);
+  const queue=await rpc('admin',"admin_partner_requests('pending')");
+  expect(queue.filter((x:any)=>x.id===r.id)).toHaveLength(1);
+  expect(queue.find((x:any)=>x.id===r.id).kind).toBe(kind);
+  await rpc('applicant','biz_partner_request_cancel($1)',[r.id]);
+ }
+});
 it('provides whitelisted authenticated unclaimed/claimed search, without hidden venues or owner/company identities',async()=>{
  const results=await rpc('applicant',"biz_venue_search('Local')");expect(results).toHaveLength(2);expect(results.find((x:any)=>x.id==='claimed').claimed).toBe(true);expect(results.find((x:any)=>x.id==='unclaimed').claimed).toBe(false);expect(Object.keys(results[0]).sort()).toEqual(['address','city','claimed','id','name']);expect(await rpc('applicant',"biz_venue_search('%')")).toEqual([]);expect(await rpc('applicant',"biz_venue_search('')")).toEqual([]);
 });
 it('denies anon endpoints and direct access to internal requests/logs',async()=>{
- await db.exec("reset role;set role anon");try{await expect(q("select biz_venue_search('Local')")).rejects.toThrow(/permission denied/);await expect(q('select business_proofs_retention_candidates()')).rejects.toThrow(/permission denied/)}finally{await db.exec('reset role')}
+ await db.exec("reset role;set role anon");try{await expect(q("select biz_venue_search('Local')")).rejects.toThrow(/permission denied/);await expect(q('select business_proofs_retention_candidates()')).rejects.toThrow(/permission denied/);for(const f of ['biz_partner_request_files(null,null)','biz_partner_proof_files(null)','biz_partner_proof_file_access(null,1)'])await expect(q('select '+f)).rejects.toThrow(/permission denied/)}finally{await db.exec('reset role')}
  await expect(as('applicant','select * from private.partner_requests')).rejects.toThrow(/permission denied/);await expect(as('applicant','select * from private.partner_request_log')).rejects.toThrow(/permission denied/);
  expect((await q("select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='private' and relname in('partner_requests','partner_request_log','partner_proof_access') and not relrowsecurity")).rows).toEqual([]);
 });

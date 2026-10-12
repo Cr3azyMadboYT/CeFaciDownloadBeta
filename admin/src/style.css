@@ -4,3 +4,5 @@
 .auth{min-height:calc(100vh - 68px)}
 
 .legal-entry{padding:12px 20px;text-align:center;background:var(--bg)}.legal-entry button{font-size:13px}.legal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:20px}.legal-dialog{background:var(--bg);color:var(--ink);width:min(960px,100%);padding:24px;border-radius:24px;display:grid;gap:18px;outline:none}.legal-dialog .card{min-width:0}.legal-dialog .actions{flex-wrap:wrap}.legal-dialog p{overflow-wrap:anywhere}.legal-dialog .bilu{width:70px}@media(max-width:600px){.legal-overlay{padding:8px}.legal-dialog{padding:16px;border-radius:16px}}
+
+.auth .remember-choice{display:flex;align-items:flex-start;gap:11px;font-size:13px;line-height:1.5}.auth .remember-choice input{width:18px;height:18px;min-height:18px;flex-shrink:0;margin:2px 0;accent-color:#244cf0}.auth .remember-hint{font-size:12px;line-height:1.6;margin:0 0 12px}

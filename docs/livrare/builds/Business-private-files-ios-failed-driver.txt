@@ -1,0 +1,9 @@
+2026-10-11T14:47:22.1955590Z PASS: actual Mach-O products, native icon module, offline bundle, privacy manifests, simulator ad-hoc signature and unsigned device archive.
+2026-10-11T14:47:48.9193630Z Waiting for iPhone 17 Pro to finish runtime migration.
+2026-10-11T14:49:59.8055530Z Waiting for flows to complete...
+2026-10-11T14:51:36.2592800Z PASS: CeFaci-Business pre-login/legal navigation on iPhone 17 Pro (4E3A6BB3-F417-4829-8DF5-0EA652541F40); no OTP requested.
+2026-10-11T14:51:36.5278890Z Waiting for iPad Pro 13-inch (M5) to finish runtime migration.
+2026-10-11T14:56:45.9695150Z xcuitest.installer.LocalXCTestInstaller$IOSDriverTimeoutException: iOS driver not ready in time, consider increasing timeout by configuring MAESTRO_DRIVER_STARTUP_TIMEOUT env variable
+2026-10-11T14:57:12.5771340Z Traceback (most recent call last):
+2026-10-11T14:57:12.5890670Z     raise CalledProcessError(retcode, process.args,
+2026-10-11T14:57:12.5905050Z subprocess.CalledProcessError: Command '['maestro', '--device', 'B385244C-CB83-424B-92FD-32C1867E3F14', 'test', '--test-output-dir', 'release/ios-screenshots/CeFaci-Business-ipad', '--format', 'junit', '--output', 'release/ios-screenshots/CeFaci-Business-ipad/results.xml', '--debug-output', 'release/ios-diagnostics/CeFaci-Business-B385244C-CB83-424B-92FD-32C1867E3F14-maestro', '-e', 'SCREENSHOT_PREFIX=CeFaci-Business-ipad', '.maestro/ios/business.yaml']' returned non-zero exit status 1.

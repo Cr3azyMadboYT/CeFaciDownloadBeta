@@ -1,3 +1,5 @@
+import {rememberedAuth} from './auth-storage';
+import {useRememberedWebAuth} from '../../shared/use-remembered-web-auth';
 import {watchBusinessIcon} from "./season-icon";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -7,6 +9,8 @@ import {
   ActivityIndicator,
   AppState,
   Platform,
+  Modal,
+  Pressable,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -54,9 +58,9 @@ import {
   type ScreenProps,
   type Action,
 } from "./screens";
-function Workspace({ session, hasAccess, checkAccess, logout }: { session: Session; hasAccess: boolean; checkAccess: () => Promise<void>; logout: () => Promise<void> }) {
+function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { session: Session; hasAccess: boolean; checkAccess: () => Promise<void>; logout: () => Promise<void>; replayToken: number }) {
   const wide = useWindowDimensions().width >= 920;
-  const [tourReplay, TourReplay] = useState(0), [tourHighlight, TourHighlight] = useState<string | null>(null);
+  const [tourHighlight, TourHighlight] = useState<string | null>(null);
   const [venues, V] = useState<VenueAccess[]>([]),
     [venue, S] = useState(""),
     [data, D] = useState<Dashboard | null>(null),
@@ -202,7 +206,7 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
           />
         ))}
       </View>
-      <ScrollView
+      <ScrollView keyboardShouldPersistTaps="handled"
         horizontal={!wide}
         contentContainerStyle={{
           gap: 8,
@@ -224,7 +228,6 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
           <Bilu mood="up" size={105} still />
         </View>
       )}
-      <Button label="Tur cu Bilu" secondary onPress={() => TourReplay(v => v + 1)} />
       <Button
         label="Revendică sau adaugă un local"
         secondary
@@ -242,12 +245,11 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
       <ActivityIndicator accessibilityLabel="Verific accesul la localuri" />
     );
   if (!venues.length || onboarding) return <View style={{flex: 1}}>
-    <Button label="Tur cu Bilu" secondary onPress={() => TourReplay(v => v + 1)} />
-    {helpBeforeAccess ? <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 760, width: "100%", alignSelf: "center"}}>
+    {helpBeforeAccess ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{padding: 20, gap: 20, maxWidth: 760, width: "100%", alignSelf: "center"}}>
       <Button label="Înapoi la cererile Business" secondary onPress={() => HelpBeforeAccess(false)} />
       <BusinessHelp key={session.user.id + ":onboarding"} userId={session.user.id} />
     </ScrollView> : <BusinessOnboarding session={session} accessError={message} onRefreshAccess={loadVenues} onSignOut={signOut} onBack={venues.length ? () => Onboarding(false) : undefined} onHelp={() => HelpBeforeAccess(true)} />}
-    <BusinessTutorial userId={session.user.id} role="applicant" availableTabs={["Cereri","Ajutor"]} replayToken={tourReplay} onNavigate={tab => HelpBeforeAccess(tab === "Ajutor")} />
+    <BusinessTutorial userId={session.user.id} role="applicant" availableTabs={["Cereri","Ajutor"]} replayToken={replayToken} onNavigate={tab => HelpBeforeAccess(tab === "Ajutor")} />
   </View>;
   const p: ScreenProps = data ? { venue, data, act, busy } : (null as any);
   const content = tab === "Confidențialitate" ? <BusinessPrivacy identity={securitySessionKey(session)}/> : tab === "Ajutor" ? <BusinessHelp key={venue + ":" + session.user.id} userId={session.user.id} venue={data ? venue : undefined} /> : data ? (
@@ -285,7 +287,7 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
   return (
     <View style={{ flex: 1, flexDirection: wide ? "row" : "column" }}>
       {nav}
-      <ScrollView
+      <ScrollView keyboardShouldPersistTaps="handled"
         key={venue + ":" + session.user.id}
         contentContainerStyle={{
           padding: wide ? 32 : 16,
@@ -319,13 +321,13 @@ function Workspace({ session, hasAccess, checkAccess, logout }: { session: Sessi
           {content}
         </View>
       </ScrollView>
-      {data && <BusinessTutorial userId={session.user.id} role={data.role} venueId={venue} availableTabs={items} replayToken={tourReplay} onNavigate={T} onHighlight={TourHighlight} />}
+      {data && <BusinessTutorial userId={session.user.id} role={data.role} venueId={venue} availableTabs={items} replayToken={replayToken} onNavigate={T} onHighlight={TourHighlight} />}
     </View>
   );
 }
 export default function App() {
   useEffect(() => watchBusinessIcon(), []);
-  const [privacyOpen, PrivacyOpen] = useState(false);
+  const [privacyOpen, PrivacyOpen] = useState(false), [optionsOpen, OptionsOpen] = useState(false), [replayToken, ReplayToken] = useState(0);
   const [fonts] = useFonts({
     BricolageGrotesque_800ExtraBold,
     BricolageGrotesque_700Bold,
@@ -358,6 +360,8 @@ export default function App() {
   }, []);
   const security = useSecureAccess(session?.user.id ?? "", "business", call, session ? securitySessionKey(session) : '');
   const logout = async () => { security.lock(); try { await call("secure_session_close", {p_scope: "business"}); } finally { const {error} = await backend.auth.signOut({scope: "local"}); if (error) throw error; } };
+  useEffect(() => {OptionsOpen(false);}, [session?.user.id, security.active]);
+  const rememberNotice=useRememberedWebAuth(rememberedAuth,session,logout);
   useEffect(() => {
     const listener = AppState.addEventListener("change", state => {if (state === "active") void security.check();});
     if (Platform.OS !== "web") return () => listener.remove();
@@ -371,35 +375,38 @@ export default function App() {
       <ThemeCtx.Provider value={{ t, name: theme, set: T }}>
         <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }} onTouchStart={security.activity}>
           <StatusBar style={t.dark ? "light" : "dark"} />
-          <View
-            style={{
-              paddingHorizontal: 12,
-              paddingVertical: 6,
-              alignItems: "flex-end",
-            }}
-          >
-            <Button
-              label={t.dark ? "Mod zi" : "Mod noapte"}
-              secondary
-              onPress={() => {
-                const n = t.dark ? "zi" : "noapte";
-                T(n);
-                void AsyncStorage.setItem("business-theme", n).catch(() => {});
-              }}
-            />
+          <View style={{paddingHorizontal: 12, paddingVertical: 4, alignItems: "flex-end"}}>
+            <Pressable accessibilityRole="button" accessibilityLabel="Opțiuni Business" accessibilityState={{expanded: optionsOpen}} onPress={() => OptionsOpen(true)} style={{minHeight: 44, paddingHorizontal: 12, justifyContent: "center"}}>
+              <Txt style={{fontSize: 14}}>••• Opțiuni</Txt>
+            </Pressable>
           </View>
-          {privacyOpen && fonts && ready ? <ScrollView contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
+          <Modal visible={optionsOpen} transparent animationType="none" onRequestClose={() => OptionsOpen(false)}>
+            <Pressable accessible={false} onPress={() => OptionsOpen(false)} style={{flex: 1, backgroundColor: "rgba(0,0,0,0.5)", justifyContent: "center", padding: 20}}>
+              <Pressable accessible={false} accessibilityViewIsModal onPress={() => {}} style={{width: "100%", maxWidth: 400, alignSelf: "center", backgroundColor: t.bg, borderRadius: 20, padding: 20, gap: 12}}>
+                <Txt big>Opțiuni Business</Txt>
+                <Button label={t.dark ? "Mod zi" : "Mod noapte"} secondary onPress={() => {
+                  const next = t.dark ? "zi" : "noapte";
+                  T(next); OptionsOpen(false);
+                  void AsyncStorage.setItem("business-theme", next).catch(() => {});
+                }}/>
+                {!privacyOpen && session && security.identity && (!security.identity.business_access || security.active) && <Button label="Tur cu Bilu" secondary onPress={() => {PrivacyOpen(false); OptionsOpen(false); ReplayToken(v => v + 1);}}/>}
+                <Button label="Termeni · Confidențialitate · Datele mele" secondary onPress={() => {OptionsOpen(false); PrivacyOpen(true);}}/>
+                <Button label="Închide meniul" secondary onPress={() => OptionsOpen(false)}/>
+              </Pressable>
+            </Pressable>
+          </Modal>
+          {!!rememberNotice&&<Txt>{rememberNotice}</Txt>}
+          {privacyOpen && fonts && ready ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
             <ActivityIndicator accessibilityLabel="Se încarcă CeFaci Business" />
           ) : session ? (
-            security.error || !security.identity ? <Card><Txt big>Verificăm accesul…</Txt><Txt>{security.error || "Verificăm contul și rolul tău."}</Txt><Button label="Verifică din nou" onPress={() => void security.check()}/><Button label="Ieși din cont" secondary onPress={() => void logout().catch(() => {})}/></Card> : security.identity.business_access && !security.active ? <BusinessSecurityGate session={session} forcedChallenge={security.forcedChallenge} onVerified={security.verified} onLogout={logout}/> : <Workspace key={session.user.id + ":" + security.identity.business_access} session={session} hasAccess={security.active} checkAccess={security.check} logout={logout} />
+            security.error || !security.identity ? <Card><Txt big>Verificăm accesul…</Txt><Txt>{security.error || "Verificăm contul și rolul tău."}</Txt><Button label="Verifică din nou" onPress={() => void security.check()}/><Button label="Ieși din cont" secondary onPress={() => void logout().catch(() => {})}/></Card> : security.identity.business_access && !security.active ? <BusinessSecurityGate session={session} forcedChallenge={security.forcedChallenge} onVerified={security.verified} onLogout={logout}/> : <Workspace key={session.user.id + ":" + security.identity.business_access} session={session} hasAccess={security.active} checkAccess={security.check} logout={logout} replayToken={replayToken} />
           ) : (
-            <ScrollView
+            <ScrollView keyboardShouldPersistTaps="handled"
               contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
             >
               <BusinessEntry />
             </ScrollView>
           )}
-          {!privacyOpen && fonts && ready && <View style={{paddingHorizontal: 16, paddingVertical: 6}}><Button label="Termeni · Confidențialitate · Datele mele" secondary onPress={() => PrivacyOpen(true)}/></View>}
         </SafeAreaView>
       </ThemeCtx.Provider>
     </SafeAreaProvider>

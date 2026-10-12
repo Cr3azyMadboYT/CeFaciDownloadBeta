@@ -1,19 +1,24 @@
 import { useEffect, useRef, useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Platform } from "react-native";
 import type { Session } from "@supabase/supabase-js";
 import {AccountLegalNotice} from "../../shared/AccountLegalNotice";
 import {useTheme} from "../../shared/theme";
 import { Bilu } from "../../shared/Bilu";
 import { RequestScope } from "../../shared/contracts";
+import {rememberedAuth} from './auth-storage';
+import {confirmRememberedLogin} from '../../shared/remembered-web-auth';
 import { backend, call } from "./backend";
-import { Button, Card, Field, Txt } from "./ui";
-import { chooseProof, requestKey, uploadProof, type ClaimVenue, type PartnerRequest, type Proof, type RequestDetails, type RequestKind } from "./onboarding-api";
+import { Button, Card, Field, Txt, Toggle } from "./ui";
+import {normalizeUsername, validUsername, validateBirthDate} from "./identity-validation";
+import {partnerValidation} from './partner-validation';
+import { chooseProofs, MAX_PROOF_FILES, MAX_PROOF_TOTAL_BYTES, requestKey, uploadProof, type ClaimVenue, type PartnerRequest, type Proof, type RequestDetails, type RequestKind } from "./onboarding-api";
 
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : "Nu am putut încheia pasul. Reîncearcă online.";
 
 export function BusinessEntry() {
   const {t} = useTheme();
   const [mode, setMode] = useState<"start" | "existing" | "new">("start");
+  const [remember, Remember] = useState(false);
   const [email, E] = useState(""), [code, C] = useState(""), [sent, S] = useState(false),
     [busy, B] = useState(false), [message, M] = useState("");
   const mounted = useRef(true);
@@ -22,10 +27,12 @@ export function BusinessEntry() {
   const run = async (verify: boolean) => {
     B(true); M("");
     try {
-      const { error } = verify
+      if(verify)rememberedAuth?.choose(remember);
+      const result = verify
         ? await backend.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "email" })
         : await backend.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: mode === "new" } });
-      if (error) throw error;
+      if (result.error) {if(verify)rememberedAuth?.choose(false);throw result.error;}
+      if(verify&&"session"in result.data)await confirmRememberedLogin(rememberedAuth,result.data.session,call);
       if (!verify && mounted.current) { S(true); M("Verifică emailul și introdu codul primit."); }
     } catch (e) { if (mounted.current) M(errorMessage(e)); }
     finally { if (mounted.current) B(false); }
@@ -41,6 +48,7 @@ export function BusinessEntry() {
       <Txt muted>{mode === "existing" ? "Folosește adresa contului CeFaci. Dacă ești în echipa unui local, intri cu rolul acordat de proprietar." : "Confirmă adresa de email. Poți folosi contul CeFaci existent sau crea unul aici. Cererea de parteneriat se verifică separat."}</Txt>
       <Field label="Email" editable={!busy} value={email} onChange={(v) => { E(v); S(false); C(""); M(""); }} />
       {sent && <Field label="Codul primit prin email" numeric editable={!busy} value={code} onChange={C} />}
+      {Platform.OS==='web'&&<><Toggle label="Ține-mă minte 15 zile pe acest dispozitiv" value={remember} onChange={Remember}/><Txt muted style={{fontSize:12}}>Folosește opțiunea pe dispozitivul tău. După inactivitate, accesul la date se redeschide prin MFA.</Txt></>}
       <AccountLegalNotice audience="business" theme={t} creating={mode === "new"}/>
       <Button label={busy ? "Așteaptă…" : sent ? "Intră" : "Trimite codul"} disabled={busy || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || (sent && !code.trim())} onPress={() => void run(sent)} />
       {sent && <Button label="Retrimite codul" secondary disabled={busy} onPress={() => void run(false)} />}
@@ -66,12 +74,27 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
   const [stage, Stage] = useState<"home" | "search" | "form">("home"), [query, Q] = useState(""),
     [found, Found] = useState<ClaimVenue[]>([]), [searched, Searched] = useState(false),
     [chosen, Chosen] = useState<ClaimVenue | null>(null), [kind, Kind] = useState<RequestKind>("claim"),
-    [details, Details] = useState<RequestDetails>({ ...blank }), [proof, ProofState] = useState<Proof | null>(null),
+    [details, Details] = useState<RequestDetails>({ ...blank }), [proofs, ProofState] = useState<Proof[]>([]),
     [requests, Requests] = useState<PartnerRequest[]>([]), [busy, B] = useState(false),
     [message, M] = useState(""), [listError, ListError] = useState(""),
     [identity, Identity] = useState<{ has_profile: boolean; username: string | null; first_name: string | null } | null>(null),
     [identityError, IdentityError] = useState(""), [firstName, FirstName] = useState(""),
-    [username, Username] = useState(""), [birthDate, BirthDate] = useState("");
+    [username, Username] = useState(""), [day, Day] = useState(""), [month, Month] = useState(""), [year, Year] = useState("");
+  const normalized = normalizeUsername(username), birth = validateBirthDate(day, month, year);
+  const [availability, Availability] = useState<{user: string; owner: string; status: "free" | "taken" | "error"} | null>(null);
+  const [checkRetry, CheckRetry] = useState(0);
+  const checked = availability?.user === normalized && availability.owner === session.user.id ? availability.status : null;
+  useEffect(() => {
+    let active = true;
+    Availability(null);
+    if (!identity || identity.has_profile || !validUsername(normalized)) return;
+    const timer = setTimeout(() => {
+      void call<boolean>("username_available", {p_username: normalized}).then(free => {
+        if (active) Availability({user: normalized, owner: session.user.id, status: free === true ? "free" : free === false ? "taken" : "error"});
+      }).catch(() => { if (active) Availability({user: normalized, owner: session.user.id, status: "error"}); });
+    }, 400);
+    return () => { active = false; clearTimeout(timer); };
+  }, [normalized, session.user.id, identity?.has_profile, checkRetry]);
   const scope = useRef(new RequestScope()), lock = useRef(false), searchGeneration = useRef(0), listGeneration = useRef(0),
     draft = useRef<PartnerRequest | null>(null), key = useRef(requestKey());
   const load = async () => {
@@ -100,14 +123,15 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     finally { if (valid()) { lock.current = false; B(false); } }
   };
   const form = (next: RequestKind, venue: ClaimVenue | null) => {
-    draft.current = null; key.current = requestKey(); ProofState(null); Details({ ...blank });
+    draft.current = null; key.current = requestKey(); ProofState([]); Details({ ...blank });
     Kind(next); Chosen(venue); M(""); Stage("form");
   };
   const field = (name: keyof RequestDetails, value: string) => Details((old) => ({ ...old, [name]: value }));
-  const canSubmit = !!proof && [details.requester_name, details.requester_role, details.firm, details.cui, details.phone].every((v) => !!v.trim()) &&
-    (kind !== "new" || [details.venue_name, details.address, details.city, details.category].every((v) => !!v?.trim()));
+  const scroll = useRef<ScrollView>(null);
+  const validation = partnerValidation(kind, details, proofs.length > 0);
   const submit = () => run(async (valid) => {
-    if (!proof) throw new Error("Alege documentul care dovedește legătura dintre local și firmă.");
+    if (validation) throw new Error(validation);
+    if (!proofs.length) throw new Error("Alege documentul care dovedește legătura dintre local și firmă.");
     {
       const created = await call<PartnerRequest>("biz_partner_request_create", { p_key: key.current, p_kind: kind, p_venue: chosen?.id ?? null, p_details: details });
       if (!valid()) return; draft.current = created;
@@ -115,35 +139,61 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
     if (draft.current.status !== "draft" && draft.current.status !== "pending")
       throw new Error("Această cerere a fost deja încheiată. Verifică lista cererilor tale.");
     if (draft.current.status === "draft") {
-      const path = await uploadProof(session.user.id, draft.current.id, proof);
+      await call('biz_partner_request_files', {p_id: draft.current.id, p_files: proofs.map(p => ({name:p.name,content_type:p.contentType,size:p.bytes.byteLength}))});
       if (!valid()) return;
-      await call("biz_partner_request_submit", { p_id: draft.current.id, p_path: path });
+      let path = '';
+      for (const [index, proof] of proofs.entries()) {
+        const uploaded = await uploadProof(session.user.id, draft.current.id, proof, index + 1);
+        if (!valid()) return;
+        if (index === 0) path = uploaded;
+      }
       if (!valid()) return;
+      const receipt = await call<PartnerRequest>("biz_partner_request_submit", { p_id: draft.current.id, p_path: path });
+      if (!valid()) return;
+      if (receipt?.id !== draft.current.id || receipt.status !== 'pending')
+        throw new Error('Nu am primit confirmarea trimiterii. Reîncearcă; cererea păstrează aceeași referință.');
     }
-    draft.current = null; ProofState(null); Stage("home");
+    draft.current = null; ProofState([]); Stage("home");
     M("Cererea și documentul au fost trimise. Urmărește decizia aici; localul rămâne neschimbat până la aprobare.");
+    scroll.current?.scrollTo({y: 0, animated: true});
     await load();
   });
   const cancelDraft = () => run(async (valid) => {
     if (draft.current) await call("biz_partner_request_cancel", { p_id: draft.current.id });
     if (!valid()) return;
-    draft.current = null; ProofState(null); Stage("home"); await load();
+    draft.current = null; ProofState([]); Stage("home"); await load();
   });
   const title = kind === "new" ? "Solicită adăugarea localului" : kind === "dispute" ? "Dispută pentru local" : "Revendică localul";
-  return <ScrollView contentContainerStyle={{ padding: 20, gap: 20, width: "100%", maxWidth: 760, alignSelf: "center" }}>
+  return <ScrollView ref={scroll} keyboardShouldPersistTaps="handled" contentContainerStyle={{ padding: 20, gap: 20, width: "100%", maxWidth: 760, alignSelf: "center" }}>
     <View style={{ alignItems: "center", gap: 8 }}><Bilu mood="hi" size={100} still /><Txt big>Hai să găsim localul tău</Txt><Txt muted>{session.user.email ?? "Cont CeFaci confirmat"}</Txt></View>
     {onHelp && <Card><Txt muted>CeFaci este încă în dezvoltare. Ai găsit o problemă? Spune-ne.</Txt><Button label="Ajutor · Raportează o problemă" secondary disabled={busy} onPress={onHelp} /></Card>}
     {!!accessError && <Card title="Accesul nu a putut fi verificat"><Txt>{accessError}</Txt><Txt muted>Poți reîncerca actualizarea accesului din lista cererilor.</Txt></Card>}
-    {!!message && <Card><Txt>{message}</Txt></Card>}
+    {!!message && stage !== 'form' && (!identity || identity.has_profile) && <Card><Txt>{message}</Txt></Card>}
     {!!identityError && <Card title="Verifică profilul contului"><Txt>{identityError}</Txt><Button label="Reîncearcă verificarea profilului" secondary disabled={busy} onPress={() => void run(async () => { await loadIdentity(); })} /></Card>}
     {identity && !identity.has_profile && <Card title="Completează contul CeFaci">
       <Txt>Ai confirmat emailul. Completează profilul contului pe care îl vei folosi în Client și Business. Acest pas nu acordă acces la un local.</Txt>
       <Field label="Prenume" value={firstName} editable={!busy} onChange={FirstName} />
       <Field label="Username CeFaci" value={username} editable={!busy} onChange={(v) => Username(v.toLowerCase())} />
-      <Field label="Data nașterii (AAAA-LL-ZZ)" value={birthDate} editable={!busy} onChange={BirthDate} />
+      {!!username && <Txt muted>{!validUsername(normalized) ? "Folosește 3–20 de caractere: litere, cifre, punct, cratimă sau _." : checked === "free" ? "Username disponibil." : checked === "taken" ? "Username ocupat. Alege altul." : checked === "error" ? "Nu am putut verifica username-ul. Reîncearcă online." : "Verificăm username-ul…"}</Txt>}
+      {checked === "error" && <Button label="Reverifică username-ul" secondary disabled={busy} onPress={() => CheckRetry(v => v + 1)}/>}
+      <Txt muted>Data nașterii</Txt>
+      <View style={{flexDirection: "row", gap: 10}}>
+        <View style={{flex: 1, minWidth: 0}}><Field label="Zi" numeric value={day} editable={!busy} onChange={v => Day(v.replace(/\D/g, '').slice(0, 2))}/></View>
+        <View style={{flex: 1, minWidth: 0}}><Field label="Lună" numeric value={month} editable={!busy} onChange={v => Month(v.replace(/\D/g, '').slice(0, 2))}/></View>
+        <View style={{flex: 1.4, minWidth: 0}}><Field label="An" numeric value={year} editable={!busy} onChange={v => Year(v.replace(/\D/g, '').slice(0, 4))}/></View>
+      </View>
+      {!!day && !!month && year.length === 4 && !!birth.error && <Txt>{birth.error}</Txt>}
       <Txt muted>Contul CeFaci este disponibil de la 16 ani. Data nașterii nu apare pe profilul public.</Txt>
-      <Button label="Salvează profilul contului" disabled={busy || firstName.trim().length < 2 || username.trim().length < 3 || !/^\d{4}-\d{2}-\d{2}$/.test(birthDate)} onPress={() => void run(async (valid) => {
-        await call("biz_identity_complete", { p_username: username.trim(), p_first_name: firstName.trim(), p_birth_date: birthDate });
+      {!!message && <View accessibilityLiveRegion="polite"><Txt>{message}</Txt></View>}
+      <Button label="Salvează profilul contului" disabled={busy || firstName.trim().length < 2 || !validUsername(normalized) || checked !== "free" || !birth.iso} onPress={() => void run(async (valid) => {
+        try {await call("biz_identity_complete", { p_username: normalized, p_first_name: firstName.trim(), p_birth_date: birth.iso });}
+        catch (e) {
+          if (valid() && e instanceof Error && /username|duplicate key|deja luat/i.test(e.message)) {
+            Availability({user: normalized, owner: session.user.id, status: "taken"});
+            throw new Error("Username-ul a fost ocupat între timp. Alege altul.");
+          }
+          throw e;
+        }
         if (!valid()) return;
         await loadIdentity();
         if (valid()) M("Profilul contului CeFaci a fost completat. Cererea pentru local se verifică separat.");
@@ -193,10 +243,22 @@ export function BusinessOnboarding({ session, onRefreshAccess, onSignOut, onBack
       <Card title={kind === "new" ? "3. Documentul justificativ" : "2. Documentul justificativ"}>
         <Txt>Certificat constatator ONRC, certificat de înregistrare, contract de închiriere sau autorizație. Acoperă CNP-ul și datele personale care nu sunt necesare verificării.</Txt>
         <Txt muted>PDF, JPEG sau PNG, maximum 8 MB. Documentul este privat, accesibil pentru verificarea cererii.</Txt>
-        <Button label={proof ? "Schimbă documentul" : "Încarcă documentul"} secondary disabled={busy || !!draft.current} onPress={() => void run(async (valid) => { const next = await chooseProof(); if (valid() && next) ProofState(next); })} />
-        {proof && <Txt>{proof.name} · {Math.ceil(proof.bytes.byteLength / 1024)} KB</Txt>}
+        <Txt muted>Un fișier este suficient. Dacă ai nevoie, poți adăuga până la 5 fișiere; maximum 20 MB în total. Pozele sunt pregătite pentru citire în Admin.</Txt>
+        <Button label={proofs.length ? "Schimbă documentul" : "Încarcă documentul"} secondary disabled={busy || !!draft.current} onPress={() => void run(async (valid) => { const next = await chooseProofs(); if (valid() && next.length) ProofState(next); })} />
+        {proofs.map((proof,index) => <View key={index} style={{gap:8}}><Txt>{index+1}. {proof.name} · {Math.ceil(proof.bytes.byteLength / 1024)} KB</Txt><Button label={`Scoate fișierul ${index+1}`} secondary disabled={busy || !!draft.current} onPress={() => ProofState(old=>old.filter((_,i)=>i!==index))}/></View>)}
+        {!!proofs.length && proofs.length < MAX_PROOF_FILES && <Button label="Adaugă alt fișier (opțional)" secondary disabled={busy || !!draft.current} onPress={() => void run(async valid => {
+          const next=await chooseProofs(MAX_PROOF_FILES-proofs.length);
+          if (!valid() || !next.length) return;
+          if([...proofs,...next].reduce((sum,p)=>sum+p.bytes.byteLength,0)>MAX_PROOF_TOTAL_BYTES) throw new Error('Fișierele din dosar pot avea cel mult 20 MB împreună.');
+          ProofState(old=>[...old,...next]);
+        })}/>}
         {draft.current && <Txt muted>Ciorna este salvată. Reîncearcă trimiterea documentului; pentru alte date, renunță la ciornă și începe din nou.</Txt>}
-        <Button label={busy ? "Se trimite…" : "Trimite cererea pentru verificare"} disabled={busy || !canSubmit} onPress={() => void submit()} />
+        <View testID="partner-submit-feedback" accessibilityLiveRegion="polite">
+          {!!message && <Txt>{message}</Txt>}
+          {!!validation && <Txt muted>{validation}</Txt>}
+          {busy && <Txt muted>Se verifică datele și se trimite documentul. Așteaptă confirmarea înainte să închizi pagina.</Txt>}
+        </View>
+        <Button label={busy ? "Se trimite…" : "Trimite cererea pentru verificare"} disabled={busy || !!validation} onPress={() => void submit()} />
         <Button label={draft.current ? "Renunță la ciornă" : "Înapoi"} secondary disabled={busy} onPress={() => void cancelDraft()} />
       </Card>
     </>}

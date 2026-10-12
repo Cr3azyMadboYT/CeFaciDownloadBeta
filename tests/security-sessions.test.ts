@@ -26,7 +26,7 @@ beforeAll(async()=>{
  await q("insert into auth.mfa_factors values($1,$2,'verified','totp'),($3,$4,'verified','totp')",[F,A,G,B]);
  await q("insert into auth.sessions(id,user_id,factor_id,aal)values($1,$2,$3,'aal2'),($4,$5,$6,'aal2'),($7,$8,null,'aal1')",[S,A,F,T,B,G,V,C]);
 },60000);
-beforeEach(async()=>{await db.exec('delete from private.security_sessions');await q("update auth.users set banned_until=null,deleted_at=null,is_anonymous=false");await q("update auth.mfa_factors set status='verified'");await q("update auth.sessions set aal='aal2',not_after=null where id in($1,$2)",[S,T]);await jwt();});
+beforeEach(async()=>{await db.exec('delete from private.security_sessions;delete from private.remembered_web_sessions');await q("update auth.users set banned_until=null,deleted_at=null,is_anonymous=false");await q("update auth.mfa_factors set status='verified'");await q("update auth.sessions set aal='aal2',not_after=null where id in($1,$2)",[S,T]);await jwt();});
 afterAll(()=>db?.close());
 it('bootstrap is minimal at aal1 and neither metadata nor aal claim alone creates a capability',async()=>{
  await jwt(A,S,'aal1',0,{user_metadata:{role:'fondator'}});expect(await api('secure_access_status()')).toEqual({admin_role:'admin',business_access:false});expect((await api('admin_me()')).permissions).toEqual([]);
@@ -84,4 +84,23 @@ it('an employee still cannot claim their own venue Drop from Client after losing
  const drop=(await q("insert into drops(venue_id,title,pct_all,pct_plus,seats,min_group,starts_at,ends_at)values('secure-v','Ofertă test',10,20,4,1,now()-interval '11 minutes',now()+interval '2 hours')returning id")).rows[0].id;
  await expect(api("drop_claim_v2($1,$2,1,44.1,26.1,'employee-blocked')",[drop,plan])).rejects.toThrow(/Echipa localului/);
  expect((await q('select count(*) n from drop_claims where drop_id=$1',[drop])).rows[0].n).toBe(0);
+});
+
+it('remembered web login uses a fixed server deadline and does not grant or extend MFA access',async()=>{
+ await jwt(A,S,'aal1',0);const r=await api("remember_web_session('admin')");const created=(await q('select created_at from auth.sessions where id=$1',[S])).rows[0].created_at;
+ expect(Date.parse(r.expires_at)-new Date(created).getTime()).toBe(15*24*60*60*1000);
+ expect(await api("remember_web_session('admin')")).toEqual(r);expect((await api("secure_session_open('admin')")).active).toBe(false);
+ await expect(api('admin_dashboard()')).rejects.toThrow(/securizată/);await jwt();const access=await api("secure_session_open('admin')");expect(access.absolute_seconds).toBe(28800);expect(access.idle_seconds).toBe(900);
+ await q("update private.security_sessions set touched_at=now()-interval '16 minutes'");expect((await api("secure_session_status('admin')")).active).toBe(false);
+ await jwt(B,T);const b=await api("remember_web_session('business')");expect(Date.parse(b.expires_at)).toBeGreaterThan(Date.now());expect((await api("secure_session_open('business')")).absolute_seconds).toBe(43200);
+});
+it('expired remembered login is denied on server even with valid old JWT, role and MFA',async()=>{
+ await api("remember_web_session('admin')");await api("secure_session_open('admin')");await q("update private.remembered_web_sessions set expires_at=now()-interval '1 second'where session_id=$1",[S]);
+ await expect(api('secure_access_status()')).rejects.toThrow(/cont/);await expect(api("remember_web_session('admin')")).rejects.toThrow(/cont/);expect((await api("secure_session_status('admin')")).active).toBe(false);await expect(api('admin_dashboard()')).rejects.toThrow();
+});
+it('remembering cannot target another session, use unknown scopes, revive revocation or read private receipts',async()=>{
+ await expect(api("remember_web_session('client')")).rejects.toThrow(/invalidă/);await jwt(A,T);await expect(api("remember_web_session('admin')")).rejects.toThrow(/cont/);await jwt();
+ await db.exec('set role authenticated');try{await expect(q('select * from private.remembered_web_sessions')).rejects.toThrow(/permission denied/);}finally{await db.exec('reset role')}
+ await db.exec('set role anon');try{await expect(q("select remember_web_session('admin')")).rejects.toThrow(/permission denied/);}finally{await db.exec('reset role')}
+ const extra='81000000-0000-4000-8000-000000000099';await q("insert into auth.sessions(id,user_id,aal)values($1,$2,'aal1')",[extra,A]);await jwt(A,extra,'aal1',0);await api("remember_web_session('admin')");await q('delete from auth.sessions where id=$1',[extra]);expect((await q('select count(*) n from private.remembered_web_sessions where session_id=$1',[extra])).rows[0].n).toBe(0);await expect(api('secure_access_status()')).rejects.toThrow(/cont/);
 });

@@ -1,6 +1,28 @@
+# Actualizare Business 1.0.8 — trimitere cereri
+
+Folosește `release/CeFaci-Business-web.zip` pentru business.cefaci.app. Admin și cefaci.app nu trebuie înlocuite pentru această corecție. Nu rula SQL suplimentar. Înlocuiește APK Business cu buildul verificat 1.0.8/code9. Păstrează datele hostingului și backupul anterior; extrage conținutul ZIP-ului în rădăcina subdomeniului, inclusiv `.htaccess`. Verifică `/version.json` cu commit 794710b și golește cache-ul/PWA dacă folosești aplicația web.
+
+Detalii: [corecție trimitere](BUSINESS-SUBMIT-FIX-20261010.md). Pentru iOS: [ghid separat](IOS-CEFACI-20261010.md); arhiva nesemnată nu este IPA instalabilă.
+
+## Instrucțiuni precedente, păstrate pentru referință
+
 # Livrare CeFaci Client + Business + Admin
 
-## Release iconițe Business și nota contului — 10.10.2026
+## Actualizare Business 1.0.7 — formular și meniu
+
+Pentru corecția din captura de telefon înlocuiește **numai Business web**, cu `CeFaci-Business-web.zip` din sursa `7d36324d1113fcfcc8e935f05471bd39680e62f2`. Admin și site-ul rămân release-ul web precedent. Nu folosi Business-ul inclus în kitul istoric de quiz pentru acest update.
+
+Android: instalează `CeFaci-Business.apk` **1.0.7/code8** peste code7; semnătura de producție este aceeași. `CeFaci-Business.aab` este pachetul semnat pentru Google Play, fără publicare automată. Nu dezinstala aplicația pentru acest upgrade. Backupuri: `release/previous-business-profile-20261010/`. [Verificări și instalare](BUSINESS-PROFILE-FIX-20261010.md).
+
+Pentru Client și Business iOS folosește [ghidul dedicat](IOS-CEFACI-20261010.md). Pachetul de simulator, arhiva device nesemnată și proiectul Xcode au utilizări diferite. Nu există încă Apple Developer; nu se livrează un IPA instalabil/TestFlight.
+
+## Release web: tur interactiv și memorare login — 10.10.2026
+
+Admin, Business și site-ul public sunt recompilate din **ab97354c90919108fba8c19daf6be2dcbacb878d**. Înlocuiește weburile cu ZIP-urile actuale din `release/`, inclusiv `.htaccess`, în document-root-urile corespunzătoare descrise mai jos. Backendul pentru voturi și memorarea loginului este deja aplicat. Vezi [raportul actual](RAPORT.md), [turul](QUIZ-CEFACI-20261010.md) și [memorarea](REMEMBER-LOGIN-20261010.md).
+
+După upload, verifică `version.json`, intrarea cu propriul cont și opțiunea nebifată implicit **Ține-mă minte 15 zile pe acest dispozitiv**. Bifată, păstrează autentificarea în același browser; rolurile și MFA rămân verificate. Redeschide tabul și verifică logoutul pe dispozitivul personal. În Admin, doar fondator/admin vede **Lansare CeFaci**. Nu introduce voturi de test în producție. Story-ul se publică numai după ce `https://cefaci.app/descopera/` funcționează, cu stickerul Link adăugat în Instagram.
+
+## Release iconițe Business și nota contului — 10.10.2026 (istoric)
 
 Client **0.3.4/code7**, Business **1.0.6/code7**, Admin/Business web: APK/AAB și weburi din `26591508a442cfa4b9787afc0a661d3ef9f08668`, workflow 38053659611 SUCCESS. Business iOS este proiectul local corectat din `3c922ab`, fără IPA; site-ul final este `011748c477632130c6bac93c8d12e7d1f6b03e0f`. Folosește pachetele și checksumurile din [raportul actual](RAPORT.md). Textele juridice sunt în Client/Business înainte de crearea contului; documentele se deschid offline fără pierderea formularului. Calendarul iconițelor native Business este comun Clientului. Backendul și instrucțiunile de instalare de mai jos rămân valabile; istoricul code6 este arhivat.
 

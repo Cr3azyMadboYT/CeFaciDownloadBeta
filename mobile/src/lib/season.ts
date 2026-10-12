@@ -2,9 +2,10 @@
 // itself, nothing to set). Bilu dresses for it,
 // Acasă gets what falls in it, and the app's icon follows it (setIcon, when the app goes to the background).
 import { useEffect, useState } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { requireOptionalNativeModule } from 'expo-modules-core';
 import { LOOKS, lookFor, type Look, type LookInfo } from '../../../src/app/season';
+import {watchSeasonalIcon} from '../../../shared/seasonal-icon';
 
 export { LOOKS, type Look, type LookInfo };
 
@@ -21,14 +22,7 @@ export function useLook(): Look {
 type IconNative = { current(): string | null; set(name: string): Promise<boolean> };
 const icon = requireOptionalNativeModule<IconNative>('CefaciIcon');
 
-/** Android: the launcher icon for the look, changed only while the app is in the background (changing the
- *  launcher entry of a running app can close it on some phones). */
+/** Android switches in background; UIKit switches while active, using the same season calendar. */
 export function watchIcon() {
-  if (!icon) return () => {};
-  const sub = AppState.addEventListener('change', (st) => {
-    if (st !== 'background') return;
-    const want = LOOKS[lookFor('auto')].icon;
-    try { if (icon.current() !== want) void icon.set(want).catch(() => {}); } catch { /* missing */ }
-  });
-  return () => sub.remove();
+  return watchSeasonalIcon({native: icon, platform: Platform.OS, appState: AppState});
 }

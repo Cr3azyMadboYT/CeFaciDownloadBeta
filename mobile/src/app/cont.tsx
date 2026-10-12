@@ -11,7 +11,7 @@ import { nearestZone } from '../../../src/engine/core';
 import { E2E } from '../lib/e2e';
 import { RadiusChooser, WhereChooser } from '../ui/WherePick';
 import type { Who } from '../lib/auth';
-import { signOutEverywhere } from '../lib/auth';
+import { signOutEverywhere, googleSignInAvailable } from '../lib/auth';
 import { LIKES } from '../lib/answers';
 import { useLightBar } from '../ui/bar';
 import { Bilu, type Mood } from '../ui/Bilu';
@@ -268,18 +268,18 @@ export default function Cont() {
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 10 }}>
             <AccountLegalNotice audience="client" theme={t} dark creating={!returning}/>
             <LegalLinks dark compact />
-            <Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}
+            {googleSignInAvailable&&<Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}
               style={{ height: 56, borderRadius: 18, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <GoogleG />
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#0E1440' }}>{busy ? 'O clipă…' : 'Continuă cu Google'}</T>
-            </Press>
+            </Press>}
             <Press disabled={busy} onPress={() => { setAuthErr(''); setSent(false); setCode(''); go(E2E ? 'name' : 'email'); }}
               style={{ height: 56, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.06)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <MailIcon />
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>Continuă cu email</T>
             </Press>
             {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
-            <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ai deja cont? Intră la fel, cu Google sau cu emailul.</T>
+            <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>{googleSignInAvailable?'Ai deja cont? Intră la fel, cu Google sau cu emailul.':'Ai deja cont? Intră cu aceeași adresă de email.'}</T>
           </View>
         </ScrollView>
       </Slide>

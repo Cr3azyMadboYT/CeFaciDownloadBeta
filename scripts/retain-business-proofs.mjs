@@ -1,7 +1,7 @@
 // Server-only retention runner. The key must be injected by a private scheduler, never shipped with apps.
 import { pathToFileURL } from 'node:url';
 const projectUrl = 'https://vqrmwuarjjntusfbqprx.supabase.co';
-const safePath = /^[0-9a-f-]{36}\/[0-9a-f-]{36}\/proof\.(pdf|jpg|png)$/;
+const safePath = /^[0-9a-f-]{36}\/[0-9a-f-]{36}\/proof(?:-[2-5])?\.(pdf|jpg|png)$/;
 export async function retainBusinessProofs({key, execute=false, fetcher=fetch}) {
   if(!key) throw new Error('Configure CEFACI_RETENTION_SERVICE_KEY in the private server environment.');
   const request=async(path,method,body)=>{

@@ -1,0 +1,22 @@
+{
+  "commit": "794710b927a1e1f2bc6e33394cf69bf360d96b5d",
+  "e2e_enabled": false,
+  "products": [
+    {
+      "kind": "simulator",
+      "bundle": "app.cefaci.business",
+      "version": "1.0.8",
+      "build": "9",
+      "architecture": "arm64",
+      "offline_bundle_bytes": 3379826
+    },
+    {
+      "kind": "device-unsigned",
+      "bundle": "app.cefaci.business",
+      "version": "1.0.8",
+      "build": "9",
+      "architecture": "arm64",
+      "offline_bundle_bytes": 3379883
+    }
+  ]
+}

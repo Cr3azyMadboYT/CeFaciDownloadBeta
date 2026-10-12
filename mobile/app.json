@@ -36,7 +36,7 @@
     "ios": {
       "bundleIdentifier": "ro.cefaci.app",
       "supportsTablet": false,
-      "buildNumber": "7",
+      "buildNumber": "8",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
@@ -60,7 +60,10 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "CeFaci folosește locația la cererea ta pentru locuri apropiate, revendicarea ofertelor și verificarea sosirii. La aceste verificări, coordonatele sunt trimise serverului."
+          "locationWhenInUsePermission": "CeFaci folosește locația la cererea ta pentru locuri apropiate, revendicarea ofertelor și verificarea sosirii. La aceste verificări, coordonatele sunt trimise serverului.",
+          "locationAlwaysPermission": false,
+          "locationAlwaysAndWhenInUsePermission": false,
+          "motionUsagePermission": false
         }
       ],
       [
@@ -74,7 +77,7 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "CeFaci deschide camera când fotografiezi un bon, avatarul sau o problemă raportată.",
+          "cameraPermission": "CeFaci deschide camera când scanezi codul localului sau fotografiezi un bon, avatarul ori o problemă raportată.",
           "photosPermission": "CeFaci deschide pozele doar când alegi un bon sau atașezi o poză unei probleme.",
           "microphonePermission": false
         }
@@ -90,11 +93,12 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Scanează codul localului pentru sosirea grupului.",
+          "cameraPermission": "CeFaci deschide camera când scanezi codul localului sau fotografiezi un bon, avatarul ori o problemă raportată.",
           "microphonePermission": false,
           "recordAudioAndroid": false
         }
-      ]
+      ],
+      "./plugins/withIosSeasonIcons"
     ],
     "experiments": {
       "typedRoutes": false,

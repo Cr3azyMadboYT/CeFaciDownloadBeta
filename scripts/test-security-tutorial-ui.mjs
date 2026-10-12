@@ -46,6 +46,7 @@ async function fixture(app,{role=app==='admin'?'fondator':'proprietar',aal='aal1
   else if(path===`/auth/v1/factors/${fid}`&&req.method()==='DELETE'){assert.equal(state.factor,'unverified');state.factor=null;data={id:fid};}
   else if(name==='admin_me'&&state.revoked){status=403;data={message:'Accesul în Admin este rezervat echipei CeFaci.',code:'42501'};}
   else if(name==='admin_me')data={user_id:uid,username:'synthetic',role:state.role,permissions:permissions[state.role]??[]};
+  else if(name==='admin_launch_interests')data={summary:{total:0,yes:0,maybe:0,no:0,email:0},rows:[]};
   else if(name==='admin_dashboard')data={support_new:0,support_in_progress:0,missing_place_new:0,legacy_new:0,partner_pending:0,places:1};
   else if(name==='admin_operations_summary')data={visits_today:0,reservations_pending:0,counts_awaiting:0,counts_disputed:0,benefits_pending:0,unclosed:0};
   else if(name==='admin_operations')data={visits:[],reservations:[],total_visits:0,total_reservations:0};
@@ -88,17 +89,17 @@ try{
   await f.page.getByLabel('Codul din aplicația de autentificare',{exact:true}).fill('000000');await button(f.page,'Activează protecția').click();
   await f.page.getByText('Codul nu este valid sau a expirat.',{exact:false}).waitFor();assert.equal(privateCalls(f.state).length,0);
   await f.page.getByLabel('Codul din aplicația de autentificare',{exact:true}).fill('123456');await button(f.page,'Activează protecția').click();
-  await button(f.page,'Tur cu Bilu').waitFor();assert(privateCalls(f.state).length>0);assert(!(await f.page.textContent('body')).includes('JBSWY3DPEHPK3PXP'));
+  await button(f.page,app==='business'?'Ajutor':'Tur cu Bilu').waitFor();assert(privateCalls(f.state).length>0);assert(!(await f.page.textContent('body')).includes('JBSWY3DPEHPK3PXP'));
   assert.equal(await f.page.evaluate(app=>localStorage.getItem(`cefaci-${app}-auth`),app),null);
   f.state.deadline=Date.now()+800;await f.page.evaluate(()=>window.dispatchEvent(new Event('focus')));
   await button(f.page,'Verifică și continuă').waitFor();assert.equal(await button(f.page,'Tur cu Bilu').count(),0);
   const opens=f.state.calls.filter(c=>c.name==='secure_session_open').length;
   await f.page.waitForTimeout(100);assert.equal(f.state.calls.filter(c=>c.name==='secure_session_open').length,opens);
-  await verify(f.page);await button(f.page,'Tur cu Bilu').waitFor();
+  await verify(f.page);await button(f.page,app==='business'?'Ajutor':'Tur cu Bilu').waitFor();
   await f.page.screenshot({path:`release/screenshots/${app}-secured-dashboard.png`,fullPage:true});
   f.state.revoked=true;await f.page.evaluate(()=>window.dispatchEvent(new Event('focus')));
   if(app==='admin')await f.page.getByRole('heading',{name:'Acest cont nu are acces la Admin.',exact:true}).waitFor();
-  else await button(f.page,'Tur cu Bilu').waitFor();
+  else await button(f.page,'Ajutor · Raportează o problemă').waitFor();
  }
  const changed=await fixture('admin',{role:'fondator',aal:'aal2',factor:'verified',active:true,done:true,clock:true});
  await button(changed.page,'Bani').click();await changed.page.getByRole('heading',{name:'Bani',exact:true}).waitFor();
@@ -120,7 +121,7 @@ try{
   await button(f.page,'Arată-mi!').waitFor();await tour(f.page);
   if(['receptie','scanare'].includes(role))assert.equal(await button(f.page,'Financiar').count(),0);
   if(role==='scanare')assert.equal(await button(f.page,'Rezervări').count(),0);
-  await button(f.page,'Tur cu Bilu').click();await button(f.page,'Arată-mi!').waitFor();await button(f.page,'Închide turul').click();
+  await button(f.page,'Opțiuni Business').click();await button(f.page,'Tur cu Bilu').click();await button(f.page,'Arată-mi!').waitFor();await button(f.page,'Închide turul').click();
   assert(!f.state.calls.some(c=>/_(save|change|update|decide|grant|set|scan_v2)$/.test(c.name)));
   await f.page.screenshot({path:`release/screenshots/business-role-${role}.png`,fullPage:true});
  }

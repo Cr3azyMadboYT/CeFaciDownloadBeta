@@ -1,0 +1,31 @@
+{
+  "source": "8336a5f242eaa7cc68d9cf065d837e5af6bb0bc4",
+  "run": 38143849800,
+  "ci_result": "success",
+  "artifact_sha256": "4ac4b3bb665480f29a2a1cf2f0ea91195c95d7c99dc0ca665a1d813cf7abf838",
+  "package": "app.cefaci.business",
+  "version": "1.0.9",
+  "version_code": 10,
+  "certificate_sha256": "d7714280ace4bcb3b37d5738f9334fb1fca9f29ac35024d5d5622d1d26cf853e",
+  "checks": {
+    "apk_manifest_verified": true,
+    "apk_v2_signature_verified_in_ci": true,
+    "aab_pkcs7_verified_locally": true,
+    "aab_signed_entries": 1346,
+    "debuggable": false,
+    "allow_backup": false,
+    "cleartext": false,
+    "microphone_permission": false,
+    "location_permissions": false
+  },
+  "files": {
+    "CeFaci-Business.apk": {
+      "size": 107970258,
+      "sha256": "dbea8f87d224c5514f64a97c50a9110c42ba1c90135a884b02c512bb708d8536"
+    },
+    "CeFaci-Business.aab": {
+      "size": 70453002,
+      "sha256": "db79e5df54db69ee822db816c4490bd059d35c8e2f2ec295d7efac2b77647f56"
+    }
+  }
+}
