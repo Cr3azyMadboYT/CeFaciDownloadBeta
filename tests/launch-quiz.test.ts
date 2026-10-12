@@ -24,3 +24,14 @@ it('quota survives withdrawals, retries do not consume quota, expiry hides stale
 it('filters use literal text and bounded pages, never SQL fragments or wildcard expansion',async()=>{await submit(undefined,'yes','100% real');await submit(undefined,'no','Other');expect((await admin("select admin_launch_interests(null,'%',0)r")).rows).toHaveLength(1);expect((await admin("select admin_launch_interests('no','',0)r")).rows).toHaveLength(1);await expect(admin("select admin_launch_interests(null,'',-1)r")).rejects.toThrow();});
 
 it('withdrawal blocks delayed requests and idempotent replay from resurrecting consent',async()=>{const token=randomUUID();await withdraw(token);await expect(submit(token)).rejects.toThrow(/retrasă/);const b=randomUUID();await submit(b);await withdraw(b);await expect(submit(b)).rejects.toThrow(/retrasă/);expect((await admin('select admin_launch_interests()r')).summary.total).toBe(0);});
+it('limits submissions from one network to 6 per hour without storing the address',async()=>{
+ await db.exec("truncate private.launch_ip");
+ await db.exec(`set request.headers='{"x-forwarded-for":"203.0.113.9, 10.0.0.1"}'`);
+ try{
+  for(let i=0;i<6;i++)expect((await submit()).saved).toBe(true);
+  await expect(submit()).rejects.toThrow(/prea multe trimiteri de pe această rețea/);
+  const rows=(await q('select fp from private.launch_ip')).rows;
+  expect(rows.length).toBe(1);expect(rows[0].fp).not.toContain('203.0.113.9');
+ }finally{await db.exec("reset request.headers");}
+ expect((await submit()).saved).toBe(true);
+});
