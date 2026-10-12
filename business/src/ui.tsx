@@ -1,4 +1,6 @@
 import {
+  Alert,
+  Platform,
   Text,
   View,
   Pressable,
@@ -219,3 +221,16 @@ export function Empty({
 }) {
   return <Txt muted>{text}</Txt>;
 }
+
+/** Întreabă înainte de o acțiune care nu se mai poate anula (Android/iOS: dialog nativ; web: confirm). */
+export function ask(title: string, message: string, ok: string): Promise<boolean> {
+  if (Platform.OS === "web") return Promise.resolve(typeof window !== "undefined" && window.confirm(title + "\n\n" + message));
+  return new Promise((done) =>
+    Alert.alert(title, message, [
+      { text: "Renunț", style: "cancel", onPress: () => done(false) },
+      { text: ok, style: "destructive", onPress: () => done(true) },
+    ], { cancelable: true, onDismiss: () => done(false) }),
+  );
+}
+/** Rolurile cu diacritice, cum le vede omul. */
+export const ROLE_NAME: Record<string, string> = { proprietar: "proprietar", manager: "manager", receptie: "recepție", scanare: "scanare" };

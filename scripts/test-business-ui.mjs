@@ -256,6 +256,11 @@ try {
     fullPage: true,
   });
   await app.getByRole("button", { name: "Închide vizita", exact: true }).click();
+  // copiii sub 12 nu se taxează: numărul de adulți nu vine precompletat, localul îl scrie
+  assert.equal(await app.getByLabel("Persoane de minimum 12 ani (fără copiii sub 12)", {exact:true}).inputValue(), "");
+  await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
+  await app.getByText(/^Persoane de minimum 12 ani: scrie un număr întreg/).waitFor();
+  await app.getByLabel("Persoane de minimum 12 ani (fără copiii sub 12)", {exact:true}).fill(await app.getByLabel("Persoane prezente (inclusiv copiii)", {exact:true}).inputValue());
   await app.getByLabel("Încasare după reduceri (lei)").fill("abc");
   await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
   await app.getByText("Scrie o sumă validă, de exemplu 123,45 lei.", {exact:true}).waitFor();

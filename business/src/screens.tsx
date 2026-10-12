@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { View, Platform } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { CameraScanner } from "../../shared/CameraScanner";
-import { Card, Txt, Button, Field, Row, Toggle, Empty } from "./ui";
+import { Card, Txt, Button, Field, Row, Toggle, Empty, ask, ROLE_NAME } from "./ui";
 import { call } from "./backend";
 import { amount } from "./amount";
 import { financePeriod, whole } from "./validation";
@@ -77,7 +77,8 @@ function ReservationCard({
               label="Refuză"
               secondary
               disabled={busy}
-              onPress={() =>
+              onPress={async () =>
+                (await ask("Refuzi cererea?", "Clientul primește refuzul imediat.", "Refuză")) &&
                 void act(
                   () =>
                     call("reservation_decide_v2", {
@@ -153,7 +154,7 @@ function CloseVisit({
 }) {
   const [open, setOpen] = useState(false),
     [people, P] = useState(String(v.count?.people ?? v.people)),
-    [adults, A] = useState(String(v.count?.adults ?? v.people)),
+    [adults, A] = useState(v.count ? String(v.count.adults) : ""), // completat de local: copiii sub 12 nu se taxează
     [drop, D] = useState(
       String(v.count?.drop_adults ?? Math.min(v.people, v.drop_limit ?? 0)),
     ),
@@ -232,7 +233,7 @@ function CloseVisit({
           secondary
           onPress={() => setOpen(!open)}
         />
-      )}{" "}
+      )}
       {open && (
         <>
           <Field
@@ -242,7 +243,7 @@ function CloseVisit({
             onChange={P}
           />
           <Field
-            label="Persoane de minimum 12 ani"
+            label="Persoane de minimum 12 ani (fără copiii sub 12)"
             numeric
             value={adults}
             onChange={A}
@@ -310,7 +311,7 @@ export function Today(p: ScreenProps) {
       <Card title="Ce se întâmplă azi">
         <Row>
           <Txt big>
-            {data.requests.filter((r) => r.status === "cerută").length} cereri
+            {((n) => n + (n === 1 ? " cerere" : " cereri"))(data.requests.filter((r) => r.status === "cerută").length)}
           </Txt>
           <Txt big>
             {data.visits.filter((v) => !v.closed_at).length} de închis
@@ -641,7 +642,8 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
           label="Oprește Plus doar azi"
           secondary
           disabled={busy || data.plus_program?.today_off}
-          onPress={() =>
+          onPress={async () =>
+            (await ask("Oprești Plus azi?", "Folosește una din cele 4 zile pe lună și nu se mai poate porni azi.", "Oprește azi")) &&
             void act(
               () => call("biz_plus_off_today", { p_venue: venue }),
               "Plus oprit astăzi. Vizitele deja înregistrate își păstrează drepturile.",
@@ -653,8 +655,8 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
       <Card title={edit ? "Editează oferta viitoare" : "Un Live Drop nou"}>
         <Field label="Oferta" value={title} onChange={T} />
         <Row>
-          <Field label="Reducere Free (%)" numeric value={free} onChange={F} />
-          <Field label="Reducere Plus (%)" numeric value={plus} onChange={Q} />
+          <Field label="Reducere Free (10–15%)" numeric value={free} onChange={F} />
+          <Field label="Reducere Plus (15–30%, cu ≥5 peste Free)" numeric value={plus} onChange={Q} />
         </Row>
         <Row>
           <Field
@@ -695,11 +697,14 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
           disabled={busy || !title.trim()}
           onPress={() =>
             void act(async () => {
+              const t = title.trim(), pctAll = whole(free, "Reducere Free", 10, 15), pctPlus = whole(plus, "Reducere Plus", 15, 30);
+              if (t.length < 3 || t.length > 60) throw new Error("Numele ofertei are între 3 și 60 de caractere.");
+              if (pctPlus < pctAll + 5) throw new Error("Reducerea Plus e cu cel puțin 5 puncte peste cea Free.");
               await call("drop_create_v2", {
                 p_venue: venue,
-                p_title: title,
-                p_all: whole(free, "Reducere Free", 0, 100),
-                p_plus: whole(plus, "Reducere Plus", 0, 100),
+                p_title: t,
+                p_all: pctAll,
+                p_plus: pctPlus,
                 p_seats: whole(seats, "Locuri totale", 4, 40),
                 p_minutes: whole(minutes, "Durată", 15, 240),
                 p_min: whole(min, "Grup minim", 1, 6),
@@ -756,7 +761,8 @@ export function Offers({ venue, data, act, busy }: ScreenProps) {
             label="Oprește oferta"
             secondary
             disabled={busy}
-            onPress={() =>
+            onPress={async () =>
+              (await ask("Oprești oferta?", "Nu mai apare clienților. Claim-urile valabile rămân.", "Oprește")) &&
               void act(
                 () => call("drop_stop", { p_id: d.id }),
                 "Oferta este oprită. Claim-urile valabile sunt păstrate.",
@@ -904,7 +910,7 @@ export function Team({ venue, data, act, busy }: ScreenProps) {
         </Txt>
         <Field label="Username CeFaci" value={username} onChange={U} />
         <Row>
-          {(["proprietar", "manager", "receptie", "scanare"] as Role[])
+          {(["manager", "receptie", "scanare"] as Role[])
             .filter(
               (r) =>
                 data.role === "proprietar" ||
@@ -914,7 +920,7 @@ export function Team({ venue, data, act, busy }: ScreenProps) {
             .map((r) => (
               <Button
                 key={r}
-                label={r}
+                label={ROLE_NAME[r] ?? r}
                 secondary={r !== role}
                 onPress={() => R(r)}
               />
@@ -938,16 +944,17 @@ export function Team({ venue, data, act, busy }: ScreenProps) {
       {rows.map((r) => (
         <Card key={r.user_id} title={`@${r.username}`}>
           <Txt>
-            {r.first_name} · {r.role} · {r.active ? "activ" : "revocat"}
+            {r.first_name} · {ROLE_NAME[r.role] ?? r.role} · {r.active ? "activ" : "revocat"}
           </Txt>
           {r.active &&
-            (data.role === "proprietar" ||
-              !["proprietar", "manager"].includes(r.role)) && (
+            r.role !== "proprietar" &&
+            (data.role === "proprietar" || r.role !== "manager") && (
               <Button
                 label="Revocă accesul"
                 secondary
                 disabled={busy}
-                onPress={() =>
+                onPress={async () =>
+                  (await ask("Revoci accesul lui @" + r.username + "?", "Nu mai poate folosi Business pentru acest local.", "Revocă")) &&
                   void act(async () => {
                     await call("biz_team_set", {
                       p_venue: venue,
