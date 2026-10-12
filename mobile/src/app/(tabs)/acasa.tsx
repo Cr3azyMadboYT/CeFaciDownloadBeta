@@ -10,7 +10,7 @@ import { APP, useApp } from '../../lib/session';
 import { phaseOfHour, type Phase } from '../../lib/filters';
 import { NO_PLANS, dayWord, sortPlans, type Plan } from '../../lib/plans';
 import { rateOuting, toRate } from '../../lib/rate';
-import { againDraft, askOf, firstDraft, loadLast, moodDraft, runPlace, runPlans, surpriseDraft } from '../../lib/planAsk';
+import { askOf, firstDraft, moodDraft, runPlace, runPlans, surpriseDraft } from '../../lib/planAsk';
 import { eveningOf } from '../../../../src/engine/time';
 import { Bilu } from '../../ui/Bilu';
 import { Avatar } from '../../ui/Avatar';
@@ -30,6 +30,7 @@ import { SeasonCta, SeasonFall } from '../../ui/SeasonFall';
 import { LOOKS, useLook } from '../../lib/season';
 import { quickStart, refreshFreeNow, spanText, useFreeNow } from '../../lib/freeNow';
 import { useCalm } from '../../lib/motion';
+import { CONF } from '../../ui/Magic';
 import { toast } from '../../lib/toast';
 import * as Haptics from 'expo-haptics';
 
@@ -90,6 +91,31 @@ export default function Acasa() {
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
   const now = useClock();
   useLightBar();
+  // FreeNow (Cornel, 12.10): când biletul s-a umplut, Bilu de lângă titlu zboară în sus din ecran, apoi urcă înapoi din
+  // oraș la locul lui, cu confetti. Doar transformări pe firul nativ (translate/rotate/scale/opacity), nimic de layout.
+  const calm = useCalm();
+  const hop = useRef(new Animated.Value(0)).current;
+  const burst = useRef(new Animated.Value(0)).current;
+  const [cheer, setCheer] = useState(false);
+  const flying = useRef(false);
+  const celebrate = useCallback(() => {
+    if (calm || flying.current) return;
+    flying.current = true;
+    setCheer(true);
+    Animated.timing(hop, { toValue: 1, duration: 520, easing: Easing.in(Easing.back(1.6)), useNativeDriver: true }).start(() => {
+      hop.setValue(2);
+      Animated.spring(hop, { toValue: 3, delay: 260, useNativeDriver: true, speed: 9, bounciness: 9 }).start(() => {
+        hop.setValue(0);
+        flying.current = false;
+        setTimeout(() => setCheer(false), 1400);
+      });
+      setTimeout(() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+        burst.setValue(0);
+        Animated.timing(burst, { toValue: 1, duration: 1100, easing: Easing.out(Easing.quad), useNativeDriver: true }).start(() => burst.setValue(0));
+      }, 620);
+    });
+  }, [calm, hop, burst]);
   // turul lui Bilu: ținta e sus pe cer, Acasă stă sus cât arată Bilu spre ea
   const scroll = useRef<ScrollView>(null);
   const tour = useTour();
@@ -119,17 +145,12 @@ export default function Acasa() {
   const next = soon[0];
   const nextPlace = next ? APP.byId(next.placeId) : undefined;
   const clock = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-  // last time's answers, read again each time Acasă comes back (a plan was just made)
-  const [seen, setSeen] = useState(0);
-  useFocusEffect(useCallback(() => { setSeen((x) => x + 1); }, []));
-  const last = useMemo(() => loadLast(), [plans, ideas, seen]); // eslint-disable-line react-hooks/exhaustive-deps
   // after an outing: one tap to say how it was (it teaches Bilu, and the crew when the plan was with them)
   const rate = useMemo(() => toRate((plans as Plan[]) ?? [], now), [plans, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
   const ratePlace = rate ? APP.byId(rate.placeId) : undefined; // eslint-disable-line react-hooks/exhaustive-deps
 
   // one tap: Bilu makes three outings and opens one of them; "Altă surpriză" is on it
   const surprise = () => { void runPlans(surpriseDraft(), { surprise: true }); router.push({ pathname: '/plan/[i]', params: { i: 's' } }); };
-  const again = () => { const a = againDraft(); if (!a) { router.push('/plan-nou'); return; } void runPlans(a.draft, { notice: a.notice }); router.push('/planuri-gata'); };
   const mood = (vibe: string) => { void runPlans(moodDraft(vibe)); router.push('/planuri-gata'); };
   const openIdea = (id: string, soonish: boolean, at: Date) => {
     const hour = soonish ? 'acum' : String(at.getHours()).padStart(2, '0') + ':' + String(at.getMinutes()).padStart(2, '0');
@@ -142,7 +163,7 @@ export default function Acasa() {
       <Doodles />
       <ScrollView ref={scroll} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
         <View onLayout={(e) => setTop({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
-          style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 4, paddingHorizontal: 20, paddingBottom: 92, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
+          style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 96, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
           <Sky phase={phase} />
           <SeasonFall wear={wear} w={top.w} h={top.h} night={phase === 'dusk' || phase === 'night' || phase === 'late'} />
           <TourTarget id="pills">
@@ -157,11 +178,11 @@ export default function Acasa() {
               <Avatar size={34} />
             </Press>
           </View>
-          <View style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
-            <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={34} color="#FFD43B" />
+          <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
+            <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={40} color="#FFD43B" />
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-                {nowWx ? <T style={{ fontFamily: F.display, fontSize: 28, lineHeight: 32, color: '#FFFFFF' }}>{nowWx.temp + '°'}</T> : null}
+                {nowWx ? <T style={{ fontFamily: F.display, fontSize: 32, lineHeight: 36, color: '#FFFFFF' }}>{nowWx.temp + '°'}</T> : null}
                 <T style={{ fontFamily: F.sb, fontSize: nowWx ? 15 : 22, color: '#FFFFFF' }}>{nowWx ? nowWx.text.charAt(0).toUpperCase() + nowWx.text.slice(1) : clock}</T>
               </View>
               <T style={{ fontFamily: F.m, fontSize: 13.5, color: 'rgba(255,255,255,0.9)' }}>{APP.todayText() + (nowWx ? ' · ' + clock : '')}</T>
@@ -174,41 +195,47 @@ export default function Acasa() {
             ) : null}
           </View>
           </TourTarget>
-          <View style={{ marginTop: 14, flexDirection: 'row', alignItems: 'flex-end' }}>
+          <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'flex-end' }}>
             <View style={{ flex: 1 }}>
-              <T accessibilityRole="header" maxFontSizeMultiplier={1.1} style={{ color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 40 : 48, lineHeight: (word.length > 10 ? 40 : 48) * 0.95, letterSpacing: -1.4 }}>
+              <T accessibilityRole="header" style={{ color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 44 : 56, lineHeight: (word.length > 10 ? 44 : 56) * 0.95, letterSpacing: -1.6 }}>
                 {'Ce facem\n' + word}
               </T>
               <FlipWords words={FLIP[phase].flip} />
             </View>
-            <View style={{ marginBottom: 4 }}><Bilu size={72} mood="hi" shadow={false} /></View>
-          </View>
-          <TourTarget id="cta" style={{ marginTop: 12 }}>
-            <View onLayout={(e) => setCtaW(e.nativeEvent.layout.width)}>
-            <Press onPress={() => router.push('/plan-nou')} accessibilityLabel="Creează plan"
-              style={{ minHeight: 72, borderRadius: 22, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16, shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
-              <View style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={24} color="#FFD43B" width={2.6} /></View>
-              <View style={{ flex: 1 }}>
-                <T style={{ fontFamily: F.display, fontSize: 24, lineHeight: 26, color: '#0E1440' }}>Creează plan</T>
-                <T style={{ fontFamily: F.sb, fontSize: 13.5, color: 'rgba(14,20,64,0.75)' }}>5 întrebări, sub un minut</T>
-              </View>
-              <Icon name="next" size={22} color="#0E1440" />
-            </Press>
-            <SeasonCta wear={wear} w={ctaW} />
+            <View style={{ marginBottom: 6 }}>
+              <Animated.View style={{ transform: [
+                { translateY: hop.interpolate({ inputRange: [0, 1, 2, 3], outputRange: [0, -460, Math.max(360, top.h), 0] }) },
+                { rotate: hop.interpolate({ inputRange: [0, 1, 2, 2.7, 3], outputRange: ['0deg', '-18deg', '14deg', '-4deg', '0deg'] }) },
+                { scale: hop.interpolate({ inputRange: [0, 0.15, 1, 2, 3], outputRange: [1, 0.9, 1.1, 1.1, 1] }) },
+              ] }}>
+                <Bilu size={84} mood={cheer ? 'yay' : 'hi'} shadow={false} />
+              </Animated.View>
+              <Burst v={burst} />
             </View>
-            <View style={{ marginTop: 10, flexDirection: 'row', gap: 10 }}>
-              <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ flex: 1, height: 46, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                <Icon name="dice" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Surprinde-mă</T>
-              </Press>
-              {last ? (
-                <Press onPress={again} accessibilityLabel="Ca data trecută" style={{ flex: 1, height: 46, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <Icon d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Ca data trecută</T>
+          </View>
+          {/* Creează plan + zarul (Surprinde-mă) pe un rând, FreeNow ca bilet dedesubt (Cornel, 12.10: „Ca data trecută” a ieșit) */}
+          <TourTarget id="cta" style={{ marginTop: 16 }}>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <View style={{ flex: 1 }} onLayout={(e) => setCtaW(e.nativeEvent.layout.width)}>
+                <Press onPress={() => router.push('/plan-nou')} accessibilityLabel="Creează plan"
+                  style={{ minHeight: 84, borderRadius: 24, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
+                  <View style={{ width: 50, height: 50, borderRadius: 16, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={26} color="#FFD43B" width={2.6} /></View>
+                  <View style={{ flex: 1 }}>
+                    <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#0E1440' }}>Creează plan</T>
+                    <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(14,20,64,0.75)' }}>5 întrebări, sub un minut</T>
+                  </View>
                 </Press>
-              ) : null}
+                <SeasonCta wear={wear} w={ctaW} />
+              </View>
+              <Press onPress={surprise} accessibilityLabel="Surprinde-mă: Bilu îți face un plan dintr-un tap"
+                style={{ width: 84, height: 84, borderRadius: 24, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                <Icon name="dice" size={30} color="#FFFFFF" />
+                <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.b, fontSize: 11, color: 'rgba(255,255,255,0.9)' }}>Surprinde-mă</T>
+              </Press>
             </View>
           </TourTarget>
-          <TourTarget id="freenow" style={{ marginTop: 10 }}>
-            <HoldFreeNow />
+          <TourTarget id="freenow" style={{ marginTop: 12 }}>
+            <HoldFreeNow sky={SKY_BG[phase]} onEntered={celebrate} />
           </TourTarget>
         </View>
 
@@ -292,16 +319,14 @@ export default function Acasa() {
   );
 }
 
-/** FreeNow (Cornel, 12.10) pe cer, deasupra orașului: ții apăsat și butonul se umple; la capăt Bilu zboară în sus și
- *  ești pe FreeNow cu alegerile de data trecută (prietenii tăi află). O apăsare scurtă deschide ecranul FreeNow. */
+/** FreeNow (Cornel, 12.10): biletul galben de pe cer, sub Creează plan, deasupra orașului. Ții apăsat și se umple de verde;
+ *  la capăt Bilu zboară în sus și ești pe FreeNow cu alegerile de data trecută. O apăsare scurtă deschide ecranul FreeNow. */
 const HOLD_MS = 900;
-function HoldFreeNow() {
+function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void }) {
   const who = useApp((s) => s.who);
   const known = useApp((s) => s.known);
   const st = useFreeNow();
-  const calm = useCalm();
   const fill = useRef(new Animated.Value(0)).current;
-  const fly = useRef(new Animated.Value(0)).current;
   const [w, setW] = useState(0);
   const [busy, setBusy] = useState(false);
   const done = useRef(false);
@@ -317,7 +342,7 @@ function HoldFreeNow() {
   const go = async () => {
     setBusy(true);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-    if (!calm) Animated.timing(fly, { toValue: 1, duration: 1500, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start(() => fly.setValue(0));
+    onEntered();
     const r = await quickStart();
     setBusy(false);
     Animated.timing(fill, { toValue: 0, duration: 250, useNativeDriver: false }).start();
@@ -335,40 +360,55 @@ function HoldFreeNow() {
   const pressOut = () => { if (done.current || on) return; fill.stopAnimation(); Animated.spring(fill, { toValue: 0, useNativeDriver: false, speed: 20 }).start(); };
   const names = others.slice(0, 2).map((p) => p.first_name).join(', ') + (others.length > 2 ? ' +' + (others.length - 2) : '');
   const title = st.outing ? (st.outing.plan ? 'Mergeți la ' + st.outing.plan.venue_name : 'Ieșiți: ' + st.outing.members.length + ' oameni')
-    : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : busy ? 'Bilu îi anunță…' : 'Ține apăsat: FreeNow';
-  const sub = on ? (others.length ? 'Au timp și ' + names : 'Apasă să vezi cine vine') : others.length ? names + (others.length === 1 ? ' are timp acum' : ' au timp acum') : 'Le dai de veste prietenilor că ai timp';
-  const row = (dark: boolean) => (
-    <>
-      <View style={{ width: 40, height: 40, borderRadius: 13, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
-        <Animated.View style={{ transform: [{ scale: fill.interpolate({ inputRange: [0, 1], outputRange: [1, 1.3] }) }] }}><T style={{ fontSize: 19 }}>⚡</T></Animated.View>
-        {others.length ? <View style={{ position: 'absolute', top: -5, right: -5, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 99, backgroundColor: '#FF6A4D', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 11, color: '#FFFFFF' }}>{String(others.length)}</T></View> : null}
-      </View>
-      <View style={{ flex: 1 }}>
-        <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 16, color: dark ? '#0E1440' : '#FFFFFF' }}>{title}</T>
-        <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 12.5, color: dark ? 'rgba(14,20,64,0.8)' : 'rgba(255,255,255,0.8)' }}>{sub}</T>
-      </View>
-      <Icon name="next" size={18} color={dark ? '#0E1440' : '#FFD43B'} />
-    </>
-  );
+    : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : busy ? 'Bilu îi anunță…' : 'FreeNow';
+  const sub = on ? (others.length ? 'Au timp și ' + names : 'Apasă să vezi cine vine')
+    : (others.length ? names + (others.length === 1 ? ' are timp' : ' au timp') + ' · ' : '') + 'ține apăsat ca să intri';
+  const STUB = 64;
   return (
     <View onLayout={(e) => setW(e.nativeEvent.layout.width)}>
+      {/* un bilet: cotor ⚡ și perforație; ții apăsat și se umple de verde de la stânga, ca o ștampilă */}
       <Press onPress={() => { if (!done.current) open(); }} onPressIn={pressIn} onPressOut={pressOut} delayLongPress={HOLD_MS + 400}
         accessibilityLabel={title + '. ' + sub} accessibilityHint={on ? undefined : 'Ține apăsat ca să intri pe FreeNow; o apăsare deschide FreeNow.'}
-        style={{ height: 56, borderRadius: 18, overflow: 'hidden', borderWidth: 1.5, borderColor: on ? '#5FD39A' : '#FFD43B', backgroundColor: on ? '#5FD39A' : 'rgba(255,212,59,0.10)', flexDirection: 'row', alignItems: 'center', paddingLeft: 8, paddingRight: 14, gap: 10 }}>
-        {row(on)}
-        {/* umplerea: aceeași față, galbenă cu scris închis, tăiată cât ai ținut apăsat */}
-        {!on ? (
-          <Animated.View pointerEvents="none" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, overflow: 'hidden', backgroundColor: '#FFD43B', width: fill.interpolate({ inputRange: [0, 1], outputRange: [0, w || 400] }) }}>
-            <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: w || 400, flexDirection: 'row', alignItems: 'center', paddingLeft: 8, paddingRight: 14, gap: 10 }}>{row(true)}</View>
-          </Animated.View>
-        ) : null}
+        style={{ height: 68, borderRadius: 18, overflow: 'hidden', flexDirection: 'row', backgroundColor: on ? '#5FD39A' : '#FFD43B' }}>
+        {!on ? <Animated.View pointerEvents="none" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: '#5FD39A', width: fill.interpolate({ inputRange: [0, 1], outputRange: [0, w || 400] }) }} /> : null}
+        <View style={{ width: STUB, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
+          <Animated.View style={{ transform: [{ scale: fill.interpolate({ inputRange: [0, 1], outputRange: [1, 1.35] }) }] }}><T style={{ fontSize: 26 }}>⚡</T></Animated.View>
+          {others.length ? <View style={{ position: 'absolute', top: 8, right: 6, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 99, backgroundColor: '#FF6A4D', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 11, color: '#FFFFFF' }}>{String(others.length)}</T></View> : null}
+        </View>
+        <View style={{ width: 0, borderLeftWidth: 2, borderStyle: 'dashed', borderColor: 'rgba(14,20,64,0.35)' }} />
+        <View style={{ flex: 1, paddingLeft: 16, paddingRight: 12, justifyContent: 'center' }}>
+          <T numberOfLines={1} style={{ fontFamily: F.display, fontSize: 22, lineHeight: 25, color: '#0E1440' }}>{title + (on ? '' : ' ⚡')}</T>
+          <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(14,20,64,0.78)' }}>{sub}</T>
+        </View>
+        <View style={{ paddingRight: 14, justifyContent: 'center' }}><Icon name="next" size={18} color="#0E1440" /></View>
       </Press>
-      {/* Bilu își ia zborul din buton */}
-      <Animated.View pointerEvents="none" style={{ position: 'absolute', left: 8, top: 0, opacity: fly.interpolate({ inputRange: [0, 0.04, 0.85, 1], outputRange: [0, 1, 1, 0] }),
-        transform: [{ translateY: fly.interpolate({ inputRange: [0, 1], outputRange: [-20, -420] }) }, { translateX: fly.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 90, 160] }) },
-          { rotate: fly.interpolate({ inputRange: [0, 0.5, 1], outputRange: ['0deg', '-12deg', '10deg'] }) }, { scale: fly.interpolate({ inputRange: [0, 0.3, 1], outputRange: [0.6, 1.1, 0.8] }) }] }}>
-        <Bilu size={76} mood="yay" shadow={false} still />
-      </Animated.View>
+      {/* perforația: două semicercuri tăiate în bilet, de culoarea cerului */}
+      <View pointerEvents="none" style={{ position: 'absolute', left: STUB - 10, top: -10, width: 20, height: 20, borderRadius: 99, backgroundColor: sky }} />
+      <View pointerEvents="none" style={{ position: 'absolute', left: STUB - 10, bottom: -10, width: 20, height: 20, borderRadius: 99, backgroundColor: sky }} />
+    </View>
+  );
+}
+
+/** Confetti din jurul lui Bilu când se întoarce: 18 bucăți mereu montate, invizibile până pornește `v` (fir nativ). */
+const BITS = Array.from({ length: 18 }, (_, i) => {
+  const a = (i / 18) * Math.PI * 2 + (i % 2 ? 0.2 : -0.1);
+  const r = 70 + (i % 3) * 28;
+  return { dx: Math.round(Math.cos(a) * r), dy: Math.round(Math.sin(a) * r * 0.8) - 20, w: 6 + (i % 3) * 2, h: 9 + (i % 4) * 2, c: CONF[i % CONF.length], round: i % 4 === 0, spin: (i % 2 ? 1 : -1) * (300 + i * 20) };
+});
+function Burst({ v }: { v: Animated.Value }) {
+  return (
+    <View pointerEvents="none" style={{ position: 'absolute', left: 42, top: 42, width: 0, height: 0 }}>
+      {BITS.map((b, i) => (
+        <Animated.View key={i} style={{
+          position: 'absolute', left: -b.w / 2, top: -b.h / 2, width: b.w, height: b.h, borderRadius: b.round ? 99 : 2, backgroundColor: b.c,
+          opacity: v.interpolate({ inputRange: [0, 0.02, 0.75, 1], outputRange: [0, 1, 1, 0] }),
+          transform: [
+            { translateX: v.interpolate({ inputRange: [0, 1], outputRange: [0, b.dx * 1.15] }) },
+            { translateY: v.interpolate({ inputRange: [0, 0.45, 1], outputRange: [0, b.dy, b.dy + 70] }) },
+            { rotate: v.interpolate({ inputRange: [0, 1], outputRange: ['0deg', b.spin + 'deg'] }) },
+          ],
+        }} />
+      ))}
     </View>
   );
 }
