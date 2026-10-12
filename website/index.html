@@ -14,10 +14,12 @@
 <meta property="og:url" content="https://cefaci.app/">
 <meta property="og:image" content="https://cefaci.app/assets/acasa.webp">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
-<link rel="stylesheet" href="/assets/fonts.css">
-<link rel="stylesheet" href="/assets/home.css">
-<script src="/assets/site.js" defer></script>
-<script src="/assets/home.js" defer></script>
+<link rel="preload" href="/assets/bricolage-grotesque-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/instrument-sans-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/acasa-560.webp" as="image" type="image/webp" fetchpriority="high">
+<link rel="stylesheet" href="/assets/home.css?v=3">
+<script src="/assets/site.js?v=3" defer></script>
+<script src="/assets/home.js?v=3" defer></script>
 </head>
 <body class="home">
 <a class="skip" href="#main">Sari la conținut</a>
@@ -27,7 +29,7 @@
   <div class="doodles" id="doodles" aria-hidden="true"></div>
 
   <header class="top wrap">
-    <a class="brand" href="/" aria-label="CeFaci, început"><img src="/assets/bilu.webp" alt="" width="40" height="40">CeFaci<span>.</span></a>
+    <a class="brand" href="/" aria-label="CeFaci, început"><img src="/assets/bilu.webp" alt="" width="30" height="40">CeFaci<span>.</span></a>
     <nav aria-label="Navigare principală">
       <a href="#cum">Cum merge</a>
       <a href="#gasca">Cu gașca</a>
@@ -53,8 +55,8 @@
       <p class="soon">În curând pe <strong>Android</strong> și <strong>iOS</strong></p>
     </div>
     <div class="hero-art">
-      <div class="phone"><img src="/assets/acasa.webp" alt="Ecran real din CeFaci: Acasă, cu Creează plan și Surprinde-mă" width="824" height="1830" fetchpriority="high"></div>
-      <img class="bilu" src="/assets/bilu.webp" alt="Bilu, biletul galben care face planurile" width="200" height="200">
+      <div class="phone"><img src="/assets/acasa-560.webp" srcset="/assets/acasa-560.webp 560w, /assets/acasa.webp 824w" sizes="(max-width:640px) 70vw, 380px" alt="Ecran real din CeFaci: Acasă, cu Creează plan și Surprinde-mă" width="560" height="1244" fetchpriority="high" decoding="async"></div>
+      <img class="bilu" src="/assets/bilu.webp" alt="Bilu, biletul galben care face planurile" width="152" height="200" decoding="async">
       <div class="bubble b1" aria-hidden="true">Pizza sau shaorma?</div>
       <div class="bubble b2" aria-hidden="true">Cine mai vine?</div>
     </div>
@@ -113,7 +115,7 @@
       </div>
       <p class="caption" id="screen-caption">Tu alegi cum începe seara.</p>
     </div>
-    <div class="phone small"><img id="app-screen" src="/assets/plan.webp" alt="CeFaci: alegerea unui singur loc, a întregii seri sau a unui plan construit manual" width="824" height="1830"></div>
+    <div class="phone small"><img id="app-screen" src="/assets/plan.webp" alt="CeFaci: alegerea unui singur loc, a întregii seri sau a unui plan construit manual" width="824" height="1830" loading="lazy" decoding="async"></div>
   </div>
 </section>
 
@@ -158,7 +160,7 @@
       <a class="cta small" href="/descopera/"><span class="cta-text"><strong>Ia-ți locul în tur</strong><small>și spune-ne dacă ai folosi-o</small></span><span class="cta-arrow" aria-hidden="true">›</span></a>
     </div>
     <div class="bt-stub" aria-hidden="true"><span class="barcode"></span><span>CF-2026</span></div>
-    <img class="bt-bilu" src="/assets/bilu.webp" alt="" width="150" height="150">
+    <img class="bt-bilu" src="/assets/bilu.webp" alt="" width="152" height="200" loading="lazy" decoding="async">
   </div>
 </section>
 

@@ -18,11 +18,24 @@ Header always set X-Frame-Options "DENY"
 Header always set Strict-Transport-Security "max-age=31536000"
 Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'none'"
 <FilesMatch "\.(html|json)$">
-Header set Cache-Control "no-cache, no-store, must-revalidate"
+Header set Cache-Control "no-cache"
 </FilesMatch>
-<FilesMatch "\.(js|css|woff2|png|webp|svg)$">
-Header set Cache-Control "public, max-age=3600, must-revalidate"
+<FilesMatch "\.woff2$">
+Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+<FilesMatch "\.(png|webp|svg)$">
+Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+<FilesMatch "\.(js|css)$">
+Header set Cache-Control "public, max-age=31536000"
 </FilesMatch>
 </IfModule>
 AddType font/woff2 .woff2
 AddType image/webp .webp
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml text/plain
+</IfModule>
+<IfModule mod_brotli.c>
+AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/javascript application/javascript application/json image/svg+xml text/plain
+</IfModule>

@@ -18,7 +18,7 @@ function copy(directory,target){
     const input=path.join(directory,entry.name),out=path.join(target,entry.name);
     if(entry.isSymbolicLink())throw new Error(`Link simbolic interzis: ${input}`);
     if(entry.isDirectory()){copy(input,out);continue;}
-    if(!entry.isFile()||!(/\.(html|css|js|woff2|webp|png|svg)$/.test(entry.name)||entry.name==='.htaccess'||/-OFL\.txt$/.test(entry.name)))throw new Error(`Fișier neașteptat: ${input}`);
+    if(!entry.isFile()||!(/\.(html|css|js|woff2|webp|png|svg)$/.test(entry.name)||entry.name==='.htaccess'||entry.name==='robots.txt'||entry.name==='sitemap.xml'||/-OFL\.txt$/.test(entry.name)))throw new Error(`Fișier neașteptat: ${input}`);
     if(/backup|before|\.env|\.sql|\.map$/i.test(input))throw new Error(`Fișier privat sau backup în site: ${input}`);
     if(entry.name.endsWith('.html')){
       const text=fs.readFileSync(input,'utf8');

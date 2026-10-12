@@ -48,9 +48,10 @@
   // Întrebările abia vizibile de pe fundal, ca în aplicație (Doodles.tsx).
   const QS = ['Ce facem?', 'Unde mergem?', 'Cu cine ies?', 'Ieșim diseară?', 'Cine mai vine?', 'Pe la ce oră?', 'Unde ne vedem?', 'Facem ceva?', 'Ce zici?', 'Băgăm un film?', 'Câți suntem?', 'Și după?', 'Mâncăm ceva?', 'Unde e lumea?', 'Hai afară?', 'La ce oră vii?', 'Bowling?', 'Karaoke?', 'Mergem pe jos?', 'Ce chef ai?', 'Vii și tu?', 'Weekendul ăsta?', 'Pizza sau shaorma?'];
   const wall = $('doodles');
+  const paintWall = () => {
   if (wall) {
     let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    for (let k = 0; k < 34; k++) {
+    for (let k = 0; k < (innerWidth < 640 ? 16 : 30); k++) {
       const s = document.createElement('span');
       s.textContent = QS[k % QS.length];
       s.style.left = (rnd() * 96) + '%'; s.style.top = (rnd() * 96) + '%';
@@ -59,6 +60,8 @@
       wall.appendChild(s);
     }
   }
+  };
+  if ('requestIdleCallback' in window) requestIdleCallback(paintWall, { timeout: 1500 }); else setTimeout(paintWall, 300);
 
   // Ce cade peste cerul de seară: petale, praf de soare, frunze sau zăpadă.
   const cv = $('fall'); if (!cv) return;
@@ -67,7 +70,7 @@
   const size = () => { const r = cv.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1); W = r.width; H = r.height; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
   size(); window.addEventListener('resize', size);
   const kind = LOOK.fall;
-  const count = Math.round(Math.min(70, Math.max(26, W / 22)) * (kind === 'snow' ? 1.6 : 1));
+  const count = Math.round(Math.min(60, Math.max(18, W / 28)) * (kind === 'snow' ? 1.5 : 1));
   const LEAF = ['#F28C28', '#E8662A', '#FFB33B', '#C9502A'], PETAL = ['#FFC4DA', '#FFD9E6', '#FFFFFF', '#F7A8C8'];
   const parts = Array.from({ length: count }, () => spawn(true));
   function spawn(first) {
@@ -101,9 +104,13 @@
     }
     draw();
   }
-  if (calm) { draw(); return; }
-  let on = true;
-  document.addEventListener('visibilitychange', () => { on = !document.hidden; if (on) requestAnimationFrame(loop); });
-  function loop() { if (!on) return; step(); requestAnimationFrame(loop); }
-  requestAnimationFrame(loop);
+  draw();
+  if (calm) return;
+  // pornește după ce pagina s-a încărcat și merge la ~30 de cadre pe secundă: animația nu încurcă încărcarea
+  let on = !document.hidden, last = 0, started = false;
+  const loop = (t) => { if (!on) return; if (t - last > 32) { last = t; step(); } requestAnimationFrame(loop); };
+  const start = () => { if (started) return; started = true; requestAnimationFrame(loop); };
+  document.addEventListener('visibilitychange', () => { on = !document.hidden; if (on && started) requestAnimationFrame(loop); });
+  const later = () => setTimeout(() => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 2500 }) : start()), 1200);
+  if (document.readyState === 'complete') later(); else window.addEventListener('load', later, { once: true });
 })();
