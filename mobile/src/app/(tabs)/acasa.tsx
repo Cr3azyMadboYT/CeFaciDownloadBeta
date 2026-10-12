@@ -27,6 +27,7 @@ import { useWeatherVersion } from '../../lib/weather';
 import { Doodles } from '../../ui/Doodles';
 import { SeasonCta, SeasonFall } from '../../ui/SeasonFall';
 import { LOOKS, useLook } from '../../lib/season';
+import { refreshFreeNow, spanText, useFreeNow } from '../../lib/freeNow';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -194,6 +195,9 @@ export default function Acasa() {
               ) : null}
             </View>
           </TourTarget>
+          <TourTarget id="freenow" style={{ marginTop: 10 }}>
+            <FreeNowRow />
+          </TourTarget>
         </View>
 
         <View style={{ paddingHorizontal: 20 }}>
@@ -273,6 +277,39 @@ export default function Acasa() {
       </ScrollView>
       <TopShade color={SKY_BG[phase]} />
     </View>
+  );
+}
+
+/** FreeNow (Cornel, 12.10): pe cerul de pe Acasă, sub Surprinde-mă: cine mai e pe FreeNow, sau „Intră pe FreeNow ⚡”. */
+function FreeNowRow() {
+  const who = useApp((s) => s.who);
+  const known = useApp((s) => s.known);
+  const st = useFreeNow();
+  useFocusEffect(useCallback(() => {
+    if (!who || !known) return undefined;
+    void refreshFreeNow();
+    const id = setInterval(() => { void refreshFreeNow(); }, 60000);
+    return () => clearInterval(id);
+  }, [who, known]));
+  const others = st.people.filter((p) => !p.outing?.mine);
+  const names = others.slice(0, 2).map((p) => p.first_name).join(', ') + (others.length > 2 ? ' +' + (others.length - 2) : '');
+  const title = st.outing ? (st.outing.plan ? 'Mergeți la ' + st.outing.plan.venue_name : 'Ieșiți: ' + st.outing.members.length + ' oameni')
+    : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : 'Intră pe FreeNow ⚡';
+  const sub = st.outing ? (st.outing.plan ? 'Vezi biletul și cine vine' : 'Bilu alege locul, voi votați')
+    : others.length ? 'Pe FreeNow acum: ' + names : st.me ? 'Cine are chef vine cu tine' : 'Ai timp de ieșit? Dă-le de veste.';
+  return (
+    <Press onPress={() => router.push('/freenow')} accessibilityLabel={title + '. ' + sub}
+      style={{ minHeight: 58, borderRadius: 18, paddingHorizontal: 14, paddingVertical: 8, flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: st.me || st.outing ? '#5FD39A' : 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: st.me || st.outing ? '#5FD39A' : 'rgba(255,255,255,0.25)' }}>
+      <View style={{ width: 36, height: 36, borderRadius: 12, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
+        <T style={{ fontSize: 18 }}>⚡</T>
+        {others.length ? <View style={{ position: 'absolute', top: -4, right: -4, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 99, backgroundColor: '#FF6A4D', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 11, color: '#FFFFFF' }}>{String(others.length)}</T></View> : null}
+      </View>
+      <View style={{ flex: 1 }}>
+        <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 16, color: st.me || st.outing ? '#0E1440' : '#FFFFFF' }}>{title}</T>
+        <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 13, color: st.me || st.outing ? 'rgba(14,20,64,0.8)' : 'rgba(255,255,255,0.85)' }}>{sub}</T>
+      </View>
+      <Icon name="next" size={18} color={st.me || st.outing ? '#0E1440' : '#FFFFFF'} />
+    </Press>
   );
 }
 

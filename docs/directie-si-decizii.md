@@ -523,8 +523,13 @@ Ideile de la care am pornit:
 - **Explorează:** apăsat, un loc deschide detaliile lui (de ce merită, când e lume, programul pe toată săptămâna, adresa, harta, Drum / Sună / Site); planul îl faci de acolo, cu „Fă-mi plan aici”. Pe hartă, butonul din bulă e „Vezi detalii”.
 - **Iconițele:** Bilu e mai mare în iconiță, tot în zona pe care o taie telefonul.
 
-## „Liber acum” (Free now) — de făcut după lansare (Cornel, 10.10)
-- Apeși „Sunt liber acum” → ești liber 2–3 ore, apoi se stinge singur.
-- Te văd doar prietenii (sau o gașcă aleasă), niciodată străinii; sub 18 doar cu prietenii lor.
-- Prietenii primesc „X e liber acum”; „Ies și eu” → Bilu face pe loc un plan din ce e deschis și aproape pentru cei liberi.
-- Se construiește după verificarea de buguri / după lansare, nu înainte.
+## FreeNow (Cornel, 12.10 — făcut înainte de lansare, înlocuiește „Liber acum”)
+- Butonul: „Intră pe FreeNow ⚡” (pe Acasă, sub Surprinde-mă). Notificarea, fără gen: „Ana e pe FreeNow până la 22:00 🍻 Ieși și tu?”.
+- Alegi: când (acum / de la o oră, azi), cât (1, 2, 3 ore, toată seara), chef de (cel mult 2), cine te vede, zona (opțional, fără poziție).
+- Cine te vede: prietenii și prietenii lor (implicit; doar 2 pași: eu–Mihai–Andrei, nu și Gabi, prietenul lui Andrei), doar prietenii, o gașcă, câțiva aleși. Pe card scrie „prieten cu Mihai”.
+- „Vin și eu” → o ieșire (2–10 oameni, nu doar în doi, nu doar gașca); Bilu alege 3 locuri deschise, votați 15 minute, cine a pornit poate „Alegem acum”; planul ajunge pe biletul fiecăruia cu „Vin”; cine vine după plan intră direct pe plan. Cine a pornit poate închide ieșirea („Nu, suntem destui”).
+- Situații: fără prieteni → Bilu trimite la Prieteni; nimeni nu vine → după jumătate din timp Bilu propune „Surprinde-mă”, la final se stinge în liniște; ești deja într-o ieșire → „O schimbi?”; pleacă gazda → următorul devine gazdă; rămâne unul → ieșirea se oprește și află.
+- Sub 18: doar prietenii direcți (sau gașca), până la 23:00, prietenii prietenilor nu trec printr-un minor; în ieșire cu un minor intră doar prietenii lui; locuri potrivite pentru toți.
+- Ca să nu enerveze: 3 intrări pe zi; notificări cel mult 3 pe zi, 1 pe zi de la același om, nimic 02:00–09:00; oprite pentru cineva (fără să afle) sau toate (Setări).
+- Fără chat (WhatsApp dintr-un tap). Locurile se caută acum în jurul celui care pornește votul; „la mijloc între zone” rămâne de făcut.
+- Străinii din apropiere („FreeNow Deschis”): doar după 2–3 mii de oameni activi, 18+, opt-in, distanță aproximativă, doar grupuri de minim 3 în local public, raportare/blocare, „doar fete”.

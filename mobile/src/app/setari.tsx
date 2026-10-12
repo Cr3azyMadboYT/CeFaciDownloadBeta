@@ -2,7 +2,9 @@
 import { Linking, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
+import { useEffect } from 'react';
 import { setBoard, useApp } from '../lib/session';
+import { muteFree, refreshFreeNow, useFreeNow } from '../lib/freeNow';
 import { Icon } from '../ui/Icon';
 import { H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
@@ -26,6 +28,8 @@ export default function Setari() {
   const calm = useApp((s) => !!s.board.calm);
   const remind = useApp((s) => s.board.billRemind !== false);
   const who = useApp((s) => s.who);
+  const fn = useFreeNow();
+  useEffect(() => { if (who) void refreshFreeNow(); }, [who]);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/profil'));
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -47,6 +51,12 @@ export default function Setari() {
           <Seg label="Da" on={remind} onPress={() => setBoard({ billRemind: true })} />
           <Seg label="Nu" on={!remind} onPress={() => setBoard({ billRemind: false })} />
         </Group>
+        {who ? (
+          <Group title="Notificări FreeNow" note="Când un prieten (sau un prieten de-al lui) intră pe FreeNow. Cel mult 3 pe zi și niciuna între 02:00 și 09:00. Le poți opri și doar pentru cineva, din FreeNow.">
+            <Seg label="Da" on={!fn.quiet} onPress={() => { if (fn.quiet) void muteFree(who.id, false); }} />
+            <Seg label="Nu" on={fn.quiet} onPress={() => { if (!fn.quiet) void muteFree(who.id, true); }} />
+          </Group>
+        ) : null}
         <Lbl style={{ marginTop: 8 }}>Contul</Lbl>
         <Muted style={{ fontSize: 14 }}>{who ? 'Contul: ' + (who.email ?? 'Google') + '. Ieșirea din cont și ștergerea sunt jos în Profil.' : 'Nu ești în cont.'}</Muted>
         <Lbl style={{ marginTop: 8 }}>Despre</Lbl>
