@@ -101,7 +101,7 @@ export default function Bilet() {
   const planB = (() => {
     let best: { id: string; name: string; m: number } | null = null;
     for (const x of APP.places) {
-      if (x.id === p.id || x.real.cat !== p.real.cat) continue;
+      if (x.id === p.id || x.real.cat !== p.real.cat || !APP.canPlan(x.id)) continue;
       const m = km(p.real, x.real) * 1000;
       if (m < 1500 && (!best || m < best.m)) best = { id: x.id, name: x.name, m };
     }
@@ -226,7 +226,7 @@ export default function Bilet() {
             </View>
           ) : null}
           {planB && !pl.inAt ? (
-            <Press onPress={() => { const pid = createPlanAt(planB.id, startsAt(pl), pl.people); router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); }}
+            <Press onPress={() => { try { const pid = createPlanAt(planB.id, startsAt(pl), pl.people); router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); } catch (e) { toast(e instanceof Error ? e.message : 'Nu am putut face planul.'); } }}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 10, paddingHorizontal: 14, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
               <T style={{ fontFamily: F.b, fontSize: 13, color: t.ink2 }}>PLAN B</T>
               <T numberOfLines={1} style={{ flex: 1, fontFamily: F.sb, fontSize: 14 }}>{planB.name + ' · la ' + (planB.m < 1000 ? Math.round(planB.m / 10) * 10 + ' m' : (planB.m / 1000).toFixed(1).replace('.', ',') + ' km')}</T>

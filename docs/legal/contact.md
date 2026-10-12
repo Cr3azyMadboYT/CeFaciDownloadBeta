@@ -1,10 +1,10 @@
 # Contact și informații despre proiect
 
-Versiunea: 2026-10-10. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Contact direct
 
-Proiect CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
+Proiectul CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
 
 Pentru suport, reclamații, drepturi GDPR, localuri lipsă și securitate: contact@cornacidev.ro. Specifică aplicația și subiectul, fără secrete sau date personale inutile. Cererile din aplicație sunt analizate prin dashboardul Admin de rolurile autorizate.
 

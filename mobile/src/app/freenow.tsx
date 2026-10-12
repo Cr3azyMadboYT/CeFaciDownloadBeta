@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, ScrollView, Share, View } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
-import { useApp } from '../lib/session';
+import { APP, useApp } from '../lib/session';
 import { listFriends } from '../lib/friends';
 import {
   AUDIENCES, MOODS, endFor, endVoteNow, extendFreeNow, joinFree, leaveOuting, loadLastStart, moodOf, moodWords, muteFree, myZone,
@@ -31,13 +31,14 @@ function Face({ name, user, size = 38 }: { name: string; user: string; size?: nu
 }
 
 /** Când poate începe: acum sau la următoarele ore pline (azi; noaptea ține până la 05:00). */
-function startChoices(now = new Date()) {
+function startChoices(now = new Date(), minor = APP.isMinor()) {
   const out: { label: string; at: Date | null }[] = [{ label: 'Acum', at: null }];
   const d = new Date(now); d.setMinutes(0, 0, 0);
   for (let i = 1; out.length < 5; i++) {
     const x = new Date(d.getTime() + i * 3600e3);
     const h = x.getHours();
     if (h >= 5 && h < 9) break;   // ziua aplicației se termină la 05:00
+    if (minor && (h >= 22 || h < 5)) break;   // sub 18: până la 23:00, deci cel târziu de la 22:00
     out.push({ label: hhmm(x), at: x });
   }
   return out;
@@ -55,7 +56,10 @@ function StartForm({ friends }: { friends: number | null }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const onTarget = useCallback((x: Target | null) => setTarget(x), []);
-  const choices = useMemo(() => startChoices(), []);
+  // orele se refac la fiecare minut (altfel, cu ecranul lăsat deschis, „De la 21:00” rămânea și la 21:30)
+  const [tick, setTick] = useState(() => Math.floor(Date.now() / 60000));
+  useEffect(() => { const id = setInterval(() => setTick(Math.floor(Date.now() / 60000)), 30000); return () => clearInterval(id); }, []);
+  const choices = useMemo(() => startChoices(), [tick]); // eslint-disable-line react-hooks/exhaustive-deps
   const zone = myZone();
   const me = useApp((s) => s.prefs.name as string | undefined);
   const start = choices[when]?.at ?? null;
@@ -96,7 +100,7 @@ function StartForm({ friends }: { friends: number | null }) {
       </View>
       <Lbl style={{ marginTop: 14, marginBottom: 6 }}>Chef de… (cel mult 2)</Lbl>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-        {MOODS.map((m) => <Chip key={m.id} label={m.emoji + ' ' + m.label} on={moods.includes(m.id)} onPress={() => toggleMood(m.id)} />)}
+        {MOODS.filter((m) => !(m.id === 'pahar' && APP.isMinor())).map((m) => <Chip key={m.id} label={m.emoji + ' ' + m.label} on={moods.includes(m.id)} onPress={() => toggleMood(m.id)} />)}
       </View>
       <Lbl style={{ marginTop: 14, marginBottom: 6 }}>Cine te vede?</Lbl>
       <View style={{ gap: 6 }}>

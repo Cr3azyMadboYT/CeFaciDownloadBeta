@@ -1,6 +1,6 @@
 # Șterge contul CeFaci
 
-Versiunea: 2026-10-10. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Din aplicația Client
 

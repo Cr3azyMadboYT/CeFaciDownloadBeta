@@ -67,10 +67,15 @@ export const upcoming = (list: Plan[], now = new Date()) => list.filter((pl) => 
 
 const plans = () => ((getApp().board.plans as unknown as Plan[] | undefined) ?? []);
 
-/** The time a plan starts: now, or the usual evening slot of that kind of place. */
-function slotFor(placeId: string, when: string) {
+/** The time a plan starts: now, or the usual evening slot of that kind of place — unless that hour has already
+ *  passed today (23:30, „Fă-mi plan aici”: the ticket said 20:00, in the past; QA 13.10), then it is „acum”. */
+function slotFor(placeId: string, when: string, now = new Date()) {
   if (when === 'now') return 'acum';
-  return APP.byId(placeId)?.t ?? '20:00';
+  const t = APP.byId(placeId)?.t ?? '20:00';
+  const d = dayFor(when);
+  const [h, m] = t.split(':').map(Number);
+  const at = new Date(d.getFullYear(), d.getMonth(), d.getDate(), Number.isInteger(h) ? h : 20, Number.isInteger(m) ? m : 0);
+  return at.getTime() < now.getTime() + 15 * 60e3 ? 'acum' : t;
 }
 
 /** Makes a plan for a venue (or opens the one already made for the same day). Returns its id. */

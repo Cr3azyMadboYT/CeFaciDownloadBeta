@@ -17,10 +17,12 @@ import { PlacesMap } from '../ui/PlacesMap';
 import { useWeatherVersion } from '../lib/weather';
 import { Doodles } from '../ui/Doodles';
 import { MissingPlace } from '../ui/MissingPlace';
-import { openAt } from '../../../src/engine/core';
+import { openAt, PUBLIC_SPACE } from '../../../src/engine/core';
 
 const WORDS = ['nimic', 'una', 'două', 'trei'];
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
+const EXAMPLES_MINOR = ['pizza sector 2', 'escape room', 'cafenea deschisă acum', 'muzeu', 'bowling', 'cinema'];
+const ADULT_WORDS = /\b(club|bar|pub|cocktail|bere|narghilea|shisha|vin|party)/i;
 const CAR = 'M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2M9 17h6M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0M15 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0';
 const WALLET = 'M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4';
 
@@ -104,7 +106,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
         </View>
         {sq.trim().length < 2 ? (
           <View style={{ marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-            {EXAMPLES.map((x) => <Chip key={x} label={x} onPress={() => setSearch(x)} />)}
+            {(APP.isMinor() ? EXAMPLES_MINOR : EXAMPLES).map((x) => <Chip key={x} label={x} onPress={() => setSearch(x)} />)}
           </View>
         ) : null}
         <H1 style={{ marginTop: 14, fontSize: 38, lineHeight: 38 }}>{title}</H1>
@@ -158,7 +160,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
                         // closed right now, or no hours on the map at night: said on the card, not found out at the door
                         const now = new Date(); const o = openAt(p.real, now); const h = now.getHours();
                         if (o.known && !o.open) return <Tag text="Închis acum" bg={t.coralSoft} fg={t.coralInk} />;
-                        if (!o.known && (h >= 22 || h < 7) && p.real.cat !== 'natura') return <Tag text="Program neconfirmat" bg={t.s2} fg={t.ink2} />;
+                        if (!o.known && (h >= 22 || h < 7) && p.real.cat !== 'natura' && !PUBLIC_SPACE.has(p.real.k)) return <Tag text="Program neconfirmat" bg={t.s2} fg={t.ink2} />;
                         return null;
                       })()}
                     </View>
@@ -184,7 +186,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
         ) : (
           <View style={{ marginTop: 18, padding: 18, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
             <T style={{ fontFamily: F.sb, fontSize: 16 }}>{searching ? 'Nu găsim locul ăsta.' : 'Filtrele sunt prea strânse pentru seara asta.'}</T>
-            <Muted>{searching ? 'Verifică scrierea sau încearcă altfel.' : 'Relaxează unul și îți arătăm ce iese.'}</Muted>
+            <Muted>{searching ? (APP.isMinor() && ADULT_WORDS.test(sq) ? 'Cluburile, barurile și locurile 18+ nu apar sub 18 ani. Încearcă un escape room, bowling sau un film.' : 'Verifică scrierea sau încearcă altfel.') : 'Relaxează unul și îți arătăm ce iese.'}</Muted>
             {!searching ? (
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
                 <Chip label="Orice vibe" onPress={() => setFilters({ vibes: [] })} />

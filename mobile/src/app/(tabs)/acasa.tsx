@@ -41,6 +41,11 @@ const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   night: { word: 'în seara asta?', flip: ['…un club?', '…karaoke?', '…un cocktail bun?', '…biliard sau darts?', '…o bere cu gașca?'] },
   late: { word: 'acum?', flip: ['…un club?', '…ceva deschis non-stop?', '…karaoke?', '…o plimbare cu gașca?'] },
 };
+/** Sub 18 (seara și noaptea): fără club, cocktail, bere. */
+const FLIP_MINOR: Partial<Record<Phase, string[]>> = {
+  night: ['…karaoke?', '…un film bun?', '…biliard sau darts?', '…ceva dulce?', '…o plimbare cu gașca?'],
+  late: ['…ceva de mâncat?', '…o plimbare cu gașca?', '…un film acasă?'],
+};
 const MOODS: [string, keyof typeof I, string, string, string][] = [
   ['Competitiv', 'target', '#2F5BFF', '#FFFFFF', '#5C80FF'],
   ['Party', 'club', '#0E1440', '#FFD43B', '#2B3575'],
@@ -200,7 +205,7 @@ export default function Acasa() {
               <T accessibilityRole="header" style={{ color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 44 : 56, lineHeight: (word.length > 10 ? 44 : 56) * 0.95, letterSpacing: -1.6 }}>
                 {'Ce facem\n' + word}
               </T>
-              <FlipWords words={FLIP[phase].flip} />
+              <FlipWords words={(APP.isMinor() && FLIP_MINOR[phase]) || FLIP[phase].flip} />
             </View>
             <View style={{ marginBottom: 6 }}>
               <Animated.View style={{ transform: [
@@ -222,7 +227,7 @@ export default function Acasa() {
                   <View style={{ width: 50, height: 50, borderRadius: 16, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={26} color="#FFD43B" width={2.6} /></View>
                   <View style={{ flex: 1 }}>
                     <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#0E1440' }}>Creează plan</T>
-                    <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(14,20,64,0.75)' }}>5 întrebări, sub un minut</T>
+                    <T numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(14,20,64,0.75)' }}>5 întrebări, sub un minut</T>
                   </View>
                 </Press>
                 <SeasonCta wear={wear} w={ctaW} />
@@ -340,13 +345,14 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
   const on = !!(st.me || st.outing);
   const open = () => router.push('/freenow');
   const go = async () => {
+    // biletul rămâne plin („Bilu îi anunță…”) cât răspunde serverul; Bilu zboară doar dacă a mers
     setBusy(true);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-    onEntered();
-    const r = await quickStart();
+    const r = await quickStart().catch(() => ({ err: 'Nu am putut intra pe FreeNow. Mai încearcă o dată.', notified: 0 }));
     setBusy(false);
     Animated.timing(fill, { toValue: 0, duration: 250, useNativeDriver: false }).start();
-    if (r.err) { toast(r.err); open(); return; }
+    if (r.err) { Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {}); toast(r.err); open(); return; }
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+    onEntered();
     toast(r.notified ? 'Ești pe FreeNow! Am anunțat ' + (r.notified === 1 ? '1 om.' : r.notified + ' oameni.') : 'Ești pe FreeNow! Cine deschide aplicația te vede.');
   };
   const pressIn = () => {

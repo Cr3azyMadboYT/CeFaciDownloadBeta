@@ -16,7 +16,7 @@ import { toast } from '../../lib/toast';
 import { plusOffers } from '../../lib/plus';
 
 const PERKS: [string, string, string][] = [
-  ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reducere de 10–20% la partenerii CeFaci', 'La localurile și în intervalele care oferă Plus. Reducerea valabilă pentru ieșirea ta apare în bilet.'],
+  ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reduceri mai mari la Live Drops: 15–30%', 'Unde ceilalți primesc 10–15%, tu primești cu cel puțin 5 puncte în plus, la localurile partenere care pun Live Drops. Reducerea pentru ieșirea ta apare în bilet.'],
   ['M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75', 'Și pentru gașca ta', 'Un participant confirmat cu Plus activează reducerea pentru întreaga notă eligibilă a grupului, fără limită de patru.'],
   ['M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z', 'Live Drops cu 10 minute mai devreme', 'Acces cu 10 minute înainte de Free, în limita locurilor și a condițiilor ofertei.'],
   ['M12 2l2.9 6.9L22 9.3l-5.4 4.8L18.2 21 12 17.3 5.8 21l1.6-6.9L2 9.3l7.1-.4z', 'Bilu auriu și carnet auriu', 'Bilu se face auriu, iar carnetul din Profil primește rama aurie și insigna Plus.'],

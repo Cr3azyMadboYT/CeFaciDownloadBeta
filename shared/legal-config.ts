@@ -1,5 +1,5 @@
 /** Public, non-secret legal identity. Complete verified fields before commercial launch. */
-export const LEGAL_VERSION = '2026-10-10';
+export const LEGAL_VERSION = '2026-10-13';
 export const LEGAL_CONTACT_EMAIL = 'contact@cornacidev.ro';
 export const LEGAL_OPERATOR = {
   name: null,

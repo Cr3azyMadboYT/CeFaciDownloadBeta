@@ -130,7 +130,7 @@ export function outingOptions(o: Outing, moods: string[], now = new Date()) {
   APP.buildStart(askOf({ ...ev, mode: 'loc', hour, people: Math.max(2, o.members.length), vibes: [] }, now), o.has_minor);
   const asked = [...new Set(moods.flatMap((m) => moodOf(m)?.part ?? []))];
   const h = start.getHours();
-  const parts = asked.length ? asked : h >= 5 && h < 12 ? ['desert', 'masa', 'promenada'] : h < 17 ? ['masa', 'desert', 'joaca'] : h < 22 ? ['masa', 'pahar', 'joaca'] : ['pahar', 'club', 'gustare'];
+  const parts = asked.length ? asked : h < 5 || h >= 22 ? ['pahar', 'club', 'gustare'] : h < 12 ? ['desert', 'masa', 'promenada'] : h < 17 ? ['masa', 'desert', 'joaca'] : ['masa', 'pahar', 'joaca'];
   const picked: ReturnType<typeof APP.buildOptions> = [];
   const seen: string[] = [];
   // pe rând din fiecare fel ales, până la 3
@@ -178,8 +178,15 @@ export function spanText(starts: string, ends: string, now = new Date()) {
 export const myZone = () => { const z = APP.zoneName(); return z && !/locația mea|aproape/i.test(z) ? z : null; };
 
 /** „Toată seara” (hours = 0) = până la 02:00 (serverul taie la 05:00 și, sub 18, la 23:00). */
-export function endFor(start: Date, hours: number) {
-  if (hours) return new Date(start.getTime() + hours * 3600e3);
+export function endFor(start: Date, hours: number, minor = APP.isMinor()) {
+  const e = hours ? new Date(start.getTime() + hours * 3600e3) : untilNight(start);
+  if (!minor) return e;
+  // sub 18: cel mult până la 23:00 (aceeași regulă ca pe server)
+  const cap = new Date(start); cap.setHours(23, 0, 0, 0);
+  if (start.getHours() < 5) cap.setDate(cap.getDate() - 1);
+  return cap.getTime() > start.getTime() && cap.getTime() < e.getTime() ? cap : e;
+}
+function untilNight(start: Date) {
   const e = new Date(start); e.setHours(2, 0, 0, 0);
   if (e.getTime() <= start.getTime() + 3600e3) e.setDate(e.getDate() + 1);
   if (e.getTime() - start.getTime() > 12 * 3600e3) return new Date(start.getTime() + 4 * 3600e3);

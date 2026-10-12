@@ -1,10 +1,10 @@
 # Termeni de utilizare Client
 
-Versiunea: 2026-10-10. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Serviciul și etapa proiectului
 
-Proiect CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
+Proiectul CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
 
 CeFaci te ajută să descoperi locuri și să organizezi ieșiri în București și Ilfov, inclusiv planuri cu prietenii, rezervări și beneficii la parteneri unde sunt active. Funcțiile și disponibilitatea sunt cele afișate efectiv. O etichetă beta nu înlătură obligațiile legale sau drepturile consumatorilor.
 
@@ -12,7 +12,7 @@ CeFaci te ajută să descoperi locuri și să organizezi ieșiri în București 
 
 Produsul este destinat persoanelor de cel puțin 16 ani. Furnizează date corecte și folosește numai contul propriu. Pentru 16–17 ani se aplică filtrele produsului; achizițiile viitoare și serviciile localului rămân supuse capacității legale și regulilor specifice acelui serviciu. Nu folosi aplicația pentru a evita restricțiile legale de vârstă.
 
-Poți explora funcțiile disponibile fără cont. Funcțiile sincronizate, sociale și biletele pot necesita autentificare. Protejează codurile de acces și anunță suportul dacă suspectezi folosirea neautorizată.
+Aplicația Client se folosește cu un cont (Google sau e-mail); site-ul și turul de la cefaci.app/descopera pot fi parcurse fără cont. Protejează codurile de acces și anunță suportul dacă suspectezi folosirea neautorizată.
 
 ## 3. Localuri, planuri, rezervări și beneficii
 

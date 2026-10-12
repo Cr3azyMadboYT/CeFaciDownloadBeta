@@ -1,10 +1,10 @@
 # Politica de confidențialitate
 
-Versiunea: 2026-10-10. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Cine răspunde de date
 
-Proiect CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
+Proiectul CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
 
 Această informare acoperă site-ul cefaci.app, aplicația Client, Business și dashboardul Admin. Localurile pot avea propriile obligații de operator pentru rezervări, servire și evidențe legale; informarea lor se aplică separat acelor activități. Un eventual rol de împuternicit al CeFaci pentru un local necesită un acord distinct, nu rezultă automat din folosirea Business.
 
@@ -26,7 +26,9 @@ Folosim adresa de e-mail, identificatorul contului și informațiile furnizate l
 
 Data nașterii verifică limita de 16 ani a produsului și filtrele pentru locurile 18+. Aceasta este o regulă de eligibilitate și protecție a minorilor a CeFaci, nu o afirmație că legea impune universal vârsta de 16 ani pentru orice serviciu. Nu publicăm data nașterii în profilul social. Prietenii și participanții văd informațiile necesare colaborării, precum prenumele, username-ul, voturile, planul și progresul afișat.
 
-Fără cont, preferințele și progresul nesincronizat se păstrează pe dispozitiv. Cererile de catalog și încărcarea site-ului pot totuși genera date tehnice la furnizori, inclusiv adresa IP; modul fără cont nu înseamnă că nu există nicio prelucrare pe server.
+Aplicația Client se folosește cu cont (Google sau e-mail). Până la autentificare și pentru progresul încă nesincronizat, preferințele se păstrează pe dispozitiv. Cererile de catalog și încărcarea site-ului pot genera date tehnice la furnizori, inclusiv adresa IP.
+
+FreeNow este opțional: când anunți că ai timp, păstrăm intervalul, „chef de” ales, zona aproximativă dacă o bifezi și cine te poate vedea (prietenii și prietenii lor, doar prietenii, o gașcă sau persoanele alese). Te văd numai persoanele din grupul ales; prietenii prietenilor sunt limitați la doi pași. Ieșirile, membrii, voturile și planul rezultat se păstrează ca istoric (marcate ca încheiate, nu șterse imediat), pentru limitele zilnice și siguranță. Notificările FreeNow pot fi oprite pentru o persoană sau complet din Setări. Sub 18 ani, FreeNow este limitat la prietenii direcți și până la ora 23:00.
 
 ## 3. Locație și verificarea unei vizite
 
@@ -62,7 +64,7 @@ Pentru limitarea probei gratuite Plus la o utilizare pe dispozitiv, aplicația t
 
 ## 7. Destinatari și transferuri
 
-Supabase furnizează autentificarea, baza de date, funcții server și stocarea fișierelor. Furnizorul de găzduire web procesează cererile către site. Google participă la autentificare dacă o alegi și Google Cloud Vision la OCR dacă funcția este activă. Firebase poate procesa identificatorii de notificare atunci când notificările push sunt configurate și permise; unele mementouri sunt exclusiv locale. Furnizorul efectiv de e-mail tranzacțional trebuie consemnat în registrul împuterniciților la activare.
+Supabase furnizează autentificarea, baza de date, funcții server și stocarea fișierelor. Furnizorul de găzduire web procesează cererile către site. Google participă la autentificare dacă o alegi și Google Cloud Vision la OCR dacă funcția este activă. Pentru a verifica dacă un local din plan este deschis la ora pasului, serverul CeFaci întreabă Google Places despre acel local și ora respectivă; pentru vreme, serverul întreabă Google Weather despre o zonă. Aceste cereri pleacă de pe serverul CeFaci, fără numele, e-mailul sau identificatorul contului tău; păstrăm doar identificatorul Google al locului și verdictul nostru, nu programul sau recenziile de la Google. Firebase poate procesa identificatorii de notificare atunci când notificările push sunt configurate și permise; unele mementouri sunt exclusiv locale. Furnizorul efectiv de e-mail tranzacțional trebuie consemnat în registrul împuterniciților la activare.
 
 Nu promitem că toate datele, copiile de siguranță, metadatele și accesul furnizorilor rămân exclusiv în UE. Regiunea bazei de date nu acoperă automat toate serviciile, jurnalele și subîmputerniciții. Pentru transferuri în afara SEE trebuie verificate mecanismul aplicabil, acordurile de prelucrare și garanțiile, inclusiv clauzele contractuale standard sau o decizie de adecvare, după caz. Detaliile furnizorului și ale garanțiilor pot fi cerute la adresa de contact.
 

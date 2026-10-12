@@ -1,10 +1,10 @@
 # Reguli și termeni Business beta
 
-Versiunea: 2026-10-10. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Cine oferă dashboardul
 
-Proiect CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
+Proiectul CeFaci este în dezvoltare și beta, înaintea lansării comerciale. Contact: contact@cornacidev.ro. Nu există încă o firmă înregistrată pentru CeFaci. Identitatea completă și adresa operatorului urmează să fie completate înaintea lansării; aceste date nu sunt publicate în prezent. Informarea este provizorie în privința identității, nu o declarație de îndeplinire completă a cerințelor legale. Obligațiile de protecție a datelor se aplică și în această etapă.
 
 Acești termeni acoperă accesul de test și utilizarea funcțiilor Business disponibile. Nu țin locul unui contract comercial de parteneriat, al unui acord de împuternicire sau al unei facturi. Condițiile comerciale și operatorul fiscal trebuie confirmate separat înaintea activării comerciale.
 
@@ -22,7 +22,7 @@ Nu distribui contul, codurile MFA sau sesiunea. Administratorul localului trebui
 
 ## 4. Rezervări, vizite, oferte și reclamații
 
-Menține actuale capacitatea, programul și condițiile ofertelor. Confirmările, propunerile, anulările, scanările și disputele trebuie să reflecte situația reală. Nu crea vizite, bonuri sau reduceri fictive pentru statistici ori comisioane. Aplică oferta confirmată în condițiile biletului și explică un refuz justificat.
+Menține actuale capacitatea, programul și condițiile ofertelor. Confirmările, propunerile, anulările, scanările și disputele trebuie să reflecte situația reală. Nu crea vizite, bonuri sau reduceri fictive pentru statistici ori taxe. Aplică oferta confirmată în condițiile biletului și explică un refuz justificat.
 
 Localul răspunde pentru autorizările proprii, informarea consumatorilor, limitele de vârstă, siguranța serviciului, documentele fiscale și încasarea de la client. Fluxul CeFaci nu înlocuiește casa de marcat, bonul fiscal sau obligațiile localului.
 
@@ -38,7 +38,7 @@ Transmite imediat suspiciunile de incident la contact@cornacidev.ro, fără codu
 
 ## 6. Estimări și circuit fiscal
 
-Valorile din Plăți/Financiar sunt estimări și pot fi parțiale dacă lipsesc bonuri ori există dispute. Circuitul de facturare al platformei rămâne dezactivat, billing_ready=false. Afișarea unui comision estimat nu emite o factură, nu transmite e-Factura și nu autorizează debitarea unui cont.
+Modelul propus este o taxă fixă pe persoană venită, nu un procent din notă: pentru rezervări confirmate și Live Drops, după treapta de preț a localului, numai pentru persoanele confirmate ca prezente, fără copiii sub 12 ani și cu un plafon pe masă. Valorile din Plăți/Financiar sunt estimări și pot fi parțiale dacă lipsesc confirmări ori există dispute. Facturarea prin platformă nu este activată: afișarea unei sume estimate nu emite o factură, nu transmite e-Factura și nu autorizează debitarea unui cont.
 
 Înainte de activarea comercială sunt necesare identitatea fiscală a operatorului, contractul cu preț/bază de calcul/TVA/scadență, procedura de corecție, emitentul documentelor, accesul SPV și integrarea RO e-Factura aplicabilă. Nu este activată prin acești termeni autofacturarea și nu înlocuim validarea unui contabil.
 

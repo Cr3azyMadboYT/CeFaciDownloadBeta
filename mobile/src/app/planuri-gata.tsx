@@ -136,7 +136,7 @@ export default function PlanuriGata() {
           ) : null}
           {!loading && !plans.length ? (
             <View style={{ marginTop: 6, gap: 8 }}>
-              {(() => { const h = new Date().getHours(); const tom = h >= 19 || h < 5; return <Big label={(tom ? 'Mâine' : 'Diseară') + ' la 20:00'} color="#0E1440" onPress={() => redo({ evening: tom ? addDays(eveningOf(new Date()), h < 5 ? 0 : 1) : e0, hour: '20:00' })} />; })()}
+              {(() => { const h = new Date().getHours(); const tom = h >= 19 || h < 5; return <Big label={(tom ? 'Mâine' : 'Diseară') + ' la 20:00'} color="#0E1440" onPress={() => redo({ evening: tom ? addDays(eveningOf(new Date()), 1) : e0, hour: '20:00' })} />; })()}
               <Big label="Altă zi sau oră" color={t.s2} ink={t.ink} onPress={() => router.push({ pathname: '/plan-nou', params: { step: 'cand', edit: '1' } })} />
             </View>
           ) : null}
@@ -173,7 +173,7 @@ export default function PlanuriGata() {
             </Press>
           ))}
           {!loading && plans.length ? (
-            <Press onPress={() => { void startBuild({ ...draft, mode: 'eu' }); router.push('/construiesc'); }} accessibilityLabel="Niciunul nu-mi place, o construiesc eu"
+            <Press onPress={() => { void startBuild({ ...draft, mode: 'eu' }).finally(() => router.push('/construiesc')); }} accessibilityLabel="Niciunul nu-mi place, o construiesc eu"
               style={{ marginTop: 14, minHeight: 48, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               <Icon name="dice" size={16} color={t.blueInk} />
               <T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>Niciunul nu-mi place? O construiesc eu</T>

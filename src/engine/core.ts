@@ -194,6 +194,8 @@ export const LIKELY = 0.6;
 
 /** Whether a place works from `at` for about `minutes`: open when you arrive and still open a good while (most of the
  * time you planned, at least 45 minutes); `until` is when you leave (earlier if it closes), `sure` when its hours are known. */
+/** Public places with no opening hours (no „Program neconfirmat” for them). */
+export const PUBLIC_SPACE = new Set(['square', 'promenade']);
 export function stayAt(v: Venue, at: Date, minutes: number): { ok: boolean; until: Date; sure: boolean; chance: number; closes: Date | null } {
   const end = new Date(at.getTime() + minutes * 60e3);
   const no = { ok: false, until: at, sure: false, chance: 0, closes: null };
@@ -202,7 +204,8 @@ export function stayAt(v: Venue, at: Date, minutes: number): { ok: boolean; unti
   let until = end;
   let closes: Date | null = null;
   // a park is open by day, hours on the map or not
-  const sure = (first === 1 && !!(v.wk || v.hours)) || ((v.k === 'park' || v.k === 'nature_reserve') && !isDark(at));
+  // a square or a promenade has no hours at all: it's a public place, always there
+  const sure = (first === 1 && !!(v.wk || v.hours)) || ((v.k === 'park' || v.k === 'nature_reserve') && !isDark(at)) || PUBLIC_SPACE.has(v.k);
   if (sure) {
     closes = closesAt(v, at);
     if (closes && closes.getTime() < until.getTime()) until = closes;

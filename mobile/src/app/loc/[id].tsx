@@ -3,6 +3,7 @@
 // map, what it has (terrace, wifi…), how to call or reach it. The plan comes only from "Fă-mi plan aici".
 import { useMemo } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
+import { toast } from '../../lib/toast';
 import { router, useLocalSearchParams } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useSafeAreaInsets } from '../../ui/insets';
@@ -14,7 +15,7 @@ import { Icon, type IconName } from '../../ui/Icon';
 import { Big, Muted, Press, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 import { PlacesMap } from '../../ui/PlacesMap';
-import { openAt } from '../../../../src/engine/core';
+import { openAt, PUBLIC_SPACE } from '../../../../src/engine/core';
 
 const DAYS = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
 const ORDER = [1, 2, 3, 4, 5, 6, 0]; // the week from Monday
@@ -57,7 +58,7 @@ export default function Loc() {
   const week = v.wk ? weekLines(v.wk) : null;
   const todayIdx = ORDER.indexOf(now.getDay());
   const back = () => (router.canGoBack() ? router.back() : router.replace('/exploreaza'));
-  const plan = () => { const pid = createPlan(p.id, f); router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); };
+  const plan = () => { try { const pid = createPlan(p.id, f); router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); } catch (e) { toast(e instanceof Error ? e.message : 'Nu am putut face planul.'); } };
   const nav = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v.lat + ',' + v.lon);
   const site = webLink(v.website);
   const tel = telLink(v.phone);
@@ -94,7 +95,7 @@ export default function Loc() {
 
         <View style={{ paddingHorizontal: 20, paddingTop: 14, gap: 14 }}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-            {open.known ? <Tag big text={open.label} bg={open.open ? t.greenSoft : t.coralSoft} fg={open.open ? t.greenInk : t.coralInk} /> : <Tag big text="Program neconfirmat" bg={t.s2} fg={t.ink2} />}
+            {open.known ? <Tag big text={open.label} bg={open.open ? t.greenSoft : t.coralSoft} fg={open.open ? t.greenInk : t.coralInk} /> : <Tag big text={PUBLIC_SPACE.has(v.k) ? 'Loc public, oricând' : 'Program neconfirmat'} bg={t.s2} fg={t.ink2} />}
             {v.pick ? <Tag text="Ales de noi" bg={t.yellowSoft} fg={t.yellowInk} /> : v.rated ? <Tag text="Bine cotat de oameni" bg={t.blueSoft} fg={t.blueInk} /> : null}
             {p.res === 'required' ? <Tag text="Cere rezervare" bg={t.coralSoft} fg={t.coralInk} /> : null}
           </View>

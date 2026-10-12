@@ -50,7 +50,7 @@ export default function PlanNou() {
   // "O construiesc eu": no vibe question (they choose each place), on to building the evening
   const last = d.mode === 'eu' ? STEPS.indexOf('buget') : STEPS.length - 1;
   const finish = (x = d) => {
-    if (x.mode === 'eu') { void startBuild(x); router.replace('/construiesc'); return; }
+    if (x.mode === 'eu') { void startBuild(x).finally(() => router.replace('/construiesc')); return; } // gașca cu un minor e știută înainte de primul pas (QA 13.10)
     void runPlans(x, { save: true }); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata');
   };
   const next = (x = d) => { if (k >= (x.mode === 'eu' ? STEPS.indexOf('buget') : STEPS.length - 1)) finish(x); else setK(k + 1); };
@@ -210,7 +210,7 @@ export default function PlanNou() {
           <View>
             <H1 style={{ fontSize: 32, lineHeight: 33 }}>Ce chef aveți?</H1>
             <View style={{ marginTop: 16, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-              {VIBE_TILES.map(([v, icon, bg]) => {
+              {VIBE_TILES.filter(([v]) => !(v === 'Party' && APP.isMinor())).map(([v, icon, bg]) => {
                 const on = d.vibes.includes(v);
                 return (
                   <Press key={v} onPress={() => set({ vibes: on ? d.vibes.filter((x) => x !== v) : [...d.vibes, v] })} accessibilityState={{ selected: on }} accessibilityLabel={v}
