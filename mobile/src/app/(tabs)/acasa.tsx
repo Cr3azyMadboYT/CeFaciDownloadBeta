@@ -358,7 +358,6 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
     });
   };
   const pressOut = () => { if (done.current || on) return; fill.stopAnimation(); Animated.spring(fill, { toValue: 0, useNativeDriver: false, speed: 20 }).start(); };
-  const look = FN_LOOK();
   const title = st.outing ? (st.outing.plan ? 'Mergeți la ' + st.outing.plan.venue_name : 'Ieșiți: ' + st.outing.members.length + ' oameni')
     : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : busy ? 'Bilu îi anunță…' : 'FreeNow';
   const sub = whoIsOn(others.map((p) => p.first_name)) || (on ? 'Apasă să vezi cine vine' : 'Ai timp? Ține apăsat ca să intri');
@@ -377,24 +376,7 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
   const press = { onPress: () => { if (!done.current) open(); }, onPressIn: pressIn, onPressOut: pressOut, delayLongPress: HOLD_MS + 400,
     accessibilityLabel: title + '. ' + sub, accessibilityHint: on ? undefined : 'Ține apăsat ca să intri pe FreeNow; o apăsare deschide FreeNow.' };
 
-  if (look === 'chip') {
-    // B. Discret: doar un cotor de bilet galben, mic, și lângă el cine e pe FreeNow, direct pe cer
-    return (
-      <Press {...press} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 48 }}>
-        <View onLayout={(e) => setW(e.nativeEvent.layout.width)} style={{ height: 42, paddingLeft: 10, paddingRight: 14, borderRadius: 12, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: on ? '#5FD39A' : '#FFD43B' }}>
-          {!on ? <Animated.View pointerEvents="none" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: fillW, backgroundColor: '#5FD39A' }} /> : null}
-          <Animated.View style={{ transform: [{ scale: fill.interpolate({ inputRange: [0, 1], outputRange: [1, 1.35] }) }] }}><T style={{ fontSize: 17 }}>⚡</T></Animated.View>
-          <T style={{ fontFamily: F.display, fontSize: 17, color: '#0E1440' }}>{on ? 'Pornit' : 'FreeNow'}</T>
-          <View style={{ position: 'absolute', right: -6, top: 15, width: 12, height: 12, borderRadius: 99, backgroundColor: sky }} />
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <T numberOfLines={2} style={{ flex: 1, fontFamily: F.sb, fontSize: 13, lineHeight: 17, color: 'rgba(255,255,255,0.9)' }}>{on ? title + (faces.length ? ' · ' + sub : '') : sub}</T>
-          {faces.length ? <Faces list={faces} ring={sky} /> : null}
-        </View>
-      </Press>
-    );
-  }
-  // A. Bilet de sticlă: ca Surprinde-mă (discret), cu cotor ⚡ și perforație galbenă; ții apăsat și se umple de galben
+  // bilet de sticlă (Cornel, 12.10: varianta A, discret ca zarul): cotor ⚡ și perforație galbenă; ții apăsat și se umple de galben
   return (
     <View onLayout={(e) => setW(e.nativeEvent.layout.width)}>
       <Press {...press} style={{ height: 56, borderRadius: 16, overflow: 'hidden', flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: on ? '#5FD39A' : 'rgba(255,255,255,0.25)', backgroundColor: on ? 'rgba(95,211,154,0.16)' : 'rgba(255,255,255,0.10)' }}>
@@ -419,13 +401,14 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
   );
 }
 
-/** „Mihai e pe FreeNow”, „Mihai și Andrei sunt…”, „Mihai, Andrei și Ana sunt…”, de la 4: „Mihai, Andrei și alții sunt pe FreeNow!” */
+/** Sub titlul „FreeNow ⚡”, doar cine are timp (fără text care rulează: încape mereu dintr-o privire):
+ *  „Mihai are timp acum”, „Mihai și Andrei au timp acum”, „Mihai, Andrei și Ana au timp”, de la 4: „Mihai, Andrei și alții au timp!” */
 function whoIsOn(n: string[]) {
   if (!n.length) return '';
-  if (n.length === 1) return n[0] + ' e pe FreeNow';
-  if (n.length === 2) return n[0] + ' și ' + n[1] + ' sunt pe FreeNow';
-  if (n.length === 3) return n[0] + ', ' + n[1] + ' și ' + n[2] + ' sunt pe FreeNow';
-  return n[0] + ', ' + n[1] + ' și alții sunt pe FreeNow!';
+  if (n.length === 1) return n[0] + ' are timp acum';
+  if (n.length === 2) return n[0] + ' și ' + n[1] + ' au timp acum';
+  if (n.length === 3) return n[0] + ', ' + n[1] + ' și ' + n[2] + ' au timp';
+  return n[0] + ', ' + n[1] + ' și alții au timp!';
 }
 const FACE_BG = ['#8C6CFF', '#FF6A4D', '#5FD39A', '#8EA6FF', '#FFB199'];
 /** Până la 3 fețe suprapuse (inițiala, culoarea după username); de la 4, a treia arată „+N”. */
@@ -448,7 +431,6 @@ function Faces({ list, ring }: { list: { n: string; u: string }[]; ring: string 
     </View>
   );
 }
-const FN_LOOK = (): 'glass' | 'chip' => { try { return localStorage.getItem('cefaci.fnstyle') === 'chip' ? 'chip' : 'glass'; } catch { return 'glass'; } };
 
 /** Confetti din jurul lui Bilu când se întoarce: 18 bucăți mereu montate, invizibile până pornește `v` (fir nativ). */
 const BITS = Array.from({ length: 18 }, (_, i) => {
