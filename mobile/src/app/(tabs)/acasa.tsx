@@ -15,7 +15,8 @@ import { eveningOf } from '../../../../src/engine/time';
 import { Bilu } from '../../ui/Bilu';
 import { Avatar } from '../../ui/Avatar';
 import { TourTarget } from '../../ui/TourTarget';
-import { shouldStartTour, startTour } from '../../lib/tour';
+import { shouldStartTour, startTour, useTour } from '../../lib/tour';
+import { tourTargetAt } from '../../ui/Tour';
 import { useLightBar } from '../../ui/bar';
 import { Icon, I } from '../../ui/Icon';
 import { Muted, Press, T } from '../../ui/kit';
@@ -86,6 +87,15 @@ export default function Acasa() {
   const plans = useApp((s) => (s.board.plans as Plan[] | undefined) ?? NO_PLANS);
   const now = useClock();
   useLightBar();
+  const fnLook = FN_LOOK();
+  // turul lui Bilu: ținta e sus pe cer, Acasă stă sus cât arată Bilu spre ea
+  const scroll = useRef<ScrollView>(null);
+  const tour = useTour();
+  useEffect(() => {
+    if (!tour.on) return;
+    const id = tourTargetAt(tour.step);
+    if (id === 'pills' || id === 'cta' || id === 'freenow' || !id) scroll.current?.scrollTo({ y: 0, animated: false });
+  }, [tour.on, tour.step]);
   // a new account gets Bilu's tour once, after Acasă has settled
   useEffect(() => { const id = setTimeout(() => { if (shouldStartTour()) startTour(); }, 900); return () => clearTimeout(id); }, []);
   const phase = phaseOfHour(now.getHours());
@@ -128,7 +138,7 @@ export default function Acasa() {
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <Doodles />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView ref={scroll} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
         <View onLayout={(e) => setTop({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
           style={{ backgroundColor: SKY_BG[phase], paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 96, borderBottomLeftRadius: 34, borderBottomRightRadius: 34, overflow: 'hidden' }}>
           <Sky phase={phase} />
@@ -138,12 +148,15 @@ export default function Acasa() {
             <Press onPress={() => router.push('/zona')} accessibilityLabel={'Pleci din ' + APP.zoneName() + ', până la ' + APP.radiusKm() + ' km. Schimbă'}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 44, marginLeft: -10, paddingLeft: 10, paddingRight: 12, borderRadius: 14 }}>
               <Icon name="pin" size={16} color="#FFD43B" />
-              <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF', maxWidth: 230 }}>{APP.zoneName() + ' · ' + APP.radiusKm() + ' km'}</T>
+              <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF', maxWidth: fnLook === 'top' ? 150 : 230 }}>{APP.zoneName() + ' · ' + APP.radiusKm() + ' km'}</T>
               <View style={{ opacity: 0.7 }}><Icon name="down" size={16} color="#FFFFFF" /></View>
             </Press>
-            <Press onPress={() => router.push('/profil')} accessibilityLabel="Profilul tău" style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
-              <Avatar size={34} />
-            </Press>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              {fnLook === 'top' ? <TourTarget id="freenow"><FreeNowPill /></TourTarget> : null}
+              <Press onPress={() => router.push('/profil')} accessibilityLabel="Profilul tău" style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
+                <Avatar size={34} />
+              </Press>
+            </View>
           </View>
           <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
             <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={40} color="#FFD43B" />
@@ -184,6 +197,13 @@ export default function Acasa() {
             </Press>
             <SeasonCta wear={wear} w={ctaW} />
             </View>
+            {fnLook === 'row' ? (
+              <View style={{ marginTop: 10, flexDirection: 'row', gap: 8 }}>
+                <Tile label="Surprinde-mă" onPress={surprise} icon={<Icon name="dice" size={20} color="#FFFFFF" />} />
+                {last ? <Tile label="Ca data trecută" onPress={again} icon={<Icon d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" size={20} color="#FFFFFF" />} /> : null}
+                <TourTarget id="freenow" style={{ flex: 1 }}><FreeNowTile /></TourTarget>
+              </View>
+            ) : (
             <View style={{ marginTop: 10, flexDirection: 'row', gap: 10 }}>
               <Press onPress={surprise} accessibilityLabel="Surprinde-mă" style={{ flex: 1, height: 50, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 <Icon name="dice" size={18} color="#FFFFFF" /><T style={{ fontFamily: F.b, fontSize: 15, color: '#FFFFFF' }}>Surprinde-mă</T>
@@ -194,9 +214,7 @@ export default function Acasa() {
                 </Press>
               ) : null}
             </View>
-          </TourTarget>
-          <TourTarget id="freenow" style={{ marginTop: 10 }}>
-            <FreeNowRow phase={phase} />
+            )}
           </TourTarget>
         </View>
 
@@ -280,107 +298,58 @@ export default function Acasa() {
   );
 }
 
-/** FreeNow (Cornel, 12.10): pe cerul de pe Acasă, sub Surprinde-mă: cine mai e pe FreeNow, sau „Intră pe FreeNow ⚡”.
- *  Trei variante de test (12.10, „nu prea îmi place designul”): A bilet, B live, C comutator (`cefaci.fnstyle`). */
-const FN_STYLE = (): 'a' | 'b' | 'c' => { try { const v = localStorage.getItem('cefaci.fnstyle'); return v === 'b' || v === 'c' ? v : 'a'; } catch { return 'a'; } };
-function Faces({ names, ring }: { names: string[]; ring: string }) {
-  const C = ['#8C6CFF', '#FF6A4D', '#5FD39A', '#8EA6FF'];
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      {names.slice(0, 3).map((n, i) => (
-        <View key={n + i} style={{ marginLeft: i ? -10 : 0, width: 28, height: 28, borderRadius: 99, borderWidth: 2, borderColor: ring, backgroundColor: C[i % 4], alignItems: 'center', justifyContent: 'center' }}>
-          <T style={{ fontFamily: F.b, fontSize: 12, color: '#0E1440' }}>{n.charAt(0).toUpperCase()}</T>
-        </View>
-      ))}
-    </View>
-  );
-}
-function FreeNowRow({ phase }: { phase: Phase }) {
+/** FreeNow (Cornel, 12.10) pe cerul de pe Acasă, fără să acopere orașul. Două variante de test (`cefaci.fnstyle`):
+ *  „top” = pastila galbenă ⚡ lângă poza ta; „row” = a treia piesă lângă Surprinde-mă și Ca data trecută. */
+const FN_LOOK = (): 'top' | 'row' => { try { return localStorage.getItem('cefaci.fnstyle') === 'row' ? 'row' : 'top'; } catch { return 'top'; } };
+function useFreeNowHome() {
   const who = useApp((s) => s.who);
   const known = useApp((s) => s.known);
   const st = useFreeNow();
-  const look = FN_STYLE();
-  const pulse = useRef(new Animated.Value(0)).current;
-  useEffect(() => { const a = Animated.loop(Animated.timing(pulse, { toValue: 1, duration: 1400, easing: Easing.out(Easing.quad), useNativeDriver: true })); a.start(); return () => a.stop(); }, [pulse]);
   useFocusEffect(useCallback(() => {
     if (!who || !known) return undefined;
     void refreshFreeNow();
     const id = setInterval(() => { void refreshFreeNow(); }, 60000);
     return () => clearInterval(id);
   }, [who, known]));
-  const others = st.people.filter((p) => !p.outing?.mine);
+  const others = st.people.filter((p) => !p.outing?.mine).length;
   const on = !!(st.me || st.outing);
-  const names = others.slice(0, 2).map((p) => p.first_name).join(', ') + (others.length > 2 ? ' +' + (others.length - 2) : '');
-  const title = st.outing ? (st.outing.plan ? 'Mergeți la ' + st.outing.plan.venue_name : 'Ieșiți: ' + st.outing.members.length + ' oameni')
-    : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : 'FreeNow';
-  const sub = st.outing ? (st.outing.plan ? 'Vezi biletul și cine vine' : 'Bilu alege locul, voi votați')
-    : others.length ? (others.length === 1 ? names + ' e pe FreeNow acum' : names + ' sunt pe FreeNow') : st.me ? 'Cine are chef vine cu tine' : 'Ai timp de ieșit? Dă-le de veste.';
-  const go = () => router.push('/freenow');
-  const label = title + '. ' + sub;
-  const dot = (
-    <View style={{ width: 12, height: 12, alignItems: 'center', justifyContent: 'center' }}>
-      <Animated.View style={{ position: 'absolute', width: 12, height: 12, borderRadius: 99, backgroundColor: '#5FD39A', opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.7, 0] }), transform: [{ scale: pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 2.6] }) }] }} />
-      <View style={{ width: 9, height: 9, borderRadius: 99, backgroundColor: '#5FD39A' }} />
+  const label = st.outing ? 'FreeNow: ieșiți ' + st.outing.members.length : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : others ? 'FreeNow: ' + others + ' prieteni au timp acum' : 'Intră pe FreeNow';
+  return { others, on, label };
+}
+function Badge({ n }: { n: number }) {
+  if (!n) return null;
+  return (
+    <View style={{ position: 'absolute', top: -5, right: -5, minWidth: 20, height: 20, paddingHorizontal: 5, borderRadius: 99, backgroundColor: '#FF6A4D', borderWidth: 2, borderColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
+      <T style={{ fontFamily: F.b, fontSize: 11, color: '#FFFFFF' }}>{String(n)}</T>
     </View>
   );
-
-  if (look === 'b') {
-    // B. Live: o pastilă de sticlă cu punct verde care pulsează și un buton alb „Intră ⚡”
-    return (
-      <Press onPress={go} accessibilityLabel={label} style={{ minHeight: 64, borderRadius: 999, paddingLeft: 16, paddingRight: 8, flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: on ? 'rgba(95,211,154,0.18)' : 'rgba(255,255,255,0.10)', borderWidth: 1.5, borderColor: on ? '#5FD39A' : 'rgba(255,255,255,0.28)' }}>
-        {dot}
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <T style={{ fontFamily: F.b, fontSize: 11, letterSpacing: 1.2, color: '#5FD39A' }}>LIVE</T>
-            <T numberOfLines={1} style={{ flex: 1, fontFamily: F.b, fontSize: 15.5, color: '#FFFFFF' }}>{title}</T>
-          </View>
-          <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 12.5, color: 'rgba(255,255,255,0.8)' }}>{sub}</T>
-        </View>
-        {others.length ? <Faces names={others.map((p) => p.first_name)} ring={SKY_BG[phase]} /> : null}
-        <View style={{ height: 46, paddingHorizontal: 16, borderRadius: 999, backgroundColor: on ? '#5FD39A' : '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-          <T style={{ fontFamily: F.b, fontSize: 15, color: '#0E1440' }}>{on ? 'Vezi' : 'Intră ⚡'}</T>
-        </View>
-      </Press>
-    );
-  }
-  if (look === 'c') {
-    // C. Comutator: ca un întrerupător mare; pornit = verde, cu cine mai e pe FreeNow
-    return (
-      <Press onPress={go} accessibilityRole="switch" accessibilityState={{ checked: on }} accessibilityLabel={label}
-        style={{ minHeight: 70, borderRadius: 22, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'rgba(255,255,255,0.10)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' }}>
-        <View style={{ flex: 1 }}>
-          <T numberOfLines={1} style={{ fontFamily: F.display, fontSize: 21, lineHeight: 24, color: '#FFFFFF' }}>{st.me || st.outing ? title : 'FreeNow ⚡'}</T>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 }}>
-            {others.length ? dot : null}
-            <T numberOfLines={1} style={{ flex: 1, fontFamily: F.m, fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>{sub}</T>
-          </View>
-        </View>
-        <View style={{ width: 66, height: 38, borderRadius: 999, padding: 4, backgroundColor: on ? '#5FD39A' : 'rgba(255,255,255,0.22)', justifyContent: 'center', alignItems: on ? 'flex-end' : 'flex-start' }}>
-          <View style={{ width: 30, height: 30, borderRadius: 99, backgroundColor: on ? '#0E1440' : '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-            <T style={{ fontSize: 15 }}>⚡</T>
-          </View>
-        </View>
-      </Press>
-    );
-  }
-  // A. Bilet: un bilet galben cu cotor și perforație, ca biletul serii
-  const bg = SKY_BG[phase];
+}
+function FreeNowPill() {
+  const f = useFreeNowHome();
   return (
-    <Press onPress={go} accessibilityLabel={label} style={{ minHeight: 70, flexDirection: 'row', borderRadius: 18, backgroundColor: on ? '#5FD39A' : '#FFD43B', overflow: 'hidden' }}>
-      <View style={{ width: 62, alignItems: 'center', justifyContent: 'center', backgroundColor: '#0E1440' }}>
-        <T style={{ fontSize: 26 }}>⚡</T>
-      </View>
-      <View style={{ width: 0, borderLeftWidth: 2, borderStyle: 'dashed', borderColor: on ? '#5FD39A' : '#FFD43B' }} />
-      <View style={{ position: 'absolute', left: 52, top: -10, width: 20, height: 20, borderRadius: 99, backgroundColor: bg }} />
-      <View style={{ position: 'absolute', left: 52, bottom: -10, width: 20, height: 20, borderRadius: 99, backgroundColor: bg }} />
-      <View style={{ flex: 1, paddingLeft: 16, paddingRight: 12, justifyContent: 'center' }}>
-        <T numberOfLines={1} style={{ fontFamily: F.display, fontSize: 21, lineHeight: 24, color: '#0E1440' }}>{title}</T>
-        <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(14,20,64,0.78)' }}>{sub}</T>
-      </View>
-      <View style={{ paddingRight: 14, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        {others.length ? <Faces names={others.map((p) => p.first_name)} ring={on ? '#5FD39A' : '#FFD43B'} /> : <T style={{ fontFamily: F.b, fontSize: 15, color: '#0E1440' }}>Intră</T>}
-        <Icon name="next" size={18} color="#0E1440" />
-      </View>
+    <Press onPress={() => router.push('/freenow')} accessibilityLabel={f.label}
+      style={{ height: 36, paddingHorizontal: 12, borderRadius: 999, flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: f.on ? '#5FD39A' : '#FFD43B' }}>
+      <T style={{ fontSize: 15 }}>⚡</T>
+      <T style={{ fontFamily: F.b, fontSize: 14, color: '#0E1440' }}>FreeNow</T>
+      <Badge n={f.others} />
+    </Press>
+  );
+}
+function Tile({ label, icon, onPress }: { label: string; icon: React.ReactNode; onPress: () => void }) {
+  return (
+    <Press onPress={onPress} accessibilityLabel={label} style={{ flex: 1, height: 64, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+      {icon}<T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 13, color: '#FFFFFF' }}>{label}</T>
+    </Press>
+  );
+}
+function FreeNowTile() {
+  const f = useFreeNowHome();
+  return (
+    <Press onPress={() => router.push('/freenow')} accessibilityLabel={f.label}
+      style={{ flex: 1, height: 64, borderRadius: 16, backgroundColor: f.on ? '#5FD39A' : '#FFD43B', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+      <T style={{ fontSize: 19 }}>⚡</T>
+      <T style={{ fontFamily: F.b, fontSize: 13, color: '#0E1440' }}>FreeNow</T>
+      <Badge n={f.others} />
     </Press>
   );
 }

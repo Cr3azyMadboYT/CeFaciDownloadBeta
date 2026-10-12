@@ -27,13 +27,13 @@ export const Sky = memo(function Sky({ phase }: { phase: Phase }) {
   const stars = phase === 'night' || phase === 'late' || phase === 'dusk';
   const win = phase === 'day' ? ['#8EA6FF', 0.55] : phase === 'morning' ? ['#B7C6FF', 0.5] : ['#FFD43B', 0.9];
   const half = (odd: boolean) => (
-    <Svg style={StyleSheet.absoluteFill} viewBox="0 0 390 600" preserveAspectRatio="xMidYMax slice">
+    <Svg style={StyleSheet.absoluteFill} width="100%" height="100%" viewBox="0 0 390 600" preserveAspectRatio="xMidYMax slice">
       {stars ? <G opacity={phase === 'dusk' ? 0.55 : 1}>{STARS.filter((_, i) => i % 2 === (odd ? 1 : 0)).map(([x, y, r], i) => <Circle key={i} cx={x} cy={y} r={r} fill="#FFFFFF" />)}</G> : null}
     </Svg>
   );
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-      <Svg style={StyleSheet.absoluteFill} viewBox="0 0 390 600" preserveAspectRatio="xMidYMax slice">
+      <Svg style={StyleSheet.absoluteFill} width="100%" height="100%" viewBox="0 0 390 600" preserveAspectRatio="xMidYMax slice">
         {(phase === 'night' || phase === 'late') ? <G><Circle cx={322} cy={118} r={30} fill="#FFD43B" /><Circle cx={336} cy={106} r={27} fill={SKY_BG[phase]} /></G> : null}
         {phase === 'day' ? <G><Circle cx={318} cy={112} r={34} fill="#FFD43B" /><Circle cx={318} cy={112} r={50} fill="none" stroke="#FFD43B" strokeWidth={2} strokeDasharray="3 9" opacity={0.7} /></G> : null}
         {phase === 'morning' ? <G><Circle cx={66} cy={205} r={38} fill="#FFD43B" opacity={0.25} /><Circle cx={66} cy={205} r={24} fill="#FFD43B" /></G> : null}

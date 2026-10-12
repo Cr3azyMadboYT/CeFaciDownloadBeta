@@ -13,7 +13,7 @@ import { Confetti, Poof } from './Magic';
 import { Icon } from './Icon';
 
 interface Step { id?: string; mood: Mood; text: string; oops?: string; hot?: 'profil' | 'plus'; final?: 'xp' | 'gift'; magic?: boolean }
-const STEPS: Step[] = [
+export const STEPS: Step[] = [
   { mood: 'hi', text: 'Salutare! Bine ai venit în CeFaci. Sperăm să te scăpăm de plictiseală și să te distrezi cu vârf și îndesat!' },
   { mood: 'wink', text: 'Înainte de toate, un mic tur prin aplicație. Durează jumătate de minut, promit.' },
   { id: 'pills', mood: 'up', text: 'Sus vezi de unde pleci, vremea, ziua și ora. Apasă pe zonă ca s-o schimbi.' },
@@ -29,12 +29,15 @@ const STEPS: Step[] = [
 
 const DIM = 'rgba(4,7,24,0.78)';
 
+/** Ținta pasului de acum (Acasă derulează până la ea când e mai jos, ca la FreeNow). */
+export const tourTargetAt = (step: number) => STEPS[step]?.id;
+
 export function Tour() {
   const tour = useTour();
   const plus = useApp((s) => s.board.plus);
   const { width: W, height: H } = useWindowDimensions();
   const ins = useModalInsets();
-  const steps = tour.replay ? STEPS.slice(0, 7) : STEPS;
+  const steps = tour.replay ? STEPS.slice(0, 8) : STEPS; // turul din nou: până la carnet, fără cadoul Plus
   const st = steps[Math.min(tour.step, steps.length - 1)];
   const r: Rect | undefined = st?.id ? tour.rects[st.id] : undefined;
   const fade = useRef(new Animated.Value(0)).current;
