@@ -143,6 +143,18 @@ function StartForm({ friends }: { friends: number | null }) {
   );
 }
 
+/** „Vin și eu” în stilul variantei de test (A galben, B verde, C contur), ca rândul de pe Acasă. */
+function JoinBtn({ onPress }: { onPress: () => void }) {
+  const { t } = useTheme();
+  let v = 'a'; try { v = localStorage.getItem('cefaci.fnstyle') ?? 'a'; } catch { /* nimic */ }
+  const st = v === 'b' ? { bg: '#5FD39A', ink: '#0E1440', bw: 0, r: 999 } : v === 'c' ? { bg: 'transparent', ink: t.ink, bw: 2, r: 16 } : { bg: '#FFD43B', ink: '#0E1440', bw: 0, r: 16 };
+  return (
+    <Press onPress={onPress} accessibilityLabel="Vin și eu" style={{ flex: 1, minHeight: 52, borderRadius: st.r, borderWidth: st.bw, borderColor: t.ink, backgroundColor: st.bg, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+      <T style={{ fontSize: 17 }}>⚡</T><T style={{ fontFamily: F.b, fontSize: 16, color: st.ink }}>Vin și eu</T>
+    </Press>
+  );
+}
+
 function Person({ p, onJoin, onMute }: { p: Free; onJoin: () => void; onMute: () => void }) {
   const { t } = useTheme();
   const o = p.outing;
@@ -162,7 +174,7 @@ function Person({ p, onJoin, onMute }: { p: Free; onJoin: () => void; onMute: ()
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         {o?.mine ? <Note kind="ok">Ieșiți împreună</Note>
           : o && !o.open ? <Muted style={{ flex: 1 }}>Ieșirea lor s-a închis.</Muted>
-          : <Big style={{ flex: 1 }} label="Vin și eu" onPress={onJoin} />}
+          : <JoinBtn onPress={onJoin} />}
         <Quiet label={p.muted ? '🔔 Pornește' : '🔕 Fără notificări'} color={t.ink2} onPress={onMute} />
       </View>
     </View>
