@@ -206,11 +206,11 @@ try {
   await page.getByLabel('Motivul deciziei',{exact:true}).fill('Am verificat numărul cu ambele părți și documentul de sosire.');
   await button(page,'Confirmă numărul').click();await button(page,'Verifică sosirea: '+visit.id).click();
   assert.equal(visit.count.state,'confirmed');assert.equal(visit.count.version,3);
-  assert.equal(await button(page,'Confirmă numărul').count(),0);
+  await button(page,'Confirmă numărul').waitFor({state:'detached',timeout:10000});assert.equal(await button(page,'Confirmă numărul').count(),0);
   await page.getByLabel('Motivul deciziei privind reducerea',{exact:true}).fill('Bonul confirmă lipsa reducerii promise pentru grup.');
   await button(page,'Admite plângerea').click();await button(page,'Verifică sosirea: '+visit.id).click();
   assert.equal(visit.benefit.state,'upheld');assert.equal(visit.benefit.version,2);
-  assert.equal(await button(page,'Admite plângerea').count(),0);
+  await button(page,'Admite plângerea').waitFor({state:'detached',timeout:10000});assert.equal(await button(page,'Admite plângerea').count(),0);
   assert.equal(await button(page,'Bani').count(),0);
 
   await button(page,'Plus').click();await page.getByLabel('Username exact',{exact:true}).fill('client_test');
