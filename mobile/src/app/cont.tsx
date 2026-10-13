@@ -83,19 +83,19 @@ const MailIcon = () => (
 
 /** The first screen's background (decision Cornel, 04.10: „întrebările în background, ca pe WhatsApp”, no animation,
  *  nothing that eats battery): the questions every group chat asks before going out, faint behind the text. */
-const CHAT: [string, 'l' | 'r', number, number][] = [
-  ['Ieșim diseară?', 'l', 0.06, 0.04], ['Ce facem? 🤔', 'r', 0.13, 0.52], ['La cât?', 'l', 0.21, 0.08], ['Și dacă plouă? ☔', 'r', 0.29, 0.40],
-  ['Cine mai vine?', 'l', 0.37, 0.05], ['Eu zic bowling 🎳', 'r', 0.45, 0.45], ['Pizza? 🍕', 'l', 0.53, 0.10], ['Sâmbătă la 8?', 'r', 0.61, 0.50],
-  ['Rezervă tu?', 'l', 0.69, 0.06], ['Vin și eu! 🙌', 'r', 0.77, 0.48], ['Unde mergem?', 'l', 0.85, 0.12],
+// doar sus, pe margini, în jurul lui Bilu (Cornel, 13.10: sub text și butoane se citea greu)
+const CHAT: [string, 'l' | 'r', number][] = [
+  ['Ieșim diseară?', 'l', 0.11], ['Ce facem? 🤔', 'r', 0.15], ['La cât?', 'l', 0.21], ['Și dacă plouă? ☔', 'r', 0.26],
+  ['Cine mai vine?', 'l', 0.31], ['Vin și eu! 🙌', 'r', 0.36],
 ];
 function ChatBg() {
   const { width, height } = useWindowDimensions();
   return (
     <View pointerEvents="none" importantForAccessibility="no-hide-descendants" style={{ position: 'absolute', left: 0, right: 0, top: 0, height }}>
-      {CHAT.map(([text, side, y, x]) => (
-        <View key={text} style={{ position: 'absolute', top: y * height, left: x * width, maxWidth: width * 0.5, paddingHorizontal: 12, paddingVertical: 7, borderRadius: 16,
-          borderBottomLeftRadius: side === 'l' ? 4 : 16, borderBottomRightRadius: side === 'r' ? 4 : 16, backgroundColor: side === 'l' ? 'rgba(255,255,255,0.07)' : 'rgba(47,91,255,0.16)' }}>
-          <T style={{ fontFamily: F.sb, fontSize: 14, color: 'rgba(255,255,255,0.28)' }}>{text}</T>
+      {CHAT.filter(([, , y]) => height >= 760 || y <= 0.26).map(([text, side, y]) => (
+        <View key={text} style={{ position: 'absolute', top: y * height, [side === 'l' ? 'left' : 'right']: 14, maxWidth: width * 0.34, paddingHorizontal: 11, paddingVertical: 6, borderRadius: 14,
+          borderBottomLeftRadius: side === 'l' ? 4 : 14, borderBottomRightRadius: side === 'r' ? 4 : 14, backgroundColor: side === 'l' ? 'rgba(255,255,255,0.04)' : 'rgba(47,91,255,0.10)' }}>
+          <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 12.5, color: 'rgba(255,255,255,0.16)' }}>{text}</T>
         </View>
       ))}
     </View>
@@ -110,7 +110,8 @@ const Glow = ({ top }: { top: number }) => (
 export default function Cont() {
   const { t, name: themeName, set: setTheme } = useTheme();
   const ins = useSafeAreaInsets();
-  const short = useWindowDimensions().height < 760; // small phones: a smaller Bilu, so the buttons stay on screen
+  const winH = useWindowDimensions().height;
+  const short = winH < 760; // small phones: a smaller Bilu, so the buttons stay on screen
   const prefs = useApp((s) => s.prefs);
   const [step, setStep] = useState<Step>('start');
   const [authErr, setAuthErr] = useState('');
@@ -247,12 +248,14 @@ export default function Cont() {
 
   // ---------- screens ----------
   if (step === 'start') {
+    // fără scroll (Cornel, 13.10): totul încape pe ecran; termenii mici, jos de tot
+    const tiny = winH < 680;
     return (
       <Slide k="start">
-        <ScrollView style={{ flex: 1, backgroundColor: '#0E1440' }} contentContainerStyle={{ flexGrow: 1, paddingTop: ins.top }} bounces={false} showsVerticalScrollIndicator={false}>
+        <View style={{ flex: 1, backgroundColor: '#0E1440', paddingTop: ins.top, overflow: 'hidden' }}>
           <ChatBg />
           <Glow top={ins.top + 70} />
-          <View style={{ paddingTop: 16, paddingHorizontal: 24, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <View style={{ paddingTop: 12, paddingHorizontal: 24, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Logo />
             <T style={{ fontFamily: F.display, fontSize: 25, letterSpacing: -0.5, color: '#FFFFFF' }}>CeFaci</T>
             <View style={{ flex: 1 }} />
@@ -261,13 +264,12 @@ export default function Cont() {
               <Icon name={themeName === 'noapte' ? 'sun' : 'moon'} size={16} color="#FFFFFF" />
             </Press>
           </View>
-          <View style={{ alignItems: 'center', marginTop: short ? 12 : 34 }}><Bilu size={short ? 120 : 170} mood="hi" /></View>
-          <T accessibilityRole="header" style={{ marginTop: 18, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: 38, lineHeight: 39, letterSpacing: -1.1, color: '#FFFFFF' }}>{'Nu mai stai acasă\nfără să vrei.'}</T>
-          <T style={{ marginTop: 12, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: 16, lineHeight: 23, color: '#C9CEE6' }}>{returning ? 'Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.' : 'Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.'}</T>
-          <View style={{ flex: 1, minHeight: 24 }} />
-          <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 10 }}>
-            <AccountLegalNotice audience="client" theme={t} dark creating={!returning}/>
-            <LegalLinks dark compact />
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ alignItems: 'center' }}><Bilu size={tiny ? 96 : short ? 124 : 160} mood="hi" /></View>
+            <T accessibilityRole="header" style={{ marginTop: tiny ? 10 : 18, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: tiny ? 30 : 36, lineHeight: tiny ? 32 : 38, letterSpacing: -1, color: '#FFFFFF' }}>{'Nu mai stai acasă\nfără să vrei.'}</T>
+            <T style={{ marginTop: 10, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: tiny ? 14.5 : 16, lineHeight: tiny ? 20 : 23, color: '#C9CEE6' }}>{returning ? 'Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.' : 'Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.'}</T>
+          </View>
+          <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 6, gap: 10 }}>
             {googleSignInAvailable&&<Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}
               style={{ height: 56, borderRadius: 18, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <GoogleG />
@@ -279,9 +281,10 @@ export default function Cont() {
               <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>Continuă cu email</T>
             </Press>
             {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
-            <T style={{ marginTop: 6, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>{googleSignInAvailable?'Ai deja cont? Intră la fel, cu Google sau cu emailul.':'Ai deja cont? Intră cu aceeași adresă de email.'}</T>
+            <T style={{ marginTop: 2, textAlign: 'center', fontFamily: F.m, fontSize: 12.5, lineHeight: 17, color: '#A9B1DA' }}>{googleSignInAvailable?'Ai deja cont? Intră la fel, cu Google sau cu emailul.':'Ai deja cont? Intră cu aceeași adresă de email.'}</T>
+            <View style={{ marginTop: 4 }}><AccountLegalNotice audience="client" theme={t} dark small creating={!returning} extra={<LegalLinks dark tiny />} /></View>
           </View>
-        </ScrollView>
+        </View>
       </Slide>
     );
   }
