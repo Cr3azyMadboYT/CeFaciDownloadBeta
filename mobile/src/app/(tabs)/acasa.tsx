@@ -39,7 +39,7 @@ const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   day: { word: 'astăzi?', flip: ['…Mogoșoaia?', '…un escape room?', '…un film?', '…jocuri de societate?', '…o pizza la cuptor?'] },
   dusk: { word: 'în seara asta?', flip: ['…poate un bowling?', '…sau karaoke?', '…un film bun?', '…un escape room?', '…o pizza la cuptor?', '…padel cu gașca?'] },
   night: { word: 'în seara asta?', flip: ['…un club?', '…karaoke?', '…un cocktail bun?', '…biliard sau darts?', '…o bere cu gașca?'] },
-  late: { word: 'acum?', flip: ['…un club?', '…ceva deschis non-stop?', '…karaoke?', '…o plimbare cu gașca?'] },
+  late: { word: 'acum?', flip: ['…un club?', '…ceva non-stop?', '…karaoke?', '…o plimbare cu gașca?'] },
 };
 /** Sub 18 (seara și noaptea): fără club, cocktail, bere. */
 const FLIP_MINOR: Partial<Record<Phase, string[]>> = {
@@ -70,8 +70,9 @@ function FlipWords({ words }: { words: string[] }) {
     return () => clearInterval(id);
   }, [words, a]);
   return (
-    <View style={{ minHeight: 38, marginTop: 4 }} accessibilityLiveRegion="polite">
-      <Animated.Text maxFontSizeMultiplier={1} style={{ fontFamily: F.hand, fontSize: 30, lineHeight: 38, color: '#FFD43B', opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }] }}>
+    // înălțime fixă, un singur rând (Cornel, 13.10: textele lungi treceau pe 2 rânduri și ecranul se ridica și se lăsa)
+    <View style={{ height: 40, marginTop: 4, justifyContent: 'center' }} accessibilityLiveRegion="polite">
+      <Animated.Text maxFontSizeMultiplier={1} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={{ fontFamily: F.hand, fontSize: 30, lineHeight: 38, color: '#FFD43B', opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }] }}>
         {words[i % words.length]}
       </Animated.Text>
     </View>
