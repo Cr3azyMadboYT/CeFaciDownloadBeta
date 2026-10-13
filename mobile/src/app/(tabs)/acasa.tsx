@@ -410,13 +410,19 @@ const PIPS: Record<number, [number, number][]> = {
   5: [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]], 3: [[0, 0], [1, 1], [2, 2]], 6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]],
 };
 function Die({ face, size }: { face: number; size: number }) {
-  const cell = size / 3;
-  const dot = size * 0.17;
+  // bulinele se așază în interiorul marginii (pozițiile absolute pornesc de după bordură), pe o grilă 3×3 cu margine egală
+  const border = 2;
+  const inner = size - border * 2;
+  const dot = Math.round(size * 0.17);
+  const pad = inner * 0.16;
+  const step = (inner - pad * 2 - dot) / 2;
   return (
-    <View style={{ width: size, height: size, borderRadius: size * 0.26, backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#0E1440', shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 4, shadowOffset: { width: 0, height: 3 }, elevation: 4 }}>
-      {PIPS[face].map(([x, y], k) => (
-        <View key={k} style={{ position: 'absolute', left: x * cell + (cell - dot) / 2 - 1, top: y * cell + (cell - dot) / 2 - 1, width: dot, height: dot, borderRadius: dot, backgroundColor: '#0E1440' }} />
-      ))}
+    <View style={{ width: size, height: size + 3, borderRadius: size * 0.26, backgroundColor: '#C9C2F5', borderWidth: border, borderColor: '#0E1440' }}>
+      <View style={{ position: 'absolute', left: 0, top: 0, width: inner, height: inner, borderRadius: size * 0.22, backgroundColor: '#FFFFFF' }}>
+        {PIPS[face].map(([x, y], k) => (
+          <View key={k} style={{ position: 'absolute', left: pad + x * step, top: pad + y * step, width: dot, height: dot, borderRadius: dot, backgroundColor: '#0E1440' }} />
+        ))}
+      </View>
     </View>
   );
 }
@@ -458,10 +464,10 @@ function SurpriseBtn({ onPress }: { onPress: () => void }) {
       <T pointerEvents="none" style={{ position: 'absolute', top: 18, right: 10, fontSize: 8, color: '#FFFFFF' }}>✦</T>
       <Animated.View style={{ transform: [
         { translateY: spin.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0, -14, 0] }) },
-        { rotate: spin.interpolate({ inputRange: [0, 1], outputRange: ['-12deg', '348deg'] }) },
+        { rotate: spin.interpolate({ inputRange: [0, 1], outputRange: ['-8deg', '352deg'] }) },
         { rotate: wob.interpolate({ inputRange: [-1, 1], outputRange: ['-10deg', '10deg'] }) },
       ] }}>
-        <Die face={face} size={34} />
+        <Die face={face} size={38} />
       </Animated.View>
       <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.b, fontSize: 12, color: '#FFFFFF' }}>Surprinde-mă</T>
     </Press>
