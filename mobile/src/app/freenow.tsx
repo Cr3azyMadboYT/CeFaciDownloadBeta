@@ -1,7 +1,8 @@
 // FreeNow (Cornel, 12.10): intri, le dai de veste prietenilor (și prietenilor lor), cine vrea vine. Sus: tu (sau
 // formularul de intrare), apoi ieșirea ta (cine vine, votul, planul), apoi cine mai e pe FreeNow acum.
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, ScrollView, Share, View } from 'react-native';
+import { ScrollView, Share, View } from 'react-native';
+import { ask } from '../ui/Ask';
 import { router, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
 import { APP, useApp } from '../lib/session';
@@ -206,10 +207,9 @@ export default function FreeNowScreen() {
     const r = await joinFree(p.id);
     setBusy('');
     if (r.ask) {
-      Alert.alert('Ești deja într-o ieșire', 'Ieși din ea și vii cu ' + p.first_name + '?', [
-        { text: 'Rămân', style: 'cancel' },
-        { text: 'Da, vin cu ' + p.first_name, onPress: () => { void joinFree(p.id, true).then((x) => { if (x.err) toast(x.err); }); } },
-      ]);
+      if (await ask({ title: 'Ești deja într-o ieșire', text: 'Ieși din ea și vii cu ' + p.first_name + '?', ok: 'Da, vin cu ' + p.first_name })) {
+        const x = await joinFree(p.id, true); if (x.err) toast(x.err);
+      }
     } else if (r.err) toast(r.err);
     else toast('Ești în ieșire cu ' + p.first_name + '. Bilu alege locurile.');
   };
@@ -261,7 +261,7 @@ export default function FreeNowScreen() {
                   <Press onPress={() => run('ext', () => extendFreeNow(1))} accessibilityLabel="Încă o oră" style={{ flex: 1, minHeight: 46, borderRadius: 14, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
                     <T style={{ fontFamily: F.b, color: '#FFD43B' }}>{busy === 'ext' ? '…' : '+1 oră'}</T>
                   </Press>
-                  <Press onPress={() => Alert.alert('Ieși de pe FreeNow?', out ? 'Ieși și din ieșirea cu ceilalți.' : 'Nu te mai vede nimeni pe FreeNow.', [{ text: 'Rămân', style: 'cancel' }, { text: 'Ies', style: 'destructive', onPress: () => { void run('stop', stopFreeNow); } }])}
+                  <Press onPress={async () => { if (await ask({ title: 'Ieși de pe FreeNow?', text: out ? 'Ieși și din ieșirea cu ceilalți.' : 'Nu te mai vede nimeni pe FreeNow.', ok: 'Ies', danger: true })) void run('stop', stopFreeNow); }}
                     accessibilityLabel="Ieși de pe FreeNow" style={{ flex: 1, minHeight: 46, borderRadius: 14, borderWidth: 2, borderColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
                     <T style={{ fontFamily: F.b, color: '#0E1440' }}>Ieși de pe FreeNow</T>
                   </Press>
@@ -313,7 +313,7 @@ export default function FreeNowScreen() {
                 ) : null}
                 <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
                   <Quiet label="Scrie-le pe WhatsApp" onPress={whatsapp} />
-                  <Quiet label="Nu mai vin" onPress={() => Alert.alert('Nu mai vii?', 'Ceilalți află că nu mai poți.', [{ text: 'Rămân', style: 'cancel' }, { text: 'Nu mai vin', style: 'destructive', onPress: () => { void run('leave', leaveOuting); } }])} />
+                  <Quiet label="Nu mai vin" onPress={async () => { if (await ask({ title: 'Nu mai vii?', text: 'Ceilalți află că nu mai poți.', ok: 'Nu mai vin', danger: true })) void run('leave', leaveOuting); }} />
                 </View>
               </View>
             ) : null}

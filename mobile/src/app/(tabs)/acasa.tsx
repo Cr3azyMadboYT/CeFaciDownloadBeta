@@ -233,11 +233,7 @@ export default function Acasa() {
                 </Press>
                 <SeasonCta wear={wear} w={ctaW} />
               </View>
-              <Press onPress={surprise} accessibilityLabel="Surprinde-mă: Bilu îți face un plan dintr-un tap"
-                style={{ width: 84, height: 84, borderRadius: 24, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.12)', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                <Icon name="dice" size={30} color="#FFFFFF" />
-                <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.b, fontSize: 11, color: 'rgba(255,255,255,0.9)' }}>Surprinde-mă</T>
-              </Press>
+              <SurpriseBtn onPress={surprise} />
             </View>
           </TourTarget>
           <TourTarget id="freenow" style={{ marginTop: 10 }}>
@@ -405,6 +401,70 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
       <View pointerEvents="none" style={{ position: 'absolute', left: 44, top: -6, width: 12, height: 12, borderRadius: 99, backgroundColor: sky }} />
       <View pointerEvents="none" style={{ position: 'absolute', left: 44, bottom: -6, width: 12, height: 12, borderRadius: 99, backgroundColor: sky }} />
     </View>
+  );
+}
+
+// „Surprinde-mă” (Cornel, 13.10: „fă-l mai bine”): o placă mov cu un zar adevărat, cu buline, care din când în când
+// se clatină; apăsat, zarul se rostogolește și abia apoi pleci spre surpriză. Doar transformări pe native driver.
+const PIPS: Record<number, [number, number][]> = {
+  5: [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]], 3: [[0, 0], [1, 1], [2, 2]], 6: [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]],
+};
+function Die({ face, size }: { face: number; size: number }) {
+  const cell = size / 3;
+  const dot = size * 0.17;
+  return (
+    <View style={{ width: size, height: size, borderRadius: size * 0.26, backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: '#0E1440', shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 4, shadowOffset: { width: 0, height: 3 }, elevation: 4 }}>
+      {PIPS[face].map(([x, y], k) => (
+        <View key={k} style={{ position: 'absolute', left: x * cell + (cell - dot) / 2 - 1, top: y * cell + (cell - dot) / 2 - 1, width: dot, height: dot, borderRadius: dot, backgroundColor: '#0E1440' }} />
+      ))}
+    </View>
+  );
+}
+function SurpriseBtn({ onPress }: { onPress: () => void }) {
+  const calm = useCalm();
+  const spin = useRef(new Animated.Value(0)).current;
+  const wob = useRef(new Animated.Value(0)).current;
+  const [face, setFace] = useState(5);
+  const busy = useRef(false);
+  useEffect(() => {
+    if (calm) return undefined;
+    const loop = Animated.loop(Animated.sequence([
+      Animated.delay(3800),
+      Animated.timing(wob, { toValue: 1, duration: 120, useNativeDriver: true }),
+      Animated.timing(wob, { toValue: -1, duration: 160, useNativeDriver: true }),
+      Animated.timing(wob, { toValue: 0.5, duration: 120, useNativeDriver: true }),
+      Animated.timing(wob, { toValue: 0, duration: 120, useNativeDriver: true }),
+    ]));
+    loop.start();
+    return () => loop.stop();
+  }, [calm, wob]);
+  const go = () => {
+    if (busy.current) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    if (calm) { onPress(); return; }
+    busy.current = true;
+    const t1 = setTimeout(() => setFace(3), 120); const t2 = setTimeout(() => setFace(6), 260); const t3 = setTimeout(() => setFace(5), 400);
+    spin.setValue(0);
+    Animated.timing(spin, { toValue: 1, duration: 520, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start(() => {
+      busy.current = false; clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); spin.setValue(0); onPress();
+    });
+  };
+  return (
+    <Press onPress={go} accessibilityLabel="Surprinde-mă: Bilu îți face un plan dintr-un tap"
+      style={{ width: 92, minHeight: 84, borderRadius: 24, backgroundColor: '#8C6CFF', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 8, overflow: 'hidden',
+        shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
+      <View pointerEvents="none" style={{ position: 'absolute', top: -24, right: -18, width: 64, height: 64, borderRadius: 64, backgroundColor: 'rgba(255,255,255,0.14)' }} />
+      <T pointerEvents="none" style={{ position: 'absolute', top: 6, left: 9, fontSize: 11, color: '#FFD43B' }}>✦</T>
+      <T pointerEvents="none" style={{ position: 'absolute', top: 18, right: 10, fontSize: 8, color: '#FFFFFF' }}>✦</T>
+      <Animated.View style={{ transform: [
+        { translateY: spin.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0, -14, 0] }) },
+        { rotate: spin.interpolate({ inputRange: [0, 1], outputRange: ['-12deg', '348deg'] }) },
+        { rotate: wob.interpolate({ inputRange: [-1, 1], outputRange: ['-10deg', '10deg'] }) },
+      ] }}>
+        <Die face={face} size={34} />
+      </Animated.View>
+      <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.b, fontSize: 12, color: '#FFFFFF' }}>Surprinde-mă</T>
+    </Press>
   );
 }
 

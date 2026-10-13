@@ -13,6 +13,7 @@ import { Caveat_700Bold } from '@expo-google-fonts/caveat';
 import { noapte, ThemeCtx, zi } from '../ui/theme';
 import { setBoard, useApp } from '../lib/session';
 import { Toast } from '../ui/Toast';
+import { AskHost } from '../ui/Ask';
 import { LevelUp } from '../ui/LevelUp';
 import { onReminderTap } from '../lib/remind';
 import { watchNavBar } from '../../modules/cefaci-insets';
@@ -49,6 +50,7 @@ export default function Root() {
           <Stack.Screen name="zona" options={{ animation: 'slide_from_bottom' }} />
         </Stack>
         <Toast />
+        <AskHost />
         <LevelUp />
         {E2E ? <E2EProbe /> : null}
       </ThemeCtx.Provider>
