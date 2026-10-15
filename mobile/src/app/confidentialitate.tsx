@@ -8,14 +8,15 @@ import {privacyCall, type PrivacyClient} from '../../../shared/privacy';
 import {securitySessionKey} from '../../../shared/security-mfa';
 import {sb} from '../lib/auth';
 import {useSafeAreaInsets} from '../ui/insets';
-import {Big, H1} from '../ui/kit';
+import {Big, H1, Muted} from '../ui/kit';
 import {useTheme} from '../ui/theme';
 import {Bilu} from '../ui/Bilu';
+import {tr, lang} from '../lib/i18n';
 const call = <T,>(name: string, args?: Record<string, unknown>) => privacyCall<T>(sb() as unknown as PrivacyClient, name, args);
 export default function PrivacyScreen() {
   const {t} = useTheme(), ins = useSafeAreaInsets();
   const [session, set] = useState<Session|null>(null);
   useEffect(() => {let active = true, changed = false; const {data} = sb().auth.onAuthStateChange((_e, s) => {changed = true; if (active) set(s);}); void sb().auth.getSession().then(({data}) => {if (active && !changed) set(data.session);}); return () => {active = false; data.subscription.unsubscribe();};}, []);
   const identity = session ? securitySessionKey(session) : '';
-  return <View style={{flex: 1, backgroundColor: t.bg}}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{paddingTop: ins.top + 12, paddingBottom: ins.bottom + 28, paddingHorizontal: 20, gap: 20}}><Big label="Înapoi" color={t.s1} ink={t.ink} onPress={() => router.back()}/><View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}><Bilu size={60} mood="hi" still/><H1 style={{fontSize: 27, flex: 1}}>Confidențialitate și termeni</H1></View><LegalReaderNative audience="client" theme={t}/><PrivacyPanelNative identity={identity} scope="client" call={call} theme={t}/></ScrollView></View>;
+  return <View style={{flex: 1, backgroundColor: t.bg}}><ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{paddingTop: ins.top + 12, paddingBottom: ins.bottom + 28, paddingHorizontal: 20, gap: 20}}><Big label={tr('Înapoi')} color={t.s1} ink={t.ink} onPress={() => router.back()}/><View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}><Bilu size={60} mood="hi" still/><H1 style={{fontSize: 27, flex: 1}}>{tr('Confidențialitate și termeni')}</H1></View>{lang() === 'en' ? <Muted>The legal documents below are in Romanian, the language they are legally binding in.</Muted> : null}<LegalReaderNative audience="client" theme={t}/><PrivacyPanelNative identity={identity} scope="client" call={call} theme={t}/></ScrollView></View>;
 }

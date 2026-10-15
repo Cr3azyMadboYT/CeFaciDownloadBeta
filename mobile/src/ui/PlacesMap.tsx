@@ -9,6 +9,7 @@ import { WebView } from 'react-native-webview';
 import { Muted } from './kit';
 import { useTheme } from './theme';
 import { mapLink } from '../lib/links';
+import { tr } from '../lib/i18n';
 
 const ESRI = process.env.EXPO_PUBLIC_ESRI_MAPS_KEY ?? '';
 /** The map's look: Esri's satellite photo with labels when the build has the key, else OpenFreeMap's streets. */
@@ -18,7 +19,7 @@ export const MAP_SATELLITE = !!ESRI;
 export interface MapPin { id: string; lat: number; lon: number; name: string; sub: string; bg: string; fg: string; n: number; hot?: boolean }
 
 function html(pins: MapPin[], origin: { lat: number; lon: number; label: string }, line: boolean, dark: boolean, pick: boolean) {
-  const data = JSON.stringify({ pins, origin, line, dark, pick, style: MAP_STYLE, sat: MAP_SATELLITE }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ pins, origin, line, dark, pick, style: MAP_STYLE, sat: MAP_SATELLITE, txt: { offline: tr('Harta are nevoie de internet. Lista de mai jos merge și fără.'), details: tr('Vezi detalii') } }).replace(/</g, '\\u003c');
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'};font-family:system-ui,sans-serif}
@@ -35,7 +36,7 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
   var D=${data};
   function send(x){ window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(x)); }
   function start(){
-    if(!window.maplibregl){ document.body.innerHTML='<div class="err">Harta are nevoie de internet. Lista de mai jos merge și fără.</div>'; return; }
+    if(!window.maplibregl){ var e=document.createElement('div');e.className='err';e.textContent=D.txt.offline;document.body.innerHTML='';document.body.appendChild(e); return; }
     var map=new maplibregl.Map({container:'m',style:D.style,center:[D.origin.lon,D.origin.lat],zoom:13,attributionControl:false});
     // the route through the steps (yellow on the satellite photo, where blue would not show)
     map.on('style.load',function(){ if(D.line&&D.pins.length>1&&!map.getSource('r')){
@@ -47,7 +48,7 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
     D.pins.forEach(function(p){
       var el=document.createElement('div');el.className='pin'+(p.hot?' hot':'');el.style.background=p.bg;el.style.color=p.fg;el.textContent=p.n;
       var c=document.createElement('div');c.className='card';
-      c.innerHTML='<b></b><small></small>'+(D.pick?'<button>Vezi detalii</button>':'');c.querySelector('b').textContent=p.name;c.querySelector('small').textContent=p.sub;
+      c.innerHTML='<b></b><small></small>'+(D.pick?'<button></button>':'');c.querySelector('b').textContent=p.name;c.querySelector('small').textContent=p.sub;if(D.pick) c.querySelector('button').textContent=D.txt.details;
       if(D.pick) c.querySelector('button').onclick=function(){send({pick:p.id});};
       new maplibregl.Marker({element:el}).setLngLat([p.lon,p.lat]).setPopup(new maplibregl.Popup({offset:18,closeButton:false}).setDOMContent(c)).addTo(map);
       b.extend([p.lon,p.lat]);
@@ -68,7 +69,7 @@ export function PlacesMap({ pins, origin, line = false, height = 360, onPick }: 
   const { t } = useTheme();
   const page = useMemo(() => html(pins, origin, line, t.dark, !!onPick), [pins, origin, line, t.dark, onPick]);
   if (Platform.OS === 'web') {
-    return <View style={{ height: 120, borderRadius: 20, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Muted>Harta se vede în aplicația de telefon.</Muted></View>;
+    return <View style={{ height: 120, borderRadius: 20, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Muted>{tr('Harta se vede în aplicația de telefon.')}</Muted></View>;
   }
   return (
     <View style={{ height, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: t.line }}>
