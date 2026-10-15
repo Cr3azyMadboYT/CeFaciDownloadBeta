@@ -13,8 +13,9 @@ import {
 import { sb } from "./auth";
 import { captureAccount, getApp } from "./session";
 import { startsAt, updPlan, type Plan } from "./plans";
+import { tr } from "./i18n";
 const client = () => sb() as unknown as RpcClient;
-const assertAccount = (valid: () => boolean) => { if (!valid()) throw new Error("Contul s-a schimbat. Reia operațiunea din contul curent."); };
+const assertAccount = (valid: () => boolean) => { if (!valid()) throw new Error(tr("Contul s-a schimbat. Reia operațiunea din contul curent.")); };
 const serial = new Map<string, Promise<unknown>>();
 function lane<T>(key: string, work: () => Promise<T>): Promise<T> {
   const next = (serial.get(key) ?? Promise.resolve())
@@ -34,7 +35,7 @@ export async function ensurePlan(
 ): Promise<string> {
   const valid = captureAccount();
   const user = getApp().who?.id;
-  if (!user) throw new Error("Intră în cont.");
+  if (!user) throw new Error(tr("Intră în cont."));
   return lane(user + ":" + pl.createdAt + ":" + pl.pid, async () => {
     assertAccount(valid);
     const current =
@@ -112,7 +113,7 @@ export const saveGuestAges = (sid: string, ages: number[]) =>
   rpc(client(), "plan_guest_ages_v2", { p_plan: sid, p_ages: ages });
 export async function position() {
   const p = await Location.requestForegroundPermissionsAsync();
-  if (!p.granted) throw new Error("Permite locația pentru această operațiune.");
+  if (!p.granted) throw new Error(tr("Permite locația pentru această operațiune."));
   const fix = await Location.getCurrentPositionAsync({
     accuracy: Location.Accuracy.High,
   });

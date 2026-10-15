@@ -25,6 +25,7 @@ import { TopShade } from '../../ui/TopShade';
 import { Ticket } from '../../ui/Ticket';
 import { Doodles } from '../../ui/Doodles';
 import { PartnerTicket } from '../../ui/PartnerTicket';
+import { tr, trServer, pick } from '../../lib/i18n';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 /** The chosen time and the half hours around it, for the booking. */
@@ -70,8 +71,8 @@ export default function Bilet() {
   if (!pl || !p) {
     return (
       <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20, gap: 12 }}>
-        <H1>Planul nu mai e aici.</H1>
-        <Big label="Înapoi" onPress={close} />
+        <H1>{tr('Planul nu mai e aici.')}</H1>
+        <Big label={tr('Înapoi')} onPress={close} />
       </View>
     );
   }
@@ -81,11 +82,11 @@ export default function Bilet() {
   const noted = pl.res === 'noted';
   const ct = p.contact;
   const day = dayWord(pl);
-  const atSlot = pl.slot === 'acum' ? 'acum' : day + ' la ' + pl.slot;
-  const people = pl.people + (pl.people === 1 ? ' persoană' : ' persoane');
-  const script = 'Bună ziua! Aș vrea ' + (ct?.unit ?? 'o masă') + ' pentru ' + people + ', ' + atSlot + ', pe numele ' + (name || 'meu') + '.';
+  const atSlot = pl.slot === 'acum' ? tr('acum') : tr('{day} la {slot}', { day, slot: pl.slot });
+  const people = pl.people === 1 ? tr('{n} persoană', { n: pl.people }) : tr('{n} persoane', { n: pl.people });
+  const script = name ? tr('Bună ziua! Aș vrea {unit} pentru {people}, {at}, pe numele {name}.', { unit: ct?.unit ? tr(ct.unit) : tr('o masă'), people, at: atSlot, name }) : tr('Bună ziua! Aș vrea {unit} pentru {people}, {at}, pe numele meu.', { unit: ct?.unit ? tr(ct.unit) : tr('o masă'), people, at: atSlot });
   const open = APP.openLabel(p.id, pl.when, pl.slot === 'acum' ? undefined : startsAt(pl));
-  const go = (url: string, how: string) => { setVia(how); setExt('back'); Linking.openURL(url).catch(() => toast('Nu am putut deschide ' + how + '.')); };
+  const go = (url: string, how: string) => { setVia(how); setExt('back'); Linking.openURL(url).catch(() => toast(tr('Nu am putut deschide {how}.', { how: tr(how) }))); };
   const navUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.real.lat + ',' + p.real.lon);
   const calendar = () => {
     const d = planDay(pl);
@@ -93,7 +94,7 @@ export default function Bilet() {
     d.setHours(h, m, 0, 0);
     const end = new Date(d.getTime() + Math.max(1, p.dur) * 3600e3);
     const z = (x: Date) => x.getUTCFullYear() + pad(x.getUTCMonth() + 1) + pad(x.getUTCDate()) + 'T' + pad(x.getUTCHours()) + pad(x.getUTCMinutes()) + '00Z';
-    Linking.openURL('https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(p.name) + '&dates=' + z(d) + '/' + z(end) + '&details=' + encodeURIComponent('Plan făcut în CeFaci') + '&location=' + encodeURIComponent(p.real.lat + ',' + p.real.lon)).catch(() => {});
+    Linking.openURL('https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(p.name) + '&dates=' + z(d) + '/' + z(end) + '&details=' + encodeURIComponent(tr('Plan făcut în CeFaci')) + '&location=' + encodeURIComponent(p.real.lat + ',' + p.real.lon)).catch(() => {});
   };
   const clash = all ? clashWith(pl, all) : null;
   const wxWarn = pl.inAt ? null : APP.weatherWarn(p.id, pl.slot === 'acum' ? new Date() : startsAt(pl));
@@ -108,18 +109,18 @@ export default function Bilet() {
     return best;
   })();
   const clashP = clash ? APP.byId(clash.placeId) : undefined;
-  const drop = async () => {try {if(pl.sid&&me)await dropShared(pl,me.id);await cancelReminders(pl.remind);removePlan(pl.pid);toast('Planul a fost anulat.');close();}catch(e){toast((e as Error).message);}};
+  const drop = async () => {try {if(pl.sid&&me)await dropShared(pl,me.id);await cancelReminders(pl.remind);removePlan(pl.pid);toast(tr('Planul a fost anulat.'));close();}catch(e){toast(trServer((e as Error).message));}};
   const shareToCrew = async () => {
     if (!to || !me) return;
     setSending(true);
     const e = await sharePlan(pl, me.id, { crewId: to.crewId, friendIds: to.friendIds });
     setSending(false);
-    if (e) { toast(e); return; }
+    if (e) { toast(trServer(e)); return; }
     setShareOpen(false);
-    toast('Trimis! ' + to.label + ' răspund cu Vin sau Nu pot.');
+    toast(tr('Trimis! {who} răspund cu Vin sau Nu pot.', { who: to.label }));
     loadWho();
   };
-  const send = () => Share.share({ message: 'Hai la ' + p.name + ' (' + p.title.toLowerCase() + '), ' + atSlot + '. ' + navUrl }).catch(() => {});
+  const send = () => Share.share({ message: tr('Hai la {name} ({kind}), {at}. {url}', { name: p.name, kind: p.title.toLowerCase(), at: atSlot, url: navUrl }) }).catch(() => {});
 
   const Row = ({ icon, bg, title, sub, btn, onPress, ink }: { icon: string; bg: string; ink: string; title: string; sub: string; btn?: string; onPress?: () => void }) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 64, paddingVertical: 8, paddingLeft: 14, paddingRight: 8, borderRadius: 18, backgroundColor: bg }}>
@@ -129,8 +130,8 @@ export default function Bilet() {
         <T style={{ fontFamily: F.m, fontSize: 13, lineHeight: 17, color: t.ink2 }}>{sub}</T>
       </View>
       {btn ? (
-        <Press onPress={onPress} style={{ height: 44, paddingHorizontal: btn === 'Anulează' ? 12 : 16, borderRadius: 14, backgroundColor: btn === 'Anulează' ? 'transparent' : t.blue, justifyContent: 'center' }}>
-          <T style={{ fontFamily: F.sb, fontSize: 15, color: btn === 'Anulează' ? t.ink2 : '#FFFFFF' }}>{btn}</T>
+        <Press onPress={onPress} style={{ height: 44, paddingHorizontal: btn === tr('Anulează') ? 12 : 16, borderRadius: 14, backgroundColor: btn === tr('Anulează') ? 'transparent' : t.blue, justifyContent: 'center' }}>
+          <T style={{ fontFamily: F.sb, fontSize: 15, color: btn === tr('Anulează') ? t.ink2 : '#FFFFFF' }}>{btn}</T>
         </Press>
       ) : null}
     </View>
@@ -140,36 +141,36 @@ export default function Bilet() {
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <Doodles />
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', gap: 8, height: ins.top + 52 }}>
-        <Press onPress={close} accessibilityLabel="Închide" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="close" color={t.ink} /></Press>
-        <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15, color: t.ink2 }}>Planul tău</T>
+        <Press onPress={close} accessibilityLabel={tr('Închide')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="close" color={t.ink} /></Press>
+        <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15, color: t.ink2 }}>{tr('Planul tău')}</T>
       </View>
       <ScrollView contentContainerStyle={{ paddingBottom: Math.max(ins.bottom, 12) + 24 }} showsVerticalScrollIndicator={false}>
         <View style={{ marginTop: 6 }}>
           <Ticket bg={t.bg} d={{
-            pid: pl.pid, place: p.name, kind: p.title, area: p.zone, day: pl.slot === 'acum' ? 'Azi' : dateText(pl), hour: pl.slot === 'acum' ? 'acum' : pl.slot, people: pl.people,
-            cost: p.price === 0 ? 'Gratuit' : '~' + p.price + ' lei',
-            last: internal ? {label:'Grup',value:'Prin CeFaci',dot:'#2F5BFF'} : needsRes ? { label: 'Rezervare', value: noted ? 'Prin ' + (pl.resVia ?? 'telefon') : 'De făcut', dot: noted ? '#2F5BFF' : '#D93A1C' } : { label: 'Durată', value: fmtDur(p.dur) },
+            pid: pl.pid, place: p.name, kind: p.title, area: p.zone, day: pl.slot === 'acum' ? tr('Azi') : dateText(pl), hour: pl.slot === 'acum' ? tr('acum') : pl.slot, people: pl.people,
+            cost: p.price === 0 ? tr('Gratuit') : '~' + p.price + ' lei',
+            last: internal ? {label:tr('Grup'),value:tr('Prin CeFaci'),dot:'#2F5BFF'} : needsRes ? { label: tr('Rezervare'), value: noted ? tr('Prin {via}', { via: tr(pl.resVia ?? 'telefon') }) : tr('De făcut'), dot: noted ? '#2F5BFF' : '#D93A1C' } : { label: tr('Durată'), value: fmtDur(p.dur) },
           }} />
         </View>
 
         {internal ? <PartnerTicket plan={pl}/> : null}
-        {partner?.mode==='recommended'&&!partner.reservations_on?<View style={{padding:20}}><Muted>Poți merge direct. Momentan nu acceptă rezervări.</Muted></View>:null}
+        {partner?.mode==='recommended'&&!partner.reservations_on?<View style={{padding:20}}><Muted>{tr('Poți merge direct. Momentan nu acceptă rezervări.')}</Muted></View>:null}
         {p.story ? (
           <View style={{ marginTop: 12, marginHorizontal: 20, padding: 14, borderRadius: 18, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, gap: 4 }}>
-            <T style={{ fontFamily: F.b, fontSize: 12, letterSpacing: 1.2, color: t.ink3 }}>DE CE MERITĂ</T>
+            <T style={{ fontFamily: F.b, fontSize: 12, letterSpacing: 1.2, color: t.ink3 }}>{tr('DE CE MERITĂ')}</T>
             <T style={{ fontFamily: F.m, fontSize: 15, lineHeight: 21 }}>{p.story}</T>
-            {p.crowd ? <T style={{ fontFamily: F.sb, fontSize: 13, color: t.ink2 }}>{'Când e lume: ' + p.crowd}</T> : null}
+            {p.crowd ? <T style={{ fontFamily: F.sb, fontSize: 13, color: t.ink2 }}>{tr('Când e lume: {crowd}', { crowd: p.crowd })}</T> : null}
           </View>
         ) : null}
         <View style={{ marginTop: 12, marginHorizontal: 20, gap: 10 }}>
           {!internal && needsRes && !noted && !pl.inAt ? (
             <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M12 8v4M12 16h.01" bg={p.res === 'required' ? t.coralSoft : t.yellowSoft} ink={p.res === 'required' ? t.coralInk : t.yellowInk}
-              title={p.res === 'required' ? p.name + ' cere rezervare' : 'Se umple repede la ' + p.name} sub="Faceți o rezervare ca să vă asigurați locul." btn="Rezervă" onPress={() => setExt('pick')} />
+              title={p.res === 'required' ? tr('{name} cere rezervare', { name: p.name }) : tr('Se umple repede la {name}', { name: p.name })} sub={tr('Faceți o rezervare ca să vă asigurați locul.')} btn={tr('Rezervă')} onPress={() => setExt('pick')} />
           ) : null}
           {noted ? (
-            <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M9 12l2 2 4-4" bg={t.blueSoft} ink={t.blueInk} title={'Rezervat prin ' + (pl.resVia ?? 'telefon') + ' la ' + p.name}
-              sub={day.charAt(0).toUpperCase() + day.slice(1) + ', ' + pl.slot + ', ' + people + ', pe numele ' + (name || 'tău') + '.'} btn="Anulează"
-              onPress={() => { updPlan(pl.pid, { res: 'none', resVia: undefined }); toast('Am scos rezervarea de pe bilet. Anunță-i și pe ei' + (ct?.phone ? ': ' + ct.phone : '') + '.'); }} />
+            <Row icon="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20M9 12l2 2 4-4" bg={t.blueSoft} ink={t.blueInk} title={tr('Rezervat prin {via} la {name}', { via: tr(pl.resVia ?? 'telefon'), name: p.name })}
+              sub={day.charAt(0).toUpperCase() + day.slice(1) + ', ' + pl.slot + ', ' + people + ', ' + (name ? tr('pe numele {name}.', { name }) : tr('pe numele tău.'))} btn={tr('Anulează')}
+              onPress={() => { updPlan(pl.pid, { res: 'none', resVia: undefined }); toast(ct?.phone ? tr('Am scos rezervarea de pe bilet. Anunță-i și pe ei: {phone}.', { phone: ct.phone }) : tr('Am scos rezervarea de pe bilet. Anunță-i și pe ei.')); }} />
           ) : null}
           {(() => {
             // check-in at the place (today only), then the receipt photo
@@ -180,45 +181,45 @@ export default function Bilet() {
             if (!pl.inAt) {
               if (!today) return null;
               if(internal)return null;
-              return <Row icon={SCAN} bg={t.yellowSoft} ink={t.yellowInk} title={'Ai ajuns la ' + p.name + '?'} sub="Fă check-in când ești acolo: primești ștampila și XP."
-                btn={busyIn === 'in' ? 'Caut…' : 'Sunt aici'} onPress={async () => { if (busyIn) return; setBusyIn('in'); const r = await checkIn(pl); setBusyIn(''); toast(r.msg); }} />;
+              return <Row icon={SCAN} bg={t.yellowSoft} ink={t.yellowInk} title={tr('Ai ajuns la {name}?', { name: p.name })} sub={tr('Fă check-in când ești acolo: primești ștampila și XP.')}
+                btn={busyIn === 'in' ? tr('Caut…') : tr('Sunt aici')} onPress={async () => { if (busyIn) return; setBusyIn('in'); const r = await checkIn(pl); setBusyIn(''); toast(r.msg); }} />;
             }
             if (!pl.bonDone) {
-              return <Row icon={BON} bg={t.blueSoft} ink={t.blueInk} title={'Ești la ' + p.name + ' din ' + pl.inAt} sub="La plecare, pune poza bonului fiscal: +25 XP."
-                btn={busyIn === 'bon' ? 'Citesc…' : 'Pune bonul'} onPress={() => { if (!busyIn) setBonPick(true); }} />;
+              return <Row icon={BON} bg={t.blueSoft} ink={t.blueInk} title={tr('Ești la {name} din {t}', { name: p.name, t: pl.inAt })} sub={tr('La plecare, pune poza bonului fiscal: +25 XP.')}
+                btn={busyIn === 'bon' ? tr('Citesc…') : tr('Pune bonul')} onPress={() => { if (!busyIn) setBonPick(true); }} />;
             }
-            return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title="Ieșire confirmată cu bonul" sub="Bon confirmat. XP-ul este acordat separat de verificarea vizitei." />;
+            return <Row icon={OK} bg={t.blueSoft} ink={t.blueInk} title={tr('Ieșire confirmată cu bonul')} sub={tr('Bon confirmat. XP-ul este acordat separat de verificarea vizitei.')} />;
           })()}
           {p.real.gone ? (
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
-              title={p.name + ' pare închis'} sub="A dispărut de pe hartă la ultima actualizare. Sună înainte sau alege altceva." btn="Altceva" onPress={() => router.navigate('/exploreaza')} />
+              title={tr('{name} pare închis', { name: p.name })} sub={tr('A dispărut de pe hartă la ultima actualizare. Sună înainte sau alege altceva.')} btn={tr('Altceva')} onPress={() => router.navigate('/exploreaza')} />
           ) : null}
           {canRate(pl) ? (
             <View style={{ padding: 14, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
-              <T style={{ fontFamily: F.b, fontSize: 15 }}>{'Cum a fost la ' + p.name + '?'}</T>
-              {pl.sid ? <Muted>Votul tău învață și gașca: data viitoare vă fac planuri mai pe gustul vostru.</Muted> : null}
+              <T style={{ fontFamily: F.b, fontSize: 15 }}>{tr('Cum a fost la {name}?', { name: p.name })}</T>
+              {pl.sid ? <Muted>{tr('Votul tău învață și gașca: data viitoare vă fac planuri mai pe gustul vostru.')}</Muted> : null}
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 {([['super', 'Super!'], ['yes', 'Mi-a plăcut'], ['no', 'Nu prea']] as const).map(([k, label]) => (
-                  <Big key={k} style={{ flex: 1, paddingHorizontal: 6 }} label={label} color={k === 'super' ? '#FFD43B' : k === 'yes' ? t.blue : t.s2} ink={k === 'yes' ? '#FFFFFF' : k === 'super' ? '#0E1440' : t.ink} onPress={() => { void rateOuting(pl, k); }} />
+                  <Big key={k} style={{ flex: 1, paddingHorizontal: 6 }} label={tr(label)} color={k === 'super' ? '#FFD43B' : k === 'yes' ? t.blue : t.s2} ink={k === 'yes' ? '#FFFFFF' : k === 'super' ? '#0E1440' : t.ink} onPress={() => { void rateOuting(pl, k); }} />
                 ))}
               </View>
             </View>
           ) : null}
           {wxWarn ? (
-            <Row icon={I.rain} bg={t.blueSoft} ink={t.blueInk} title="Vremea" sub={wxWarn} />
+            <Row icon={I.rain} bg={t.blueSoft} ink={t.blueInk} title={tr('Vremea')} sub={wxWarn} />
           ) : null}
           {clash && clashP ? (
             <Row icon="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" bg={t.coralSoft} ink={t.coralInk}
-              title={'Se suprapune cu ' + clashP.name} sub={'Ai și planul ăla ' + dayWord(clash) + ' la ' + clash.slot + '. Păstrezi amândouă?'} btn="Vezi" onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(clash.pid) } })} />
+              title={tr('Se suprapune cu {name}', { name: clashP.name })} sub={tr('Ai și planul ăla {day} la {slot}. Păstrezi amândouă?', { day: dayWord(clash), slot: clash.slot })} btn={tr('Vezi')} onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(clash.pid) } })} />
           ) : null}
           {who.length ? (
             <View style={{ padding: 14, gap: 8, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
-              <T style={{ fontFamily: F.b, fontSize: 15 }}>{'Cine vine (' + who.filter((g) => g.answer === 'vin').length + ' din ' + who.length + ')'}</T>
+              <T style={{ fontFamily: F.b, fontSize: 15 }}>{tr('Cine vine ({n} din {all})', { n: who.filter((g) => g.answer === 'vin').length, all: who.length })}</T>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                 {who.map((g) => (
                   <View key={g.person.id} style={{ height: 30, paddingHorizontal: 10, borderRadius: 999, justifyContent: 'center', backgroundColor: g.answer === 'vin' ? t.blueSoft : g.answer === 'nu_pot' ? t.coralSoft : t.s2 }}>
                     <T style={{ fontFamily: F.sb, fontSize: 13, color: g.answer === 'vin' ? t.blueInk : g.answer === 'nu_pot' ? t.coralInk : t.ink2 }}>
-                      {(g.person.id === me?.id ? 'Tu' : g.person.first_name) + (g.answer === 'vin' ? ' · vine' : g.answer === 'nu_pot' ? ' · nu poate' : ' · n-a zis')}
+                      {(g.person.id === me?.id ? tr('Tu') : g.person.first_name) + (g.answer === 'vin' ? tr(' · vine') : g.answer === 'nu_pot' ? tr(' · nu poate') : tr(' · n-a zis'))}
                     </T>
                   </View>
                 ))}
@@ -226,57 +227,57 @@ export default function Bilet() {
             </View>
           ) : null}
           {planB && !pl.inAt ? (
-            <Press onPress={() => { try { const pid = createPlanAt(planB.id, startsAt(pl), pl.people); router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); } catch (e) { toast(e instanceof Error ? e.message : 'Nu am putut face planul.'); } }}
+            <Press onPress={() => { try { const pid = createPlanAt(planB.id, startsAt(pl), pl.people); router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); } catch (e) { toast(e instanceof Error ? trServer(e.message) : tr('Nu am putut face planul.')); } }}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 10, paddingHorizontal: 14, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
               <T style={{ fontFamily: F.b, fontSize: 13, color: t.ink2 }}>PLAN B</T>
-              <T numberOfLines={1} style={{ flex: 1, fontFamily: F.sb, fontSize: 14 }}>{planB.name + ' · la ' + (planB.m < 1000 ? Math.round(planB.m / 10) * 10 + ' m' : (planB.m / 1000).toFixed(1).replace('.', ',') + ' km')}</T>
+              <T numberOfLines={1} style={{ flex: 1, fontFamily: F.sb, fontSize: 14 }}>{planB.name + tr(' · la {d}', { d: planB.m < 1000 ? Math.round(planB.m / 10) * 10 + ' m' : (planB.m / 1000).toFixed(1).replace('.', pick(',', '.')) + ' km' })}</T>
               <Icon name="next" size={16} color={t.ink3} />
             </Press>
           ) : null}
           {open ? <Muted style={{ paddingHorizontal: 4 }}>{open + (p.real.street ? ' · ' + p.real.street : '')}</Muted> : null}
           <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Action icon="M3 11 22 2l-9 19-2-8z" label="Navighează" primary onPress={() => Linking.openURL(navUrl).catch(() => {})} />
-            <Action icon="M8 2v4M16 2v4M3 10h18M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M19 16v6M16 19h6" label="În calendar" onPress={calendar} />
-            <Action icon="M18 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6M6 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6M18 16a3 3 0 1 0 0 6 3 3 0 0 0 0-6M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" label="Trimite gășcii" onPress={() => setShareOpen(true)} />
+            <Action icon="M3 11 22 2l-9 19-2-8z" label={tr('Navighează')} primary onPress={() => Linking.openURL(navUrl).catch(() => {})} />
+            <Action icon="M8 2v4M16 2v4M3 10h18M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M19 16v6M16 19h6" label={tr('În calendar')} onPress={calendar} />
+            <Action icon="M18 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6M6 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6M18 16a3 3 0 1 0 0 6 3 3 0 0 0 0-6M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" label={tr('Trimite gășcii')} onPress={() => setShareOpen(true)} />
           </View>
           <View style={{ alignItems: 'center', marginTop: 6 }}>
-            <Quiet label="Renunț la plan" color={t.ink2} onPress={drop} />
-            <Quiet label="Ceva nu e bun la locul ăsta?" color={t.ink3} onPress={() => setReportOpen(true)} />
+            <Quiet label={tr('Renunț la plan')} color={t.ink2} onPress={drop} />
+            <Quiet label={tr('Ceva nu e bun la locul ăsta?')} color={t.ink3} onPress={() => setReportOpen(true)} />
           </View>
         </View>
       </ScrollView>
 
       <Sheet open={shareOpen} onClose={() => setShareOpen(false)}>
-        <H1 style={{ fontSize: 26 }}>Trimite planul</H1>
-        <Muted style={{ marginTop: 6, marginBottom: 14, fontSize: 15, lineHeight: 21 }}>Îl primesc în Planuri și răspund cu Vin sau Nu pot. Tu vezi pe bilet cine vine.</Muted>
-        {pl.owner === false ? <Muted style={{ fontSize: 15, lineHeight: 21 }}>Planul ăsta l-a făcut altcineva, așa că doar cine l-a făcut cheamă oameni în CeFaci. Tu îl poți trimite pe WhatsApp.</Muted> : shareOpen ? <SendTo onChange={onTo} /> : null}
+        <H1 style={{ fontSize: 26 }}>{tr('Trimite planul')}</H1>
+        <Muted style={{ marginTop: 6, marginBottom: 14, fontSize: 15, lineHeight: 21 }}>{tr('Îl primesc în Planuri și răspund cu Vin sau Nu pot. Tu vezi pe bilet cine vine.')}</Muted>
+        {pl.owner === false ? <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('Planul ăsta l-a făcut altcineva, așa că doar cine l-a făcut cheamă oameni în CeFaci. Tu îl poți trimite pe WhatsApp.')}</Muted> : shareOpen ? <SendTo onChange={onTo} /> : null}
         <View style={{ marginTop: 16, gap: 8 }}>
-          {pl.owner !== false ? <Big label={sending ? 'Trimit…' : to ? 'Trimite la ' + to.label : 'Alege pe cine chemi'} disabled={!to || sending} onPress={shareToCrew} /> : null}
-          <Big label="Trimite pe WhatsApp sau altundeva" color={t.s2} ink={t.ink} onPress={() => { setShareOpen(false); send(); }} />
+          {pl.owner !== false ? <Big label={sending ? tr('Trimit…') : to ? tr('Trimite la {who}', { who: to.label }) : tr('Alege pe cine chemi')} disabled={!to || sending} onPress={shareToCrew} /> : null}
+          <Big label={tr('Trimite pe WhatsApp sau altundeva')} color={t.s2} ink={t.ink} onPress={() => { setShareOpen(false); send(); }} />
         </View>
       </Sheet>
       <Sheet open={reportOpen} onClose={() => setReportOpen(false)}>
-        <H1 style={{ fontSize: 26 }}>Ce nu e bun?</H1>
-        <Muted style={{ marginTop: 6, marginBottom: 12, fontSize: 15, lineHeight: 21 }}>{'Ne ajuți să ținem harta corectă. Verificăm și reparăm la următoarea actualizare.'}</Muted>
+        <H1 style={{ fontSize: 26 }}>{tr('Ce nu e bun?')}</H1>
+        <Muted style={{ marginTop: 6, marginBottom: 12, fontSize: 15, lineHeight: 21 }}>{tr('Ne ajuți să ținem harta corectă. Verificăm și reparăm la următoarea actualizare.')}</Muted>
         <View style={{ gap: 8 }}>
           {REPORTS.map(([k, label]) => (
-            <Big key={k} label={label} color={t.s2} ink={t.ink} onPress={async () => {
+            <Big key={k} label={tr(label)} color={t.s2} ink={t.ink} onPress={async () => {
               setReportOpen(false);
               if (k === 'inchis') { const d = (APP.prefs.disliked as string[] | undefined) ?? []; if (!d.includes(p.id)) savePrefs({ disliked: [...d, p.id] }); }
-              if (!me) { toast(k === 'inchis' ? 'Notat: nu ți-l mai arătăm.' : 'Ca să ne trimiți asta, intră în cont din Profil → Prieteni.'); return; }
+              if (!me) { toast(k === 'inchis' ? tr('Notat: nu ți-l mai arătăm.') : tr('Ca să ne trimiți asta, intră în cont din Profil → Prieteni.')); return; }
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const { error } = await (sb() as any).from('reports').insert({ venue_id: p.id, kind: k });
-              toast(error ? (/^Ai trimis/.test(error.message ?? '') ? error.message : 'Nu am putut trimite acum. Încearcă mai târziu.') : 'Mersi! Am notat.' + (k === 'inchis' ? ' Nu ți-l mai arătăm.' : ''));
+              toast(error ? (/^Ai trimis/.test(error.message ?? '') ? trServer(error.message) : tr('Nu am putut trimite acum. Încearcă mai târziu.')) : tr('Mersi! Am notat.') + (k === 'inchis' ? tr(' Nu ți-l mai arătăm.') : ''));
             }} />
           ))}
         </View>
       </Sheet>
       <Sheet open={bonPick} onClose={() => setBonPick(false)}>
         <View style={{ gap: 10 }}>
-          <H1 style={{ fontSize: 26 }}>Poza bonului</H1>
-          <Muted style={{ fontSize: 15, lineHeight: 21 }}>Citim doar localul, ora și totalul. Poza nu se păstrează.</Muted>
+          <H1 style={{ fontSize: 26 }}>{tr('Poza bonului')}</H1>
+          <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('Citim doar localul, ora și totalul. Poza nu se păstrează.')}</Muted>
           {(['camera', 'gallery'] as const).map((from) => (
-            <Big key={from} label={from === 'camera' ? 'Fă poza acum' : 'Alege din galerie'} color={from === 'camera' ? t.blue : t.s2} ink={from === 'camera' ? '#FFFFFF' : t.ink}
+            <Big key={from} label={from === 'camera' ? tr('Fă poza acum') : tr('Alege din galerie')} color={from === 'camera' ? t.blue : t.s2} ink={from === 'camera' ? '#FFFFFF' : t.ink}
               onPress={async () => { setBonPick(false); setBusyIn('bon'); const r = await sendBill(pl, from); setBusyIn(''); if (r) toast(r.msg); }} />
           ))}
         </View>
@@ -284,38 +285,38 @@ export default function Bilet() {
       <Sheet open={ext !== 'closed'} onClose={() => setExt('closed')}>
         {ext === 'pick' ? (
           <View style={{ gap: 10 }}>
-            <H1 style={{ fontSize: 26 }}>Rezervă la {p.name}</H1>
-            <Muted style={{ fontSize: 15, lineHeight: 21 }}>{p.name} nu primește încă rezervări prin CeFaci. Rezervi direct la ei, apoi o notezi aici.</Muted>
+            <H1 style={{ fontSize: 26 }}>{tr('Rezervă la {name}', { name: p.name })}</H1>
+            <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('{name} nu primește încă rezervări prin CeFaci. Rezervi direct la ei, apoi o notezi aici.', { name: p.name })}</Muted>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-              <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>Câte persoane</T>
-              <Press onPress={() => updPlan(pl.pid, { people: Math.max(1, pl.people - 1) })} accessibilityLabel="Mai puține persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>−</T></Press>
+              <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15 }}>{tr('Câte persoane')}</T>
+              <Press onPress={() => updPlan(pl.pid, { people: Math.max(1, pl.people - 1) })} accessibilityLabel={tr('Mai puține persoane')} style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>−</T></Press>
               <T style={{ minWidth: 28, textAlign: 'center', fontFamily: F.display, fontSize: 22 }}>{pl.people}</T>
-              <Press onPress={() => updPlan(pl.pid, { people: Math.min(500, pl.people + 1) })} accessibilityLabel="Mai multe persoane" style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>+</T></Press>
+              <Press onPress={() => updPlan(pl.pid, { people: Math.min(500, pl.people + 1) })} accessibilityLabel={tr('Mai multe persoane')} style={{ width: 44, height: 44, borderRadius: 14, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 20 }}>+</T></Press>
             </View>
             {pl.slot !== 'acum' ? (
               <View style={{ gap: 8 }}>
-                <T style={{ fontFamily: F.sb, fontSize: 15 }}>La ce oră</T>
+                <T style={{ fontFamily: F.sb, fontSize: 15 }}>{tr('La ce oră')}</T>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={()=>void(async()=>{try{await moveShared(pl,s);updPlan(pl.pid,{slot:s});}catch(e){toast((e as Error).message);}})()} />)}
+                  {slotsAround(pl.slot).map((s) => <Chip key={s} small label={s} on={s === pl.slot} onPress={()=>void(async()=>{try{await moveShared(pl,s);updPlan(pl.pid,{slot:s});}catch(e){toast(trServer((e as Error).message));}})()} />)}
                 </View>
               </View>
             ) : null}
-            {ct?.phone ? <Big label={'Sună · ' + ct.phone} icon={<Icon name="phone" color="#FFFFFF" />} onPress={() => go('tel:' + ct.phone.replace(/[^\d+]/g, ''), 'telefon')} /> : null}
-            {ct?.phone && waNumber(ct.phone) ? <Big label="Scrie-le pe WhatsApp" color="#25D366" ink="#0E1440" icon={<Icon d="M3 21l1.65-4.8A9 9 0 1 1 8 20.2zM9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" color="#0E1440" />}
+            {ct?.phone ? <Big label={tr('Sună · {phone}', { phone: ct.phone })} icon={<Icon name="phone" color="#FFFFFF" />} onPress={() => go('tel:' + ct.phone.replace(/[^\d+]/g, ''), 'telefon')} /> : null}
+            {ct?.phone && waNumber(ct.phone) ? <Big label={tr('Scrie-le pe WhatsApp')} color="#25D366" ink="#0E1440" icon={<Icon d="M3 21l1.65-4.8A9 9 0 1 1 8 20.2zM9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" color="#0E1440" />}
               onPress={() => go('https://wa.me/' + waNumber(ct.phone) + '?text=' + encodeURIComponent(script), 'WhatsApp')} /> : null}
-            {ct?.site ? <Big label="Rezervă pe site-ul lor" color={t.violet} ink="#0E1440" icon={<Icon name="globe" color="#0E1440" />} onPress={() => { const w = webLink(ct.site); if (w) go(w, 'site'); }} /> : null}
-            {!ct?.phone && !ct?.site ? <Muted>Nu avem încă telefonul sau site-ul lor. Treceți pe acolo sau încercați fără rezervare.</Muted> : null}
+            {ct?.site ? <Big label={tr('Rezervă pe site-ul lor')} color={t.violet} ink="#0E1440" icon={<Icon name="globe" color="#0E1440" />} onPress={() => { const w = webLink(ct.site); if (w) go(w, 'site'); }} /> : null}
+            {!ct?.phone && !ct?.site ? <Muted>{tr('Nu avem încă telefonul sau site-ul lor. Treceți pe acolo sau încercați fără rezervare.')}</Muted> : null}
             <View style={{ padding: 12, borderRadius: 14, backgroundColor: t.s2 }}>
               <T style={{ fontFamily: F.m, fontSize: 14, lineHeight: 20 }}>{script}</T>
             </View>
           </View>
         ) : (
           <View style={{ gap: 10 }}>
-            <H1 style={{ fontSize: 26 }}>Ai rezervat?</H1>
-            <Muted style={{ fontSize: 15, lineHeight: 21 }}>O notăm pe bilet, ca s-o ai la îndemână.</Muted>
-            <Big label="Da, notează rezervarea" onPress={() => { updPlan(pl.pid, { res: 'noted', resVia: via }); setExt('closed'); toast('Am notat rezervarea pe bilet.'); }} />
-            <Big label="Nu mai au loc" color={t.s2} ink={t.ink} onPress={() => { setExt('closed'); removePlan(pl.pid); toast('Am scos ' + p.name + ' din planuri. Uite ce se mai potrivește.'); router.navigate('/exploreaza'); }} />
-            <Quiet label="Mai târziu" onPress={() => setExt('closed')} />
+            <H1 style={{ fontSize: 26 }}>{tr('Ai rezervat?')}</H1>
+            <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('O notăm pe bilet, ca s-o ai la îndemână.')}</Muted>
+            <Big label={tr('Da, notează rezervarea')} onPress={() => { updPlan(pl.pid, { res: 'noted', resVia: via }); setExt('closed'); toast(tr('Am notat rezervarea pe bilet.')); }} />
+            <Big label={tr('Nu mai au loc')} color={t.s2} ink={t.ink} onPress={() => { setExt('closed'); removePlan(pl.pid); toast(tr('Am scos {name} din planuri. Uite ce se mai potrivește.', { name: p.name })); router.navigate('/exploreaza'); }} />
+            <Quiet label={tr('Mai târziu')} onPress={() => setExt('closed')} />
           </View>
         )}
       </Sheet>

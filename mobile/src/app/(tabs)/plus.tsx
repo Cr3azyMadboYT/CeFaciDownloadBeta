@@ -14,6 +14,7 @@ import { blurStyle, useEased } from '../../ui/Magic';
 import { useTour } from '../../lib/tour';
 import { toast } from '../../lib/toast';
 import { plusOffers } from '../../lib/plus';
+import { tr } from '../../lib/i18n';
 
 const PERKS: [string, string, string][] = [
   ['M19 5 5 19M6.5 4a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5M17.5 15a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5', 'Reduceri mai mari la Live Drops: 15–30%', 'Unde ceilalți primesc 10–15%, tu primești cu cel puțin 5 puncte în plus, la localurile partenere care pun Live Drops. Reducerea pentru ieșirea ta apare în bilet.'],
@@ -33,7 +34,7 @@ export default function Plus() {
   const day = b.plusDay ?? 1;
   const left = Math.max(1, 8 - day);
   const veiled = st === 'locked' || st === 'off';
-  const tag: [string, string, string] = st === 'trial' ? ['Probă · ' + left + (left === 1 ? ' zi' : ' zile'), '#FFD43B', '#0E1440'] : st === 'active' ? ['Activ', t.blueSoft, t.blueInk] : st === 'off' ? ['Oprit', t.s2, t.ink2] : ['Cadou', '#FFD43B', '#0E1440'];
+  const tag: [string, string, string] = st === 'trial' ? [left === 1 ? tr('Probă · {n} zi', { n: left }) : tr('Probă · {n} zile', { n: left }), '#FFD43B', '#0E1440'] : st === 'active' ? [tr('Activ'), t.blueSoft, t.blueInk] : st === 'off' ? [tr('Oprit'), t.s2, t.ink2] : [tr('Cadou'), '#FFD43B', '#0E1440'];
   const setModal = (m: string) => setBoard({ plusModal: m });
   const m = b.plusModal;
   const touring = useTour().on; // in Bilu's tour he opens the gift himself: no button to press meanwhile
@@ -49,43 +50,43 @@ export default function Plus() {
           <Tag text={tag[0]} bg={tag[1]} fg={tag[2]} />
         </View>
         <View style={{ marginTop: 10, padding: 18, borderRadius: 22, backgroundColor: '#FFD43B' }}>
-          <T style={{ fontFamily: F.b, fontSize: 13, color: '#3A4270' }}>{st === 'trial' || st === 'locked' ? 'Probă gratuită · ziua ' + (st === 'locked' ? 1 : day) + ' din 7' : st === 'active' ? 'Plus activ' : 'Plus e oprit'}</T>
+          <T style={{ fontFamily: F.b, fontSize: 13, color: '#3A4270' }}>{st === 'trial' || st === 'locked' ? tr('Probă gratuită · ziua {d} din 7', { d: st === 'locked' ? 1 : day }) : st === 'active' ? tr('Plus activ') : tr('Plus e oprit')}</T>
           <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 54, lineHeight: 52, letterSpacing: -1.6, color: '#0E1440' }}>—</T>
-          <T style={{ fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>Economii: total indisponibil</T>
+          <T style={{ fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{tr('Economii: total indisponibil')}</T>
           {st === 'trial' || st === 'locked' ? (
-            <View style={{ marginTop: 14, flexDirection: 'row', gap: 5 }} accessibilityLabel={'Ziua ' + day + ' din 7 de probă'}>
+            <View style={{ marginTop: 14, flexDirection: 'row', gap: 5 }} accessibilityLabel={tr('Ziua {d} din 7 de probă', { d: day })}>
               {[1, 2, 3, 4, 5, 6, 7].map((d) => <View key={d} style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: d <= day ? '#0E1440' : 'rgba(14,20,64,0.18)' }} />)}
             </View>
           ) : null}
           <T style={{ marginTop: 12, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>
-            Reducerile se confirmă pe nota localului. Nu afișăm un total până când istoricul verificat este disponibil. Abonamentele plătite nu sunt disponibile încă.
+            {tr('Reducerile se confirmă pe nota localului. Nu afișăm un total până când istoricul verificat este disponibil. Abonamentele plătite nu sunt disponibile încă.')}
           </T>
         </View>
         <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>Ce primești</T>
-          <Tag text="la localurile eligibile" bg={t.yellowSoft} fg={t.yellowInk} />
+          <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>{tr('Ce primești')}</T>
+          <Tag text={tr('la localurile eligibile')} bg={t.yellowSoft} fg={t.yellowInk} />
         </View>
         <View style={{ marginTop: 10, gap: 8 }}>
           {PERKS.map(([icon, title, sub]) => (
             <View key={title} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
               <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center' }}><Icon d={icon} color="#0E1440" /></View>
               <View style={{ flex: 1, gap: 3 }}>
-                <T style={{ fontFamily: F.sb, fontSize: 15, lineHeight: 18 }}>{title}</T>
-                <Muted>{sub}</Muted>
+                <T style={{ fontFamily: F.sb, fontSize: 15, lineHeight: 18 }}>{tr(title)}</T>
+                <Muted>{tr(sub)}</Muted>
               </View>
             </View>
           ))}
         </View>
-        <T accessibilityRole="header" style={{ marginTop: 22, fontFamily: F.display, fontSize: 22 }}>Reduceri Plus</T>
+        <T accessibilityRole="header" style={{ marginTop: 22, fontFamily: F.display, fontSize: 22 }}>{tr('Reduceri Plus')}</T>
         <View style={{ marginTop: 10, gap: 8 }}>
           {offers.length ? offers.map((offer) => (
             <Press key={offer.id} onPress={() => router.push({ pathname: '/loc/[id]', params: { id: offer.id } })}
               style={{ padding: 14, gap: 5, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
               <T style={{ fontFamily: F.sb, fontSize: 16 }}>{offer.name}</T>
-              <Muted>{offer.percent > 0 ? offer.percent + '% Plus acum · verifică în bilet reducerea la ora ieșirii' : 'Plus nu este disponibil acum la acest local.'}</Muted>
+              <Muted>{offer.percent > 0 ? tr('{pct}% Plus acum · verifică în bilet reducerea la ora ieșirii', { pct: offer.percent }) : tr('Plus nu este disponibil acum la acest local.')}</Muted>
             </Press>
           )) : <View style={{ padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
-            <Muted style={{ fontSize: 14, lineHeight: 20 }}>Nu sunt localuri partenere disponibile în catalogul încărcat. Lista se actualizează când revii online.</Muted>
+            <Muted style={{ fontSize: 14, lineHeight: 20 }}>{tr('Nu sunt localuri partenere disponibile în catalogul încărcat. Lista se actualizează când revii online.')}</Muted>
           </View>}
         </View>
       </ScrollView>
@@ -93,11 +94,11 @@ export default function Plus() {
       {veiled && !m && !touring ? (
         <View style={{ position: 'absolute', left: 24, right: 24, top: ins.top + 120, padding: 20, paddingBottom: 22, borderRadius: 26, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', gap: 10, shadowColor: '#0E1440', shadowOpacity: 0.28, shadowRadius: 25, shadowOffset: { width: 0, height: 20 }, elevation: 12 }}>
           <Bilu size={st === 'off' ? 104 : 112} mood={st === 'off' ? 'hi' : 'wink'} />
-          <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 27, textAlign: 'center' }}>{st === 'off' ? 'Plus s-a oprit' : 'Aici e ascuns un cadou'}</T>
-          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? 'Proba gratuită s-a încheiat sau a fost deja folosită. Abonamentele plătite nu sunt disponibile încă.' : 'Bilu îl păzește pentru tine. Apasă și vezi ce e.'}</Muted>
-          <Big style={{ alignSelf: 'stretch', marginTop: 6 }} disabled={opening} label={opening ? 'Verific disponibilitatea…' : st === 'off' ? 'Disponibilitatea Plus' : 'Deschide cadoul'}
-            onPress={async () => { if (st === 'off' || b.trialUsed) { setModal(b.trialUsed && st !== 'off' ? 'used' : 'pay'); return; } const valid = captureAccount(); setOpening(true); const result = await claimTrial(); if (!valid()) return; setOpening(false); if (result === 'ok') setModal('gift'); else if (result === 'used') setModal('used'); else toast('Nu pot confirma proba acum. Verifică internetul și reîncearcă.'); }} />
-          {st === 'off' ? <Muted>Nu se încasează nimic automat.</Muted> : null}
+          <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 27, textAlign: 'center' }}>{st === 'off' ? tr('Plus s-a oprit') : tr('Aici e ascuns un cadou')}</T>
+          <Muted style={{ fontSize: 15, lineHeight: 21, textAlign: 'center' }}>{st === 'off' ? tr('Proba gratuită s-a încheiat sau a fost deja folosită. Abonamentele plătite nu sunt disponibile încă.') : tr('Bilu îl păzește pentru tine. Apasă și vezi ce e.')}</Muted>
+          <Big style={{ alignSelf: 'stretch', marginTop: 6 }} disabled={opening} label={opening ? tr('Verific disponibilitatea…') : st === 'off' ? tr('Disponibilitatea Plus') : tr('Deschide cadoul')}
+            onPress={async () => { if (st === 'off' || b.trialUsed) { setModal(b.trialUsed && st !== 'off' ? 'used' : 'pay'); return; } const valid = captureAccount(); setOpening(true); const result = await claimTrial(); if (!valid()) return; setOpening(false); if (result === 'ok') setModal('gift'); else if (result === 'used') setModal('used'); else toast(tr('Nu pot confirma proba acum. Verifică internetul și reîncearcă.')); }} />
+          {st === 'off' ? <Muted>{tr('Nu se încasează nimic automat.')}</Muted> : null}
         </View>
       ) : null}
 

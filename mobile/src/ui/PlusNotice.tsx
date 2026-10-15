@@ -6,6 +6,7 @@ import { toast } from '../lib/toast';
 import { Bilu, type Mood } from './Bilu';
 import { Big, T } from './kit';
 import { F } from './theme';
+import { tr } from '../lib/i18n';
 
 const M: Record<string, [Mood, string, string, string | null]> = {
   gift: ['yay', 'Poftim: 7 zile de CeFaci Plus, cadou de la mine! Vezi în Plus localurile și reducerile disponibile. La final nu se încasează nimic automat.', 'Arată-mi Plus', null],
@@ -22,7 +23,7 @@ export function PlusNotice() {
     if (cur === 'expired') {
       if (go) { setBoard({ plusModal: 'pay' }); return; }
       setBoard({ plusModal: undefined, plus: 'off' });
-      toast('Am înțeles. Poți reveni oricând din tab-ul Plus.');
+      toast(tr('Am înțeles. Poți reveni oricând din tab-ul Plus.'));
       return;
     }
     setBoard({ plusModal: undefined });
@@ -34,10 +35,10 @@ export function PlusNotice() {
           <>
             <View style={{ alignItems: 'center' }}><Bilu size={150} mood={m[0]} /></View>
             <View style={{ padding: 16, borderRadius: 20, backgroundColor: '#FFFFFF' }}>
-              <T style={{ fontFamily: F.sb, fontSize: 17, lineHeight: 24, color: '#0E1440' }}>{m[1]}</T>
+              <T style={{ fontFamily: F.sb, fontSize: 17, lineHeight: 24, color: '#0E1440' }}>{tr(m[1])}</T>
             </View>
-            <Big label={m[2]} color="#FFD43B" ink="#0E1440" onPress={() => close(true)} />
-            {m[3] ? <Big label={m[3]} color="rgba(255,255,255,0.12)" onPress={() => close(false)} /> : null}
+            <Big label={tr(m[2])} color="#FFD43B" ink="#0E1440" onPress={() => close(true)} />
+            {m[3] ? <Big label={tr(m[3])} color="rgba(255,255,255,0.12)" onPress={() => close(false)} /> : null}
           </>
         ) : null}
       </View>

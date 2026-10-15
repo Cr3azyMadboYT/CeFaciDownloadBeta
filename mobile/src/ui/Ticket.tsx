@@ -6,6 +6,7 @@ import { useMemo, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { T } from './kit';
 import { F } from './theme';
+import { tr } from '../lib/i18n';
 
 const INK = '#0E1440';
 const INK2 = '#3A4270';
@@ -86,27 +87,27 @@ export function Ticket({ d, bg }: { d: TicketData; bg: string }) {
   const no = serial(d.pid);
   const code = useMemo(() => bars(no), [no]);
   return (
-    <View style={{ marginHorizontal: 20 }} accessible accessibilityLabel={'Bilet: ' + d.place + ', ' + d.day + ', ' + d.hour + ', ' + d.people + (d.people === 1 ? ' persoană' : ' persoane')}>
+    <View style={{ marginHorizontal: 20 }} accessible accessibilityLabel={tr('Bilet: {place}, {day}, {hour}, {people}', { place: d.place, day: d.day, hour: d.hour, people: d.people === 1 ? tr('{n} persoană', { n: 1 }) : tr('{n} persoane', { n: d.people }) })}>
       <View style={{ borderRadius: 18, backgroundColor: PAPER, overflow: 'hidden' }}>
         <Watermark />
         <View style={{ paddingTop: 18, paddingHorizontal: 20, paddingBottom: 14 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <T style={{ fontFamily: F.display, fontSize: 19, letterSpacing: -0.4, color: INK }}>CeFaci</T>
             <View style={{ width: 4, height: 4, borderRadius: 99, backgroundColor: INK, marginHorizontal: 8 }} />
-            <T style={{ flex: 1, fontFamily: F.b, fontSize: 10.5, letterSpacing: 1.6, color: INK2 }}>BILET DE IEȘIT</T>
+            <T style={{ flex: 1, fontFamily: F.b, fontSize: 10.5, letterSpacing: 1.6, color: INK2 }}>{tr('BILET DE IEȘIT')}</T>
             <View style={{ paddingHorizontal: 8, paddingVertical: 3, borderRadius: 6, borderWidth: 1.5, borderColor: INK }}>
-              <T style={{ fontFamily: F.b, fontSize: 11, letterSpacing: 1, color: INK }}>{'INTRARE ' + d.people}</T>
+              <T style={{ fontFamily: F.b, fontSize: 11, letterSpacing: 1, color: INK }}>{tr('INTRARE {n}', { n: d.people })}</T>
             </View>
           </View>
           <T numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.7} style={{ marginTop: 16, fontFamily: F.display, fontSize: 40, lineHeight: 41, letterSpacing: -1.4, color: INK }}>{d.place}</T>
           <T numberOfLines={1} style={{ marginTop: 4, fontFamily: F.sb, fontSize: 14, color: INK2 }}>{d.kind + ' · ' + d.area}</T>
           <View style={{ marginTop: 18, flexDirection: 'row', gap: 10 }}>
-            <Field label="Ziua" value={d.day} wide />
-            <Field label="Ora" value={d.hour} />
-            <Field label="Intrare" value={d.people === 1 ? '1 pers.' : d.people + ' pers.'} />
+            <Field label={tr('Ziua')} value={d.day} wide />
+            <Field label={tr('Ora')} value={d.hour} />
+            <Field label={tr('Intrare')} value={tr('{n} pers.', { n: d.people })} />
           </View>
           <View style={{ marginTop: 14, flexDirection: 'row', gap: 10 }}>
-            <Field label="De persoană" value={d.cost} wide />
+            <Field label={tr('De persoană')} value={d.cost} wide />
             <Field label={d.last.label} value={d.last.value} dot={d.last.dot} />
           </View>
         </View>
@@ -128,8 +129,8 @@ export function Ticket({ d, bg }: { d: TicketData; bg: string }) {
           </View>
           <Stamp>
             <T style={{ fontFamily: F.b, fontSize: 9, letterSpacing: 1, color: 'rgba(217,58,28,0.9)' }}>BILU</T>
-            <T style={{ fontFamily: F.display, fontSize: 13, color: 'rgba(217,58,28,0.9)' }}>aprobă</T>
-            <T style={{ fontFamily: F.b, fontSize: 7.5, letterSpacing: 0.4, color: 'rgba(217,58,28,0.9)' }}>✓ VERIFICAT</T>
+            <T style={{ fontFamily: F.display, fontSize: 13, color: 'rgba(217,58,28,0.9)' }}>{tr('aprobă')}</T>
+            <T style={{ fontFamily: F.b, fontSize: 7.5, letterSpacing: 0.4, color: 'rgba(217,58,28,0.9)' }}>{tr('✓ VERIFICAT')}</T>
           </Stamp>
         </View>
         <Bites bg={bg} at="bottom" />

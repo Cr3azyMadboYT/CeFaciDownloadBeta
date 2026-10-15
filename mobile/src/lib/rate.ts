@@ -6,6 +6,7 @@ import { APP, getApp, savePrefs } from './session';
 import { startsAt, updPlan, type Plan } from './plans';
 import { voteOuting } from './crews';
 import { toast } from './toast';
+import { tr } from './i18n';
 
 export type Rating = 'super' | 'yes' | 'no';
 
@@ -34,9 +35,9 @@ export async function rateOuting(pl: Plan, r: Rating) {
   updPlan(pl.pid, { rated: r, voteDue: pl.sid ? vote : undefined });
   const sent = pl.sid ? await voteOuting(pl.sid, vote).catch(() => false) : false;
   if (sent) updPlan(pl.pid, { voteDue: undefined });
-  toast(r === 'no' ? 'Notat. Data viitoare vă arăt altceva.'
-    : !pl.sid ? 'Notat! Îți arăt mai des locuri ca ăsta.'
-    : sent ? 'Notat! Și gașca învață din votul tău.' : 'Notat! Votul ajunge la gașcă imediat ce ai internet.');
+  toast(r === 'no' ? tr('Notat. Data viitoare vă arăt altceva.')
+    : !pl.sid ? tr('Notat! Îți arăt mai des locuri ca ăsta.')
+    : sent ? tr('Notat! Și gașca învață din votul tău.') : tr('Notat! Votul ajunge la gașcă imediat ce ai internet.'));
 }
 
 /** The crew votes the server did not take yet (no internet when they were given): sent again, quietly. */

@@ -25,6 +25,7 @@ import { useApp } from "../lib/session";
 import { checkIn } from "../lib/outing";
 import { Big, Muted, T } from "./kit";
 import { F, useTheme } from "./theme";
+import { tr, trServer, locale } from "../lib/i18n";
 export function PartnerTicket({ plan }: { plan: Plan }) {
   const scope = useRef(new RequestScope()),
     running = useRef(false);
@@ -70,7 +71,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
           }
         }
       } catch (e) {
-        if (live && n === seq) setMessage((e as Error).message);
+        if (live && n === seq) setMessage(trServer((e as Error).message));
       }
     };
     void load();
@@ -94,7 +95,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
       const next = await refreshPartner(plan);
       if (valid()) setState(next);
     } catch (e) {
-      if (valid()) setMessage((e as Error).message);
+      if (valid()) setMessage(trServer((e as Error).message));
     } finally {
       if (valid()) {
         running.current = false;
@@ -117,20 +118,20 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
         borderWidth: 1,
       }}
     >
-      <T style={{ fontFamily: F.display, fontSize: 20 }}>Prin CeFaci</T>
+      <T style={{ fontFamily: F.display, fontSize: 20 }}>{tr("Prin CeFaci")}</T>
       <Muted>
         {state?.attendance?.ready
-          ? `${state.attendance.people} persoane în grupul final`
-          : `Așteptăm răspunsurile. Termen: ${state?.attendance?.deadline ? new Date(state.attendance.deadline).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }) : "30 de minute de la trimitere"}.`}
+          ? tr("{n} persoane în grupul final", { n: state.attendance.people })
+          : tr("Așteptăm răspunsurile. Termen: {t}.", { t: state?.attendance?.deadline ? new Date(state.attendance.deadline).toLocaleTimeString(locale(), { hour: "2-digit", minute: "2-digit" }) : tr("30 de minute de la trimitere") })}
       </Muted>
       {!!state?.attendance?.guests &&
         plan.owner !== false &&
         !state.visit &&
         !state.claim && (
           <>
-            <Muted>{`${state.attendance.guests} invitați fără cont. Pentru oferte 18+, completează vârstele separate prin virgulă (de exemplu: 25, 32).`}</Muted>
+            <Muted>{tr("{n} invitați fără cont. Pentru oferte 18+, completează vârstele separate prin virgulă (de exemplu: 25, 32).", { n: state.attendance.guests })}</Muted>
             <TextInput
-              accessibilityLabel="Vârste invitați fără cont"
+              accessibilityLabel={tr("Vârste invitați fără cont")}
               value={guestAges}
               onChangeText={setGuestAges}
               keyboardType="numbers-and-punctuation"
@@ -143,7 +144,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
               }}
             />
             <Big
-              label="Salvează vârstele"
+              label={tr("Salvează vârstele")}
               disabled={busy}
               onPress={() =>
                 void act(() =>
@@ -159,19 +160,19 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
           </>
         )}
       {partner?.mode === "recommended" && !partner.reservations_on && (
-        <Muted>Poți merge direct. Momentan nu acceptă rezervări.</Muted>
+        <Muted>{tr("Poți merge direct. Momentan nu acceptă rezervări.")}</Muted>
       )}
       {r && (
-        <T>{`Rezervare ${r.status} · ${new Date(r.at).toLocaleString("ro-RO")}`}</T>
+        <T>{tr("Rezervare {status} · {at}", { status: tr(r.status), at: new Date(r.at).toLocaleString(locale()) })}</T>
       )}
       {partner?.mode !== "none" &&
         partner?.reservations_on &&
         (!r || ["expirată", "anulată", "refuzată"].includes(r.status)) &&
         plan.owner !== false && (
           <>
-            <Muted>Copii sub 12 ani, incluși în grup:</Muted>
+            <Muted>{tr("Copii sub 12 ani, incluși în grup:")}</Muted>
             <TextInput
-              accessibilityLabel="Copii sub 12 ani"
+              accessibilityLabel={tr("Copii sub 12 ani")}
               keyboardType="number-pad"
               value={kids}
               onChangeText={setKids}
@@ -184,7 +185,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
               }}
             />
             <Big
-              label={busy ? "Trimit…" : "Rezervă pentru noi"}
+              label={busy ? tr("Trimit…") : tr("Rezervă pentru noi")}
               disabled={busy || !state?.attendance?.ready}
               onPress={() =>
                 void act(async () => {
@@ -208,14 +209,14 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
         )}
       {r?.status === "propusă" && plan.owner !== false && (
         <>
-          <Muted>{`Acceptă înainte de ${new Date(r.proposal_expires_at!).toLocaleTimeString("ro-RO")}`}</Muted>
+          <Muted>{tr("Acceptă înainte de {t}", { t: new Date(r.proposal_expires_at!).toLocaleTimeString(locale()) })}</Muted>
           <Big
-            label="Accept ora"
+            label={tr("Accept ora")}
             disabled={busy}
             onPress={() => void act(() => proposalAnswer(r.id, true))}
           />
           <Big
-            label="Refuz propunerea"
+            label={tr("Refuz propunerea")}
             color={t.s2}
             ink={t.ink}
             disabled={busy}
@@ -226,7 +227,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
       {ticket && (
         <View style={{ alignItems: "center", gap: 8 }}>
           <QRCode value={ticket} size={160} />
-          <Muted>Biletul grupului pentru scannerul localului</Muted>
+          <Muted>{tr("Biletul grupului pentru scannerul localului")}</Muted>
           <T selectable>{ticket}</T>
         </View>
       )}
@@ -237,10 +238,10 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
           new Date(state.claim.expires_at).getTime() <= Date.now()) && (
           <>
             <Muted>
-              Locuri Drop (maximum șase, distinct de mărimea grupului):
+              {tr("Locuri Drop (maximum șase, distinct de mărimea grupului):")}
             </Muted>
             <TextInput
-              accessibilityLabel="Locuri Drop"
+              accessibilityLabel={tr("Locuri Drop")}
               value={seats}
               onChangeText={setSeats}
               keyboardType="number-pad"
@@ -255,7 +256,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
             {drops.map((d) => (
               <Big
                 key={d.id}
-                label={`${d.title} · −${d.pct}% · ${d.seats} locuri`}
+                label={tr("{title} · −{pct}% · {seats} locuri", { title: d.title, pct: d.pct, seats: d.seats })}
                 disabled={busy}
                 onPress={() =>
                   void act(() =>
@@ -267,12 +268,12 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
           </>
         )}
       {state?.claim && (
-        <Muted>{`Drop ${state.claim.status} · ${state.claim.seats} locuri · valabil până la ${new Date(state.claim.expires_at).toLocaleTimeString("ro-RO")}`}</Muted>
+        <Muted>{tr("Drop {status} · {seats} locuri · valabil până la {t}", { status: tr(state.claim.status), seats: state.claim.seats, t: new Date(state.claim.expires_at).toLocaleTimeString(locale()) })}</Muted>
       )}
       {!plan.inAt && (
         <>
           <Big
-            label="Scanează codul localului"
+            label={tr("Scanează codul localului")}
             disabled={busy}
             onPress={() => setCamera(true)}
           />
@@ -290,7 +291,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
             />
           )}
           <TextInput
-            accessibilityLabel="Codul localului"
+            accessibilityLabel={tr("Codul localului")}
             value={token}
             onChangeText={setToken}
             autoCapitalize="none"
@@ -303,7 +304,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
             }}
           />
           <Big
-            label="Confirmă sosirea cu codul"
+            label={tr("Confirmă sosirea cu codul")}
             disabled={busy || !token.trim()}
             color={t.s2}
             ink={t.ink}
@@ -318,20 +319,20 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
         </>
       )}
       {state?.visit && (
-        <Muted>{`Reducere ${state.visit.discount_pct ?? 0}% · ${state.visit.discount_scope === "eligible_consumption" ? `numai consumul celor ${state.visit.discount_people} persoane Drop, produse sau bon separat` : "întreaga notă eligibilă, fără cumul"}.`}</Muted>
+        <Muted>{tr("Reducere {pct}% · {scope}.", { pct: state.visit.discount_pct ?? 0, scope: state.visit.discount_scope === "eligible_consumption" ? tr("numai consumul celor {n} persoane Drop, produse sau bon separat", { n: state.visit.discount_people }) : tr("întreaga notă eligibilă, fără cumul") })}</Muted>
       )}
       {c?.state === "awaiting" && (
         <>
-          <T>{`Localul declară ${c.people} persoane, ${c.adults} de minimum 12 ani și ${c.drop_adults} eligibile Drop. Este corect?`}</T>
+          <T>{tr("Localul declară {people} persoane, {adults} de minimum 12 ani și {drop} eligibile Drop. Este corect?", { people: c.people, adults: c.adults, drop: c.drop_adults })}</T>
           <Big
-            label="Da, confirm numărul"
+            label={tr("Da, confirm numărul")}
             disabled={busy}
             onPress={() =>
               void act(() => countAnswer(c.visit_id, c.version, true))
             }
           />
           <Big
-            label="Nu, contest numărul"
+            label={tr("Nu, contest numărul")}
             disabled={busy}
             color={t.s2}
             ink={t.ink}
@@ -342,18 +343,17 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
         </>
       )}
       {state?.benefit && (
-        <Muted>{`Sesizare reducere: ${state.benefit.state === "pending" ? "în verificare" : state.benefit.state === "upheld" ? "confirmată de CeFaci" : "închisă"}. ${state.benefit.reply ?? ""}`}</Muted>
+        <Muted>{tr("Sesizare reducere: {state}.", { state: state.benefit.state === "pending" ? tr("în verificare") : state.benefit.state === "upheld" ? tr("confirmată de CeFaci") : tr("închisă") }) + " " + trServer(state.benefit.reply ?? "")}</Muted>
       )}
       {state?.visit &&
         (state.visit.discount_pct ?? 0) > 0 &&
         !state.benefit && (
           <>
             <Muted>
-              Dacă reducerea a fost refuzată, spune-ne în maximum 24 de ore.
-              Eligibilitatea rămâne distinctă.
+              {tr("Dacă reducerea a fost refuzată, spune-ne în maximum 24 de ore. Eligibilitatea rămâne distinctă.")}
             </Muted>
             <TextInput
-              accessibilityLabel="Reducerea refuzată"
+              accessibilityLabel={tr("Reducerea refuzată")}
               value={reason}
               onChangeText={setReason}
               multiline
@@ -366,7 +366,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
               }}
             />
             <Big
-              label="Raportează reducerea refuzată"
+              label={tr("Raportează reducerea refuzată")}
               disabled={busy || reason.trim().length < 5}
               color={t.s2}
               ink={t.ink}

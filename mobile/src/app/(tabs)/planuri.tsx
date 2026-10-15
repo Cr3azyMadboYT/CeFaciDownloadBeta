@@ -16,13 +16,17 @@ import { Big, Field, H1, Lbl, Muted, Note, Press, Sheet, T } from '../../ui/kit'
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { Doodles } from '../../ui/Doodles';
+import { tr, trServer, pick, locale } from '../../lib/i18n';
 
 /** "la 21:00", "mâine la 21:00", "vineri la 21:00": a vote may close another day (07.10). */
 const WD = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'];
+const WD_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 function untilWords(d: Date, now = new Date()) {
   const day = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
   const diff = Math.round((day(d) - day(now)) / 864e5);
-  return (diff <= 0 ? '' : diff === 1 ? 'mâine ' : WD[d.getDay()] + ' ') + 'la ' + d.toTimeString().slice(0, 5);
+  const hm = d.toTimeString().slice(0, 5);
+  return pick((diff <= 0 ? '' : diff === 1 ? 'mâine ' : WD[d.getDay()] + ' ') + 'la ' + hm,
+    'by ' + (diff <= 0 ? '' : (diff === 1 ? 'tomorrow' : WD_EN[d.getDay()]) + ' at ') + hm);
 }
 
 
@@ -44,7 +48,7 @@ export default function Planuri() {
     void listCrews(who.id).then(v=>{if(valid())setCrews(v);}).catch(()=>{});
     void listVotes().then(v=>{if(valid())setVotes(v);}).catch(()=>{});
     void listInvites(who.id).then(v=>{if(valid())setInvites(v);}).catch(()=>{});
-    void syncShared().then((gone) => { if (valid()&&gone.length) toast('S-a anulat planul de la ' + gone.join(', ') + '.'); });
+    void syncShared().then((gone) => { if (valid()&&gone.length) toast(tr('S-a anulat planul de la {who}.', { who: gone.join(', ') })); });
   }, [who, known]);
   useFocusEffect(refresh);
   useEffect(() => (who && known ? watchPlans(who.id, refresh) : undefined), [who, known, refresh]);
@@ -53,8 +57,8 @@ export default function Planuri() {
     setBusy(inv.planId + a);
     const e = await answer(inv, who.id, a);
     setBusy('');
-    if (e) { toast(e); return; }
-    toast(a === 'vin' ? 'Super! ' + inv.owner.first_name + ' vede că vii.' : 'Am anunțat că nu poți.');
+    if (e) { toast(trServer(e)); return; }
+    toast(a === 'vin' ? tr('Super! {name} vede că vii.', { name: inv.owner.first_name }) : tr('Am anunțat că nu poți.'));
     refresh();
   };
   const fresh = invites.filter((i) => i.answer === 'pending');
@@ -65,19 +69,19 @@ export default function Planuri() {
     setBusy('join'); setJoinErr('');
     const r = await joinWithCode(joinCode);
     setBusy('');
-    if (r.err) { setJoinErr(r.err); return; }
+    if (r.err) { setJoinErr(trServer(r.err)); return; }
     setJoinOpen(false); setJoinCode('');
-    toast('Ai intrat în gașcă!');
+    toast(tr('Ai intrat în gașcă!'));
     router.push({ pathname: '/gasca/[id]', params: { id: r.id! } });
   };
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <Doodles />
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
-      <View style={{ height: 44, justifyContent: 'center' }}><H1>Planuri</H1></View>
+      <View style={{ height: 44, justifyContent: 'center' }}><H1>{tr('Planuri')}</H1></View>
       {votes.length ? (
         <View>
-          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{votes.length === 1 ? 'Un vot' : 'Voturi (' + votes.length + ')'}</Lbl>
+          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{votes.length === 1 ? tr('Un vot') : tr('Voturi ({n})', { n: votes.length })}</Lbl>
           <View style={{ gap: 10 }}>
             {votes.map((v) => {
               const open = new Date(v.closesAt).getTime() > Date.now();
@@ -87,7 +91,7 @@ export default function Planuri() {
                   <Icon name="users" color={open ? '#FFFFFF' : t.ink} />
                   <View style={{ flex: 1, gap: 2 }}>
                     <T style={{ fontFamily: F.b, fontSize: 16, color: open ? '#FFFFFF' : t.ink }}>{v.title + (v.crewName ? ' · ' + v.crewName : '')}</T>
-                    <T style={{ fontFamily: F.sb, fontSize: 13, color: open ? 'rgba(255,255,255,0.85)' : t.ink2 }}>{open ? 'Votează până ' + untilWords(new Date(v.closesAt)) : 'S-a închis. Vezi cine a câștigat.'}</T>
+                    <T style={{ fontFamily: F.sb, fontSize: 13, color: open ? 'rgba(255,255,255,0.85)' : t.ink2 }}>{open ? tr('Votează până {when}', { when: untilWords(new Date(v.closesAt)) }) : tr('S-a închis. Vezi cine a câștigat.')}</T>
                   </View>
                   <Icon name="next" size={16} color={open ? '#FFFFFF' : t.ink3} />
                 </Press>
@@ -98,7 +102,7 @@ export default function Planuri() {
       ) : null}
       {fresh.length ? (
         <View>
-          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>Te-au chemat</Lbl>
+          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{tr('Te-au chemat')}</Lbl>
           <View style={{ gap: 10 }}>
             {fresh.map((inv) => {
               const d = new Date(inv.startsAt);
@@ -106,11 +110,11 @@ export default function Planuri() {
                 <View key={inv.planId} style={{ padding: 14, gap: 10, borderRadius: 20, borderWidth: 1.5, borderColor: t.yellowInk, backgroundColor: t.s1 }}>
                   <View style={{ gap: 2 }}>
                     <T style={{ fontFamily: F.b, fontSize: 16 }}>{inv.venueName}</T>
-                    <Muted>{inv.owner.first_name + ' te cheamă · ' + d.toLocaleDateString('ro-RO', { weekday: 'long', day: 'numeric', month: 'short' }) + ', ' + d.toTimeString().slice(0, 5)}</Muted>
+                    <Muted>{tr('{name} te cheamă · {date}, {t}', { name: inv.owner.first_name, date: d.toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'short' }), t: d.toTimeString().slice(0, 5) })}</Muted>
                   </View>
                   <View style={{ flexDirection: 'row', gap: 8 }}>
-                    <Big style={{ flex: 1 }} label={busy === inv.planId + 'vin' ? '…' : 'Vin'} disabled={!!busy} onPress={() => reply(inv, 'vin')} />
-                    <Big style={{ flex: 1 }} label={busy === inv.planId + 'nu_pot' ? '…' : 'Nu pot'} color={t.s2} ink={t.ink} disabled={!!busy} onPress={() => reply(inv, 'nu_pot')} />
+                    <Big style={{ flex: 1 }} label={busy === inv.planId + 'vin' ? '…' : tr('Vin')} disabled={!!busy} onPress={() => reply(inv, 'vin')} />
+                    <Big style={{ flex: 1 }} label={busy === inv.planId + 'nu_pot' ? '…' : tr('Nu pot')} color={t.s2} ink={t.ink} disabled={!!busy} onPress={() => reply(inv, 'nu_pot')} />
                   </View>
                 </View>
               );
@@ -120,13 +124,13 @@ export default function Planuri() {
       ) : null}
       {plans.length ? (
         <View>
-          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{'Urmează (' + plans.length + ')'}</Lbl>
+          <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{tr('Urmează ({n})', { n: plans.length })}</Lbl>
           <View style={{ gap: 10 }}>
             {plans.map((x) => {
               const p = APP.byId(x.placeId);
               if (!p) return null;
               const bits = [p.name];
-              if (p.res !== 'none') bits.push(x.res === 'noted' ? 'rezervat prin ' + (x.resVia ?? 'telefon') : 'fără rezervare încă');
+              if (p.res !== 'none') bits.push(x.res === 'noted' ? tr('rezervat prin {via}', { via: tr(x.resVia ?? 'telefon') }) : tr('fără rezervare încă'));
               return (
                 <Press key={x.pid} onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(x.pid) } })}
                   style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingLeft: 12, paddingRight: 16, borderRadius: 20, backgroundColor: '#FFD43B' }}>
@@ -149,19 +153,19 @@ export default function Planuri() {
         </View>
       ) : (
         <View style={{ marginTop: 18, padding: 18, paddingVertical: 22, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1, alignItems: 'flex-start' }}>
-          <T style={{ fontFamily: F.display, fontSize: 24, lineHeight: 25 }}>Niciun plan încă.</T>
-          <Muted>Alege ceva de pe Acasă și biletul apare aici.</Muted>
-          <Big style={{ marginTop: 6 }} label="Ce facem?" onPress={() => router.navigate('/acasa')} />
+          <T style={{ fontFamily: F.display, fontSize: 24, lineHeight: 25 }}>{tr('Niciun plan încă.')}</T>
+          <Muted>{tr('Alege ceva de pe Acasă și biletul apare aici.')}</Muted>
+          <Big style={{ marginTop: 6 }} label={tr('Ce facem?')} onPress={() => router.navigate('/acasa')} />
         </View>
       )}
       <View style={{ marginTop: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Lbl style={{ flex: 1 }}>Gășcile tale</Lbl>
+        <Lbl style={{ flex: 1 }}>{tr('Gășcile tale')}</Lbl>
         {known ? <Press onPress={() => { setJoinErr(''); setJoinOpen(true); }} style={{ height: 40, paddingHorizontal: 12, marginRight: 6, borderRadius: 999, borderWidth: 1, borderColor: t.line, justifyContent: 'center' }}>
-          <T style={{ fontFamily: F.sb, fontSize: 14 }}>Intră cu un cod</T>
+          <T style={{ fontFamily: F.sb, fontSize: 14 }}>{tr('Intră cu un cod')}</T>
         </Press> : null}
         <Press onPress={() => router.push('/gasca-noua')} style={{ height: 40, paddingLeft: 10, paddingRight: 14, borderRadius: 999, backgroundColor: t.blueSoft, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Icon name="plus" size={16} color={t.blueInk} width={2.4} />
-          <T style={{ fontFamily: F.sb, fontSize: 14, color: t.blueInk }}>Gașcă nouă</T>
+          <T style={{ fontFamily: F.sb, fontSize: 14, color: t.blueInk }}>{tr('Gașcă nouă')}</T>
         </Press>
       </View>
       {crews && crews.length ? (
@@ -175,7 +179,7 @@ export default function Planuri() {
                 <CrewMark icon={c.icon} color={c.color === '#0E1440' && t.dark ? '#F4F4F6' : c.color} rot={['-6deg', '5deg', '-3deg', '7deg'][k % 4]} />
                 <View style={{ flex: 1, gap: 4 }}>
                   <T style={{ fontFamily: F.sb, fontSize: 16 }}>{c.name}</T>
-                  <Muted>{c.mine === 'invited' ? 'Te-au invitat. Apasă ca să intri.' : inN + ' în gașcă' + (pend ? ', ' + (pend === 1 ? 'o invitație' : pend + ' invitații') + ' în așteptare' : '')}</Muted>
+                  <Muted>{c.mine === 'invited' ? tr('Te-au invitat. Apasă ca să intri.') : tr('{n} în gașcă', { n: inN }) + (pend ? (pend === 1 ? tr(', o invitație în așteptare') : tr(', {n} invitații în așteptare', { n: pend })) : '')}</Muted>
                 </View>
                 <Icon name="next" size={16} color={t.ink3} />
               </Press>
@@ -184,16 +188,16 @@ export default function Planuri() {
         </View>
       ) : (
         <View style={{ marginTop: 10, padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
-          <Muted style={{ fontSize: 14, lineHeight: 20 }}>{known ? 'Încă n-ai nicio gașcă. Fă una cu cel puțin 2 prieteni, iar ei primesc invitația.' : 'Gășcile merg cu cont. Intră din Profil → Prieteni.'}</Muted>
+          <Muted style={{ fontSize: 14, lineHeight: 20 }}>{known ? tr('Încă n-ai nicio gașcă. Fă una cu cel puțin 2 prieteni, iar ei primesc invitația.') : tr('Gășcile merg cu cont. Intră din Profil → Prieteni.')}</Muted>
         </View>
       )}
     </ScrollView>
     <Sheet open={joinOpen} onClose={() => setJoinOpen(false)}>
-      <H1 style={{ fontSize: 26 }}>Intră într-o gașcă</H1>
-      <Muted style={{ marginTop: 6, marginBottom: 12, fontSize: 15, lineHeight: 21 }}>Scrie codul primit de la cineva din gașcă (12 caractere).</Muted>
-      <Field value={joinCode} onChangeText={(x) => setJoinCode(x.replace(/\s/g, '').slice(0, 12))} placeholder="ex: abcd2345efgh" autoCapitalize="none" autoCorrect={false} />
+      <H1 style={{ fontSize: 26 }}>{tr('Intră într-o gașcă')}</H1>
+      <Muted style={{ marginTop: 6, marginBottom: 12, fontSize: 15, lineHeight: 21 }}>{tr('Scrie codul primit de la cineva din gașcă (12 caractere).')}</Muted>
+      <Field value={joinCode} onChangeText={(x) => setJoinCode(x.replace(/\s/g, '').slice(0, 12))} placeholder={tr('ex: abcd2345efgh')} autoCapitalize="none" autoCorrect={false} />
       {joinErr ? <View style={{ marginTop: 10 }}><Note kind="err">{joinErr}</Note></View> : null}
-      <Big style={{ marginTop: 14 }} label={busy === 'join' ? 'Intru…' : 'Intră'} disabled={joinCode.length < 12 || busy === 'join'} onPress={join} />
+      <Big style={{ marginTop: 14 }} label={busy === 'join' ? tr('Intru…') : tr('Intră')} disabled={joinCode.length < 12 || busy === 'join'} onPress={join} />
     </Sheet>
     <TopShade />
     </View>
