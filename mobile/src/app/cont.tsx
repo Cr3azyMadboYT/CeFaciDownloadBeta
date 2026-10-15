@@ -20,6 +20,7 @@ import { Big, Chip, Field, H1, Lbl, Lead, Muted, Note, Press, Quiet, Say, Seg, S
 import { F, useTheme } from '../ui/theme';
 import { Doodles } from '../ui/Doodles';
 import {AccountLegalNotice} from '../../../shared/AccountLegalNotice';
+import { LangPick } from '../ui/LangPick';
 import { LegalLinks } from '../ui/LegalLinks';
 import { isRudeName, RUDE_SAY } from '../../../src/app/names';
 
@@ -259,6 +260,7 @@ export default function Cont() {
             <Logo />
             <T style={{ fontFamily: F.display, fontSize: 25, letterSpacing: -0.5, color: '#FFFFFF' }}>CeFaci</T>
             <View style={{ flex: 1 }} />
+            <LangPick dark />
             <Press onPress={() => setTheme(themeName === 'noapte' ? 'zi' : 'noapte')} accessibilityLabel={themeName === 'noapte' ? 'Treci pe tema de zi' : 'Treci pe tema de noapte'}
               style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' }}>
               <Icon name={themeName === 'noapte' ? 'sun' : 'moon'} size={16} color="#FFFFFF" />

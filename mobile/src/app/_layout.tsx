@@ -22,11 +22,13 @@ import { E2E } from '../lib/e2e';
 import '../lib/places'; // the places changed from Admin (Supabase) come in at start
 import { E2EProbe } from '../ui/E2EProbe';
 import { watchIcon } from '../lib/season';
+import { useLang } from '../lib/i18n';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function Root() {
   const [loaded] = useFonts({ BricolageGrotesque_700Bold, BricolageGrotesque_800ExtraBold, InstrumentSans_400Regular, InstrumentSans_500Medium, InstrumentSans_600SemiBold, InstrumentSans_700Bold, Caveat_700Bold });
+  const lng = useLang(); // limba se pune înaintea oricărui ecran; la schimbare, tot arborele se redesenează (key)
   const mode = useApp((s) => s.board.theme ?? 'zi');
   const sys = useColorScheme();
   const name: 'zi' | 'noapte' = mode === 'noapte' || (mode === 'auto' && sys === 'dark') ? 'noapte' : 'zi';
@@ -42,7 +44,7 @@ export default function Root() {
   if (!loaded) return null;
   return (
     <SafeAreaProvider>
-      <ThemeCtx.Provider value={ctx}>
+      <ThemeCtx.Provider value={ctx} key={lng}>
         <StatusBar style={t.dark ? 'light' : 'dark'} />
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg }, animation: 'slide_from_right' }}>
           <Stack.Screen name="cont" options={{ animation: 'fade' }} />

@@ -9,6 +9,8 @@ import { Icon } from '../ui/Icon';
 import { H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
+import { LangPick } from '../ui/LangPick';
+import { tr } from '../lib/i18n';
 
 function Group({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
   const { t } = useTheme();
@@ -38,6 +40,9 @@ export default function Setari() {
           <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
         </View>
         <H1 style={{ fontSize: 34, lineHeight: 35 }}>Setări</H1>
+        <Group title="Limba · Language" note={tr('Numele localurilor și adresele rămân cum sunt.')}>
+          <LangPick />
+        </Group>
         <Group title="Temă" note={theme === 'auto' ? 'Urmează tema telefonului: ziua luminoasă, noaptea întunecată.' : undefined}>
           <Seg label="Zi" on={theme === 'zi'} onPress={() => setBoard({ theme: 'zi' })} />
           <Seg label="Noapte" on={theme === 'noapte'} onPress={() => setBoard({ theme: 'noapte' })} />

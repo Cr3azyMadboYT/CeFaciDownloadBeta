@@ -10,6 +10,7 @@ import { Bilu } from '../../ui/Bilu';
 import { NO_STAMPS, type Stamp } from '../../lib/outing';
 import { startOver, useApp, setBoard } from '../../lib/session';
 import { Portrait } from '../../ui/Avatar';
+import { LangPick } from '../../ui/LangPick';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Muted, Note, Press, Seg, Sheet, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
@@ -54,6 +55,7 @@ export default function Profil() {
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
       <View style={{ height: 44, flexDirection: 'row', alignItems: 'center' }}>
         <H1 style={{ flex: 1, fontSize: 28 }}>{'@' + (prefs.user || 'tu')}</H1>
+        <LangPick />
         <Press onPress={() => router.push('/setari')} accessibilityLabel="Setări" style={{ width: 44, height: 44, marginRight: -8, alignItems: 'center', justifyContent: 'center', borderRadius: 14 }}>
           <Icon name="gear" color={t.ink} />
         </Press>

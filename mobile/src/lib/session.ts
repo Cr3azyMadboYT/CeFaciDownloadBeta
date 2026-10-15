@@ -19,6 +19,7 @@ export type { Prefs };
 // ---------- a tiny store ----------
 export interface Board {
   theme?: 'zi' | 'noapte' | 'auto';
+  lang?: 'ro' | 'en';  // limba aplicației (Setări, Profil, ecranul de start)
   calm?: boolean;      // fewer animations (Setări)
   billRemind?: boolean; // false = no receipt reminders (Setări)
   plans?: unknown[];
