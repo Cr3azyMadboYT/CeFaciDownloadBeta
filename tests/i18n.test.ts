@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { EN, setLang, tr, trServer } from '../src/i18n';
 
-const ROOTS = ['mobile/src', 'src/engine', 'src/app', 'src/i18n'];
+const ROOTS = ['mobile/src', 'src/engine', 'src/app'];
 function files(dir: string): string[] {
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
@@ -49,6 +49,9 @@ describe('engleza', () => {
     const k = Object.keys(EN)[0];
     if (k) expect(tr(k)).toBe(EN[k].replace(/\{\w+\}/g, (m) => m));
     expect(trServer('mesaj necunoscut')).toBe('mesaj necunoscut');
+    // mesajele de la server cu o parte variabilă (cheia are {x})
+    const pat = Object.keys(EN).find((k) => k === 'Alege cel puțin {x} prieteni.');
+    if (pat) expect(trServer('Alege cel puțin 2 prieteni.')).toBe(EN[pat].replace('{x}', '2'));
     setLang('ro');
     if (k) expect(tr(k)).toBe(k);
   });

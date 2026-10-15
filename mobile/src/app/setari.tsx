@@ -37,39 +37,39 @@ export default function Setari() {
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: ins.bottom + 32, gap: 12 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
         </View>
-        <H1 style={{ fontSize: 34, lineHeight: 35 }}>Setări</H1>
+        <H1 style={{ fontSize: 34, lineHeight: 35 }}>{tr('Setări')}</H1>
         <Group title="Limba · Language" note={tr('Numele localurilor și adresele rămân cum sunt.')}>
           <LangPick />
         </Group>
-        <Group title="Temă" note={theme === 'auto' ? 'Urmează tema telefonului: ziua luminoasă, noaptea întunecată.' : undefined}>
-          <Seg label="Zi" on={theme === 'zi'} onPress={() => setBoard({ theme: 'zi' })} />
-          <Seg label="Noapte" on={theme === 'noapte'} onPress={() => setBoard({ theme: 'noapte' })} />
-          <Seg label="Ca telefonul" on={theme === 'auto'} onPress={() => setBoard({ theme: 'auto' })} />
+        <Group title={tr('Temă')} note={theme === 'auto' ? tr('Urmează tema telefonului: ziua luminoasă, noaptea întunecată.') : undefined}>
+          <Seg label={tr('Zi')} on={theme === 'zi'} onPress={() => setBoard({ theme: 'zi' })} />
+          <Seg label={tr('Noapte')} on={theme === 'noapte'} onPress={() => setBoard({ theme: 'noapte' })} />
+          <Seg label={tr('Ca telefonul')} on={theme === 'auto'} onPress={() => setBoard({ theme: 'auto' })} />
         </Group>
-        <Group title="Animații" note="Cu „Mai puține”, Bilu stă cuminte și ecranele nu mai sar. Se pornește singur dacă telefonul are setarea de reducere a mișcării.">
-          <Seg label="Normale" on={!calm} onPress={() => setBoard({ calm: false })} />
-          <Seg label="Mai puține" on={calm} onPress={() => setBoard({ calm: true })} />
+        <Group title={tr('Animații')} note={tr('Cu „Mai puține”, Bilu stă cuminte și ecranele nu mai sar. Se pornește singur dacă telefonul are setarea de reducere a mișcării.')}>
+          <Seg label={tr('Normale')} on={!calm} onPress={() => setBoard({ calm: false })} />
+          <Seg label={tr('Mai puține')} on={calm} onPress={() => setBoard({ calm: true })} />
         </Group>
-        <Group title="Amintirea pentru bon" note="La 40 de minute după check-in și, dacă tot n-ai pus bonul, a doua zi la prânz. Niciodată mai mult de două.">
-          <Seg label="Da" on={remind} onPress={() => setBoard({ billRemind: true })} />
-          <Seg label="Nu" on={!remind} onPress={() => setBoard({ billRemind: false })} />
+        <Group title={tr('Amintirea pentru bon')} note={tr('La 40 de minute după check-in și, dacă tot n-ai pus bonul, a doua zi la prânz. Niciodată mai mult de două.')}>
+          <Seg label={tr('Da')} on={remind} onPress={() => setBoard({ billRemind: true })} />
+          <Seg label={tr('Nu')} on={!remind} onPress={() => setBoard({ billRemind: false })} />
         </Group>
         {who ? (
-          <Group title="Notificări FreeNow" note="Când un prieten (sau un prieten de-al lui) intră pe FreeNow. Cel mult 3 pe zi și niciuna între 02:00 și 09:00. Le poți opri și doar pentru cineva, din FreeNow.">
-            <Seg label="Da" on={!fn.quiet} onPress={() => { if (fn.quiet) void muteFree(who.id, false); }} />
-            <Seg label="Nu" on={fn.quiet} onPress={() => { if (!fn.quiet) void muteFree(who.id, true); }} />
+          <Group title={tr('Notificări FreeNow')} note={tr('Când un prieten (sau un prieten de-al lui) intră pe FreeNow. Cel mult 3 pe zi și niciuna între 02:00 și 09:00. Le poți opri și doar pentru cineva, din FreeNow.')}>
+            <Seg label={tr('Da')} on={!fn.quiet} onPress={() => { if (fn.quiet) void muteFree(who.id, false); }} />
+            <Seg label={tr('Nu')} on={fn.quiet} onPress={() => { if (!fn.quiet) void muteFree(who.id, true); }} />
           </Group>
         ) : null}
-        <Lbl style={{ marginTop: 8 }}>Contul</Lbl>
-        <Muted style={{ fontSize: 14 }}>{who ? 'Contul: ' + (who.email ?? 'Google') + '. Ieșirea din cont și ștergerea sunt jos în Profil.' : 'Nu ești în cont.'}</Muted>
-        <Lbl style={{ marginTop: 8 }}>Despre</Lbl>
-        <Press accessibilityLabel="Termeni și confidențialitate" onPress={() => router.push('/confidentialitate')} style={{minHeight: 44, justifyContent: 'center'}}><T style={{fontFamily: F.sb, color: t.blueInk}}>Termeni · Confidențialitate · Datele mele</T></Press>
+        <Lbl style={{ marginTop: 8 }}>{tr('Contul')}</Lbl>
+        <Muted style={{ fontSize: 14 }}>{who ? tr('Contul: {email}. Ieșirea din cont și ștergerea sunt jos în Profil.', { email: who.email ?? 'Google' }) : tr('Nu ești în cont.')}</Muted>
+        <Lbl style={{ marginTop: 8 }}>{tr('Despre')}</Lbl>
+        <Press accessibilityLabel={tr('Termeni și confidențialitate')} onPress={() => router.push('/confidentialitate')} style={{minHeight: 44, justifyContent: 'center'}}><T style={{fontFamily: F.sb, color: t.blueInk}}>{tr('Termeni · Confidențialitate · Datele mele')}</T></Press>
         <Muted style={{ fontSize: 14 }}>
-          {'Datele localurilor: © contribuitorii '}
+          {tr('Datele localurilor: © contribuitorii ')}
           <T style={{ fontFamily: F.m, fontSize: 14, color: t.ink2, textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://www.openstreetmap.org/copyright')}>OpenStreetMap</T>
-          {', licența ODbL. Prețurile sunt estimate.'}
+          {tr(', licența ODbL. Prețurile sunt estimate.')}
         </Muted>
       </ScrollView>
       <TopShade />

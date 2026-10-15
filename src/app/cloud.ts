@@ -3,6 +3,7 @@
 // - a new account is created at the end of sign-up (username, first name, birth date, answers);
 // - every later change to the answers or the saved state is sent back, a few seconds after it happens.
 // Without an account, everything stays on the phone only.
+import { tr } from '../i18n';
 
 export interface CloudClient {
   from(table: string): any;
@@ -23,7 +24,7 @@ export async function restore(db: CloudClient, userId: string, active = () => tr
   if (!prof) return { known: false };
   const { data: priv, error: privateError } = await db.from('profile_private').select('birth_date, prefs, app_state, plus_trial_started_at').eq('id', userId).maybeSingle();
   if (privateError) throw privateError;
-  if (!priv) throw new Error('Profilul privat nu este disponibil.');
+  if (!priv) throw new Error(tr('Profilul privat nu este disponibil.'));
   if (!active()) return { known: false };
   const localP = read(PKEY);
   const remoteP = priv?.prefs ?? {};

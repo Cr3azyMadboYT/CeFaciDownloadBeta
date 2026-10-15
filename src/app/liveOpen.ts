@@ -3,6 +3,7 @@
 // the time of its step, for the whole step. Parks, squares and promenades are not asked: they do not close.
 // Results are cached for the exact requested interval, for an hour in memory. Only the id
 // and the time leave the phone: the server takes the name and the position from its own list (07.10).
+import { tr } from '../i18n';
 
 
 export type Live = { open: boolean | null; closes?: string; status?: string; checkedAt?: number; checkedUntil?: number };
@@ -14,7 +15,7 @@ export const needsCheck = (k: string, cat: string) => !OPEN_AIR.has(k) && cat !=
 // rebuilding a plan or "Altă surpriză" does not ask Google again for the same places (only on the phone, for an hour)
 /** Why a place cannot be used then, in Bilu's words (it may be open when you arrive but close before you leave). */
 export function closedWhy(name: string, v: Live | undefined): string {
-  return v?.closes ? name + ' se închide la ' + v.closes + ', înainte să terminați acolo (am verificat pe Google)' : name + ' e închis la ora aia (am verificat pe Google)';
+  return v?.closes ? tr('{name} se închide la {t}, înainte să terminați acolo (am verificat pe Google)', { name, t: v.closes }) : tr('{name} e închis la ora aia (am verificat pe Google)', { name });
 }
 
 export function createLiveChecker(invoke: (body: { items: { id: string; at: string; until?: string }[] }) => PromiseLike<{ data?: { checked?: Record<string, Live>; limit?: boolean } | null }>) {

@@ -51,7 +51,7 @@ export function trServer(msg: string | null | undefined): string {
   return msg;
 }
 const SERVER_PATTERNS = Object.keys(server).filter((k) => k.includes('{x}')).map((key) => ({
-  key, re: new RegExp('^' + key.replace(/[.*+?^$()|[\]\\]/g, '\\$&').replace('\\{x\\}', '(.+?)') + '$'),
+  key, re: new RegExp('^' + key.replace(/[.*+?^$()|[\]\\]/g, '\\$&').replace('{x}', '(.+?)') + '$'),
 }));
 
 /** Alege între două forme după limbă, pentru bucăți care nu sunt text simplu (ordinea cuvintelor, plurale). */
