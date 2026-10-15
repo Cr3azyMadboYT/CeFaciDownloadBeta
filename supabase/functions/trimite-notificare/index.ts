@@ -41,6 +41,7 @@ async function googleToken(acc: Account) {
 const hhmm = (iso: string) => new Date(iso).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Bucharest' });
 
 const MOOD: Record<string, string> = { mancare: 'mâncare', pahar: 'un pahar', cafea: 'o cafea', film: 'un film', plimbare: 'o plimbare', joaca: 'joacă', desert: 'desert' };
+const MOOD_EN: Record<string, string> = { mancare: 'food', pahar: 'a drink', cafea: 'a coffee', film: 'a movie', plimbare: 'a walk', joaca: 'games', desert: 'dessert' };
 const MOOD_ICON: Record<string, string> = { orice: '⚡', mancare: '🍕', pahar: '🍻', cafea: '☕', film: '🎬', plimbare: '🚶', joaca: '🎳', desert: '🍰' };
 
 const done = () => json({ ok: true }); // the same answer whatever happened: nothing to learn from calling it
@@ -59,36 +60,51 @@ Deno.serve(async (req) => {
   const name = async (id: string | null) => (id ? ((await db.from('profiles').select('first_name').eq('id', id).maybeSingle()).data?.first_name ?? 'Cineva') : 'Cineva');
 
   // the message, from the real row (and only if this person is really in it)
-  let title = '', body = '', url = '';
+  // română și engleză: fiecare telefon primește limba aleasă în aplicație (push_tokens.lang, 15.10)
+  let title = '', body = '', url = '', titleEn = '', bodyEn = '';
   if (kind === 'vote') {
     const { data: v } = await db.from('vote_sessions').select('created_by, closes_at, crew_id').eq('id', ref).maybeSingle();
     const { data: me } = await db.from('vote_voters').select('user_id').eq('session_id', ref).eq('user_id', user).maybeSingle();
     if (!v || !me || new Date(v.closes_at).getTime() < Date.now()) return done();
-    title = (await name(v.created_by)) + ' a pornit un vot: unde mergem?';
+    const who = await name(v.created_by);
+    title = who + ' a pornit un vot: unde mergem?';
     body = 'Votează până la ' + hhmm(v.closes_at) + '. Da, Nu sau Super.';
+    titleEn = who + ' started a vote: where are we going?';
+    bodyEn = 'Vote by ' + hhmm(v.closes_at) + '. Yes, No or Super.';
     url = '/vot/' + ref;
   } else if (kind === 'plan') {
     const { data: p } = await db.from('plans').select('owner_id, venue_name, starts_at, status').eq('id', ref).maybeSingle();
     const { data: me } = await db.from('plan_members').select('answer').eq('plan_id', ref).eq('user_id', user).maybeSingle();
     if (!p || !me || p.status !== 'active') return done();
-    title = (await name(p.owner_id)) + ' te cheamă la ' + p.venue_name;
+    const who = await name(p.owner_id);
+    title = who + ' te cheamă la ' + p.venue_name;
     body = new Date(p.starts_at).toLocaleDateString('ro-RO', { weekday: 'long', timeZone: 'Europe/Bucharest' }) + ', la ' + hhmm(p.starts_at) + '. Răspunde cu Vin sau Nu pot.';
+    titleEn = who + ' invited you to ' + p.venue_name;
+    bodyEn = new Date(p.starts_at).toLocaleDateString('en-GB', { weekday: 'long', timeZone: 'Europe/Bucharest' }) + ' at ' + hhmm(p.starts_at) + '. Answer I\'m in or Can\'t make it.';
     url = '/planuri';
   } else if (kind === 'free') {
     // FreeNow: cine a intrat (rândul încă pornit); vizibilitatea a fost verificată de baza de date înainte de trimitere
     const { data: f } = await db.from('free_now').select('user_id, starts_at, ends_at, moods').eq('id', ref).maybeSingle();
     if (!f || new Date(f.ends_at).getTime() < Date.now()) return done();
     const later = new Date(f.starts_at).getTime() > Date.now() + 5 * 60_000;
-    title = (await name(f.user_id)) + ' e pe FreeNow ' + (later ? 'de la ' + hhmm(f.starts_at) + ' la ' : 'până la ') + hhmm(f.ends_at) + ' ' + (MOOD_ICON[f.moods?.[0]] ?? '⚡');
-    body = (f.moods?.length && f.moods[0] !== 'orice' ? 'Chef de ' + f.moods.map((m: string) => MOOD[m] ?? m).join(' sau ') + '. ' : '') + 'Ieși și tu?';
+    const who = await name(f.user_id);
+    const icon = MOOD_ICON[f.moods?.[0]] ?? '⚡';
+    const some = f.moods?.length && f.moods[0] !== 'orice';
+    title = who + ' e pe FreeNow ' + (later ? 'de la ' + hhmm(f.starts_at) + ' la ' : 'până la ') + hhmm(f.ends_at) + ' ' + icon;
+    body = (some ? 'Chef de ' + f.moods.map((m: string) => MOOD[m] ?? m).join(' sau ') + '. ' : '') + 'Ieși și tu?';
+    titleEn = who + ' is on FreeNow ' + (later ? 'from ' + hhmm(f.starts_at) + ' to ' : 'until ') + hhmm(f.ends_at) + ' ' + icon;
+    bodyEn = (some ? 'In the mood for ' + f.moods.map((m: string) => MOOD_EN[m] ?? m).join(' or ') + '. ' : '') + 'Coming along?';
     url = '/freenow';
   } else if (kind === 'free_join') {
     const { data: m } = await db.from('free_outing_members').select('user_id, outing_id, left_at').eq('id', ref).maybeSingle();
     if (!m || m.left_at || m.user_id === user) return done();
     const { data: me } = await db.from('free_outing_members').select('left_at').eq('outing_id', m.outing_id).eq('user_id', user).maybeSingle();
     if (!me || me.left_at) return done();
-    title = (await name(m.user_id)) + ' iese cu voi!';
+    const who = await name(m.user_id);
+    title = who + ' iese cu voi!';
     body = 'Bilu are 3 locuri pentru voi. Intră și votați.';
+    titleEn = who + ' is coming with you!';
+    bodyEn = 'Bilu has 3 places for you. Jump in and vote.';
     url = '/freenow';
   } else if (kind === 'free_left') {
     const { data: o } = await db.from('free_outings').select('status').eq('id', ref).maybeSingle();
@@ -96,30 +112,36 @@ Deno.serve(async (req) => {
     if (!o || !me || me.left_at) return done();
     title = 'Ceilalți nu mai pot';
     body = 'Ieșirea s-a oprit. Vezi cine mai e pe FreeNow.';
+    titleEn = 'The others can\'t make it';
+    bodyEn = 'The outing is off. See who else is on FreeNow.';
     url = '/freenow';
   } else {
     const { data: c } = await db.from('crews').select('name').eq('id', ref).maybeSingle();
     const { data: me } = await db.from('crew_members').select('status, invited_by').eq('crew_id', ref).eq('user_id', user).maybeSingle();
     if (!c || !me || me.status !== 'invited') return done();
-    title = (await name(me.invited_by)) + ' te-a invitat în gașca „' + c.name + '”';
+    const who = await name(me.invited_by);
+    title = who + ' te-a invitat în gașca „' + c.name + '”';
     body = 'Intră în CeFaci ca să accepți.';
+    titleEn = who + ' invited you to the crew “' + c.name + '”';
+    bodyEn = 'Open CeFaci to accept.';
     url = '/gasca/' + ref;
   }
 
   // once per person and thing
   const { error: dup } = await db.from('push_log').insert({ kind, ref, user_id: user });
   if (dup) return done();
-  const { data: tokens } = await db.from('push_tokens').select('token').eq('user_id', user);
+  const { data: tokens } = await db.from('push_tokens').select('token, lang').eq('user_id', user);
   if (!tokens?.length) return done();
 
   const acc = JSON.parse(raw) as Account;
   const access = await googleToken(acc);
   let sent = 0;
-  for (const { token } of tokens) {
+  for (const { token, lang } of tokens as { token: string; lang?: string | null }[]) {
+    const en = lang === 'en' && titleEn;
     const res = await fetch(`https://fcm.googleapis.com/v1/projects/${acc.project_id}/messages:send`, {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + access, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: { token, notification: { title, body }, data: { url }, android: { priority: 'high', notification: { channel_id: 'social' } } } }),
+      body: JSON.stringify({ message: { token, notification: en ? { title: titleEn, body: bodyEn } : { title, body }, data: { url }, android: { priority: 'high', notification: { channel_id: 'social' } } } }),
     });
     if (res.ok) { sent++; continue; }
     const err = await res.text();
