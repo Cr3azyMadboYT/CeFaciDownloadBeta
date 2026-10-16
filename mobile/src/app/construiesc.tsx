@@ -6,9 +6,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { BackHandler, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { APP } from '../lib/session';
-import { getPlans, runBuilt, whenText, withLive, budgetLabel } from '../lib/planAsk';
+import { getPlans, low, runBuilt, whenText, withLive, budgetLabel } from '../lib/planAsk';
 import { checkOpen, closedWhy, needsCheck } from '../lib/liveOpen';
 import { toast } from '../lib/toast';
+import { tr } from '../lib/i18n';
 import { Icon, type IconName } from '../ui/Icon';
 import { useSafeAreaInsets } from '../ui/insets';
 import { Big, H1, Muted, Press, Say, T } from '../ui/kit';
@@ -47,7 +48,7 @@ export default function Construiesc() {
   useEffect(() => { const h = BackHandler.addEventListener('hardwareBackPress', back); return () => h.remove(); });
 
   const choose = (o: Opt) => {
-    if (!part || !APP.buildAdd(part, o.place.id)) { toast('Locul nu mai merge la ora asta. Alege altul.'); return; }
+    if (!part || !APP.buildAdd(part, o.place.id)) { toast(tr('Locul nu mai merge la ora asta. Alege altul.')); return; }
     setPart(null); setShown([]); setVer((v) => v + 1);
   };
   const cut = (i: number) => { APP.buildCut(i); setPart(null); setShown([]); setVer((v) => v + 1); };
@@ -61,7 +62,7 @@ export default function Construiesc() {
     const shut = APP.built.steps.findIndex((x) => live[x.v.id]?.open === false);
     if (shut >= 0) {
       const st = APP.built.steps[shut];
-      toast(closedWhy(st.v.name, live[st.v.id]) + '. Alege altceva în locul lui.');
+      toast(tr('{why}. Alege altceva în locul lui.', { why: closedWhy(st.v.name, live[st.v.id]) }));
       cut(shut);
       return;
     }
@@ -73,10 +74,10 @@ export default function Construiesc() {
 
   const lastStep = steps[steps.length - 1];
   const say = !steps.length
-    ? 'Cu ce începem? Îți arăt doar ce e deschis ' + (draft ? whenText(draft).toLowerCase() : 'atunci') + ', aproape de tine.'
-    : steps.length >= MAX ? 'Gata, e o seară plină! Apasă „Vezi planul”.' : 'Și după? Îți arăt ce e deschis pe la ' + lastStep.until + ', aproape de ' + lastStep.place.name + '.';
+    ? (draft ? tr('Cu ce începem? Îți arăt doar ce e deschis {when}, aproape de tine.', { when: low(whenText(draft)) }) : tr('Cu ce începem? Îți arăt doar ce e deschis atunci, aproape de tine.'))
+    : steps.length >= MAX ? tr('Gata, e o seară plină! Apasă „Vezi planul”.') : tr('Și după? Îți arăt ce e deschis pe la {t}, aproape de {place}.', { t: lastStep.until, place: lastStep.place.name });
   const pick = (p: (typeof parts)[number]) => {
-    if (!p.ok) { toast('Nu e nimic de felul ăsta deschis ' + (lastStep ? 'pe la ' + lastStep.until + ' aproape de ' + lastStep.place.name : 'atunci, aproape de tine') + '.'); return; }
+    if (!p.ok) { toast(lastStep ? tr('Nu e nimic de felul ăsta deschis pe la {t} aproape de {place}.', { t: lastStep.until, place: lastStep.place.name }) : tr('Nu e nimic de felul ăsta deschis atunci, aproape de tine.')); return; }
     setPart(part === p.id ? null : p.id); setShown([]);
   };
   const now = parts.find((p) => p.id === part);
@@ -86,12 +87,12 @@ export default function Construiesc() {
     <View style={{ flex: 1, backgroundColor: t.bgCont }}>
       <Doodles />
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 16, height: ins.top + 60, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
+        <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="back" color={t.ink} />
         </Press>
         <View style={{ flex: 1 }}>
-          <T style={{ fontFamily: F.display, fontSize: 20 }}>Seara ta</T>
-          {draft ? <Muted numberOfLines={1}>{whenText(draft) + ' · ' + (draft.people === 1 ? 'doar tu' : draft.people + ' persoane') + ' · ' + budgetLabel(draft.budget)}</Muted> : null}
+          <T style={{ fontFamily: F.display, fontSize: 20 }}>{tr('Seara ta')}</T>
+          {draft ? <Muted numberOfLines={1}>{whenText(draft) + ' · ' + (draft.people === 1 ? tr('doar tu') : tr('{n} persoane', { n: draft.people })) + ' · ' + budgetLabel(draft.budget)}</Muted> : null}
         </View>
       </View>
 
@@ -100,7 +101,7 @@ export default function Construiesc() {
         {minor ? (
           <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', marginTop: -4, marginBottom: 12, padding: 10, borderRadius: 14, backgroundColor: t.yellowSoft }}>
             <Icon name="users" size={18} color={t.yellowInk} />
-            <T style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: t.yellowInk }}>În gașcă e cineva sub 18 ani: îți arăt doar locuri unde puteți intra toți.</T>
+            <T style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: t.yellowInk }}>{tr('În gașcă e cineva sub 18 ani: îți arăt doar locuri unde puteți intra toți.')}</T>
           </View>
         ) : null}
 
@@ -115,7 +116,7 @@ export default function Construiesc() {
                     <View style={{ flexDirection: 'row', alignItems: 'center', height: 30 }}>
                       <View style={{ width: 48, alignItems: 'center', height: '100%' }}><View style={{ width: 4, flex: 1, borderRadius: 2, backgroundColor: t.line }} /></View>
                       <View style={{ paddingHorizontal: 10, paddingVertical: 3, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
-                        <T style={{ fontFamily: F.sb, fontSize: 12, color: t.ink2 }}>{(s.by === 'walk' ? '🚶 ' : s.by === 'bus' ? '🚌 ' : s.by === 'bike' ? '🚲 ' : '🚗 ') + s.travel + ' min până acolo'}</T>
+                        <T style={{ fontFamily: F.sb, fontSize: 12, color: t.ink2 }}>{(s.by === 'walk' ? '🚶 ' : s.by === 'bus' ? '🚌 ' : s.by === 'bike' ? '🚲 ' : '🚗 ') + tr('{n} min până acolo', { n: s.travel })}</T>
                       </View>
                     </View>
                   ) : null}
@@ -136,7 +137,7 @@ export default function Construiesc() {
                         <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 17, color: INK }}>{s.place.name}</T>
                         <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 13, color: INK, opacity: 0.75 }}>{s.place.title + ' · ~' + s.price + ' lei'}</T>
                       </View>
-                      <Press onPress={() => cut(i)} accessibilityLabel={'Scoate ' + s.place.name + (!last ? ' și ce e după' : '')} style={{ width: 36, height: 36, borderRadius: 99, backgroundColor: 'rgba(255,255,255,0.45)', alignItems: 'center', justifyContent: 'center' }}>
+                      <Press onPress={() => cut(i)} accessibilityLabel={!last ? tr('Scoate {place} și ce e după', { place: s.place.name }) : tr('Scoate {place}', { place: s.place.name })} style={{ width: 36, height: 36, borderRadius: 99, backgroundColor: 'rgba(255,255,255,0.45)', alignItems: 'center', justifyContent: 'center' }}>
                         <Icon name="close" size={16} color={INK} width={2.2} />
                       </Press>
                     </View>
@@ -154,18 +155,18 @@ export default function Construiesc() {
                 </View>
               ))}
             </View>
-            <Muted style={{ flex: 1 }}>Seara ta apare aici, loc cu loc. Până la {MAX} opriri.</Muted>
+            <Muted style={{ flex: 1 }}>{tr('Seara ta apare aici, loc cu loc. Până la {n} opriri.', { n: MAX })}</Muted>
           </View>
         )}
 
         {/* what comes next: coloured tiles; once one is chosen, a strip of them to switch */}
         {steps.length < MAX ? (
           <View style={{ marginTop: 14 }}>
-            <H1 style={{ fontSize: 24, lineHeight: 26 }}>{steps.length ? 'Și după?' : 'Cu ce începem?'}</H1>
+            <H1 style={{ fontSize: 24, lineHeight: 26 }}>{steps.length ? tr('Și după?') : tr('Cu ce începem?')}</H1>
             {!part ? (
               <View style={{ marginTop: 12, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 10 }}>
                 {parts.map((p) => (
-                  <Press key={p.id} onPress={() => pick(p)} accessibilityLabel={p.label + (p.ok ? '' : ', nimic deschis atunci')}
+                  <Press key={p.id} onPress={() => pick(p)} accessibilityLabel={p.label + (p.ok ? '' : ', ' + tr('nimic deschis atunci'))}
                     style={{ width: '48.4%', height: 84, padding: 12, borderRadius: 22, backgroundColor: colorOf(p.id), opacity: p.ok ? 1 : 0.35, justifyContent: 'space-between' }}>
                     <Icon name={p.icon as IconName} size={24} color={INK} width={2} />
                     <T numberOfLines={2} style={{ fontFamily: F.b, fontSize: 15, lineHeight: 18, color: INK }}>{p.label}</T>
@@ -195,7 +196,7 @@ export default function Construiesc() {
               <View key={o.place.id} style={{ borderRadius: 22, overflow: 'hidden', backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingVertical: 10, backgroundColor: colorOf(part) }}>
                   <Icon name={iconOf(part)} size={18} color={INK} width={2} />
-                  <T style={{ flex: 1, fontFamily: F.b, fontSize: 13, color: INK }}>{(n === 0 && !shown.length ? 'Bilu ar alege · ' : '') + (now?.label ?? '')}</T>
+                  <T style={{ flex: 1, fontFamily: F.b, fontSize: 13, color: INK }}>{(n === 0 && !shown.length ? tr('Bilu ar alege') + ' · ' : '') + (now?.label ?? '')}</T>
                   <View style={{ paddingHorizontal: 9, paddingVertical: 3, borderRadius: 99, backgroundColor: INK }}>
                     <T style={{ fontFamily: F.b, fontSize: 13, color: '#FFD43B' }}>{o.slot + '–' + o.until}</T>
                   </View>
@@ -203,26 +204,26 @@ export default function Construiesc() {
                 <View style={{ padding: 14, paddingTop: 12, gap: 6 }}>
                   <T style={{ fontFamily: F.b, fontSize: 18 }} numberOfLines={1}>{o.place.name}</T>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {[o.place.title, '~' + o.price + ' lei', (o.by === 'walk' ? '🚶 ' : o.by === 'bus' ? '🚌 ' : o.by === 'bike' ? '🚲 ' : '🚗 ') + o.travel + ' min', ...(o.open && o.open !== 'Program necunoscut' ? [o.open] : [])].map((x, j) => (
+                    {[o.place.title, '~' + o.price + ' lei', (o.by === 'walk' ? '🚶 ' : o.by === 'bus' ? '🚌 ' : o.by === 'bike' ? '🚲 ' : '🚗 ') + o.travel + ' min', ...(o.open && o.open !== 'Program necunoscut' && o.open !== tr('Program necunoscut') ? [o.open] : [])].map((x, j) => (
                       <View key={j} style={{ paddingHorizontal: 9, paddingVertical: 3, borderRadius: 99, backgroundColor: t.s2 }}>
                         <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 12, color: t.ink2 }}>{x}</T>
                       </View>
                     ))}
                   </View>
                   {o.place.story || o.reason ? <T numberOfLines={3} style={{ fontFamily: F.m, fontSize: 13, lineHeight: 18, color: t.ink2 }}>{o.place.story ?? o.reason}</T> : null}
-                  <Big label="Aleg asta" color="#FFD43B" ink={INK} icon={<Icon name="plus" size={18} color={INK} width={2.4} />} style={{ minHeight: 48, marginTop: 4 }} onPress={() => choose(o)} />
+                  <Big label={tr('Aleg asta')} color="#FFD43B" ink={INK} icon={<Icon name="plus" size={18} color={INK} width={2.4} />} style={{ minHeight: 48, marginTop: 4 }} onPress={() => choose(o)} />
                 </View>
               </View>
             )) : (
               <View style={{ padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
-                <Muted>Nu mai am altele de felul ăsta deschise atunci, aproape. Încearcă altceva de mai sus.</Muted>
+                <Muted>{tr('Nu mai am altele de felul ăsta deschise atunci, aproape. Încearcă altceva de mai sus.')}</Muted>
               </View>
             )}
             {options.length ? (
-              <Press onPress={() => setShown((x) => [...x, ...options.map((o) => o.place.id)])} accessibilityLabel="Arată-mi altele"
+              <Press onPress={() => setShown((x) => [...x, ...options.map((o) => o.place.id)])} accessibilityLabel={tr('Arată-mi altele')}
                 style={{ minHeight: 46, borderRadius: 16, borderWidth: 2, borderStyle: 'dashed', borderColor: colorOf(part), flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                 <Icon name="dice" size={18} color={t.ink} />
-                <T style={{ fontFamily: F.b, fontSize: 15 }}>Arată-mi altele</T>
+                <T style={{ fontFamily: F.b, fontSize: 15 }}>{tr('Arată-mi altele')}</T>
               </Press>
             ) : null}
           </View>
@@ -235,10 +236,10 @@ export default function Construiesc() {
             <View style={{ flexDirection: 'row' }}>
               {steps.map((s, i) => <View key={s.place.id} style={{ width: 14, height: 14, marginLeft: i ? -4 : 0, borderRadius: 99, backgroundColor: colorOf(s.part), borderWidth: 2, borderColor: t.bgCont }} />)}
             </View>
-            <T style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: over ? t.coralInk : t.ink2 }}>{steps.length + (steps.length === 1 ? ' loc' : ' locuri') + ' · ~' + total + ' lei de persoană' + (over ? ' (peste buget)' : '')}</T>
+            <T style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: over ? t.coralInk : t.ink2 }}>{(steps.length === 1 ? tr('1 loc') : tr('{n} locuri', { n: steps.length })) + ' · ' + tr('~{n} lei de persoană', { n: total }) + (over ? ' ' + tr('(peste buget)') : '')}</T>
           </View>
         ) : null}
-        <Big label={busy ? 'Verific pe Google…' : 'Gata, vezi planul'} disabled={!steps.length || busy} color="#FFD43B" ink={INK} onPress={() => void done()} />
+        <Big label={busy ? tr('Verific pe Google…') : tr('Gata, vezi planul')} disabled={!steps.length || busy} color="#FFD43B" ink={INK} onPress={() => void done()} />
       </View>
     </View>
   );

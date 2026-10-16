@@ -3,6 +3,7 @@
 import { APP } from '../../../src/app/bridge';
 import { getApp, setBoard } from './session';
 import { WHO, type Filters } from './filters';
+import { pick, tr } from './i18n';
 
 export interface Plan {
   visitId?: string; reservationAttempt?: number;
@@ -23,6 +24,8 @@ export const NO_PLANS: Plan[] = [];
 
 const MONTHS = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
 const DAYS = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'];
+const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAYS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const iso = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
@@ -49,15 +52,18 @@ export const isTonight = (pl: Plan, now = new Date()) => planEvening(pl).getTime
 export function dayWord(pl: Plan, now = new Date()) {
   const ev = planEvening(pl);
   const diff = Math.round((ev.getTime() - eveOf(now).getTime()) / 864e5);
-  return diff < 0 ? 'ieri' : diff === 0 ? 'azi' : diff === 1 ? 'mâine' : DAYS[ev.getDay()];
+  return diff < 0 ? pick('ieri', 'yesterday') : diff === 0 ? pick('azi', 'today') : diff === 1 ? pick('mâine', 'tomorrow') : pick(DAYS, DAYS_EN)[ev.getDay()];
 }
 /** "azi", "mâine", "sâm.": short, for the little day box. */
-export function dayShort(pl: Plan, now = new Date()) { const w = dayWord(pl, now); return w === 'azi' || w === 'mâine' || w === 'ieri' ? w : w.slice(0, 3) + '.'; }
+export function dayShort(pl: Plan, now = new Date()) {
+  const w = dayWord(pl, now);
+  return ['azi', 'mâine', 'ieri', 'today', 'tomorrow', 'yesterday'].includes(w) ? w : w.slice(0, 3) + pick('.', '');
+}
 /** "Azi, 4 oct.", "Mâine, 5 oct.", "Sâmbătă, 10 oct." */
 export function dateText(pl: Plan, now = new Date()) {
   const d = planEvening(pl);
   const w = dayWord(pl, now);
-  return w.charAt(0).toUpperCase() + w.slice(1) + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
+  return w.charAt(0).toUpperCase() + w.slice(1) + ', ' + d.getDate() + ' ' + pick(MONTHS, MONTHS_EN)[d.getMonth()];
 }
 /** Plans whose day has not passed, plus yesterday's outing while its receipt can still be added (until tonight). */
 export const upcoming = (list: Plan[], now = new Date()) => list.filter((pl) => {
@@ -80,7 +86,7 @@ function slotFor(placeId: string, when: string, now = new Date()) {
 
 /** Makes a plan for a venue (or opens the one already made for the same day). Returns its id. */
 export function createPlan(placeId: string, f: Filters): number {
-  if(!APP.canPlan(placeId))throw new Error('Localul nu este disponibil pentru planuri noi.');
+  if(!APP.canPlan(placeId))throw new Error(tr('Localul nu este disponibil pentru planuri noi.'));
   const date = iso(dayFor(f.when));
   const same = plans().find((x) => x.placeId === placeId && iso(planDay(x)) === date);
   if (same) return same.pid;
@@ -103,7 +109,7 @@ export function createPlanAt(placeId: string, at: Date, people: number, extra: P
   const date = iso(at);
   const same = plans().find((x) => (extra.sid && x.sid === extra.sid) || (!extra.sid && !x.sid && x.placeId === placeId && iso(planDay(x)) === date && x.slot===hhmm(at)));
   if (same) { if(extra.sid)updPlan(same.pid,{...extra,people,slot:hhmm(at),date}); return same.pid; }
-  if(!extra.sid&&!APP.canPlan(placeId))throw new Error('Localul nu este disponibil pentru planuri noi.');
+  if(!extra.sid&&!APP.canPlan(placeId))throw new Error(tr('Localul nu este disponibil pentru planuri noi.'));
   const pid = Math.max(0, ...plans().map((x) => x.pid)) + 1;
   const diff = Math.round((startOfDay(at).getTime() - startOfDay(new Date()).getTime()) / 864e5);
   const pl: Plan = { pid, placeId, when: diff <= 0 ? 'eve' : diff === 1 ? 'tom' : 'we', date, slot: hhmm(at), people, res: 'none', createdAt: Date.now(), ...extra };

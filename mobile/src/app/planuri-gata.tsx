@@ -7,7 +7,8 @@ import { ActivityIndicator, ScrollView, TextInput, View } from 'react-native';
 import { Redirect, router, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 import { setFilters, useFilters } from '../lib/filters';
-import { BUDGET_TOP, askOf, budgetLabel, refreshIfStale, runPlans, setPlan, usePlans, wholeLabel, whenText, type Draft, type Shown, startBuild } from '../lib/planAsk';
+import { tr } from '../lib/i18n';
+import { BUDGET_TOP, askOf, budgetLabel, low, refreshIfStale, runPlans, setPlan, usePlans, wholeLabel, whenText, type Draft, type Shown, startBuild } from '../lib/planAsk';
 import { createPlanAt, type Plan } from '../lib/plans';
 import { sharePlan } from '../lib/together';
 import { getApp } from '../lib/session';
@@ -28,7 +29,7 @@ import { Doodles } from '../ui/Doodles';
 let making = 0; // a second tap on "Facem așa" while the first is still on its way does nothing (07.10: plan sent twice)
 export function makeTickets(p: Shown, people: number, crew?: { id: string; name: string }) {
   if (Date.now() - making < 2500) return;
-  if(p.steps.some(s=>!APP.canPlan(s.place.id))){toast('Un local nu mai este disponibil pentru planuri noi. Actualizează recomandările.');return;}
+  if(p.steps.some(s=>!APP.canPlan(s.place.id))){toast(tr('Un local nu mai este disponibil pentru planuri noi. Actualizează recomandările.'));return;}
   making = Date.now();
   const route = p.steps.length > 1 ? 'r' + Date.now() : undefined;
   const pids = p.steps.map((s) => createPlanAt(s.place.id, s.at, people, route ? { route } : {}));
@@ -39,23 +40,23 @@ export function makeTickets(p: Shown, people: number, crew?: { id: string; name:
         const pl = ((getApp().board.plans as Plan[] | undefined) ?? []).find((x) => x.pid === pid);
         if (pl) { const err = await sharePlan(pl, me, { crewId: crew.id }); if (err) { toast(err); return; } }
       }
-      toast('Am trimis planul gășcii ' + crew.name + ': fiecare răspunde Vin sau Nu pot.');
+      toast(tr('Am trimis planul gășcii {crew}: fiecare răspunde Vin sau Nu pot.', { crew: crew.name }));
     })();
   }
-  toast(p.steps.length > 1 ? 'Gata! Seara e în Planuri, cu un bilet pentru fiecare loc.' : 'Gata! Planul e în Planuri.');
+  toast(p.steps.length > 1 ? tr('Gata! Seara e în Planuri, cu un bilet pentru fiecare loc.') : tr('Gata! Planul e în Planuri.'));
   router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pids[0]) } });
 }
 
 export function Checking({ draft }: { draft: Draft }) {
   const { t } = useTheme();
-  const when = askOf(draft).now ? 'acum' : whenText(draft).toLowerCase();
+  const when = askOf(draft).now ? tr('acum') : low(whenText(draft));
   return (
     <View style={{ marginTop: 18, padding: 16, borderRadius: 22, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, gap: 10 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         <ActivityIndicator color={t.blue} />
-        <T style={{ fontFamily: F.b, fontSize: 16 }}>Bilu verifică…</T>
+        <T style={{ fontFamily: F.b, fontSize: 16 }}>{tr('Bilu verifică…')}</T>
       </View>
-      {['Ce e deschis ' + when, 'Drumul și cât stați în fiecare loc', 'Bugetul și vremea'].map((x) => (
+      {[tr('Ce e deschis {when}', { when }), tr('Drumul și cât stați în fiecare loc'), tr('Bugetul și vremea')].map((x) => (
         <T key={x} style={{ fontFamily: F.m, fontSize: 14, color: t.ink2 }}>{'· ' + x}</T>
       ))}
     </View>
@@ -83,7 +84,7 @@ export default function PlanuriGata() {
   const tell = (text: string) => {
     if (text.trim().length < 2) return;
     const r = APP.refine(text, askOf(draft), { evening: draft.evening, hour: askOf(draft).now ? 'acum' : draft.hour });
-    if (!r.chips.length) { setSaid('Nu m-am prins. Încearcă „mai ieftin”, „aproape”, „cu terasă”, „fără fum” sau o oră („la 22”).'); return; }
+    if (!r.chips.length) { setSaid(tr('Nu m-am prins. Încearcă „mai ieftin”, „aproape”, „cu terasă”, „fără fum” sau o oră („la 22”).')); return; }
     const a = r.ask;
     setQ('');
     redo({ evening: r.slot.evening, hour: r.slot.hour, people: a.people, ...(a.people !== draft.people ? { crewId: undefined, crewName: undefined } : {}), vibes: a.vibes, budget: [a.budget[0], a.budget[1] === Infinity ? BUDGET_TOP : Math.min(BUDGET_TOP, a.budget[1])], extra: { outdoor: a.outdoor, needs: a.needs, near: a.near } }, [...st.chips, ...r.chips]);
@@ -99,26 +100,26 @@ export default function PlanuriGata() {
   );
   const e0 = eveningOf(new Date());
   const bilu = loading ? '' : plans.length
-    ? (plans.length === 1 ? 'Ți-am făcut un plan.' : 'Ți-am făcut ' + plans.length + ' planuri gata.') + ' ' + (st.note ?? 'Le-am verificat: deschis, drum, buget, vreme.') + (people >= 2 && plans.length > 1 ? ' Alegeți unul sau votați.' : '')
-    : st.empty ?? 'N-am găsit nimic deschis atunci.';
+    ? (plans.length === 1 ? tr('Ți-am făcut un plan.') : tr('Ți-am făcut {n} planuri gata.', { n: plans.length })) + ' ' + (st.note ?? tr('Le-am verificat: deschis, drum, buget, vreme.')) + (people >= 2 && plans.length > 1 ? ' ' + tr('Alegeți unul sau votați.') : '')
+    : st.empty ?? tr('N-am găsit nimic deschis atunci.');
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <Doodles />
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingBottom: footer ? 24 : ins.bottom + 24 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <View style={{ paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
           <View style={{ flex: 1 }}>
-            <T accessibilityRole="header" numberOfLines={1} style={{ fontFamily: F.display, fontSize: 23 }}>{(askOf(draft).now ? 'Acum' : whenText(draft)) + ', ' + (people === 1 ? 'doar tu' : 'pentru ' + people)}</T>
-            <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 13, color: t.ink2 }}>{'din ' + APP.zoneName() + (wx ? ' · ' + wx.temp + '°, ' + wx.text : '')}</T>
+            <T accessibilityRole="header" numberOfLines={1} style={{ fontFamily: F.display, fontSize: 23 }}>{(askOf(draft).now ? tr('Acum') : whenText(draft)) + ', ' + (people === 1 ? tr('doar tu') : tr('pentru {n}', { n: people }))}</T>
+            <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 13, color: t.ink2 }}>{tr('din {zone}', { zone: APP.zoneName() }) + (wx ? ' · ' + wx.temp + '°, ' + wx.text : '')}</T>
           </View>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 12 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 6 }}>
-          {chip(draft.mode === 'seara' ? wholeLabel(draft) : 'Un loc', 'ce')}
-          {chip(askOf(draft).now ? 'Acum' : whenText(draft), 'cand')}
-          {chip((draft.crewId ? 'Gașca ' + (draft.crewName ?? 'voastră') + ' · ' : '') + people + (people === 1 ? ' persoană' : ' persoane'), 'cati')}
+          {chip(draft.mode === 'seara' ? wholeLabel(draft) : tr('Un loc'), 'ce')}
+          {chip(askOf(draft).now ? tr('Acum') : whenText(draft), 'cand')}
+          {chip((draft.crewId ? (draft.crewName ? tr('Gașca {crew}', { crew: draft.crewName }) : tr('Gașca voastră')) + ' · ' : '') + (people === 1 ? tr('1 persoană') : tr('{n} persoane', { n: people })), 'cati')}
           {chip(budgetLabel(draft.budget), 'buget')}
-          {chip(draft.vibes.length ? draft.vibes.join(' · ') : 'orice vibe', 'vibe')}
+          {chip(draft.vibes.length ? draft.vibes.map((v) => tr(v)).join(' · ') : tr('orice vibe'), 'vibe')}
         </ScrollView>
 
         <View style={{ paddingHorizontal: 20, marginTop: 14 }}>
@@ -131,18 +132,18 @@ export default function PlanuriGata() {
           ) : null}
           {!loading && st.wider && !draft.strict ? (
             <Press onPress={() => redo({ strict: true })} style={{ marginTop: 6, minHeight: 40, justifyContent: 'center' }}>
-              <T style={{ fontFamily: F.b, fontSize: 13, color: t.blueInk }}>{'Nu, vreau doar până la ' + APP.radiusKm() + ' km'}</T>
+              <T style={{ fontFamily: F.b, fontSize: 13, color: t.blueInk }}>{tr('Nu, vreau doar până la {n} km', { n: APP.radiusKm() })}</T>
             </Press>
           ) : null}
           {!loading && !plans.length ? (
             <View style={{ marginTop: 6, gap: 8 }}>
-              {(() => { const h = new Date().getHours(); const tom = h >= 19 || h < 5; return <Big label={(tom ? 'Mâine' : 'Diseară') + ' la 20:00'} color="#0E1440" onPress={() => redo({ evening: tom ? addDays(eveningOf(new Date()), 1) : e0, hour: '20:00' })} />; })()}
-              <Big label="Altă zi sau oră" color={t.s2} ink={t.ink} onPress={() => router.push({ pathname: '/plan-nou', params: { step: 'cand', edit: '1' } })} />
+              {(() => { const h = new Date().getHours(); const tom = h >= 19 || h < 5; return <Big label={tom ? tr('Mâine la {h}', { h: '20:00' }) : tr('Diseară la {h}', { h: '20:00' })} color="#0E1440" onPress={() => redo({ evening: tom ? addDays(eveningOf(new Date()), 1) : e0, hour: '20:00' })} />; })()}
+              <Big label={tr('Altă zi sau oră')} color={t.s2} ink={t.ink} onPress={() => router.push({ pathname: '/plan-nou', params: { step: 'cand', edit: '1' } })} />
             </View>
           ) : null}
 
           {!loading && plans.map((p, i) => (
-            <Press key={p.id + i} onPress={() => router.push({ pathname: '/plan/[i]', params: { i: String(i) } })} haptic={false} accessibilityLabel={'Planul ' + (i + 1) + ': ' + p.title}
+            <Press key={p.id + i} onPress={() => router.push({ pathname: '/plan/[i]', params: { i: String(i) } })} haptic={false} accessibilityLabel={tr('Planul {n}: {title}', { n: i + 1, title: p.title })}
               style={{ marginTop: 12, borderRadius: 24, backgroundColor: t.s1, borderWidth: i === 0 ? 2 : 1, borderColor: i === 0 ? t.ink : t.line, padding: 14 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                 <View style={{ width: 26, height: 26, borderRadius: 99, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: '#FFD43B' }}>{String(i + 1)}</T></View>
@@ -163,51 +164,51 @@ export default function PlanuriGata() {
                 <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 14, backgroundColor: t.yellowSoft }}>
                   <Icon name="sparkle" size={18} color={t.yellowInk} />
                   <T style={{ flex: 1, fontFamily: F.m, fontSize: 13, lineHeight: 18 }}>{p.tip.text}</T>
-                  <Press onPress={() => setPlan(i, APP.swapPlan(i, p.tip!.step, p.tip!.id))} style={{ minHeight: 36, justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: t.blueInk }}>Schimbă</T></Press>
+                  <Press onPress={() => setPlan(i, APP.swapPlan(i, p.tip!.step, p.tip!.id))} style={{ minHeight: 36, justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: t.blueInk }}>{tr('Schimbă')}</T></Press>
                 </View>
               ) : null}
               <View style={{ marginTop: 12, flexDirection: 'row', gap: 8 }}>
-                <Big label="Facem așa" color={i === 0 ? '#FFD43B' : t.s2} ink="#0E1440" style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? 'voastră' } : undefined)} />
-                <Big label="Vezi pe hartă" color={t.bg} ink={t.ink} style={{ minHeight: 46, paddingHorizontal: 14 }} onPress={() => router.push({ pathname: '/plan/[i]', params: { i: String(i) } })} />
+                <Big label={tr('Facem așa')} color={i === 0 ? '#FFD43B' : t.s2} ink="#0E1440" style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? tr('voastră') } : undefined)} />
+                <Big label={tr('Vezi pe hartă')} color={t.bg} ink={t.ink} style={{ minHeight: 46, paddingHorizontal: 14 }} onPress={() => router.push({ pathname: '/plan/[i]', params: { i: String(i) } })} />
               </View>
             </Press>
           ))}
           {!loading && plans.length ? (
-            <Press onPress={() => { void startBuild({ ...draft, mode: 'eu' }).finally(() => router.push('/construiesc')); }} accessibilityLabel="Niciunul nu-mi place, o construiesc eu"
+            <Press onPress={() => { void startBuild({ ...draft, mode: 'eu' }).finally(() => router.push('/construiesc')); }} accessibilityLabel={tr('Niciunul nu-mi place, o construiesc eu')}
               style={{ marginTop: 14, minHeight: 48, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               <Icon name="dice" size={16} color={t.blueInk} />
-              <T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>Niciunul nu-mi place? O construiesc eu</T>
+              <T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>{tr('Niciunul nu-mi place? O construiesc eu')}</T>
             </Press>
           ) : null}
 
           {!loading ? (
             <View style={{ marginTop: 18, padding: 14, borderRadius: 22, backgroundColor: '#0E1440', gap: 10 }}>
-              <T style={{ fontFamily: F.b, fontSize: 16, color: '#FFFFFF' }}>Mai vrei ceva? Spune-i lui Bilu.</T>
-              <TextInput value={q} onChangeText={setQ} placeholder="ex: cu terasă, mai ieftin, la 22" placeholderTextColor="#8690C4" returnKeyType="done" onSubmitEditing={() => tell(q)}
-                style={{ minHeight: 48, borderRadius: 14, backgroundColor: '#FFFFFF', paddingHorizontal: 14, fontFamily: F.sb, fontSize: 16, color: '#0E1440' }} accessibilityLabel="Spune-i lui Bilu ce mai vrei" />
+              <T style={{ fontFamily: F.b, fontSize: 16, color: '#FFFFFF' }}>{tr('Mai vrei ceva? Spune-i lui Bilu.')}</T>
+              <TextInput value={q} onChangeText={setQ} placeholder={tr('ex: cu terasă, mai ieftin, la 22')} placeholderTextColor="#8690C4" returnKeyType="done" onSubmitEditing={() => tell(q)}
+                style={{ minHeight: 48, borderRadius: 14, backgroundColor: '#FFFFFF', paddingHorizontal: 14, fontFamily: F.sb, fontSize: 16, color: '#0E1440' }} accessibilityLabel={tr('Spune-i lui Bilu ce mai vrei')} />
               {said ? <T style={{ fontFamily: F.m, fontSize: 13, color: '#FFD43B' }}>{said}</T> : null}
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                 {quick.map((x) => (
                   <Press key={x} onPress={() => tell(x)} style={{ height: 34, paddingHorizontal: 12, borderRadius: 99, borderWidth: 1, borderColor: '#2B3575', backgroundColor: 'rgba(255,255,255,0.08)', justifyContent: 'center' }}>
-                    <T style={{ fontFamily: F.sb, fontSize: 13, color: '#FFFFFF' }}>{x}</T>
+                    <T style={{ fontFamily: F.sb, fontSize: 13, color: '#FFFFFF' }}>{tr(x)}</T>
                   </Press>
                 ))}
               </View>
-              {st.chips.length ? <T style={{ fontFamily: F.m, fontSize: 12, color: '#C9CEE6' }}>{'Am ținut cont de: ' + st.chips.join(', ')}</T> : null}
+              {st.chips.length ? <T style={{ fontFamily: F.m, fontSize: 12, color: '#C9CEE6' }}>{tr('Am ținut cont de: {list}', { list: st.chips.join(', ') })}</T> : null}
             </View>
           ) : null}
           {!loading ? (
             <Press onPress={() => { setFilters({ who: people <= 1 ? '1' : people === 2 ? '2' : people <= 4 ? '34' : '5', vibes: draft.vibes, budget: draft.budget[1] >= BUDGET_TOP ? 'any' : (draft.budget[0] || '') + '-' + draft.budget[1] }); router.push('/exploreaza'); }}
               style={{ marginTop: 12, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}>
-              <T style={{ fontFamily: F.sb, fontSize: 14, color: t.blueInk }}>Vreau să caut singur printre toate locurile ›</T>
+              <T style={{ fontFamily: F.sb, fontSize: 14, color: t.blueInk }}>{tr('Vreau să caut singur printre toate locurile ›')}</T>
             </Press>
           ) : null}
-          {!loading && plans.some((p) => p.over) ? <View style={{ marginTop: 6 }}><Note kind="err">Unde scrie „peste buget”, prețurile sunt estimate: poate ieși și mai puțin.</Note></View> : null}
+          {!loading && plans.some((p) => p.over) ? <View style={{ marginTop: 6 }}><Note kind="err">{tr('Unde scrie „peste buget”, prețurile sunt estimate: poate ieși și mai puțin.')}</Note></View> : null}
         </View>
       </ScrollView>
       {footer ? (
         <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
-          <Big label={'Trimite cele ' + plans.length + ' planuri la vot'} color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} onPress={() => setVote(true)} />
+          <Big label={tr('Trimite cele {n} planuri la vot', { n: plans.length })} color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} onPress={() => setVote(true)} />
         </View>
       ) : null}
       <VoteStart open={vote} onClose={() => setVote(false)} places={[]} f={f}

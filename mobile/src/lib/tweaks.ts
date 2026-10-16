@@ -2,6 +2,7 @@
 // without opening the filters. With a search typed, they add words the search understands.
 import { APP } from '../../../src/app/bridge';
 import type { Filters, Place } from './filters';
+import { tr } from './i18n';
 
 export interface Tweak { id: string; label: string; icon?: string; apply: { f?: Partial<Filters>; q?: string } }
 
@@ -12,20 +13,20 @@ export function tweaksFor(f: Filters, sq: string, shown: Place[]): Tweak[] {
   const wx = APP.weatherFor(f.when);
   const q = sq.trim();
   if (q.length > 1) {
-    if (!has(q, /ieftin|buget|lei/)) out.push({ id: 'cheap', label: 'Mai ieftin', icon: 'wallet', apply: { q: q + ' ieftin' } });
-    if (!has(q, /deschis|acum/)) out.push({ id: 'open', label: 'Deschis acum', icon: 'clock', apply: { q: q + ' deschis acum' } });
-    if (!wx?.wet && !has(q, /teras|afara|aer liber/)) out.push({ id: 'out', label: 'Cu terasă', icon: 'sun', apply: { q: q + ' cu terasa' } });
+    if (!has(q, /ieftin|buget|lei/)) out.push({ id: 'cheap', label: tr('Mai ieftin'), icon: 'wallet', apply: { q: q + ' ieftin' } });
+    if (!has(q, /deschis|acum/)) out.push({ id: 'open', label: tr('Deschis acum'), icon: 'clock', apply: { q: q + ' deschis acum' } });
+    if (!wx?.wet && !has(q, /teras|afara|aer liber/)) out.push({ id: 'out', label: tr('Cu terasă'), icon: 'sun', apply: { q: q + ' cu terasa' } });
     return out;
   }
   const prices = shown.map((p) => p.price).filter((p) => p > 0);
   if (prices.length) {
     const cap = Math.max(10, Math.min(...prices) - 5);
-    out.push({ id: 'cheap', label: 'Mai ieftin', icon: 'wallet', apply: { f: { budget: '-' + cap } } });
+    out.push({ id: 'cheap', label: tr('Mai ieftin'), icon: 'wallet', apply: { f: { budget: '-' + cap } } });
   }
-  if (f.dist !== '5') out.push({ id: 'near', label: 'Mai aproape', icon: 'pin', apply: { f: { dist: f.dist === '40' ? '20' : f.dist === '30' ? '20' : f.dist === '20' ? '10' : '5' } } });
-  if (f.when !== 'now') out.push({ id: 'open', label: 'Deschis acum', icon: 'clock', apply: { f: { when: 'now' } } });
-  if (wx?.wet && f.where !== 'in') out.push({ id: 'roof', label: 'La adăpost', icon: 'rain', apply: { f: { where: 'in' } } });
-  else if (!wx?.wet && f.where !== 'out') out.push({ id: 'out', label: wx?.nice ? 'Afară, e frumos' : 'Afară sau terasă', icon: 'sun', apply: { f: { where: 'out' } } });
-  if (f.where) out.push({ id: 'any', label: 'Oriunde', apply: { f: { where: undefined } } });
+  if (f.dist !== '5') out.push({ id: 'near', label: tr('Mai aproape'), icon: 'pin', apply: { f: { dist: f.dist === '40' ? '20' : f.dist === '30' ? '20' : f.dist === '20' ? '10' : '5' } } });
+  if (f.when !== 'now') out.push({ id: 'open', label: tr('Deschis acum'), icon: 'clock', apply: { f: { when: 'now' } } });
+  if (wx?.wet && f.where !== 'in') out.push({ id: 'roof', label: tr('La adăpost'), icon: 'rain', apply: { f: { where: 'in' } } });
+  else if (!wx?.wet && f.where !== 'out') out.push({ id: 'out', label: wx?.nice ? tr('Afară, e frumos') : tr('Afară sau terasă'), icon: 'sun', apply: { f: { where: 'out' } } });
+  if (f.where) out.push({ id: 'any', label: tr('Oriunde'), apply: { f: { where: undefined } } });
   return out;
 }

@@ -11,6 +11,7 @@ import { nextSurprise, refreshIfStale, setPlan, usePlans } from '../../lib/planA
 import { Checking, makeTickets } from '../planuri-gata';
 import { APP } from '../../lib/session';
 import { toast } from '../../lib/toast';
+import { tr } from '../../lib/i18n';
 import { Icon } from '../../ui/Icon';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { Big, Muted, Press, T } from '../../ui/kit';
@@ -39,9 +40,9 @@ export default function PlanDeschis() {
   const wx = APP.dayWeather(p.steps[0].at);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/acasa'));
 
-  const make = () => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? 'voastră' } : undefined);
+  const make = () => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? tr('voastră') } : undefined);
   const open = (url: string) => { WebBrowser.openBrowserAsync(url).catch(() => void Linking.openURL(url)); };
-  const alt = (k: number) => { if (!setPlan(idx, APP.altPlan(idx, k))) toast('Nu mai am altă variantă bună în apropiere.'); };
+  const alt = (k: number) => { if (!setPlan(idx, APP.altPlan(idx, k))) toast(tr('Nu mai am altă variantă bună în apropiere.')); };
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
@@ -50,14 +51,14 @@ export default function PlanDeschis() {
           <PlacesMap height={250} line={p.steps.length > 1}
             pins={p.steps.map((s, k) => ({ id: s.place.id, lat: s.place.real.lat, lon: s.place.real.lon, name: s.slot + ' · ' + s.place.name, sub: s.why, bg: s.place.bg, fg: s.place.fg, n: k + 1 }))}
             origin={{ ...APP.origin(), label: APP.zoneName() }} />
-          <Press onPress={back} accessibilityLabel="Înapoi" style={{ position: 'absolute', left: 20, top: ins.top + 8, width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ position: 'absolute', left: 20, top: ins.top + 8, width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
         </View>
         <View style={{ marginTop: -22, borderTopLeftRadius: 26, borderTopRightRadius: 26, backgroundColor: t.bg, paddingHorizontal: 20, paddingTop: 18 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
             <View style={{ width: 26, height: 26, borderRadius: 99, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: '#FFD43B' }}>{String(idx + 1)}</T></View>
             <T accessibilityRole="header" style={{ flex: 1, fontFamily: F.display, fontSize: 24 }}>{p.steps.length === 1 ? p.steps[0].place.name : p.title}</T>
           </View>
-          <Muted style={{ marginTop: 2, fontSize: 14 }}>{(p.steps.length === 1 ? p.steps[0].place.title + ' · ' : '') + p.from + '–' + p.to + ' · ' + (people === 1 ? 'doar tu' : people + ' persoane')}</Muted>
+          <Muted style={{ marginTop: 2, fontSize: 14 }}>{(p.steps.length === 1 ? p.steps[0].place.title + ' · ' : '') + p.from + '–' + p.to + ' · ' + (people === 1 ? tr('doar tu') : tr('{n} persoane', { n: people }))}</Muted>
           <Checks plan={p} />
           {surprise && st.note ? (
             // what Bilu had to change to find it (further than the radius, over the budget…): said here too, the
@@ -77,17 +78,17 @@ export default function PlanDeschis() {
                   {k > 0 ? (
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, height: 34 }}>
                       <View style={{ width: 2, height: 34, backgroundColor: t.line, marginLeft: 79 }} />
-                      <T style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : s.by === 'bus' ? '🚌 ' : s.by === 'bike' ? '🚲 ' : '🚶 ') + s.travel + ' min până aici'}</T>
+                      <T style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{(s.by === 'car' ? '🚗 ' : s.by === 'bus' ? '🚌 ' : s.by === 'bike' ? '🚲 ' : '🚶 ') + tr('{n} min până aici', { n: s.travel })}</T>
                     </View>
                   ) : null}
                   <StepRow s={s} />
                   {s.place.story ? <T style={{ marginLeft: 58, marginTop: 6, fontFamily: F.m, fontSize: 14, lineHeight: 20, color: t.ink }}>{s.place.story}</T> : null}
-                  {s.place.crowd ? <Muted numberOfLines={1} style={{ marginLeft: 58, marginTop: 3 }}>{'Lume: ' + s.place.crowd}</Muted> : null}
+                  {s.place.crowd ? <Muted numberOfLines={1} style={{ marginLeft: 58, marginTop: 3 }}>{tr('Lume: {x}', { x: s.place.crowd })}</Muted> : null}
                   {s.reason ? <Muted numberOfLines={2} style={{ marginLeft: 58, marginTop: 4 }}>{s.reason}</Muted> : null}
                   <View style={{ marginLeft: 58, marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {c ? <Pill icon={c.site ? 'globe' : 'phone'} label={c.site ? 'Rezervă' : 'Sună'} onPress={() => { const w = c.site ? webLink(c.site) : null; const tl = c.site ? null : telLink(c.phone); if (w) open(w); else if (tl) void Linking.openURL(tl); }} /> : null}
-                    <Pill icon="map" label="Drum" onPress={() => void Linking.openURL(nav)} />
-                    <Pill icon="dice" label={OTHER[s.place.real.cat] ?? 'Altceva'} onPress={() => alt(k)} />
+                    {c ? <Pill icon={c.site ? 'globe' : 'phone'} label={c.site ? tr('Rezervă') : tr('Sună')} onPress={() => { const w = c.site ? webLink(c.site) : null; const tl = c.site ? null : telLink(c.phone); if (w) open(w); else if (tl) void Linking.openURL(tl); }} /> : null}
+                    <Pill icon="map" label={tr('Drum')} onPress={() => void Linking.openURL(nav)} />
+                    <Pill icon="dice" label={tr(OTHER[s.place.real.cat] ?? 'Altceva')} onPress={() => alt(k)} />
                   </View>
                 </View>
               );
@@ -95,11 +96,11 @@ export default function PlanDeschis() {
           </View>
 
           <View style={{ marginTop: 10, flexDirection: 'row', padding: 14, borderRadius: 18, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, justifyContent: 'space-between' }}>
-            <View><Muted>De persoană</Muted><T style={{ fontFamily: F.b, fontSize: 18 }}>{'~' + p.price + ' lei'}</T></View>
-            {people > 1 ? <View><Muted>{'Pentru ' + people}</Muted><T style={{ fontFamily: F.b, fontSize: 18 }}>{'~' + p.price * people + ' lei'}</T></View> : null}
-            {wx ? <View><Muted>Vremea</Muted><T style={{ fontFamily: F.b, fontSize: 18 }}>{wx.temp + '°, ' + wx.text}</T></View> : null}
+            <View><Muted>{tr('De persoană')}</Muted><T style={{ fontFamily: F.b, fontSize: 18 }}>{'~' + p.price + ' lei'}</T></View>
+            {people > 1 ? <View><Muted>{tr('Pentru {n}', { n: people })}</Muted><T style={{ fontFamily: F.b, fontSize: 18 }}>{'~' + p.price * people + ' lei'}</T></View> : null}
+            {wx ? <View><Muted>{tr('Vremea')}</Muted><T style={{ fontFamily: F.b, fontSize: 18 }}>{wx.temp + '°, ' + wx.text}</T></View> : null}
           </View>
-          <Muted style={{ marginTop: 6 }}>Prețurile sunt estimate.</Muted>
+          <Muted style={{ marginTop: 6 }}>{tr('Prețurile sunt estimate.')}</Muted>
         </View>
       </ScrollView>
       {/* the main button gets the whole row; the other two share the row above it (on a phone with big letters three in
@@ -107,11 +108,11 @@ export default function PlanDeschis() {
       <View style={{ gap: 8, paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
         {surprise || people >= 2 ? (
           <View style={{ flexDirection: 'row', gap: 8 }}>
-            {surprise ? <Big label="Altă surpriză" color={t.s2} ink={t.ink} icon={<Icon name="dice" color={t.ink} />} style={{ flex: 1, minHeight: 50 }} onPress={() => { void nextSurprise(); }} /> : null}
-            {people >= 2 ? <Big label="La vot" color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} style={{ flex: 1, minHeight: 50 }} onPress={() => setVote(true)} /> : null}
+            {surprise ? <Big label={tr('Altă surpriză')} color={t.s2} ink={t.ink} icon={<Icon name="dice" color={t.ink} />} style={{ flex: 1, minHeight: 50 }} onPress={() => { void nextSurprise(); }} /> : null}
+            {people >= 2 ? <Big label={tr('La vot')} color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} style={{ flex: 1, minHeight: 50 }} onPress={() => setVote(true)} /> : null}
           </View>
         ) : null}
-        <Big label="Facem așa" color="#FFD43B" ink="#0E1440" onPress={make} />
+        <Big label={tr('Facem așa')} color="#FFD43B" ink="#0E1440" onPress={make} />
       </View>
       <VoteStart open={vote} onClose={() => setVote(false)} places={[]} f={f}
         routes={[p, ...plans.filter((x) => x !== p)].map((x) => ({ label: x.title, sub: x.steps.map((s) => s.place.name).join(' → '), price: x.price, from: x.from, steps: x.steps.map((s) => ({ place: s.place, at: s.at, slot: s.slot })) }))} />

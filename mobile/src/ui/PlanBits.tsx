@@ -29,7 +29,7 @@ export function StepRow({ s }: { s: Shown['steps'][number] }) {
       <View style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: s.place.bg, alignItems: 'center', justifyContent: 'center' }}><Icon name={s.place.icon as never} size={22} color={s.place.fg} /></View>
       <View style={{ flex: 1 }}>
         <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 15 }}>{s.place.name}</T>
-        <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{s.why + ' · ' + city + ' · ~' + s.place.price + ' lei' + (/până la/.test(s.open) ? ' · ' + s.open.replace('Deschis ', '') : '')}</T>
+        <T numberOfLines={1} style={{ fontFamily: F.m, fontSize: 12.5, color: t.ink2 }}>{s.why + ' · ' + city + ' · ~' + s.place.price + ' lei' + (/până la|until/.test(s.open) ? ' · ' + s.open.replace(/^(Deschis|Open) /, '') : '')}</T>
       </View>
     </View>
   );

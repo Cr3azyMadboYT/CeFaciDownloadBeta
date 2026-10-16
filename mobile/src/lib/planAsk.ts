@@ -11,6 +11,7 @@ import { APP } from './session';
 import { crewHasMinor, crewTaste } from './crews';
 import { checkOpen, checkedFor, isClosed, closedWhy, needsCheck, type Live } from './liveOpen';
 import type { Taste } from '../../../src/engine/types';
+import { pick, tr } from './i18n';
 
 APP.skipLive = isClosed; // the builder leaves out what Google just said is closed (07.10: it came back as Bilu's pick)
 
@@ -78,13 +79,15 @@ export function hourFor(evening: string, had: string, now = new Date()): string 
   return all[0] ?? 'acum';
 }
 /** "Acum", "Diseară la 21:00", "Mâine la 20:00", "Joi, 8 oct., la 20:00", "Noaptea asta, la 02:00". */
-export const whenText = (d: Pick<Draft, 'evening' | 'hour'>, now = new Date()) => (d.hour === 'acum' ? 'Acum' : whenWords(d.evening, d.hour, now));
+export const whenText = (d: Pick<Draft, 'evening' | 'hour'>, now = new Date()) => (d.hour === 'acum' ? tr('Acum') : whenWords(d.evening, d.hour, now));
+/** A "when" text inside a sentence: lower case in Romanian; in English only "Tonight", "Tomorrow"… (not the weekdays). */
+export const low = (w: string) => pick(w.toLowerCase(), w.replace(/^(Now|Tonight|Today|Tomorrow|This|Later)\b/, (m) => m.toLowerCase()));
 /** The word and the date on a day card. */
 export const dayCard = (evening: string, now = new Date(), hour?: string) => ({ word: eveningWord(evening, now, hour ? Number(hour.split(':')[0]) : 20), date: dateShort(evening) });
 /** "Toată seara", or "Toată noaptea" / "Toată ziua" by the hour it starts. */
 export function wholeLabel(d: Pick<Draft, 'evening' | 'hour'>, now = new Date()) {
   const h = atOf(d, now).getHours();
-  return h >= 22 || h < 5 ? 'Toată noaptea' : h < 16 ? 'Toată ziua' : 'Toată seara';
+  return h >= 22 || h < 5 ? tr('Toată noaptea') : h < 16 ? tr('Toată ziua') : tr('Toată seara');
 }
 
 // ---------- the first answers ----------
@@ -132,8 +135,8 @@ export function againDraft(now = new Date()): { draft: Draft; notice?: Notice } 
   if (last.hour === 'acum') return { draft: { ...d, hour: 'acum' } };
   const at = momentOf(e0, last.hour);
   if (at.getTime() > now.getTime() + 15 * 60e3) return { draft: { ...d, hour: last.hour } };
-  if (now.getTime() - at.getTime() < 4 * 3600e3) return { draft: { ...d, hour: 'acum' }, notice: { text: 'Data trecută a fost la ' + last.hour + '. Ora a trecut, așa că l-am făcut de acum.', label: 'Mâine la ' + last.hour, patch: { evening: addDays(e0, 1), hour: last.hour } } };
-  return { draft: { ...d, evening: addDays(e0, 1), hour: last.hour }, notice: { text: 'Data trecută a fost la ' + last.hour + '; azi ora a trecut, așa că l-am făcut pentru mâine.', label: 'Vreau acum', patch: { evening: e0, hour: 'acum' } } };
+  if (now.getTime() - at.getTime() < 4 * 3600e3) return { draft: { ...d, hour: 'acum' }, notice: { text: tr('Data trecută a fost la {h}. Ora a trecut, așa că l-am făcut de acum.', { h: last.hour }), label: tr('Mâine la {h}', { h: last.hour }), patch: { evening: addDays(e0, 1), hour: last.hour } } };
+  return { draft: { ...d, evening: addDays(e0, 1), hour: last.hour }, notice: { text: tr('Data trecută a fost la {h}; azi ora a trecut, așa că l-am făcut pentru mâine.', { h: last.hour }), label: tr('Vreau acum'), patch: { evening: e0, hour: 'acum' } } };
 }
 
 /** "Surprinde-mă": a whole outing, now — or tonight at 20:00 in the late afternoon; the vibe is theirs (chill or party,
@@ -182,7 +185,7 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
     let r = APP.makePlans(askOf(d), avoid, tt, crewMinor);
     if (!r.plans.length && avoid.length) r = APP.makePlans(askOf(d), o.avoid ?? [], tt, crewMinor);
     if (!r.plans.length && o.avoid?.length) r = APP.makePlans(askOf(d), [], tt, crewMinor);
-    const minorNote: Notice | undefined = crewMinor && !APP.isMinor() ? { text: 'În gașca ' + (d.crewName ?? 'voastră') + ' e cineva sub 18 ani, așa că v-am ales doar locuri unde puteți intra toți: fără cluburi, baruri sau narghilea.' } : undefined;
+    const minorNote: Notice | undefined = crewMinor && !APP.isMinor() ? { text: d.crewName ? tr('În gașca {crew} e cineva sub 18 ani, așa că v-am ales doar locuri unde puteți intra toți: fără cluburi, baruri sau narghilea.', { crew: d.crewName }) : tr('În gașca voastră e cineva sub 18 ani, așa că v-am ales doar locuri unde puteți intra toți: fără cluburi, baruri sau narghilea.') } : undefined;
     // a surprise: any of the plans, the best a little more often
     const roll = Math.random();
     const pick = o.surprise && r.plans.length ? Math.min(r.plans.length - 1, roll < 0.45 ? 0 : roll < 0.75 ? 1 : 2) : 0;
@@ -208,8 +211,11 @@ export function withLive(plans: Shown[], live: Record<string, Live>): Shown[] {
     const asked = p.steps.filter((x) => needsCheck(x.place.real.k, x.place.real.cat));
     if (!asked.length || !asked.every((x) => live[x.place.id]?.open === true && checkedFor(live[x.place.id], new Date(x.at), untilOf(new Date(x.at), x.until)))) return p;
     const one = asked.length === 1 ? live[asked[0].place.id] : null;
-    const text = 'Verificat acum pe Google: ' + (p.steps.length === 1 ? 'deschis' + (one?.closes ? ' până la ' + one.closes : '') : 'toate deschise la ora lor');
-    const checks = [{ ok: true, text }, ...p.checks.filter((c) => !/^Deschis la|^Toate deschise|^Program neconfirmat/.test(c.text))];
+    const text = p.steps.length === 1
+      ? (one?.closes ? tr('Verificat acum pe Google: deschis până la {t}', { t: one.closes }) : tr('Verificat acum pe Google: deschis'))
+      : tr('Verificat acum pe Google: toate deschise la ora lor');
+    // the engine's own opening check, in either language (the engine's texts go through tr())
+    const checks = [{ ok: true, text }, ...p.checks.filter((c) => !/^(Deschis la|Toate deschise|Program neconfirmat|Open at|All open|Hours not confirmed)/.test(c.text))];
     return { ...p, checks };
   });
 }
@@ -240,8 +246,10 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
     const said = (ids: string[]) => {
       const n = ids.map((k) => names.get(k)).filter(Boolean) as string[];
       const one = ids.find((k) => names.get(k));
-      return n.length === 1 && one ? closedWhy(n[0], whyOf[one]) + ', așa că l-am schimbat.'
-        : 'Am verificat pe Google: ' + n.slice(0, 3).join(', ') + (n.length > 3 ? ' și încă ' + (n.length - 3) : '') + ' sunt închise la ora aia, așa că le-am schimbat.';
+      return n.length === 1 && one ? tr('{why}, așa că l-am schimbat.', { why: closedWhy(n[0], whyOf[one]) })
+        : n.length > 3
+          ? tr('Am verificat pe Google: {names} și încă {n} sunt închise la ora aia, așa că le-am schimbat.', { names: n.slice(0, 3).join(', '), n: n.length - 3 })
+          : tr('Am verificat pe Google: {names} sunt închise la ora aia, așa că le-am schimbat.', { names: n.join(', ') });
     };
     if (round === ROUNDS - 1) {
       // still closed ones after the last round: those plans go; the rest stay, checked
@@ -254,7 +262,7 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
       if (APP.lastPlans.length === s.plans.length) APP.lastPlans = APP.lastPlans.filter((p) => ok(p.steps));
       s = keep.length
         ? { ...s, plans: keep, note: said(closed), pick: Math.min(s.pick, keep.length - 1) }
-        : { ...s, plans: [], note: undefined, empty: 'Am verificat pe Google și locurile bune de pe aproape sunt închise la ora asta. Încearcă altă oră sau mai departe.', pick: 0 };
+        : { ...s, plans: [], note: undefined, empty: tr('Am verificat pe Google și locurile bune de pe aproape sunt închise la ora asta. Încearcă altă oră sau mai departe.'), pick: 0 };
       emit();
       return;
     }
@@ -319,9 +327,9 @@ export function refreshIfStale(now = new Date()): boolean {
   const gone = first ? new Date(first).getTime() < now.getTime() - 15 * 60e3 : false;
   const old = askOf(s.draft, now).now && now.getTime() - s.madeAt > 20 * 60e3;
   if (!gone && !old) return false;
-  void runPlans(s.draft, { chips: s.chips, notice: { text: 'Am refăcut planurile pentru ora de acum: cele de dinainte erau pentru ' + hhmm(new Date(first ?? now)) + '.' } });
+  void runPlans(s.draft, { chips: s.chips, notice: { text: tr('Am refăcut planurile pentru ora de acum: cele de dinainte erau pentru {t}.', { t: hhmm(new Date(first ?? now)) }) } });
   return true;
 }
 
-export const budgetLabel = (b: [number, number]) => (b[1] >= BUDGET_TOP ? (b[0] ? 'de la ' + b[0] + ' lei' : 'orice buget') : b[1] === 0 ? 'gratis' : (b[0] ? b[0] + '–' : 'până în ') + b[1] + ' lei');
+export const budgetLabel = (b: [number, number]) => (b[1] >= BUDGET_TOP ? (b[0] ? tr('de la {n} lei', { n: b[0] }) : tr('orice buget')) : b[1] === 0 ? tr('gratis') : b[0] ? b[0] + '–' + b[1] + ' lei' : tr('până în {b} lei', { b: b[1] }));
 export { isoDay };

@@ -6,7 +6,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { BackHandler, ScrollView, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { listCrews, type Crew } from '../lib/crews';
-import { BUDGET_TOP, askOf, budgetLabel, dayCard, eveningsFrom, firstDraft, getPlans, hourFor, hoursFor, runPlans, startBuild, wholeLabel, whenText, type Draft } from '../lib/planAsk';
+import { BUDGET_TOP, askOf, budgetLabel, dayCard, eveningsFrom, firstDraft, getPlans, hourFor, hoursFor, low, runPlans, startBuild, wholeLabel, whenText, type Draft } from '../lib/planAsk';
+import { tr } from '../lib/i18n';
 import { addDays, momentOf } from '../../../src/engine/time';
 import { APP, useApp } from '../lib/session';
 import { useWeatherVersion } from '../lib/weather';
@@ -69,21 +70,21 @@ export default function PlanNou() {
   const pickDay = (e: string) => set({ evening: e, hour: hourFor(e, d.hour, now) });
 
   const say: Record<Step, [Mood, string]> = {
-    ce: ['hi', 'Hai să-ți fac planul! Un singur loc, toată seara făcută de mine, sau o construiești tu, loc cu loc?'],
-    cand: ['up', 'Acum sau altă zi? Lângă fiecare zi îți pun vremea' + (best ? ': cea mai frumoasă e ' + dayCard(best, now).word.toLowerCase() + '.' : '.')],
-    cati: ['wink', 'Câți sunteți, cu tot cu tine? Sau alege gașca și știu singur.'],
-    buget: ['up', 'Cât vrea să dea fiecare' + (d.mode === 'seara' ? ', pe toată seara' : '') + '? Trage de bulinele de pe bară.'],
-    vibe: ['hi', 'Ultima: ce chef aveți? Alege câte vrei.'],
+    ce: ['hi', tr('Hai să-ți fac planul! Un singur loc, toată seara făcută de mine, sau o construiești tu, loc cu loc?')],
+    cand: ['up', best ? tr('Acum sau altă zi? Lângă fiecare zi îți pun vremea: cea mai frumoasă e {day}.', { day: low(dayCard(best, now).word) }) : tr('Acum sau altă zi? Lângă fiecare zi îți pun vremea.')],
+    cati: ['wink', tr('Câți sunteți, cu tot cu tine? Sau alege gașca și știu singur.')],
+    buget: ['up', d.mode === 'seara' ? tr('Cât vrea să dea fiecare, pe toată seara? Trage de bulinele de pe bară.') : tr('Cât vrea să dea fiecare? Trage de bulinele de pe bară.')],
+    vibe: ['hi', tr('Ultima: ce chef aveți? Alege câte vrei.')],
   };
 
   const wxIcon = (i: string) => (i === 'sun' || i === 'moon' || i === 'cloud' || i === 'rain' || i === 'snow' || i === 'storm' ? (i as IconName) : 'cloud');
   const DayCard = ({ label, sub, on, wx, badge, onPress }: { label: string; sub: string; on: boolean; wx: ReturnType<typeof APP.dayWeather>; badge?: string; onPress: () => void }) => (
-    <Press onPress={onPress} accessibilityState={{ selected: on }} accessibilityLabel={label + ', ' + sub + (wx ? ', ' + wx.temp + ' grade, ' + wx.text : '')}
+    <Press onPress={onPress} accessibilityState={{ selected: on }} accessibilityLabel={label + ', ' + sub + (wx ? ', ' + tr('{n} grade', { n: wx.temp }) + ', ' + wx.text : '')}
       style={{ width: '23.5%', minHeight: 104, paddingVertical: 8, borderRadius: 18, borderWidth: 2, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center', gap: 2 }}>
       {badge ? <View style={{ position: 'absolute', top: -10, paddingHorizontal: 6, paddingVertical: 1, borderRadius: 99, backgroundColor: '#FFD43B' }}><T style={{ fontFamily: F.b, fontSize: 10, color: '#0E1440' }}>{badge}</T></View> : null}
       <T numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75} style={{ paddingHorizontal: 4, fontFamily: F.b, fontSize: 14, color: on ? t.bg : t.ink }}>{label}</T>
       <T style={{ fontFamily: F.m, fontSize: 11, color: on ? t.bg : t.ink2 }}>{sub}</T>
-      {wx ? <><Icon name={wxIcon(wx.icon)} size={22} color={on ? '#FFD43B' : wx.wet ? t.blue : '#E0A800'} /><T style={{ fontFamily: F.display, fontSize: 16, color: on ? t.bg : t.ink }}>{wx.temp + '°'}</T></> : <T style={{ fontFamily: F.m, fontSize: 11, color: on ? t.bg : t.ink3 }}>fără prognoză</T>}
+      {wx ? <><Icon name={wxIcon(wx.icon)} size={22} color={on ? '#FFD43B' : wx.wet ? t.blue : '#E0A800'} /><T style={{ fontFamily: F.display, fontSize: 16, color: on ? t.bg : t.ink }}>{wx.temp + '°'}</T></> : <T style={{ fontFamily: F.m, fontSize: 11, color: on ? t.bg : t.ink3 }}>{tr('fără prognoză')}</T>}
     </Press>
   );
 
@@ -91,13 +92,13 @@ export default function PlanNou() {
     <View style={{ flex: 1, backgroundColor: t.bgCont }}>
       <Doodles />
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 16, height: ins.top + 60, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <Press onPress={back} accessibilityLabel={k ? 'Înapoi' : 'Închide'} style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
+        <Press onPress={back} accessibilityLabel={k ? tr('Înapoi') : tr('Închide')} style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name={k ? 'back' : 'close'} color={t.ink} />
         </Press>
         <View style={{ flex: 1, flexDirection: 'row', gap: 5 }}>
           {STEPS.slice(0, last + 1).map((s, i) => <View key={s} style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: i <= k ? t.blue : t.s3 }} />)}
         </View>
-        <Press onPress={() => finish()} style={{ minHeight: 44, justifyContent: 'center', paddingLeft: 4 }}><T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>Arată-mi acum</T></Press>
+        <Press onPress={() => finish()} style={{ minHeight: 44, justifyContent: 'center', paddingLeft: 4 }}><T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>{tr('Arată-mi acum')}</T></Press>
       </View>
 
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: 20 }} showsVerticalScrollIndicator={false}>
@@ -105,8 +106,8 @@ export default function PlanNou() {
 
         {step === 'ce' ? (
           <View style={{ gap: 12 }}>
-            <H1 style={{ fontSize: 32, lineHeight: 33 }}>Ce plan vrei?</H1>
-            {([['loc', 'Un singur loc', 'Un restaurant, un bar, un film… unul și gata.', 'pin', '#FFD43B'], ['seara', wholeLabel(d), 'Bilu face toată seara: mai multe locuri pe rând, cu ore și drum.', 'sparkle', '#2F5BFF'], ['eu', 'O construiesc eu', 'Aleg eu fiecare loc, pe rând. Bilu îmi arată ce e deschis aproape.', 'dice', '#5FD39A']] as const).map(([key, title, sub, icon, bg]) => {
+            <H1 style={{ fontSize: 32, lineHeight: 33 }}>{tr('Ce plan vrei?')}</H1>
+            {([['loc', tr('Un singur loc'), tr('Un restaurant, un bar, un film… unul și gata.'), 'pin', '#FFD43B'], ['seara', wholeLabel(d), tr('Bilu face toată seara: mai multe locuri pe rând, cu ore și drum.'), 'sparkle', '#2F5BFF'], ['eu', tr('O construiesc eu'), tr('Aleg eu fiecare loc, pe rând. Bilu îmi arată ce e deschis aproape.'), 'dice', '#5FD39A']] as const).map(([key, title, sub, icon, bg]) => {
               const on = d.mode === key;
               return (
                 <Press key={key} onPress={() => auto({ mode: key })} accessibilityState={{ selected: on }}
@@ -125,20 +126,20 @@ export default function PlanNou() {
 
         {step === 'cand' ? (
           <View>
-            <H1 style={{ fontSize: 32, lineHeight: 33 }}>Când ieșiți?</H1>
+            <H1 style={{ fontSize: 32, lineHeight: 33 }}>{tr('Când ieșiți?')}</H1>
             <View style={{ marginTop: 16, flexDirection: 'row', flexWrap: 'wrap', gap: 8, rowGap: 14 }}>
-              <DayCard label="Acum" sub={String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')} on={d.hour === 'acum'} wx={nowWx} onPress={() => auto({ evening: evenings[0], hour: 'acum' })} />
+              <DayCard label={tr('Acum')} sub={String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0')} on={d.hour === 'acum'} wx={nowWx} onPress={() => auto({ evening: evenings[0], hour: 'acum' })} />
               {days.map(({ e, wx }) => {
                 const c = dayCard(e, now, d.hour === 'acum' ? undefined : d.hour);
-                return <DayCard key={e} label={c.word} sub={c.date.replace(/ \S+$/, '')} on={d.hour !== 'acum' && d.evening === e} wx={wx} badge={best === e ? 'cea mai caldă' : undefined} onPress={() => pickDay(e)} />;
+                return <DayCard key={e} label={c.word} sub={c.date.replace(/ \S+$/, '')} on={d.hour !== 'acum' && d.evening === e} wx={wx} badge={best === e ? tr('cea mai caldă') : undefined} onPress={() => pickDay(e)} />;
               })}
             </View>
             <Press onPress={() => setMore(true)} style={{ marginTop: 10, minHeight: 46, borderRadius: 14, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 }}>
-              <Icon name="calendar" size={18} color={t.blueInk} /><T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>{d.hour !== 'acum' && !evenings.includes(d.evening) ? whenText(d) : 'Altă dată, din calendar'}</T>
+              <Icon name="calendar" size={18} color={t.blueInk} /><T style={{ fontFamily: F.b, fontSize: 14, color: t.blueInk }}>{d.hour !== 'acum' && !evenings.includes(d.evening) ? whenText(d) : tr('Altă dată, din calendar')}</T>
             </Press>
             {rows.map(([part, hs]) => (
               <View key={part}>
-                <Lbl style={{ marginTop: 16, marginBottom: 8 }}>{part}</Lbl>
+                <Lbl style={{ marginTop: 16, marginBottom: 8 }}>{tr(part)}</Lbl>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                   {hs.map((h) => <Chip key={h} label={h} on={d.hour === h} onPress={() => auto({ hour: h })} />)}
                 </View>
@@ -149,32 +150,32 @@ export default function PlanNou() {
 
         {step === 'cati' ? (
           <View>
-            <H1 style={{ fontSize: 32, lineHeight: 33 }}>Câți sunteți?</H1>
+            <H1 style={{ fontSize: 32, lineHeight: 33 }}>{tr('Câți sunteți?')}</H1>
             <View style={{ marginTop: 18, flexDirection: 'row', justifyContent: 'space-between' }}>
               {[1, 2, 3, 4, 5, 6].map((n) => {
                 const on = n === 6 ? d.people >= 6 : d.people === n && !d.crewId;
                 return (
                   <View key={n} style={{ alignItems: 'center', gap: 6 }}>
-                    <Press onPress={() => (n === 6 ? set({ people: Math.max(6, d.people), crewId: undefined, crewName: undefined }) : auto({ people: n, crewId: undefined, crewName: undefined }))} accessibilityLabel={n === 6 ? '6 sau mai mulți' : n + (n === 1 ? ', singur' : ' persoane')} accessibilityState={{ selected: on }}
+                    <Press onPress={() => (n === 6 ? set({ people: Math.max(6, d.people), crewId: undefined, crewName: undefined }) : auto({ people: n, crewId: undefined, crewName: undefined }))} accessibilityLabel={n === 6 ? tr('6 sau mai mulți') : n === 1 ? tr('1, singur') : tr('{n} persoane', { n })} accessibilityState={{ selected: on }}
                       style={{ width: 52, height: 52, borderRadius: 99, borderWidth: 2, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center' }}>
                       <T style={{ fontFamily: F.display, fontSize: n === 6 ? 18 : 22, color: on ? t.bg : t.ink }}>{n === 6 ? '6+' : String(n)}</T>
                     </Press>
-                    <T style={{ fontFamily: F.sb, fontSize: 11, color: t.ink2 }}>{n === 1 ? 'Singur' : n === 2 ? 'În doi' : n === 6 ? 'Mulți' : ' '}</T>
+                    <T style={{ fontFamily: F.sb, fontSize: 11, color: t.ink2 }}>{n === 1 ? tr('Singur') : n === 2 ? tr('În doi') : n === 6 ? tr('Mulți') : ' '}</T>
                   </View>
                 );
               })}
             </View>
             {d.people >= 6 ? (
               <View style={{ marginTop: 14, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderRadius: 18, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
-                <T style={{ flex: 1, fontFamily: F.m, fontSize: 14, color: t.ink2 }}>Câți sunteți, cu tot cu tine?</T>
-                <Press onPress={() => set({ people: Math.max(6, d.people - 1) })} accessibilityLabel="Mai puțini" style={{ width: 44, height: 44, borderRadius: 12, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22 }}>−</T></Press>
+                <T style={{ flex: 1, fontFamily: F.m, fontSize: 14, color: t.ink2 }}>{tr('Câți sunteți, cu tot cu tine?')}</T>
+                <Press onPress={() => set({ people: Math.max(6, d.people - 1) })} accessibilityLabel={tr('Mai puțini')} style={{ width: 44, height: 44, borderRadius: 12, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22 }}>−</T></Press>
                 <T style={{ width: 36, textAlign: 'center', fontFamily: F.display, fontSize: 22 }}>{String(d.people)}</T>
-                <Press onPress={() => set({ people: Math.min(500, d.people + 1) })} accessibilityLabel="Mai mulți" style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22, color: '#FFFFFF' }}>+</T></Press>
+                <Press onPress={() => set({ people: Math.min(500, d.people + 1) })} accessibilityLabel={tr('Mai mulți')} style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 22, color: '#FFFFFF' }}>+</T></Press>
               </View>
             ) : null}
             {crews.length ? (
               <>
-                <Lbl style={{ marginTop: 22, marginBottom: 8 }}>Sau alege gașca</Lbl>
+                <Lbl style={{ marginTop: 22, marginBottom: 8 }}>{tr('Sau alege gașca')}</Lbl>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                   {crews.map((c) => {
                     const n = c.members.filter((m) => m.status === 'member').length + 1; // the members and you
@@ -188,35 +189,35 @@ export default function PlanNou() {
 
         {step === 'buget' ? (
           <View>
-            <H1 style={{ fontSize: 32, lineHeight: 33 }}>Buget de persoană</H1>
+            <H1 style={{ fontSize: 32, lineHeight: 33 }}>{tr('Buget de persoană')}</H1>
             <T style={{ marginTop: 18, textAlign: 'center', fontFamily: F.display, fontSize: 44, lineHeight: 48 }}>
-              {d.budget[1] >= BUDGET_TOP ? (d.budget[0] ? 'de la ' + d.budget[0] : 'Oricât') : d.budget[1] === 0 ? 'Gratis' : d.budget[0] + ' – ' + d.budget[1]}
+              {d.budget[1] >= BUDGET_TOP ? (d.budget[0] ? tr('de la {n}', { n: d.budget[0] }) : tr('Oricât')) : d.budget[1] === 0 ? tr('Gratis') : d.budget[0] + ' – ' + d.budget[1]}
               {d.budget[1] > 0 && !(d.budget[1] >= BUDGET_TOP && !d.budget[0]) ? <T style={{ fontFamily: F.b, fontSize: 20 }}> lei</T> : null}
             </T>
             <View style={{ marginTop: 16 }}>
-              <RangeSlider min={0} max={BUDGET_TOP} step={10} value={d.budget} onChange={(b) => set({ budget: b })} label={(v) => (v >= BUDGET_TOP ? 'oricât' : v + ' lei')} />
+              <RangeSlider min={0} max={BUDGET_TOP} step={10} value={d.budget} onChange={(b) => set({ budget: b })} label={(v) => (v >= BUDGET_TOP ? tr('oricât') : v + ' lei')} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 2 }}>
-                {['Gratis', '50', '100', '150', '200', '250', '300+'].map((x) => <T key={x} style={{ fontFamily: F.sb, fontSize: 12, color: t.ink2 }}>{x}</T>)}
+                {['Gratis', '50', '100', '150', '200', '250', '300+'].map((x) => <T key={x} style={{ fontFamily: F.sb, fontSize: 12, color: t.ink2 }}>{x === 'Gratis' ? tr('Gratis') : x}</T>)}
               </View>
             </View>
             <View style={{ marginTop: 20, flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {QUICK.map(([label, b]) => <Chip key={label} label={label} on={d.budget[0] === b[0] && d.budget[1] === b[1]} onPress={() => { tap(); set({ budget: b }); }} />)}
+              {QUICK.map(([label, b]) => <Chip key={label} label={tr(label)} on={d.budget[0] === b[0] && d.budget[1] === b[1]} onPress={() => { tap(); set({ budget: b }); }} />)}
             </View>
-            <Muted style={{ marginTop: 14 }}>{(d.mode === 'seara' ? 'E pentru toată seara, cu toate locurile. ' : '') + 'Prețurile sunt estimate, după tipul localului. Cu bonurile voastre devin prețuri reale.'}</Muted>
+            <Muted style={{ marginTop: 14 }}>{(d.mode === 'seara' ? tr('E pentru toată seara, cu toate locurile.') + ' ' : '') + tr('Prețurile sunt estimate, după tipul localului. Cu bonurile voastre devin prețuri reale.')}</Muted>
           </View>
         ) : null}
 
         {step === 'vibe' ? (
           <View>
-            <H1 style={{ fontSize: 32, lineHeight: 33 }}>Ce chef aveți?</H1>
+            <H1 style={{ fontSize: 32, lineHeight: 33 }}>{tr('Ce chef aveți?')}</H1>
             <View style={{ marginTop: 16, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
               {VIBE_TILES.filter(([v]) => !(v === 'Party' && APP.isMinor())).map(([v, icon, bg]) => {
                 const on = d.vibes.includes(v);
                 return (
-                  <Press key={v} onPress={() => set({ vibes: on ? d.vibes.filter((x) => x !== v) : [...d.vibes, v] })} accessibilityState={{ selected: on }} accessibilityLabel={v}
+                  <Press key={v} onPress={() => set({ vibes: on ? d.vibes.filter((x) => x !== v) : [...d.vibes, v] })} accessibilityState={{ selected: on }} accessibilityLabel={tr(v)}
                     style={{ width: '48.4%', height: 88, padding: 12, borderRadius: 22, backgroundColor: bg, borderWidth: 3, borderColor: on ? '#0E1440' : 'transparent', justifyContent: 'space-between' }}>
                     <Icon name={icon} size={26} color="#0E1440" />
-                    <T style={{ fontFamily: F.b, fontSize: 16, color: '#0E1440' }}>{v}</T>
+                    <T style={{ fontFamily: F.b, fontSize: 16, color: '#0E1440' }}>{tr(v)}</T>
                     {on ? <View style={{ position: 'absolute', right: 10, top: 10, width: 24, height: 24, borderRadius: 99, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={14} color="#FFD43B" width={3} /></View> : null}
                   </Press>
                 );
@@ -224,7 +225,7 @@ export default function PlanNou() {
               <Press onPress={() => set({ vibes: [] })} accessibilityState={{ selected: !d.vibes.length }}
                 style={{ width: '48.4%', height: 88, padding: 12, borderRadius: 22, backgroundColor: t.s1, borderWidth: d.vibes.length ? 1.5 : 3, borderStyle: d.vibes.length ? 'dashed' : 'solid', borderColor: d.vibes.length ? t.line : t.ink, justifyContent: 'space-between' }}>
                 <Icon name="dice" size={26} color={t.ink} />
-                <T style={{ fontFamily: F.b, fontSize: 15 }}>Orice, surprinde-mă</T>
+                <T style={{ fontFamily: F.b, fontSize: 15 }}>{tr('Orice, surprinde-mă')}</T>
               </Press>
             </View>
           </View>
@@ -233,15 +234,15 @@ export default function PlanNou() {
 
       <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, backgroundColor: t.bgCont, borderTopWidth: 1, borderTopColor: t.line, gap: 10 }}>
         <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 13, color: t.ink2 }}>
-          {(step === 'cand' ? whenText(d) + ' · ' : step === 'buget' ? budgetLabel(d.budget) + ' · ' : '') + (names.length ? 'Se potrivesc: ' : 'Caut…')}
+          {(step === 'cand' ? whenText(d) + ' · ' : step === 'buget' ? budgetLabel(d.budget) + ' · ' : '') + (names.length ? tr('Se potrivesc:') + ' ' : tr('Caut…'))}
           <T style={{ fontFamily: F.b, fontSize: 13 }}>{names.join(' · ')}</T>
         </T>
-        <Big label={k === last ? (d.mode === 'eu' ? 'Hai să construim' : 'Gata, fă-mi planul') : 'Mai departe'} color={k === last ? '#0E1440' : undefined} onPress={() => next()} />
+        <Big label={k === last ? (d.mode === 'eu' ? tr('Hai să construim') : tr('Gata, fă-mi planul')) : tr('Mai departe')} color={k === last ? '#0E1440' : undefined} onPress={() => next()} />
       </View>
 
       <Sheet open={more} onClose={() => setMore(false)}>
-        <H1 style={{ fontSize: 26 }}>Altă zi</H1>
-        <Muted style={{ marginTop: 6 }}>Pentru zilele de după o săptămână nu am încă vremea.</Muted>
+        <H1 style={{ fontSize: 26 }}>{tr('Altă zi')}</H1>
+        <Muted style={{ marginTop: 6 }}>{tr('Pentru zilele de după o săptămână nu am încă vremea.')}</Muted>
         <View style={{ marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
           {Array.from({ length: 24 }, (_, i) => addDays(evenings[0], i + 7)).map((e) => { const c = dayCard(e, now); return <Chip key={e} small label={c.date} on={d.evening === e && d.hour !== 'acum'} onPress={() => { set({ evening: e, hour: hourFor(e, d.hour === 'acum' ? '20:00' : d.hour, now) }); setMore(false); }} />; })}
         </View>

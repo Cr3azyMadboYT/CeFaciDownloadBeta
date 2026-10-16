@@ -7,6 +7,7 @@ import { BUDGET, DIST, DIST_KEYS, DUR, VIBES, WHEN, WHO, matchesOf, type Filters
 import { Icon } from './Icon';
 import { Big, H1, Lbl, Muted, Press, T, tap } from './kit';
 import { F, useTheme } from './theme';
+import { tr } from '../lib/i18n';
 
 function Opt({ label, on, onPress, grow = true }: { label: string; on: boolean; onPress: () => void; grow?: boolean }) {
   const { t } = useTheme();
@@ -32,11 +33,11 @@ export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; 
     set({ budget: !a && !b ? 'any' : a + '-' + b });
   };
   const rows: [string, keyof Filters, Record<string, { label: string }>, string[], boolean][] = [
-    ['Cine vine?', 'who', WHO, ['1', '2', '34', '5'], true],
-    ['Când?', 'when', WHEN, ['now', 'eve', 'tom', 'we'], true],
-    ['Cât timp aveți?', 'dur', DUR, ['1', '23', '4'], true],
-    ['Cât de departe?', 'dist', DIST, DIST_KEYS, true],
-    ['Buget de persoană, în lei', 'budget', BUDGET, ['0', '50', '100', '200', 'any'], false],
+    [tr('Cine vine?'), 'who', WHO, ['1', '2', '34', '5'], true],
+    [tr('Când?'), 'when', WHEN, ['now', 'eve', 'tom', 'we'], true],
+    [tr('Cât timp aveți?'), 'dur', DUR, ['1', '23', '4'], true],
+    [tr('Cât de departe?'), 'dist', DIST, DIST_KEYS, true],
+    [tr('Buget de persoană, în lei'), 'budget', BUDGET, ['0', '50', '100', '200', 'any'], false],
   ];
   const field = (val: string, ph: string, label: string, onChange: (x: string) => void) => (
     <TextInput maxFontSizeMultiplier={1.15} value={val} onChangeText={onChange} placeholder={ph} accessibilityLabel={label} keyboardType="number-pad" maxLength={4} placeholderTextColor={t.ink3}
@@ -45,40 +46,40 @@ export function FilterSheet({ open, value, onClose, onApply }: { open: boolean; 
   return (
     <Modal visible={open} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-      <Pressable style={{ height: ins.top + 40, backgroundColor: t.scrim }} onPress={onClose} accessibilityLabel="Închide filtrele" />
+      <Pressable style={{ height: ins.top + 40, backgroundColor: t.scrim }} onPress={onClose} accessibilityLabel={tr('Închide filtrele')} />
       <View style={{ flex: 1, backgroundColor: t.s1, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingTop: 8 }}>
         <View style={{ alignSelf: 'center', width: 36, height: 5, borderRadius: 3, backgroundColor: t.line }} />
         <View style={{ marginTop: 10, paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
-          <H1 style={{ fontSize: 28 }}>Filtre</H1>
-          <Press onPress={onClose} accessibilityLabel="Închide" style={{ width: 44, height: 44, borderRadius: 999, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><Icon name="close" color={t.ink} /></Press>
+          <H1 style={{ fontSize: 28 }}>{tr('Filtre')}</H1>
+          <Press onPress={onClose} accessibilityLabel={tr('Închide')} style={{ width: 44, height: 44, borderRadius: 999, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}><Icon name="close" color={t.ink} /></Press>
         </View>
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16, gap: 14 }} keyboardShouldPersistTaps="handled">
           {rows.map(([label, key, list, order, grow]) => (
             <View key={key} style={{ gap: 8 }}>
               <Lbl>{label}</Lbl>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                {order.map((k) => <Opt key={k} label={list[k].label} grow={grow} on={d[key] === k} onPress={() => set({ [key]: k } as Partial<Filters>)} />)}
+                {order.map((k) => <Opt key={k} label={tr(list[k].label)} grow={grow} on={d[key] === k} onPress={() => set({ [key]: k } as Partial<Filters>)} />)}
               </View>
             </View>
           ))}
           <View style={{ gap: 8 }}>
-            <Lbl>Sau scrie tu: de la – până la (lei)</Lbl>
+            <Lbl>{tr('Sau scrie tu: de la – până la (lei)')}</Lbl>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-              {field(lo, 'de la', 'De la, în lei', (x) => putRange(x, hi))}
+              {field(lo, tr('de la'), tr('De la, în lei'), (x) => putRange(x, hi))}
               <T style={{ color: t.ink2, fontFamily: F.b }}>–</T>
-              {field(hi, 'până la', 'Până la, în lei', (x) => putRange(lo, x))}
+              {field(hi, tr('până la'), tr('Până la, în lei'), (x) => putRange(lo, x))}
             </View>
-            <Muted>Atenție: prețurile sunt estimate, cam cât dai de persoană. Pot avea o marjă de eroare.</Muted>
+            <Muted>{tr('Atenție: prețurile sunt estimate, cam cât dai de persoană. Pot avea o marjă de eroare.')}</Muted>
           </View>
           <View style={{ gap: 8 }}>
-            <Lbl>Ce vibe? <T style={{ fontFamily: F.m, fontSize: 13, color: t.ink3 }}>Oricâte</T></Lbl>
+            <Lbl>{tr('Ce vibe?') + ' '}<T style={{ fontFamily: F.m, fontSize: 13, color: t.ink3 }}>{tr('Oricâte')}</T></Lbl>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-              {VIBES.map((v) => { const on = d.vibes.includes(v); return <Opt key={v} label={v} grow={false} on={on} onPress={() => { tap(); set({ vibes: on ? d.vibes.filter((x) => x !== v) : d.vibes.concat([v]) }); }} />; })}
+              {VIBES.map((v) => { const on = d.vibes.includes(v); return <Opt key={v} label={tr(v)} grow={false} on={on} onPress={() => { tap(); set({ vibes: on ? d.vibes.filter((x) => x !== v) : d.vibes.concat([v]) }); }} />; })}
             </View>
           </View>
         </ScrollView>
         <View style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: Math.max(ins.bottom, 12) + 10 }}>
-          <Big label={count ? 'Arată ' + count + (count === 1 ? ' variantă' : ' variante') : 'Nimic nu se potrivește'} onPress={() => onApply(d)} />
+          <Big label={count ? (count === 1 ? tr('Arată 1 variantă') : tr('Arată {n} variante', { n: count })) : tr('Nimic nu se potrivește')} onPress={() => onApply(d)} />
         </View>
       </View>
       </KeyboardAvoidingView>
