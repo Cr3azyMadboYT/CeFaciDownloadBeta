@@ -397,14 +397,15 @@ export interface Parsed {
   note: string;         // shown when we had to relax the request
 }
 
-const DAYS: Record<string, number> = { duminica: 0, luni: 1, marti: 2, miercuri: 3, joi: 4, vineri: 5, sambata: 6, sambeta: 6 };
-const PARTS: [RegExp, number, number, string][] = [ // pattern, hour, minute, label
-  [/ dupa miezul noptii /, 1, 0, 'după miezul nopții'],
-  [/ (dimineata|dimineatza|dimi) /, 10, 0, 'dimineața'],
-  [/ (la )?pranz /, 13, 0, 'la prânz'],
-  [/ (dupa amiaza|dupa amiaz|dupaamiaza|dupa masa|dupamasa) /, 16, 0, 'după-amiază'],
-  [/ (la noapte|noaptea|noapte|tarziu|late) /, 23, 30, 'noaptea'],
-  [/ (diseara|deseara|disara|diseara asta|in seara asta|seara asta|seara|searã) /, 20, 0, 'seara'],
+const DAYS: Record<string, number> = { duminica: 0, luni: 1, marti: 2, miercuri: 3, joi: 4, vineri: 5, sambata: 6, sambeta: 6,
+  sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
+const PARTS: [RegExp, number, number, string][] = [ // pattern, hour, minute, label (the labels are translated where used)
+  [/ (?:dupa miezul noptii|after midnight) /, 1, 0, 'după miezul nopții'],
+  [/ (dimineata|dimineatza|dimi|in the morning|this morning|morning) /, 10, 0, 'dimineața'],
+  [/ (?:(la )?pranz|at lunch|lunchtime|lunch) /, 13, 0, 'la prânz'],
+  [/ (dupa amiaza|dupa amiaz|dupaamiaza|dupa masa|dupamasa|in the afternoon|this afternoon|afternoon) /, 16, 0, 'după-amiază'],
+  [/ (la noapte|noaptea|noapte|tarziu|late night|at night|late|night) /, 23, 30, 'noaptea'],
+  [/ (diseara|deseara|disara|diseara asta|in seara asta|seara asta|seara|searã|tonight|this evening|in the evening|evening) /, 20, 0, 'seara'],
 ];
 const ADULT = /pussy|strip|gentlemen|erotic|\bsexy\b|\bxxx\b|cigars club/;
 const FOODISH = new Set<Cat>(['mancare', 'cafea', 'desert']);
@@ -466,6 +467,12 @@ function placeOf(w: string): Place | null {
 export function parseQuery(q: string): Parsed {
   const p: Parsed = { raw: [], words: [], topics: [], kinds: [], cuisines: [], cats: [], vibes: [], needs: [], outdoor: false, openNow: false, cheap: false, near: false, fancy: false, family: false, romantic: false, fixes: [], fuzzy: {}, note: '' };
   let s = ' ' + fold(q).replace(/(\d{1,2})[:.](\d{2})/g, '$1h$2').replace(/['’`´]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ') + ' ';
+  // English clock times: "10pm" is 22:00, "9am" the morning, "1am" the night
+  s = s.replace(/(?<= )(\d{1,2})(?:(am)| ?(pm))(?= )/g, (m, h: string, am?: string) => {
+    const n = Number(h); if (n > 12) return m;
+    if (!am) return (n % 12 + 12) + 'h';
+    return n === 12 ? '0h' : n <= 5 ? n + 'h noaptea' : n + 'h dimineata';
+  });
   for (const [k, v] of Object.entries(NAME_ALIASES)) s = s.replace(' ' + k + ' ', ' ' + v + ' ');
   const take = (re: RegExp, fn: (m: RegExpMatchArray) => void) => { const m = s.match(re); if (m) { fn(m); s = s.replace(re, ' '); return true; } return false; };
   const num = (x: string) => (/^\d+$/.test(x) ? Number(x) : NUMBERS[x] ?? NaN);
@@ -478,33 +485,33 @@ export function parseQuery(q: string): Parsed {
   });
   // what the place should have
   const needs: [RegExp, Need][] = [
-    [/ (?:cu )?(?:wi ?fi|internet|net bun|sa (?:pot )?lucra|sa lucrez|de lucru|cu laptopul|laptopul|laptop|remote) /, 'wifi'],
-    [/ (?:fara fumat|fara fum|nefumatori|pentru nefumatori|sa nu se fumeze|fara tigari|smoke free|non smoking|(?:unde |in care )?nu se fumeaza|nu (?:vreau|suport|imi place) (?:fumul|fum|fumat|tigari)) /, 'nosmoke'],
-    [/ (?:unde se fumeaza|se fumeaza|cu fumat|fumatori|pentru fumatori|pot fuma|sa pot fuma|sa se poata fuma|fumat) /, 'smoke'],
-    [/ (?:accesibil |acces )?(?:pentru |cu )?(?:scaun cu rotile|scaun rulant|carucior|caruciorul|dizabilitati|handicap|fara trepte|wheelchair) /, 'wheel'],
-    [/ (?:cu )?(?:aer conditionat|aerul conditionat|racoare|climatizat|cu clima|cu ac) /, 'ac'],
+    [/ (?:cu |with )?(?:wi ?fi|internet|net bun|sa (?:pot )?lucra|sa lucrez|de lucru|cu laptopul|laptopul|laptop|remote|to work|for work|work friendly|working) /, 'wifi'],
+    [/ (?:fara fumat|fara fum|nefumatori|pentru nefumatori|sa nu se fumeze|fara tigari|smoke free|non smoking|nonsmoking|no smoking|no smoke|(?:unde |in care )?nu se fumeaza|nu (?:vreau|suport|imi place) (?:fumul|fum|fumat|tigari)) /, 'nosmoke'],
+    [/ (?:unde se fumeaza|se fumeaza|cu fumat|fumatori|pentru fumatori|pot fuma|sa pot fuma|sa se poata fuma|fumat|smoking allowed|smoking area|where i can smoke|can smoke|smokers|smoking) /, 'smoke'],
+    [/ (?:accesibil |acces )?(?:pentru |cu )?(?:scaun cu rotile|scaun rulant|carucior|caruciorul|dizabilitati|handicap|fara trepte|wheelchair accessible|wheelchair access|wheelchair friendly|wheelchair|disabled access|step free|accessible) /, 'wheel'],
+    [/ (?:cu |with )?(?:aer conditionat|aerul conditionat|racoare|climatizat|cu clima|cu ac|air conditioning|air conditioned|aircon|air con) /, 'ac'],
   ];
   for (const [re, n] of needs) while (take(re, () => {})) if (!p.needs.includes(n)) p.needs.push(n);
   // close by: "aproape", "mai aproape", "lângă mine" (not "aproape de Unirii": that is a place)
-  if (take(/ (?:cat mai |mai |foarte )?(?:aproape(?: de (?:mine|noi|casa|acasa))?(?! de )|langa mine|langa noi|in apropiere|prin apropiere|pe aproape|prin preajma|in preajma|in zona mea|nu departe|nu prea departe) /, () => {})) p.near = true;
+  if (take(/ (?:cat mai |mai |foarte )?(?:aproape(?: de (?:mine|noi|casa|acasa))?(?! de )|langa mine|langa noi|in apropiere|prin apropiere|pe aproape|prin preajma|in preajma|in zona mea|nu departe|nu prea departe|near me|near us|near here|nearby|close by|close to me|around me|around here|closest|nearest) /, () => {})) p.near = true;
   // budget
-  const PER = '(?: (?:de )?(?:persoana|pers|om|cap))?';
-  take(new RegExp(' (?:intre|de la) ' + NUMW + ' (?:si|la|pana la) ' + NUMW + ' (?:de )?(?:lei|ron)?' + PER + ' '), (m) => { p.budgetMin = num(m[1]); p.budget = num(m[2]); });
+  const PER = '(?: (?:de |per |a )?(?:persoana|pers|om|cap|person|head)| pp| each)?';
+  take(new RegExp(' (?:intre|de la|between|from) ' + NUMW + ' (?:si|la|pana la|and|to) ' + NUMW + ' (?:de )?(?:lei|ron)?' + PER + ' '), (m) => { p.budgetMin = num(m[1]); p.budget = num(m[2]); });
   take(new RegExp(' (\\d{2,4}) (\\d{2,4}) (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budgetMin = Number(m[1]); p.budget = Number(m[2]); }); // "50-100 lei"
   if (p.budgetMin !== undefined && p.budget !== undefined && p.budgetMin > p.budget) [p.budgetMin, p.budget] = [p.budget, p.budgetMin]; // "intre 100 si 50"
-  take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana (?:in|la)) ' + NUMW + ' (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budget = num(m[1]); });
-  take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana in) (\\d{2,4})' + PER + ' '), (m) => { p.budget = num(m[1]); }); // "sub 50": lei is implied
-  take(new RegExp(' ' + NUMW + ' (?:de )?(?:lei|ron)(?: (?:de )?(?:persoana|pers|om|cap))? '), (m) => { p.budget = num(m[1]); });
-  if (take(/ (ieftin|ieftina|ieftine|ieftini|ieftinut|ieftinica|buget|low cost|lowcost|studentesc|studenteasca|accesibil|accesibile|preturi accesibile|preturi mici|preturi bune|nu prea scump|nu scump|pe buget|pe bani putini|economic) /, () => {})) { p.cheap = true; p.budget = Math.min(p.budget ?? 50, 50); }
-  if (take(/ (scump|scumpa|lux|luxos|luxoasa|elegant|eleganta|fancy|fine dining|gourmet|de fite|select|exclusivist) /, () => {})) p.fancy = true;
+  take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana (?:in|la)|under|below|less than|up to|maximum) ' + NUMW + ' (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budget = num(m[1]); });
+  take(new RegExp(' (?:sub|maxim|max|cel mult|nu mai mult de|pana in|under|below|less than|up to|maximum) (\\d{2,4})' + PER + ' '), (m) => { p.budget = num(m[1]); }); // "sub 50": lei is implied
+  take(new RegExp(' ' + NUMW + ' (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budget = num(m[1]); });
+  if (take(/ (ieftin|ieftina|ieftine|ieftini|ieftinut|ieftinica|buget|low cost|lowcost|studentesc|studenteasca|accesibil|accesibile|preturi accesibile|preturi mici|preturi bune|nu prea scump|nu scump|pe buget|pe bani putini|economic|cheap|cheaper|cheapest|affordable|inexpensive|not expensive|on a budget|budget|student) /, () => {})) { p.cheap = true; p.budget = Math.min(p.budget ?? 50, 50); }
+  if (take(/ (scump|scumpa|lux|luxos|luxoasa|elegant|eleganta|fancy|fine dining|gourmet|de fite|select|exclusivist|expensive|luxury|luxurious|upscale|high end|classy|posh) /, () => {})) p.fancy = true;
   if (p.budget !== undefined && p.budget < 50) p.cheap = true;
 
   // clock times, before people ("înainte de 9" is a time, not nine people) and with the right half of the day:
   // "la 8" is the evening for a bar, "la 10" the morning for brunch, "la 1 noaptea" is 01:00
   const t: TimeAsk = { label: '' };
   let clockFirst = false; // the label starts with a clock time ("la 20:00", "după 22:00"): a part of the day is not added
-  const daytime = /brunch|mic dejun|micul dejun|cafea|cafenea|cafele|muzeu|muzee|parc|plimbare|zoo|gradina|dimineata|pranz|copii|tenis|padel|piscina/.test(s);
-  const nightlife = /club|party|petrecere|disco|shisha|narghil|noaptea|la noapte|dupa miezul/.test(s);
+  const daytime = /brunch|mic dejun|micul dejun|cafea|cafenea|cafele|muzeu|muzee|parc|plimbare|zoo|gradina|dimineata|pranz|copii|tenis|padel|piscina|breakfast|coffee|museum|morning|lunch|kids|tennis/.test(s);
+  const nightlife = /club|party|petrecere|disco|shisha|narghil|noaptea|la noapte|dupa miezul|nightlife|at night|late night|midnight/.test(s);
   const clock = (h: number, part?: string) => {
     if (part === 'noaptea') return h === 12 ? 0 : h <= 5 ? h : h < 12 ? h + 12 : h;
     if (part === 'dimineata') return h % 12;
@@ -517,37 +524,37 @@ export function parseQuery(q: string): Parsed {
   };
   const hm = (h: number, m: number) => String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
   const PART = '(?: (seara|noaptea|dimineata|pranz|dupa amiaza))?';
-  take(new RegExp(' dupa (?:ora )?(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete)\\b)' + PART + ' '), (m) => {
+  take(new RegExp(' (?:dupa|after) (?:ora )?(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete|people|persons|friends|guys)\\b)' + PART + ' '), (m) => {
     const h = Number(m[1]); if (h > 24) return;
     t.hour = clock(h, m[3]); t.min = m[2] ? Number(m[2]) : 0; t.after = true; t.label = tr('după {t}', { t: hm(t.hour, t.min) }); clockFirst = true;
   });
-  take(new RegExp(' (?:inainte de|inainte sa fie|pana la|pana in) (?:ora )?(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete)\\b)' + PART + ' '), (m) => {
+  take(new RegExp(' (?:inainte de|inainte sa fie|pana la|pana in|before|until|till) (?:ora )?(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete|people|persons|friends|guys)\\b)' + PART + ' '), (m) => {
     const h = Number(m[1]); if (h > 24) return;
     const end = clock(h, m[3]) * 60 + (m[2] ? Number(m[2]) : 0);
     const at = Math.max(0, end - 60);
     t.hour = Math.floor(at / 60); t.min = at % 60; t.before = true; t.label = tr('înainte de {t}', { t: hm(Math.floor(end / 60) % 24, end % 60) }); clockFirst = true;
   });
-  take(new RegExp(' (?:la |pe la |pela |ora |la ora |in jur de |pe la ora )(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete)\\b)' + PART + ' '), (m) => {
+  take(new RegExp(' (?:la |pe la |pela |ora |la ora |in jur de |pe la ora |at |around |at around |about )(\\d{1,2})(?:h(\\d{2})?)?(?! (?:de )?(?:persoane|persoana|pers|oameni|insi|prieteni|prietene|colegi|copii|adulti|baieti|fete|people|persons|friends|guys)\\b)' + PART + ' '), (m) => {
     const h = Number(m[1]); if (h > 24) return;
     t.hour = clock(h, m[3]); t.min = m[2] ? Number(m[2]) : 0; t.label = tr('la {t}', { t: hm(t.hour, t.min) }); clockFirst = true;
   });
 
   // people
   const setPeople = (n: number) => { if (n >= 1 && n <= 40) p.people = n; };
-  if (take(/ (in doi|in 2|cuplu|cu iubita|cu iubitul|cu prietena|cu prietenul|date|intalnire|prima intalnire|romantic|romantica|romantice|romantik|aniversare) /, () => {})) { p.romantic = true; p.people ??= 2; p.vibes.push('Chill'); }
-  take(new RegExp(' ' + NUMW + ' (?:de )?(?:persoane|persoana|pers|oameni|prieteni|prietene|insi|inși|adulti|colegi|baieti|fete) '), (m) => setPeople(num(m[1]))); // "20 de persoane"
-  take(new RegExp(' (?:gasca|grup|grupul|gasca mea|echipa) (?:de )?' + NUMW + ' '), (m) => setPeople(num(m[1])));
-  take(new RegExp(' (?:de|pt|pentru|in|cu) ' + NUMW + ' (?!(?:de )?(?:lei|ron|ani)\\b)'), (m) => { const n = num(m[1]); if (n >= 2 && n <= 30) setPeople(n); });
-  if (take(/ (singur|singura|solo) /, () => {})) p.people ??= 1;
-  if (take(/ (cu copiii|cu copii|copii|copiii|copil|cu cel mic|cu cei mici|familie|familia|in familie|kids|family|pentru copii|pt copii) /, () => {})) p.family = true;
-  if (take(/ (cu gasca|gasca|grup|grupul|cu prietenii|prietenii|cu baietii|cu fetele|colegii|cu colegii|echipa) /, () => {})) p.people ??= 5;
+  if (take(/ (date night|on a date|for a date|first date|romantic dinner|with my girlfriend|with my boyfriend|with my partner|with my wife|with my husband|girlfriend|boyfriend|couples|couple|anniversary|in doi|in 2|cuplu|cu iubita|cu iubitul|cu prietena|cu prietenul|date|intalnire|prima intalnire|romantic|romantica|romantice|romantik|aniversare) /, () => {})) { p.romantic = true; p.people ??= 2; p.vibes.push('Chill'); }
+  take(new RegExp(' ' + NUMW + ' (?:de )?(?:persoane|persoana|pers|oameni|prieteni|prietene|insi|inși|adulti|colegi|baieti|fete|people|persons|pax|guys|friends|of us) '), (m) => setPeople(num(m[1]))); // "20 de persoane"
+  take(new RegExp(' (?:gasca|grup|grupul|gasca mea|echipa|group of|party of|group) (?:de )?' + NUMW + ' '), (m) => setPeople(num(m[1])));
+  take(new RegExp(' (?:de|pt|pentru|in|cu|for|with) ' + NUMW + ' (?!(?:de )?(?:lei|ron|ani|years)\\b)'), (m) => { const n = num(m[1]); if (n >= 2 && n <= 30) setPeople(n); });
+  if (take(/ (singur|singura|solo|alone|by myself|on my own|just me) /, () => {})) p.people ??= 1;
+  if (take(/ (with kids|with the kids|with children|kid friendly|kids friendly|family friendly|for kids|for children|children|child|cu copiii|cu copii|copii|copiii|copil|cu cel mic|cu cei mici|familie|familia|in familie|kids|family|pentru copii|pt copii) /, () => {})) p.family = true;
+  if (take(/ (with friends|with my friends|with the gang|with mates|with colleagues|friends|colleagues|cu gasca|gasca|grup|grupul|cu prietenii|prietenii|cu baietii|cu fetele|colegii|cu colegii|echipa) /, () => {})) p.people ??= 5;
 
   // time
-  if (take(/ (non ?stop|24 ?7|24 din 24|deschis toata noaptea) /, () => {})) { t.now = true; t.nonstop = true; t.label = tr('non-stop'); clockFirst = false; }
-  if (take(/ (deschis acum|deschisa acum|deschise acum|deschisi acum|chiar acum|acum|in momentul asta|imediat|open now|open) /, () => {})) { t.now = true; t.label ||= tr('acum'); }
-  if (take(/ (azi|astazi|azi seara) /, () => {})) { t.day = -1; }
-  if (take(/ (poimaine) /, () => {})) t.day = -3;
-  else if (take(/ (maine|mâine|mine seara) /, () => {})) t.day = -2;
+  if (take(/ (non ?stop|24 ?7|24 din 24|deschis toata noaptea|24 hours|24h|open all night|all night) /, () => {})) { t.now = true; t.nonstop = true; t.label = tr('non-stop'); clockFirst = false; }
+  if (take(/ (deschis acum|deschisa acum|deschise acum|deschisi acum|chiar acum|acum|in momentul asta|imediat|open right now|open now|right now|currently open|open|now) /, () => {})) { t.now = true; t.label ||= tr('acum'); }
+  if (take(/ (azi|astazi|azi seara|today) /, () => {})) { t.day = -1; }
+  if (take(/ (poimaine|day after tomorrow) /, () => {})) t.day = -3;
+  else if (take(/ (maine|mâine|mine seara|tomorrow) /, () => {})) t.day = -2;
   for (const [w, d] of Object.entries(DAYS)) if (take(new RegExp(' ' + w + '(a|ea)? '), () => {})) { t.day = d; t.label = pick(['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'], ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])[d] + (t.label ? ' ' + t.label : ''); clockFirst = false; }
   if (take(/ (in )?(weekend|weekendul|week end|wekend|weekend asta|weekendul asta) /, () => {})) { t.day = 6; t.label = tr('în weekend'); clockFirst = false; }
   for (const [re, h, mm, label] of PARTS) {
@@ -555,7 +562,7 @@ export function parseQuery(q: string): Parsed {
     if (take(re, () => {})) {
       if (t.hour === undefined) { t.hour = h; t.min = mm; t.label = (t.label ? t.label + ' ' : '') + tr(label); }
       else if (!clockFirst) t.label = (t.label ? t.label + ' ' : '') + tr(label);
-      if (/diseara|deseara|disara|seara asta|la noapte/.test(was) && t.day === undefined) t.day = -1;
+      if (/diseara|deseara|disara|seara asta|la noapte|tonight|this evening/.test(was) && t.day === undefined) t.day = -1;
       break;
     }
   }
@@ -567,7 +574,7 @@ export function parseQuery(q: string): Parsed {
 
   // places (longest phrase first), then topic phrases
   if (!p.place) for (const [w, pl] of PLACE_PHRASES) { if (s.includes(' ' + w + ' ')) { p.place = pl; s = s.replace(' ' + w + ' ', ' '); break; } }
-  const OUT = / (cu terasa|terasa|terase|terasei|afara|gradina|gradini|in aer liber|aer liber|outdoor|curte|curtea|vara)(?= )/g;
+  const OUT = / (cu terasa|terasa|terase|terasei|afara|gradina|gradini|in aer liber|aer liber|outdoor|curte|curtea|vara|with a terrace|with terrace|terraces|terrace|outdoors|outside|open air|patio|garden|summer garden)(?= )/g;
   if (OUT.test(s)) { p.outdoor = true; s = s.replace(OUT, ' '); }
   const content = s.trim(); // what is left for names and topics
   for (const [w, id] of TOPIC_PHRASES) if (s.includes(' ' + w + ' ')) { addTopic(p, id); s = s.replace(' ' + w + ' ', ' § '); }
