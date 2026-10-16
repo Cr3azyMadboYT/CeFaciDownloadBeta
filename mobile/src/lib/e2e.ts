@@ -14,3 +14,7 @@ if (E2E) {
     }
   } catch { /* storage blocked */ }
 }
+
+// the emulator check taps the Romanian texts: the test build starts in Romanian whatever the emulator's language
+import { deviceLang, type Lang } from '../../../src/i18n';
+export const firstLang = (): Lang => (E2E ? 'ro' : deviceLang());

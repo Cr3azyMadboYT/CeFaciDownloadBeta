@@ -3,7 +3,7 @@
 import { APP } from '../../../src/app/bridge';
 import { getApp, setBoard } from './session';
 import { WHO, type Filters } from './filters';
-import { pick, tr } from './i18n';
+import { pick, tr } from '../../../src/i18n';
 
 export interface Plan {
   visitId?: string; reservationAttempt?: number;

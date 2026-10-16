@@ -2,7 +2,7 @@
 // without opening the filters. With a search typed, they add words the search understands.
 import { APP } from '../../../src/app/bridge';
 import type { Filters, Place } from './filters';
-import { tr } from './i18n';
+import { tr } from '../../../src/i18n';
 
 export interface Tweak { id: string; label: string; icon?: string; apply: { f?: Partial<Filters>; q?: string } }
 

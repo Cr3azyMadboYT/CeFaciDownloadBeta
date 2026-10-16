@@ -6,7 +6,7 @@ import { APP, getApp, savePrefs } from './session';
 import { startsAt, updPlan, type Plan } from './plans';
 import { voteOuting } from './crews';
 import { toast } from './toast';
-import { tr } from './i18n';
+import { tr } from '../../../src/i18n';
 
 export type Rating = 'super' | 'yes' | 'no';
 

@@ -1,7 +1,7 @@
 // Gășcile, through Supabase: a permanent crew needs at least 2 friends; friends are invited and show as
 // "Invitat" until they accept. The admin can delete the crew; anyone can leave (the oldest member becomes admin).
 import { sb } from './auth';
-import { tr, trServer } from './i18n';
+import { tr, trServer } from '../../../src/i18n';
 import type { Person } from './friends';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -10,7 +10,8 @@
 //   what he changed; when there is really nothing (04:30), he says why instead of an empty screen.
 import { KINDS } from './catalog';
 import { closesAt, info, km, learnHours, needFit, openAt, priceOf, scoreVenue, stayAt, vibesOf, type Need } from './core';
-import { SLOTS, buildEvening, carMin, eveningCands, walkMin, type EveningAsk, type EveningCand, type SlotId } from './evening';
+import { pick, tr } from '../i18n';
+import { SLOTS, buildEvening, carMin, driveNote, eveningCands, walkMin, type EveningAsk, type EveningCand, type SlotId } from './evening';
 import { hhmm, nightHour } from './time';
 import { exposure, wxAt } from './weather';
 import type { Ask, Ctx, OpenInfo, Scored, Venue, Vibe, Who } from './types';
@@ -63,10 +64,10 @@ export { carMin };
 export const wayOf = (d: number, car = true, go: Way = 'car'): Way => (d <= 1.2 || !car ? 'walk' : go);
 /** Minutes on the way: on foot, by car, by bus (with the wait), by bike (about 15 km/h). */
 export const minutesBy = (d: number, by: Way = wayOf(d)) => (by === 'walk' ? walkMin(d) : by === 'bus' ? Math.round(8 + d * 3) : by === 'bike' ? Math.max(3, Math.round(d * 4)) : carMin(d));
-const BY_TEXT: Record<Way, string> = { walk: 'pe jos', car: 'cu mașina', bus: 'cu autobuzul', bike: 'cu bicicleta' };
+const BY_TEXT: Record<Way, string> = { walk: 'pe jos', car: 'cu mașina', bus: 'cu autobuzul', bike: 'cu bicicleta' }; // said with tr()
 const wayFor = (req: PlanReq, d: number) => wayOf(d, req.car !== false, req.go ?? 'car');
 const roundUp5 = (d: Date) => { const t = new Date(d.getTime()); t.setSeconds(0, 0); t.setMinutes(Math.ceil(t.getMinutes() / 5) * 5); return t; };
-const kmText = (d: number) => (d < 1 ? Math.max(50, Math.round((d * 1000) / 50) * 50) + ' m' : d.toFixed(d < 10 ? 1 : 0).replace('.', ',') + ' km');
+const kmText = (d: number) => (d < 1 ? Math.max(50, Math.round((d * 1000) / 50) * 50) + ' m' : d.toFixed(d < 10 ? 1 : 0).replace('.', pick(',', '.')) + ' km');
 
 // one outing of each kind first, then the rest: "Altceva" is really something else
 const GROUP: Record<string, string> = { mancare: 'food', cafea: 'food', desert: 'food', bar: 'night', club: 'night', film: 'culture', teatru: 'culture', cultura: 'culture', activitate: 'play', sport: 'play', natura: 'day' };
@@ -97,7 +98,7 @@ function openInfo(v: Venue, at: Date): OpenInfo {
   const o = openAt(v, at);
   if (!o.known) return o;
   const c = closesAt(v, at);
-  return c ? { ...o, label: 'Deschis până la ' + hhmm(c) } : o;
+  return c ? { ...o, label: tr('Deschis până la {t}', { t: hhmm(c) }) } : o;
 }
 
 interface Cand { s: Scored; at: Date; until: Date; sure: boolean; score: number }
@@ -132,7 +133,7 @@ const vibeFit = (vibes: Vibe[], req: PlanReq) => !req.vibes.length || vibes.some
 function single(c: Cand, req: PlanReq, ctx: Ctx, title: string, sub: string, id: string): MadePlan {
   const v = c.s.v;
   const by = wayFor(req, c.s.km);
-  const step: PlanStep = { v, at: c.at, until: c.until, travel: minutesBy(c.s.km, by), by, why: KINDS[v.k]?.label ?? v.kind, price: priceOf(v), open: openInfo(v, c.at), sure: c.sure, reasons: c.s.reasons };
+  const step: PlanStep = { v, at: c.at, until: c.until, travel: minutesBy(c.s.km, by), by, why: tr(KINDS[v.k]?.label ?? v.kind), price: priceOf(v), open: openInfo(v, c.at), sure: c.sure, reasons: c.s.reasons };
   return finish({ id, title, sub, steps: [step], price: step.price, drive: false, checks: [], family: groupOf(v), fits: vibeFit(vibesOf(v), req) }, req, ctx);
 }
 
@@ -143,7 +144,7 @@ function fromRoute(c: EveningCand, req: PlanReq, ctx: Ctx): MadePlan {
     const by: Way = i === 0 ? wayFor(req, d) : r.drive ? req.go ?? 'car' : 'walk';
     return { v: s.v, at: s.at, until: s.until, travel: i === 0 || by !== 'walk' ? minutesBy(d, by) : s.walk, by, why: s.why, price: s.price, open: openInfo(s.v, s.at), sure: s.sure, reasons: s.reasons };
   });
-  const note = r.note?.replace('cu mașina sau cu taxiul', BY_TEXT[req.go ?? 'car'] + ' sau cu taxiul');
+  const note = r.note && r.note === driveNote() ? driveNote(req.go ?? 'car') : r.note;
   return finish({ id: r.id, title: r.label, sub: r.sub, steps, price: r.price, over: r.over, drive: !!r.drive, checks: [], family: r.family, fits: vibeFit(r.vibes, req), note }, req, ctx);
 }
 
@@ -152,26 +153,29 @@ function finish(p: MadePlan, req: PlanReq, ctx: Ctx): MadePlan {
   const checks: Check[] = [];
   const shut = p.steps.find((s) => { const o = openAt(s.v, s.at); return o.known && !o.open; });
   const unsure = p.steps.filter((s) => !s.sure);
-  if (shut) checks.push({ ok: false, text: shut.v.name + ' e închis la ' + hhmm(shut.at) });
-  else if (!unsure.length) checks.push({ ok: true, text: p.steps.length > 1 ? 'Toate deschise la ora lor' : 'Deschis la ' + hhmm(p.steps[0].at) });
-  else checks.push({ ok: false, text: 'Program neconfirmat la ' + unsure[0].v.name + (unsure[0].v.phone ? ': sunați înainte' : unsure[0].v.website ? ': vedeți pe site' : '') });
+  if (shut) checks.push({ ok: false, text: tr('{name} e închis la {t}', { name: shut.v.name, t: hhmm(shut.at) }) });
+  else if (!unsure.length) checks.push({ ok: true, text: p.steps.length > 1 ? tr('Toate deschise la ora lor') : tr('Deschis la {t}', { t: hhmm(p.steps[0].at) }) });
+  else {
+    const name = unsure[0].v.name;
+    checks.push({ ok: false, text: unsure[0].v.phone ? tr('Program neconfirmat la {name}: sunați înainte', { name }) : unsure[0].v.website ? tr('Program neconfirmat la {name}: vedeți pe site', { name }) : tr('Program neconfirmat la {name}', { name }) });
+  }
   const first = p.steps[0];
   const d = km(ctx.origin, first.v);
-  if (req.now) checks.push({ ok: true, text: kmText(d) + ', ajungeți pe la ' + hhmm(first.at) });
-  else checks.push({ ok: true, text: kmText(d) + ', ~' + first.travel + ' min ' + BY_TEXT[first.by] });
+  if (req.now) checks.push({ ok: true, text: tr('{km}, ajungeți pe la {t}', { km: kmText(d), t: hhmm(first.at) }) });
+  else checks.push({ ok: true, text: kmText(d) + ', ~' + first.travel + ' min ' + tr(BY_TEXT[first.by]) });
   const price = p.steps.reduce((a, s) => a + s.price, 0);
   // against the budget they chose, even when Bilu had to look above it
   const cap = req.askedMax ?? req.budgetMax;
   const over = cap !== Infinity && price > cap ? price - cap : undefined;
-  if (cap === Infinity) checks.push({ ok: true, text: '~' + price + ' lei de persoană' });
-  else if (!over) checks.push({ ok: true, text: '~' + price + ' lei, în buget' });
-  else checks.push({ ok: false, text: '~' + price + ' lei, +' + over + ' peste buget' });
+  if (cap === Infinity) checks.push({ ok: true, text: tr('~{price} lei de persoană', { price }) });
+  else if (!over) checks.push({ ok: true, text: tr('~{price} lei, în buget', { price }) });
+  else checks.push({ ok: false, text: tr('~{price} lei, +{over} peste buget', { price, over }) });
   const wet = p.steps.map((s) => ({ s, w: wxAt(ctx.weather, s.at) })).find(({ s, w }) => w?.wet && exposure(s.v) !== 'in');
   const w0 = wxAt(ctx.weather, first.at);
-  if (wet) checks.push({ ok: false, text: 'La ' + hhmm(wet.s.at) + ': ' + wet.w!.text + ', stați înăuntru' });
+  if (wet) checks.push({ ok: false, text: tr('La {t}: {wx}, stați înăuntru', { t: hhmm(wet.s.at), wx: wet.w!.text }) });
   else if (w0) checks.push({ ok: !w0.wet, text: w0.temp + '°, ' + w0.text });
   // a big group: a table for nine does not wait for you
-  if (req.people >= 6 && p.steps.some((s) => s.v.cat === 'mancare' || s.v.cat === 'bar' || s.v.cat === 'club' || s.v.cat === 'activitate' || s.v.cat === 'sport')) checks.push({ ok: false, text: 'Sunteți ' + req.people + ': sunați să rezervați' });
+  if (req.people >= 6 && p.steps.some((s) => s.v.cat === 'mancare' || s.v.cat === 'bar' || s.v.cat === 'club' || s.v.cat === 'activitate' || s.v.cat === 'sport')) checks.push({ ok: false, text: tr('Sunteți {n}: sunați să rezervați', { n: req.people }) });
   return { ...p, price, over, checks };
 }
 
@@ -215,7 +219,8 @@ function cheaperTip(p: MadePlan, all: Venue[], req: PlanReq, ctx: Ctx): MadePlan
   });
   if (!best) return undefined;
   const total = p.price - best.save;
-  return { step: best.step, v: best.v, text: 'Cu ' + best.v.name + ' în loc de ' + p.steps[best.step].v.name + ': ~' + total + ' lei' + (total <= (req.askedMax ?? req.budgetMax) ? ', în buget.' : '.') };
+  const vars = { a: best.v.name, b: p.steps[best.step].v.name, total };
+  return { step: best.step, v: best.v, text: total <= (req.askedMax ?? req.budgetMax) ? tr('Cu {a} în loc de {b}: ~{total} lei, în buget.', vars) : tr('Cu {a} în loc de {b}: ~{total} lei.', vars) };
 }
 
 /** Puts another place in one step (the tip, or "Alt bar") and checks the plan again. */
@@ -256,18 +261,18 @@ function singles(ranked: Cand[], n: number, used: Set<string>, req: PlanReq, ctx
   const pool = ranked.filter((c) => !used.has(c.s.v.id));
   const first = pool[0];
   if (!first || n <= 0) return [];
-  const take: [Cand, string, string][] = [[first, topUp ? 'Un singur loc' : 'Cel mai potrivit', KINDS[first.s.v.k]?.label ?? first.s.v.kind]];
+  const take: [Cand, string, string][] = [[first, topUp ? tr('Un singur loc') : tr('Cel mai potrivit'), tr(KINDS[first.s.v.k]?.label ?? first.s.v.kind)]];
   // "Altceva": another kind of outing that still has the vibe asked (Mâncare bună: a dessert after a restaurant)
   const fits = (c: Cand) => vibeFit(vibesOf(c.s.v), req);
   const other = pool.find((c) => groupOf(c.s.v) !== groupOf(first.s.v) && fits(c)) ?? pool.find((c) => c.s.v.k !== first.s.v.k && fits(c))
     ?? pool.find((c) => groupOf(c.s.v) !== groupOf(first.s.v)) ?? pool[1];
-  if (other && n >= 2) take.push([other, 'Altceva', KINDS[other.s.v.k]?.label ?? other.s.v.kind]);
+  if (other && n >= 2) take.push([other, tr('Altceva'), tr(KINDS[other.s.v.k]?.label ?? other.s.v.kind)]);
   // the closest of the good ones — of a third kind, when one is about as close
   const good = pool.slice(0, 40).filter((c) => !take.some(([x]) => x === c));
   const near = (good.some(fits) ? good.filter(fits) : good).sort((a, b) => a.s.km - b.s.km);
   const third = near.find((c) => !take.some(([x]) => x.s.v.k === c.s.v.k) && c.s.km <= (near[0]?.s.km ?? 0) + 0.6);
   const close = third ?? near[0];
-  if (close && n >= 3) take.push([close, 'Cel mai aproape', kmText(close.s.km) + ' de tine']);
+  if (close && n >= 3) take.push([close, tr('Cel mai aproape'), tr('{km} de tine', { km: kmText(close.s.km) })]);
   return take.map(([c, title, sub], k) => single(c, req, ctx, title, sub, 'loc-' + (k + 1) + '-' + c.s.v.id));
 }
 
@@ -307,6 +312,7 @@ function tryPlans(all: Venue[], req: PlanReq, ctx: Ctx): MadePlan[] {
 }
 
 const NEED_TEXT: Record<Need, string> = { wifi: 'wifi', nosmoke: 'fără fum', smoke: 'loc de fumat', wheel: 'acces cu scaun cu rotile', ac: 'aer condiționat' };
+const NEED_TEXT_EN: Record<Need, string> = { wifi: 'with wifi', nosmoke: 'smoke-free', smoke: 'with a smoking area', wheel: 'with wheelchair access', ac: 'with air conditioning' };
 
 /** Three plans for the request, with what Bilu had to change to find them, or why there is none. */
 export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
@@ -347,26 +353,39 @@ export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
   // a small town: Bilu says it as it is, rather than send them far without a word
   const close = all.filter((v) => km(ctx.origin, v) <= 5).length;
   const farFirst = plans.length && plans.every((p) => km(ctx.origin, p.steps[0].v) > 5);
-  if (close < 12 && farFirst) notes.push((close === 0 ? 'Pe 5 km în jurul tău n-am încă locuri bune' : 'Pe 5 km în jurul tău am doar ' + (close === 1 ? 'un loc bun' : close + ' locuri bune')) + ', așa că planurile sunt puțin mai departe. Știi un loc bun pe aproape? Spune-mi în Explorează → „Lipsește un loc?”.');
-  if (relaxed.includes('needs')) notes.push('N-am găsit nimic ' + [...(req0.outdoor ? ['cu terasă'] : []), ...(req0.needs ?? []).map((n) => 'cu ' + NEED_TEXT[n])].join(', ').replace('cu fără', 'fără') + ' deschis atunci: uite ce e deschis.');
-  if (relaxed.includes('budget')) notes.push(req0.budgetMax === 0 ? 'Gratis nu e nimic deschis la ora asta: uite ce e mai ieftin.' : req0.budgetMin > 0 && req0.budgetMax === Infinity ? 'De la ' + req0.budgetMin + ' lei în sus nu e nimic deschis la ora asta: uite ce e.' : 'Cu ' + req0.budgetMax + ' lei de persoană nu iese nimic la ora asta: uite ce e cel mai aproape de buget.');
-  if (relaxed.includes('near')) notes.push('Chiar lângă tine nu e nimic deschis atunci, așa că m-am uitat puțin mai departe.');
-  else if ((relaxed.includes('far') || relaxed.includes('wider')) && !(close < 12 && farFirst)) notes.push('Prin apropiere n-am găsit destule la ora asta, așa că m-am uitat până la ' + req.maxKm + ' km.');
+  if (close < 12 && farFirst) notes.push(close === 0
+    ? tr('Pe 5 km în jurul tău n-am încă locuri bune, așa că planurile sunt puțin mai departe. Știi un loc bun pe aproape? Spune-mi în Explorează → „Lipsește un loc?”.')
+    : close === 1
+      ? tr('Pe 5 km în jurul tău am doar un loc bun, așa că planurile sunt puțin mai departe. Știi un loc bun pe aproape? Spune-mi în Explorează → „Lipsește un loc?”.')
+      : tr('Pe 5 km în jurul tău am doar {n} locuri bune, așa că planurile sunt puțin mai departe. Știi un loc bun pe aproape? Spune-mi în Explorează → „Lipsește un loc?”.', { n: close }));
+  if (relaxed.includes('needs')) {
+    const what = pick([...(req0.outdoor ? ['cu terasă'] : []), ...(req0.needs ?? []).map((n) => 'cu ' + NEED_TEXT[n])].join(', ').replace('cu fără', 'fără'),
+      [...(req0.outdoor ? ['with a terrace'] : []), ...(req0.needs ?? []).map((n) => NEED_TEXT_EN[n])].join(', '));
+    notes.push(tr('N-am găsit nimic {what} deschis atunci: uite ce e deschis.', { what }));
+  }
+  if (relaxed.includes('budget')) notes.push(req0.budgetMax === 0 ? tr('Gratis nu e nimic deschis la ora asta: uite ce e mai ieftin.') : req0.budgetMin > 0 && req0.budgetMax === Infinity ? tr('De la {min} lei în sus nu e nimic deschis la ora asta: uite ce e.', { min: req0.budgetMin }) : tr('Cu {max} lei de persoană nu iese nimic la ora asta: uite ce e cel mai aproape de buget.', { max: req0.budgetMax }));
+  if (relaxed.includes('near')) notes.push(tr('Chiar lângă tine nu e nimic deschis atunci, așa că m-am uitat puțin mai departe.'));
+  else if ((relaxed.includes('far') || relaxed.includes('wider')) && !(close < 12 && farFirst)) notes.push(tr('Prin apropiere n-am găsit destule la ora asta, așa că m-am uitat până la {km} km.', { km: req.maxKm }));
   const lone = plans.filter((p) => p.id.startsWith('loc-')).length;
   const linked = plans.length - lone;
-  if (req.mode === 'seara' && lone) notes.push(!linked ? 'La ora asta nu găsesc o seară cu mai multe opriri deschise una după alta, așa că îți dau locuri bune, câte unul.' : 'La ora asta doar ' + (linked === 1 ? 'un plan are' : linked + ' planuri au') + ' mai multe opriri deschise una după alta; ' + (lone === 1 ? 'celălalt e un singur loc.' : 'celelalte sunt câte un singur loc.'));
+  if (req.mode === 'seara' && lone) {
+    notes.push(!linked ? tr('La ora asta nu găsesc o seară cu mai multe opriri deschise una după alta, așa că îți dau locuri bune, câte unul.')
+      : linked === 1
+        ? (lone === 1 ? tr('La ora asta doar un plan are mai multe opriri deschise una după alta; celălalt e un singur loc.') : tr('La ora asta doar un plan are mai multe opriri deschise una după alta; celelalte sunt câte un singur loc.'))
+        : (lone === 1 ? tr('La ora asta doar {n} planuri au mai multe opriri deschise una după alta; celălalt e un singur loc.', { n: linked }) : tr('La ora asta doar {n} planuri au mai multe opriri deschise una după alta; celelalte sunt câte un singur loc.', { n: linked })));
+  }
   const hit = plans.filter((p) => p.fits).length;
   if (req.vibes.length && plans.length && hit < plans.length) {
-    const said = '„' + req.vibes.join('”, „') + '”';
-    notes.push(hit === 0 ? 'Pe ' + said + ' nu e nimic deschis la ora asta: uite ce e bun.' : 'Pe ' + said + (hit === 1 ? ' e un plan' : ' sunt ' + hit + ' planuri') + '; celelalte sunt ce mai e bun deschis la ora asta.');
+    const said = pick('„' + req.vibes.join('”, „') + '”', '"' + req.vibes.map((x) => tr(x)).join('", "') + '"');
+    notes.push(hit === 0 ? tr('Pe {said} nu e nimic deschis la ora asta: uite ce e bun.', { said }) : hit === 1 ? tr('Pe {said} e un plan; celelalte sunt ce mai e bun deschis la ora asta.', { said }) : tr('Pe {said} sunt {n} planuri; celelalte sunt ce mai e bun deschis la ora asta.', { said, n: hit }));
   }
-  if (plans.length && plans.length < 3 && !notes.length) notes.push('La ora asta am găsit doar ' + (plans.length === 1 ? 'un plan care se potrivește.' : 'două planuri care se potrivesc.'));
+  if (plans.length && plans.length < 3 && !notes.length) notes.push(plans.length === 1 ? tr('La ora asta am găsit doar un plan care se potrivește.') : tr('La ora asta am găsit doar două planuri care se potrivesc.'));
   let empty: string | undefined;
   if (!plans.length) {
     const h = nightHour(req0.at);
-    empty = h >= 26.5 && h < 29 ? 'E ' + hhmm(req0.at) + ': aproape tot e închis acum. Hai să facem planul pentru diseară sau mâine.'
-      : ctx.minor && h >= 21.5 ? 'La ora asta, pentru cei sub 18 ani, nu mai e nimic deschis prin apropiere.'
-      : 'N-am găsit nimic deschis atunci, nici până la ' + Math.max(req.maxKm, top(req0)) + ' km.';
+    empty = h >= 26.5 && h < 29 ? tr('E {t}: aproape tot e închis acum. Hai să facem planul pentru diseară sau mâine.', { t: hhmm(req0.at) })
+      : ctx.minor && h >= 21.5 ? tr('La ora asta, pentru cei sub 18 ani, nu mai e nimic deschis prin apropiere.')
+      : tr('N-am găsit nimic deschis atunci, nici până la {km} km.', { km: Math.max(req.maxKm, top(req0)) });
   }
   // Bilu says one or two things, the most important first: a long speech is not read
   return { plans, req, relaxed, note: notes.slice(0, 2).join(' ') || undefined, empty };
@@ -384,13 +403,13 @@ export function suggest(all: Venue[], req0: PlanReq, ctx: Ctx): Suggestion[] {
   const add = (c: Cand | undefined, tag: string, line: (v: Venue) => string) => { if (c && !used.has(c.s.v.id)) { used.add(c.s.v.id); out.push({ v: c.s.v, tag, line: line(c.s.v), at: c.at }); } };
   const w = wxAt(ctx.weather, req.at);
   const evening = req.at.getHours() >= 17 || req.at.getHours() < 5;
-  const when = req.now ? 'Acum' : evening ? 'Diseară' : 'Azi';
-  if (w?.nice) add(ranked.find((x) => exposure(x.s.v) !== 'in'), when + ' e ' + w.text + ', ' + w.temp + '°', (v) => (exposure(v) === 'out' ? 'Afară la ' : 'Terasă la ') + v.name);
-  else if (w?.wet) add(ranked.find((x) => exposure(x.s.v) === 'in'), when + ': ' + w.text + ', ' + w.temp + '°', (v) => 'La adăpost: ' + v.name);
-  add(ranked.slice(0, 12).sort((a, b) => a.s.km - b.s.km)[0], 'Lângă tine', (v) => v.name);
-  add(ranked.find((x) => !used.has(x.s.v.id)), 'Pe gustul tău', (v) => v.name);
+  const when = req.now ? tr('Acum') : evening ? tr('Diseară') : tr('Azi');
+  if (w?.nice) add(ranked.find((x) => exposure(x.s.v) !== 'in'), tr('{when} e {wx}, {temp}°', { when, wx: w.text, temp: w.temp }), (v) => (exposure(v) === 'out' ? tr('Afară la {name}', { name: v.name }) : tr('Terasă la {name}', { name: v.name })));
+  else if (w?.wet) add(ranked.find((x) => exposure(x.s.v) === 'in'), when + ': ' + w.text + ', ' + w.temp + '°', (v) => tr('La adăpost: {name}', { name: v.name }));
+  add(ranked.slice(0, 12).sort((a, b) => a.s.km - b.s.km)[0], tr('Lângă tine'), (v) => v.name);
+  add(ranked.find((x) => !used.has(x.s.v.id)), tr('Pe gustul tău'), (v) => v.name);
   // still fewer than three (a quiet hour): the next best of another kind
-  for (const c of ranked) { if (out.length >= 3) break; if (!used.has(c.s.v.id) && !out.some((o) => groupOf(o.v) === groupOf(c.s.v))) add(c, 'Altceva', (v) => v.name); }
+  for (const c of ranked) { if (out.length >= 3) break; if (!used.has(c.s.v.id) && !out.some((o) => groupOf(o.v) === groupOf(c.s.v))) add(c, tr('Altceva'), (v) => v.name); }
   return out.slice(0, 3);
 }
 
@@ -402,7 +421,7 @@ export function planForPlace(v: Venue, req: PlanReq, ctx: Ctx): MadePlan {
   const until = stay.ok ? stay.until : new Date(at.getTime() + stayOf(v) * 60e3);
   const s = scoreVenue(v, { ...askOf(req), at, maxKm: Infinity, budget: Infinity, budgetMin: undefined }, ctx);
   const sc: Scored = s ?? { v, score: 0, km: d, open: openAt(v, at), reasons: [], parts: { gust: 0, ocazie: 0, calitate: 0, aproape: 0, nou: 0, gasca: 0 } };
-  return single({ s: sc, at, until, sure: stay.sure, score: sc.score }, req, ctx, 'Ideea lui Bilu', KINDS[v.k]?.label ?? v.kind, 'loc-' + v.id);
+  return single({ s: sc, at, until, sure: stay.sure, score: sc.score }, req, ctx, tr('Ideea lui Bilu'), tr(KINDS[v.k]?.label ?? v.kind), 'loc-' + v.id);
 }
 
 /** The first places that fit, for the line under each question ("Se potrivesc: A · B · C"). */
@@ -467,7 +486,7 @@ export function buildOptions(all: Venue[], req: PlanReq, ctx: Ctx, prev: PlanSte
 /** The steps chosen, as a plan like the others ("Seara ta"): checked, with the price and the way between them. */
 export function builtPlan(steps: PlanStep[], req: PlanReq, ctx: Ctx): MadePlan {
   const drive = steps.some((x, i) => i > 0 && x.by !== 'walk');
-  const sub = steps.map((x) => x.why.toLowerCase()).join(', apoi ');
-  const p: MadePlan = { id: 'eu-' + steps.map((x) => x.v.id).join('-'), title: steps.length === 1 ? 'Locul tău' : 'Seara ta', sub, steps, price: steps.reduce((a, x) => a + x.price, 0), drive, checks: [], family: 'food', fits: true };
+  const sub = steps.map((x) => x.why.toLowerCase()).join(pick(', apoi ', ', then '));
+  const p: MadePlan = { id: 'eu-' + steps.map((x) => x.v.id).join('-'), title: steps.length === 1 ? tr('Locul tău') : tr('Seara ta'), sub, steps, price: steps.reduce((a, x) => a + x.price, 0), drive, checks: [], family: 'food', fits: true };
   return finish(p, req, ctx);
 }

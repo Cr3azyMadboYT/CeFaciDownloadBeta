@@ -7,7 +7,7 @@ import { sb } from './auth';
 import { APP } from './session';
 import { askOf, firstDraft } from './planAsk';
 import { hhmm } from './plans';
-import { tr, trServer } from './i18n';
+import { tr, trServer } from '../../../src/i18n';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = () => sb() as any;

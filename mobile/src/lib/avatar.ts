@@ -3,7 +3,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
 import { setBoard } from './session';
-import { tr } from './i18n';
+import { tr } from '../../../src/i18n';
 
 export async function pickAvatar(from: 'camera' | 'gallery'): Promise<string | null> {
   if (from === 'camera' && !(await ImagePicker.requestCameraPermissionsAsync()).granted) return tr('Pentru poză avem nevoie de cameră.');

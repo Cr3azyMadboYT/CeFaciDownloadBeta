@@ -13,7 +13,7 @@ import {
 import { sb } from "./auth";
 import { captureAccount, getApp } from "./session";
 import { startsAt, updPlan, type Plan } from "./plans";
-import { tr } from "./i18n";
+import { tr } from "../../../src/i18n";
 const client = () => sb() as unknown as RpcClient;
 const assertAccount = (valid: () => boolean) => { if (!valid()) throw new Error(tr("Contul s-a schimbat. Reia operațiunea din contul curent.")); };
 const serial = new Map<string, Promise<unknown>>();

@@ -3,9 +3,11 @@ import type { Partner } from '../../shared/contracts';
 import venuesJson from '../data/venues.json';
 import goneJson from '../data/gone.json';
 import venuesMeta from '../data/venues-meta.json';
+import storiesEnJson from '../data/stories-en.json';
+import { lang, pick, tr } from '../i18n';
 import { addRows, mergePlaces, type PlaceCache, type PlaceRow } from './places';
 import { KINDS, ZONES } from '../engine/catalog';
-import { adultOnly, cuisineLabels, fold, nearestZone, info, km, openAt, parseQuery, priceOf, recommend, search, targetTime, vibesOf, zoneById, type Need } from '../engine/core';
+import { adultOnly, cuisineLabels, fold, kindName, nearestZone, info, km, openAt, parseQuery, priceOf, recommend, search, targetTime, vibesOf, zoneById, type Need } from '../engine/core';
 import type { Ask, Ctx, Scored, Taste, Venue, When, Who } from '../engine/types';
 import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
 import { evenings, type TemplateId } from '../engine/evening';
@@ -116,22 +118,30 @@ const CUISINE_ICON: Record<string, string> = { pizza: 'pizza', burger: 'burger',
 const hash = (s: string) => { let x = 0; for (let i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) | 0; return Math.abs(x); };
 const SLOT = ['15:00', '20:00', '23:00'];
 
+// the places' stories in English (translated from curated.json), by venue id; a story written in Admin (story_en) wins
+const STORIES_EN = storiesEnJson as Record<string, { story?: string; crowd?: string }>;
+const storyOf = (v: Venue) => (lang() === 'en' ? v.story_en || STORIES_EN[v.id]?.story || v.story : v.story);
+const crowdOf = (v: Venue) => (lang() === 'en' ? v.crowd_en || STORIES_EN[v.id]?.crowd || v.crowd : v.crowd);
+/** "Restaurant, italian și pizza" / "Cafenea": what the place is, in the app's language (asked each time it is shown). */
+function titleOf(v: Venue) {
+  const cl = cuisineLabels(v);
+  return cl.length ? (v.k === 'restaurant' ? tr('Restaurant') + ', ' + cl.slice(0, 2).join(pick(' și ', ' & ')).toLowerCase() : kindName(v) + ', ' + cl[0].toLowerCase()) : kindName(v);
+}
+
 /** One venue in the shape the design's screens expect (PLACES entries). */
 function toPlace(v: Venue, origin: { lat: number; lon: number }) {
   const k = info(v);
   const looks = LOOK[v.cat] ?? LOOK.mancare;
   const [bg, fg, dot] = looks[hash(v.id) % looks.length];
-  const cl = cuisineLabels(v);
-  const title = cl.length ? (v.k === 'restaurant' ? 'Restaurant, ' + cl.slice(0, 2).join(' și ').toLowerCase() : v.kind + ', ' + cl[0].toLowerCase()) : v.kind;
   const d = km(origin, v);
   const phone = v.phone ?? '';
   const needsRes = v.k === 'escape_game' || v.k === 'bowling_alley' || v.k === 'padel' || v.k === 'tennis' || v.k === 'soccer' || v.k === 'squash' ? 'required' : v.k === 'restaurant' && (phone || v.website) ? 'recommended' : 'none';
   return {
-    id: v.id, name: v.name, title, icon: CUISINE_ICON[v.cuisines[0]] ?? ICON_OF[v.k] ?? 'star', bg, fg, dot,
+    id: v.id, name: v.name, get title() { return titleOf(v); }, icon: CUISINE_ICON[v.cuisines[0]] ?? ICON_OF[v.k] ?? 'star', bg, fg, dot,
     price: priceOf(v), dur: k.hours, dist: Math.max(3, Math.round(3 + d * 2.4)), km: d, vibes: vibesOf(v), min: k.min, max: k.max,
     when: ['now', 'eve', 'tom', 'we'], res: partnerCatalog.get(v.id)?.mode ?? (phone || v.website ? needsRes : 'none'), verified: false, partner: partnerCatalog.get(v.id)?.partner ?? false,
-    age: v.k === 'nightclub', t: SLOT[k.night], zone: zoneById(v.zone).name, real: v, story: v.story, crowd: v.crowd,
-    contact: phone || v.website ? { phone, wa: false, web: !!v.website, site: v.website ?? '', unit: v.cat === 'activitate' || v.cat === 'sport' ? (v.cat === 'sport' && v.k !== 'swimming' ? 'un teren' : 'o rezervare') : 'o masă' } : undefined,
+    age: v.k === 'nightclub', t: SLOT[k.night], zone: zoneById(v.zone).name, real: v, get story() { return storyOf(v); }, get crowd() { return crowdOf(v); },
+    contact: phone || v.website ? { phone, wa: false, web: !!v.website, site: v.website ?? '', get unit() { return v.cat === 'activitate' || v.cat === 'sport' ? (v.cat === 'sport' && v.k !== 'swimming' ? tr('un teren') : tr('o rezervare')) : tr('o masă'); } } : undefined,
   };
 }
 type Place = ReturnType<typeof toPlace>;
@@ -206,10 +216,10 @@ export const APP = {
     const now = new Date();
     const at = (d: number, h: number) => { const t = new Date(now.getFullYear(), now.getMonth(), now.getDate() + d, h, 0); return t; };
     const sat = (6 - now.getDay() + 7) % 7;
-    const [from, until, label] = when === 'now' ? [now, new Date(now.getTime() + 4 * 3600e3), 'Acum']
-      : when === 'tom' ? [at(1, 19), at(1, 24), 'Mâine seară']
-      : when === 'we' ? [at(sat, 13), at(sat, 23), sat === 0 ? 'Azi' : 'Sâmbătă']
-      : [now.getHours() >= 19 ? now : at(0, 19), at(0, 24), 'Diseară'];
+    const [from, until, label] = when === 'now' ? [now, new Date(now.getTime() + 4 * 3600e3), tr('Acum')]
+      : when === 'tom' ? [at(1, 19), at(1, 24), tr('Mâine seară')]
+      : when === 'we' ? [at(sat, 13), at(sat, 23), sat === 0 ? tr('Azi') : tr('Sâmbătă')]
+      : [now.getHours() >= 19 ? now : at(0, 19), at(0, 24), tr('Diseară')];
     const line = wxLine(this.weather, from as Date, until as Date, label as string);
     const w = wxAt(this.weather, from as Date);
     if (!line || !w) return null;
@@ -223,9 +233,9 @@ export const APP = {
     const w = wxAt(this.weather, at);
     if (!p || !w) return null;
     const e = exposure(p.real);
-    if (w.wet && e !== 'in') return 'La ora planului: ' + w.text + ', ' + w.temp + '°. ' + (e === 'out' ? 'E în aer liber: ia umbrela sau alege Plan B.' : 'Stați înăuntru, nu pe terasă.');
-    if (w.cold && e === 'out') return 'La ora planului sunt doar ' + w.temp + '°: îmbracă-te gros.';
-    if (w.hot) return 'La ora planului sunt ' + w.temp + '°: ia apă.';
+    if (w.wet && e !== 'in') return e === 'out' ? tr('La ora planului: {wx}, {temp}°. E în aer liber: ia umbrela sau alege Plan B.', { wx: w.text, temp: w.temp }) : tr('La ora planului: {wx}, {temp}°. Stați înăuntru, nu pe terasă.', { wx: w.text, temp: w.temp });
+    if (w.cold && e === 'out') return tr('La ora planului sunt doar {temp}°: îmbracă-te gros.', { temp: w.temp });
+    if (w.hot) return tr('La ora planului sunt {temp}°: ia apă.', { temp: w.temp });
     return null;
   },
   restart: () => {},
@@ -242,7 +252,7 @@ export const APP = {
     if (this.prefs.home) return { lat: this.prefs.home.lat, lon: this.prefs.home.lon };
     return zoneById(this.prefs.zone);
   },
-  zoneName() { return this.hasHere() ? 'Lângă tine' : this.prefs.home?.name ?? zoneById(this.prefs.zone).name; },
+  zoneName() { return this.hasHere() ? tr('Lângă tine') : this.prefs.home?.name ?? zoneById(this.prefs.zone).name; },
   /** How far they would go (km): what they chose, else the old answer in minutes turned into km. */
   radiusKm(): number {
     if (this.prefs.radiusKm) return this.prefs.radiusKm;
@@ -278,13 +288,13 @@ export const APP = {
   },
   useHere(): Promise<string | null> {
     return new Promise((done) => {
-      if (typeof navigator === 'undefined' || !navigator.geolocation) { done('Telefonul nu ne dă locația. Alege zona din listă.'); return; }
+      if (typeof navigator === 'undefined' || !navigator.geolocation) { done(tr('Telefonul nu ne dă locația. Alege zona din listă.')); return; }
       navigator.geolocation.getCurrentPosition((p) => {
         const here = { lat: p.coords.latitude, lon: p.coords.longitude, at: Date.now() };
         const z = nearestZone(here);
-        if (km(here, z) > 40) { done('Ești în afara Bucureștiului și Ilfovului. Alege zona din listă.'); return; }
+        if (km(here, z) > 40) { done(tr('Ești în afara Bucureștiului și Ilfovului. Alege zona din listă.')); return; }
         this.savePrefs({ here, zone: z.id }); done(null);
-      }, () => done('N-am primit locația. Poți s-o permiți din setări sau alegi zona din listă.'), { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
+      }, () => done(tr('N-am primit locația. Poți s-o permiți din setări sau alegi zona din listă.')), { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 });
     });
   },
   zones() { return ZONES; },
@@ -352,11 +362,11 @@ export const APP = {
   },
   onSaved: (_state: Record<string, unknown>) => {},
   age: ageOn,
-  google: async (): Promise<string | null> => 'Google nu e pornit.',
+  google: async (): Promise<string | null> => tr('Google nu e pornit.'),
   /** Deletes the account (when there is one) and everything on the phone, then starts from the beginning. */
   deleteAccount: async () => { try { localStorage.clear(); } catch { /* storage blocked */ } APP.restart(); },
-  emailStart: async (_email: string): Promise<string | null> => 'Emailul nu e pornit.',
-  emailVerify: async (_email: string, _code: string): Promise<string | null> => 'Emailul nu e pornit.',
+  emailStart: async (_email: string): Promise<string | null> => tr('Emailul nu e pornit.'),
+  emailVerify: async (_email: string, _code: string): Promise<string | null> => tr('Emailul nu e pornit.'),
   isMinor() { const a = ageOn(this.prefs.birth); return a !== null && a < 18; },
   /** Minutes to km, by the fastest way the person moves. */
   kmFor(min: string, moves?: string[]) {
@@ -385,13 +395,13 @@ export const APP = {
   priceNote(q: string, budgetKey: string) {
     const r = search(VENUES, q || '', this.ctx(), 1).parsed;
     const asked = q && q.trim().length > 1 ? r.budget !== undefined || r.budgetMin !== undefined : budgetKey !== 'any';
-    return asked ? ' · Atenție: prețurile sunt estimate și pot varia.' : '';
+    return asked ? ' · ' + tr('Atenție: prețurile sunt estimate și pot varia.') : '';
   },
   /** The design's matches(f): real ranking from the engine, as PLACES entries. */
   /** `where`: 'in' only places with a roof (rain), 'out' only outside or with a terrace. */
   matches(f: { who: string; when: string; dur: string; budget: string; vibes: string[]; dist: string; km?: number; where?: 'in' | 'out' }): Place[] {
     const d = new Date();
-    const key = JSON.stringify(f) + this.prefs.zone + d.toDateString() + d.getHours(); // the date too: not yesterday's list
+    const key = JSON.stringify(f) + this.prefs.zone + d.toDateString() + d.getHours() + lang(); // the date too: not yesterday's list; the language: the "why" lines
     const hit = this.cache.get(key);
     if (hit) { const why = this.cacheWhy.get(key); if (why) for (const [id, r] of why) this.reasons.set(id, r); return hit; } // its own "why" lines back
     const b = budgetRange(f.budget);
@@ -440,7 +450,7 @@ export const APP = {
   pickMemo: new Map<string, { id: string; name: string; tag: string; sub: string; bg: string; fg: string; dot: string; like: string }[]>(),
   /** Real places for the sign-up "Da / Poate / Nu" cards, near the chosen zone and matched to the chosen likes. */
   picksFor(likes: string[], zoneId: string, more: { budget?: string; when?: string[]; birth?: string; who?: string; at?: { lat: number; lon: number } } = {}) {
-    const key = likes.join(',') + '@' + zoneId + JSON.stringify(more);
+    const key = likes.join(',') + '@' + zoneId + JSON.stringify(more) + lang();
     const hit = this.pickMemo.get(key);
     if (hit) return hit;
     const origin = more.at ?? zoneById(zoneId);
@@ -454,20 +464,21 @@ export const APP = {
     const LIKE_OF: Record<string, string> = { mancare: 'food', cafea: 'cafe', desert: 'cafe', bar: 'party', club: 'party', film: 'film', teatru: 'culture', cultura: 'culture', activitate: 'bowl', natura: 'nature', sport: 'sport' };
     const out = r.picks.map((s) => {
       const p = toPlace(s.v, origin);
-      return { id: s.v.id, name: p.name, tag: s.v.kind + ' · ' + p.dist + ' min', sub: (p.title !== s.v.kind ? p.title + '. ' : '') + (p.price ? 'Cam ' + p.price + ' lei de persoană. ' : '') + (s.reasons[0] ?? ''), bg: p.bg, fg: p.fg, dot: p.dot, like: s.v.k === 'escape_game' ? 'escape' : LIKE_OF[s.v.cat] ?? 'food' };
+      const kind = kindName(s.v);
+      return { id: s.v.id, name: p.name, tag: kind + ' · ' + p.dist + ' min', sub: (p.title !== kind ? p.title + '. ' : '') + (p.price ? tr('Cam {price} lei de persoană.', { price: p.price }) + ' ' : '') + (s.reasons[0] ?? ''), bg: p.bg, fg: p.fg, dot: p.dot, like: s.v.k === 'escape_game' ? 'escape' : LIKE_OF[s.v.cat] ?? 'food' };
     });
     this.pickMemo.set(key, out);
     return out;
   },
   fixWhen(WHEN: Record<string, { date: string }>) {
-    const months = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
+    const months = pick(['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'], ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
     const fmt = (d: Date) => d.getDate() + ' ' + months[d.getMonth()];
     const now = new Date();
     const tom = new Date(now.getTime() + 864e5);
     const sat = new Date(now.getTime()); sat.setDate(sat.getDate() + ((6 - sat.getDay() + 7) % 7 || 7));
-    if (WHEN.eve) WHEN.eve.date = 'Azi, ' + fmt(now);
-    if (WHEN.tom) WHEN.tom.date = 'Mâine, ' + fmt(tom);
-    if (WHEN.we) WHEN.we.date = 'Sâmbătă, ' + fmt(sat);
+    if (WHEN.eve) WHEN.eve.date = tr('Azi') + ', ' + fmt(now);
+    if (WHEN.tom) WHEN.tom.date = tr('Mâine') + ', ' + fmt(tom);
+    if (WHEN.we) WHEN.we.date = tr('Sâmbătă') + ', ' + fmt(sat);
   },
   /** The PlanAsk as the planner's request: how far comes from the sign-up answers (at least 10 km, Ilfov is wide). */
   planReq(a: PlanAsk): PlanReq {
@@ -505,7 +516,7 @@ export const APP = {
     const req = this.built.req; if (!req) return [];
     const prev = this.built.steps[this.built.steps.length - 1] ?? null;
     const used = [...this.built.steps.map((x) => x.v.id)];
-    return PARTS.map((p) => ({ ...p, ok: buildOptions(VENUES, req, this.buildCtx(), prev, p.id, used, 400).some((b) => !this.skipLive(b.step.v.id, b.step.at, b.step.until)) }));
+    return PARTS.map((p) => ({ ...p, label: tr(p.label), ok: buildOptions(VENUES, req, this.buildCtx(), prev, p.id, used, 400).some((b) => !this.skipLive(b.step.v.id, b.step.at, b.step.until)) }));
   },
   /** A few places for the next part (`skip`: the ones already shown, for "Altele"). */
   buildOptions(part: string, skip: string[] = []) {
@@ -620,13 +631,13 @@ export const APP = {
     const p = parseQuery(text);
     const next: PlanAsk = { ...a, budget: [...a.budget] as [number, number], vibes: [...a.vibes] };
     const chips: string[] = [];
-    if (p.outdoor) { next.outdoor = true; chips.push('Cu terasă'); }
-    if (p.needs.length) { next.needs = [...new Set([...(a.needs ?? []), ...p.needs])]; chips.push(...p.needs.map((n) => ({ wifi: 'Wifi', nosmoke: 'Fără fum', smoke: 'Se poate fuma', wheel: 'Scaun cu rotile', ac: 'Aer condiționat' })[n])); }
-    if (p.near) { next.near = true; chips.push('Aproape'); }
-    if (p.budget !== undefined || p.cheap) { const max = p.budget ?? (a.budget[1] === 0 ? 0 : Math.max(30, Math.round(a.budget[1] === Infinity ? 60 : a.budget[1] * 0.6))); next.budget = [p.budgetMin ?? 0, max]; chips.push('Până în ' + max + ' lei'); }
+    if (p.outdoor) { next.outdoor = true; chips.push(tr('Cu terasă')); }
+    if (p.needs.length) { next.needs = [...new Set([...(a.needs ?? []), ...p.needs])]; chips.push(...p.needs.map((n) => tr(({ wifi: 'Wifi', nosmoke: 'Fără fum', smoke: 'Se poate fuma', wheel: 'Scaun cu rotile', ac: 'Aer condiționat' })[n]))); }
+    if (p.near) { next.near = true; chips.push(tr('Aproape')); }
+    if (p.budget !== undefined || p.cheap) { const max = p.budget ?? (a.budget[1] === 0 ? 0 : Math.max(30, Math.round(a.budget[1] === Infinity ? 60 : a.budget[1] * 0.6))); next.budget = [p.budgetMin ?? 0, max]; chips.push(tr('Până în {max} lei', { max })); }
     let { evening, hour } = slot;
     const t = p.time;
-    if (t?.now) { evening = eveningOf(now); hour = 'acum'; chips.push('Acum'); }
+    if (t?.now) { evening = eveningOf(now); hour = 'acum'; chips.push(tr('Acum')); }
     else if (t && (t.day !== undefined || t.hour !== undefined)) {
       const today = isoDay(now);
       if (t.day === -1) evening = eveningOf(now);
@@ -641,13 +652,13 @@ export const APP = {
         if (t.day === undefined && now.getTime() - m.getTime() < 3 * 3600e3) { evening = eveningOf(now); hour = 'acum'; }
         else if (t.day === undefined || t.day === -1) evening = addDays(evening, 1);
       }
-      chips.push(hour === 'acum' ? 'Acum' : (t.after ? 'De la ' : '') + whenWords(evening, hour, now));
+      chips.push(hour === 'acum' ? tr('Acum') : t.after ? tr('De la {when}', { when: whenWords(evening, hour, now) }) : whenWords(evening, hour, now));
     }
     next.now = hour === 'acum';
     next.at = hour === 'acum' ? new Date(now.getTime() + 5 * 60e3) : momentOf(evening, hour);
-    if (p.people) { next.people = p.people; chips.push(p.people + (p.people === 1 ? ' persoană' : ' persoane')); }
+    if (p.people) { next.people = p.people; chips.push(p.people === 1 ? tr('{n} persoană', { n: p.people }) : tr('{n} persoane', { n: p.people })); }
     const vibes = p.vibes.filter((v) => !next.vibes.includes(v));
-    if (vibes.length) { next.vibes.push(...vibes); chips.push(...vibes); }
+    if (vibes.length) { next.vibes.push(...vibes); chips.push(...vibes.map((v) => tr(v))); }
     return { ask: next, chips, slot: { evening, hour } };
   },
   get count() { return VENUES.length; },
@@ -665,8 +676,8 @@ export const APP = {
     return rows.length;
   },
   todayText() {
-    const days = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
-    const months = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
+    const days = pick(['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'], ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+    const months = pick(['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'], ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
     const d = new Date();
     return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()];
   },

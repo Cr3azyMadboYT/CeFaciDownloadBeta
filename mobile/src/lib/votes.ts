@@ -1,7 +1,7 @@
 // Votul cu gașca, through Supabase: up to three places, everyone votes Da / Nu / Super (one Super each) from their own
 // phone, the results move live, and when time is up (or everyone voted) the winner becomes one plan for all.
 import { sb } from './auth';
-import { tr, trServer } from './i18n';
+import { tr, trServer } from '../../../src/i18n';
 import { captureAccount } from './session';
 import type { Person } from './friends';
 

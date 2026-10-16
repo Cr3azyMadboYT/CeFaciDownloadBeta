@@ -1,7 +1,7 @@
 // Friends, through Supabase (etapa 2): find someone by exact @username (adults only) or by their code,
 // send a request, accept or refuse (refusing deletes it quietly), remove.
 import { sb } from './auth';
-import { tr, trServer } from './i18n';
+import { tr, trServer } from '../../../src/i18n';
 
 // no generated database types yet: rows are typed by hand below
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

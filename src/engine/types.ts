@@ -34,6 +34,8 @@ export interface Venue {
   fast?: boolean;      // fast food
   story?: string;      // why go (src/data/curated.json, researched 05.10): one or two sentences, real facts
   crowd?: string;      // when people are there ("vineri–duminică seara")
+  story_en?: string;   // the story in English, when Admin wrote one (public.venues); else src/data/stories-en.json
+  crowd_en?: string;   // when people are there, in English
   pick?: boolean;      // chosen by hand for CeFaci (curated.json): only these are shown
   rated?: boolean;     // not chosen by hand, but people rate it well on Google Maps (src/data/rated.json): after the chosen ones
   vibes?: Vibe[];      // researched vibes, instead of the kind's usual ones

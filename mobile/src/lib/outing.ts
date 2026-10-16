@@ -11,7 +11,7 @@ import { isTonight, planDay, updPlan, type Plan } from './plans';
 import { cancelReminders, remindBill } from './remind';
 import { levelOf } from './levels';
 import { arrivePartner } from './partner';
-import { tr, trServer, pick } from './i18n';
+import { tr, trServer, pick } from '../../../src/i18n';
 
 export interface Stamp { id: string; name: string; icon: string; bg: string; at: number }
 export interface Bill { placeId: string; total: number; people: number; at: number }

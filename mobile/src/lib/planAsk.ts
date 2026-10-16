@@ -11,7 +11,7 @@ import { APP } from './session';
 import { crewHasMinor, crewTaste } from './crews';
 import { checkOpen, checkedFor, isClosed, closedWhy, needsCheck, type Live } from './liveOpen';
 import type { Taste } from '../../../src/engine/types';
-import { pick, tr } from './i18n';
+import { pick, tr } from '../../../src/i18n';
 
 APP.skipLive = isClosed; // the builder leaves out what Google just said is closed (07.10: it came back as Bilu's pick)
 

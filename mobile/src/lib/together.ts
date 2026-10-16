@@ -3,7 +3,7 @@
 import { APP } from '../../../src/app/bridge';
 import {AppState} from 'react-native';
 import { sb } from './auth';
-import { tr, trServer } from './i18n';
+import { tr, trServer } from '../../../src/i18n';
 import type { Person } from './friends';
 import { createPlanAt, hhmm, removePlan, startsAt, updPlan, type Plan } from './plans';
 import { captureAccount, getApp } from './session';

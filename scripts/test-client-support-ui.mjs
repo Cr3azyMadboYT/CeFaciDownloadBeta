@@ -13,7 +13,7 @@ const prefs={name:'Ana',user:'client_test',google:uid,zone:'centru',dist:'20',mo
 const board={theme:'zi',calm:true,tut:{on:false},plans:[],xp:150,welcomeXp:true,plus:'locked',savedAt:Date.now()};
 const reports=[],calls=[],unexpected=[],errors=[];let failCreate=true;
 const browser=await chromium.launch({headless:true});
-const context=await browser.newContext({viewport:{width:390,height:844}});
+const context=await browser.newContext({viewport:{width:390,height:844},locale:'ro-RO'});
 await context.routeWebSocket(/supabase\.co/,ws=>ws.close());
 await context.route('**/*',async route=>{
   const req=route.request(),url=new URL(req.url()),name=url.pathname.split('/').pop();
