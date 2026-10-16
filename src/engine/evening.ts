@@ -8,6 +8,7 @@ import { KINDS } from './catalog';
 import { adultOnly, km, learnHours, priceOf, scoreVenue, stayAt } from './core';
 import { nightHour } from './time';
 import { wxAt } from './weather';
+import { pick, tr } from '../i18n';
 import type { Ask, Ctx, Venue, Vibe, When, Who } from './types';
 
 export type SlotId = 'masa' | 'pahar' | 'club' | 'joaca' | 'spectacol' | 'film' | 'dulce' | 'desert' | 'cafea' | 'plimbare' | 'promenada' | 'cultura' | 'gustare';
@@ -22,20 +23,20 @@ interface Slot {
 }
 const PLAY = ['escape_game', 'amusement_arcade', 'bowling_alley', 'billiards', 'karting', 'trampoline_park', 'ice_rink', 'climbing', 'padel', 'tennis', 'soccer', 'squash', 'miniature_golf', 'paintball'];
 export const SLOTS: Record<SlotId, Slot> = {
-  masa: { kinds: ['restaurant', 'food_market'], min: 95, windows: [[12, 15.5], [17.5, 22.25]], why: (h) => (h < 16 ? 'Prânzul' : 'Cina') },
-  pahar: { kinds: ['bar', 'pub', 'biergarten'], min: 105, windows: [[16, 26]], why: () => 'Un pahar', adult: true, stretch: true },
-  club: { kinds: ['nightclub'], min: 180, windows: [[22.5, 27.5]], why: () => 'Dansul', adult: true },
-  joaca: { kinds: PLAY, min: 85, windows: [[10, 21.75]], why: () => 'Joacă', whole: 60 },
-  spectacol: { kinds: ['theatre', 'arts_centre'], min: 130, windows: [[17.5, 20.25]], why: () => 'Spectacolul', whole: 120 },
-  film: { kinds: ['cinema'], min: 130, windows: [[11, 22]], why: () => 'Filmul', whole: 120 },
-  dulce: { kinds: ['ice_cream', 'cafe'], min: 50, windows: [[11, 21.5]], why: () => 'Ceva dulce' },
+  masa: { kinds: ['restaurant', 'food_market'], min: 95, windows: [[12, 15.5], [17.5, 22.25]], why: (h) => (h < 16 ? tr('Prânzul') : tr('Cina')) },
+  pahar: { kinds: ['bar', 'pub', 'biergarten'], min: 105, windows: [[16, 26]], why: () => tr('Un pahar'), adult: true, stretch: true },
+  club: { kinds: ['nightclub'], min: 180, windows: [[22.5, 27.5]], why: () => tr('Dansul'), adult: true },
+  joaca: { kinds: PLAY, min: 85, windows: [[10, 21.75]], why: () => tr('Joacă'), whole: 60 },
+  spectacol: { kinds: ['theatre', 'arts_centre'], min: 130, windows: [[17.5, 20.25]], why: () => tr('Spectacolul'), whole: 120 },
+  film: { kinds: ['cinema'], min: 130, windows: [[11, 22]], why: () => tr('Filmul'), whole: 120 },
+  dulce: { kinds: ['ice_cream', 'cafe'], min: 50, windows: [[11, 21.5]], why: () => tr('Ceva dulce') },
   // in the evening: a dessert after dinner, a walk where people are (Centrul Vechi, Calea Victoriei, a lake shore)
-  desert: { kinds: ['ice_cream', 'cafe'], min: 45, windows: [[17, 23.5]], why: () => 'Desertul' },
-  promenada: { kinds: ['promenade', 'square'], min: 60, windows: [[17, 23]], why: () => 'Plimbarea' },
-  cafea: { kinds: ['cafe'], min: 60, windows: [[8, 20]], why: () => 'O cafea' },
-  plimbare: { kinds: ['park', 'botanical_garden', 'nature_reserve', 'promenade', 'square'], min: 80, windows: [[8, 20]], why: () => 'Plimbarea' },
-  cultura: { kinds: ['museum', 'gallery', 'planetarium', 'castle', 'palace', 'manor'], min: 90, windows: [[9.5, 17.5]], why: () => 'Muzeul' },
-  gustare: { kinds: ['fast_food'], min: 35, windows: [[22, 29]], why: () => 'Ceva de mâncat' },
+  desert: { kinds: ['ice_cream', 'cafe'], min: 45, windows: [[17, 23.5]], why: () => tr('Desertul') },
+  promenada: { kinds: ['promenade', 'square'], min: 60, windows: [[17, 23]], why: () => tr('Plimbarea') },
+  cafea: { kinds: ['cafe'], min: 60, windows: [[8, 20]], why: () => tr('O cafea') },
+  plimbare: { kinds: ['park', 'botanical_garden', 'nature_reserve', 'promenade', 'square'], min: 80, windows: [[8, 20]], why: () => tr('Plimbarea') },
+  cultura: { kinds: ['museum', 'gallery', 'planetarium', 'castle', 'palace', 'manor'], min: 90, windows: [[9.5, 17.5]], why: () => tr('Muzeul') },
+  gustare: { kinds: ['fast_food'], min: 35, windows: [[22, 29]], why: () => tr('Ceva de mâncat') },
 };
 
 export type TemplateId = 'cina-bar' | 'noaptea' | 'pahar-club' | 'club-gustare' | 'doua-baruri' | 'cultura' | 'film-cina' | 'film-pahar' | 'activ' | 'joaca-pahar' | 'dulce' | 'afara' | 'cultura-zi' | 'cina-desert' | 'plimbare-desert';
@@ -192,16 +193,17 @@ export function buildRoute(all: Venue[], tpl: Template, ask: EveningAsk, ctx: Ct
   const score = picked.reduce((a, x) => a + x, 0) / Math.max(1, picked.length);
   let note: string | undefined;
   const wet = steps.find((s) => wxAt(ctx.weather, s.at)?.wet && (tpl.outdoor || s.v.outdoor));
-  if (wet) note = 'Pe la ' + String(wet.at.getHours()).padStart(2, '0') + ':00 plouă: stați înăuntru.';
-  if (drive && !note) note = 'Locurile sunt mai departe unul de altul: între ele mergeți cu mașina sau cu taxiul.';
+  if (wet) note = tr('Pe la {t} plouă: stați înăuntru.', { t: String(wet.at.getHours()).padStart(2, '0') + ':00' });
+  if (drive && !note) note = driveNote();
   // by day the meal is lunch: "Prânz și film", not "Cină și film"
-  const lunch = steps.some((s) => s.why === 'Prânzul');
+  const lunch = steps.some((s) => s.why === tr('Prânzul'));
   const say = (s: string) => (lunch ? s.replace('Cină', 'Prânz').replace('cină', 'prânz').replace('Cina', 'Prânzul') : s);
-  // a part left out (the snack after the club) is not promised in the title
-  const sub = steps.length < steps0.length ? steps.map((s) => s.why.toLowerCase()).join(', apoi ') : tpl.sub;
+  // a part left out (the snack after the club) is not promised in the title (the parts are already in the app's language)
+  const sub = steps.length < steps0.length ? steps.map((s) => s.why.toLowerCase()).join(pick(', apoi ', ', then ')) : tr(say(tpl.sub));
   // by car between the places: not "la pas"
   const label = (steps.length < steps0.length && tpl.alone ? tpl.alone : tpl.label).replace(', la pas', drive ? '' : ', la pas');
-  return { id: tpl.id, label: say(label), sub: say(sub), steps, price: total, score, note, drive, over, family: tpl.family, vibes: tpl.vibes };
+  // the titles are made in Romanian (the keys of the dictionary), then said in the app's language
+  return { id: tpl.id, label: tr(say(label)), sub, steps, price: total, score, note, drive, over, family: tpl.family, vibes: tpl.vibes };
 }
 type Cand = { v: Venue; arrive: Date; until: Date; travel: number; sure: boolean; closes: Date | null; score: number; reasons: string[]; stretched: number };
 
@@ -253,4 +255,11 @@ export function evenings(all: Venue[], ask: EveningAsk, ctx: Ctx, skip: Partial<
   return eveningCands(all, ask, ctx, skip).map((c) => c.r);
 }
 
-export const STEP_LABEL = (v: Venue) => KINDS[v.k]?.label ?? v.kind;
+export const STEP_LABEL = (v: Venue) => tr(KINDS[v.k]?.label ?? v.kind);
+/** "Locurile sunt mai departe…: între ele mergeți cu mașina sau cu taxiul" — `by`: how they get further than a walk. */
+export function driveNote(by: 'car' | 'bus' | 'bike' | 'walk' = 'car'): string {
+  if (by === 'bus') return tr('Locurile sunt mai departe unul de altul: între ele mergeți cu autobuzul sau cu taxiul.');
+  if (by === 'bike') return tr('Locurile sunt mai departe unul de altul: între ele mergeți cu bicicleta sau cu taxiul.');
+  if (by === 'walk') return tr('Locurile sunt mai departe unul de altul: între ele mergeți pe jos sau cu taxiul.');
+  return tr('Locurile sunt mai departe unul de altul: între ele mergeți cu mașina sau cu taxiul.');
+}

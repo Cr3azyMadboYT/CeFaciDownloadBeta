@@ -285,7 +285,7 @@ export default function Cont() {
             </Press>
             {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
             <T style={{ marginTop: 2, textAlign: 'center', fontFamily: F.m, fontSize: 12.5, lineHeight: 17, color: '#A9B1DA' }}>{googleSignInAvailable?tr('Ai deja cont? Intră la fel, cu Google sau cu emailul.'):tr('Ai deja cont? Intră cu aceeași adresă de email.')}</T>
-            <View style={{ marginTop: 4 }}><AccountLegalNotice audience="client" theme={t} dark small creating={!returning} extra={<LegalLinks dark tiny />} /></View>
+            <View style={{ marginTop: 4 }}><AccountLegalNotice audience="client" theme={t} tr={tr} dark small creating={!returning} extra={<LegalLinks dark tiny />} /></View>
           </View>
         </View>
       </Slide>
@@ -328,7 +328,7 @@ export default function Cont() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Slide k="email">
-          <StepScreen k={1} onBack={back} foot={<View style={{gap: 8}}>{!sent && <AccountLegalNotice audience="client" theme={t} creating={!returning}/>}<Big label={busy ? tr('O clipă…') : sent ? tr('Confirmă codul') : tr('Trimite-mi codul')} disabled={off} onPress={sendOrVerify} /></View>}>
+          <StepScreen k={1} onBack={back} foot={<View style={{gap: 8}}>{!sent && <AccountLegalNotice audience="client" theme={t} tr={tr} creating={!returning}/>}<Big label={busy ? tr('O clipă…') : sent ? tr('Confirmă codul') : tr('Trimite-mi codul')} disabled={off} onPress={sendOrVerify} /></View>}>
             {bubble}
             <H1>{tr('Emailul tău')}</H1>
             <View style={{ marginTop: 14, gap: 8 }}>

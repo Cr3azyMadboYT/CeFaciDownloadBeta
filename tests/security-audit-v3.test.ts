@@ -91,7 +91,12 @@ it("permits first invitations before any operational snapshot and keeps retries 
   expect((await q("select count(*)::int n from plan_members where plan_id=$1", [p])).rows[0].n).toBe(1);
 });
 it("refuses adding participants after a reservation and preserves the capacity snapshot", async () => {
-  const p = await plan("frozen-reservation", 2, 120);
+  // la o oră din program oricând rulează testul (seara, „peste 2 ore” cădea după închidere): mâine la 14:00 în București
+  const at = new Date(Date.now() + 864e5);
+  const hereNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Europe/Bucharest" }));
+  const offset = Math.round((hereNow.getTime() - Date.now()) / 60e3);
+  const target = Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate(), 14, 0) - offset * 60e3;
+  const p = await plan("frozen-reservation", 2, Math.round((target - Date.now()) / 60e3));
   const reservation = await value("owner", "select reservation_request_v2($1,'frozen-res')", [p]);
   await expect(inviteExisting(p, "frozen-reservation")).rejects.toThrow(/Grupul are deja/);
   expect((await q("select people,shared_at from plans where id=$1", [p])).rows[0]).toMatchObject({people: 2,shared_at:null});

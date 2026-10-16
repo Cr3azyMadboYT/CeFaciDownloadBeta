@@ -1,3 +1,4 @@
+import { pick, tr } from '../i18n';
 // Time as people going out think of it (decision Cornel, 04.10: "după ora 8 logica nu e bună"): the night belongs to
 // the evening it started in — at 01:00 on Sunday, "acum" is still Saturday night and "diseară" is Sunday evening — so
 // the day turns at 05:00, not at midnight. And daylight: a park, a palace or a lake is not a plan after dark.
@@ -33,30 +34,35 @@ export const daysBetween = (a: string, b: string) => Math.round((dayFromIso(b).g
 export const addDays = (evening: string, n: number) => { const d = dayFromIso(evening); d.setDate(d.getDate() + n); return isoDay(d); };
 
 // ---------- saying it ----------
-const DAYS = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'];
-const MONTHS = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
+const DAYS_RO = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'];
+const DAYS_EN = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+const MONTHS_RO = ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'];
+const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const dayName = (i: number) => pick(DAYS_RO, DAYS_EN)[i];
+const monthName = (i: number) => pick(MONTHS_RO, MONTHS_EN)[i];
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** What an evening is called, seen from `now`, like the phone's calendar: "Azi" or "Diseară" (by the hour), "Mâine",
  * "Poimâine", the weekday; after midnight the night that is still going is "Noaptea asta". */
 export function eveningWord(evening: string, now: Date, hour?: number): string {
   const diff = daysBetween(isoDay(now), evening);
-  if (diff < 0) return 'Noaptea asta';
-  if (diff === 0) return hour !== undefined && hour >= DAY_TURNS_AT && hour < 17 ? 'Azi' : 'Diseară';
-  if (diff === 1) return 'Mâine';
-  if (diff === 2) return 'Poimâine';
-  return cap(DAYS[dayFromIso(evening).getDay()]);
+  if (diff < 0) return tr('Noaptea asta');
+  if (diff === 0) return hour !== undefined && hour >= DAY_TURNS_AT && hour < 17 ? tr('Azi') : tr('Diseară');
+  if (diff === 1) return tr('Mâine');
+  if (diff === 2) return tr('Poimâine');
+  return cap(dayName(dayFromIso(evening).getDay()));
 }
 /** "sâm. 4 oct." — the evening's calendar date, short. */
-export const dateShort = (evening: string) => { const d = dayFromIso(evening); return DAYS[d.getDay()].slice(0, 3) + '. ' + d.getDate() + ' ' + MONTHS[d.getMonth()]; };
+export const dateShort = (evening: string) => { const d = dayFromIso(evening); return pick(DAYS_RO[d.getDay()].slice(0, 3) + '.', cap(DAYS_EN[d.getDay()].slice(0, 3))) + ' ' + d.getDate() + ' ' + monthName(d.getMonth()); };
 /** "Diseară la 21:00", "Mâine la 20:00", "Joi, 8 oct., la 20:00", "Noaptea asta, la 02:00". */
 export function whenWords(evening: string, hour: string, now: Date): string {
   const h = Number(hour.split(':')[0]);
   const word = eveningWord(evening, now, h);
   const d = dayFromIso(evening);
-  if (word === 'Noaptea asta') return word + ', la ' + hour;
-  if (daysBetween(isoDay(now), evening) > 2) return word + ', ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ', la ' + hour;
-  return word + ' la ' + hour;
+  const diff = daysBetween(isoDay(now), evening);
+  if (diff < 0) return tr('{word}, la {hour}', { word, hour });
+  if (diff > 2) return tr('{word}, {date}, la {hour}', { word, date: d.getDate() + ' ' + monthName(d.getMonth()), hour });
+  return tr('{word} la {hour}', { word, hour });
 }
 
 // ---------- the sun over București ----------

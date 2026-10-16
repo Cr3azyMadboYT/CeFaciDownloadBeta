@@ -2,6 +2,7 @@
 // sun and warmth to terraces and parks. The forecast comes from the server (public.weather, Google Weather API):
 // the next 48 hours, then 7 days (day and night).
 import type { Venue } from './types';
+import { tr } from '../i18n';
 
 export interface WxHour { t: string; c: string; temp: number | null; feel: number | null; rain: number; mm: number; wind: number; storm: number; day: boolean }
 export interface WxDay { d: string; max: number | null; min: number | null; cd: string; cn: string; rd: number; rn: number }
@@ -18,16 +19,16 @@ export interface WxAt {
 const WET = /RAIN|SHOWER|THUNDER|HAIL|SNOW/;
 const CLEARISH = /^(CLEAR|MOSTLY_CLEAR|PARTLY_CLOUDY)$/;
 export function conditionText(type: string): string {
-  if (/THUNDER/.test(type)) return 'furtună';
-  if (/HAIL/.test(type)) return 'grindină';
-  if (/RAIN_AND_SNOW/.test(type)) return 'lapoviță';
-  if (/SNOW/.test(type)) return 'ninsoare';
-  if (/SHOWER/.test(type)) return 'averse';
-  if (/RAIN/.test(type)) return /LIGHT/.test(type) ? 'ploaie slabă' : 'ploaie';
-  if (/WIND/.test(type)) return 'vânt';
-  if (type === 'CLEAR' || type === 'MOSTLY_CLEAR') return 'senin';
-  if (type === 'PARTLY_CLOUDY') return 'parțial înnorat';
-  return 'înnorat';
+  if (/THUNDER/.test(type)) return tr('furtună');
+  if (/HAIL/.test(type)) return tr('grindină');
+  if (/RAIN_AND_SNOW/.test(type)) return tr('lapoviță');
+  if (/SNOW/.test(type)) return tr('ninsoare');
+  if (/SHOWER/.test(type)) return tr('averse');
+  if (/RAIN/.test(type)) return /LIGHT/.test(type) ? tr('ploaie slabă') : tr('ploaie');
+  if (/WIND/.test(type)) return tr('vânt');
+  if (type === 'CLEAR' || type === 'MOSTLY_CLEAR') return tr('senin');
+  if (type === 'PARTLY_CLOUDY') return tr('parțial înnorat');
+  return tr('înnorat');
 }
 
 function read(type: string, temp: number, feel: number, rain: number, mm: number, wind: number, storm: number, day: boolean): WxAt {
@@ -79,14 +80,14 @@ export function wxScore(v: Venue, wx: WxAt | null): { pts: number; why?: string 
     if (wx.storm) return { pts: -35 };
     if (wx.wet) return { pts: -25 };
     if (wx.cold) return { pts: -12 };
-    if (wx.hot && WATER.has(v.k)) return { pts: 12, why: 'E cald: bun de stat la apă' };
-    if (wx.nice) return { pts: 8, why: 'Vreme bună de stat afară' };
+    if (wx.hot && WATER.has(v.k)) return { pts: 12, why: tr('E cald: bun de stat la apă') };
+    if (wx.nice) return { pts: 8, why: tr('Vreme bună de stat afară') };
     return { pts: 0 };
   }
   if (WATER.has(v.k) && (wx.cold || wx.wet)) return { pts: -6 };
-  if (e === 'terrace') return wx.nice ? { pts: 5, why: 'Are terasă și e vreme bună' } : { pts: 0 };
-  if (wx.wet) return { pts: 6, why: 'La adăpost de ' + (wx.snow ? 'ninsoare' : 'ploaie') };
-  if (wx.cold) return { pts: 4, why: 'La căldură' };
+  if (e === 'terrace') return wx.nice ? { pts: 5, why: tr('Are terasă și e vreme bună') } : { pts: 0 };
+  if (wx.wet) return { pts: 6, why: wx.snow ? tr('La adăpost de ninsoare') : tr('La adăpost de ploaie') };
+  if (wx.cold) return { pts: 4, why: tr('La căldură') };
   return { pts: 0 };
 }
 
@@ -100,6 +101,6 @@ export function wxLine(w: Weather | null | undefined, from: Date, until: Date, l
     if (x && x.wet && !start.wet) { change = { at: t, wx: x }; break; }
   }
   const hh = (d: Date) => String(d.getHours()).padStart(2, '0') + ':00';
-  if (change) return label + ' ' + start.temp + '°, ' + change.wx.text + ' de la ' + hh(change.at);
+  if (change) return tr('{label} {temp}°, {wx} de la {t}', { label, temp: start.temp, wx: change.wx.text, t: hh(change.at) });
   return label + ' ' + start.temp + '°, ' + start.text;
 }

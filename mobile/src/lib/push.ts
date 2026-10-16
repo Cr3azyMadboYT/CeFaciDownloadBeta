@@ -4,9 +4,10 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { sb } from './auth';
-import { tr } from '../../../src/i18n';
+import { lang, tr } from '../../../src/i18n';
 
 let saved = '';
+let savedLang = '';
 
 export async function registerPush(): Promise<void> {
   if (Platform.OS !== 'android') return;
@@ -16,14 +17,17 @@ export async function registerPush(): Promise<void> {
     if (!perm.granted && perm.canAskAgain) perm = await Notifications.requestPermissionsAsync();
     if (!perm.granted) return;
     const { data: token } = await Notifications.getDevicePushTokenAsync();
-    if (!token || token === saved) return;
+    if (!token || (token === saved && lang() === savedLang)) return;
     // the phone's token belongs to the account signed in on it now (07.10: after a failed sign-out it stayed with the
     // old account, which kept getting its notifications here)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let { error } = await (sb() as any).rpc('push_token_save', { p_token: token });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (error && /push_token_save|function/i.test(error.message ?? '')) ({ error } = await (sb() as any).from('push_tokens').upsert({ token, platform: 'android', updated_at: new Date().toISOString() }));
-    if (!error) saved = token;
+    // the notifications come in the app's language (push_tokens.lang, read by trimite-notificare)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!error) await (sb() as any).from('push_tokens').update({ lang: lang() }).eq('token', token).then(() => {}, () => {});
+    if (!error) { saved = token; savedLang = lang(); }
   } catch {
     /* no Firebase in this build yet, or no network: try again next time */
   }

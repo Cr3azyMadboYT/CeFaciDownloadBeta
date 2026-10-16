@@ -541,7 +541,7 @@ export function parseQuery(q: string): Parsed {
 
   // people
   const setPeople = (n: number) => { if (n >= 1 && n <= 40) p.people = n; };
-  if (take(/ (date night|on a date|for a date|first date|romantic dinner|with my girlfriend|with my boyfriend|with my partner|with my wife|with my husband|girlfriend|boyfriend|couples|couple|anniversary|in doi|in 2|cuplu|cu iubita|cu iubitul|cu prietena|cu prietenul|date|intalnire|prima intalnire|romantic|romantica|romantice|romantik|aniversare) /, () => {})) { p.romantic = true; p.people ??= 2; p.vibes.push('Chill'); }
+  if (take(/ (date night|on a date|for a date|first date|with my girlfriend|with my boyfriend|with my partner|with my wife|with my husband|girlfriend|boyfriend|couples|couple|anniversary|in doi|in 2|cuplu|cu iubita|cu iubitul|cu prietena|cu prietenul|date|intalnire|prima intalnire|romantic|romantica|romantice|romantik|aniversare) /, () => {})) { p.romantic = true; p.people ??= 2; p.vibes.push('Chill'); }
   take(new RegExp(' ' + NUMW + ' (?:de )?(?:persoane|persoana|pers|oameni|prieteni|prietene|insi|inși|adulti|colegi|baieti|fete|people|persons|pax|guys|friends|of us) '), (m) => setPeople(num(m[1]))); // "20 de persoane"
   take(new RegExp(' (?:gasca|grup|grupul|gasca mea|echipa|group of|party of|group) (?:de )?' + NUMW + ' '), (m) => setPeople(num(m[1])));
   take(new RegExp(' (?:de|pt|pentru|in|cu|for|with) ' + NUMW + ' (?!(?:de )?(?:lei|ron|ani|years)\\b)'), (m) => { const n = num(m[1]); if (n >= 2 && n <= 30) setPeople(n); });
@@ -574,7 +574,7 @@ export function parseQuery(q: string): Parsed {
 
   // places (longest phrase first), then topic phrases
   if (!p.place) for (const [w, pl] of PLACE_PHRASES) { if (s.includes(' ' + w + ' ')) { p.place = pl; s = s.replace(' ' + w + ' ', ' '); break; } }
-  const OUT = / (cu terasa|terasa|terase|terasei|afara|gradina|gradini|in aer liber|aer liber|outdoor|curte|curtea|vara|with a terrace|with terrace|terraces|terrace|outdoors|outside|open air|patio|garden|summer garden)(?= )/g;
+  const OUT = / (cu terasa|terasa|terase|terasei|afara|gradina|gradini|in aer liber|aer liber|outdoor|curte|curtea|vara|with a terrace|with terrace|terraces|terrace|outdoors|outside|open air|patio)(?= )/g;
   if (OUT.test(s)) { p.outdoor = true; s = s.replace(OUT, ' '); }
   const content = s.trim(); // what is left for names and topics
   for (const [w, id] of TOPIC_PHRASES) if (s.includes(' ' + w + ' ')) { addTopic(p, id); s = s.replace(' ' + w + ' ', ' § '); }
