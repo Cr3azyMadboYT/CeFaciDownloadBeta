@@ -2,6 +2,7 @@
 // missing, the next day at noon. At most two, both cancelled as soon as the receipt is in. Local notifications only.
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import { tr } from '../../../src/i18n';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: false, shouldSetBadge: false }),
@@ -10,7 +11,7 @@ Notifications.setNotificationHandler({
 async function allowed() {
   if (Platform.OS === 'web') return false;
   if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('bon', { name: 'Amintiri pentru bon', importance: Notifications.AndroidImportance.DEFAULT, lightColor: '#FFD43B' }).catch(() => {});
+    await Notifications.setNotificationChannelAsync('bon', { name: tr('Amintiri pentru bon'), importance: Notifications.AndroidImportance.DEFAULT, lightColor: '#FFD43B' }).catch(() => {});
   }
   const cur = await Notifications.getPermissionsAsync();
   if (cur.granted) return true;
@@ -23,13 +24,13 @@ export async function remindBill(placeName: string, at = new Date(), pid?: numbe
   try {
     if (!(await allowed())) return [];
     const first = await Notifications.scheduleNotificationAsync({
-      content: { title: 'Bilu de la CeFaci', body: 'Nu uita de bon, ne ajută și pe noi și pe tine :)', data: { kind: 'bon', pid } },
+      content: { title: tr('Bilu de la CeFaci'), body: tr('Nu uita de bon, ne ajută și pe noi și pe tine :)'), data: { kind: 'bon', pid } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 40 * 60, channelId: 'bon' },
     });
     // the next noon: the same day for a check-in after midnight (07.10: it came 35 hours later)
     const noon = new Date(at.getFullYear(), at.getMonth(), at.getDate() + (at.getHours() < 5 ? 0 : 1), 12, 0);
     const second = await Notifications.scheduleNotificationAsync({
-      content: { title: 'Bilu de la CeFaci', body: 'Ai uitat bonul de ' + (at.getHours() >= 17 || at.getHours() < 5 ? 'aseară' : 'ieri') + ' de la ' + placeName + '? Îl mai poți pune până diseară: +25 XP.', data: { kind: 'bon', pid } },
+      content: { title: tr('Bilu de la CeFaci'), body: at.getHours() >= 17 || at.getHours() < 5 ? tr('Ai uitat bonul de aseară de la {p}? Îl mai poți pune până diseară: +25 XP.', { p: placeName }) : tr('Ai uitat bonul de ieri de la {p}? Îl mai poți pune până diseară: +25 XP.', { p: placeName }), data: { kind: 'bon', pid } },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: noon, channelId: 'bon' },
     });
     return [first, second];

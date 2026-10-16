@@ -23,6 +23,7 @@ import {AccountLegalNotice} from '../../../shared/AccountLegalNotice';
 import { LangPick } from '../ui/LangPick';
 import { LegalLinks } from '../ui/LegalLinks';
 import { isRudeName, RUDE_SAY } from '../../../src/app/names';
+import { tr, trServer } from '../lib/i18n';
 
 const STEPS = ['start', 'name', 'zone', 'radius', 'likes', 'style', 'picks', 'friends', 'done'] as const;
 type Step = (typeof STEPS)[number] | 'email';
@@ -45,13 +46,13 @@ function StepScreen({ k, onBack, children, foot }: { k: number; onBack: () => vo
     <View style={{ flex: 1, backgroundColor: t.bgCont }}>
       <Doodles />
       <View style={{ paddingTop: ins.top + 8, paddingHorizontal: 16, height: ins.top + 60, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <Press onPress={onBack} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
+        <Press onPress={onBack} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="back" color={t.ink} />
         </Press>
         <View style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: t.s3, overflow: 'hidden' }}>
           <Animated.View style={{ height: 6, borderRadius: 99, backgroundColor: t.blue, width: w.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }} />
         </View>
-        <Lbl style={{ fontFamily: F.b }}>{Math.max(1, k) + ' din 7'}</Lbl>
+        <Lbl style={{ fontFamily: F.b }}>{tr('{n} din 7', { n: Math.max(1, k) })}</Lbl>
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: foot ? 20 : ins.bottom + 20 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         {children}
@@ -96,7 +97,7 @@ function ChatBg() {
       {CHAT.filter(([, , y]) => height >= 760 || y <= 0.26).map(([text, side, y]) => (
         <View key={text} style={{ position: 'absolute', top: y * height, [side === 'l' ? 'left' : 'right']: 14, maxWidth: width * 0.34, paddingHorizontal: 11, paddingVertical: 6, borderRadius: 14,
           borderBottomLeftRadius: side === 'l' ? 4 : 14, borderBottomRightRadius: side === 'r' ? 4 : 14, backgroundColor: side === 'l' ? 'rgba(255,255,255,0.04)' : 'rgba(47,91,255,0.10)' }}>
-          <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 12.5, color: 'rgba(255,255,255,0.16)' }}>{text}</T>
+          <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 12.5, color: 'rgba(255,255,255,0.16)' }}>{tr(text)}</T>
         </View>
       ))}
     </View>
@@ -190,7 +191,7 @@ export default function Cont() {
   // 16–17 (the birth date they confirmed): the questions leave out clubs, party and nights out
   const minor = !!birthIso && (APP.age(birthIso) ?? 18) < 18;
   const bOk = age !== null && age <= 110;
-  const ageNote = !birth ? 'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.' : !bM ? 'Scrie data așa: 14.05.2004.' : !bOk ? 'Data nu pare bună. Verifică ziua, luna și anul.' : age! < 16 ? 'CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!' : age! < 18 ? 'Până la 18 ani îți arătăm doar locurile pentru oricine, fără baruri și cluburi.' : 'Perfect, vezi toate locurile, inclusiv cele 18+.';
+  const ageNote = !birth ? tr('Ca să nu-ți arătăm locuri pentru care n-ai vârsta.') : !bM ? tr('Scrie data așa: 14.05.2004.') : !bOk ? tr('Data nu pare bună. Verifică ziua, luna și anul.') : age! < 16 ? tr('CeFaci e de la 16 ani în sus. Revino peste câțiva ani, te așteptăm!') : age! < 18 ? tr('Până la 18 ani îți arătăm doar locurile pentru oricine, fără baruri și cluburi.') : tr('Perfect, vezi toate locurile, inclusiv cele 18+.');
   // nume urâte (Cornel, 06.10): Bilu cere alt nume; serverul verifică la fel
   const rudeFirst = isRudeName(first), rudeUser = isRudeName(u);
   const nameOff = first.trim().length < 2 || !userOk || !bOk || age! < 16 || rudeFirst || rudeUser;
@@ -220,16 +221,16 @@ export default function Cont() {
   };
 
   const say: Partial<Record<Step, [Mood, string]>> = {
-    email: ['hi', sent ? 'Ți-am trimis un cod pe email. Scrie-l aici.' : 'Scrie-mi emailul. Îți trimit un cod, ca să știu că ești tu.'],
-    name: rudeFirst || rudeUser ? ['oops', RUDE_SAY] : ageAsk ? ['oops', 'Stai puțin! Verific o dată cu tine data nașterii.'] : ['wink', 'Salut! Cum să-ți zic? Prietenii te găsesc după username.'],
-    zone: ['up', 'De unde pleci de obicei? Cel mai simplu: folosește locația ta. Sau alege tu orașul ori sectorul.'],
-    radius: ['wink', 'Cât de departe ai merge pentru o seară bună? Ți-am pus raza în care ai destule locuri. O schimbi oricând de pe Acasă.'],
-    likes: ['hi', likes.length >= 3 ? 'Bun gust! Mai alege dacă vrei, sau mergi mai departe.' : 'Alege măcar 3 lucruri care îți plac' + (first.trim() ? ', ' + first.trim() : '') + '. Așa știu de unde să încep.'],
-    style: ['wink', !who ? 'Întâi: ieși mai mult singur, în doi sau cu gașca? Îți fac alte planuri pentru fiecare.' : 'Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.'],
-    picks: ['up', pick === 0 ? 'Aproape gata: ' + (real.length || 5) + ' locuri reale din zona ta. Zi-mi repede dacă ai merge.' : votes[votes.length - 1][1] === 'yes' ? 'Notat! Îmi place cum gândești.' : votes[votes.length - 1][1] === 'no' ? 'Ok, pe ăsta nu ți-l mai arăt des.' : 'Hmm, bine. Îl las pe „poate”.'],
-    friends: who === 'solo' ? ['wink', 'Îți fac planuri pentru tine: cafenele, muzee, filme, plimbări. Când ai chef de companie, adaugi prieteni.']
-      : who === 'duo' ? ['hi', 'Adaugă-l pe cel cu care ieși și vă trimit planurile amândurora.']
-      : ['hi', 'Cu gașca e mai distractiv: votați împreună unde mergeți.'],
+    email: ['hi', sent ? tr('Ți-am trimis un cod pe email. Scrie-l aici.') : tr('Scrie-mi emailul. Îți trimit un cod, ca să știu că ești tu.')],
+    name: rudeFirst || rudeUser ? ['oops', tr(RUDE_SAY)] : ageAsk ? ['oops', tr('Stai puțin! Verific o dată cu tine data nașterii.')] : ['wink', tr('Salut! Cum să-ți zic? Prietenii te găsesc după username.')],
+    zone: ['up', tr('De unde pleci de obicei? Cel mai simplu: folosește locația ta. Sau alege tu orașul ori sectorul.')],
+    radius: ['wink', tr('Cât de departe ai merge pentru o seară bună? Ți-am pus raza în care ai destule locuri. O schimbi oricând de pe Acasă.')],
+    likes: ['hi', likes.length >= 3 ? tr('Bun gust! Mai alege dacă vrei, sau mergi mai departe.') : first.trim() ? tr('Alege măcar 3 lucruri care îți plac, {name}. Așa știu de unde să încep.', { name: first.trim() }) : tr('Alege măcar 3 lucruri care îți plac. Așa știu de unde să încep.')],
+    style: ['wink', !who ? tr('Întâi: ieși mai mult singur, în doi sau cu gașca? Îți fac alte planuri pentru fiecare.') : tr('Încă puțin: cât cheltui de obicei și când ieși. Nu te judec, promit.')],
+    picks: ['up', pick === 0 ? tr('Aproape gata: {n} locuri reale din zona ta. Zi-mi repede dacă ai merge.', { n: real.length || 5 }) : votes[votes.length - 1][1] === 'yes' ? tr('Notat! Îmi place cum gândești.') : votes[votes.length - 1][1] === 'no' ? tr('Ok, pe ăsta nu ți-l mai arăt des.') : tr('Hmm, bine. Îl las pe „poate”.')],
+    friends: who === 'solo' ? ['wink', tr('Îți fac planuri pentru tine: cafenele, muzee, filme, plimbări. Când ai chef de companie, adaugi prieteni.')]
+      : who === 'duo' ? ['hi', tr('Adaugă-l pe cel cu care ieși și vă trimit planurile amândurora.')]
+      : ['hi', tr('Cu gașca e mai distractiv: votați împreună unde mergeți.')],
   };
   const sayNow = say[step];
 
@@ -261,29 +262,29 @@ export default function Cont() {
             <T style={{ fontFamily: F.display, fontSize: 25, letterSpacing: -0.5, color: '#FFFFFF' }}>CeFaci</T>
             <View style={{ flex: 1 }} />
             <LangPick dark />
-            <Press onPress={() => setTheme(themeName === 'noapte' ? 'zi' : 'noapte')} accessibilityLabel={themeName === 'noapte' ? 'Treci pe tema de zi' : 'Treci pe tema de noapte'}
+            <Press onPress={() => setTheme(themeName === 'noapte' ? 'zi' : 'noapte')} accessibilityLabel={themeName === 'noapte' ? tr('Treci pe tema de zi') : tr('Treci pe tema de noapte')}
               style={{ width: 44, height: 44, borderRadius: 99, backgroundColor: 'rgba(255,255,255,0.08)', alignItems: 'center', justifyContent: 'center' }}>
               <Icon name={themeName === 'noapte' ? 'sun' : 'moon'} size={16} color="#FFFFFF" />
             </Press>
           </View>
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <View style={{ alignItems: 'center' }}><Bilu size={tiny ? 96 : short ? 124 : 160} mood="hi" /></View>
-            <T accessibilityRole="header" style={{ marginTop: tiny ? 10 : 18, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: tiny ? 30 : 36, lineHeight: tiny ? 32 : 38, letterSpacing: -1, color: '#FFFFFF' }}>{'Nu mai stai acasă\nfără să vrei.'}</T>
-            <T style={{ marginTop: 10, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: tiny ? 14.5 : 16, lineHeight: tiny ? 20 : 23, color: '#C9CEE6' }}>{returning ? 'Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.' : 'Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.'}</T>
+            <T accessibilityRole="header" style={{ marginTop: tiny ? 10 : 18, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: tiny ? 30 : 36, lineHeight: tiny ? 32 : 38, letterSpacing: -1, color: '#FFFFFF' }}>{tr('Nu mai stai acasă\nfără să vrei.')}</T>
+            <T style={{ marginTop: 10, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: tiny ? 14.5 : 16, lineHeight: tiny ? 20 : 23, color: '#C9CEE6' }}>{returning ? tr('Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.') : tr('Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.')}</T>
           </View>
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 6, gap: 10 }}>
             {googleSignInAvailable&&<Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}
               style={{ height: 56, borderRadius: 18, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <GoogleG />
-              <T style={{ fontFamily: F.sb, fontSize: 16, color: '#0E1440' }}>{busy ? 'O clipă…' : 'Continuă cu Google'}</T>
+              <T style={{ fontFamily: F.sb, fontSize: 16, color: '#0E1440' }}>{busy ? tr('O clipă…') : tr('Continuă cu Google')}</T>
             </Press>}
             <Press disabled={busy} onPress={() => { setAuthErr(''); setSent(false); setCode(''); go(E2E ? 'name' : 'email'); }}
               style={{ height: 56, borderRadius: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.06)', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               <MailIcon />
-              <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>Continuă cu email</T>
+              <T style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF' }}>{tr('Continuă cu email')}</T>
             </Press>
             {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
-            <T style={{ marginTop: 2, textAlign: 'center', fontFamily: F.m, fontSize: 12.5, lineHeight: 17, color: '#A9B1DA' }}>{googleSignInAvailable?'Ai deja cont? Intră la fel, cu Google sau cu emailul.':'Ai deja cont? Intră cu aceeași adresă de email.'}</T>
+            <T style={{ marginTop: 2, textAlign: 'center', fontFamily: F.m, fontSize: 12.5, lineHeight: 17, color: '#A9B1DA' }}>{googleSignInAvailable?tr('Ai deja cont? Intră la fel, cu Google sau cu emailul.'):tr('Ai deja cont? Intră cu aceeași adresă de email.')}</T>
             <View style={{ marginTop: 4 }}><AccountLegalNotice audience="client" theme={t} dark small creating={!returning} extra={<LegalLinks dark tiny />} /></View>
           </View>
         </View>
@@ -292,15 +293,15 @@ export default function Cont() {
   }
 
   if (step === 'done') {
-    const BUDGET_TXT: Record<string, string> = { '0': 'gratis', '50': '≤ 50 lei', '100': '≤ 100 lei', any: 'orice buget' };
-    const summary = likes.slice(0, 3).map((key) => LIKES.find((l) => l[0] === key)![1]).concat([(home ? home.name + ', ' : '') + 'până la ' + km + ' km', BUDGET_TXT[budget], yes + ' din ' + votes.length + ' locuri pe listă']);
+    const BUDGET_TXT: Record<string, string> = { '0': tr('gratis'), '50': '≤ 50 lei', '100': '≤ 100 lei', any: tr('orice buget') };
+    const summary = likes.slice(0, 3).map((key) => tr(LIKES.find((l) => l[0] === key)![1])).concat([(home ? home.name + ', ' : '') + tr('până la {km} km', { km }), BUDGET_TXT[budget], tr('{y} din {n} locuri pe listă', { y: yes, n: votes.length })]);
     return (
       <Slide k="done">
         <ScrollView style={{ flex: 1, backgroundColor: '#0E1440' }} contentContainerStyle={{ flexGrow: 1, paddingTop: ins.top }} bounces={false} showsVerticalScrollIndicator={false}>
           <Glow top={ins.top + 40} />
           <View style={{ alignItems: 'center', marginTop: short ? 20 : 56 }}><Bilu size={short ? 110 : 150} mood="yay" /></View>
-          <T accessibilityRole="header" style={{ marginTop: 16, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: 34, lineHeight: 35, letterSpacing: -0.7, color: '#FFFFFF' }}>{'Gata' + (first.trim() ? ', ' + first.trim() : '') + '! Acum te cunosc puțin.'}</T>
-          <T style={{ marginTop: 10, marginHorizontal: 30, textAlign: 'center', fontFamily: F.m, fontSize: 15, lineHeight: 22, color: '#C9CEE6' }}>Cu cât ieși mai mult și îmi spui cum a fost, cu atât te nimeresc mai bine.</T>
+          <T accessibilityRole="header" style={{ marginTop: 16, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: 34, lineHeight: 35, letterSpacing: -0.7, color: '#FFFFFF' }}>{first.trim() ? tr('Gata, {name}! Acum te cunosc puțin.', { name: first.trim() }) : tr('Gata! Acum te cunosc puțin.')}</T>
+          <T style={{ marginTop: 10, marginHorizontal: 30, textAlign: 'center', fontFamily: F.m, fontSize: 15, lineHeight: 22, color: '#C9CEE6' }}>{tr('Cu cât ieși mai mult și îmi spui cum a fost, cu atât te nimeresc mai bine.')}</T>
           <View style={{ marginTop: 18, marginHorizontal: 24, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 6 }}>
             {summary.map((x) => (
               <View key={x} style={{ height: 32, paddingHorizontal: 12, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.12)', justifyContent: 'center' }}>
@@ -308,11 +309,11 @@ export default function Cont() {
               </View>
             ))}
           </View>
-          <T style={{ marginTop: 16, marginHorizontal: 30, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>Ce-mi spui folosesc doar ca să-ți recomand locuri. Nu vindem date și nu arătăm reclame. Schimbi oricând din Profil → Ce-ți place.</T>
+          <T style={{ marginTop: 16, marginHorizontal: 30, textAlign: 'center', fontFamily: F.m, fontSize: 12, lineHeight: 17, color: '#A9B1DA' }}>{tr('Ce-mi spui folosesc doar ca să-ți recomand locuri. Nu vindem date și nu arătăm reclame. Schimbi oricând din Profil → Ce-ți place.')}</T>
           <View style={{ flex: 1 }} />
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 20, gap: 8 }}>
-            <Big label={busy ? 'O clipă…' : 'Intră în aplicație'} color="#FFD43B" ink="#0E1440" onPress={enter} disabled={busy} />
-            <Quiet label="Ia-o de la capăt" color="#FFFFFF" onPress={restart} />
+            <Big label={busy ? tr('O clipă…') : tr('Intră în aplicație')} color="#FFD43B" ink="#0E1440" onPress={enter} disabled={busy} />
+            <Quiet label={tr('Ia-o de la capăt')} color="#FFFFFF" onPress={restart} />
           </View>
         </ScrollView>
       </Slide>
@@ -327,24 +328,24 @@ export default function Cont() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Slide k="email">
-          <StepScreen k={1} onBack={back} foot={<View style={{gap: 8}}>{!sent && <AccountLegalNotice audience="client" theme={t} creating={!returning}/>}<Big label={busy ? 'O clipă…' : sent ? 'Confirmă codul' : 'Trimite-mi codul'} disabled={off} onPress={sendOrVerify} /></View>}>
+          <StepScreen k={1} onBack={back} foot={<View style={{gap: 8}}>{!sent && <AccountLegalNotice audience="client" theme={t} creating={!returning}/>}<Big label={busy ? tr('O clipă…') : sent ? tr('Confirmă codul') : tr('Trimite-mi codul')} disabled={off} onPress={sendOrVerify} /></View>}>
             {bubble}
-            <H1>Emailul tău</H1>
+            <H1>{tr('Emailul tău')}</H1>
             <View style={{ marginTop: 14, gap: 8 }}>
-              <Field value={mail} onChangeText={(x) => { setMail(x.slice(0, 80)); setSent(false); setCode(''); setAuthErr(''); }} placeholder="nume@exemplu.ro" accessibilityLabel="Adresa de email"
+              <Field value={mail} onChangeText={(x) => { setMail(x.slice(0, 80)); setSent(false); setCode(''); setAuthErr(''); }} placeholder={tr('nume@exemplu.ro')} accessibilityLabel={tr('Adresa de email')}
                 keyboardType="email-address" autoCapitalize="none" autoComplete="email" autoCorrect={false} textContentType="emailAddress" returnKeyType="send"
                 onSubmitEditing={() => { if (!off) sendOrVerify(); }} focused={focus === 'mail'} onFocus={() => setFocus('mail')} onBlur={() => setFocus('')} />
               {authErr || netErr ? <Note kind="err">{authErr || netErr}</Note> : null}
               {sent ? (
                 <View style={{ marginTop: 10, gap: 8 }}>
-                  <Lbl>Codul din email</Lbl>
-                  <Field big value={code} onChangeText={(x) => { setCode(x.replace(/\D/g, '').slice(0, 10)); setCodeBad(false); }} placeholder="cod" accessibilityLabel="Codul din email"
+                  <Lbl>{tr('Codul din email')}</Lbl>
+                  <Field big value={code} onChangeText={(x) => { setCode(x.replace(/\D/g, '').slice(0, 10)); setCodeBad(false); }} placeholder={tr('cod')} accessibilityLabel={tr('Codul din email')}
                     keyboardType="number-pad" returnKeyType="done" onSubmitEditing={() => { if (!off) void sendOrVerify(); }} autoComplete="one-time-code" textContentType="oneTimeCode" maxLength={10} autoFocus
                     focused={focus === 'code'} onFocus={() => setFocus('code')} onBlur={() => setFocus('')} />
-                  {codeBad ? <Note kind="err">Codul nu e bun. Mai încearcă.</Note> : null}
+                  {codeBad ? <Note kind="err">{tr('Codul nu e bun. Mai încearcă.')}</Note> : null}
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Muted style={{ flex: 1 }}>Nu l-ai primit? Uită-te și la Spam.</Muted>
-                    <Quiet label="Trimite din nou" onPress={async () => { setAuthErr(''); setCode(''); const err = await APP.emailStart(mailN); setAuthErr(err || ''); }} />
+                    <Muted style={{ flex: 1 }}>{tr('Nu l-ai primit? Uită-te și la Spam.')}</Muted>
+                    <Quiet label={tr('Trimite din nou')} onPress={async () => { setAuthErr(''); setCode(''); const err = await APP.emailStart(mailN); setAuthErr(err || ''); }} />
                   </View>
                 </View>
               ) : null}
@@ -359,40 +360,40 @@ export default function Cont() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Slide k="name">
-          <StepScreen k={1} onBack={back} foot={<Big label="Mai departe" disabled={nameOff} onPress={() => setAgeAsk(true)} />}>
+          <StepScreen k={1} onBack={back} foot={<Big label={tr('Mai departe')} disabled={nameOff} onPress={() => setAgeAsk(true)} />}>
             {bubble}
-            <H1>Cum te cheamă?</H1>
-            {saveErr ? <View style={{ marginTop: 10 }}><Note kind="err">{saveErr}</Note></View> : null}
+            <H1>{tr('Cum te cheamă?')}</H1>
+            {saveErr ? <View style={{ marginTop: 10 }}><Note kind="err">{trServer(saveErr)}</Note></View> : null}
             <View style={{ marginTop: 14, gap: 8 }}>
-              <Lbl>Prenumele</Lbl>
-              <Field value={first} onChangeText={(x) => setFirst(x.slice(0, 24))} placeholder="ex: Cornel" accessibilityLabel="Prenumele" autoCapitalize="words" autoComplete="given-name" textContentType="givenName"
+              <Lbl>{tr('Prenumele')}</Lbl>
+              <Field value={first} onChangeText={(x) => setFirst(x.slice(0, 24))} placeholder={tr('ex: Cornel')} accessibilityLabel={tr('Prenumele')} autoCapitalize="words" autoComplete="given-name" textContentType="givenName"
                 focused={focus === 'fn'} onFocus={() => setFocus('fn')} onBlur={() => setFocus('')} />
-              {rudeFirst ? <Note kind="err">{RUDE_SAY}</Note> : <Muted>Prietenii îți văd prenumele și inițiala numelui.</Muted>}
+              {rudeFirst ? <Note kind="err">{tr(RUDE_SAY)}</Note> : <Muted>{tr('Prietenii îți văd prenumele și inițiala numelui.')}</Muted>}
               <Lbl style={{ marginTop: 8 }}>Username</Lbl>
-              <Field prefix="@" value={u} onChangeText={(x) => { setUser(clean(x)); setSaveErr(''); }} placeholder="cum te găsesc prietenii" accessibilityLabel="Username" autoCapitalize="none" autoCorrect={false}
+              <Field prefix="@" value={u} onChangeText={(x) => { setUser(clean(x)); setSaveErr(''); }} placeholder={tr('cum te găsesc prietenii')} accessibilityLabel="Username" autoCapitalize="none" autoCorrect={false}
                 focused={focus === 'un'} onFocus={() => setFocus('un')} onBlur={() => setFocus('')} />
-              {rudeUser ? <Note kind="err">{RUDE_SAY}</Note> : userTaken ? (
+              {rudeUser ? <Note kind="err">{tr(RUDE_SAY)}</Note> : userTaken ? (
                 <View style={{ gap: 8 }}>
-                  <Note kind="err">{'@' + u + ' e deja luat. Încearcă una din astea:'}</Note>
+                  <Note kind="err">{tr('@{u} e deja luat. Încearcă una din astea:', { u })}</Note>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                     {[u + '.ies', u + '_cf', u + (bM ? bM[3].slice(2) : '23')].map((s) => <Chip key={s} small label={'@' + s} onPress={() => setUser(s)} />)}
                   </View>
                 </View>
-              ) : userOk && signedIn ? <Note kind="ok">{'@' + u + ' e liber.'}</Note> : signedIn && u.length >= 3 ? <Muted>Verific dacă e liber…</Muted> : null}
-              <Lbl style={{ marginTop: 8 }}>Data nașterii</Lbl>
-              <Field value={birth} onChangeText={onBirth} placeholder="ZZ.LL.AAAA, ex: 14.05.2004" accessibilityLabel="Data nașterii" keyboardType="number-pad" maxLength={10}
+              ) : userOk && signedIn ? <Note kind="ok">{tr('@{u} e liber.', { u })}</Note> : signedIn && u.length >= 3 ? <Muted>{tr('Verific dacă e liber…')}</Muted> : null}
+              <Lbl style={{ marginTop: 8 }}>{tr('Data nașterii')}</Lbl>
+              <Field value={birth} onChangeText={onBirth} placeholder={tr('ZZ.LL.AAAA, ex: 14.05.2004')} accessibilityLabel={tr('Data nașterii')} keyboardType="number-pad" maxLength={10}
                 focused={focus === 'bd'} onFocus={() => setFocus('bd')} onBlur={() => setFocus('')} />
               <Muted style={age !== null && age < 16 ? { color: t.coralInk, fontFamily: F.sb } : undefined}>{ageNote}</Muted>
             </View>
           </StepScreen>
         </Slide>
         <Sheet open={ageAsk && bOk} onClose={() => setAgeAsk(false)}>
-          <H1 style={{ fontSize: 26 }}>Sigur e data corectă?</H1>
-          <T style={{ marginTop: 8, fontFamily: F.sb, fontSize: 16 }}>{birth + ' înseamnă că ai ' + age + ' ani.'}</T>
-          {age !== null && age < 18 ? <Muted style={{ marginTop: 8 }}>Până la 18 ani îți arătăm doar locurile pentru oricine: fără cluburi, baruri, pub-uri, narghilea și alte locuri 18+.</Muted> : null}
+          <H1 style={{ fontSize: 26 }}>{tr('Sigur e data corectă?')}</H1>
+          <T style={{ marginTop: 8, fontFamily: F.sb, fontSize: 16 }}>{tr('{d} înseamnă că ai {n} ani.', { d: birth, n: age ?? '' })}</T>
+          {age !== null && age < 18 ? <Muted style={{ marginTop: 8 }}>{tr('Până la 18 ani îți arătăm doar locurile pentru oricine: fără cluburi, baruri, pub-uri, narghilea și alte locuri 18+.')}</Muted> : null}
           <View style={{ marginTop: 18, gap: 8 }}>
-            <Big label="Da, e corectă" onPress={() => { setAgeAsk(false); setBirthIso(bIso); go('zone'); }} />
-            <Quiet label="O corectez" onPress={() => setAgeAsk(false)} />
+            <Big label={tr('Da, e corectă')} onPress={() => { setAgeAsk(false); setBirthIso(bIso); go('zone'); }} />
+            <Quiet label={tr('O corectez')} onPress={() => setAgeAsk(false)} />
           </View>
         </Sheet>
       </KeyboardAvoidingView>
@@ -402,9 +403,9 @@ export default function Cont() {
   if (step === 'zone') {
     return (
       <Slide k="zone">
-        <StepScreen k={2} onBack={back} foot={<Big label="Mai departe" disabled={!home} onPress={() => go('radius')} />}>
+        <StepScreen k={2} onBack={back} foot={<Big label={tr('Mai departe')} disabled={!home} onPress={() => go('radius')} />}>
           {bubble}
-          <H1>De unde pleci?</H1>
+          <H1>{tr('De unde pleci?')}</H1>
           <View style={{ marginTop: 14 }}>
             <WhereChooser value={home} live={live} onPick={(h, l) => { setHome(h); setLive(l); setRadius(null); setTimeout(() => go('radius'), 350); }} />
           </View>
@@ -416,16 +417,16 @@ export default function Cont() {
   if (step === 'radius' && home) {
     return (
       <Slide k="radius">
-        <StepScreen k={3} onBack={back} foot={<Big label="Mai departe" disabled={moves.length === 0} onPress={() => go('likes')} />}>
+        <StepScreen k={3} onBack={back} foot={<Big label={tr('Mai departe')} disabled={moves.length === 0} onPress={() => go('likes')} />}>
           {bubble}
-          <H1>Cât de departe?</H1>
-          <Muted style={{ marginTop: 4 }}>{'Pleci din ' + home.name + (live ? ' (locația ta)' : '') + '.'}</Muted>
+          <H1>{tr('Cât de departe?')}</H1>
+          <Muted style={{ marginTop: 4 }}>{live ? tr('Pleci din {name} (locația ta).', { name: home.name }) : tr('Pleci din {name}.', { name: home.name })}</Muted>
           <View style={{ marginTop: 12 }}>
             <RadiusChooser home={home} km={km} moves={moves} onKm={setRadius} onMove={(h) => { setHome(h); setLive(false); }} />
           </View>
-          <Lbl style={{ marginTop: 16, marginBottom: 8 }}>Cum ajungi? <T style={{ fontFamily: F.m, fontSize: 13, color: t.ink3 }}>Oricâte</T></Lbl>
+          <Lbl style={{ marginTop: 16, marginBottom: 8 }}>{tr('Cum ajungi?')} <T style={{ fontFamily: F.m, fontSize: 13, color: t.ink3 }}>{tr('Oricâte')}</T></Lbl>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {[['walk', 'Pe jos'], ['car', 'Cu mașina'], ['bus', 'Cu autobuzul'], ['bike', 'Pe bicicletă']].map(([key, label]) => <Chip key={key} label={label} on={moves.includes(key)} onPress={() => toggle(moves, setMoves, key)} />)}
+            {[['walk', 'Pe jos'], ['car', 'Cu mașina'], ['bus', 'Cu autobuzul'], ['bike', 'Pe bicicletă']].map(([key, label]) => <Chip key={key} label={tr(label)} on={moves.includes(key)} onPress={() => toggle(moves, setMoves, key)} />)}
           </View>
         </StepScreen>
       </Slide>
@@ -436,19 +437,19 @@ export default function Cont() {
     const n = likes.length;
     return (
       <Slide k="likes">
-        <StepScreen k={4} onBack={back} foot={<Big label={n < 3 ? 'Alege încă ' + (3 - n) : 'Mai departe'} disabled={n < 3} onPress={() => go('style')} />}>
+        <StepScreen k={4} onBack={back} foot={<Big label={n < 3 ? tr('Alege încă {n}', { n: 3 - n }) : tr('Mai departe')} disabled={n < 3} onPress={() => go('style')} />}>
           {bubble}
-          <H1>Ce-ți place?</H1>
-          <Lead style={{ marginTop: 6 }}>{n === 0 ? 'Alege măcar 3. Poți schimba oricând.' : n < 3 ? 'Mai alege ' + (3 - n) + '.' : n + ' alese. Bun început!'}</Lead>
+          <H1>{tr('Ce-ți place?')}</H1>
+          <Lead style={{ marginTop: 6 }}>{n === 0 ? tr('Alege măcar 3. Poți schimba oricând.') : n < 3 ? tr('Mai alege {n}.', { n: 3 - n }) : tr('{n} alese. Bun început!', { n })}</Lead>
           <View style={{ marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
             {LIKES.filter(([key]) => !(minor && key === 'party')).map(([key, label, bg, icon]) => {
               const on = likes.includes(key);
               return (
                 <View key={key} style={{ width: '48.5%', borderRadius: 23, borderWidth: 3, borderColor: on ? '#FFD43B' : 'transparent', margin: -3 }}>
-                  <Press onPress={() => toggle(likes, setLikes, key)} accessibilityLabel={label} accessibilityState={{ selected: on }}
+                  <Press onPress={() => toggle(likes, setLikes, key)} accessibilityLabel={tr(label)} accessibilityState={{ selected: on }}
                     style={{ minHeight: 96, padding: 12, borderRadius: 20, backgroundColor: bg, borderWidth: 2, borderColor: on ? '#0E1440' : 'transparent', justifyContent: 'space-between' }}>
                     <Icon d={icon} size={28} color="#0E1440" />
-                    <T style={{ marginTop: 14, fontFamily: F.b, fontSize: 15, lineHeight: 17, color: '#0E1440' }}>{label}</T>
+                    <T style={{ marginTop: 14, fontFamily: F.b, fontSize: 15, lineHeight: 17, color: '#0E1440' }}>{tr(label)}</T>
                     {on ? (
                       <View style={{ position: 'absolute', right: 10, top: 10, width: 24, height: 24, borderRadius: 99, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>
                         <Icon name="check" size={14} color="#FFD43B" width={3} />
@@ -474,14 +475,14 @@ export default function Cont() {
     ];
     return (
       <Slide k="style">
-        <StepScreen k={5} onBack={back} foot={<Big label={!who ? 'Alege cu cine ieși' : 'Mai departe'} disabled={when.length === 0 || !who} onPress={startPicks} />}>
+        <StepScreen k={5} onBack={back} foot={<Big label={!who ? tr('Alege cu cine ieși') : tr('Mai departe')} disabled={when.length === 0 || !who} onPress={startPicks} />}>
           {bubble}
-          <H1>Cum ieși tu?</H1>
+          <H1>{tr('Cum ieși tu?')}</H1>
           {rows.map(([id, label, val, set, opts, multi]) => (
             <View key={id} style={{ marginTop: 14 }}>
-              <Lbl style={{ marginBottom: 8 }}>{label}</Lbl>
+              <Lbl style={{ marginBottom: 8 }}>{tr(label)}</Lbl>
               <View style={{ flexDirection: 'row', gap: 8 }}>
-                {opts.map(([v, text]) => <Seg key={v} label={text} on={multi ? (val as string[]).includes(v) : val === v} onPress={() => set(v)} />)}
+                {opts.map(([v, text]) => <Seg key={v} label={tr(text)} on={multi ? (val as string[]).includes(v) : val === v} onPress={() => set(v)} />)}
               </View>
             </View>
           ))}
@@ -498,23 +499,23 @@ export default function Cont() {
         <StepScreen k={6} onBack={back} foot={
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Press onPress={() => vote('no')} disabled={!card || pick >= total} style={{ flex: 1, height: 60, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <Icon name="close" color={t.ink} /><T style={{ fontFamily: F.b, fontSize: 16 }}>Nu prea</T>
+              <Icon name="close" color={t.ink} /><T style={{ fontFamily: F.b, fontSize: 16 }}>{tr('Nu prea')}</T>
             </Press>
             <Press onPress={() => vote('maybe')} disabled={!card || pick >= total} style={{ flex: 1, height: 60, borderRadius: 20, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}>
-              <T style={{ fontFamily: F.b, fontSize: 16 }}>Poate</T>
+              <T style={{ fontFamily: F.b, fontSize: 16 }}>{tr('Poate')}</T>
             </Press>
             <Press onPress={() => vote('yes')} disabled={!card || pick >= total} style={{ flex: 1, height: 60, borderRadius: 20, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <Icon name="check" color="#0E1440" /><T style={{ fontFamily: F.b, fontSize: 16, color: '#0E1440' }}>Da!</T>
+              <Icon name="check" color="#0E1440" /><T style={{ fontFamily: F.b, fontSize: 16, color: '#0E1440' }}>{tr('Da!')}</T>
             </Press>
           </View>
         }>
           {bubble}
-          <H1 style={{ fontSize: 26, lineHeight: 28 }}>Ai merge aici?</H1>
-          <Muted style={{ marginTop: 4, marginBottom: 12 }}>{Math.min(pick, total - 1) + 1 + ' din ' + total + ' · ' + yes + ' „da” până acum'}</Muted>
+          <H1 style={{ fontSize: 26, lineHeight: 28 }}>{tr('Ai merge aici?')}</H1>
+          <Muted style={{ marginTop: 4, marginBottom: 12 }}>{tr('{i} din {n} · {y} „da” până acum', { i: Math.min(pick, total - 1) + 1, n: total, y: yes })}</Muted>
           {card ? <PickCard key={card.id + pick} odd={pick % 2 === 1} bg={card.bg} fg={card.fg} dot={card.dot} icon={like[3]} tag={card.tag} title={card.name} sub={card.sub} /> : (
-            <Note kind="err">Nu am găsit locuri aproape de zona aleasă. Mergi mai departe, le vezi în aplicație.</Note>
+            <Note kind="err">{tr('Nu am găsit locuri aproape de zona aleasă. Mergi mai departe, le vezi în aplicație.')}</Note>
           )}
-          {!card || pick >= total ? <View style={{ marginTop: 12 }}><Big label="Mai departe" onPress={() => go('friends')} /></View> : null}
+          {!card || pick >= total ? <View style={{ marginTop: 12 }}><Big label={tr('Mai departe')} onPress={() => go('friends')} /></View> : null}
         </StepScreen>
       </Slide>
     );
@@ -523,14 +524,14 @@ export default function Cont() {
   // friends
   return (
     <Slide k="friends">
-      <StepScreen k={7} onBack={back} foot={<Big label="Gata" onPress={() => go('done')} />}>
+      <StepScreen k={7} onBack={back} foot={<Big label={tr('Gata')} onPress={() => go('done')} />}>
         {bubble}
-        <H1>{who === 'solo' ? 'Și când vrei companie' : who === 'duo' ? 'Cu cine ieși în doi?' : 'Gașca ta'}</H1>
+        <H1>{who === 'solo' ? tr('Și când vrei companie') : who === 'duo' ? tr('Cu cine ieși în doi?') : tr('Gașca ta')}</H1>
         <Lead style={{ marginTop: 6 }}>{who === 'solo'
-          ? 'Planurile ți le fac pentru o persoană: fără escape room sau biliard, care cer companie. Prietenii îi adaugi oricând din Profil → Prieteni, după @username sau cu codul tău.'
+          ? tr('Planurile ți le fac pentru o persoană: fără escape room sau biliard, care cer companie. Prietenii îi adaugi oricând din Profil → Prieteni, după @username sau cu codul tău.')
           : who === 'duo'
-            ? 'Adaugă-l din Profil → Prieteni, după @username sau cu codul tău. Îi trimiți planul și răspunde cu „Vin” sau „Nu pot”.'
-            : 'Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile le faci din Planuri și votați împreună unde mergeți.'}</Lead>
+            ? tr('Adaugă-l din Profil → Prieteni, după @username sau cu codul tău. Îi trimiți planul și răspunde cu „Vin” sau „Nu pot”.')
+            : tr('Prietenii îi adaugi după @username sau le trimiți codul tău, din Profil → Prieteni. Gășcile le faci din Planuri și votați împreună unde mergeți.')}</Lead>
       </StepScreen>
     </Slide>
   );

@@ -3,6 +3,7 @@
 import { APP } from '../../../src/app/bridge';
 import {AppState} from 'react-native';
 import { sb } from './auth';
+import { tr, trServer } from './i18n';
 import type { Person } from './friends';
 import { createPlanAt, hhmm, removePlan, startsAt, updPlan, type Plan } from './plans';
 import { captureAccount, getApp } from './session';
@@ -18,7 +19,7 @@ export interface Going { person: Person; answer: Answer; owner?: boolean }
 /** Sends a plan to a crew (its members) or to friends; they get it in Planuri with Vin / Nu pot. */
 export async function sharePlan(pl: Plan, me: string, to: { crewId?: string | null; friendIds?: string[] }): Promise<string | null> {
   const p = APP.byId(pl.placeId);
-  if (!p) return 'Nu mai găsim locul ăsta.';
+  if (!p) return tr('Nu mai găsim locul ăsta.');
   try {
     let ids = to.friendIds ?? [];
     if (to.crewId) {
@@ -27,10 +28,10 @@ export async function sharePlan(pl: Plan, me: string, to: { crewId?: string | nu
       ids=[...new Set([...ids,...((data??[]) as {user_id:string}[]).map(r=>r.user_id)])];
     }
     ids=ids.filter(u=>u!==me);
-    if(!ids.length)return 'Nu e nimeni de chemat.';
+    if(!ids.length)return tr('Nu e nimeni de chemat.');
     await ensurePlan(pl,{...to,guests:Math.max(0,pl.people-1-ids.length)});
     return null;
-  } catch(e){return String((e as Error).message);}
+  } catch(e){return trServer(String((e as Error).message));}
 
 }
 
@@ -48,7 +49,7 @@ export async function listInvites(me: string): Promise<Invite[]> {
   const byId = new Map(((people ?? []) as Person[]).map((p) => [p.id, p]));
   return list.map((p) => ({
     planId: p.id, venueId: p.venue_id, venueName: p.venue_name, startsAt: p.starts_at, crewId: p.crew_id,
-    owner: byId.get(p.owner_id) ?? { id: p.owner_id, username: '', first_name: 'Cineva' },
+    owner: byId.get(p.owner_id) ?? { id: p.owner_id, username: '', first_name: tr('Cineva') },
     answer: rows.find((r) => r.plan_id === p.id)?.answer ?? 'pending',
   })).sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }
@@ -56,10 +57,10 @@ export async function listInvites(me: string): Promise<Invite[]> {
 /** "Vin" puts the plan in my Planuri too; "Nu pot" only tells the others. */
 export async function answer(inv: Invite, me: string, a: 'vin' | 'nu_pot'): Promise<string | null> {
   const valid = captureAccount();
-  if (getApp().who?.id !== me) return 'Contul s-a schimbat.';
+  if (getApp().who?.id !== me) return tr('Contul s-a schimbat.');
   const {data, error}=await db().rpc('plan_answer_v2',{p_plan:inv.planId,p_answer:a});
-  if (!valid()) return 'Contul s-a schimbat.';
-  if(error)return error.message;
+  if (!valid()) return tr('Contul s-a schimbat.');
+  if(error)return trServer(error.message);
   if (a === 'nu_pot') {
     for (const pl of (getApp().board.plans as Plan[] | undefined) ?? []) if (pl.sid === inv.planId && pl.owner === false) removePlan(pl.pid);
   }
@@ -81,7 +82,7 @@ export async function going(sid: string): Promise<Going[]> {
   const ids = [plan.owner_id as string, ...rows.map((r) => r.user_id)];
   const { data: people } = await db().from('profiles').select('id, username, first_name').in('id', ids);
   const byId = new Map(((people ?? []) as Person[]).map((p) => [p.id, p]));
-  const who = (id: string) => byId.get(id) ?? { id, username: '', first_name: 'Cineva' };
+  const who = (id: string) => byId.get(id) ?? { id, username: '', first_name: tr('Cineva') };
   return [{ person: who(plan.owner_id), answer: 'vin', owner: true }, ...rows.map((r) => ({ person: who(r.user_id), answer: r.answer }))];
 }
 

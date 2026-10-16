@@ -8,6 +8,7 @@ import { onSyncTrouble } from '../lib/session';
 import { Big, Field, Lbl, Muted, Note } from './kit';
 import { useTheme } from './theme';
 import { LegalLinks } from './LegalLinks';
+import { tr } from '../lib/i18n';
 
 export function SignIn() {
   const { t } = useTheme();
@@ -31,17 +32,17 @@ export function SignIn() {
   return (
     <View style={{ gap: 10 }}>
       <LegalLinks />
-      {googleSignInAvailable&&<Big label="Continuă cu Google" color="#FFD43B" ink="#0E1440" disabled={busy} onPress={async () => { setErr(''); setBusy(true); const e = await APP.google(); setBusy(false); if (e) setErr(e); }} />}
-      <Lbl style={{ marginTop: 6 }}>{googleSignInAvailable?'Sau cu emailul':'Intră cu emailul'}</Lbl>
-      <Field value={mail} onChangeText={(x) => { setMail(x.slice(0, 80)); setSent(false); setCode(''); }} placeholder="nume@exemplu.ro" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} autoComplete="email"
-        accessibilityLabel="Adresa de email" focused={focus === 'm'} onFocus={() => setFocus('m')} onBlur={() => setFocus('')} />
+      {googleSignInAvailable&&<Big label={tr('Continuă cu Google')} color="#FFD43B" ink="#0E1440" disabled={busy} onPress={async () => { setErr(''); setBusy(true); const e = await APP.google(); setBusy(false); if (e) setErr(e); }} />}
+      <Lbl style={{ marginTop: 6 }}>{googleSignInAvailable?tr('Sau cu emailul'):tr('Intră cu emailul')}</Lbl>
+      <Field value={mail} onChangeText={(x) => { setMail(x.slice(0, 80)); setSent(false); setCode(''); }} placeholder={tr('nume@exemplu.ro')} keyboardType="email-address" autoCapitalize="none" autoCorrect={false} autoComplete="email"
+        accessibilityLabel={tr('Adresa de email')} focused={focus === 'm'} onFocus={() => setFocus('m')} onBlur={() => setFocus('')} />
       {sent ? (
-        <Field big value={code} onChangeText={(x) => setCode(x.replace(/\D/g, '').slice(0, 10))} placeholder="cod" keyboardType="number-pad" autoComplete="one-time-code" maxLength={10}
-          accessibilityLabel="Codul din email" focused={focus === 'c'} onFocus={() => setFocus('c')} onBlur={() => setFocus('')} />
+        <Field big value={code} onChangeText={(x) => setCode(x.replace(/\D/g, '').slice(0, 10))} placeholder={tr('cod')} keyboardType="number-pad" autoComplete="one-time-code" maxLength={10}
+          accessibilityLabel={tr('Codul din email')} focused={focus === 'c'} onFocus={() => setFocus('c')} onBlur={() => setFocus('')} />
       ) : null}
       {err || net ? <Note kind="err">{err || net}</Note> : null}
-      <Big label={busy ? 'O clipă…' : sent ? 'Confirmă codul' : 'Trimite-mi codul'} disabled={busy || (sent ? code.length < 6 : !ok)} color={t.blue} onPress={go} />
-      {sent ? <Muted>Codul vine pe email în câteva secunde. Uită-te și la Spam.</Muted> : null}
+      <Big label={busy ? tr('O clipă…') : sent ? tr('Confirmă codul') : tr('Trimite-mi codul')} disabled={busy || (sent ? code.length < 6 : !ok)} color={t.blue} onPress={go} />
+      {sent ? <Muted>{tr('Codul vine pe email în câteva secunde. Uită-te și la Spam.')}</Muted> : null}
     </View>
   );
 }

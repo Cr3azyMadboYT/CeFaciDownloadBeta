@@ -5,6 +5,7 @@ import { memo, useMemo } from 'react';
 import { useWindowDimensions, View } from 'react-native';
 import { T } from './kit';
 import { F, useTheme } from './theme';
+import { tr } from '../lib/i18n';
 
 const QUESTIONS = [
   'Ce facem?', 'Unde mergem?', 'Cu cine ies?', 'Unde ieșim?', 'Când ieșim?', 'Vine cineva?', 'Ieșim diseară?', 'Cine mai vine?',
@@ -42,7 +43,7 @@ export const Doodles = memo(function Doodles({ strength = 1 }: { strength?: numb
       {items.map((x, i) => (
         <T key={i} numberOfLines={1} maxFontSizeMultiplier={1}
           style={{ position: 'absolute', left: x.left, top: x.top, transform: [{ rotate: x.rot.toFixed(0) + 'deg' }], fontFamily: x.font, fontSize: x.font === F.hand ? x.size + 4 : x.size, color }}>
-          {x.q}
+          {tr(x.q)}
         </T>
       ))}
     </View>

@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from '../ui/insets';
 import { useApp } from '../lib/session';
 import { accept, addByCode, ask, findUser, listFriends, myCode, remove, type FriendRow, type Person } from '../lib/friends';
 import { toast } from '../lib/toast';
+import { tr } from '../lib/i18n';
 import { Icon } from '../ui/Icon';
 import { SignIn } from '../ui/SignIn';
 import { Big, Field, H1, Lbl, Muted, Note, Press, T } from '../ui/kit';
@@ -57,8 +58,8 @@ export default function Prieteni() {
     setBusy(true);
     if (/^[a-z0-9]{8}$/i.test(x) && !x.includes('.')) {
       const err = await addByCode(x);
-      if (!err) { setBusy(false); setQ(''); toast('Cererea a plecat. Vă vedeți după ce o acceptă.'); void load(); return; }
-      if (err !== 'Codul nu e bun.') { setBusy(false); toast(err); return; } // a limit: say it, do not look for a username
+      if (!err) { setBusy(false); setQ(''); toast(tr('Cererea a plecat. Vă vedeți după ce o acceptă.')); void load(); return; }
+      if (err !== tr('Codul nu e bun.')) { setBusy(false); toast(err); return; } // a limit: say it, do not look for a username
     }
     const p = await findUser(x);
     setBusy(false);
@@ -74,50 +75,50 @@ export default function Prieteni() {
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: t.bg }} behavior="padding">
     <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: Math.max(ins.bottom, 12) + 24 }} keyboardShouldPersistTaps="handled">
       <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-        <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+        <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
       </View>
-      <H1 style={{ fontSize: 34, lineHeight: 35 }}>Prieteni</H1>
+      <H1 style={{ fontSize: 34, lineHeight: 35 }}>{tr('Prieteni')}</H1>
       {!who || !known ? (
         <View style={{ marginTop: 14, gap: 12 }}>
-          <Muted style={{ fontSize: 15, lineHeight: 21 }}>Prietenii merg doar cu cont, ca să vă găsiți unii pe alții. Contul îl faci cu Google sau cu emailul, fără parolă, iar ce ai deja pe telefon (planuri, XP, ce-ți place) trece în cont.</Muted>
-          {who && !known ? <Note kind="ok">Leg contul de profilul tău…</Note> : <SignIn />}
+          <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('Prietenii merg doar cu cont, ca să vă găsiți unii pe alții. Contul îl faci cu Google sau cu emailul, fără parolă, iar ce ai deja pe telefon (planuri, XP, ce-ți place) trece în cont.')}</Muted>
+          {who && !known ? <Note kind="ok">{tr('Leg contul de profilul tău…')}</Note> : <SignIn />}
         </View>
       ) : (
         <View style={{ marginTop: 14, gap: 12 }}>
           <View style={{ padding: 14, borderRadius: 20, backgroundColor: t.blueSoft, gap: 6 }}>
-            <Lbl>Te găsesc după</Lbl>
+            <Lbl>{tr('Te găsesc după')}</Lbl>
             <T style={{ fontFamily: F.display, fontSize: 22 }}>{'@' + (user ?? '')}</T>
-            {code ? <Muted>{'sau cu codul tău: ' + code + ' (pentru cei de 16–17 ani, care nu apar la căutare)'}</Muted> : null}
-            {code ? <Press onPress={() => Share.share({ message: 'Hai în CeFaci! Mă găsești după @' + user + ' sau cu codul ' + code + '.' })} style={{ alignSelf: 'flex-start', marginTop: 4, height: 40, paddingHorizontal: 14, borderRadius: 999, backgroundColor: t.blue, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Icon name="share" size={16} color="#FFFFFF" /><T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>Trimite-le codul</T>
+            {code ? <Muted>{tr('sau cu codul tău: {code} (pentru cei de 16–17 ani, care nu apar la căutare)', { code })}</Muted> : null}
+            {code ? <Press onPress={() => Share.share({ message: tr('Hai în CeFaci! Mă găsești după @{user} sau cu codul {code}.', { user: user ?? '', code }) })} style={{ alignSelf: 'flex-start', marginTop: 4, height: 40, paddingHorizontal: 14, borderRadius: 999, backgroundColor: t.blue, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Icon name="share" size={16} color="#FFFFFF" /><T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>{tr('Trimite-le codul')}</T>
             </Press> : null}
           </View>
-          <Lbl style={{ marginTop: 6 }}>Adaugă după @username sau cod</Lbl>
-          <Field prefix="@" value={q} onChangeText={(x) => { setQ(x.slice(0, 24)); setFound(null); }} placeholder="username exact sau cod" autoCapitalize="none" autoCorrect={false}
-            returnKeyType="search" onSubmitEditing={search} focused={focus} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} accessibilityLabel="Username sau cod" />
-          <Big label={busy ? 'Caut…' : 'Caută'} disabled={busy || q.trim().replace(/^@+/, '').length < 3} onPress={search} />
-          {found === 'none' ? <Muted>Nu găsim pe nimeni cu numele ăsta. Verifică scrierea, iar celor sub 18 ani cere-le codul.</Muted> : null}
+          <Lbl style={{ marginTop: 6 }}>{tr('Adaugă după @username sau cod')}</Lbl>
+          <Field prefix="@" value={q} onChangeText={(x) => { setQ(x.slice(0, 24)); setFound(null); }} placeholder={tr('username exact sau cod')} autoCapitalize="none" autoCorrect={false}
+            returnKeyType="search" onSubmitEditing={search} focused={focus} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} accessibilityLabel={tr('Username sau cod')} />
+          <Big label={busy ? tr('Caut…') : tr('Caută')} disabled={busy || q.trim().replace(/^@+/, '').length < 3} onPress={search} />
+          {found === 'none' ? <Muted>{tr('Nu găsim pe nimeni cu numele ăsta. Verifică scrierea, iar celor sub 18 ani cere-le codul.')}</Muted> : null}
           {found && found !== 'none' ? (
             <Row p={found} right={
-              <Press onPress={async () => { const err = await ask(who.id, found.id); toast(err ?? 'Cererea a plecat la ' + found.first_name + '.'); setFound(null); setQ(''); void load(); }}
+              <Press onPress={async () => { const err = await ask(who.id, found.id); toast(err ?? tr('Cererea a plecat la {name}.', { name: found.first_name })); setFound(null); setQ(''); void load(); }}
                 style={{ height: 40, paddingHorizontal: 14, borderRadius: 12, backgroundColor: t.blue, justifyContent: 'center' }}>
-                <T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>Adaugă</T>
+                <T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>{tr('Adaugă')}</T>
               </Press>
             } />
           ) : null}
-          {incoming.length ? <Lbl style={{ marginTop: 10 }}>{'Cereri (' + incoming.length + ')'}</Lbl> : null}
+          {incoming.length ? <Lbl style={{ marginTop: 10 }}>{tr('Cereri ({n})', { n: incoming.length })}</Lbl> : null}
           {incoming.map((r) => (
             <Row key={r.person.id} p={r.person} right={
               <View style={{ flexDirection: 'row', gap: 6 }}>
-                <Press onPress={async () => { await remove(who.id, r.person.id); void load(); }} style={{ height: 40, paddingHorizontal: 12, borderRadius: 12, backgroundColor: t.s2, justifyContent: 'center' }}><T style={{ fontFamily: F.sb, fontSize: 14 }}>Nu</T></Press>
-                <Press onPress={async () => { await accept(who.id, r.person.id); toast('Acum sunteți prieteni.'); void load(); }} style={{ height: 40, paddingHorizontal: 12, borderRadius: 12, backgroundColor: t.blue, justifyContent: 'center' }}><T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>Acceptă</T></Press>
+                <Press onPress={async () => { await remove(who.id, r.person.id); void load(); }} style={{ height: 40, paddingHorizontal: 12, borderRadius: 12, backgroundColor: t.s2, justifyContent: 'center' }}><T style={{ fontFamily: F.sb, fontSize: 14 }}>{tr('Nu')}</T></Press>
+                <Press onPress={async () => { await accept(who.id, r.person.id); toast(tr('Acum sunteți prieteni.')); void load(); }} style={{ height: 40, paddingHorizontal: 12, borderRadius: 12, backgroundColor: t.blue, justifyContent: 'center' }}><T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>{tr('Acceptă')}</T></Press>
               </View>
             } />
           ))}
-          <Lbl style={{ marginTop: 10 }}>{friends.length ? 'Prietenii tăi (' + friends.length + ')' : 'Prietenii tăi'}</Lbl>
-          {friends.length ? friends.map((r) => <Press key={r.person.id} onPress={() => router.push({ pathname: '/prieten/[id]', params: { id: r.person.id } })} accessibilityLabel={'Profil: ' + r.person.first_name}><Row p={r.person} right={<Icon name="next" size={16} color={t.ink3} />} /></Press>) : <Muted>Încă n-ai prieteni în CeFaci. Caută-i mai sus sau trimite-le codul tău.</Muted>}
-          {sent.length ? <Lbl style={{ marginTop: 10 }}>Așteaptă răspuns</Lbl> : null}
-          {sent.map((r) => <Row key={r.person.id} p={r.person} right={<Muted>trimisă</Muted>} />)}
+          <Lbl style={{ marginTop: 10 }}>{friends.length ? tr('Prietenii tăi ({n})', { n: friends.length }) : tr('Prietenii tăi')}</Lbl>
+          {friends.length ? friends.map((r) => <Press key={r.person.id} onPress={() => router.push({ pathname: '/prieten/[id]', params: { id: r.person.id } })} accessibilityLabel={tr('Profil: {name}', { name: r.person.first_name })}><Row p={r.person} right={<Icon name="next" size={16} color={t.ink3} />} /></Press>) : <Muted>{tr('Încă n-ai prieteni în CeFaci. Caută-i mai sus sau trimite-le codul tău.')}</Muted>}
+          {sent.length ? <Lbl style={{ marginTop: 10 }}>{tr('Așteaptă răspuns')}</Lbl> : null}
+          {sent.map((r) => <Row key={r.person.id} p={r.person} right={<Muted>{tr('trimisă')}</Muted>} />)}
         </View>
       )}
     </ScrollView>

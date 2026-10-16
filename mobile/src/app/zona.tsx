@@ -16,6 +16,7 @@ import { RadiusChooser, WhereChooser } from '../ui/WherePick';
 import { useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { Doodles } from '../ui/Doodles';
+import { tr } from '../lib/i18n';
 
 export default function Zona() {
   const { t } = useTheme();
@@ -30,7 +31,7 @@ export default function Zona() {
   const save = () => {
     savePrefs({ home, radiusKm: km, live, zone: nearestZone(home).id, here: live ? { lat: home.lat, lon: home.lon, at: Date.now() } : undefined } as Partial<Prefs>);
     setFilters({ dist: String(km) }); // the rest of the Explorează filters (vibe, budget) stay as they were
-    toast('Pleci din ' + home.name + ', până la ' + km + ' km. Am refăcut recomandările.');
+    toast(tr('Pleci din {name}, până la {km} km. Am refăcut recomandările.', { name: home.name, km }));
     back();
   };
   return (
@@ -38,16 +39,16 @@ export default function Zona() {
       <Doodles />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24, gap: 14 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
         </View>
-        <H1 style={{ fontSize: 34, lineHeight: 35 }}>De unde pleci?</H1>
-        <Muted>Toate planurile și locurile se socotesc de aici.</Muted>
+        <H1 style={{ fontSize: 34, lineHeight: 35 }}>{tr('De unde pleci?')}</H1>
+        <Muted>{tr('Toate planurile și locurile se socotesc de aici.')}</Muted>
         <WhereChooser value={home} live={live} onPick={(h, l) => { setHome(h); setLive(l); }} />
-        <H1 style={{ marginTop: 8, fontSize: 26, lineHeight: 28 }}>Cât de departe?</H1>
+        <H1 style={{ marginTop: 8, fontSize: 26, lineHeight: 28 }}>{tr('Cât de departe?')}</H1>
         <RadiusChooser home={home} km={km} moves={prefs.moves} onKm={setKm} onMove={(h) => { setHome(h); setLive(false); }} />
       </ScrollView>
       <View style={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: Math.max(ins.bottom, 12) + 14, borderTopWidth: 1, borderTopColor: t.line, backgroundColor: t.bg }}>
-        <Big label={'Gata: ' + home.name + ', ' + km + ' km'} color="#0E1440" onPress={save} />
+        <Big label={tr('Gata: {name}, {km} km', { name: home.name, km })} color="#0E1440" onPress={save} />
       </View>
       <TopShade />
     </View>

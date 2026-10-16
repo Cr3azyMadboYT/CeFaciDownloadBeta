@@ -9,6 +9,7 @@ import { CrewMark } from './CrewMark';
 import { Icon } from './Icon';
 import { Big, Chip, Lbl, Muted, Press, T } from './kit';
 import { F, useTheme } from './theme';
+import { tr } from '../lib/i18n';
 
 export interface Target { crewId?: string; friendIds: string[]; label: string }
 
@@ -35,17 +36,17 @@ export function SendTo({ onChange, need = 1 }: { onChange: (t: Target | null) =>
   if (!who || !known) {
     return (
       <View style={{ gap: 10 }}>
-        <Muted style={{ fontSize: 15, lineHeight: 21 }}>Merge cu cont și cu prieteni în CeFaci. Intră din Profil → Prieteni.</Muted>
-        <Big label="Mergi la Prieteni" onPress={() => router.push('/prieteni')} />
+        <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('Merge cu cont și cu prieteni în CeFaci. Intră din Profil → Prieteni.')}</Muted>
+        <Big label={tr('Mergi la Prieteni')} onPress={() => router.push('/prieteni')} />
       </View>
     );
   }
-  if (!crews || !friends) return <Muted>Îți caut gășcile și prietenii…</Muted>;
+  if (!crews || !friends) return <Muted>{tr('Îți caut gășcile și prietenii…')}</Muted>;
   if (!friends.length) {
     return (
       <View style={{ gap: 10 }}>
-        <Muted style={{ fontSize: 15, lineHeight: 21 }}>Încă n-ai prieteni în CeFaci. Adaugă-i și apoi îi chemi la vot sau la plan.</Muted>
-        <Big label="Adaugă prieteni" onPress={() => router.push('/prieteni')} />
+        <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('Încă n-ai prieteni în CeFaci. Adaugă-i și apoi îi chemi la vot sau la plan.')}</Muted>
+        <Big label={tr('Adaugă prieteni')} onPress={() => router.push('/prieteni')} />
       </View>
     );
   }
@@ -53,7 +54,7 @@ export function SendTo({ onChange, need = 1 }: { onChange: (t: Target | null) =>
     <View style={{ gap: 10 }}>
       {crews.length ? (
         <>
-          <Lbl>O gașcă</Lbl>
+          <Lbl>{tr('O gașcă')}</Lbl>
           {crews.map((c) => {
             const on = crew === c.id;
             return (
@@ -62,15 +63,15 @@ export function SendTo({ onChange, need = 1 }: { onChange: (t: Target | null) =>
                 <CrewMark icon={c.icon} color={c.color === '#0E1440' && t.dark ? '#F4F4F6' : c.color} size={40} />
                 <View style={{ flex: 1 }}>
                   <T style={{ fontFamily: F.sb, fontSize: 16 }}>{c.name}</T>
-                  <Muted>{c.members.filter((m) => m.status === 'member').length + 1 + ' oameni'}</Muted>
+                  <Muted>{tr('{n} oameni', { n: c.members.filter((m) => m.status === 'member').length + 1 })}</Muted>
                 </View>
                 {on ? <Icon name="check" color={t.blueInk} /> : null}
               </Press>
             );
           })}
-          <Lbl style={{ marginTop: 4 }}>Sau prieteni, aleși de tine</Lbl>
+          <Lbl style={{ marginTop: 4 }}>{tr('Sau prieteni, aleși de tine')}</Lbl>
         </>
-      ) : <Lbl>Pe cine chemi?</Lbl>}
+      ) : <Lbl>{tr('Pe cine chemi?')}</Lbl>}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
         {friends.map((f) => {
           const on = picked.includes(f.id);

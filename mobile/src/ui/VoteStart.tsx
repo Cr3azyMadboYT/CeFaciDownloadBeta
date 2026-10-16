@@ -8,6 +8,7 @@ import { DEADLINES, startVote } from '../lib/votes';
 import { Big, H1, Lbl, Muted, Note, Seg, Sheet } from './kit';
 import { SendTo, type Target } from './SendTo';
 import { useTheme } from './theme';
+import { tr } from '../lib/i18n';
 
 function momentFor(p: Place, when: string) {
   if (when === 'now') return new Date(Date.now() + 30 * 60000);
@@ -46,18 +47,18 @@ export function VoteStart({ open, onClose, places, f, routes }: { open: boolean;
   };
   return (
     <Sheet open={open} onClose={onClose}>
-      <H1 style={{ fontSize: 26 }}>Votul cu gașca</H1>
-      <Muted style={{ marginTop: 6, fontSize: 15, lineHeight: 21 }}>{'Trimiți ' + (routes ? (n === 1 ? 'seara asta' : 'cele ' + n + ' variante de seară') : n === 1 ? 'locul ăsta' : 'cele ' + n + ' locuri') + '. Fiecare votează din telefonul lui: Da, Nu sau Super (o dată). Câștigă cel cu cele mai multe voturi.'}</Muted>
+      <H1 style={{ fontSize: 26 }}>{tr('Votul cu gașca')}</H1>
+      <Muted style={{ marginTop: 6, fontSize: 15, lineHeight: 21 }}>{(routes ? (n === 1 ? tr('Trimiți seara asta.') : tr('Trimiți cele {n} variante de seară.', { n })) : n === 1 ? tr('Trimiți locul ăsta.') : tr('Trimiți cele {n} locuri.', { n })) + ' ' + tr('Fiecare votează din telefonul lui: Da, Nu sau Super (o dată). Câștigă cel cu cele mai multe voturi.')}</Muted>
       <View style={{ marginTop: 14 }}>{open ? <SendTo onChange={onTo} /> : null}</View>
-      <Lbl style={{ marginTop: 16, marginBottom: 8 }}>Votul se închide în</Lbl>
+      <Lbl style={{ marginTop: 16, marginBottom: 8 }}>{tr('Votul se închide în')}</Lbl>
       <View style={{ flexDirection: 'row', gap: 6 }}>
-        {DEADLINES.map(([k, label]) => <Seg key={k} label={label} on={dl === k} onPress={() => setDl(k)} />)}
+        {DEADLINES.map(([k, label]) => <Seg key={k} label={tr(label)} on={dl === k} onPress={() => setDl(k)} />)}
       </View>
-      {n < 2 ? <View style={{ marginTop: 12 }}><Note kind="err">{routes ? 'Votul are nevoie de cel puțin 2 variante de seară.' : 'Votul are nevoie de cel puțin 2 locuri. Caută mai larg.'}</Note></View> : null}
+      {n < 2 ? <View style={{ marginTop: 12 }}><Note kind="err">{routes ? tr('Votul are nevoie de cel puțin 2 variante de seară.') : tr('Votul are nevoie de cel puțin 2 locuri. Caută mai larg.')}</Note></View> : null}
       {err ? <View style={{ marginTop: 12 }}><Note kind="err">{err}</Note></View> : null}
       <View style={{ marginTop: 16, gap: 8 }}>
-        <Big label={busy ? 'Pornesc votul…' : to ? 'Pornește votul cu ' + to.label : 'Alege pe cine chemi'} disabled={!to || busy || n < 2} onPress={go} />
-        <Big label="Mai târziu" color={t.s2} ink={t.ink} onPress={onClose} />
+        <Big label={busy ? tr('Pornesc votul…') : to ? tr('Pornește votul cu {who}', { who: to.label }) : tr('Alege pe cine chemi')} disabled={!to || busy || n < 2} onPress={go} />
+        <Big label={tr('Mai târziu')} color={t.s2} ink={t.ink} onPress={onClose} />
       </View>
     </Sheet>
   );

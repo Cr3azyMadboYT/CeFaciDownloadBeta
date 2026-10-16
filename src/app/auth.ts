@@ -3,6 +3,7 @@
 import { createClient, type Session } from '@supabase/supabase-js';
 import { Capacitor } from '@capacitor/core';
 import { SocialLogin } from '@capgo/capacitor-social-login';
+import { tr, trServer } from '../i18n';
 
 const URL = import.meta.env.VITE_SUPABASE_URL || 'https://vqrmwuarjjntusfbqprx.supabase.co';
 const KEY = import.meta.env.VITE_SUPABASE_KEY || 'sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O';
@@ -21,40 +22,40 @@ const sha256 = async (text: string) => [...new Uint8Array(await crypto.subtle.di
 
 /** Native Google sign-in (Android app): Google gives an ID token, Supabase turns it into a session. */
 async function signInNative(): Promise<string | null> {
-  if (!GOOGLE_WEB_CLIENT_ID) return 'Google nu e configurat încă în aplicație. Intră cu emailul.';
+  if (!GOOGLE_WEB_CLIENT_ID) return tr('Google nu e configurat încă în aplicație. Intră cu emailul.');
   try {
     await SocialLogin.initialize({ google: { webClientId: GOOGLE_WEB_CLIENT_ID } });
     const raw = crypto.randomUUID();                       // Supabase checks the nonce Google signed
     const res = await SocialLogin.login({ provider: 'google', options: { scopes: ['email', 'profile'], nonce: await sha256(raw) } });
     const token = (res.result as { idToken?: string | null }).idToken;
-    if (!token) return 'Google nu ne-a dat contul. Mai încearcă o dată.';
+    if (!token) return tr('Google nu ne-a dat contul. Mai încearcă o dată.');
     const { error } = await sb().auth.signInWithIdToken({ provider: 'google', token, nonce: raw });
-    return error ? 'Nu am putut intra cu Google. Mai încearcă o dată.' : null;
+    return error ? tr('Nu am putut intra cu Google. Mai încearcă o dată.') : null;
   } catch (e) {
     const msg = String((e as { message?: string })?.message ?? e ?? '');
     if (/cancel|12501|closed|dismiss/i.test(msg)) return null; // closed the Google sheet: nothing to say
     // anything else is shown, with Google's own words at the end, so a wrong key or setup can be told apart
-    if (/10:|developer|DEVELOPER_ERROR|no credential|No credentials/i.test(msg)) return 'Google nu recunoaște aplicația (cheia de semnare sau clientul Android). Intră cu emailul până rezolvăm. [' + msg.slice(0, 80) + ']';
-    return 'Nu am putut intra cu Google. [' + msg.slice(0, 80) + ']';
+    if (/10:|developer|DEVELOPER_ERROR|no credential|No credentials/i.test(msg)) return tr('Google nu recunoaște aplicația (cheia de semnare sau clientul Android). Intră cu emailul până rezolvăm. [{m}]', { m: msg.slice(0, 80) });
+    return tr('Nu am putut intra cu Google. [{m}]', { m: msg.slice(0, 80) });
   }
 }
 
 export async function signInWithGoogle(): Promise<string | null> {
   if (native()) return signInNative();
-  if (!googleAvailable()) return 'Google merge doar în aplicație sau pe site. Intră cu emailul sau continuă fără cont.';
+  if (!googleAvailable()) return tr('Google merge doar în aplicație sau pe site. Intră cu emailul sau continuă fără cont.');
   const { error } = await sb().auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
-  return error ? 'Nu am putut porni Google. Mai încearcă o dată.' : null;
+  return error ? tr('Nu am putut porni Google. Mai încearcă o dată.') : null;
 }
 
 /** Email sign-in with a 6-digit code (works inside the app too: no web redirect). */
 export async function emailStart(email: string): Promise<string | null> {
   const { error } = await sb().auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
   if (!error) return null;
-  return /rate|limit|seconds/i.test(error.message) ? 'Ai cerut deja un cod. Așteaptă un minut și încearcă iar.' : 'Nu am putut trimite codul. Verifică adresa și încearcă iar.';
+  return /rate|limit|seconds/i.test(error.message) ? tr('Ai cerut deja un cod. Așteaptă un minut și încearcă iar.') : tr('Nu am putut trimite codul. Verifică adresa și încearcă iar.');
 }
 export async function emailVerify(email: string, code: string): Promise<string | null> {
   const { error } = await sb().auth.verifyOtp({ email, token: code, type: 'email' });
-  return error ? 'Codul nu e bun sau a expirat.' : null;
+  return error ? tr('Codul nu e bun sau a expirat.') : null;
 }
 
 export interface Who { id: string; email?: string; first: string }
@@ -75,13 +76,13 @@ export function watchAuth(cb: (who: Who | null) => void) {
 export async function deleteAccountEverywhere(): Promise<string | null> {
   try {
     const { data, error } = await sb().auth.getSession();
-    if (error) return 'Sesiunea nu a putut fi verificată. Contul nu a fost șters.';
-    if (!data.session) return 'Intră din nou în cont înainte de a solicita ștergerea.';
+    if (error) return tr('Sesiunea nu a putut fi verificată. Contul nu a fost șters.');
+    if (!data.session) return tr('Intră din nou în cont înainte de a solicita ștergerea.');
     if (data.session) {
       const { error: deletionError } = await sb().rpc('delete_my_account');
-      if (deletionError) return deletionError.message;
+      if (deletionError) return trServer(deletionError.message);
       await sb().auth.signOut({ scope: 'local' });
     }
     return null;
-  } catch { return 'Serverul nu a confirmat ștergerea. Verifică internetul și încearcă din nou.'; }
+  } catch { return tr('Serverul nu a confirmat ștergerea. Verifică internetul și încearcă din nou.'); }
 }

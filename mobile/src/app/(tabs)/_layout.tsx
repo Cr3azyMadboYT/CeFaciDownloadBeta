@@ -12,6 +12,7 @@ import { TourTarget } from '../../ui/TourTarget';
 import { blurStyle, useEased } from '../../ui/Magic';
 import { Press, T } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
+import { tr } from '../../lib/i18n';
 
 const TAB_ICON: Record<string, string> = {
   acasa: 'M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
@@ -39,16 +40,16 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         return (
           <TourTarget key={r.key} id={'tab-' + r.name} style={{ flex: 1 }}>
           <Press style={{ minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4 }}
-            accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? 'CeFaci Plus, oprit' : 'Plus: un cadou de la Bilu') : 'CeFaci Plus') : LABEL[r.name]}
+            accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? tr('CeFaci Plus, oprit') : tr('Plus: un cadou de la Bilu')) : 'CeFaci Plus') : tr(LABEL[r.name])}
             accessibilityState={{ selected: on }}
             onPress={() => {
               const ev = navigation.emit({ type: 'tabPress', target: r.key, canPreventDefault: true });
               if (!ev.defaultPrevented) navigation.navigate(r.name);
             }}>
-            {isPlus ? <PlusTab veiled={veiled} color={color} label={LABEL[r.name]} ink={on ? t.ink : t.ink3} /> : (
+            {isPlus ? <PlusTab veiled={veiled} color={color} label={tr(LABEL[r.name])} ink={on ? t.ink : t.ink3} /> : (
               <>
                 <Icon d={TAB_ICON[r.name]} color={color} />
-                <T style={{ fontFamily: F.sb, fontSize: 12, color: on ? t.ink : t.ink3 }}>{LABEL[r.name]}</T>
+                <T style={{ fontFamily: F.sb, fontSize: 12, color: on ? t.ink : t.ink3 }}>{tr(LABEL[r.name])}</T>
               </>
             )}
           </Press>

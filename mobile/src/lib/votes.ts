@@ -1,6 +1,7 @@
 // Votul cu gașca, through Supabase: up to three places, everyone votes Da / Nu / Super (one Super each) from their own
 // phone, the results move live, and when time is up (or everyone voted) the winner becomes one plan for all.
 import { sb } from './auth';
+import { tr, trServer } from './i18n';
 import { captureAccount } from './session';
 import type { Person } from './friends';
 
@@ -23,13 +24,13 @@ export const DEADLINES: [string, string, number][] = [['30m', '30 min', 30], ['1
 
 /** Starts a vote for a crew or for friends picked one by one. Returns the vote id or an error to show. */
 export async function startVote(o: { crewId?: string | null; friendIds?: string[]; minutes: number; options: { venueId: string; name: string; details: VoteOption['details'] }[] }): Promise<{ id?: string; err?: string }> {
-  if (o.options.length < 2) return { err: 'Votul are nevoie de cel puțin 2 variante.' };
+  if (o.options.length < 2) return { err: tr('Votul are nevoie de cel puțin 2 variante.') };
   const closes = new Date(Date.now() + o.minutes * 60000).toISOString();
   const { data, error } = await db().rpc('start_vote', {
     p_crew: o.crewId ?? null, p_friends: o.friendIds ?? [], p_closes_at: closes, p_title: 'Unde mergem?',
     p_options: o.options.map((x) => ({ venue_id: x.venueId, venue_name: x.name, details: x.details })),
   });
-  if (error) return { err: String(error.message || 'Nu am putut porni votul. Încearcă iar.') };
+  if (error) return { err: error.message ? trServer(String(error.message)) : tr('Nu am putut porni votul. Încearcă iar.') };
   return { id: data as string };
 }
 
@@ -67,7 +68,7 @@ export async function getVote(id: string): Promise<VoteFull | null> {
   return {
     ...row(s, crews),
     options: ((opts ?? []) as { id: string; venue_id: string; venue_name: string; details: VoteOption['details'] }[]).map((o) => ({ id: o.id, venueId: o.venue_id, name: o.venue_name, details: o.details ?? {} })),
-    voters: ids.map((u) => known.get(u) ?? { id: u, username: '', first_name: 'Cineva' }),
+    voters: ids.map((u) => known.get(u) ?? { id: u, username: '', first_name: tr('Cineva') }),
     ballots: ((bb ?? []) as { option_id: string; user_id: string; value: Ballot }[]).map((b) => ({ optionId: b.option_id, userId: b.user_id, value: b.value })),
   };
 }
@@ -99,7 +100,7 @@ export async function cast(v: VoteFull, me: string, optionId: string, value: Bal
     const old = v.ballots.find((b) => b.userId === me && b.value === 'super' && b.optionId !== optionId);
     if (old) {
       const { error } = await db().from('ballots').update({ value: 'da', updated_at: new Date().toISOString() }).eq('session_id', v.id).eq('option_id', old.optionId).eq('user_id', me);
-      if (error) return 'Nu am putut muta Super-ul. Încearcă iar.';
+      if (error) return tr('Nu am putut muta Super-ul. Încearcă iar.');
     }
   }
   const q = value === null
@@ -107,7 +108,7 @@ export async function cast(v: VoteFull, me: string, optionId: string, value: Bal
     : db().from('ballots').upsert({ session_id: v.id, option_id: optionId, user_id: me, value, updated_at: new Date().toISOString() });
   const { error } = await q;
   if (!error) return null;
-  return /closes_at|row-level|policy/i.test(error.message ?? '') ? 'Votul s-a închis.' : 'Nu am putut trimite votul. Verifică internetul.';
+  return /closes_at|row-level|policy/i.test(error.message ?? '') ? tr('Votul s-a închis.') : tr('Nu am putut trimite votul. Verifică internetul.');
 }
 
 /** Live updates for one vote: every change of a ballot or of the vote itself calls `cb`. Returns a stop function. */
@@ -127,10 +128,10 @@ export function watchVote(id: string, cb: () => void) {
 export async function planFromVote(id: string): Promise<{ planId?: string; venueId?: string; startsAt?: string; ownerId?: string; err?: string }> {
   const valid = captureAccount();
   const { data, error } = await db().rpc('plan_from_vote', { p_session: id });
-  if (!valid()) return { err: 'Contul s-a schimbat.' };
-  if (error) return { err: /terminat/.test(error.message ?? '') ? 'Votul nu s-a terminat încă: mai așteptăm voturi.' : 'Nu am putut face planul. Încearcă iar.' };
+  if (!valid()) return { err: tr('Contul s-a schimbat.') };
+  if (error) return { err: /terminat/.test(error.message ?? '') ? tr('Votul nu s-a terminat încă: mai așteptăm voturi.') : tr('Nu am putut face planul. Încearcă iar.') };
   const { data: pl } = await db().from('plans').select('id, venue_id, starts_at, owner_id').eq('id', data).maybeSingle();
-  if (!valid()) return { err: 'Contul s-a schimbat.' };
-  if (!pl) return { err: 'Planul e făcut, dar nu-l pot citi acum. Încearcă iar.' };
+  if (!valid()) return { err: tr('Contul s-a schimbat.') };
+  if (!pl) return { err: tr('Planul e făcut, dar nu-l pot citi acum. Încearcă iar.') };
   return { planId: pl.id, venueId: pl.venue_id, startsAt: pl.starts_at, ownerId: pl.owner_id };
 }

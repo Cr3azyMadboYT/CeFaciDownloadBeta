@@ -8,9 +8,10 @@ import { Muted } from './kit';
 import { useTheme } from './theme';
 import { mapLink } from '../lib/links';
 import { MAP_SATELLITE, MAP_STYLE } from './PlacesMap';
+import { tr } from '../lib/i18n';
 
 function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable: boolean) {
-  const data = JSON.stringify({ p, r, movable, style: MAP_STYLE, sat: MAP_SATELLITE }).replace(/</g, '\\u003c');
+  const data = JSON.stringify({ p, r, movable, style: MAP_STYLE, sat: MAP_SATELLITE, err: tr('Harta are nevoie de internet. Raza merge și fără ea.') }).replace(/</g, '\\u003c');
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'}}
@@ -36,7 +37,7 @@ function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable
   window.setR=function(km){ D.r=km; if(map&&map.getSource('c')){ draw(); fit(); } };
   window.setP=function(lat,lon){ D.p={lat:lat,lon:lon}; if(marker) marker.setLngLat([lon,lat]); if(map&&map.getSource('c')){ draw(); fit(); } };
   function start(){
-    if(!window.maplibregl){ document.body.innerHTML='<div class="err">Harta are nevoie de internet. Raza merge și fără ea.</div>'; return; }
+    if(!window.maplibregl){ document.body.innerHTML='<div class="err"></div>'; document.body.firstChild.textContent=D.err; return; }
     map=new maplibregl.Map({container:'m',style:D.style,center:[D.p.lon,D.p.lat],zoom:11,attributionControl:{compact:true}});
     var el=document.createElement('div');el.className='pin';
     marker=new maplibregl.Marker({element:el,draggable:D.movable,anchor:'bottom'}).setLngLat([D.p.lon,D.p.lat]).addTo(map);
@@ -78,7 +79,7 @@ export function RadiusMap({ point, km, height = 260, movable = true, onMove }: {
     ref.current?.injectJavaScript('window.setP&&window.setP(' + Number(point.lat) + ',' + Number(point.lon) + ');true;');
   }, [point]);
   if (Platform.OS === 'web') {
-    return <View style={{ height: 120, borderRadius: 20, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Muted>Harta se vede în aplicația de telefon.</Muted></View>;
+    return <View style={{ height: 120, borderRadius: 20, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Muted>{tr('Harta se vede în aplicația de telefon.')}</Muted></View>;
   }
   return (
     <View style={{ height, borderRadius: 20, overflow: 'hidden', borderWidth: 1, borderColor: t.line }}>

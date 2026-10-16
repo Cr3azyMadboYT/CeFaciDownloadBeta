@@ -1,6 +1,7 @@
 // Gășcile, through Supabase: a permanent crew needs at least 2 friends; friends are invited and show as
 // "Invitat" until they accept. The admin can delete the crew; anyone can leave (the oldest member becomes admin).
 import { sb } from './auth';
+import { tr, trServer } from './i18n';
 import type { Person } from './friends';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,20 +45,20 @@ export async function listCrews(me: string): Promise<Crew[]> {
 
 export async function createCrew(name: string, icon: string, color: string, friendIds: string[]): Promise<{ id?: string; err?: string }> {
   const { data, error } = await db().rpc('create_crew', { p_name: name, p_icon: icon, p_color: color, p_friends: friendIds, p_temporary: false });
-  if (error) return { err: String(error.message || 'Nu am putut face gașca. Încearcă iar.') };
+  if (error) return { err: error.message ? trServer(String(error.message)) : tr('Nu am putut face gașca. Încearcă iar.') };
   return { id: data as string };
 }
 export async function acceptCrew(crewId: string, me: string) {
   const { error } = await db().from('crew_members').update({ status: 'member', joined_at: new Date().toISOString() }).eq('crew_id', crewId).eq('user_id', me);
-  return error ? 'Nu am putut intra în gașcă. Încearcă iar.' : null;
+  return error ? tr('Nu am putut intra în gașcă. Încearcă iar.') : null;
 }
 export async function leaveCrew(crewId: string, me: string) {
   const { error } = await db().from('crew_members').delete().eq('crew_id', crewId).eq('user_id', me);
-  return error ? 'Nu am putut ieși din gașcă. Încearcă iar.' : null;
+  return error ? tr('Nu am putut ieși din gașcă. Încearcă iar.') : null;
 }
 export async function deleteCrew(crewId: string) {
   const { error } = await db().from('crews').delete().eq('id', crewId);
-  return error ? 'Nu am putut șterge gașca. Încearcă iar.' : null;
+  return error ? tr('Nu am putut șterge gașca. Încearcă iar.') : null;
 }
 
 /** Invites friends into a crew I am in (they show as "Invitat" until they accept). */
@@ -65,7 +66,7 @@ export async function inviteToCrew(crewId: string, me: string, ids: string[]) {
   if (!ids.length) return null;
   const { error } = await db().from('crew_members').insert(ids.map((user_id) => ({ crew_id: crewId, user_id, status: 'invited', invited_by: me })));
   if (!error) return null;
-  return /15/.test(error.message ?? '') ? 'O gașcă are maximum 15 oameni.' : /duplicate|unique/i.test(error.message ?? '') ? 'E deja în gașcă sau invitat.' : 'Nu am putut trimite invitația. Încearcă iar.';
+  return /15/.test(error.message ?? '') ? tr('O gașcă are maximum 15 oameni.') : /duplicate|unique/i.test(error.message ?? '') ? tr('E deja în gașcă sau invitat.') : tr('Nu am putut trimite invitația. Încearcă iar.');
 }
 /** The crew's invite code (valid 7 days); the admin can make a new one, which stops the old one. */
 export async function crewCode(crewId: string): Promise<{ code: string; until: string } | null> {
@@ -79,7 +80,7 @@ export async function newCrewCode(crewId: string): Promise<string | null> {
 /** Joins a crew with the code someone sent. Returns the crew id or an error to show. */
 export async function joinWithCode(code: string): Promise<{ id?: string; err?: string }> {
   const { data, error } = await db().rpc('join_crew', { p_token: code.trim().toLowerCase() });
-  if (error) return { err: /expirat/i.test(error.message ?? '') ? 'Codul a expirat sau nu e bun. Cere unul nou.' : /15/.test(error.message ?? '') ? 'Gașca e plină (15 oameni).' : 'Nu am putut intra. Verifică codul.' };
+  if (error) return { err: /expirat/i.test(error.message ?? '') ? tr('Codul a expirat sau nu e bun. Cere unul nou.') : /15/.test(error.message ?? '') ? tr('Gașca e plină (15 oameni).') : tr('Nu am putut intra. Verifică codul.') };
   return { id: data as string };
 }
 /** The crew's carnet: the outings planned together, newest first. */

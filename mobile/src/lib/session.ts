@@ -8,6 +8,7 @@ import { APP, initBridge, type Home, type Prefs } from '../../../src/app/bridge'
 import { createAccount, makeUploader, restore } from '../../../src/app/cloud';
 import { km, nearestZone } from '../../../src/engine/core';
 import { resetFilters, setSearch } from './filters';
+import { tr } from '../../../src/i18n';
 import { phoneCode } from './device';
 import { forgetPush, registerPush, resetPush } from './push';
 import { loadWeather } from './weather';
@@ -155,15 +156,15 @@ const within = <T,>(p: Promise<T>, ms: number) => Promise.race([p, new Promise<n
 export async function locate(): Promise<{ lat: number; lon: number } | string> {
   try {
     const perm = await Location.requestForegroundPermissionsAsync();
-    if (perm.status !== 'granted') return 'N-am primit locația. Poți s-o permiți din setări sau alegi tu de mai jos.';
+    if (perm.status !== 'granted') return tr('N-am primit locația. Poți s-o permiți din setări sau alegi tu de mai jos.');
     const p = await within(Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }), 12000)
       .catch(() => Location.getLastKnownPositionAsync({ maxAge: 30 * 60e3 }));
-    if (!p) return 'Telefonul nu ne dă locația acum. Încearcă afară sau alege tu de mai jos.';
+    if (!p) return tr('Telefonul nu ne dă locația acum. Încearcă afară sau alege tu de mai jos.');
     const here = { lat: p.coords.latitude, lon: p.coords.longitude };
-    if (km(here, nearestZone(here)) > 40) return 'Ești în afara Bucureștiului și Ilfovului. Alege tu de mai jos.';
+    if (km(here, nearestZone(here)) > 40) return tr('Ești în afara Bucureștiului și Ilfovului. Alege tu de mai jos.');
     return here;
   } catch {
-    return 'Telefonul nu ne dă locația. Alege tu de mai jos.';
+    return tr('Telefonul nu ne dă locația. Alege tu de mai jos.');
   }
 }
 async function useHere(): Promise<string | null> {
@@ -311,7 +312,7 @@ async function connect(who: Who) {
   } catch {
     if (signedIn !== who.id) return;
     // offline right after signing in: try again in a bit and whenever the app comes back to the front
-    trouble('Nu ajung la contul tău acum. Verifică internetul, reîncerc singur.');
+    trouble(tr('Nu ajung la contul tău acum. Verifică internetul, reîncerc singur.'));
     retry = setTimeout(() => { if (signedIn === who.id) void connect(who); }, 10000);
   }
 }

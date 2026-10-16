@@ -11,6 +11,7 @@ import { F } from './theme';
 import { useModalInsets } from './insets';
 import { Confetti, Poof } from './Magic';
 import { Icon } from './Icon';
+import { tr } from '../lib/i18n';
 
 interface Step { id?: string; mood: Mood; text: string; oops?: string; hot?: 'profil' | 'plus'; final?: 'xp' | 'gift'; magic?: boolean }
 export const STEPS: Step[] = [
@@ -84,15 +85,15 @@ export function Tour() {
       <Bilu size={st.final === 'gift' ? 96 : st.final || !hole ? 130 : 92} mood={tour.oops && st.hot ? 'oops' : st.mood} />
       <View style={{ alignSelf: 'stretch', padding: 16, borderRadius: 20, backgroundColor: '#FFFFFF' }}>
         <T style={{ fontFamily: st.magic ? F.display : F.sb, fontSize: st.magic ? 28 : 17, lineHeight: st.magic ? 30 : 24, color: '#0E1440', textAlign: st.magic ? 'center' : 'left' }}>
-          {st.final === 'gift' && plus !== 'trial' && plus !== 'active' ? 'Cadoul se activează numai după confirmarea serverului. Deschide Plus ca să verifici disponibilitatea probei.' : tour.oops && st.oops ? st.oops : st.text}
+          {st.final === 'gift' && plus !== 'trial' && plus !== 'active' ? tr('Cadoul se activează numai după confirmarea serverului. Deschide Plus ca să verifici disponibilitatea probei.') : tr(tour.oops && st.oops ? st.oops : st.text)}
         </T>
-        {!st.final && !st.magic ? <T style={{ marginTop: 6, fontFamily: F.m, fontSize: 13, color: '#5A6390' }}>{st.hot ? 'Apasă pe zona luminată' : 'Apasă oriunde pe ecran'}</T> : null}
+        {!st.final && !st.magic ? <T style={{ marginTop: 6, fontFamily: F.m, fontSize: 13, color: '#5A6390' }}>{st.hot ? tr('Apasă pe zona luminată') : tr('Apasă oriunde pe ecran')}</T> : null}
       </View>
       {st.final === 'xp' ? (
         <View style={{ alignSelf: 'stretch', padding: 14, borderRadius: 20, backgroundColor: '#2F5BFF', gap: 4 }}>
-          <T style={{ fontFamily: F.b, fontSize: 14, color: '#FFFFFF' }}>Nivel 1</T>
-          <T style={{ fontFamily: F.display, fontSize: 30, color: '#FFFFFF' }}>Boboc</T>
-          <T style={{ fontFamily: F.sb, fontSize: 13, color: '#FFFFFF' }}>Abia ai ieșit din casă. Bine ai venit!</T>
+          <T style={{ fontFamily: F.b, fontSize: 14, color: '#FFFFFF' }}>{tr('Nivel {n}', { n: 1 })}</T>
+          <T style={{ fontFamily: F.display, fontSize: 30, color: '#FFFFFF' }}>{tr('Boboc')}</T>
+          <T style={{ fontFamily: F.sb, fontSize: 13, color: '#FFFFFF' }}>{tr('Abia ai ieșit din casă. Bine ai venit!')}</T>
         </View>
       ) : null}
       {st.final === 'gift' ? <GiftCard /> : null}
@@ -100,12 +101,12 @@ export function Tour() {
         <View style={{ alignSelf: 'stretch', gap: 8 }}>
           {st.final === 'xp' ? (
             tour.replay
-              ? <Big label="Hai să vedem ce faci diseară!" color="#FFD43B" ink="#0E1440" onPress={() => finish('/plan-nou')} />
-              : <Big label="Mai departe" color="#FFD43B" ink="#0E1440" onPress={() => tourNext()} />
+              ? <Big label={tr('Hai să vedem ce faci diseară!')} color="#FFD43B" ink="#0E1440" onPress={() => finish('/plan-nou')} />
+              : <Big label={tr('Mai departe')} color="#FFD43B" ink="#0E1440" onPress={() => tourNext()} />
           ) : (
             <>
-              <Big label="Arată-mi Plus" color="#FFD43B" ink="#0E1440" onPress={() => finish('/plus')} />
-              <Big label="Hai să vedem ce faci diseară!" color="#2A3160" onPress={() => finish('/plan-nou')} />
+              <Big label={tr('Arată-mi Plus')} color="#FFD43B" ink="#0E1440" onPress={() => finish('/plus')} />
+              <Big label={tr('Hai să vedem ce faci diseară!')} color="#2A3160" onPress={() => finish('/plan-nou')} />
             </>
           )}
         </View>
@@ -115,7 +116,7 @@ export function Tour() {
 
   return (
     <Modal visible transparent animationType="fade" statusBarTranslucent navigationBarTranslucent onRequestClose={() => (last ? finish() : st.final ? undefined : tap())}>
-      <Pressable style={{ flex: 1 }} onPress={(e) => tap(e)} accessibilityLabel={st.hot ? 'Apasă pe zona luminată' : 'Mai departe'}>
+      <Pressable style={{ flex: 1 }} onPress={(e) => tap(e)} accessibilityLabel={st.hot ? tr('Apasă pe zona luminată') : tr('Mai departe')}>
         {hole ? (
           <>
             <View style={{ position: 'absolute', left: 0, right: 0, top: 0, height: Math.max(0, hole.y), backgroundColor: DIM }} />
@@ -123,7 +124,7 @@ export function Tour() {
             <View style={{ position: 'absolute', left: 0, width: Math.max(0, hole.x), top: hole.y, height: hole.h, backgroundColor: DIM }} />
             <View style={{ position: 'absolute', left: hole.x + hole.w, right: 0, top: hole.y, height: hole.h, backgroundColor: DIM }} />
             <View pointerEvents="none" style={{ position: 'absolute', left: hole.x, top: hole.y, width: hole.w, height: hole.h, borderRadius: 18, borderWidth: 3, borderColor: '#FFD43B' }} />
-            {st.hot ? <Pressable onPress={hit} accessibilityLabel={st.hot === 'profil' ? 'Deschide Profilul' : 'Deschide Plus'} style={{ position: 'absolute', left: hole.x, top: hole.y, width: hole.w, height: hole.h }} /> : null}
+            {st.hot ? <Pressable onPress={hit} accessibilityLabel={st.hot === 'profil' ? tr('Deschide Profilul') : tr('Deschide Plus')} style={{ position: 'absolute', left: hole.x, top: hole.y, width: hole.w, height: hole.h }} /> : null}
             <View pointerEvents="box-none" style={{ position: 'absolute', left: 20, right: 20, ...(below ? { top: Math.min(hole.y + hole.h + 16, H - 360) } : { bottom: Math.min(H - hole.y + 16, H - 360) }) }}>
               {bubble}
             </View>
@@ -136,8 +137,8 @@ export function Tour() {
           </View>
         )}
         {!st.final && !st.magic ? (
-          <Pressable onPress={() => finish()} hitSlop={10} style={{ position: 'absolute', right: 16, top: 48, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.14)' }} accessibilityLabel="Sari peste tur">
-            <T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>Sari peste</T>
+          <Pressable onPress={() => finish()} hitSlop={10} style={{ position: 'absolute', right: 16, top: 48, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.14)' }} accessibilityLabel={tr('Sari peste tur')}>
+            <T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>{tr('Sari peste')}</T>
           </Pressable>
         ) : null}
         <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: ins.bottom + 16, flexDirection: 'row', justifyContent: 'center', gap: 6, opacity: hole && !below ? 0 : 1 }}>
@@ -154,21 +155,21 @@ function GiftCard() {
   const a = useRef(new Animated.Value(0)).current;
   useEffect(() => { Animated.spring(a, { toValue: 1, delay: 200, speed: 12, bounciness: 10, useNativeDriver: true }).start(); }, [a]);
   return (
-    <Animated.View accessibilityLabel="Cadoul lui Bilu: 7 zile gratis de CeFaci Plus" style={{
+    <Animated.View accessibilityLabel={tr('Cadoul lui Bilu: 7 zile gratis de CeFaci Plus')} style={{
       alignSelf: 'stretch', padding: 16, borderRadius: 22, backgroundColor: '#FFD43B',
       opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [16, 0] }) }, { scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }],
     }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ height: 28, paddingHorizontal: 11, borderRadius: 999, backgroundColor: '#0E1440', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: '#FFD43B' }}>CeFaci Plus</T></View>
-        <T style={{ fontFamily: F.b, fontSize: 13, color: '#0E1440' }}>Cadou</T>
+        <T style={{ fontFamily: F.b, fontSize: 13, color: '#0E1440' }}>{tr('Cadou')}</T>
       </View>
-      <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 44, lineHeight: 44, letterSpacing: -1.2, color: '#0E1440' }}>7 zile gratis</T>
+      <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 44, lineHeight: 44, letterSpacing: -1.2, color: '#0E1440' }}>{tr('7 zile gratis')}</T>
       <View style={{ marginTop: 10, gap: 6 }}>
         {['10–20% reducere la localurile partenere', 'Pentru întreaga notă eligibilă a grupului', 'Live Drops cu 10 minute mai devreme'].map((x) => (
-          <View key={x} style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><Icon name="check" size={16} color="#0E1440" width={2.6} /><T style={{ flex: 1, fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{x}</T></View>
+          <View key={x} style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><Icon name="check" size={16} color="#0E1440" width={2.6} /><T style={{ flex: 1, fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{tr(x)}</T></View>
         ))}
       </View>
-      <T style={{ marginTop: 10, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>Fără plată automată. Abonamentele plătite nu sunt disponibile încă.</T>
+      <T style={{ marginTop: 10, fontFamily: F.m, fontSize: 13, lineHeight: 18, color: '#3A4270' }}>{tr('Fără plată automată. Abonamentele plătite nu sunt disponibile încă.')}</T>
     </Animated.View>
   );
 }

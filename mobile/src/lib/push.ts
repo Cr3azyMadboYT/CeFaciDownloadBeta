@@ -4,13 +4,14 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { sb } from './auth';
+import { tr } from '../../../src/i18n';
 
 let saved = '';
 
 export async function registerPush(): Promise<void> {
   if (Platform.OS !== 'android') return;
   try {
-    await Notifications.setNotificationChannelAsync('social', { name: 'Voturi, planuri și gășci', importance: Notifications.AndroidImportance.HIGH, lightColor: '#FFD43B' });
+    await Notifications.setNotificationChannelAsync('social', { name: tr('Voturi, planuri și gășci'), importance: Notifications.AndroidImportance.HIGH, lightColor: '#FFD43B' });
     let perm = await Notifications.getPermissionsAsync();
     if (!perm.granted && perm.canAskAgain) perm = await Notifications.requestPermissionsAsync();
     if (!perm.granted) return;

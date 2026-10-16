@@ -7,6 +7,7 @@ import { STAMP_COLORS, STAMP_ICONS, createCrew } from '../lib/crews';
 import { listFriends, type Person } from '../lib/friends';
 import { useApp } from '../lib/session';
 import { toast } from '../lib/toast';
+import { tr } from '../lib/i18n';
 import { CrewMark } from '../ui/CrewMark';
 import { Icon } from '../ui/Icon';
 import { Big, Field, H1, Lbl, Muted, Note, Press, Say, T } from '../ui/kit';
@@ -36,7 +37,7 @@ export default function GascaNoua() {
   useEffect(() => { if (friends) setPicked((p) => p.filter((x) => friends.some((f) => f.id === x))); }, [friends]);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/planuri'));
   const names = friends?.filter((f) => picked.includes(f.id)).map((f) => f.first_name) ?? [];
-  const auto = names.length >= 2 ? 'Tu, ' + names.slice(0, 2).join(' și ') + (names.length > 2 ? ' și încă ' + (names.length - 2) : '') : 'ex: Gașca de vineri';
+  const auto = names.length >= 2 ? (names.length > 2 ? tr('Tu, {a} și {b} și încă {n}', { a: names[0], b: names[1], n: names.length - 2 }) : tr('Tu, {a} și {b}', { a: names[0], b: names[1] })) : tr('ex: Gașca de vineri');
   const rude = isRudeName(name);
   const create = async () => {
     if (rude) return;
@@ -44,48 +45,48 @@ export default function GascaNoua() {
     const r = await createCrew((name.trim() || auto).slice(0, 40), icon, color, picked.filter((x) => friends?.some((f) => f.id === x)));
     setBusy(false);
     if (r.err) { setErr(r.err); return; }
-    toast('Invitațiile au plecat. Intră în gașcă doar cine acceptă.');
+    toast(tr('Invitațiile au plecat. Intră în gașcă doar cine acceptă.'));
     router.replace({ pathname: '/gasca/[id]', params: { id: r.id! } });
   };
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: t.bg }} behavior="padding">
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24, gap: 14 }} keyboardShouldPersistTaps="handled">
         <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
           <CrewMark icon={icon} color={color === '#0E1440' && t.dark ? '#F4F4F6' : color} size={60} />
-          <H1 style={{ flex: 1, fontSize: 32, lineHeight: 33 }}>Gașcă nouă</H1>
+          <H1 style={{ flex: 1, fontSize: 32, lineHeight: 33 }}>{tr('Gașcă nouă')}</H1>
         </View>
         {!who || !known ? (
-          <Note kind="err">Gășcile merg cu cont. Intră din Profil → Prieteni.</Note>
+          <Note kind="err">{tr('Gășcile merg cu cont. Intră din Profil → Prieteni.')}</Note>
         ) : friends && friends.length < 2 ? (
           <View style={{ gap: 10 }}>
-            <Muted style={{ fontSize: 15, lineHeight: 21 }}>O gașcă are măcar 2 prieteni în afară de tine. {friends.length === 1 ? 'Ai 1 prieten în CeFaci.' : 'Încă n-ai prieteni în CeFaci.'}</Muted>
-            <Big label="Adaugă prieteni" onPress={() => router.push('/prieteni')} />
+            <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('O gașcă are măcar 2 prieteni în afară de tine.')} {friends.length === 1 ? tr('Ai 1 prieten în CeFaci.') : tr('Încă n-ai prieteni în CeFaci.')}</Muted>
+            <Big label={tr('Adaugă prieteni')} onPress={() => router.push('/prieteni')} />
           </View>
         ) : (
           <>
-            <Lbl>Numele gășcii</Lbl>
-            <Field value={name} onChangeText={(x) => setName(x.slice(0, 40))} placeholder={auto} accessibilityLabel="Numele gășcii" focused={focus} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} />
-            {rude ? <Say mood="oops" text={'Te rog alege alt nume pentru gașcă, acesta nu prea pare potrivit.'} /> : null}
-            <Lbl>Ștampila</Lbl>
+            <Lbl>{tr('Numele gășcii')}</Lbl>
+            <Field value={name} onChangeText={(x) => setName(x.slice(0, 40))} placeholder={auto} accessibilityLabel={tr('Numele gășcii')} focused={focus} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} />
+            {rude ? <Say mood="oops" text={tr('Te rog alege alt nume pentru gașcă, acesta nu prea pare potrivit.')} /> : null}
+            <Lbl>{tr('Ștampila')}</Lbl>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
               {STAMP_ICONS.map(([key, ic, label]) => (
-                <Press key={key} onPress={() => setIcon(key)} accessibilityLabel={label} accessibilityState={{ selected: icon === key }}
+                <Press key={key} onPress={() => setIcon(key)} accessibilityLabel={tr(label)} accessibilityState={{ selected: icon === key }}
                   style={{ width: 52, height: 52, borderRadius: 16, borderWidth: icon === key ? 2 : 1, borderColor: icon === key ? t.blue : t.line, backgroundColor: icon === key ? t.blueSoft : t.s1, alignItems: 'center', justifyContent: 'center' }}>
                   <Icon name={ic as never} color={icon === key ? t.blueInk : t.ink2} />
                 </Press>
               ))}
             </View>
-            <Lbl>Culoarea</Lbl>
+            <Lbl>{tr('Culoarea')}</Lbl>
             <View style={{ flexDirection: 'row', gap: 10 }}>
               {STAMP_COLORS.map(([c, label]) => (
-                <Press key={c} onPress={() => setColor(c)} accessibilityLabel={label} accessibilityState={{ selected: color === c }}
+                <Press key={c} onPress={() => setColor(c)} accessibilityLabel={tr(label)} accessibilityState={{ selected: color === c }}
                   style={{ width: 40, height: 40, borderRadius: 99, backgroundColor: c, borderWidth: 3, borderColor: color === c ? t.ink : 'transparent' }} />
               ))}
             </View>
-            <Lbl>{'Prietenii (' + (picked.length ? picked.length + (picked.length === 1 ? ' ales' : ' aleși') : 'minim 2') + ')'}</Lbl>
+            <Lbl>{picked.length === 1 ? tr('Prietenii (1 ales)') : picked.length ? tr('Prietenii ({n} aleși)', { n: picked.length }) : tr('Prietenii (minim 2)')}</Lbl>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
               {(friends ?? []).map((f) => {
                 const on = picked.includes(f.id);
@@ -103,7 +104,7 @@ export default function GascaNoua() {
       </ScrollView>
       {who && known && friends && friends.length >= 2 ? (
         <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: Math.max(ins.bottom, 12) + 14, borderTopWidth: 1, borderTopColor: t.line }}>
-          <Big label={busy ? 'O clipă…' : picked.length < 2 ? 'Alege cel puțin 2 prieteni' : 'Trimite ' + picked.length + ' invitații'} disabled={busy || picked.length < 2 || rude} onPress={create} />
+          <Big label={busy ? tr('O clipă…') : picked.length < 2 ? tr('Alege cel puțin 2 prieteni') : tr('Trimite {n} invitații', { n: picked.length })} disabled={busy || picked.length < 2 || rude} onPress={create} />
         </View>
       ) : null}
       <TopShade />

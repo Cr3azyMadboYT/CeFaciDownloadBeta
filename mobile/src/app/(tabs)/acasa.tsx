@@ -32,6 +32,7 @@ import { quickStart, refreshFreeNow, spanText, useFreeNow } from '../../lib/free
 import { useCalm } from '../../lib/motion';
 import { CONF } from '../../ui/Magic';
 import { toast } from '../../lib/toast';
+import { pick, tr, trServer } from '../../lib/i18n';
 import * as Haptics from 'expo-haptics';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
@@ -73,7 +74,7 @@ function FlipWords({ words }: { words: string[] }) {
     // înălțime fixă, un singur rând (Cornel, 13.10: textele lungi treceau pe 2 rânduri și ecranul se ridica și se lăsa)
     <View style={{ height: 40, marginTop: 4, justifyContent: 'center' }} accessibilityLiveRegion="polite">
       <Animated.Text maxFontSizeMultiplier={1} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={{ fontFamily: F.hand, fontSize: 30, lineHeight: 38, color: '#FFD43B', opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [14, 0] }) }] }}>
-        {words[i % words.length]}
+        {tr(words[i % words.length])}
       </Animated.Text>
     </View>
   );
@@ -146,7 +147,7 @@ export default function Acasa() {
     return () => clearTimeout(h);
   }, [prefs, wxv, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
   const moods = MOODS.map((m) => ({ m, n: counts[m[0]] }));
-  const word = FLIP[phase].word;
+  const word = tr(FLIP[phase].word);
   const soon = sortPlans(plans);
   const next = soon[0];
   const nextPlace = next ? APP.byId(next.placeId) : undefined;
@@ -174,13 +175,13 @@ export default function Acasa() {
           <SeasonFall wear={wear} w={top.w} h={top.h} night={phase === 'dusk' || phase === 'night' || phase === 'late'} />
           <TourTarget id="pills">
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', height: 44 }}>
-            <Press onPress={() => router.push('/zona')} accessibilityLabel={'Pleci din ' + APP.zoneName() + ', până la ' + APP.radiusKm() + ' km. Schimbă'}
+            <Press onPress={() => router.push('/zona')} accessibilityLabel={tr('Pleci din {z}, până la {km} km. Schimbă', { z: APP.zoneName(), km: APP.radiusKm() })}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 44, marginLeft: -10, paddingLeft: 10, paddingRight: 12, borderRadius: 14 }}>
               <Icon name="pin" size={16} color="#FFD43B" />
               <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF', maxWidth: 230 }}>{APP.zoneName() + ' · ' + APP.radiusKm() + ' km'}</T>
               <View style={{ opacity: 0.7 }}><Icon name="down" size={16} color="#FFFFFF" /></View>
             </Press>
-            <Press onPress={() => router.push('/profil')} accessibilityLabel="Profilul tău" style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
+            <Press onPress={() => router.push('/profil')} accessibilityLabel={tr('Profilul tău')} style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
               <Avatar size={34} />
             </Press>
           </View>
@@ -195,8 +196,8 @@ export default function Acasa() {
             </View>
             {tonight ? (
               <View style={{ alignItems: 'flex-end', maxWidth: 130 }}>
-                <T style={{ fontFamily: F.sb, fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>Diseară</T>
-                <T style={{ fontFamily: F.b, fontSize: 14, color: '#FFFFFF', textAlign: 'right' }}>{tonight.line.replace(/^Diseară /, '')}</T>
+                <T style={{ fontFamily: F.sb, fontSize: 12, color: 'rgba(255,255,255,0.8)' }}>{tr('Diseară')}</T>
+                <T style={{ fontFamily: F.b, fontSize: 14, color: '#FFFFFF', textAlign: 'right' }}>{tonight.line.replace(/^(Diseară|Tonight) /, '')}</T>
               </View>
             ) : null}
           </View>
@@ -204,7 +205,7 @@ export default function Acasa() {
           <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'flex-end' }}>
             <View style={{ flex: 1 }}>
               <T accessibilityRole="header" style={{ color: '#FFFFFF', fontFamily: F.display, fontSize: word.length > 10 ? 44 : 56, lineHeight: (word.length > 10 ? 44 : 56) * 0.95, letterSpacing: -1.6 }}>
-                {'Ce facem\n' + word}
+                {tr('Ce facem\n{w}', { w: word })}
               </T>
               <FlipWords words={(APP.isMinor() && FLIP_MINOR[phase]) || FLIP[phase].flip} />
             </View>
@@ -223,12 +224,12 @@ export default function Acasa() {
           <TourTarget id="cta" style={{ marginTop: 16 }}>
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <View style={{ flex: 1 }} onLayout={(e) => setCtaW(e.nativeEvent.layout.width)}>
-                <Press onPress={() => router.push('/plan-nou')} accessibilityLabel="Creează plan"
+                <Press onPress={() => router.push('/plan-nou')} accessibilityLabel={tr('Creează plan')}
                   style={{ minHeight: 84, borderRadius: 24, backgroundColor: '#FFD43B', flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
                   <View style={{ width: 50, height: 50, borderRadius: 16, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><Icon name="plus" size={26} color="#FFD43B" width={2.6} /></View>
                   <View style={{ flex: 1 }}>
-                    <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#0E1440' }}>Creează plan</T>
-                    <T numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(14,20,64,0.75)' }}>5 întrebări, sub un minut</T>
+                    <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#0E1440' }}>{tr('Creează plan')}</T>
+                    <T numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(14,20,64,0.75)' }}>{tr('5 întrebări, sub un minut')}</T>
                   </View>
                 </Press>
                 <SeasonCta wear={wear} w={ctaW} />
@@ -249,7 +250,7 @@ export default function Acasa() {
                 <T style={{ fontFamily: F.display, fontSize: 16, color: '#FFD43B' }}>{next.slot}</T>
               </View>
               <T style={{ flex: 1, fontFamily: F.sb, fontSize: 15, color: '#0E1440' }}>
-                {dayWord(next).charAt(0).toUpperCase() + dayWord(next).slice(1) + ': ' + nextPlace.name + (soon.length > 1 ? ' și încă ' + (soon.length - 1) : '')}
+                {dayWord(next).charAt(0).toUpperCase() + dayWord(next).slice(1) + ': ' + nextPlace.name + (soon.length > 1 ? tr(' și încă {n}', { n: soon.length - 1 }) : '')}
               </T>
               <Icon name="next" size={16} color="#0E1440" />
             </Press>
@@ -259,14 +260,14 @@ export default function Acasa() {
             <View style={{ marginTop: 14, padding: 14, gap: 10, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                 <Bilu size={34} mood="wink" shadow={false} still />
-                <T style={{ flex: 1, fontFamily: F.b, fontSize: 15 }}>{'Cum a fost la ' + ratePlace.name + '?'}</T>
+                <T style={{ flex: 1, fontFamily: F.b, fontSize: 15 }}>{tr('Cum a fost la {p}?', { p: ratePlace.name })}</T>
               </View>
-              {rate.sid ? <Muted>Votul tău învață și gașca: data viitoare vă fac planuri mai pe gustul vostru.</Muted> : null}
+              {rate.sid ? <Muted>{tr('Votul tău învață și gașca: data viitoare vă fac planuri mai pe gustul vostru.')}</Muted> : null}
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 {([['super', 'Super!'], ['yes', 'Mi-a plăcut'], ['no', 'Nu prea']] as const).map(([k, label]) => (
-                  <Press key={k} onPress={() => { void rateOuting(rate, k); }} accessibilityLabel={label + ' la ' + ratePlace.name}
+                  <Press key={k} onPress={() => { void rateOuting(rate, k); }} accessibilityLabel={tr('{l} la {p}', { l: tr(label), p: ratePlace.name })}
                     style={{ flex: 1, minHeight: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: k === 'super' ? '#FFD43B' : k === 'yes' ? t.blue : t.s2 }}>
-                    <T style={{ fontFamily: F.b, fontSize: 14, color: k === 'yes' ? '#FFFFFF' : k === 'super' ? '#0E1440' : t.ink }}>{label}</T>
+                    <T style={{ fontFamily: F.b, fontSize: 14, color: k === 'yes' ? '#FFFFFF' : k === 'super' ? '#0E1440' : t.ink }}>{tr(label)}</T>
                   </Press>
                 ))}
               </View>
@@ -277,8 +278,8 @@ export default function Acasa() {
             <>
               <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <Bilu size={34} mood="wink" shadow={false} still />
-                <T accessibilityRole="header" style={{ flex: 1, fontFamily: F.display, fontSize: 21 }}>Bilu îți sugerează</T>
-                <Muted>{ideas[0]?.now ? 'acum' : (ideas[0].at.getHours() >= 17 ? 'diseară' : 'azi') + ', la ' + String(ideas[0].at.getHours()).padStart(2, '0') + ':' + String(ideas[0].at.getMinutes()).padStart(2, '0')}</Muted>
+                <T accessibilityRole="header" style={{ flex: 1, fontFamily: F.display, fontSize: 21 }}>{tr('Bilu îți sugerează')}</T>
+                <Muted>{ideas[0]?.now ? tr('acum') : tr(ideas[0].at.getHours() >= 17 ? 'diseară, la {t}' : 'azi, la {t}', { t: String(ideas[0].at.getHours()).padStart(2, '0') + ':' + String(ideas[0].at.getMinutes()).padStart(2, '0') })}</Muted>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10 }}>
                 {ideas.map((x) => (
@@ -288,7 +289,7 @@ export default function Acasa() {
                     <View style={{ flex: 1 }}>
                       <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 12, color: t.blueInk }}>{x.tag}</T>
                       <T numberOfLines={1} style={{ fontFamily: F.b, fontSize: 15 }}>{x.line}</T>
-                      <Muted numberOfLines={1}>{x.place.km.toFixed(1).replace('.', ',') + ' km · ' + (APP.openLabel(x.place.id, 'now', x.at) || x.place.title) + (x.place.price ? ' · ~' + x.place.price + ' lei' : '')}</Muted>
+                      <Muted numberOfLines={1}>{x.place.km.toFixed(1).replace('.', pick(',', '.')) + ' km · ' + (APP.openLabel(x.place.id, 'now', x.at) || x.place.title) + (x.place.price ? ' · ~' + x.place.price + ' lei' : '')}</Muted>
                     </View>
                   </Press>
                 ))}
@@ -297,18 +298,18 @@ export default function Acasa() {
           ) : null}
 
           <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>Ai chef de…</T>
-            <Muted>un tap și ai 3 planuri</Muted>
+            <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>{tr('Ai chef de…')}</T>
+            <Muted>{tr('un tap și ai 3 planuri')}</Muted>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 12, marginHorizontal: -20 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 10, paddingBottom: 4 }} snapToInterval={126} decelerationRate="fast">
             {moods.map(({ m: [label, icon, bg, fg, dot], n }) => (
-              <Press key={label} onPress={() => mood(label)} accessibilityLabel={label + (n === undefined ? '' : ', ' + n + ' locuri deschise')}
+              <Press key={label} onPress={() => mood(label)} accessibilityLabel={tr(label) + (n === undefined ? '' : tr(', {n} locuri deschise', { n }))}
                 style={{ width: 116, minHeight: 132, padding: 12, borderRadius: 22, backgroundColor: bg, justifyContent: 'space-between', overflow: 'hidden' }}>
                 <View style={{ position: 'absolute', right: -18, top: -18, width: 64, height: 64, borderRadius: 99, backgroundColor: dot }} />
                 <Icon name={icon} size={30} color={fg} />
                 <View style={{ gap: 4 }}>
-                  <T style={{ fontFamily: F.b, fontSize: 16, lineHeight: 18, color: fg }}>{label}</T>
-                  <T style={{ fontFamily: F.sb, fontSize: 12, color: fg }}>{n === undefined ? ' ' : n === 0 ? 'nimic deschis' : n === 1 ? '1 deschis' : n + ' deschise'}</T>
+                  <T style={{ fontFamily: F.b, fontSize: 16, lineHeight: 18, color: fg }}>{tr(label)}</T>
+                  <T style={{ fontFamily: F.sb, fontSize: 12, color: fg }}>{n === undefined ? ' ' : n === 0 ? tr('nimic deschis') : n === 1 ? tr('1 deschis') : tr('{n} deschise', { n })}</T>
                 </View>
               </Press>
             ))}
@@ -344,13 +345,13 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
   const go = async () => {
     // biletul rămâne plin („Bilu îi anunță…”) cât răspunde serverul; Bilu zboară doar dacă a mers
     setBusy(true);
-    const r = await quickStart().catch(() => ({ err: 'Nu am putut intra pe FreeNow. Mai încearcă o dată.', notified: 0 }));
+    const r = await quickStart().catch(() => ({ err: tr('Nu am putut intra pe FreeNow. Mai încearcă o dată.'), notified: 0 }));
     setBusy(false);
     Animated.timing(fill, { toValue: 0, duration: 250, useNativeDriver: false }).start();
-    if (r.err) { Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {}); toast(r.err); open(); return; }
+    if (r.err) { Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {}); toast(trServer(r.err)); open(); return; }
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
     onEntered();
-    toast(r.notified ? 'Ești pe FreeNow! Am anunțat ' + (r.notified === 1 ? '1 om.' : r.notified + ' oameni.') : 'Ești pe FreeNow! Cine deschide aplicația te vede.');
+    toast(r.notified ? (r.notified === 1 ? tr('Ești pe FreeNow! Am anunțat 1 om.') : tr('Ești pe FreeNow! Am anunțat {n} oameni.', { n: r.notified })) : tr('Ești pe FreeNow! Cine deschide aplicația te vede.'));
   };
   const pressIn = () => {
     done.current = false;
@@ -361,9 +362,9 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
     });
   };
   const pressOut = () => { if (done.current || on) return; fill.stopAnimation(); Animated.spring(fill, { toValue: 0, useNativeDriver: false, speed: 20 }).start(); };
-  const title = st.outing ? (st.outing.plan ? 'Mergeți la ' + st.outing.plan.venue_name : 'Ieșiți: ' + st.outing.members.length + ' oameni')
-    : st.me ? 'Ești pe FreeNow ' + spanText(st.me.starts_at, st.me.ends_at) : busy ? 'Bilu îi anunță…' : 'FreeNow';
-  const sub = whoIsOn(others.map((p) => p.first_name)) || (on ? 'Apasă să vezi cine vine' : 'Ai timp? Ține apăsat ca să intri');
+  const title = st.outing ? (st.outing.plan ? tr('Mergeți la {p}', { p: st.outing.plan.venue_name }) : tr('Ieșiți: {n} oameni', { n: st.outing.members.length }))
+    : st.me ? tr('Ești pe FreeNow {span}', { span: spanText(st.me.starts_at, st.me.ends_at) }) : busy ? tr('Bilu îi anunță…') : 'FreeNow';
+  const sub = whoIsOn(others.map((p) => p.first_name)) || (on ? tr('Apasă să vezi cine vine') : tr('Ai timp? Ține apăsat ca să intri'));
   const faces = others.map((p) => ({ n: p.first_name, u: p.username }));
   const face = (dark: boolean) => (
     <>
@@ -377,7 +378,7 @@ function HoldFreeNow({ sky, onEntered }: { sky: string; onEntered: () => void })
   );
   const fillW = fill.interpolate({ inputRange: [0, 1], outputRange: [0, w || 400] });
   const press = { onPress: () => { if (!done.current) open(); }, onPressIn: pressIn, onPressOut: pressOut, delayLongPress: HOLD_MS + 400,
-    accessibilityLabel: title + '. ' + sub, accessibilityHint: on ? undefined : 'Ține apăsat ca să intri pe FreeNow; o apăsare deschide FreeNow.' };
+    accessibilityLabel: title + '. ' + sub, accessibilityHint: on ? undefined : tr('Ține apăsat ca să intri pe FreeNow; o apăsare deschide FreeNow.') };
 
   // bilet de sticlă (Cornel, 12.10: varianta A, discret ca zarul): cotor ⚡ și perforație galbenă; ții apăsat și se umple de galben
   return (
@@ -456,7 +457,7 @@ function SurpriseBtn({ onPress }: { onPress: () => void }) {
     });
   };
   return (
-    <Press onPress={go} accessibilityLabel="Surprinde-mă: Bilu îți face un plan dintr-un tap"
+    <Press onPress={go} accessibilityLabel={tr('Surprinde-mă: Bilu îți face un plan dintr-un tap')}
       style={{ width: 92, minHeight: 84, borderRadius: 24, backgroundColor: '#8C6CFF', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 8, overflow: 'hidden',
         shadowColor: '#0E1440', shadowOpacity: 0.3, shadowRadius: 14, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}>
       <View pointerEvents="none" style={{ position: 'absolute', top: -24, right: -18, width: 64, height: 64, borderRadius: 64, backgroundColor: 'rgba(255,255,255,0.14)' }} />
@@ -469,7 +470,7 @@ function SurpriseBtn({ onPress }: { onPress: () => void }) {
       ] }}>
         <Die face={face} size={38} />
       </Animated.View>
-      <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.b, fontSize: 12, color: '#FFFFFF' }}>Surprinde-mă</T>
+      <T numberOfLines={1} adjustsFontSizeToFit style={{ fontFamily: F.b, fontSize: 12, color: '#FFFFFF' }}>{tr('Surprinde-mă')}</T>
     </Press>
   );
 }
@@ -478,10 +479,10 @@ function SurpriseBtn({ onPress }: { onPress: () => void }) {
  *  „Mihai are timp acum”, „Mihai și Andrei au timp acum”, „Mihai, Andrei și Ana au timp”, de la 4: „Mihai, Andrei și alții au timp!” */
 function whoIsOn(n: string[]) {
   if (!n.length) return '';
-  if (n.length === 1) return n[0] + ' are timp acum';
-  if (n.length === 2) return n[0] + ' și ' + n[1] + ' au timp acum';
-  if (n.length === 3) return n[0] + ', ' + n[1] + ' și ' + n[2] + ' au timp';
-  return n[0] + ', ' + n[1] + ' și alții au timp!';
+  if (n.length === 1) return tr('{a} are timp acum', { a: n[0] });
+  if (n.length === 2) return tr('{a} și {b} au timp acum', { a: n[0], b: n[1] });
+  if (n.length === 3) return tr('{a}, {b} și {c} au timp', { a: n[0], b: n[1], c: n[2] });
+  return tr('{a}, {b} și alții au timp!', { a: n[0], b: n[1] });
 }
 const FACE_BG = ['#8C6CFF', '#FF6A4D', '#5FD39A', '#8EA6FF', '#FFB199'];
 /** Până la 3 fețe suprapuse (inițiala, culoarea după username); de la 4, a treia arată „+N”. */

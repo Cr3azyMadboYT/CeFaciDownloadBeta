@@ -8,6 +8,7 @@ import { mutual, profileOf, remove, type Person, type Profile } from '../../lib/
 import { LEVELS, levelOf } from '../../lib/levels';
 import { useApp } from '../../lib/session';
 import { toast } from '../../lib/toast';
+import { tr } from '../../lib/i18n';
 import { CrewMark } from '../../ui/CrewMark';
 import { Icon } from '../../ui/Icon';
 import { Big, H1, Lbl, Muted, Note, Press, Sheet, T } from '../../ui/kit';
@@ -35,12 +36,12 @@ export default function Prieten() {
   useEffect(() => { if (!arm) return; const k = setTimeout(() => setArm(false), 5000); return () => clearTimeout(k); }, [arm]);
   const back = () => (router.canGoBack() ? router.back() : router.replace('/prieteni'));
 
-  if (p === undefined) return <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20 }}><Muted>Se încarcă…</Muted></View>;
+  if (p === undefined) return <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20 }}><Muted>{tr('Se încarcă…')}</Muted></View>;
   if (!p) {
     return (
       <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 60, paddingHorizontal: 20, gap: 12 }}>
-        <H1>Nu mai găsim profilul.</H1>
-        <Big label="Înapoi" onPress={back} />
+        <H1>{tr('Nu mai găsim profilul.')}</H1>
+        <Big label={tr('Înapoi')} onPress={back} />
       </View>
     );
   }
@@ -53,7 +54,7 @@ export default function Prieten() {
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: ins.bottom + 32, gap: 12 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
         </View>
         <View style={{ padding: 16, borderRadius: 24, backgroundColor: '#2F5BFF', flexDirection: 'row', alignItems: 'center', gap: 16 }}>
           <View style={{ width: 72, height: 72, borderRadius: 99, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center' }}>
@@ -62,18 +63,18 @@ export default function Prieten() {
           <View style={{ flex: 1, gap: 2 }}>
             <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#FFFFFF' }}>{p.first_name}</T>
             <T style={{ fontFamily: F.sb, fontSize: 14, color: 'rgba(255,255,255,0.85)' }}>{'@' + p.username}</T>
-            <T style={{ marginTop: 6, fontFamily: F.b, fontSize: 14, color: '#FFFFFF' }}>{lv ? 'Nivel ' + lv + ' · ' + LEVELS[lv] : 'Abia a început'}</T>
-            <T style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>{p.xp + ' XP · ' + (p.stamps === 1 ? 'o ștampilă' : p.stamps + ' ștampile')}</T>
+            <T style={{ marginTop: 6, fontFamily: F.b, fontSize: 14, color: '#FFFFFF' }}>{lv ? tr('Nivel {n}', { n: lv }) + ' · ' + tr(LEVELS[lv]) : tr('Abia a început')}</T>
+            <T style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>{p.xp + ' XP · ' + (p.stamps === 1 ? tr('o ștampilă') : tr('{n} ștampile', { n: p.stamps }))}</T>
           </View>
         </View>
 
         <View style={{ gap: 8 }}>
-          <Big label="Faceți un plan" icon={<Icon name="ticket" color="#FFFFFF" />} onPress={() => { toast('Alege locurile, apoi „Trimite gășcii la vot” sau trimite biletul lui ' + p.first_name + '.'); router.navigate('/exploreaza'); }} />
-          <Big label="Invită în gașcă" color={t.s2} ink={t.ink} disabled={!canInvite.length} onPress={() => setPick(true)} />
-          {!canInvite.length ? <Muted>{crews.length ? 'E deja în toate gășcile tale.' : 'Încă n-ai nicio gașcă. Fă una din Planuri.'}</Muted> : null}
+          <Big label={tr('Faceți un plan')} icon={<Icon name="ticket" color="#FFFFFF" />} onPress={() => { toast(tr('Alege locurile, apoi „Trimite gășcii la vot” sau trimite biletul lui {name}.', { name: p.first_name })); router.navigate('/exploreaza'); }} />
+          <Big label={tr('Invită în gașcă')} color={t.s2} ink={t.ink} disabled={!canInvite.length} onPress={() => setPick(true)} />
+          {!canInvite.length ? <Muted>{crews.length ? tr('E deja în toate gășcile tale.') : tr('Încă n-ai nicio gașcă. Fă una din Planuri.')}</Muted> : null}
         </View>
 
-        <Lbl style={{ marginTop: 6 }}>{both.length ? 'Prieteni comuni (' + both.length + ')' : 'Prieteni comuni'}</Lbl>
+        <Lbl style={{ marginTop: 6 }}>{both.length ? tr('Prieteni comuni ({n})', { n: both.length }) : tr('Prieteni comuni')}</Lbl>
         {both.length ? (
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
             {both.map((x) => (
@@ -82,11 +83,11 @@ export default function Prieten() {
               </Press>
             ))}
           </View>
-        ) : <Muted>Niciunul încă.</Muted>}
+        ) : <Muted>{tr('Niciunul încă.')}</Muted>}
 
         {shared.length ? (
           <>
-            <Lbl style={{ marginTop: 6 }}>În gășcile voastre</Lbl>
+            <Lbl style={{ marginTop: 6 }}>{tr('În gășcile voastre')}</Lbl>
             {shared.map((c) => (
               <Press key={c.id} onPress={() => router.push({ pathname: '/gasca/[id]', params: { id: c.id } })} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 18, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
                 <CrewMark icon={c.icon} color={c.color === '#0E1440' && t.dark ? '#F4F4F6' : c.color} size={40} />
@@ -97,27 +98,27 @@ export default function Prieten() {
           </>
         ) : null}
 
-        <Big style={{ marginTop: 16 }} label={busy ? 'O clipă…' : arm ? 'Sigur? Apasă iar ca să confirmi' : 'Elimină din prieteni'} color="#D93A1C" disabled={busy}
+        <Big style={{ marginTop: 16 }} label={busy ? tr('O clipă…') : arm ? tr('Sigur? Apasă iar ca să confirmi') : tr('Elimină din prieteni')} color="#D93A1C" disabled={busy}
           onPress={async () => {
             if (!arm) { setArm(true); return; }
             if (!who) return;
             setBusy(true);
             await remove(who.id, p.id);
             setBusy(false);
-            toast(p.first_name + ' nu mai e în prietenii tăi.');
+            toast(tr('{name} nu mai e în prietenii tăi.', { name: p.first_name }));
             back();
           }} />
       </ScrollView>
 
       <Sheet open={pick} onClose={() => setPick(false)}>
-        <H1 style={{ fontSize: 26 }}>{'Alege gașca pentru ' + p.first_name}</H1>
+        <H1 style={{ fontSize: 26 }}>{tr('Alege gașca pentru {name}', { name: p.first_name })}</H1>
         <View style={{ marginTop: 14, gap: 8 }}>
           {canInvite.map((c) => (
             <Press key={c.id} onPress={async () => {
               if (!who) return;
               const e = await inviteToCrew(c.id, who.id, [p.id]);
               setPick(false);
-              toast(e ?? 'Invitația a plecat. ' + p.first_name + ' intră când acceptă.');
+              toast(e ?? tr('Invitația a plecat. {name} intră când acceptă.', { name: p.first_name }));
               load();
             }} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10, borderRadius: 18, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
               <CrewMark icon={c.icon} color={c.color === '#0E1440' && t.dark ? '#F4F4F6' : c.color} size={40} />
@@ -125,7 +126,7 @@ export default function Prieten() {
               <Icon name="plus" size={18} color={t.blueInk} />
             </Press>
           ))}
-          {!canInvite.length ? <Note kind="err">Nu ai o gașcă în care să-l inviți.</Note> : null}
+          {!canInvite.length ? <Note kind="err">{tr('Nu ai o gașcă în care să-l inviți.')}</Note> : null}
         </View>
       </Sheet>
       <TopShade />

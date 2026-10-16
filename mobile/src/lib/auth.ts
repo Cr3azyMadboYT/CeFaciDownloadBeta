@@ -2,6 +2,8 @@
 // No phone/SMS, no passwords; Apple waits for an Apple account. The publishable key is meant to live in the app.
 import { Platform } from 'react-native';
 import { createClient, type Session } from '@supabase/supabase-js';
+// direct din src/i18n (nu din ./i18n, care trage session.ts → auth.ts)
+import { tr, trServer } from '../../../src/i18n';
 
 const URL = 'https://vqrmwuarjjntusfbqprx.supabase.co';
 const KEY = 'sb_publishable_DWl1cra4FE1Dxgc2hwtGrA_0LwP5B4O';
@@ -23,8 +25,8 @@ export const sb = () => (client ??= createClient(URL, KEY, {
 
 /** Google's own sign-in sheet on the phone; Google gives an ID token and Supabase turns it into a session. */
 export async function signInWithGoogle(): Promise<string | null> {
-  if (!googleSignInAvailable) return 'Pe iOS, intră cu emailul.';
-  if (Platform.OS === 'web') return 'Google merge în aplicația de pe telefon. Aici intră cu emailul.';
+  if (!googleSignInAvailable) return tr('Pe iOS, intră cu emailul.');
+  if (Platform.OS === 'web') return tr('Google merge în aplicația de pe telefon. Aici intră cu emailul.');
   try {
     const { GoogleSignin, isSuccessResponse, isErrorWithCode, statusCodes } = await import('@react-native-google-signin/google-signin');
     GoogleSignin.configure({ webClientId: GOOGLE_WEB_CLIENT_ID, scopes: ['email', 'profile'] });
@@ -33,20 +35,20 @@ export async function signInWithGoogle(): Promise<string | null> {
       const res = await GoogleSignin.signIn();
       if (!isSuccessResponse(res)) return null; // closed the Google sheet: nothing to say
       const token = res.data.idToken;
-      if (!token) return 'Google nu ne-a dat contul. Mai încearcă o dată.';
+      if (!token) return tr('Google nu ne-a dat contul. Mai încearcă o dată.');
       const { error } = await sb().auth.signInWithIdToken({ provider: 'google', token });
-      return error ? 'Nu am putut intra cu Google. Mai încearcă o dată. [' + error.message.slice(0, 80) + ']' : null;
+      return error ? tr('Nu am putut intra cu Google. Mai încearcă o dată. [{m}]', { m: error.message.slice(0, 80) }) : null;
     } catch (e) {
       if (isErrorWithCode(e)) {
         if (e.code === statusCodes.SIGN_IN_CANCELLED || e.code === statusCodes.IN_PROGRESS) return null;
-        if (e.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) return 'Telefonul nu are Google Play. Intră cu emailul.';
+        if (e.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) return tr('Telefonul nu are Google Play. Intră cu emailul.');
       }
       const msg = String((e as { message?: string })?.message ?? e ?? '');
-      if (/DEVELOPER_ERROR|10:|developer/i.test(msg)) return 'Google nu recunoaște aplicația (cheia de semnare sau clientul Android). Intră cu emailul până rezolvăm. [' + msg.slice(0, 80) + ']';
-      return 'Nu am putut intra cu Google. [' + msg.slice(0, 80) + ']';
+      if (/DEVELOPER_ERROR|10:|developer/i.test(msg)) return tr('Google nu recunoaște aplicația (cheia de semnare sau clientul Android). Intră cu emailul până rezolvăm. [{m}]', { m: msg.slice(0, 80) });
+      return tr('Nu am putut intra cu Google. [{m}]', { m: msg.slice(0, 80) });
     }
   } catch {
-    return 'Google nu e pornit în această versiune. Intră cu emailul.';
+    return tr('Google nu e pornit în această versiune. Intră cu emailul.');
   }
 }
 
@@ -54,11 +56,11 @@ export async function signInWithGoogle(): Promise<string | null> {
 export async function emailStart(email: string): Promise<string | null> {
   const { error } = await sb().auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
   if (!error) return null;
-  return /rate|limit|seconds/i.test(error.message) ? 'Ai cerut deja un cod. Așteaptă un minut și încearcă iar.' : 'Nu am putut trimite codul. Verifică adresa și încearcă iar.';
+  return /rate|limit|seconds/i.test(error.message) ? tr('Ai cerut deja un cod. Așteaptă un minut și încearcă iar.') : tr('Nu am putut trimite codul. Verifică adresa și încearcă iar.');
 }
 export async function emailVerify(email: string, code: string): Promise<string | null> {
   const { error } = await sb().auth.verifyOtp({ email, token: code, type: 'email' });
-  return error ? 'Codul nu e bun sau a expirat.' : null;
+  return error ? tr('Codul nu e bun sau a expirat.') : null;
 }
 
 export interface Who { id: string; email?: string; first: string }
@@ -96,14 +98,14 @@ export async function signOutEverywhere() {
 /** GDPR: removes the account and all it holds on the server, then signs out. Returns a message if the server
  *  did not confirm (offline, for example), so the phone is not wiped while the account still exists. */
 export async function deleteAccountEverywhere(): Promise<string | null> {
-  const fail = 'Nu am putut șterge contul acum. Verifică internetul și încearcă iar.';
+  const fail = tr('Nu am putut șterge contul acum. Verifică internetul și încearcă iar.');
   try {
     const { data } = await sb().auth.getSession();
-    if (!data.session) return 'Intră în cont pentru a solicita ștergerea lui. Datele locale nu au fost șterse.';
+    if (!data.session) return tr('Intră în cont pentru a solicita ștergerea lui. Datele locale nu au fost șterse.');
     if (data.session) {
       const r = await within(sb().rpc('delete_my_account'), 15000);
       if (r === 'timeout') return fail;
-      if (r.error) return r.error.message || fail;
+      if (r.error) return trServer(r.error.message) || fail;
       await within(sb().auth.signOut({ scope: 'local' }), 2000).catch(() => null);
     }
     await googleSignOut();

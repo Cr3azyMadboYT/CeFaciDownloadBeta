@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from 'react';
 import { PanResponder, View } from 'react-native';
 import { tap } from './kit';
 import { useTheme } from './theme';
+import { tr } from '../lib/i18n';
 
 const THUMB = 34;
 
@@ -44,7 +45,7 @@ export function RangeSlider({ min, max, step, value, onChange, label }: { min: n
   }, [min, max, step]); // eslint-disable-line react-hooks/exhaustive-deps
   const [a, b] = value;
   return (
-    <View accessible accessibilityRole="adjustable" accessibilityLabel={'Buget de la ' + label(a) + ' până la ' + label(b)}
+    <View accessible accessibilityRole="adjustable" accessibilityLabel={tr('Buget de la {a} până la {b}', { a: label(a), b: label(b) })}
       accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
       onAccessibilityAction={(e) => onChange([a, Math.min(max, Math.max(a + step, b + (e.nativeEvent.actionName === 'increment' ? step : -step)))])}
       onLayout={(e) => setW(e.nativeEvent.layout.width)} style={{ height: 56, justifyContent: 'center' }} {...responder.panHandlers}>

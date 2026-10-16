@@ -7,6 +7,7 @@ import * as Haptics from 'expo-haptics';
 import { Bilu, type Mood } from './Bilu';
 import { Icon, type IconName } from './Icon';
 import { F, useTheme } from './theme';
+import { tr } from '../lib/i18n';
 
 export const tap = () => { Haptics.selectionAsync().catch(() => {}); };
 
@@ -154,7 +155,7 @@ export function Sheet({ open, onClose, children }: { open: boolean; onClose: () 
   return (
     <Modal visible={open} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <Pressable style={{ flex: 1, backgroundColor: t.scrim }} onPress={onClose} accessibilityLabel="Închide" />
+        <Pressable style={{ flex: 1, backgroundColor: t.scrim }} onPress={onClose} accessibilityLabel={tr('Închide')} />
         <View style={{ maxHeight: height - ins.top - 24, backgroundColor: t.bgCont, borderTopLeftRadius: 28, borderTopRightRadius: 28 }}>
           <ScrollView bounces={false} keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 24, paddingBottom: Math.max(ins.bottom, 12) + 16 }}>
             {children}

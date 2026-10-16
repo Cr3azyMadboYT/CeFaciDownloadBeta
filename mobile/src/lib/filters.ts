@@ -2,6 +2,7 @@
 // free-text search. Results come from the engine through APP.matches / APP.search.
 import { useSyncExternalStore } from 'react';
 import { APP } from '../../../src/app/bridge';
+import { tr } from '../../../src/i18n';
 
 export const WHO: Record<string, { label: string; n: number; text: string }> = { 1: { label: 'Doar eu', n: 1, text: 'Doar tu' }, 2: { label: 'În doi', n: 2, text: 'În doi' }, 34: { label: '3–4', n: 4, text: 'Gașca, 4' }, 5: { label: '5+', n: 5, text: 'Gașca' } };
 export const WHEN: Record<string, { label: string; word: string; day: string }> = { now: { label: 'Acum', word: 'acum?', day: 'azi' }, eve: { label: 'Diseară', word: 'diseară?', day: 'azi' }, tom: { label: 'Mâine', word: 'mâine?', day: 'mâine' }, we: { label: 'Weekend', word: 'în weekend?', day: 'sâm.' } };
@@ -27,11 +28,11 @@ export function phaseOfHour(h: number): Phase {
 /** "50-120" style ranges typed in the filter sheet read as text too. */
 export function budgetText(key: string) {
   const r = /^(\d*)-(\d*)$/.exec(key);
-  if (!r) return (BUDGET[key] ?? BUDGET.any).text;
+  if (!r) return tr((BUDGET[key] ?? BUDGET.any).text);
   const [lo, hi] = [r[1], r[2]];
-  return lo && hi ? 'între ' + lo + ' și ' + hi + ' lei' : lo ? 'de la ' + lo + ' lei' : 'până în ' + hi + ' lei';
+  return lo && hi ? tr('între {lo} și {hi} lei', { lo, hi }) : lo ? tr('de la {lo} lei', { lo }) : tr('până în {hi} lei', { hi });
 }
-export const summaryOf = (f: Filters) => DUR[f.dur].text + ', ' + budgetText(f.budget) + ', ' + (f.vibes.length ? f.vibes.join(', ') : 'orice vibe') + ', până la ' + (DIST[f.dist]?.max ?? APP.radiusKm()) + ' km';
+export const summaryOf = (f: Filters) => tr(DUR[f.dur].text) + ', ' + budgetText(f.budget) + ', ' + (f.vibes.length ? f.vibes.map((v) => tr(v)).join(', ') : tr('orice vibe')) + tr(', până la {km} km', { km: DIST[f.dist]?.max ?? APP.radiusKm() });
 
 type S = { f: Filters; sq: string; page: number };
 /** The sign-up answers as filters; in the evening "când" starts at "diseară". */

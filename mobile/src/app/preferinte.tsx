@@ -11,6 +11,7 @@ import { Icon } from '../ui/Icon';
 import { Big, Chip, H1, Lbl, Muted, Press, Seg } from '../ui/kit';
 import { useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
+import { tr } from '../lib/i18n';
 
 export default function Preferinte() {
   const { t } = useTheme();
@@ -29,27 +30,27 @@ export default function Preferinte() {
   const save = () => {
     savePrefs({ likes, budget, who, when, mood, dist, moves });
     resetFilters();
-    toast('Am salvat. Recomandările țin cont de ce ai ales.');
+    toast(tr('Am salvat. Recomandările țin cont de ce ai ales.'));
     back();
   };
   const row = (label: string, opts: [string, string][], on: (v: string) => boolean, pick: (v: string) => void) => (
     <View style={{ gap: 8 }}>
-      <Lbl>{label}</Lbl>
-      <View style={{ flexDirection: 'row', gap: 8 }}>{opts.map(([v, l]) => <Seg key={v} label={l} on={on(v)} onPress={() => pick(v)} />)}</View>
+      <Lbl>{tr(label)}</Lbl>
+      <View style={{ flexDirection: 'row', gap: 8 }}>{opts.map(([v, l]) => <Seg key={v} label={tr(l)} on={on(v)} onPress={() => pick(v)} />)}</View>
     </View>
   );
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24, gap: 16 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel="Înapoi" style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
+          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
         </View>
-        <H1 style={{ fontSize: 34, lineHeight: 35 }}>Ce-ți place</H1>
-        <Muted style={{ marginTop: -8 }}>De aici pornesc filtrele de pe Acasă și ordinea recomandărilor.</Muted>
+        <H1 style={{ fontSize: 34, lineHeight: 35 }}>{tr('Ce-ți place')}</H1>
+        <Muted style={{ marginTop: -8 }}>{tr('De aici pornesc filtrele de pe Acasă și ordinea recomandărilor.')}</Muted>
         <View style={{ gap: 8 }}>
-          <Lbl>Ce-ți place</Lbl>
+          <Lbl>{tr('Ce-ți place')}</Lbl>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {LIKES.map(([k, l]) => <Chip key={k} label={l} on={likes.includes(k)} onPress={() => toggle(likes, setLikes, k)} />)}
+            {LIKES.map(([k, l]) => <Chip key={k} label={tr(l)} on={likes.includes(k)} onPress={() => toggle(likes, setLikes, k)} />)}
           </View>
         </View>
         {row('Cât cheltui de obicei, de persoană', BUDGETS, (v) => budget === v, setBudget)}
@@ -58,14 +59,14 @@ export default function Preferinte() {
         {row('Mai degrabă', MOODS, (v) => mood === v, setMood)}
         {row('Cât de departe mergi', DISTS, (v) => dist === v, setDist)}
         <View style={{ gap: 8 }}>
-          <Lbl>Cum ajungi</Lbl>
+          <Lbl>{tr('Cum ajungi')}</Lbl>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {MOVES.map(([k, l]) => <Chip key={k} label={l} on={moves.includes(k)} onPress={() => toggle(moves, setMoves, k)} />)}
+            {MOVES.map(([k, l]) => <Chip key={k} label={tr(l)} on={moves.includes(k)} onPress={() => toggle(moves, setMoves, k)} />)}
           </View>
         </View>
       </ScrollView>
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: Math.max(ins.bottom, 12) + 14, borderTopWidth: 1, borderTopColor: t.line }}>
-        <Big label={ok ? 'Salvează' : 'Alege măcar câte unul'} disabled={!ok} onPress={save} />
+        <Big label={ok ? tr('Salvează') : tr('Alege măcar câte unul')} disabled={!ok} onPress={save} />
       </View>
       <TopShade />
     </View>

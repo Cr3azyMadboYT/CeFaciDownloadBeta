@@ -7,6 +7,7 @@ import { sb } from './auth';
 import { APP } from './session';
 import { askOf, firstDraft } from './planAsk';
 import { hhmm } from './plans';
+import { tr, trServer } from './i18n';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = () => sb() as any;
@@ -25,8 +26,8 @@ export const MOODS: { id: Mood; label: string; emoji: string; part: string[] }[]
 export const moodOf = (id: string) => MOODS.find((m) => m.id === id);
 /** „chef de un pahar sau film” (fără „orice”) */
 export const moodWords = (ms: string[]) => {
-  const w = ms.filter((m) => m !== 'orice').map((m) => (moodOf(m)?.label ?? m).toLowerCase());
-  return w.length ? 'chef de ' + w.join(' sau ') : '';
+  const w = ms.filter((m) => m !== 'orice').map((m) => tr(moodOf(m)?.label ?? m).toLowerCase());
+  return w.length ? tr('chef de {w}', { w: w.join(tr(' sau ')) }) : '';
 };
 
 export type Audience = 'fof' | 'friends' | 'crew' | 'pick';
@@ -59,7 +60,7 @@ export const getFreeNow = () => s;
 /** Mesajele serverului sunt deja pentru oameni; o eroare tehnică devine una simplă. */
 const said = (e: { message?: string } | null | undefined) => {
   const m = e?.message ?? '';
-  return /[ăâîșțĂÂÎȘȚ]|^(Nu |Ai |Alege|Poți|Ieșirea|Așteaptă|Doar|Unul|Votul|Pe FreeNow|E prea|Intră)/.test(m) ? m : 'Nu a mers. Încearcă din nou.';
+  return /[ăâîșțĂÂÎȘȚ]|^(Nu |Ai |Alege|Poți|Ieșirea|Așteaptă|Doar|Unul|Votul|Pe FreeNow|E prea|Intră)/.test(m) ? trServer(m) : tr('Nu a mers. Încearcă din nou.');
 };
 
 let loading: Promise<void> | null = null;
@@ -101,7 +102,7 @@ export async function startFreeNow(r: StartReq): Promise<{ err?: string; notifie
 }
 /** +1 oră (sau alt chef): același anunț, fără notificări noi. */
 export async function extendFreeNow(hours = 1) {
-  const m = s.me; if (!m) return 'Nu ești pe FreeNow.';
+  const m = s.me; if (!m) return tr('Nu ești pe FreeNow.');
   const { error } = await db().rpc('free_now_set', {
     p_ends_at: new Date(new Date(m.ends_at).getTime() + hours * 3600e3).toISOString(), p_starts_at: m.starts_at, p_moods: m.moods,
     p_audience: m.audience, p_crew: m.crew_id, p_picked: m.picked, p_zone: m.zone,
@@ -145,7 +146,7 @@ export function outingOptions(o: Outing, moods: string[], now = new Date()) {
 }
 export async function startOutingVote(o: Outing, moods: string[]): Promise<{ id?: string; err?: string }> {
   const opts = outingOptions(o, moods);
-  if (opts.length < 2) return { err: 'Bilu n-a găsit destule locuri deschise acum. Încearcă alt chef.' };
+  if (opts.length < 2) return { err: tr('Bilu n-a găsit destule locuri deschise acum. Încearcă alt chef.') };
   const today = new Date();
   const at = (slot: string) => { const [hh, mm] = slot.split(':').map(Number); const d = new Date(today); d.setHours(hh, mm, 0, 0); if (d.getTime() < today.getTime() - 6 * 3600e3) d.setDate(d.getDate() + 1); return d; };
   const { data, error } = await db().rpc('free_vote', {
@@ -172,7 +173,7 @@ function saveLastStart(r: StartReq) {
 /** „până la 22:00” / „de la 19:00 la 22:00” */
 export function spanText(starts: string, ends: string, now = new Date()) {
   const a = new Date(starts), b = new Date(ends);
-  return a.getTime() > now.getTime() + 5 * 60e3 ? 'de la ' + hhmm(a) + ' la ' + hhmm(b) : 'până la ' + hhmm(b);
+  return a.getTime() > now.getTime() + 5 * 60e3 ? tr('de la {a} la {b}', { a: hhmm(a), b: hhmm(b) }) : tr('până la {b}', { b: hhmm(b) });
 }
 /** Zona din cont, fără poziție: „prin Sector 2”. */
 export const myZone = () => { const z = APP.zoneName(); return z && !/locația mea|aproape/i.test(z) ? z : null; };

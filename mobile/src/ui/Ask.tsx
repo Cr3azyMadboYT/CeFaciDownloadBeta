@@ -5,6 +5,7 @@ import { Animated, Modal, Pressable, View } from 'react-native';
 import { Bilu } from './Bilu';
 import { Press, T } from './kit';
 import { F, useTheme } from './theme';
+import { tr } from '../lib/i18n';
 
 type Req = { title: string; text?: string; ok: string; cancel?: string; danger?: boolean; done: (yes: boolean) => void };
 let cur: Req | null = null;
@@ -24,7 +25,7 @@ export function AskHost() {
   useEffect(() => { if (r) { a.setValue(0); Animated.spring(a, { toValue: 1, useNativeDriver: true, speed: 18, bounciness: 7 }).start(); } }, [r, a]);
   return (
     <Modal visible={!!r} transparent animationType="fade" onRequestClose={() => close(false)} statusBarTranslucent navigationBarTranslucent>
-      <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,8,28,0.62)', justifyContent: 'center', padding: 24 }} onPress={() => close(false)} accessibilityLabel="Închide">
+      <Pressable style={{ flex: 1, backgroundColor: 'rgba(5,8,28,0.62)', justifyContent: 'center', padding: 24 }} onPress={() => close(false)} accessibilityLabel={tr('Închide')}>
         {r ? (
           <Animated.View onStartShouldSetResponder={() => true} accessibilityViewIsModal
             style={{ opacity: a, transform: [{ scale: a.interpolate({ inputRange: [0, 1], outputRange: [0.92, 1] }) }], borderRadius: 28, backgroundColor: t.s1, padding: 22, paddingTop: 18, gap: 14 }}>
@@ -34,9 +35,9 @@ export function AskHost() {
             </View>
             {r.text ? <T style={{ fontFamily: F.m, fontSize: 15, lineHeight: 21, color: t.ink2 }}>{r.text}</T> : null}
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
-              <Press onPress={() => close(false)} accessibilityLabel={r.cancel ?? 'Rămân'}
+              <Press onPress={() => close(false)} accessibilityLabel={r.cancel ?? tr('Rămân')}
                 style={{ flex: 1, minHeight: 52, borderRadius: 16, backgroundColor: t.s2, alignItems: 'center', justifyContent: 'center' }}>
-                <T style={{ fontFamily: F.sb, fontSize: 16, color: t.ink }}>{r.cancel ?? 'Rămân'}</T>
+                <T style={{ fontFamily: F.sb, fontSize: 16, color: t.ink }}>{r.cancel ?? tr('Rămân')}</T>
               </Press>
               <Press onPress={() => close(true)} accessibilityLabel={r.ok}
                 style={{ flex: 1, minHeight: 52, borderRadius: 16, backgroundColor: r.danger ? t.coral : '#FFD43B', alignItems: 'center', justifyContent: 'center' }}>
