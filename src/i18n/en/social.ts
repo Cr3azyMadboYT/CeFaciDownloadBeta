@@ -5,7 +5,6 @@ const en: Record<string, string> = {
   'Mâncare': 'Food',
   'Un pahar': 'A drink',
   'Cafea': 'Coffee',
-  'Film': 'Movie',
   'Plimbare': 'A walk',
   'Joacă': 'Games',
   'Desert': 'Dessert',
@@ -23,7 +22,6 @@ const en: Record<string, string> = {
   '1 oră': '1 hour',
   '2 ore': '2 hours',
   '3 ore': '3 hours',
-  'Toată seara': 'All evening',
 
   // FreeNow: ecranul
   '{name} e pe FreeNow {span}': '{name} is on FreeNow {span}',
@@ -111,7 +109,6 @@ const en: Record<string, string> = {
 
   // Prieteni
   'Cererea a plecat. Vă vedeți după ce o acceptă.': 'Request sent. You\'ll see each other once they accept.',
-  'Codul nu e bun.': 'That code isn\'t valid.',
   'Prieteni': 'Friends',
   'Prietenii merg doar cu cont, ca să vă găsiți unii pe alții. Contul îl faci cu Google sau cu emailul, fără parolă, iar ce ai deja pe telefon (planuri, XP, ce-ți place) trece în cont.': 'Friends need an account, so you can find each other. Sign up with Google or your email, no password, and what\'s already on your phone (plans, XP, what you like) moves into your account.',
   'Leg contul de profilul tău…': 'Linking the account to your profile…',
@@ -122,7 +119,6 @@ const en: Record<string, string> = {
   'Adaugă după @username sau cod': 'Add by @username or code',
   'username exact sau cod': 'exact username or code',
   'Username sau cod': 'Username or code',
-  'Caut…': 'Searching…',
   'Caută': 'Search',
   'Nu găsim pe nimeni cu numele ăsta. Verifică scrierea, iar celor sub 18 ani cere-le codul.': 'No one with that name. Check the spelling, and ask anyone under 18 for their code.',
   'Cererea a plecat la {name}.': 'Request sent to {name}.',
@@ -185,12 +181,10 @@ const en: Record<string, string> = {
   'ex: Gașca de vineri': 'e.g. The Friday crew',
   'Invitațiile au plecat. Intră în gașcă doar cine acceptă.': 'Invites sent. Only those who accept join the crew.',
   'Gașcă nouă': 'New crew',
-  'Gășcile merg cu cont. Intră din Profil → Prieteni.': 'Crews need an account. Go to Profile → Friends.',
   'O gașcă are măcar 2 prieteni în afară de tine.': 'A crew needs at least 2 friends besides you.',
   'Ai 1 prieten în CeFaci.': 'You have 1 friend on CeFaci.',
   'Încă n-ai prieteni în CeFaci.': 'No friends on CeFaci yet.',
   'Numele gășcii': 'Crew name',
-  'Te rog alege alt nume pentru gașcă, acesta nu prea pare potrivit.': 'Please pick another name for the crew, this one doesn\'t seem right.',
   'Ștampila': 'Stamp',
   'Culoarea': 'Colour',
   'Prietenii (1 ales)': 'Friends (1 picked)',
@@ -239,7 +233,6 @@ const en: Record<string, string> = {
   'Nu am putut intra în gașcă. Încearcă iar.': 'Couldn\'t join the crew. Try again.',
   'Nu am putut ieși din gașcă. Încearcă iar.': 'Couldn\'t leave the crew. Try again.',
   'Nu am putut șterge gașca. Încearcă iar.': 'Couldn\'t delete the crew. Try again.',
-  'O gașcă are maximum 15 oameni.': 'A crew can have at most 15 people.',
   'E deja în gașcă sau invitat.': 'Already in the crew or invited.',
   'Nu am putut trimite invitația. Încearcă iar.': 'Couldn\'t send the invite. Try again.',
   'Codul a expirat sau nu e bun. Cere unul nou.': 'The code has expired or isn\'t valid. Ask for a new one.',

@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from '../ui/insets';
 import { useApp } from '../lib/session';
 import { accept, addByCode, ask, findUser, listFriends, myCode, remove, type FriendRow, type Person } from '../lib/friends';
 import { toast } from '../lib/toast';
-import { tr } from '../lib/i18n';
+import { pick, tr } from '../lib/i18n';
 import { Icon } from '../ui/Icon';
 import { SignIn } from '../ui/SignIn';
 import { Big, Field, H1, Lbl, Muted, Note, Press, T } from '../ui/kit';
@@ -96,7 +96,7 @@ export default function Prieteni() {
           <Lbl style={{ marginTop: 6 }}>{tr('Adaugă după @username sau cod')}</Lbl>
           <Field prefix="@" value={q} onChangeText={(x) => { setQ(x.slice(0, 24)); setFound(null); }} placeholder={tr('username exact sau cod')} autoCapitalize="none" autoCorrect={false}
             returnKeyType="search" onSubmitEditing={search} focused={focus} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} accessibilityLabel={tr('Username sau cod')} />
-          <Big label={busy ? tr('Caut…') : tr('Caută')} disabled={busy || q.trim().replace(/^@+/, '').length < 3} onPress={search} />
+          <Big label={busy ? pick('Caut…', 'Searching…') : tr('Caută')} disabled={busy || q.trim().replace(/^@+/, '').length < 3} onPress={search} />
           {found === 'none' ? <Muted>{tr('Nu găsim pe nimeni cu numele ăsta. Verifică scrierea, iar celor sub 18 ani cere-le codul.')}</Muted> : null}
           {found && found !== 'none' ? (
             <Row p={found} right={
