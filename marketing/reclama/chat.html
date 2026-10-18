@@ -1,0 +1,36 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=412">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:412px;height:915px;background:#0f1720;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#e9edef;overflow:hidden}
+  .top{height:104px;padding:52px 16px 0;display:flex;align-items:center;gap:12px;background:#17212b;border-bottom:1px solid #222d38}
+  .av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#FF6A4D,#8C6CFF);display:flex;align-items:center;justify-content:center;font-size:20px}
+  .t b{display:block;font-size:17px}.t span{font-size:13px;color:#8696a0}
+  .list{position:absolute;left:0;right:0;bottom:78px;padding:0 12px;display:flex;flex-direction:column;gap:6px}
+  .m{max-width:78%;padding:7px 11px 8px;border-radius:14px;font-size:16px;line-height:21px;opacity:0;transform:translateY(12px) scale(.98);transition:all .25s ease}
+  .m.in{opacity:1;transform:none}
+  .l{align-self:flex-start;background:#202c33;border-top-left-radius:4px}
+  .r{align-self:flex-end;background:#2b5278;border-top-right-radius:4px}
+  .n{font-size:13px;font-weight:600;margin-bottom:2px}
+  .bar{position:absolute;left:0;right:0;bottom:0;height:70px;background:#17212b;display:flex;align-items:center;padding:0 12px;gap:10px}
+  .in2{flex:1;height:44px;border-radius:22px;background:#202c33;color:#8696a0;display:flex;align-items:center;padding:0 16px;font-size:16px}
+  .count{position:absolute;top:118px;left:50%;transform:translateX(-50%);background:#202c33;color:#8696a0;font-size:13px;padding:4px 12px;border-radius:10px}
+</style></head><body>
+<div class="top"><div class="av">🍻</div><div class="t"><b>Gașca de vineri</b><span>Mihai, Ioana, Andrei, tu</span></div></div>
+<div class="count" id="c">37 mesaje noi</div>
+<div class="list" id="L"></div>
+<div class="bar"><div class="in2">Mesaj</div></div>
+<script>
+const M=[
+ ['l','Mihai','#FF9F7A','Ce facem diseară? 🤔'],
+ ['l','Ioana','#B7A3FF','Nu știu, zi tu'],
+ ['r','','','Oriunde, numai să nu fie scump'],
+ ['l','Andrei','#5FD39A','Mergem unde am fost data trecută?'],
+ ['l','Ioana','#B7A3FF','Acolo era închis 😅'],
+ ['l','Mihai','#FF9F7A','Ok, deci... ce facem?'],
+ ['r','','','...'],
+];
+const L=document.getElementById('L');let i=0,n=37;
+function add(){if(i>=M.length)return;const [s,name,col,txt]=M[i++];const d=document.createElement('div');d.className='m '+s;d.innerHTML=(name?'<div class="n" style="color:'+col+'">'+name+'</div>':'')+txt;L.appendChild(d);requestAnimationFrame(()=>d.classList.add('in'));document.getElementById('c').textContent=(++n)+' mesaje noi';setTimeout(add,i<3?650:820);}
+setTimeout(add,300);
+</script></body></html>
