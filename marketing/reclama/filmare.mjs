@@ -24,7 +24,7 @@ let ballots = [
   { option_id: 'o0', user_id: 'a3', value: 'da' }, { option_id: 'o2', user_id: 'a3', value: 'nu' },
 ];
 
-async function ctxFor(b, { signed = true } = {}) {
+async function ctxFor(b, { signed = true, newbie = false } = {}) {
   const ctx = await b.newContext({ viewport: { width: 412, height: 915 }, deviceScaleFactor: 2.62, locale: 'ro-RO', timezoneId: 'Europe/Bucharest' });
   await ctx.addInitScript(() => {
     // un cerc care arată atingerea, ca într-un walkthrough
@@ -61,12 +61,12 @@ async function ctxFor(b, { signed = true } = {}) {
   const pg = await ctx.newPage();
   if (signed) {
     await pg.goto('http://localhost:8791/');
-    await pg.evaluate(([jwt, ME]) => {
+    await pg.evaluate(([jwt, ME, newbie]) => {
       localStorage.setItem('sb-vqrmwuarjjntusfbqprx-auth-token', JSON.stringify({ access_token: jwt, refresh_token: 'r', token_type: 'bearer', expires_in: 7200, expires_at: Math.floor(Date.now() / 1000) + 7200, user: { id: ME, email: 'c@x.ro', aud: 'authenticated', role: 'authenticated', app_metadata: {}, user_metadata: {} } }));
       localStorage.setItem('cefaci.owner', ME); localStorage.setItem('cefaci.onboarded', '1');
       localStorage.setItem('cefaci.prefs', JSON.stringify({ zone: 'centru', likes: ['food'], dist: '20', moves: ['walk'], name: 'Cornel', user: 'cornel', birth: '1999-01-01', done: true }));
-      localStorage.setItem('cefaci.state', JSON.stringify({ tut: { on: false, done: true, step: 0 }, plus: 'locked', welcomeXp: true, xp: 150, lang: 'ro' }));
-    }, [jwt, ME]);
+      localStorage.setItem('cefaci.state', JSON.stringify(newbie ? { plus: 'locked', lang: 'ro' } : { tut: { on: false, done: true, step: 0 }, plus: 'locked', welcomeXp: true, xp: 150, lang: 'ro' }));
+    }, [jwt, ME, newbie]);
   }
   return { ctx, pg };
 }
@@ -153,6 +153,22 @@ const SCENES = {
     return ctx;
   },
   // 8. zarul: Surprinde-mă
+  // turul lui Bilu la prima deschidere (omul abia a instalat aplicația)
+  async tour(b) {
+    const { ctx, pg } = await ctxFor(b, { newbie: true });
+    await pg.goto('http://localhost:8791/acasa'); await pg.waitForTimeout(3000); await startRec(pg); await wait(pg, 1500); await shot(pg, 't0');
+    for (let i = 1; i <= 6; i++) { await press(pg, 206, 640); await wait(pg, 1700); await shot(pg, 't' + i); }
+    return ctx;
+  },
+  // ții apăsat pe FreeNow: biletul se umple, Bilu zboară
+  async hold(b) {
+    const { ctx, pg } = await ctxFor(b);
+    await pg.goto('http://localhost:8791/acasa'); await pg.waitForTimeout(3500); await startRec(pg); await wait(pg, 900);
+    const bx = await pg.getByLabel(/FreeNow/).first().boundingBox();
+    await pg.mouse.move(bx.x + bx.width / 2, bx.y + bx.height / 2); await pg.mouse.down(); await wait(pg, 1400); await pg.mouse.up();
+    await wait(pg, 3000); await shot(pg, 'h1');
+    return ctx;
+  },
   async dice(b) {
     const { ctx, pg } = await ctxFor(b);
     await pg.goto('http://localhost:8791/acasa'); await pg.waitForTimeout(3500); await startRec(pg); await wait(pg, 700);
