@@ -1,0 +1,216 @@
+CEFACI – CUM FACEM BANI (tot fluxul, de dat la verificat)
+Versiunea 19.10.2026
+
+========================================================================
+CE TE ROG (pentru cine citește asta, ex. ChatGPT)
+========================================================================
+Ești consultant pentru o aplicație nouă din România. Citește tot fluxul de
+bani de mai jos și spune-mi:
+1. Unde sunt erori, găuri sau situații neclare (cine poate trișa: clientul,
+   localul sau noi).
+2. Ce ar putea să nu-i placă unui restaurant/bar/club și l-ar face să nu
+   semneze sau să plece.
+3. Ce se poate îmbunătăți ca să câștigăm mai mult, dar să rămână corect
+   pentru local și pentru client.
+4. Dacă prețurile (lei) par prea mari, prea mici sau potrivite pentru
+   București.
+5. Ce lipsește legal/fiscal în România (TVA, e-Factura, Google Play etc.).
+Răspunde concret, cu exemple și cifre.
+
+========================================================================
+1. CE E CEFACI
+========================================================================
+- Aplicație de telefon (Android acum) pentru ieșit în oraș în București
+  și Ilfov.
+- Omul spune când iese, câți sunt, bugetul și ce chef are. Mascota
+  aplicației, Bilu, îi face 3 planuri gata (ex: cină → bar → club), cu
+  locuri deschise la ora aia.
+- Gașca poate vota planul în aplicație.
+- FreeNow: anunți că ai timp acum, prietenii primesc notificare și ieșiți
+  împreună.
+- Check-in la local: omul primește ștampile și XP (puncte).
+- Firma: SRL în România, înființat înainte de primul contract cu un local.
+
+========================================================================
+2. SURSA 1 – ABONAMENTUL PLUS (plătit de client)
+========================================================================
+- Preț: 20 lei pe lună.
+- Doar de la 18 ani.
+- Probă gratuită de 7 zile, o singură dată pe telefon (nu pe cont, ca să
+  nu-și facă oamenii conturi noi). După probă NU se iau bani automat;
+  plătește doar dacă alege să continue.
+- Ce primește omul cu Plus:
+  * 10–20% reducere la localurile partenere (procentul îl alege localul),
+    pentru el și pentru prietenii de la aceeași masă, în total maxim
+    5 oameni (el + 4).
+  * Live Drops (oferte de moment) cu 10 minute mai devreme și cu o
+    reducere mai mare (vezi secțiunea 4).
+  * Bilu și carnetul de ștampile aurii.
+- Plata: probabil prin Google Play. Din 20 lei ne rămân cam 14 lei
+  (TVA 21% + 15% comision Google). Dacă se poate plăti direct
+  (Netopia/Stripe), ne rămân cam 19 lei. ÎNTREBARE DESCHISĂ: trebuie neapărat
+  prin Google Play, dacă reducerile sunt la localuri fizice?
+- Partea de Plus la local e opțională: localul alege dacă intră în
+  programul Plus.
+
+========================================================================
+3. SURSA 2 – LOCALURILE PARTENERE (plătesc pentru oamenii aduși)
+========================================================================
+Principiu: localul plătește DOAR pentru oamenii pe care chiar i-am adus
+și care chiar au venit. Fără abonament lunar pentru localuri.
+
+3.1 Treapta localului (după cât cheltuie un om acolo, în medie)
+- Ieftin: sub 50 lei de persoană
+- Mediu: 50–150 lei de persoană
+- Scump: peste 150 lei de persoană
+
+3.2 Cât plătește localul pe fiecare om adus
+
+  Cum a venit omul                        Ieftin   Mediu   Scump
+  --------------------------------------------------------------
+  A rezervat prin CeFaci                    2 lei   5 lei   8 lei
+  A luat un Live Drop (ofertă de moment)    3 lei   7 lei  10 lei
+  A venit din planul lui Bilu, fără
+    rezervare (și a dovedit că a venit)     1 leu   3 lei   5 lei
+  A venit din plan și ARE Plus              0       0       0
+
+- Omul cu Plus e gratis pentru local DOAR când vine din plan fără
+  rezervare. Dacă rezervă sau ia un Live Drop, localul plătește normal.
+
+3.3 Reguli ca să fie corect pentru local
+- O singură taxă pe om pe vizită (dacă a rezervat ȘI a luat drop, se
+  plătește o singură dată).
+- Doar cine a venit. Rezervare pentru 6, au venit 4 → se plătesc 4.
+- Copiii sub 12 ani nu se plătesc.
+- Maxim 10 oameni plătiți la o masă (o masă de 20 nu costă dublu).
+- Limită lunară la început: în primele 6 luni de plată, un local plătește
+  pentru oamenii veniți din plan cel mult 300 / 600 / 1.000 lei pe lună
+  (ieftin / mediu / scump). După 6 luni limita dispare.
+- Propunere încă nehotărâtă: același om la același local se plătește de
+  cel mult 3 ori în 12 luni (de la a 4-a vizită e client fidel al
+  localului, nu-l mai taxăm).
+- Rezervările se fac doar pe mesele pe care le dă localul; poate opri
+  rezervările oricând.
+- Localul poate ieși oricând, fără penalizări; plătește doar ce s-a
+  adunat până atunci.
+
+3.4 Localurile fondatoare (primele maxim 20)
+- Primele 3 luni gratis de la activare. Dacă în cele 3 luni nu le-a venit
+  niciun om prin CeFaci, gratuitatea se prelungește până la primul om
+  adus, cu cel mult încă 3 luni.
+- Toate tarifele cu 1 leu mai mici, cât timp rămân parteneri
+  (rezervare 1/4/7, Live Drop 2/6/9, din plan 1/2/4 lei – cel puțin 1 leu).
+- Insigna „Partener fondator”.
+- Lunile gratuite se dau o singură dată pe loc fizic (dacă localul își
+  schimbă firma, nu primește iar luni gratis).
+- Ceilalți parteneri (după primii 20): propunere 1 lună gratis.
+
+========================================================================
+4. REDUCERILE LA MASĂ (Plus și Live Drop)
+========================================================================
+- Live Drop = ofertă de moment pusă de local (ex: „−15% în următoarele
+  2 ore, 10 locuri”). Pentru oamenii fără Plus: 10–15%. Pentru cei cu
+  Plus: cu cel puțin 5 puncte mai mult (15–30%).
+- Reducerile NU se adună. Niciodată două reduceri pe aceeași notă.
+- O masă = o notă = UN singur procent, pe toată nota: cel mai mare dintre
+  cele care se aplică.
+  Exemplu: drop 15%, Plus 20% → toată masa primește 20% (nu 35%).
+- Ospătarul vede pe telefonul clientului un singur număr: „−20% pe toată
+  nota”.
+- Excepție gașcă mare: Plus acoperă maxim 5 oameni. Dacă la masă sunt
+  mai mulți (ex. 8), toată nota primește procentul drop-ului (15%). Dacă
+  vor reducerea Plus pentru unii, cer note separate (5 oameni cu 20%,
+  restul cu 15%).
+- Taxa pentru CeFaci rămâne una pe om: taxa de Live Drop.
+
+========================================================================
+5. CUM DOVEDIM CĂ OMUL A VENIT
+========================================================================
+Ca să nu depindem doar de local sau doar de client, sunt 3 dovezi.
+Oricare dintre ele ajunge ca să se plătească. Fără nicio dovadă, nu se
+plătește nimic („la dubiu nu facturăm”).
+
+  Dovada                       Cât de sigură   Cum
+  ---------------------------------------------------------------------
+  Poza bonului                 100%            Pe bon sunt firma (CUI),
+                                               data și suma. O citim
+                                               automat pe server.
+  Scanarea codului CeFaci      Foarte sigură   Cod lipit la bar sau pe
+    al localului                               masă; clientul îl scanează.
+  Locația, de două ori         Bună            Clientul apasă „Am ajuns”
+    (PROPUNERE, nehotărâtă)                    la sub 150 m de local, iar
+                                               după 30–40 min aplicația
+                                               verifică din nou (când îl
+                                               întreabă „Cum e?”).
+- Localul poate și el să bifeze la final de seară cine a venit
+  („Închide seara”, până a doua zi la 12:00).
+- Clientul are motiv să facă dovada: primește ștampile, XP și reducerea.
+- Localul nu trebuie să facă nimic în plus dacă clientul a scanat.
+
+========================================================================
+6. CUM AJUNG BANII LA NOI (pas cu pas)
+========================================================================
+1. Omul vine la local și face dovada (scanare / bon / locație), sau
+   localul îl bifează la final de seară.
+2. Pe 3 ale lunii, localul primește în aplicația CeFaci Business lista
+   lunii, ca un extras de cont:
+     „12 oct · 4 oameni · din plan · 12 lei”
+     „14 oct · 6 oameni · rezervare · 30 lei”
+     Total: 420 lei
+   (fără numele clienților)
+3. Localul are 3 zile lucrătoare să apese „Nu e corect” la ce nu se
+   potrivește.
+4. Facem factura prin e-Factura (ANAF).
+5. Localul plătește în 15 zile.
+- Fără prag minim (propunere): se facturează și sume mici.
+- CeFaci nu e plătitoare de TVA la început; dacă devine, se adaugă TVA.
+
+========================================================================
+7. CE AM SCOS / CE E AMÂNAT
+========================================================================
+- Abonament lunar pentru localuri: NU (decizie).
+- „Sponsorizat” (localul plătește să apară sus): SCOS (decizie).
+- Bilete la evenimente (propunere veche: 8% din vânzări): AMÂNAT, de
+  gândit separat și în detaliu.
+- Comision procentual din nota de plată (ex. 5% din bon): ÎNLOCUIT de
+  taxa fixă pe om.
+
+========================================================================
+8. COSTURILE NOASTRE (estimare, pe lună)
+========================================================================
+- Server (Supabase Pro): ~120 lei
+- Google (verificare „e deschis acum”, vremea, citirea bonurilor):
+  ~200–800 lei, după cât se folosește (avem limite puse)
+- Contabil + bancă: ~400–500 lei
+- Domeniu, mail, altele: ~50 lei
+Total: ~800–1.500 lei pe lună.
+Taxe: impozit de microîntreprindere pe venit, apoi impozit pe dividende
+când scot banii.
+
+========================================================================
+9. CIFRE ȚINTĂ (estimări, nu garanții)
+========================================================================
+- Un abonat Plus ≈ 14 lei pe lună pentru noi.
+- Un local partener ≈ 100–300 lei pe lună (depinde câți oameni îi
+  aducem și cum vin).
+- 25 localuri + 2.000 utilizatori + 150 Plus → ~4.500–6.000 lei pe lună
+  încasări, ~3.000–4.500 profit.
+- 60 localuri + 10.000 utilizatori + 500 Plus → ~15.000–25.000 lei pe
+  lună încasări.
+- Obiectivul meu personal: 20.000 € (mașină) în 6–12 luni.
+- Atenție: de obicei doar 2–5% din utilizatori plătesc un abonament.
+
+========================================================================
+10. ÎNTREBĂRI DESCHISE (unde vreau păreri)
+========================================================================
+1. E corect să taxăm oamenii veniți din plan fără rezervare (1/3/5 lei)?
+   Se va supăra localul?
+2. Locația verificată de două ori e o dovadă destul de bună?
+3. Limita de 3 vizite plătite pe același om la același local în 12 luni:
+   e bună sau pierdem prea mulți bani?
+4. Plus la 20 lei: e prea mult/puțin? Ce ar trebui să mai primească omul?
+5. Plus trebuie plătit prin Google Play sau se poate direct?
+6. Ce alte surse de bani corecte am putea avea (fără să stricăm
+   încrederea oamenilor și fără reclame ascunse)?
+7. Cum facem biletele la evenimente corect (banii să nu treacă prin noi)?
+8. Ce poate trișa localul? Ce poate trișa clientul? Ce putem greși noi?

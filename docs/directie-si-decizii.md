@@ -211,6 +211,7 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
   - **Copiii sub 12 ani nu se plătesc.**
   - **Plafon pe masă:** cel mult 10 oameni plătiți la o rezervare sau la un Live Drop (o masă de 20 nu costă dublu).
   - **Sosirea din plan (19.10):** omul vine dintr-un plan CeFaci fără rezervare și scanează codul localului (sau localul îl bifează): 1/3/5 lei de persoană după treaptă (fondatori 1/2/4). Fără abonament lunar. În primele 6 luni de plată, cel mult 300/600/1.000 lei pe lună din sosiri; apoi fără limită. Detalii: logica, cap. 8.1.
+  - **O masă, o notă, un singur procent (19.10):** Plus și Live Drop nu se adună; toată nota primește procentul cel mai mare. Plus acoperă cel mult 5 oameni (membrul + 4); la o masă mai mare se aplică procentul drop-ului pe toată nota, sau note separate.
   - **Clienții Plus, scris exact:** vizitele fără rezervare CeFaci și fără Live Drop (inclusiv sosirile din plan), inclusiv cele cu reducerea Plus: 0 lei. Rezervările confirmate și Live Drop-urile: tariful treptei, indiferent dacă clientul are Plus. Programul Plus e opțional pentru local.
   - **Bilete (faza 3):** 8% din biletele vândute online (propunere). Banii **nu** trec prin noi: un procesator autorizat plătește direct localul (el e vânzătorul), iar comisionul nostru e o taxă facturată localului. Biletele nu intră în promisiunea de fondator până nu alegem modelul (logica, cap. 15.7).
   - **Rezervările doar pe mesele date de local:** el alege câte mese dă prin CeFaci pe oră și poate opri rezervările oricând; atunci aplicația arată telefonul localului, gratis.
@@ -218,7 +219,7 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
 - **Localurile fondatoare (cel mult 20):** tarifele de fondator, cât timp rămân parteneri („pe viață” înseamnă asta), la prețul cel mai mic dintre tabelul de fondator și tariful obișnuit minus 1 leu, plus insigna „Partener fondator”, în contract. Dacă iese din parteneriat, pierde statutul de fondator.
 - **Ieșirea:** oricând, fără penalizări; se plătește doar ce s-a adunat până atunci. Localul rămâne în recomandări ca orice local.
 - **Factura:** lunar. Pe 3 ale lunii localul primește lista lunii (coduri de rezervare, când, câți, rezervare sau Live Drop; fără nume), are 3 zile lucrătoare să conteste, apoi se face factura prin e-Factura. Propunere: fără prag de 30 de lei. Plata în 15 zile de la validarea ANAF.
-- **Evenimente promovate, scrise clar „Sponsorizat”:** sumă fixă (de exemplu 50–150 lei pe săptămână), într-o secțiune separată („Ce e în weekend”), niciodată printre recomandările lui Bilu.
+- **„Sponsorizat”: scos (Cornel, 19.10).** Biletele (8%) sunt amânate, de gândit separat în detaliu.
 - **Bonul nu mai e folosit la facturare:** rămâne pentru XP, prețul real al localului (treapta) și statistici.
 - **Cât ar ieși (estimare):** ~1.000 de oameni și ~20 de parteneri cu ~40 de oameni pe lună fiecare, cei mai mulți la treapta din mijloc → ~4.000 lei + Plus ~850 lei; ~10.000 de oameni și ~100 de parteneri → ~30.000 lei + Plus ~8.500 lei, plus biletele. Primul an e despre oameni și localuri, nu despre bani.
 - **Mai târziu, nu acum:** un abonament mic lunar pentru uneltele avansate din Business, când avem destui oameni.
