@@ -1,0 +1,204 @@
+CEFACI – TEST MARE DE MONETIZARE (de dat lui ChatGPT)
+Versiunea 19.10.2026
+
+########################################################################
+INSTRUCȚIUNI PENTRU TINE (ChatGPT)
+########################################################################
+Ești echipa de strategie a unui startup românesc. Vreau să faci o
+SIMULARE MARE și realistă, ca să găsim cea mai bună metodă prin care
+aplicația CeFaci face bani, CORECT pentru localuri și pentru clienți,
+dar cu bani frumoși și pentru mine (fondatorul).
+
+Lucrează pas cu pas, în etapele de mai jos. Nu sări peste etape. Fii
+realist, nu optimist: localurile din București sunt sceptice, au mai
+fost păcălite de aplicații și platforme (Glovo, Bolt Food, Booking,
+TheFork, Groupon) și se uită la fiecare leu.
+
+Scrie în română, simplu, fără jargon. Folosește cifre concrete, în lei.
+
+------------------------------------------------------------------------
+ETAPA 1 – Personajele (localurile)
+------------------------------------------------------------------------
+Inventează 8 localuri din București, foarte diferite, fiecare cu
+proprietar/manager cu personalitate proprie. De exemplu:
+  1. Bistro mic de cartier (sub 50 lei/persoană), proprietarul e și la
+     bucătărie, foarte atent la bani.
+  2. Bar de cocktailuri în Centrul Vechi, plin vineri-sâmbătă, gol
+     luni-miercuri.
+  3. Restaurant scump (peste 150 lei/persoană), manager corporatist,
+     vrea contracte clare și rapoarte.
+  4. Club (intrare + masă), trăiește din weekend și din promoteri.
+  5. Escape room / bowling / biliard (activitate, nu mâncare).
+  6. Cafenea de specialitate, client care stă 2 ore cu o cafea de 18 lei.
+  7. Pub cu bere și meciuri, clienți fideli din cartier.
+  8. Restaurant nou deschis, disperat după clienți.
+Pentru fiecare: capacitate, ore pline/goale, bon mediu, cât dă acum pe
+reclame (Instagram, Glovo etc.), cea mai mare frică, ce l-ar convinge.
+
+------------------------------------------------------------------------
+ETAPA 2 – Strategiile de bani de testat
+------------------------------------------------------------------------
+Testează CEL PUȚIN aceste 7 strategii (poți adăuga altele mai bune):
+
+ A. MODELUL ACTUAL (descris mai jos, secțiunea „Modelul de acum”):
+    taxă fixă pe om adus (rezervare / Live Drop / din plan) + Plus
+    pentru clienți.
+ B. A + plafon lunar ales de local (ca un buget de reclamă), pentru
+    totdeauna, nu doar la început.
+ C. Abonament lunar fix pentru local (ex. 99 / 199 / 399 lei), fără taxă
+    pe om.
+ D. Comision procentual din nota de plată (ex. 3–5%), doar la clienții
+    aduși.
+ E. Doar Plus (clienții plătesc), localurile gratis – le aducem clienți
+    în schimbul reducerii pentru Plus.
+ F. Hibrid: abonament mic + taxă pe om mai mică.
+ G. Plată doar pe rezultat garantat (ex. „plătești doar pentru mesele
+    goale umplute de noi” – Live Drops în orele moarte).
+Și orice altă idee bună: experiențe/activități cu comision, bilete la
+evenimente (cu banii neatinși de noi), pachete pentru grupuri, date
+anonime de piață pentru localuri, etc.
+
+------------------------------------------------------------------------
+ETAPA 3 – Conversațiile de vânzare (cele mai importante)
+------------------------------------------------------------------------
+Pentru fiecare dintre cele 8 localuri, scrie conversația REALĂ dintre
+Cornel (fondatorul CeFaci) și proprietar/manager, prima întâlnire,
+10–20 de replici, cu obiecții adevărate, de exemplu:
+  - „Și dacă oamenii ăștia veneau oricum la mine?”
+  - „Încă o aplicație care vrea bani. Glovo îmi ia 30%.”
+  - „Cine verifică câți oameni au venit?”
+  - „Nu am timp să scanez coduri vineri seara.”
+  - „Reducerea plus taxa voastră mă costă prea mult.”
+  - „Ce se întâmplă dacă aplicația dispare peste 6 luni?”
+  - „Câți utilizatori aveți?” (răspuns sincer: puțini, abia lansăm)
+Testează conversația cu 2–3 dintre strategii diferite și spune la
+fiecare: semnează sau nu, de ce, și ce argument a contat.
+
+------------------------------------------------------------------------
+ETAPA 4 – Simularea pe luni (ce se întâmplă după semnare)
+------------------------------------------------------------------------
+Pentru fiecare local care a semnat, simulează lunile 1, 2, 3, 6 și 12:
+  - câți oameni le-am adus (rezervare / Live Drop / din plan / Plus),
+  - câți au dovedit că au venit, câți au fost contestați,
+  - cât a plătit localul, cât a câștigat localul (vânzări în plus minus
+    reducere minus taxa noastră),
+  - ce probleme apar (ospătari care uită să scaneze, clienți care
+    trișează, localul care declară mai puțini oameni, un client nervos
+    că nu i s-a dat reducerea, o seară cu mesele pline unde Live Drop-ul
+    a fost o greșeală),
+  - momentul în care localul vrea să plece și ce îl ține.
+Fă 3 scenarii de creștere a aplicației: PESIMIST, REALIST, OPTIMIST
+(utilizatori activi pe lună, abonați Plus, localuri partenere) pe 12
+luni.
+
+------------------------------------------------------------------------
+ETAPA 5 – Cifrele pentru CeFaci
+------------------------------------------------------------------------
+Pentru fiecare strategie și fiecare scenariu, un tabel lunar pe 12 luni:
+  utilizatori activi | abonați Plus | localuri plătitoare |
+  încasări Plus | încasări localuri | costuri | profit
+Ține cont de: lunile gratuite, plafoanele, contestațiile, neplățile,
+comisionul Google Play la Plus, TVA 21% la Plus, costurile reale
+(server, Google, contabil, deplasări, marketing, timpul meu).
+Spune la fiecare strategie: în câte luni ajung la 20.000 € strânși
+(scopul meu personal: o mașină) – sau că nu ajung deloc în 12 luni.
+
+------------------------------------------------------------------------
+ETAPA 6 – Verdictul
+------------------------------------------------------------------------
+1. Clasamentul strategiilor, cu note de la 1 la 10 pe:
+   bani pentru CeFaci | corectitudine pentru local | corectitudine
+   pentru client | ușor de explicat într-un minut | greu de trișat |
+   ușor de construit tehnic.
+2. CEA MAI BUNĂ strategie (sau combinație), cu prețurile exacte.
+3. Textul de vânzare de 30 de secunde pe care îl spun unui local.
+4. Primii 90 de zile: ce fac săptămână cu săptămână.
+5. Ce riscuri mari rămân și cum le reduc.
+6. Ce NU trebuie să fac niciodată (ca să nu pierd încrederea
+   localurilor sau a oamenilor).
+
+########################################################################
+CONTEXTUL: CE E CEFACI
+########################################################################
+- Aplicație Android (iOS mai târziu) pentru ieșit în oraș, București +
+  Ilfov. Încă nelansată; lansarea după primele 5–10 localuri partenere.
+- Omul spune când iese, câți sunt, bugetul și ce chef are. Mascota Bilu
+  îi face 3 planuri gata (ex. cină → bar → club), cu locuri verificate
+  că sunt deschise la ora aia (verificare live pe Google).
+- ~460 de localuri alese de noi, fiecare cu „de ce merită” și „când e
+  lume”, plus ~600 bine cotate (nota ≥ 4,4).
+- Gașca: prieteni, grupuri, vot în aplicație pe plan.
+- FreeNow: anunți că ai timp acum → prietenii primesc notificare →
+  ieșiți împreună în câteva minute.
+- Bilet pentru fiecare plan, check-in la local, ștampile, XP, nivele.
+- Engleză + română (și pentru turiști).
+- Firma: SRL în România (se înființează înainte de primul contract).
+- Costuri fixe mici acum: ~800–1.500 lei/lună (server, Google,
+  contabil). Fondatorul lucrează singur, fără salariu.
+
+########################################################################
+MODELUL DE ACUM (strategia A)
+########################################################################
+1) PLUS (plătit de client): 20 lei/lună, doar de la 18 ani.
+   - Probă gratuită 7 zile, o dată pe telefon, fără plată automată după.
+   - Primește 10–20% reducere la localurile partenere (alege localul
+     procentul), pentru el + maxim 4 prieteni la aceeași masă.
+   - Live Drops cu 10 minute mai devreme; Bilu și carnetul aurii.
+   - Prin Google Play ne rămân ~14 lei din 20 (TVA 21% + 15% Google).
+     Nu știm încă dacă e obligatoriu prin Google Play.
+
+2) LOCALURILE plătesc pe om adus (fără abonament):
+   Treapta localului (cât dă un om, în medie): ieftin sub 50 lei /
+   mediu 50–150 / scump peste 150.
+
+     Cum a venit omul                     Ieftin  Mediu  Scump
+     ---------------------------------------------------------
+     Rezervare prin CeFaci                  2 lei  5 lei  8 lei
+     Live Drop (ofertă de moment a          3 lei  7 lei 10 lei
+       localului, ex. -15% 2 ore)
+     Din planul lui Bilu, fără rezervare    1 leu  3 lei  5 lei
+     Din plan, dar clientul are Plus        0      0      0
+
+   Reguli:
+   - Doar cine a venit; o singură taxă pe om pe vizită; maxim 10 oameni
+     plătiți la o masă; copiii sub 12 nu se plătesc.
+   - Fondatori (primele 20 de localuri): 3 luni gratis + tarife cu 1 leu
+     mai mici, cât rămân parteneri.
+   - Plafon lunar la sosirile din plan: 300/600/1.000 lei, în primele
+     6 luni (de testat: plafon ales de local, pentru totdeauna).
+   - Ieșire oricând, fără penalizări.
+
+3) REDUCERILE: nu se adună. O masă = o notă = un singur procent, cel mai
+   mare dintre Plus și Live Drop. Plus acoperă maxim 5 oameni; la masă
+   mai mare se aplică procentul drop-ului (sau note separate).
+
+4) DOVADA CĂ OMUL A VENIT (fără dovadă nu se plătește nimic):
+   - Principală: ospătarul scanează codul de pe biletul clientului din
+     aplicație și confirmă câți sunt (2 secunde).
+   - Sau: clientul scanează codul CeFaci al localului.
+   - Ajutătoare: poza bonului (firmă, dată, sumă), locația telefonului.
+   - Localul poate bifa la final de seară cine a venit.
+
+5) FACTURAREA: lista lunii pe 3 ale lunii (oră, cod vizită, câți oameni,
+   cum au venit, tarif), 3–5 zile pentru contestat, factură prin
+   e-Factura, plată în 15 zile.
+
+6) SCOASE / AMÂNATE: „Sponsorizat” – scos. Bilete la evenimente – amânat.
+   Comision procentual din notă – înlocuit de taxa fixă pe om.
+
+########################################################################
+CE ȘTIM DEJA CĂ E PROBLEMATIC (ține cont)
+########################################################################
+- Reducerea + taxa noastră poate costa localul 25–35% din notă la
+  Live Drop. Live Drop are sens doar în orele moarte.
+- Taxa fixă pe om e nedreaptă la clientul care ia doar o cafea de 18 lei
+  într-un local „mediu”.
+- Nu putem dovedi că omul n-ar fi venit oricum.
+- Ospătarii vineri seara nu au timp de nimic în plus.
+- La început avem puțini utilizatori, deci argumentul „îți aducem
+  clienți” e slab; primele localuri intră pe încredere.
+- De obicei doar 2–5% din utilizatori plătesc un abonament.
+- Fondatorul vrea să ajungă la ~20.000 € (o mașină) în 6–12 luni.
+
+FINAL: dacă ai nevoie de informații pe care nu le ai, presupune ceva
+realist pentru București 2026 și spune clar ce ai presupus.
