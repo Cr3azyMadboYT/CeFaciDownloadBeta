@@ -405,8 +405,9 @@ turiștilor plătite cash).
   de mai târziu nu rescrie istoria).
 
 ### 7.2 Ce se plătește (formularea exactă, pentru contract)
-> Vizitele fără rezervare CeFaci și fără Live Drop, inclusiv cele cu reducerea Plus: **0 lei**. Rezervările confirmate
-> și Live Drop-urile: tariful treptei, **indiferent dacă clientul are Plus**.
+> Vizitele clienților Plus fără rezervare CeFaci și fără Live Drop, inclusiv cele cu reducerea Plus: **0 lei**.
+> Rezervările confirmate și Live Drop-urile: tariful treptei, **indiferent dacă clientul are Plus**.
+> Sosirile din plan (cap. 8.1) ale clienților fără Plus: tariful de sosire din plan.
 
 ### 7.3 Proba Plus și conturile false
 - Proba de 7 zile: o dată pe cont Google/email **și o dată pe telefon** (telefonul verificat, după Magazin Play).
@@ -446,6 +447,18 @@ turiștilor plătite cash).
 | Sub 50 lei | 2 lei | 3 lei | 1 / 2 lei |
 | 50–150 lei | 5 lei | 7 lei | 4 / 6 lei |
 | Peste 150 lei | 8 lei | 10 lei | 7 / 9 lei |
+
+**Sosirea din plan (decizie Cornel, 19.10):** omul vine la local dintr-un plan făcut în CeFaci, fără rezervare și fără
+Live Drop. Se plătește **1 / 3 / 5 lei de persoană** după treaptă (fondatori: 1 leu mai puțin, cel puțin 1 leu: 1 / 2 / 4).
+- **Doar cu dovadă puternică:** omul scanează codul CeFaci al localului („Am ajuns”, primește ștampila și XP-ul) sau
+  localul îl bifează la închiderea serii. O poziție pe hartă sau „Am fost acolo” nu se plătesc (la dubiu nu facturăm).
+- **Clienții Plus: 0 lei** la sosirea din plan.
+- Aceleași reguli ca la rezervare: o singură taxă pe om pe vizită (rezervarea și drop-ul au întâietate), doar cine a
+  venit, cel mult 10 pe masă, copiii sub 12 nu se plătesc.
+- **Fără abonament lunar** pentru localuri.
+- **Limită pe lună, doar la început:** în primele 6 luni de plată (după lunile gratuite), un local plătește pentru
+  sosirile din plan cel mult **300 / 600 / 1.000 lei pe lună**, după treaptă. După 6 luni limita dispare. (Cele 6 luni
+  sunt propunere; Cornel: „doar la început”.)
 
 Fără TVA (cap. 15.3). Tarifele au versiuni, cu data de la care sunt valabile; un tarif nou intră în vigoare cel mai
 devreme la 30 de zile după ce e creat și doar cu o versiune nouă de contract. Nu atinge nimic din trecut.
