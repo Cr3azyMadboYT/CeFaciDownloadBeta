@@ -157,22 +157,18 @@ export interface Finance {
   remaining: number | null;
   would_pay: number;
   visits: number;
+  /** Una pe intrare: 10% din bonurile necontestate (docs/flux-intrare-bon.md). */
   lines: {
     visit: string;
+    no: number;
     day: string;
     kind: string;
     bill: number;
+    receipts: number;
     fee: number;
     free: boolean;
     would_pay: number;
-    calculation: {
-      drop_billable:number;reservation_billable:number;reservation_unit: number;
-      drop_unit: number;
-      reservation_limit: number;
-      drop_limit: number;
-      adults: number;
-      drop_adults: number;
-    };
+    calculation: { rate: number; total: number };
   }[];
 }
 export interface VenueAccess {

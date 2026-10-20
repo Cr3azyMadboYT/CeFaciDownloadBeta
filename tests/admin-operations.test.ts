@@ -19,7 +19,9 @@ beforeAll(async()=>{
  await db.exec(`insert into venues(id,name,cat,lat,lon,data)values('v','Partener','mancare',44,26,'{}'),('w','Gratuit','mancare',44,26,'{}'),('suggest','Sugestie','mancare',44,26,'{}'),('small','Mic','mancare',44,26,'{}');insert into partners(venue_id,firm,cui,rate,activated_at,free_until,price_tier)values('v','Test SRL','18547290',.1,current_date-90,current_date-30,2),('w','Free SRL','18547290',.1,current_date,current_date+30,2);`);
  await q("insert into partner_members(venue_id,user_id,role)values('v',$1,'proprietar')",[U.biz]);
  await q("insert into visits(id,venue_id,user_id,kind,people,group_visit,work_day,outcome,bill,bill_source,discount_amount,closed_at,proof)values($1,'v',$4,'rezervare',6,true,current_date,'a venit',200,'local',30,now(),'staff_ticket'),($2,'v',$4,'plus',6,true,current_date,'a venit',100,'local',15,now(),'staff_ticket'),($3,'v',$4,'drop',6,true,current_date,'deschis',null,null,null,null,'staff_ticket')",[V.mixed,V.simple,V.blocked,U.client]);
- await q("update private.visit_pricing set reservation_unit=5,drop_unit=7,reservation_limit=2,drop_limit=4 where visit_id in($1,$2)",[V.mixed,V.blocked]);
+ // 10% din bon (Cornel, 20.10): banii vin din bonurile intrării, nu din numărul de oameni
+ await q("insert into receipts(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'v',$3,200,now(),'local'),($2,'v',$3,100,now()+interval '1 second','local')",[V.mixed,V.simple,U.client]);
+ await q("update private.visit_pricing set reservation_unit=5,drop_unit=7,reservation_limit=2,drop_limit=4 where visit_id=$1",[V.blocked]); // numărul vechi, încă verificat de Admin
  await q("insert into private.visit_counts(visit_id,people,adults,drop_adults,state)values($1,6,6,4,'confirmed'),($2,6,6,0,'confirmed'),($3,6,6,4,'disputed')",[V.mixed,V.simple,V.blocked]);
  await q("insert into private.benefit_cases(visit_id,reason,reporter)values($1,'Reducere refuzată',$2)",[V.blocked,U.client]);
  await q("insert into reservations(venue_id,user_id,people,at,status)values('v',$1,6,(current_date+interval '12 hours') at time zone 'Europe/Bucharest','cerută')",[U.client]);
@@ -45,10 +47,10 @@ it('reads both Client and Business canonical queues with safe paging and no mone
  for(const s of["admin_operations(current_date,current_date,null,null)","admin_operations(current_date,current_date,null,'all',null)","admin_operations(current_date,current_date,null,'all',101)","admin_operations(current_date,current_date-1)","admin_operations(current_date,current_date,'unknown')"])await expect(rpc('admin',s)).rejects.toThrow(/invalid|nu există/);
  const summary=await rpc('support','admin_operations_summary()');expect(summary.counts_disputed).toBe(1);expect(summary.benefits_pending).toBe(1);expect(summary.day_boundary).toBe('05:00');
 });
-it('calculates global partial financial totals using frozen per-person fees and includes zero-fee Plus revenues',async()=>{
- const finance=await rpc('accountant','admin_finance(current_date,current_date)');expect(finance.billing_ready).toBe(false);expect(finance.estimate).toBe(true);expect(finance.partial).toBe(true);expect(finance.remaining).toBeNull();expect(finance.revenue).toBe(300);expect(finance.discounts).toBe(45);expect(finance.fee).toBe(38);expect(finance.missing).toBe(1);expect(finance.blocked).toBe(1);expect(finance.venues).toHaveLength(2);
- await q("update partners set price_tier=3 where venue_id='v'");expect((await rpc('accountant','admin_finance(current_date,current_date)')).fee).toBe(38);
- await expect(rpc('admin','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await expect(rpc('admin',"biz_finance_v2('v',current_date,current_date)")).rejects.toThrow(/Nu ai voie|Sesiunea securizată/);expect((await rpc('admin','admin_partners()')).every((p:any)=>p.month===null)).toBe(true);expect((await rpc('biz',"biz_finance_v2('v',current_date,current_date)")).fee).toBe(38);await expect(rpc('support','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await expect(rpc('editor','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
+it('calculates global partial financial totals as 10% of the entries receipts, Plus included',async()=>{
+ const finance=await rpc('accountant','admin_finance(current_date,current_date)');expect(finance.billing_ready).toBe(false);expect(finance.estimate).toBe(true);expect(finance.partial).toBe(true);expect(finance.remaining).toBeNull();expect(finance.revenue).toBe(300);expect(finance.discounts).toBe(45);expect(finance.fee).toBe(30);expect(finance.missing).toBe(1);expect(finance.blocked).toBe(0);expect(finance.venues).toHaveLength(2);
+ await q("update partners set price_tier=3 where venue_id='v'");expect((await rpc('accountant','admin_finance(current_date,current_date)')).fee).toBe(30);
+ await expect(rpc('admin','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await expect(rpc('admin',"biz_finance_v2('v',current_date,current_date)")).rejects.toThrow(/Nu ai voie|Sesiunea securizată/);expect((await rpc('admin','admin_partners()')).every((p:any)=>p.month===null)).toBe(true);expect((await rpc('biz',"biz_finance_v2('v',current_date,current_date)")).fee).toBe(30);await expect(rpc('support','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);await expect(rpc('editor','admin_finance(current_date,current_date)')).rejects.toThrow(/Nu ai acces|Sesiunea securizată/);
  await expect(rpc('accountant','admin_finance(current_date,current_date+367)')).rejects.toThrow(/Perioadă/);await expect(rpc('accountant',"admin_finance(current_date,current_date,'unknown')")).rejects.toThrow(/nu există/);
 });
 it('reuses versioned count and benefit decisions, so stale and support decisions fail and unresolved cases stay blocked',async()=>{
@@ -58,15 +60,15 @@ it('reuses versioned count and benefit decisions, so stale and support decisions
  await expect(rpc('support','admin_benefit_decide_v2($1,1,true,$2)',[V.blocked,'Refuz verificat'])).rejects.toThrow(/echipa|Sesiunea securizată/);
  await rpc('admin','admin_benefit_decide_v2($1,1,true,$2)',[V.blocked,'Refuz verificat']);
  expect((await q('select state,version,compensated from private.benefit_cases where visit_id=$1',[V.blocked])).rows[0]).toMatchObject({state:'upheld',version:2,compensated:true});expect((await q('select count(*) n from private.review_log where visit_id=$1',[V.blocked])).rows[0].n).toBe(2);
- // A resolved complaint still needs an actual closed visit and canonical amount before charging.
- expect((await rpc('accountant','admin_finance(current_date,current_date)')).blocked).toBe(1);
+ // A resolved complaint still needs a receipt on the entry before anything is charged.
+ const f=await rpc('accountant','admin_finance(current_date,current_date)');expect(f.blocked).toBe(0);expect(f.missing).toBe(1);
 });
 it('returns complete net without subtracting discounts twice and keeps contractual free commissions informational',async()=>{
  await q("update visits set outcome='a venit',bill=100,bill_source='local',discount_amount=10,closed_at=now()where id=$1",[V.blocked]);
+ await q("insert into receipts(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'v',$2,100,now()+interval '2 seconds','local')",[V.blocked,U.client]);
  const free=(await q("insert into visits(venue_id,user_id,kind,people,group_visit,work_day,outcome,bill,bill_source,discount_amount,closed_at,proof)values('w',$1,'rezervare',6,true,current_date,'a venit',80,'local',12,now(),'staff_ticket')returning id",[U.client])).rows[0].id;
- await q("update private.visit_pricing set reservation_unit=5,reservation_limit=6 where visit_id=$1",[free]);
- await q("insert into private.visit_counts(visit_id,people,adults,drop_adults,state)values($1,6,6,0,'confirmed')",[free]);
- const finance=await rpc('accountant','admin_finance(current_date,current_date)');expect(finance.partial).toBe(false);expect(finance.revenue).toBe(480);expect(finance.discounts).toBe(67);expect(finance.fee).toBe(76);expect(finance.remaining).toBe(404);expect(finance.would_pay).toBe(30);expect(finance.billing_ready).toBe(false);
+ await q("insert into receipts(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'w',$2,80,now(),'local')",[free,U.client]);
+ const finance=await rpc('accountant','admin_finance(current_date,current_date)');expect(finance.partial).toBe(false);expect(finance.revenue).toBe(480);expect(finance.discounts).toBe(67);expect(finance.fee).toBe(40);expect(finance.remaining).toBe(440);expect(finance.would_pay).toBe(8);expect(finance.billing_ready).toBe(false);
  expect(finance.venues.find((x:any)=>x.venue_id==='w').finance.fee).toBe(0);
 });
 it('returns exact minimal profiles without birth date, email, preferences or friend codes',async()=>{

@@ -1,8 +1,8 @@
 // Reads a Romanian fiscal receipt (bon fiscal) from the text Google Vision found on the photo:
-// the shop's CUI (with its check digit), the date and time, and the TOTAL. Pure TypeScript, shared by the
+// the shop's CUI (with its check digit), the date and time, the receipt number and the TOTAL. Pure TypeScript, shared by the
 // Edge Function and the tests.
 
-export interface Bon { cui: string | null; cuiValid: boolean; date: string | null; time: string | null; total: number | null }
+export interface Bon { cui: string | null; cuiValid: boolean; date: string | null; time: string | null; total: number | null; number: string | null }
 
 /** Romanian CUI check digit (key 753217532, ×10 mod 11, 10 → 0). */
 export function cuiValid(cui: string): boolean {
@@ -21,7 +21,7 @@ const amount = (s: string) => Number(s.replace(/\s/g, '').replace(/\.(?=\d{3}(\D
 export function parseBon(text: string): Bon {
   const t = (text || '').replace(/\r/g, '');
   const lines = t.split('\n').map((l) => l.trim()).filter(Boolean);
-  const out: Bon = { cui: null, cuiValid: false, date: null, time: null, total: null };
+  const out: Bon = { cui: null, cuiValid: false, date: null, time: null, total: null, number: null };
 
   // CUI / CIF / cod fiscal: take the first one whose check digit is right, else the first one found
   const cuiRe = /(?:C\s*\.?\s*[IU]\s*\.?\s*[FI]|COD\s+FISCAL|C\.?\s*FISCAL|COD\s+IDENTIFICARE\s+FISCALA)\s*\.?\s*:?\s*(?:RO)?\s*(\d[\d ]{1,11}\d)/gi;
@@ -48,6 +48,10 @@ export function parseBon(text: string): Bon {
     const next = here.length ? here : [...(lines[i + 1] ?? '').matchAll(money)].map((m) => amount(m[1]));
     if (next.length) { out.total = next[next.length - 1]; break; }
   }
+  // the receipt number („BON FISCAL NR. 0187”, „NR. BON: 187”, „BF 0187”): the same receipt scanned by the whole
+  // group is counted once (the server keys it by firm + number + day)
+  const nr = t.match(/\bNR\.?[ \t]*BON(?:[ \t]+FISCAL)?[ \t]*[:.]?[ \t]*(\d{1,10})\b/i) ?? t.match(/\b(?:BON[ \t]+FISCAL|BF)[ \t]*(?:NR\.?|NUMAR|NUMĂR)?[ \t]*[:.#]?[ \t]*(\d{1,10})\b/i);
+  if (nr) out.number = nr[1].replace(/^0+(?=\d)/, '');
   return out;
 }
 

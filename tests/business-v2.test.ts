@@ -293,14 +293,16 @@ it("free immediate Drops wait ten minutes; invitation Plus covers the group", as
     ticket.token,
   ]);
   expect(scanned.visit).toBe(v.id);
-  await as("biz", "select biz_close_v2($1,6,6,4,200,50)", [v.id]);
+  // 10% din bon (Cornel, 20.10): localul scrie totalul notei când poza nu merge
+  await as("biz", "select biz_close_v2($1,6,6,4,200,50)", [v.id]); // numărul vechi rămâne pentru reducere/sesizări
+  await as("biz", "select biz_entry_total_v3($1,200,'poza nu merge')", [v.id]);
   const finance = await value(
     "biz",
     "select biz_finance_v2('v',current_date-1,current_date+1)",
   );
-  expect(finance.fee).toBe(38);
+  expect(finance.fee).toBe(20);
   expect(finance.revenue).toBe(200);
-  expect(finance.remaining).toBe(162);
+  expect(finance.remaining).toBe(180);
   expect(finance.billing_ready).toBe(false);
   await as("owner", "select plan_cancel_v2($1)", [p]);
   expect(
@@ -335,14 +337,15 @@ it("keeps receipt canonical and versioned count disputes blocked", async () => {
     await q("select * from private.visit_counts where visit_id=$1", [id])
   ).rows[0];
   expect(state.state).toBe("awaiting");
+  // 10% din bon: numărul de oameni nu mai blochează banii; bonul intrării rămâne baza
   expect(
     (
       await value(
         "biz",
         "select biz_finance_v2('v',current_date-1,current_date+1)",
       )
-    ).remaining,
-  ).toBeNull();
+    ).fee,
+  ).toBe(20);
   await expect(
     as("owner", "select visit_count_answer_v2($1,$2,true)", [
       id,
@@ -386,100 +389,58 @@ it("roles limit financial data and revocation applies to a still-valid auth sess
     /echipa|Sesiunea securizată/,
   );
 });
-it("saves a participant receipt without XP and keeps both receipt amounts canonical", async () => {
-  const v = (await q("select id,scanned_at from visits limit 1")).rows[0];
+it("links group receipts to the entry: one receipt counted once, separate bills added, 10% fee", async () => {
+  const v = (await q("select x.id,x.scanned_at from visits x join receipts r on r.visit_id=x.id and r.by_role='local' and r.total=200 where x.venue_id='v' limit 1")).rows[0];
+  const local = (
+    await q(
+      "select (scanned_at at time zone 'Europe/Bucharest')::date d,(scanned_at at time zone 'Europe/Bucharest')::time t from visits where id=$1",
+      [v.id],
+    )
+  ).rows[0];
   await db.exec(
     "grant usage on schema public to service_role;select set_config('request.jwt.claims','{\"role\":\"service_role\"}',false);set role service_role",
   );
   try {
-    const ready = (
-      await q("select visit_receipt_ready_v2($1,$2) r", [U.guest, v.id])
-    ).rows[0].r;
-    expect(ready.ok).toBe(true);
-    const local = (
-      await q(
-        "select (scanned_at at time zone 'Europe/Bucharest')::date d,(scanned_at at time zone 'Europe/Bucharest')::time t from visits where id=$1",
-        [v.id],
-      )
-    ).rows[0];
-    await expect(
-      q("select visit_receipt_v2($1,$2,$3,240,60,$4,$5)", [
-        U.other,
-        v.id,
-        "1234567",
-        local.d,
-        local.t,
-      ]),
-    ).rejects.toThrow(/participi/);
-    await expect(
-      q("select visit_receipt_v2($1,$2,$3,240,60,$4,$5)", [
-        U.guest,
-        v.id,
-        "7654321",
-        local.d,
-        local.t,
-      ]),
-    ).rejects.toThrow(/firma/);
-    await expect(
-      q(
-        "select visit_receipt_v2($1,$2,'1234567',240,60,current_date-3,'10:00')",
-        [U.guest, v.id],
-      ),
-    ).rejects.toThrow(/Ora/);
-    expect(
-      (
-        await q("select visit_receipt_v2($1,$2,$3,240,60,$4,$5) r", [
-          U.guest,
-          v.id,
-          "1234567",
-          local.d,
-          local.t,
-        ])
-      ).rows[0].r.ok,
-    ).toBe(true);
-    await expect(
-      q("select visit_receipt_v2($1,$2,$3,240,60,$4,$5)", [
-        U.owner,
-        v.id,
-        "1234567",
-        local.d,
-        local.t,
-      ]),
-    ).rejects.toThrow(/deja/);
+    expect((await q("select visit_receipt_ready_v2($1,$2) r", [U.guest, v.id])).rows[0].r.ok).toBe(true);
+    const add = (u: string, total: number, number: string | null, cui = "1234567", staff = false, d = local.d, t = local.t) =>
+      q("select visit_receipt_v3($1,$2,$3,$4,0,$5,$6,$7,$8) r", [u, v.id, cui, total, d, t, number, staff]);
+    await expect(add(U.other, 240, "187")).rejects.toThrow(/participi/);
+    await expect(add(U.guest, 240, "187", "7654321")).rejects.toThrow(/firma/);
+    await expect(add(U.guest, 240, "187", "1234567", false, "2020-01-01", "10:00")).rejects.toThrow(/seara asta/);
+    expect((await add(U.guest, 240, "0187")).rows[0].r).toMatchObject({ ok: true, duplicate: false });
+    // același bon, scanat și de organizator: numărat o dată, „scanat de 2”
+    expect((await add(U.owner, 240, "187")).rows[0].r).toMatchObject({ ok: true, duplicate: true });
+    // ospătarul (care nu e în gașcă) nu poate pune bonul ca client, dar poate ca personal al localului
+    await expect(add(U.biz, 86, "188")).rejects.toThrow(/participi/);
+    expect((await add(U.biz, 86, "188", "1234567", true)).rows[0].r).toMatchObject({ ok: true, duplicate: false });
+    await expect(add(U.other, 86, "188", "1234567", true)).rejects.toThrow(/localul tău/);
+    const entry = (await q("select entry_of_v3($1) e", [v.id])).rows[0].e;
+    expect(entry.receipts.map((r: any) => [r.total, r.by, r.scanners]).sort((x: any, y: any) => x[0] - y[0])).toEqual([[86, "staff", 0], [200, "local", 0], [240, "client", 2]]);
+    expect(entry.scanned_by).toBe(2);
+    expect(entry.total).toBe(526);
+    expect(entry.fee).toBe(52.6);
+    expect(entry.state).toBe("closed");
   } finally {
-    await db.exec(
-      "reset role;select set_config('request.jwt.claims','',false)",
-    );
+    await db.exec("reset role;select set_config('request.jwt.claims','',false)");
   }
-  await as(
-    "biz",
-    "select biz_close_v2($1,6,6,4,99,1,'Corecție după bonul grupului')",
-    [v.id],
-  );
-  const cnt = (
-    await q("select version from private.visit_counts where visit_id=$1", [
-      v.id,
-    ])
-  ).rows[0];
-  await as("guest", "select visit_count_answer_v2($1,$2,true)", [
-    v.id,
-    cnt.version,
-  ]);
-  const saved = (
-    await q("select bill,discount_amount,proof from visits where id=$1", [v.id])
-  ).rows[0];
-  expect(saved).toMatchObject({
-    bill: "240.00",
-    discount_amount: "60.00",
-    proof: "receipt",
-  });
-  for (const sql of [
-    "select visit_close($1,false,0)",
-    "select biz_visit_attendance($1,0,0)",
-  ])
+  // legacy closing keeps working but never replaces the receipts
+  await as("biz", "select biz_close_v2($1,6,6,4,99,1,'Corecție după bonul grupului')", [v.id]);
+  expect((await q("select bill_source,proof from visits where id=$1", [v.id])).rows[0]).toMatchObject({ bill_source: "bon", proof: "receipt" });
+  // „Nu e al lor”: contestat, iese din total
+  const r86 = (await q("select id from receipts where visit_id=$1 and total=86", [v.id])).rows[0].id;
+  await expect(as("scanner", "select biz_receipt_dispute_v3($1,'nu e masa lor')", [r86])).rejects.toThrow(/Nu ai voie|Sesiunea securizată|echipa/);
+  await expect(as("biz", "select biz_receipt_dispute_v3($1,'nu')", [r86])).rejects.toThrow(/motivul/);
+  await as("biz", "select biz_receipt_dispute_v3($1,'nu e masa lor')", [r86]);
+  const day = await value("biz", "select biz_entries_v3('v',$1)", [v.scanned_at ? null : null]);
+  const e = day.entries.find((x: any) => x.id === v.id);
+  expect(e.total).toBe(440);
+  expect(e.fee).toBe(44);
+  expect(e.receipts.find((x: any) => x.total === 86).disputed).toBe(true);
+  expect((await value("biz", "select biz_finance_v2('v',current_date-1,current_date+1)")).blocked).toBe(1);
+  for (const sql of ["select visit_close($1,false,0)", "select biz_visit_attendance($1,0,0)"])
     await expect(as("biz", sql, [v.id])).rejects.toThrow(/Actualizează/);
 });
-it("prices V2 tiers, founders, free contracts, mixed children and the ten-person cap from frozen terms", async () => {
+it("charges a flat 10% of the receipts whatever the tier or founder status, and keeps free months informational", async () => {
   for (const tier of [1, 2, 3])
     for (const founder of [false, true])
       for (const free of [false, true]) {
@@ -524,15 +485,13 @@ it("prices V2 tiers, founders, free contracts, mixed children and the ten-person
             [venue, U.owner, p, res, claim],
           )
         ).rows[0].id;
-        await as("biz", "select biz_close_v2($1,12,10,4,300,75)", [visit]);
-        // Contract changes must never reprice a past visit.
+        await as("biz", "select biz_entry_total_v3($1,300,'test treaptă')", [visit]);
+        // Contract changes must never reprice a past visit; tiers and founders no longer change the 10%.
         await q(
           "update partners set price_tier=null,founder=not founder,free_until=current_date-100 where venue_id=$1",
           [venue],
         );
-        const unitR = [0, 2, 5, 8][tier] - (founder ? 1 : 0),
-          unitD = [0, 3, 7, 10][tier] - (founder ? 1 : 0),
-          expected = 4 * unitD + 6 * unitR;
+        const expected = 30;
         const finance = await value(
           "biz",
           "select biz_finance_v2($1,current_date-1,current_date+1)",
@@ -566,18 +525,15 @@ it("allows zero commission revenue from distinct same-day plans and detects a re
   ).toEqual([]);
   const old = (
     await q(
-      "select (issued_at at time zone 'Europe/Bucharest')::date d,(issued_at at time zone 'Europe/Bucharest')::time t from receipts where visit_id=$1",
+      "select (issued_at at time zone 'Europe/Bucharest')::date d,(issued_at at time zone 'Europe/Bucharest')::time t from receipts where visit_id=$1 and total=240",
       [first],
     )
   ).rows[0];
-  await expect(
-    q("select visit_receipt_v2($1,$2,'1234567',240,60,$3,$4)", [
-      U.owner,
-      v.id,
-      old.d,
-      old.t,
-    ]),
-  ).rejects.toThrow(/deja folosit/);
+  // același bon fiscal pe altă intrare: refuzat (cu număr sau fără)
+  for (const nr of ["187", null])
+    await expect(
+      q("select visit_receipt_v3($1,$2,'1234567',240,60,$3,$4,$5,false)", [U.owner, v.id, old.d, old.t, nr]),
+    ).rejects.toThrow(/altă intrare/);
 });
 it("enforces Plus tomorrow, off-day idempotence and no retroactive visit discounts", async () => {
   const prev = (await q("select discount_pct from visits limit 1")).rows[0]
@@ -661,14 +617,6 @@ it("keeps refused discounts separate from eligibility, audits resolution and app
     (await q("select plus_until from profile_private where id=$1", [U.owner]))
       .rows[0].plus_until,
   ).toEqual(expiry);
-  expect(
-    (
-      await value(
-        "biz",
-        "select biz_finance_v2('v',current_date-1,current_date+1)",
-      )
-    ).remaining,
-  ).toBeNull();
   await as(
     "biz",
     "select biz_benefit_reply_v2($1,'Am verificat situația de la masă')",
@@ -699,7 +647,7 @@ it("keeps refused discounts separate from eligibility, audits resolution and app
         [v],
       )
     ).rows[0].fee,
-  ).toBe("38");
+  ).toBe("44.00"); // 10% din bonurile necontestate ale intrării (200 + 240)
   expect(
     (
       await q("select count(*) n from private.review_log where visit_id=$1", [
@@ -835,6 +783,50 @@ it("requires explicit eligibility for anonymous guests, including declared unsha
     as("owner", "select plan_guest_ages_v2($1,ARRAY[30])", [p]),
   ).rejects.toThrow(/deja salvată/);
 });
+it("arrives with only the table code when location is off, sets the table, and shows the entry only to its group and venue", async () => {
+  await q("update partners set capacity=40 where venue_id='v'");
+  const p = await plan("no-location", 2, 15);
+  await as("guest", "select plan_answer_v2($1,'vin')", [p]).catch(() => {});
+  await expect(as("owner", "select visit_client_arrive_v2($1,'venue-token-v',44.9,26.9)", [p])).rejects.toThrow(/la local/);
+  await expect(as("owner", "select visit_client_arrive_v2($1,'venue-token-v',44.43,null)", [p])).rejects.toThrow(/la local/);
+  await expect(as("owner", "select visit_client_arrive_v2($1,'cod-gresit',null,null)", [p])).rejects.toThrow(/Codul/);
+  const v = await value("owner", "select visit_client_arrive_v2($1,'venue-token-v',null,null)", [p]);
+  expect(v.proof).toBe("venue_code");
+  await as("owner", "select visit_table_v3($1,' 7 ')", [v.id]);
+  await expect(as("owner", "select visit_table_v3($1,'masa foarte lungă de tot')", [v.id])).rejects.toThrow(/Masa/);
+  await expect(as("other", "select visit_table_v3($1,'3')", [v.id])).rejects.toThrow(/participi/);
+  const mine = await value("owner", "select visit_entry_v3($1)", [p]);
+  expect(mine).toMatchObject({ id: v.id, table: "7", state: "open", total: 0, fee: 0, receipts: [], venue_id: "v" });
+  expect(mine.no).toBeGreaterThan(0);
+  await expect(as("other", "select visit_entry_v3($1)", [p])).rejects.toThrow(/participi/);
+  const list = await value("scanner", "select biz_entries_v3('v',null)").catch(() => null);
+  // the scanner was revoked earlier in this file; the owner of the venue sees today's list
+  expect(list).toBeNull();
+  const day = await value("biz", "select biz_entries_v3('v',null)");
+  expect(day.entries.some((e: any) => e.id === v.id && e.table === "7" && e.name === "owner")).toBe(true);
+  await expect(as("other", "select biz_entries_v3('v',null)")).rejects.toThrow(/echipa|Sesiunea securizată/);
+  // the waiter writes the total when the photo can't be read; one cent precision, 10%
+  await expect(as("biz", "select biz_entry_total_v3($1,0,'x poza')", [v.id])).rejects.toThrow(/totalul/);
+  await expect(as("biz", "select biz_entry_total_v3($1,123.45,'')", [v.id])).rejects.toThrow(/de ce/);
+  const e = await value("biz", "select biz_entry_total_v3($1,123.45,'poza neclară')", [v.id]);
+  expect(e).toMatchObject({ total: 123.45, fee: 12.35, state: "closed" });
+  expect(e.receipts[0].by).toBe("local");
+});
+it("marks an entry without any receipt by 12:00 the next day as no bill, and blocks late staff receipts", async () => {
+  const p = await plan("no-bill", 1, 15);
+  const v = await value("owner", "select visit_client_arrive_v2($1,'venue-token-v',44.43,26.1)", [p]);
+  await q("update visits set work_day=work_day-2 where id=$1", [v.id]);
+  expect((await q("select private.entry_json($1) e", [v.id])).rows[0].e.state).toBe("no_bill");
+  await db.exec("grant usage on schema public to service_role;select set_config('request.jwt.claims','{\"role\":\"service_role\"}',false);set role service_role");
+  try {
+    expect((await q("select visit_receipt_staff_ready_v3($1,$2) r", [U.biz, v.id])).rows[0].r).toMatchObject({ ok: false });
+    expect((await q("select visit_receipt_staff_ready_v3($1,$2) r", [U.other, v.id])).rows[0].r.error).toMatch(/localul tău/);
+  } finally {
+    await db.exec("reset role;select set_config('request.jwt.claims','',false)");
+  }
+  await expect(as("biz", "select biz_entry_total_v3($1,50,'prea târziu')", [v.id])).rejects.toThrow(/12:00/);
+  expect((await q("select fee from private.visit_fees('v',current_date-5,current_date+1) where visit_id=$1", [v.id])).rows).toEqual([]);
+});
 it("preserves financial visits and snapshots when a participant deletes their account", async () => {
   const before = (await q("select count(*) n from visits")).rows[0].n;
   const prices = (await q("select count(*) n from private.visit_pricing"))
@@ -846,7 +838,7 @@ it("preserves financial visits and snapshots when a participant deletes their ac
   ).toBe(prices);
   expect(
     (await q("select count(*) n from visits where venue_id='v'")).rows[0].n,
-  ).toBe(2);
+  ).toBe(4); // două din testele vechi + sosirea fără locație + intrarea fără bon
   const ids=(await q("select id from visits where venue_id='v'")).rows.map(r=>r.id);
   for(const id of ids){
     await expect(as('biz','select visit_close($1,true,100)',[id])).rejects.toThrow(/Actualizează/);
