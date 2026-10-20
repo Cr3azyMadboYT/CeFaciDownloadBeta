@@ -73,7 +73,7 @@ export default function Simulare() {
       const first = !xp;
       sim.current.addReceipt(entry.id, r1, 'client', 'andrei');
       if (first) setXp(25);
-      setNote({ kind: 'ok', text: tr('Bon citit: {total}', { total: lei(r1.total) }) + (first ? ' +25 XP.' : '') });
+      setNote({ kind: 'ok', text: tr('Bon citit: {total}', { total: lei(r1.total) }) + (first ? '. +25 XP.' : '.') });
     } catch (e) { setNote({ kind: 'err', text: tr((e as Error).message) }); }
     bump();
     if (step === 'wait' || step === 'remind') go('bill');

@@ -166,7 +166,7 @@ export async function sendBill(pl: Plan, from: 'camera' | 'gallery'): Promise<{ 
     const b = getApp().board;
     const extra = xp?.gain ? { billXp: ((b.billXp as number | undefined) ?? 0) + xp.gain, bills: [...((b.bills as Bill[] | undefined) ?? []), { placeId: pl.placeId, total: bon.total ?? 0, people: pl.people, at: Date.now() }] } : {};
     if (xp?.total !== undefined) setXp(xp.total, extra); else if (xp?.gain) gainXp(xp.gain, extra);
-    const msg = (bon.total ? tr('Bon citit: {total}', { total: lei(bon.total) }) : tr('Bonul e la intrare.'))
+    const msg = (bon.total ? tr('Bon citit: {total}', { total: lei(bon.total) }) + '.' : tr('Bonul e la intrare.'))
       + (receipt.duplicate ? ' ' + tr('Bonul ăsta e deja scanat de cineva din gașcă — e numărat o dată.') : '')
       + (xp?.gain ? ' +' + xp.gain + ' XP.' : '');
     return { ok: true, msg, entry: (data.entry as Entry | undefined) ?? null, duplicate: !!receipt.duplicate, total: bon.total ?? undefined };

@@ -248,5 +248,9 @@ const en: Record<string, string> = {
   'Verificarea retragerii a eșuat.': 'Checking the withdrawal failed.',
   'Verificarea trimiterii a eșuat.': 'Checking the submission failed.',
   'Verifică numele, votul și acordul pentru participare.': 'Check the name, the vote and the consent to take part.',
+  'Codul ăsta e de la alt local.': 'This code belongs to another venue.',
+  'Bonul ăsta nu pare de la seara asta.': 'This receipt doesn\'t look like it\'s from this evening.',
+  'Bonul ăsta e deja la altă intrare.': 'This receipt is already on another entry.',
+  'Nu găsim intrarea.': 'We can\'t find the entry.',
 };
 export default en;
