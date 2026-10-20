@@ -4,7 +4,6 @@ import QRCode from "react-native-qrcode-svg";
 import { CameraScanner } from "../../shared/CameraScanner";
 import { Card, Txt, Button, Field, Row, Toggle, Empty, ask, ROLE_NAME } from "./ui";
 import { call } from "./backend";
-import { amount } from "./amount";
 import { financePeriod, whole } from "./validation";
 import {
   money,
@@ -12,7 +11,6 @@ import {
   canOperate,
   type Dashboard,
   type Reservation,
-  type Visit,
   type Finance,
   type Role,
   type Settings,
@@ -28,6 +26,8 @@ export interface ScreenProps {
   data: Dashboard;
   act: Action;
   busy: boolean;
+  /** Deschide alt tab (de pe Azi spre Intrări). */
+  go?: (tab: string) => void;
 }
 function ReservationCard({
   r,
@@ -141,169 +141,6 @@ export function Reservations({ data, act, busy }: ScreenProps) {
     </>
   );
 }
-function CloseVisit({
-  v,
-  act,
-  busy,
-  role,
-}: {
-  v: Visit;
-  act: Action;
-  busy: boolean;
-  role: Role;
-}) {
-  const [open, setOpen] = useState(false),
-    [people, P] = useState(String(v.count?.people ?? v.people)),
-    [adults, A] = useState(v.count ? String(v.count.adults) : ""), // completat de local: copiii sub 12 nu se taxează
-    [drop, D] = useState(
-      String(v.count?.drop_adults ?? Math.min(v.people, v.drop_limit ?? 0)),
-    ),
-    [bill, B] = useState(v.bill === null ? "" : String(v.bill)),
-    [discount, R] = useState(""),
-    [reason, S] = useState(""),
-    [reply, V] = useState("");
-  return (
-    <Card title={`${v.name ?? "Grup"} · ${v.people} persoane`}>
-      <Txt>
-        {showTime(v.at!)} · {v.kind}
-        {v.table ? ` · masa ${v.table}` : ""}
-      </Txt>
-      <Txt style={{ fontSize: 20 }}>
-        −{v.discount ?? 0}% {v.plus ? "Plus" : ""}
-      </Txt>
-      <Txt muted>
-        {v.scope === "eligible_consumption"
-          ? `Aplică numai consumului celor ${v.discount_people} persoane Drop, pe produse sau bon separat.`
-          : "O singură reducere pentru întreaga notă eligibilă, fără cumul."}
-      </Txt>
-      <Txt>
-        {v.closed_at ? "Închisă" : "De închis"}
-        {v.count
-          ? ` · număr ${v.count.state === "confirmed" ? "confirmat" : v.count.state === "awaiting" ? "așteaptă clientul" : "contestat"}`
-          : ""}
-      </Txt>
-      {v.benefit && (
-        <>
-          <Txt>
-            Reducere sesizată:{" "}
-            {v.benefit.state === "pending"
-              ? "în verificare"
-              : v.benefit.state === "upheld"
-                ? "refuz confirmat"
-                : "închisă"}
-          </Txt>
-          <Txt muted>{v.benefit.reason}</Txt>
-          {canFinance(role) && v.benefit.state === "pending" && (
-            <>
-              <Field label="Răspunsul localului" value={reply} onChange={V} />
-              <Button
-                label="Trimite răspunsul la sesizare"
-                secondary
-                disabled={busy || reply.trim().length < 5}
-                onPress={() =>
-                  void act(
-                    () =>
-                      call("biz_benefit_reply_v2", {
-                        p_visit: v.id,
-                        p_reply: reply,
-                      }),
-                    "Răspuns salvat pentru verificarea CeFaci.",
-                  )
-                }
-              />
-            </>
-          )}
-        </>
-      )}
-      {canFinance(role) && v.bill !== null && (
-        <Txt>
-          Încasare {money(v.bill)} ·{" "}
-          {v.source === "bon" ? "bon verificat" : "declarată de local"}
-        </Txt>
-      )}
-      {canOperate(role) && (
-        <Button
-          label={
-            open
-              ? "Ascunde închiderea"
-              : v.closed_at
-                ? "Revizuiește numărul"
-                : "Închide vizita"
-          }
-          secondary
-          onPress={() => setOpen(!open)}
-        />
-      )}
-      {open && (
-        <>
-          <Field
-            label="Persoane prezente (inclusiv copiii)"
-            numeric
-            value={people}
-            onChange={P}
-          />
-          <Field
-            label="Persoane de minimum 12 ani (fără copiii sub 12)"
-            numeric
-            value={adults}
-            onChange={A}
-          />
-          <Field
-            label="Persoane de minimum 12 ani eligibile Drop"
-            numeric
-            value={drop}
-            onChange={D}
-          />
-          <Txt muted>
-            O reducere refuzată nejustificat se raportează separat; păstrează
-            eligibilitatea sursei. Numărul redus cere confirmarea grupului.
-          </Txt>
-          <Field
-            label="Încasare după reduceri (lei)"
-            numeric
-            value={bill}
-            onChange={B}
-          />
-          <Field
-            label="Reducere efectivă acordată (lei)"
-            numeric
-            value={discount}
-            onChange={R}
-          />
-          {v.source === "bon" && (
-            <Txt muted>
-              Bonul verificat păstrează prioritatea asupra sumei manuale.
-            </Txt>
-          )}
-          <Field
-            label="Motivul unui număr diferit"
-            value={reason}
-            onChange={S}
-          />
-          <Button
-            label="Salvează închiderea"
-            disabled={busy}
-            onPress={() =>
-              void act(
-                () =>
-                  call("biz_close_v2", {
-                    p_visit: v.id,
-                    p_people: whole(people, "Persoane prezente", 1, 500),
-                    p_adults: whole(adults, "Persoane de minimum 12 ani", 0, 500),
-                    p_drop_adults: whole(drop, "Persoane eligibile Drop", 0, 6),
-                    p_bill: amount(bill),
-                    p_discount: amount(discount),
-                    p_reason: reason || null,
-                  }),
-                "Vizită salvată. Un număr neconfirmat rămâne în afara facturării.",
-              )
-            }
-          />
-        </>
-      )}
-    </Card>
-  );
-}
 export function Today(p: ScreenProps) {
   const { data } = p;
   return (
@@ -334,20 +171,17 @@ export function Today(p: ScreenProps) {
           .map((r) => (
             <ReservationCard key={r.id} r={r} act={p.act} busy={p.busy} />
           ))}
-      {!data.visits.length && (
-        <Card>
-          <Empty text="Nu există sosiri înregistrate în ziua curentă sau precedentă." />
-        </Card>
-      )}
-      {data.visits.map((v) => (
-        <CloseVisit
-          key={v.id}
-          v={v}
-          act={p.act}
-          busy={p.busy}
-          role={data.role}
-        />
-      ))}
+      <Card title="Intrări CeFaci">
+        <Txt>
+          {((n) => (n === 1 ? "1 intrare" : n + " intrări"))(data.visits.length)} azi și ieri
+          {data.visits.some((v) => !v.closed_at) ? ` · ${data.visits.filter((v) => !v.closed_at).length} așteaptă bonul` : ""}
+        </Txt>
+        <Txt muted>
+          Gășcile venite din CeFaci, bonurile lor și cei 10% pentru CeFaci sunt la „Intrări”. Acolo scanezi biletul
+          clientului și faci poză notei.
+        </Txt>
+        {p.go && <Button label="Deschide Intrări" onPress={() => p.go!("Intrări")} />}
+      </Card>
     </>
   );
 }
@@ -377,7 +211,8 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
       <Card title="Scanează biletul grupului">
         <Txt muted>
           Biletul este comun participanților. Scanările repetate arată aceeași
-          sosire. Camera funcționează pe web prin HTTPS.
+          sosire. Camera funcționează pe web prin HTTPS. Pentru poza notei,
+          folosește „Intrări” → „Scanează biletul clientului”.
         </Txt>
         <Field label="Masa (opțional)" value={table} onChange={M} />
         <Button
@@ -488,7 +323,7 @@ export function Finances({ venue, data: dashboard, act, busy }: ScreenProps) {
               Reducerea este deja inclusă în suma plătită de client.
             </Txt>
           </Card>
-          <Card title="Comision CeFaci">
+          <Card title="Comision CeFaci · 10% din bonuri">
             <Txt big>{money(data.fee)}</Txt>
             <Txt muted>
               În perioada gratuită: ai fi plătit {money(data.would_pay)}.
@@ -499,22 +334,23 @@ export function Finances({ venue, data: dashboard, act, busy }: ScreenProps) {
               emise documente fiscale din această aplicație.
             </Txt>
           </Card>
-          <Card title="Detaliile calculului">
+          <Card title="Intrările perioadei">
             {!data.lines.length && <Empty />}
             {data.lines.map((l) => (
-              <View key={l.visit} style={{ gap: 6 }}>
+              <View key={l.visit} style={{ gap: 4 }}>
                 <Txt>
-                  {l.day} · {l.kind} · {money(l.fee)}{" "}
-                  {l.free ? "(gratuit contractual)" : ""}
+                  #{l.no} · {l.day} · {l.receipts} {l.receipts === 1 ? "bon" : "bonuri"} · {money(l.bill)} →{" "}
+                  {l.free
+                    ? `ai fi plătit ${money(l.would_pay)} (lună gratuită)`
+                    : `CeFaci ${Math.round(l.calculation.rate * 100)}% = ${money(l.fee)}`}
                 </Txt>
-                <Txt muted>
-                  {l.calculation.drop_billable}{" "}
-                  × {l.calculation.drop_unit} lei Drop; {l.calculation.reservation_billable} persoane ×{" "}
-                  {l.calculation.reservation_unit} lei rezervare, maximum zece taxabile în total. Tarife păstrate la
-                  sosire.
-                </Txt>
+                {!l.receipts && <Txt muted>Fără bon: nu se plătește nimic.</Txt>}
               </View>
             ))}
+            <Txt muted>
+              10% din bonurile necontestate ale fiecărei intrări. Bonurile contestate rămân în afara calculului
+              până le verifică echipa CeFaci.
+            </Txt>
           </Card>
         </>
       )}

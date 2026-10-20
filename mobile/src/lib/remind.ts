@@ -39,17 +39,47 @@ export async function remindBill(placeName: string, at = new Date(), pid?: numbe
   }
 }
 
+/** „Ai ajuns la X?” la ora planului, pentru planurile la localuri partenere (docs/flux-intrare-bon.md, pasul 2).
+ *  Nu cere voie pentru notificări (doar dacă sunt deja permise). Se ține pe pas cu planurile: cele șterse, mutate sau
+ *  cu sosirea făcută își pierd notificarea, cele noi o primesc. `due` = planurile care o mai au de primit. */
+let arriveLane: Promise<unknown> = Promise.resolve();
+export function syncArrive(due: { pid: number; at: Date; name: string }[]) {
+  arriveLane = arriveLane.catch(() => {}).then(async () => {
+    if (Platform.OS === 'web') return;
+    const all = await Notifications.getAllScheduledNotificationsAsync().catch(() => []);
+    const have = new Map<string, string>(); // "pid|at" → id
+    for (const n of all) {
+      const d = n.content.data as { kind?: string; pid?: number; at?: string } | undefined;
+      if (d?.kind === 'arrive') have.set(d.pid + '|' + d.at, n.identifier);
+    }
+    const want = new Set(due.filter((x) => x.at.getTime() > Date.now()).map((x) => x.pid + '|' + x.at.toISOString()));
+    for (const [k, id] of have) if (!want.has(k)) await Notifications.cancelScheduledNotificationAsync(id).catch(() => {});
+    if (![...want].some((k) => !have.has(k))) return;
+    if (!(await Notifications.getPermissionsAsync()).granted) return;
+    if (Platform.OS === 'android') await Notifications.setNotificationChannelAsync('sosire', { name: tr('Ai ajuns?'), importance: Notifications.AndroidImportance.DEFAULT, lightColor: '#FFD43B' }).catch(() => {});
+    for (const x of due) {
+      const k = x.pid + '|' + x.at.toISOString();
+      if (!want.has(k) || have.has(k)) continue;
+      await Notifications.scheduleNotificationAsync({
+        content: { title: tr('Bilu de la CeFaci'), body: tr('Ai ajuns la {name}? Scanează codul de pe masă.', { name: x.name }), data: { kind: 'arrive', pid: x.pid, at: x.at.toISOString() } },
+        trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: x.at, channelId: 'sosire' },
+      }).catch(() => {});
+    }
+  });
+  return arriveLane;
+}
+
 export async function cancelReminders(ids: string[] | undefined) {
   for (const id of ids ?? []) await Notifications.cancelScheduledNotificationAsync(id).catch(() => {});
 }
 
-/** Tapping a receipt reminder opens that ticket. Returns a stop function. */
-export function onReminderTap(open: (pid: number) => void, go?: (url: string) => void) {
+/** Tapping a receipt (or „Ai ajuns?”) reminder opens that ticket, at that step. Returns a stop function. */
+export function onReminderTap(open: (pid: number, kind?: string) => void, go?: (url: string) => void) {
   if (Platform.OS === 'web') return () => {};
   const handle = (r: Notifications.NotificationResponse) => {
-    const data = r.notification.request.content.data as { pid?: number; url?: string } | undefined;
+    const data = r.notification.request.content.data as { pid?: number; url?: string; kind?: string } | undefined;
     const pid = Number(data?.pid);
-    if (pid) open(pid);
+    if (pid) open(pid, data?.kind);
     else if (data?.url && go) go(data.url); // a friend's vote, plan or crew invitation
   };
   // the app was closed and opened by tapping the notification

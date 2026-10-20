@@ -45,7 +45,7 @@ const REPORTS: [string, string][] = [['inchis', 'S-a închis definitiv'], ['prog
 export default function Bilet() {
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
-  const { pid } = useLocalSearchParams<{ pid: string }>();
+  const { pid, step } = useLocalSearchParams<{ pid: string; step?: string }>();
   const pl = useApp((s) => ((s.board.plans as Plan[] | undefined) ?? []).find((x) => String(x.pid) === String(pid)));
   const name = useApp((s) => s.prefs.name);
   const [ext, setExt] = useState<'closed' | 'pick' | 'back'>('closed');
@@ -153,7 +153,7 @@ export default function Bilet() {
           }} />
         </View>
 
-        {internal ? <PartnerTicket plan={pl}/> : null}
+        {internal ? <PartnerTicket plan={pl} focus={step}/> : null}
         {partner?.mode==='recommended'&&!partner.reservations_on?<View style={{padding:20}}><Muted>{tr('Poți merge direct. Momentan nu acceptă rezervări.')}</Muted></View>:null}
         {p.story ? (
           <View style={{ marginTop: 12, marginHorizontal: 20, padding: 14, borderRadius: 18, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, gap: 4 }}>
@@ -178,9 +178,10 @@ export default function Bilet() {
             const SCAN = 'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10';
             const BON = 'M5 2v20l2-1.5L9 22l2-1.5L13 22l2-1.5L17 22l2-1.5V2l-2 1.5L15 2l-2 1.5L11 2 9 3.5 7 2 5 3.5ZM9 8h6M9 12h6M9 16h4';
             const OK = 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM8.5 12l2.5 2.5 4.5-5';
+            // a partner venue: the entry (table code, receipts) is on the "Prin CeFaci" card above
+            if (internal) return null;
             if (!pl.inAt) {
               if (!today) return null;
-              if(internal)return null;
               return <Row icon={SCAN} bg={t.yellowSoft} ink={t.yellowInk} title={tr('Ai ajuns la {name}?', { name: p.name })} sub={tr('Fă check-in când ești acolo: primești ștampila și XP.')}
                 btn={busyIn === 'in' ? tr('Caut…') : tr('Sunt aici')} onPress={async () => { if (busyIn) return; setBusyIn('in'); const r = await checkIn(pl); setBusyIn(''); toast(r.msg); }} />;
             }

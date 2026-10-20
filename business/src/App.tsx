@@ -44,6 +44,8 @@ import { BusinessHelp } from "./support";
 import { BusinessSecurityGate } from "./security";
 import { BusinessTutorial } from "./tutorial";
 import { BusinessPrivacy } from "./privacy";
+import { Entries } from "./entries";
+import { BusinessSimulation } from "./simulation";
 import { useSecureAccess } from "../../shared/use-secure-access";
 import { securitySessionKey } from "../../shared/security-mfa";
 import {
@@ -64,7 +66,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
   const [venues, V] = useState<VenueAccess[]>([]),
     [venue, S] = useState(""),
     [data, D] = useState<Dashboard | null>(null),
-    [tab, T] = useState("Azi"),
+    [tab, T] = useState("Intrări"),
     [busy, B] = useState(false),
     [message, M] = useState(""),
     [loaded, L] = useState(false),
@@ -125,7 +127,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
     M("");
     B(false);
     action.current = false;
-    T("Azi");
+    T("Intrări");
     void refresh();
     return live(venue, () => void refresh());
   }, [venue, refresh]);
@@ -164,6 +166,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
     await logout();
   };
   const items = [
+    "Intrări",
     "Azi",
     ...(data && canOperate(data.role) ? ["Rezervări"] : []),
     "Scanner",
@@ -173,7 +176,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
     "Ajutor", "Confidențialitate",
   ];
   useEffect(() => {
-    if (!items.includes(tab)) T("Azi");
+    if (!items.includes(tab)) T("Intrări");
   }, [data?.role, tab]);
   const selected = venues.find((v) => v.venue_id === venue);
   const nav = (
@@ -251,9 +254,11 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
     </ScrollView> : <BusinessOnboarding session={session} accessError={message} onRefreshAccess={loadVenues} onSignOut={signOut} onBack={venues.length ? () => Onboarding(false) : undefined} onHelp={() => HelpBeforeAccess(true)} />}
     <BusinessTutorial userId={session.user.id} role="applicant" availableTabs={["Cereri","Ajutor"]} replayToken={replayToken} onNavigate={tab => HelpBeforeAccess(tab === "Ajutor")} />
   </View>;
-  const p: ScreenProps = data ? { venue, data, act, busy } : (null as any);
+  const p: ScreenProps = data ? { venue, data, act, busy, go: T } : (null as any);
   const content = tab === "Confidențialitate" ? <BusinessPrivacy identity={securitySessionKey(session)}/> : tab === "Ajutor" ? <BusinessHelp key={venue + ":" + session.user.id} userId={session.user.id} venue={data ? venue : undefined} /> : data ? (
-    tab === "Azi" ? (
+    tab === "Intrări" ? (
+      <Entries {...p} data={data} />
+    ) : tab === "Azi" ? (
       <Today {...p} />
     ) : tab === "Rezervări" ? (
       <Reservations {...p} />
@@ -327,7 +332,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
 }
 export default function App() {
   useEffect(() => watchBusinessIcon(), []);
-  const [privacyOpen, PrivacyOpen] = useState(false), [optionsOpen, OptionsOpen] = useState(false), [replayToken, ReplayToken] = useState(0);
+  const [simOpen, SimOpen] = useState(false), [privacyOpen, PrivacyOpen] = useState(false), [optionsOpen, OptionsOpen] = useState(false), [replayToken, ReplayToken] = useState(0);
   const [fonts] = useFonts({
     BricolageGrotesque_800ExtraBold,
     BricolageGrotesque_700Bold,
@@ -390,13 +395,14 @@ export default function App() {
                   void AsyncStorage.setItem("business-theme", next).catch(() => {});
                 }}/>
                 {!privacyOpen && session && security.identity && (!security.identity.business_access || security.active) && <Button label="Tur cu Bilu" secondary onPress={() => {PrivacyOpen(false); OptionsOpen(false); ReplayToken(v => v + 1);}}/>}
-                <Button label="Termeni · Confidențialitate · Datele mele" secondary onPress={() => {OptionsOpen(false); PrivacyOpen(true);}}/>
+                <Button label="Simulează o seară" secondary onPress={() => {OptionsOpen(false); PrivacyOpen(false); SimOpen(true);}}/>
+                <Button label="Termeni · Confidențialitate · Datele mele" secondary onPress={() => {OptionsOpen(false); SimOpen(false); PrivacyOpen(true);}}/>
                 <Button label="Închide meniul" secondary onPress={() => OptionsOpen(false)}/>
               </Pressable>
             </Pressable>
           </Modal>
           {!!rememberNotice&&<Txt>{rememberNotice}</Txt>}
-          {privacyOpen && fonts && ready ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
+          {simOpen && fonts ? <BusinessSimulation onClose={() => SimOpen(false)}/> : privacyOpen && fonts && ready ? <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{padding: 20, gap: 20, maxWidth: 900, width: '100%', alignSelf: 'center'}}><Button label="Înapoi la Business" secondary onPress={() => PrivacyOpen(false)}/><BusinessPrivacy identity={session ? securitySessionKey(session) : ''}/></ScrollView> : !fonts || !ready ? (
             <ActivityIndicator accessibilityLabel="Se încarcă CeFaci Business" />
           ) : session ? (
             security.error || !security.identity ? <Card><Txt big>Verificăm accesul…</Txt><Txt>{security.error || "Verificăm contul și rolul tău."}</Txt><Button label="Verifică din nou" onPress={() => void security.check()}/><Button label="Ieși din cont" secondary onPress={() => void logout().catch(() => {})}/></Card> : security.identity.business_access && !security.active ? <BusinessSecurityGate session={session} forcedChallenge={security.forcedChallenge} onVerified={security.verified} onLogout={logout}/> : <Workspace key={session.user.id + ":" + security.identity.business_access} session={session} hasAccess={security.active} checkAccess={security.check} logout={logout} replayToken={replayToken} />

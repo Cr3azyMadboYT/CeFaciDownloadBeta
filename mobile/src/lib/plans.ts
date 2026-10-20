@@ -18,6 +18,9 @@ export interface Plan {
   rated?: 'super' | 'yes' | 'no'; // "Cum a fost?" after the outing (the vote also teaches the crew, for a shared plan)
   voteDue?: -1 | 1 | 2; // that vote, not yet taken by the server (no internet): sent again later
   route?: string;    // the steps of one "Seara completă" share this id (they follow each other, no clash)
+  entryNo?: number;  // partner venue: the entry's number for the evening (#12), after the table code is scanned
+  tableDone?: boolean; // „La ce masă stați?” answered or skipped (it is asked once, right after arrival)
+  later?: number;    // „Încă nu” at „Ai ajuns?”: asked again after this moment (15 minutes)
 }
 /** One shared empty list, so screens reading "no plans" get the same value every time. */
 export const NO_PLANS: Plan[] = [];

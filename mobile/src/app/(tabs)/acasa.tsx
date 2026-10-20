@@ -10,6 +10,9 @@ import { APP, useApp } from '../../lib/session';
 import { phaseOfHour, type Phase } from '../../lib/filters';
 import { NO_PLANS, dayWord, sortPlans, type Plan } from '../../lib/plans';
 import { rateOuting, toRate } from '../../lib/rate';
+import { arriveLater, arriveWindow, isPartnerPlan } from '../../lib/entry';
+import { useArrive } from '../../lib/arrive';
+import { ArrivePrompt } from '../../ui/EntryFlow';
 import { askOf, firstDraft, moodDraft, runPlace, runPlans, surpriseDraft } from '../../lib/planAsk';
 import { eveningOf } from '../../../../src/engine/time';
 import { Bilu } from '../../ui/Bilu';
@@ -155,6 +158,10 @@ export default function Acasa() {
   // after an outing: one tap to say how it was (it teaches Bilu, and the crew when the plan was with them)
   const rate = useMemo(() => toRate((plans as Plan[]) ?? [], now), [plans, now.getHours()]); // eslint-disable-line react-hooks/exhaustive-deps
   const ratePlace = rate ? APP.byId(rate.placeId) : undefined; // eslint-disable-line react-hooks/exhaustive-deps
+  // „Ai ajuns la X?” (docs/flux-intrare-bon.md): the partner plan in its window, near the place or without location
+  const arrivePl = soon.find((x) => !x.inAt && isPartnerPlan(x) && arriveWindow(x, now.getTime()));
+  const arrive = useArrive(arrivePl);
+  const arrivePlace = arrivePl ? APP.byId(arrivePl.placeId) : undefined;
 
   // one tap: Bilu makes three outings and opens one of them; "Altă surpriză" is on it
   const surprise = () => { void runPlans(surpriseDraft(), { surprise: true }); router.push({ pathname: '/plan/[i]', params: { i: 's' } }); };
@@ -254,6 +261,13 @@ export default function Acasa() {
               </T>
               <Icon name="next" size={16} color="#0E1440" />
             </Press>
+          ) : null}
+
+          {arrivePl && arrivePlace && arrive.show ? (
+            <View style={{ marginTop: 12 }}>
+              <ArrivePrompt name={arrivePlace.name} dist={arrive.dist} onLater={() => arriveLater(arrivePl)}
+                onYes={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(arrivePl.pid), step: 'arrive' } })} />
+            </View>
           ) : null}
 
           {rate && ratePlace ? (

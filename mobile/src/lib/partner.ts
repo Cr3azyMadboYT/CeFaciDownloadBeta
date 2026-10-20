@@ -14,6 +14,8 @@ import { sb } from "./auth";
 import { captureAccount, getApp } from "./session";
 import { startsAt, updPlan, type Plan } from "./plans";
 import { tr } from "../../../src/i18n";
+import { entryOf } from "./entry";
+import type { Entry } from "../../../shared/entries";
 const client = () => sb() as unknown as RpcClient;
 const assertAccount = (valid: () => boolean) => { if (!valid()) throw new Error(tr("Contul s-a schimbat. Reia operațiunea din contul curent.")); };
 const serial = new Map<string, Promise<unknown>>();
@@ -71,6 +73,7 @@ export async function refreshPartner(pl: Plan) {
   if (state.attendance) updPlan(pl.pid, { people: state.attendance.people });
   if (state.visit)
     updPlan(pl.pid, {
+      later: undefined,
       visitId: state.visit.id,
       inAt:
         pl.inAt ??
@@ -79,7 +82,7 @@ export async function refreshPartner(pl: Plan) {
           { hour: "2-digit", minute: "2-digit" },
         ),
     });
-  return state;
+  return Object.assign(state, { sid });
 }
 export async function requestReservation(pl: Plan, kids = 0) {
   const valid = captureAccount();
@@ -141,29 +144,35 @@ export async function claimDrop(
   assertAccount(valid);
   return refreshPartner(pl);
 }
+/** Codul de pe masă scanat: sosirea gășcii (o singură intrare pe plan; al doilea om care scanează ajunge în aceeași).
+ *  Locația e opțională (20.10): codul ajunge; poziția se trimite doar când o avem și e lângă local. */
 export async function arrivePartner(
   pl: Plan,
   token: string,
-  fix: { lat: number; lon: number },
-) {
+  fix: { lat: number; lon: number } | null,
+): Promise<{ visit: Visit; entry: Entry | null }> {
   const valid = captureAccount();
   const sid = await ensurePlan(pl);
   assertAccount(valid);
   const v = await rpc<Visit>(client(), "visit_client_arrive_v2", {
     p_plan: sid,
     p_token: token,
-    p_lat: fix.lat,
-    p_lon: fix.lon,
+    p_lat: fix?.lat ?? null,
+    p_lon: fix?.lon ?? null,
   });
+  assertAccount(valid);
+  const entry = await entryOf(sid).catch(() => null);
   assertAccount(valid);
   updPlan(pl.pid, {
     visitId: v.id,
+    later: undefined,
+    ...(entry ? { entryNo: entry.no } : {}),
     inAt: new Date().toLocaleTimeString("ro-RO", {
       hour: "2-digit",
       minute: "2-digit",
     }),
   });
-  return v;
+  return { visit: v, entry };
 }
 export async function syncPartners() {
   const catalog = await rpc<Partner[]>(client(), "partner_catalog");

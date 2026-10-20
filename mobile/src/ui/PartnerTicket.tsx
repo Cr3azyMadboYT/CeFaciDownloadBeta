@@ -1,3 +1,5 @@
+// „Prin CeFaci” pe bilet: rezervarea, Drop-urile și intrarea (docs/flux-intrare-bon.md): „Ai ajuns?”, codul de pe
+// masă, masa, bonurile intrării și biletul la plată. Piesele intrării sunt în ui/EntryFlow (aceleași în simulare).
 import { useEffect, useState, useRef } from "react";
 import { View, TextInput } from "react-native";
 import QRCode from "react-native-qrcode-svg";
@@ -14,19 +16,23 @@ import {
   ticketOf,
   dropsOf,
   claimDrop,
-  countAnswer,
   watchPartner,
   reportRefusal,
   saveGuestAges,
 } from "../lib/partner";
 import { APP } from "../../../src/app/bridge";
-import { type Plan, updPlan } from "../lib/plans";
-import { useApp } from "../lib/session";
-import { checkIn } from "../lib/outing";
-import { Big, Muted, T } from "./kit";
+import { isTonight, type Plan, updPlan } from "../lib/plans";
+import { getApp, useApp } from "../lib/session";
+import { checkIn, sendBill } from "../lib/outing";
+import { arriveLater, entryOf, saveTable } from "../lib/entry";
+import { useArrive } from "../lib/arrive";
+import { groupName, type Entry } from "../../../shared/entries";
+import { ArrivePrompt, Arrived, BillPick, EntryCard, PayTicket, TablePick, TableScan } from "./EntryFlow";
+import { Big, Muted, Sheet, T } from "./kit";
 import { F, useTheme } from "./theme";
 import { tr, trServer, locale } from "../lib/i18n";
-export function PartnerTicket({ plan }: { plan: Plan }) {
+/** `focus`: opened from a notification — „arrive” opens the table code, „bon” the receipt. */
+export function PartnerTicket({ plan, focus }: { plan: Plan; focus?: string }) {
   const scope = useRef(new RequestScope()),
     running = useRef(false);
   const partner = APP.partnerInfo(plan.placeId);
@@ -43,6 +49,24 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
   const [seats, setSeats] = useState("1");
   const [reason, setReason] = useState("");
   const [guestAges, setGuestAges] = useState("");
+  const [entry, setEntry] = useState<Entry | null>(null);
+  const [scan, setScan] = useState(false);
+  const [billOpen, setBillOpen] = useState(false);
+  const [payOpen, setPayOpen] = useState(false);
+  const [tableOpen, setTableOpen] = useState(false);
+  const [table, setTable] = useState<string | null>(null);
+  const [scanErr, setScanErr] = useState("");
+  const [scanKey, setScanKey] = useState(0);
+  const [note, setNote] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
+  const arrive = useArrive(plan);
+  const place = APP.byId(plan.placeId);
+  const focused = useRef("");
+  useEffect(() => {
+    // from a notification: once per opening
+    if (!focus || focused.current === focus + plan.pid) return;
+    if (focus === "arrive" && !plan.inAt) { focused.current = focus + plan.pid; setScan(true); }
+    if (focus === "bon" && plan.inAt) { focused.current = focus + plan.pid; setBillOpen(true); }
+  }, [focus, plan.pid, plan.inAt]);
   useEffect(() => {
     scope.current.invalidate();
     running.current = false;
@@ -54,12 +78,18 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
     setState(null);
     setTicket("");
     setDrops([]);
+    setEntry(null);
+    setNote(null);
     const load = async () => {
       const n = ++seq;
       try {
         const result = await refreshPartner(plan);
         if (!live || n !== seq) return;
         setState(result);
+        if (result.visit) {
+          const e = await entryOf(result.sid).catch(() => null);
+          if (live && n === seq && e) { setEntry(e); if (e.no !== plan.entryNo) updPlan(plan.pid, { entryNo: e.no }); }
+        }
         if (result.attendance?.ready) {
           const [q, d] = await Promise.all([
             ticketOf(result.attendance.plan),
@@ -93,7 +123,9 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
       await work();
       if (!valid()) return;
       const next = await refreshPartner(plan);
-      if (valid()) setState(next);
+      if (!valid()) return;
+      setState(next);
+      if (next.visit) { const e = await entryOf(next.sid).catch(() => null); if (valid() && e) setEntry(e); }
     } catch (e) {
       if (valid()) setMessage(trServer((e as Error).message));
     } finally {
@@ -104,7 +136,37 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
     }
   };
   const r = state?.reservation;
-  const c = state?.count;
+  // the table code: the server checks it is this place's; the second person of the group lands in the same entry
+  const arriveWith = (code: string) => void act(async () => {
+    setScanErr("");
+    const result = await checkIn(plan, code);
+    // „Codul ăsta e de la alt local.”: the scanner stays open, ready for the right code
+    if (!result.ok) { setScanErr(result.msg); setScanKey((k) => k + 1); return; }
+    setScan(false);
+    if (result.entry) setEntry(result.entry);
+  });
+  const sid = () => ((getApp().board.plans as Plan[] | undefined) ?? []).find((x) => x.pid === plan.pid)?.sid ?? plan.sid;
+  const putTable = (v: string | null) => void act(async () => {
+    const visit = entry?.id ?? plan.visitId;
+    if (visit) await saveTable(visit, v);
+    updPlan(plan.pid, { tableDone: true });
+    setTableOpen(false);
+  });
+  const bill = (from: "camera" | "gallery") => {
+    setBillOpen(false);
+    void act(async () => {
+      const res = await sendBill(plan, from);
+      if (!res) return;
+      setNote({ kind: res.ok ? "ok" : "err", text: res.msg });
+      if (res.entry) setEntry(res.entry);
+    });
+  };
+  const showTicket = () => {
+    setPayOpen(true);
+    const s = sid();
+    if (!ticket && s) void ticketOf(s).then((q) => setTicket(q.token)).catch((e) => setMessage(trServer((e as Error).message)));
+  };
+  const me = useApp((s) => s.prefs.name);
   return (
     <View
       style={{
@@ -224,7 +286,7 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
           />
         </>
       )}
-      {ticket && (
+      {ticket && !plan.inAt && (
         <View style={{ alignItems: "center", gap: 8 }}>
           <QRCode value={ticket} size={160} />
           <Muted>{tr("Biletul grupului pentru scannerul localului")}</Muted>
@@ -270,77 +332,46 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
       {state?.claim && (
         <Muted>{tr("Drop {status} · {seats} locuri · valabil până la {t}", { status: tr(state.claim.status), seats: state.claim.seats, t: new Date(state.claim.expires_at).toLocaleTimeString(locale()) })}</Muted>
       )}
-      {!plan.inAt && (
-        <>
-          <Big
-            label={tr("Scanează codul localului")}
-            disabled={busy}
-            onPress={() => setCamera(true)}
+      {!plan.inAt && isTonight(plan) ? (
+        scan ? (
+          <TableScan
+            busy={busy}
+            error={scanErr}
+            camera={<CameraScanner key={scanKey} onScan={arriveWith} onClose={() => setScan(false)} />}
+            onCode={arriveWith}
+            onClose={() => setScan(false)}
           />
-          {camera && (
-            <CameraScanner
-              onScan={(code) => {
-                setCamera(false);
-                void act(async () => {
-                  const result = await checkIn(plan, code);
-                  setMessage(result.msg);
-                  if (!result.ok) throw new Error(result.msg);
-                });
-              }}
-              onClose={() => setCamera(false)}
-            />
-          )}
-          <TextInput
-            accessibilityLabel={tr("Codul localului")}
-            value={token}
-            onChangeText={setToken}
-            autoCapitalize="none"
-            style={{
-              color: t.ink,
-              padding: 12,
-              borderColor: t.line,
-              borderWidth: 1,
-              borderRadius: 12,
-            }}
+        ) : arrive.show && place ? (
+          <ArrivePrompt name={place.name} dist={arrive.dist} onYes={() => { setMessage(""); setScan(true); }} onLater={() => arriveLater(plan)} />
+        ) : (
+          <Big label={tr("Scanează codul de pe masă")} color={t.s2} ink={t.ink} disabled={busy} onPress={() => { setMessage(""); setScan(true); }} />
+        )
+      ) : null}
+      {plan.inAt && !plan.tableDone ? (
+        <Arrived
+          entry={entry ?? (plan.entryNo ? { no: plan.entryNo, name: me || tr("Tu"), people: plan.people, table: null } : null)}
+          busy={busy}
+          onSave={(v) => putTable(v)}
+          onSkip={() => updPlan(plan.pid, { tableDone: true })}
+        />
+      ) : null}
+      {plan.inAt && plan.tableDone ? (
+        entry ? (
+          <EntryCard
+            entry={entry}
+            busy={busy}
+            note={note}
+            highlight={focus === "bon" && !entry.receipts.length}
+            onTable={() => { setTable(entry.table); setTableOpen(true); }}
+            onScanBill={() => setBillOpen(true)}
+            onShowTicket={showTicket}
           />
-          <Big
-            label={tr("Confirmă sosirea cu codul")}
-            disabled={busy || !token.trim()}
-            color={t.s2}
-            ink={t.ink}
-            onPress={() =>
-              void act(async () => {
-                const result = await checkIn(plan, token.trim());
-                setMessage(result.msg);
-                if (!result.ok) throw new Error(result.msg);
-              })
-            }
-          />
-        </>
-      )}
-      {state?.visit && (
-        <Muted>{tr("Reducere {pct}% · {scope}.", { pct: state.visit.discount_pct ?? 0, scope: state.visit.discount_scope === "eligible_consumption" ? tr("numai consumul celor {n} persoane Drop, produse sau bon separat", { n: state.visit.discount_people }) : tr("întreaga notă eligibilă, fără cumul") })}</Muted>
-      )}
-      {c?.state === "awaiting" && (
-        <>
-          <T>{tr("Localul declară {people} persoane, {adults} de minimum 12 ani și {drop} eligibile Drop. Este corect?", { people: c.people, adults: c.adults, drop: c.drop_adults })}</T>
-          <Big
-            label={tr("Da, confirm numărul")}
-            disabled={busy}
-            onPress={() =>
-              void act(() => countAnswer(c.visit_id, c.version, true))
-            }
-          />
-          <Big
-            label={tr("Nu, contest numărul")}
-            disabled={busy}
-            color={t.s2}
-            ink={t.ink}
-            onPress={() =>
-              void act(() => countAnswer(c.visit_id, c.version, false))
-            }
-          />
-        </>
+        ) : (
+          <Muted>{tr("Ești la {name} din {t}. Încarc intrarea…", { name: place?.name ?? "", t: plan.inAt })}</Muted>
+        )
+      ) : null}
+      {state?.visit && (state.visit.discount_pct ?? 0) > 0 && (
+        <Muted>{tr("Reducere {pct}% pe toată nota, fără cumul.", { pct: state.visit.discount_pct ?? 0 })}</Muted>
       )}
       {state?.benefit && (
         <Muted>{tr("Sesizare reducere: {state}.", { state: state.benefit.state === "pending" ? tr("în verificare") : state.benefit.state === "upheld" ? tr("confirmată de CeFaci") : tr("închisă") }) + " " + trServer(state.benefit.reply ?? "")}</Muted>
@@ -381,6 +412,23 @@ export function PartnerTicket({ plan }: { plan: Plan }) {
           {message}
         </T>
       )}
+      <BillPick
+        open={billOpen}
+        onClose={() => setBillOpen(false)}
+        options={[
+          { label: tr("Fă poza acum"), primary: true, onPress: () => bill("camera") },
+          { label: tr("Alege din galerie"), onPress: () => bill("gallery") },
+        ]}
+      />
+      <PayTicket open={payOpen} token={ticket || null} title={(place?.name ?? "") + (entry ? " · " + tr("Intrarea #{no} · {group}", { no: entry.no, group: groupName(entry) }) : "")} onClose={() => setPayOpen(false)} />
+      <Sheet open={tableOpen} onClose={() => setTableOpen(false)}>
+        <View style={{ gap: 12 }}>
+          <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 24 }}>{tr("La ce masă stați?")}</T>
+          <TablePick value={table} onChange={setTable} />
+          <Big label={busy ? tr("Salvez…") : tr("Continuă")} disabled={busy || !table?.trim()} onPress={() => putTable(table)} />
+          {entry?.table ? <Big label={tr("Șterge masa")} color={t.s2} ink={t.ink} disabled={busy} onPress={() => putTable(null)} /> : null}
+        </View>
+      </Sheet>
     </View>
   );
 }

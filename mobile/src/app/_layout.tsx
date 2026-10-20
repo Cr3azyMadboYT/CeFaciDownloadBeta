@@ -15,7 +15,10 @@ import { setBoard, useApp } from '../lib/session';
 import { Toast } from '../ui/Toast';
 import { AskHost } from '../ui/Ask';
 import { LevelUp } from '../ui/LevelUp';
-import { onReminderTap } from '../lib/remind';
+import { onReminderTap, syncArrive } from '../lib/remind';
+import { startsAt, type Plan } from '../lib/plans';
+import { isPartnerPlan } from '../lib/entry';
+import { APP } from '../../../src/app/bridge';
 import { watchNavBar } from '../../modules/cefaci-insets';
 import { refreshNavFit } from '../ui/insets';
 import { E2E } from '../lib/e2e';
@@ -35,7 +38,14 @@ export default function Root() {
   const t = name === 'noapte' ? noapte : zi;
   const ctx = useMemo(() => ({ t, name, set: (n: 'zi' | 'noapte') => setBoard({ theme: n }) }), [t, name]);
   useEffect(() => { if (loaded) SplashScreen.hideAsync().catch(() => {}); }, [loaded]);
-  useEffect(() => onReminderTap((pid) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }), (url) => router.push(url as never)), []);
+  // „bon” opens the ticket at the receipt, „arrive” at the table code (docs/flux-intrare-bon.md)
+  useEffect(() => onReminderTap((pid, kind) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid), ...(kind === 'bon' || kind === 'arrive' ? { step: kind } : {}) } }), (url) => router.push(url as never)), []);
+  const plans = useApp((s) => s.board.plans as Plan[] | undefined);
+  useEffect(() => {
+    // „Ai ajuns la X?” at the plan's time, for the partner venues not reached yet; gone with the plan or the arrival
+    const id = setTimeout(() => void syncArrive((plans ?? []).filter((pl) => !pl.inAt && isPartnerPlan(pl)).map((pl) => ({ pid: pl.pid, at: startsAt(pl), name: APP.byId(pl.placeId)?.name ?? '' }))), 1500);
+    return () => clearTimeout(id);
+  }, [plans]);
   useEffect(() => { SystemUI.setBackgroundColorAsync(t.bg).catch(() => {}); }, [t.bg]);
   // the phone's buttons on the app's own background (no grey layer), dark on the light theme, light on the dark one;
   // the screens leave the bar's height free at the bottom (ui/insets.ts)
