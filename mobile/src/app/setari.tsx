@@ -1,4 +1,5 @@
-// Setări: theme (Zi / Noapte / Ca telefonul), fewer animations, the receipt reminders, the account and the legal bits.
+// Setări: theme (Zi / Noapte / Ca telefonul), fewer animations, the receipt reminders, „Simulează o seară”, the account
+// and the legal bits.
 import { Linking, ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
@@ -6,7 +7,7 @@ import { useEffect } from 'react';
 import { setBoard, useApp } from '../lib/session';
 import { muteFree, refreshFreeNow, useFreeNow } from '../lib/freeNow';
 import { Icon } from '../ui/Icon';
-import { H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';
+import { Big, H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { TopShade } from '../ui/TopShade';
 import { LangPick } from '../ui/LangPick';
@@ -62,6 +63,9 @@ export default function Setari() {
             <Seg label={tr('Nu')} on={fn.quiet} onPress={() => { if (!fn.quiet) void muteFree(who.id, true); }} />
           </Group>
         ) : null}
+        <Group title={tr('Simulează o seară')} note={tr('Cum merge o ieșire la un local partener: „Ai ajuns?”, codul de pe masă, masa, bonul și plata. Pe date de probă, fără cont și fără bani reali.')}>
+          <Big style={{ flex: 1 }} label={tr('Simulează o seară')} onPress={() => router.push('/simulare')} />
+        </Group>
         <Lbl style={{ marginTop: 8 }}>{tr('Contul')}</Lbl>
         <Muted style={{ fontSize: 14 }}>{who ? tr('Contul: {email}. Ieșirea din cont și ștergerea sunt jos în Profil.', { email: who.email ?? 'Google' }) : tr('Nu ești în cont.')}</Muted>
         <Lbl style={{ marginTop: 8 }}>{tr('Despre')}</Lbl>

@@ -155,6 +155,15 @@ export default function Profil() {
         </View>
         <Icon name="next" size={16} color={t.ink3} />
       </Press>
+      <Press onPress={() => router.push('/simulare')} accessibilityLabel={tr('Simulează o seară')}
+        style={{ marginTop: 10, minHeight: 60, flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 8, paddingLeft: 14, paddingRight: 14, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1 }}>
+        <View style={{ width: 36, height: 36, borderRadius: 12, backgroundColor: '#FFD43B', alignItems: 'center', justifyContent: 'center' }}><Icon name="ticket" color="#0E1440" /></View>
+        <View style={{ flex: 1, gap: 3 }}>
+          <T style={{ fontFamily: F.sb, fontSize: 15 }}>{tr('Simulează o seară')}</T>
+          <Muted>{tr('Intrarea la un local partener, pas cu pas, pe date de probă.')}</Muted>
+        </View>
+        <Icon name="next" size={16} color={t.ink3} />
+      </Press>
       <View style={{marginTop: 16, gap: 8, paddingHorizontal: 4}}>
         <Muted>{tr('CeFaci este încă în dezvoltare. Ai găsit o problemă? Spune-ne.')}</Muted>
         <Press accessibilityLabel={tr('Raportează o problemă')} onPress={() => router.push('/raporteaza-problema')} style={{minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 8}}>
