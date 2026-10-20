@@ -1,5 +1,13 @@
 CEFACI – CUM FACEM BANI (tot fluxul, de dat la verificat)
-Versiunea 19.10.2026
+Versiunea 19.10.2026 – ACTUALIZAT 20.10.2026
+
+>>> SCHIMBARE 20.10: localurile nu mai plătesc pe om (tabelul din secțiunea 3 e
+>>> istoric). Acum: localul dă CeFaci 10% din bonul fiecărei intrări CeFaci
+>>> (intrare = gașca venită dintr-un plan). Dovada = bonul: îl scanează clientul,
+>>> ospătarul (scanează biletul clientului și face poză notei) sau ospătarul alege
+>>> intrarea din listă. Același bon scanat de mai mulți e numărat o dată, notele
+>>> separate se adună. Fără bon până a doua zi la 12:00 = 0 lei. Detalii:
+>>> docs/flux-intrare-bon.md.
 
 ========================================================================
 CE TE ROG (pentru cine citește asta, ex. ChatGPT)

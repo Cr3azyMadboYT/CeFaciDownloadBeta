@@ -204,6 +204,7 @@ Aplicația de bază rămâne gratis: recomandări, vot cu gașca, rezervări. Ba
   | 50–150 lei (restaurant, bar, pub) | 5 lei | 7 lei | 4 / 6 lei |
   | Peste 150 lei (restaurant scump, club cu masă) | 8 lei | 10 lei | 7 / 9 lei |
 
+- **Din 20.10 (Cornel): 10% din bonurile fiecărei intrări CeFaci**, același procent pentru toate localurile; bonul se leagă de intrare (client, ospătar sau totalul scris de local), fără bon = 0 lei. Fluxul: `docs/flux-intrare-bon.md`. Regulile de mai jos (taxe pe om) sunt istorice.
 - **Regulile de calcul** (ca să nu existe nicio întrebare la factură):
   - **O singură taxă pe om, pe vizită.** Masă cu rezervare și Live Drop: oamenii eligibili pentru drop plătesc taxa de drop, restul eligibil pe rezervare taxa de rezervare; niciun om nu se plătește de două ori (logica v2, cap. 5.5).
   - **Doar cine a venit.** Rezervare pentru 6, au venit 4: se plătesc 4. N-a venit nimeni: 0 lei. Live Drop luat și nefolosit: 0 lei, iar locul revine altcuiva după 45 de minute.

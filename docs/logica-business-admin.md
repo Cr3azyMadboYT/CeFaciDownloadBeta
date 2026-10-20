@@ -440,6 +440,9 @@ turiștilor plătite cash).
 
 ## 8. Banii
 
+> **Înlocuit (Cornel, 20.10):** localul dă CeFaci **10% din bonurile fiecărei intrări**, fără trepte și fără numărat oameni.
+> Fluxul complet și regulile: `docs/flux-intrare-bon.md`. Tabelele de mai jos (taxe pe om) rămân doar pentru vizitele vechi.
+
 ### 8.1 Tarifele
 
 | Treapta localului (de persoană) | Rezervare | Live Drop | Fondator: rezervare / Live Drop |
