@@ -5,20 +5,28 @@
 -- Fără bon până a doua zi la 12:00: intrarea rămâne „fără bon” și nu se plătește nimic. Fluxul: docs/flux-intrare-bon.md.
 -- Înlocuiește taxele pe om (per-person-v2) pentru vizitele noi; istoricul rămâne cum a fost calculat.
 
--- Sosirea doar cu codul de pe masă (locația oprită) e o dovadă separată.
-alter table public.visits drop constraint if exists visits_proof_check;
-alter table public.visits add constraint visits_proof_check check(proof in('client_location','venue_code','staff_ticket','receipt'));
-
--- Mai multe bonuri pe intrare (note separate), cu numărul bonului și cine l-a adus.
-drop index if exists public.receipts_one_per_visit;
-alter table public.receipts add column if not exists number text check(number is null or number ~ '^[0-9]{1,10}$');
-alter table public.receipts add column if not exists by_role text not null default 'client' check(by_role in('client','staff','local'));
-alter table public.receipts add column if not exists note text check(note is null or length(note)<=200);
-create index if not exists receipts_visit on public.receipts(visit_id);
+-- Bonurile intrărilor stau într-un tabel nou (mai multe pe intrare: note separate), cu numărul bonului și cine l-a adus.
+-- Tabelul vechi public.bills (un bon pe vizită, modelul pe om) rămâne neatins pentru istoric.
+-- (Fără ștergeri în migrare: serverul nu acceptă comenzi distructive din afara SQL Editorului.)
+create table if not exists public.bills(
+ id uuid primary key default gen_random_uuid(),
+ visit_id uuid not null references public.visits(id),
+ venue_id text not null references public.partners(venue_id),
+ user_id uuid references public.profiles(id) on delete set null,
+ total numeric(10,2) not null check(total>0 and total<100000),
+ discount numeric(10,2) check(discount is null or (discount>=0 and discount<100000)),
+ issued_at timestamptz not null,
+ number text check(number is null or number ~ '^[0-9]{1,10}$'),
+ by_role text not null default 'client' check(by_role in('client','staff','local')),
+ note text check(note is null or length(note)<=200),
+ created_at timestamptz not null default now());
+create index if not exists bills_visit on public.bills(visit_id);
+alter table public.bills enable row level security;
+revoke all on public.bills from public,anon,authenticated;
 
 -- Cine din gașcă a scanat fiecare bon (pentru „scanat de 3/5”) și contestațiile localului („Nu e al lor”).
-create table if not exists private.receipt_scanners(receipt_id uuid not null references public.receipts(id) on delete cascade,user_id uuid not null references public.profiles(id) on delete cascade,at timestamptz not null default now(),primary key(receipt_id,user_id));
-create table if not exists private.receipt_disputes(receipt_id uuid primary key references public.receipts(id) on delete cascade,reason text not null check(length(reason) between 5 and 300),by_user uuid references public.profiles(id) on delete set null,at timestamptz not null default now(),state text not null default 'pending' check(state in('pending','upheld','dismissed')));
+create table if not exists private.receipt_scanners(receipt_id uuid not null references public.bills(id) on delete cascade,user_id uuid not null references public.profiles(id) on delete cascade,at timestamptz not null default now(),primary key(receipt_id,user_id));
+create table if not exists private.receipt_disputes(receipt_id uuid primary key references public.bills(id) on delete cascade,reason text not null check(length(reason) between 5 and 300),by_user uuid references public.profiles(id) on delete set null,at timestamptz not null default now(),state text not null default 'pending' check(state in('pending','upheld','dismissed')));
 alter table private.receipt_scanners enable row level security;
 alter table private.receipt_disputes enable row level security;
 revoke all on private.receipt_scanners,private.receipt_disputes from public,anon,authenticated;
@@ -57,17 +65,18 @@ begin
  select coalesce(sum(r.total) filter(where private.receipt_counts(r.id)),0),
   coalesce(jsonb_agg(jsonb_build_object('id',r.id,'total',r.total,'at',r.issued_at,'number',r.number,'by',r.by_role,
    'scanners',(select count(*) from private.receipt_scanners s where s.receipt_id=r.id),'disputed',not private.receipt_counts(r.id)) order by r.issued_at),'[]')
-  into total,rec from public.receipts r where r.visit_id=v.id;
+  into total,rec from public.bills r where r.visit_id=v.id;
  select s.free into free from private.visit_pricing s where s.visit_id=v.id;
  return jsonb_build_object('id',v.id,'no',n,'venue_id',v.venue_id,'venue_name',(select coalesce(x.edit->>'name',x.name) from public.venues x where x.id=v.venue_id),
   'name',coalesce((select first_name from public.profiles where id=v.user_id),'Grup'),'people',v.people,'table',v.table_no,'arrived_at',v.scanned_at,'work_day',v.work_day,
-  'receipts',rec,'scanned_by',(select count(distinct s.user_id) from private.receipt_scanners s join public.receipts r on r.id=s.receipt_id where r.visit_id=v.id),
+  'receipts',rec,'scanned_by',(select count(distinct s.user_id) from private.receipt_scanners s join public.bills r on r.id=s.receipt_id where r.visit_id=v.id),
   'total',round(total,2),'fee',round(total*private.entry_rate(),2),'free',coalesce(free,false),
   'state',case when jsonb_array_length(rec)>0 then 'closed' when now()>((v.work_day+1)+time '12:00') at time zone 'Europe/Bucharest' then 'no_bill' else 'open' end);
 end $$;
 revoke all on function private.entry_json(uuid) from public,anon,authenticated;
 
 -- Sosirea: codul localului de pe masă; locația e opțională (dacă e trimisă, trebuie să fie la cel mult 250 m).
+-- Codul de pe masă e dovada; banii vin oricum doar din bon.
 create or replace function public.visit_client_arrive_v2(p_plan uuid,p_token text,p_lat double precision,p_lon double precision) returns public.visits
 language plpgsql security definer set search_path='' as $$
 declare pos public.venues; venue text; v public.visits;
@@ -79,7 +88,6 @@ begin
  if pos.id is null then raise exception 'Codul nu este al localului din bilet.'; end if;
  if (p_lat is null)<>(p_lon is null) or (p_lat is not null and (p_lat not between -90 and 90 or p_lon not between -180 and 180 or private.km(p_lat,p_lon,pos.lat,pos.lon)>0.250)) then raise exception 'Scanează când ești la local.'; end if;
  v:=private.arrive(p_plan,false,null);
- if p_lat is null and v.proof='client_location' then update public.visits set proof='venue_code' where id=v.id returning * into v; end if;
  return v;
 end $$;
 revoke all on function public.visit_client_arrive_v2(uuid,text,double precision,double precision) from public,anon,authenticated;
@@ -135,7 +143,7 @@ declare v public.visits;
 begin
  select * into v from public.visits where id=p_visit;
  if v.id is null or not private.plan_access(v.plan_id,p_user,true) or now()>((v.work_day+2)::timestamp at time zone 'Europe/Bucharest') then return jsonb_build_object('ok',false,'error','Vizita nu este disponibilă pentru bon.'); end if;
- if (select count(*) from public.receipts where visit_id=p_visit)>=20 then return jsonb_build_object('ok',false,'error','Intrarea are deja prea multe bonuri.'); end if;
+ if (select count(*) from public.bills where visit_id=p_visit)>=20 then return jsonb_build_object('ok',false,'error','Intrarea are deja prea multe bonuri.'); end if;
  if not public.api_quota(p_user,'bon',1) then return jsonb_build_object('ok',false,'error','Ai trimis destule bonuri azi.'); end if;
  return jsonb_build_object('ok',true,'venue',v.venue_id,'day',(v.scanned_at at time zone 'Europe/Bucharest')::date);
 end $$;
@@ -150,7 +158,7 @@ begin
  select * into v from public.visits where id=p_visit;
  if v.id is null or not exists(select 1 from public.partner_members m where m.venue_id=v.venue_id and m.user_id=p_user and m.active) then return jsonb_build_object('ok',false,'error','Intrarea nu e la localul tău.'); end if;
  if now()>((v.work_day+1)+time '12:00') at time zone 'Europe/Bucharest' then return jsonb_build_object('ok',false,'error','Intrarea s-a închis a doua zi la 12:00.'); end if;
- if (select count(*) from public.receipts where visit_id=p_visit)>=20 then return jsonb_build_object('ok',false,'error','Intrarea are deja prea multe bonuri.'); end if;
+ if (select count(*) from public.bills where visit_id=p_visit)>=20 then return jsonb_build_object('ok',false,'error','Intrarea are deja prea multe bonuri.'); end if;
  if not public.api_quota(p_user,'bon_local',1) then return jsonb_build_object('ok',false,'error','Prea multe poze de bon azi. Scrie totalul.'); end if;
  return jsonb_build_object('ok',true,'venue',v.venue_id,'day',(v.scanned_at at time zone 'Europe/Bucharest')::date);
 end $$;
@@ -191,20 +199,20 @@ begin
  select f.visit_id into oldv from private.receipt_fingerprints f where f.fingerprint=fp;
  if oldv is null then
   -- același bon citit fără număr de alt telefon (sau cu număr de unul și fără de altul)
-  select r.visit_id,r.id into oldv,rid from public.receipts r join private.visit_pricing s on s.visit_id=r.visit_id where s.cui=expected_cui and r.total=p_total and r.issued_at=issued limit 1;
+  select r.visit_id,r.id into oldv,rid from public.bills r join private.visit_pricing s on s.visit_id=r.visit_id where s.cui=expected_cui and r.total=p_total and r.issued_at=issued limit 1;
  end if;
  if oldv is not null and oldv<>v.id then raise exception 'Bonul ăsta e deja la altă intrare.'; end if;
  if oldv is not null then
-  if rid is null then select r.id into rid from public.receipts r where r.visit_id=v.id and r.issued_at=issued and r.total=p_total limit 1; end if;
-  if rid is null then select r.id into rid from public.receipts r where r.visit_id=v.id and r.number=num limit 1; end if;
+  if rid is null then select r.id into rid from public.bills r where r.visit_id=v.id and r.issued_at=issued and r.total=p_total limit 1; end if;
+  if rid is null then select r.id into rid from public.bills r where r.visit_id=v.id and r.number=num limit 1; end if;
   if not p_staff and rid is not null then insert into private.receipt_scanners(receipt_id,user_id) values(rid,p_user) on conflict do nothing; end if;
   return jsonb_build_object('ok',true,'visit',v.id,'duplicate',true,'receipt',rid);
  end if;
  insert into private.receipt_fingerprints(fingerprint,visit_id) values(fp,v.id);
- insert into public.receipts(visit_id,venue_id,user_id,total,discount,issued_at,number,by_role)
+ insert into public.bills(visit_id,venue_id,user_id,total,discount,issued_at,number,by_role)
   values(v.id,v.venue_id,p_user,p_total,p_discount,issued,num,case when p_staff then 'staff' else 'client' end) returning id into rid;
  if not p_staff then insert into private.receipt_scanners(receipt_id,user_id) values(rid,p_user) on conflict do nothing; end if;
- update public.visits set bill=(select sum(total) from public.receipts where visit_id=v.id),bill_source='bon',discount_amount=coalesce(p_discount,discount_amount),proof='receipt',outcome='a venit',closed_at=coalesce(closed_at,now()) where id=v.id;
+ update public.visits set bill=(select sum(total) from public.bills where visit_id=v.id),bill_source='bon',discount_amount=coalesce(p_discount,discount_amount),proof='receipt',outcome='a venit',closed_at=coalesce(closed_at,now()) where id=v.id;
  return jsonb_build_object('ok',true,'visit',v.id,'duplicate',false,'receipt',rid);
 end $$;
 revoke all on function public.visit_receipt_v3(uuid,uuid,text,numeric,numeric,date,time,text,boolean) from public,anon,authenticated;
@@ -237,11 +245,11 @@ begin
  if now()>((v.work_day+1)+time '12:00') at time zone 'Europe/Bucharest' then raise exception 'Intrarea s-a închis a doua zi la 12:00.'; end if;
  if p_total is null or p_total<=0 or p_total>=100000 then raise exception 'Scrie totalul de pe notă.'; end if;
  if length(trim(coalesce(p_reason,'')))<3 then raise exception 'Scrie de ce nu merge poza (cel puțin 3 litere).'; end if;
- select count(*) into k from public.receipts where visit_id=v.id;
+ select count(*) into k from public.bills where visit_id=v.id;
  if k>=20 then raise exception 'Intrarea are deja prea multe bonuri.'; end if;
  insert into private.receipt_fingerprints(fingerprint,visit_id) values('local|'||v.id||'|'||(k+1),v.id);
- insert into public.receipts(visit_id,venue_id,user_id,total,discount,issued_at,by_role,note) values(v.id,v.venue_id,auth.uid(),round(p_total,2),null,now(),'local',left(trim(p_reason),200));
- update public.visits set bill=(select sum(total) from public.receipts where visit_id=v.id),bill_source=case when bill_source='bon' then 'bon' else 'local' end,outcome='a venit',closed_by=auth.uid(),closed_at=coalesce(closed_at,now()) where id=v.id;
+ insert into public.bills(visit_id,venue_id,user_id,total,discount,issued_at,by_role,note) values(v.id,v.venue_id,auth.uid(),round(p_total,2),null,now(),'local',left(trim(p_reason),200));
+ update public.visits set bill=(select sum(total) from public.bills where visit_id=v.id),bill_source=case when bill_source='bon' then 'bon' else 'local' end,outcome='a venit',closed_by=auth.uid(),closed_at=coalesce(closed_at,now()) where id=v.id;
  return private.entry_json(v.id);
 end $$;
 revoke all on function public.biz_entry_total_v3(uuid,numeric,text) from public,anon,authenticated;
@@ -250,9 +258,9 @@ grant execute on function public.biz_entry_total_v3(uuid,numeric,text) to authen
 -- „Nu e al lor”: localul contestă un bon (proprietar/manager), în 35 de zile; nu se plătește până nu verifică CeFaci.
 create or replace function public.biz_receipt_dispute_v3(p_receipt uuid,p_reason text) returns void
 language plpgsql security definer set search_path='' as $$
-declare r public.receipts; v public.visits;
+declare r public.bills; v public.visits;
 begin
- select * into r from public.receipts where id=p_receipt;
+ select * into r from public.bills where id=p_receipt;
  select * into v from public.visits where id=r.visit_id;
  if r.id is null or coalesce(private.member_role(r.venue_id),'') not in('proprietar','manager') then raise exception 'Nu ai voie.'; end if;
  if v.work_day<private.work_day(now())-35 then raise exception 'Bonul e prea vechi pentru contestație.'; end if;
@@ -269,7 +277,7 @@ returns table(visit_id uuid,work_day date,kind text,bill numeric,bill_source tex
 language sql stable security definer set search_path='' as $$
  select x.id,x.work_day,x.kind,t.total,x.bill_source,round(t.total*private.entry_rate(),2),s.free
  from public.visits x join private.visit_pricing s on s.visit_id=x.id
- join lateral(select sum(r.total) total from public.receipts r where r.visit_id=x.id and private.receipt_counts(r.id)) t on t.total>0
+ join lateral(select sum(r.total) total from public.bills r where r.visit_id=x.id and private.receipt_counts(r.id)) t on t.total>0
  where x.venue_id=v and x.work_day between d0 and d1 and s.version='bon-10-v3'
  union all
  select x.id,x.work_day,x.kind,x.bill,x.bill_source,
@@ -291,14 +299,14 @@ begin
  select coalesce(sum(fee) filter(where not free),0) into commission from private.visit_fees(p_venue,p_from,p_to);
  -- intrări încă fără bon (azi sau ieri până la 12:00) și bonuri contestate în verificare
  select count(*) into missing from public.visits x where x.venue_id=p_venue and x.work_day between p_from and p_to and x.group_visit
-  and not exists(select 1 from public.receipts r where r.visit_id=x.id) and now()<=((x.work_day+1)+time '12:00') at time zone 'Europe/Bucharest';
- select count(*) into blocked from private.receipt_disputes d join public.receipts r on r.id=d.receipt_id join public.visits x on x.id=r.visit_id where x.venue_id=p_venue and x.work_day between p_from and p_to and d.state='pending';
+  and not exists(select 1 from public.bills r where r.visit_id=x.id) and now()<=((x.work_day+1)+time '12:00') at time zone 'Europe/Bucharest';
+ select count(*) into blocked from private.receipt_disputes d join public.bills r on r.id=d.receipt_id join public.visits x on x.id=r.visit_id where x.venue_id=p_venue and x.work_day between p_from and p_to and d.state='pending';
  return jsonb_build_object('billing_ready',false,'estimate',true,'partial',missing>0 or blocked>0,'missing',missing,'blocked',blocked,'revenue',receipts,'discounts',reductions,'fee',commission,
   'remaining',case when missing=0 and blocked=0 then receipts-commission end,
   'would_pay',(select coalesce(sum(fee) filter(where free),0) from private.visit_fees(p_venue,p_from,p_to)),
   'visits',(select count(*) from public.visits where venue_id=p_venue and work_day between p_from and p_to),
   'lines',coalesce((select jsonb_agg(jsonb_build_object('visit',f.visit_id,'no',(private.entry_json(f.visit_id)->>'no')::int,'day',f.work_day,'kind',f.kind,'bill',f.bill,
-   'receipts',(select count(*) from public.receipts r where r.visit_id=f.visit_id and private.receipt_counts(r.id)),
+   'receipts',(select count(*) from public.bills r where r.visit_id=f.visit_id and private.receipt_counts(r.id)),
    'fee',case when f.free then 0 else f.fee end,'would_pay',case when f.free then f.fee else 0 end,'free',f.free,
    'calculation',jsonb_build_object('rate',private.entry_rate(),'total',f.bill)) order by f.work_day) from private.visit_fees(p_venue,p_from,p_to) f),'[]'));
 end $$;

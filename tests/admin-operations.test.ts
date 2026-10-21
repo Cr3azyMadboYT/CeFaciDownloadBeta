@@ -20,7 +20,7 @@ beforeAll(async()=>{
  await q("insert into partner_members(venue_id,user_id,role)values('v',$1,'proprietar')",[U.biz]);
  await q("insert into visits(id,venue_id,user_id,kind,people,group_visit,work_day,outcome,bill,bill_source,discount_amount,closed_at,proof)values($1,'v',$4,'rezervare',6,true,current_date,'a venit',200,'local',30,now(),'staff_ticket'),($2,'v',$4,'plus',6,true,current_date,'a venit',100,'local',15,now(),'staff_ticket'),($3,'v',$4,'drop',6,true,current_date,'deschis',null,null,null,null,'staff_ticket')",[V.mixed,V.simple,V.blocked,U.client]);
  // 10% din bon (Cornel, 20.10): banii vin din bonurile intrării, nu din numărul de oameni
- await q("insert into receipts(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'v',$3,200,now(),'local'),($2,'v',$3,100,now()+interval '1 second','local')",[V.mixed,V.simple,U.client]);
+ await q("insert into bills(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'v',$3,200,now(),'local'),($2,'v',$3,100,now()+interval '1 second','local')",[V.mixed,V.simple,U.client]);
  await q("update private.visit_pricing set reservation_unit=5,drop_unit=7,reservation_limit=2,drop_limit=4 where visit_id=$1",[V.blocked]); // numărul vechi, încă verificat de Admin
  await q("insert into private.visit_counts(visit_id,people,adults,drop_adults,state)values($1,6,6,4,'confirmed'),($2,6,6,0,'confirmed'),($3,6,6,4,'disputed')",[V.mixed,V.simple,V.blocked]);
  await q("insert into private.benefit_cases(visit_id,reason,reporter)values($1,'Reducere refuzată',$2)",[V.blocked,U.client]);
@@ -65,9 +65,9 @@ it('reuses versioned count and benefit decisions, so stale and support decisions
 });
 it('returns complete net without subtracting discounts twice and keeps contractual free commissions informational',async()=>{
  await q("update visits set outcome='a venit',bill=100,bill_source='local',discount_amount=10,closed_at=now()where id=$1",[V.blocked]);
- await q("insert into receipts(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'v',$2,100,now()+interval '2 seconds','local')",[V.blocked,U.client]);
+ await q("insert into bills(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'v',$2,100,now()+interval '2 seconds','local')",[V.blocked,U.client]);
  const free=(await q("insert into visits(venue_id,user_id,kind,people,group_visit,work_day,outcome,bill,bill_source,discount_amount,closed_at,proof)values('w',$1,'rezervare',6,true,current_date,'a venit',80,'local',12,now(),'staff_ticket')returning id",[U.client])).rows[0].id;
- await q("insert into receipts(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'w',$2,80,now(),'local')",[free,U.client]);
+ await q("insert into bills(visit_id,venue_id,user_id,total,issued_at,by_role)values($1,'w',$2,80,now(),'local')",[free,U.client]);
  const finance=await rpc('accountant','admin_finance(current_date,current_date)');expect(finance.partial).toBe(false);expect(finance.revenue).toBe(480);expect(finance.discounts).toBe(67);expect(finance.fee).toBe(40);expect(finance.remaining).toBe(440);expect(finance.would_pay).toBe(8);expect(finance.billing_ready).toBe(false);
  expect(finance.venues.find((x:any)=>x.venue_id==='w').finance.fee).toBe(0);
 });

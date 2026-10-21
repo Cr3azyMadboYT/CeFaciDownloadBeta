@@ -390,7 +390,7 @@ it("roles limit financial data and revocation applies to a still-valid auth sess
   );
 });
 it("links group receipts to the entry: one receipt counted once, separate bills added, 10% fee", async () => {
-  const v = (await q("select x.id,x.scanned_at from visits x join receipts r on r.visit_id=x.id and r.by_role='local' and r.total=200 where x.venue_id='v' limit 1")).rows[0];
+  const v = (await q("select x.id,x.scanned_at from visits x join bills r on r.visit_id=x.id and r.by_role='local' and r.total=200 where x.venue_id='v' limit 1")).rows[0];
   const local = (
     await q(
       "select (scanned_at at time zone 'Europe/Bucharest')::date d,(scanned_at at time zone 'Europe/Bucharest')::time t from visits where id=$1",
@@ -427,7 +427,7 @@ it("links group receipts to the entry: one receipt counted once, separate bills 
   await as("biz", "select biz_close_v2($1,6,6,4,99,1,'Corecție după bonul grupului')", [v.id]);
   expect((await q("select bill_source,proof from visits where id=$1", [v.id])).rows[0]).toMatchObject({ bill_source: "bon", proof: "receipt" });
   // „Nu e al lor”: contestat, iese din total
-  const r86 = (await q("select id from receipts where visit_id=$1 and total=86", [v.id])).rows[0].id;
+  const r86 = (await q("select id from bills where visit_id=$1 and total=86", [v.id])).rows[0].id;
   await expect(as("scanner", "select biz_receipt_dispute_v3($1,'nu e masa lor')", [r86])).rejects.toThrow(/Nu ai voie|Sesiunea securizată|echipa/);
   await expect(as("biz", "select biz_receipt_dispute_v3($1,'nu')", [r86])).rejects.toThrow(/motivul/);
   await as("biz", "select biz_receipt_dispute_v3($1,'nu e masa lor')", [r86]);
@@ -525,7 +525,7 @@ it("allows zero commission revenue from distinct same-day plans and detects a re
   ).toEqual([]);
   const old = (
     await q(
-      "select (issued_at at time zone 'Europe/Bucharest')::date d,(issued_at at time zone 'Europe/Bucharest')::time t from receipts where visit_id=$1 and total=240",
+      "select (issued_at at time zone 'Europe/Bucharest')::date d,(issued_at at time zone 'Europe/Bucharest')::time t from bills where visit_id=$1 and total=240",
       [first],
     )
   ).rows[0];
@@ -791,7 +791,7 @@ it("arrives with only the table code when location is off, sets the table, and s
   await expect(as("owner", "select visit_client_arrive_v2($1,'venue-token-v',44.43,null)", [p])).rejects.toThrow(/la local/);
   await expect(as("owner", "select visit_client_arrive_v2($1,'cod-gresit',null,null)", [p])).rejects.toThrow(/Codul/);
   const v = await value("owner", "select visit_client_arrive_v2($1,'venue-token-v',null,null)", [p]);
-  expect(v.proof).toBe("venue_code");
+  expect(v.proof).toBe("client_location"); // codul de pe masă e dovada; banii vin din bon
   await as("owner", "select visit_table_v3($1,' 7 ')", [v.id]);
   await expect(as("owner", "select visit_table_v3($1,'masa foarte lungă de tot')", [v.id])).rejects.toThrow(/Masa/);
   await expect(as("other", "select visit_table_v3($1,'3')", [v.id])).rejects.toThrow(/participi/);
