@@ -34,6 +34,7 @@ async function create({venue=false,failCreate=false,failUpload=false}={}){
     else if(name==='biz_partner_requests'||name==='biz_ownership_disputes')data=[];
     else if(name==='biz_my_venues')data=venue?[{venue_id:'local-test',name:'Local de test',role:'proprietar',status:'activ'}]:[];
     else if(name==='biz_dashboard_v2')data={role:'proprietar',day:'2026-10-09',word:'Bilu',token:null,partner:{firm:'Firma Test SRL',cui:'18547290'},settings:{mode:'recommended',on:true,paused:false,capacity:20,duration:120,auto:6,hours:[]},requests:[],visits:[],drops:[],statistics:{visits:0,people:0,unclosed:0,reservations:0},plus_program:null};
+    else if(name==='biz_entries_v3')data={day:'2026-10-09',entries:[]};
     else if(name==='support_reports'){
       const snapshot=structuredClone(state.reports.filter(r=>r.status!=='cancelled'));
       if(state.late)await new Promise(r=>setTimeout(r,1200));

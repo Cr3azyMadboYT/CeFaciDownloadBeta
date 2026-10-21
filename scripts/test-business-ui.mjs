@@ -8,6 +8,7 @@ if (!["localhost","127.0.0.1"].includes(new URL(root).hostname)) throw new Error
 const browser = await chromium.launch({ headless: true });
 fs.mkdirSync("release/screenshots", { recursive: true });
 const when = new Date().toISOString();
+const entry = { id: "00000000-0000-0000-0000-0000000000e1", no: 12, venue_id: "one", venue_name: "Local de test", name: "Andrei", people: 5, table: null, arrived_at: when, work_day: when.slice(0, 10), receipts: [], scanned_by: 0, total: 0, fee: 0, free: false, state: "open" };
 const base = {
   role: "proprietar",
   day: "2026-10-08",
@@ -143,6 +144,8 @@ async function ctx(viewport, auth = false) {
       if (outdated) await new Promise((r) => setTimeout(r, 1200));
       data = { ...finance, remaining: outdated ? 999 : financeRemaining };
     }
+    else if (name === "biz_entries_v3") data = { day: entry.work_day, entries: p.p_venue === "one" ? [entry] : [] };
+    else if (name === "biz_entry_total_v3") data = { ...entry, state: "closed", total: p.p_total, fee: Math.round(p.p_total * 10) / 100, receipts: [{ id: "r1", total: p.p_total, at: when, number: null, by: "local", scanners: 0, disputed: false }] };
     else if (name === "biz_partner_requests") data = [];
     else if (name === "biz_ownership_disputes") data = p.p_venue === "one" ? [{id:"00000000-0000-0000-0000-000000000099",venue_id:"one",venue_name:"Local de test",submitted_at:when,deadline:new Date(Date.now()+3*86400000).toISOString(),response:disputeReply,status:"pending"}] : [];
     else if (name === "biz_ownership_dispute_reply") {disputeReply=p.p_reply;data=null;}
@@ -255,21 +258,19 @@ try {
     path: "release/screenshots/business-today-desktop.png",
     fullPage: true,
   });
-  await app.getByRole("button", { name: "Închide vizita", exact: true }).click();
-  // copiii sub 12 nu se taxează: numărul de adulți nu vine precompletat, localul îl scrie
-  assert.equal(await app.getByLabel("Persoane de minimum 12 ani (fără copiii sub 12)", {exact:true}).inputValue(), "");
-  await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
-  await app.getByText(/^Persoane de minimum 12 ani: scrie un număr întreg/).waitFor();
-  await app.getByLabel("Persoane de minimum 12 ani (fără copiii sub 12)", {exact:true}).fill(await app.getByLabel("Persoane prezente (inclusiv copiii)", {exact:true}).inputValue());
-  await app.getByLabel("Încasare după reduceri (lei)").fill("abc");
-  await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
-  await app.getByText("Scrie o sumă validă, de exemplu 123,45 lei.", {exact:true}).waitFor();
-  assert.equal(calls.filter(x=>x.name==='biz_close_v2').length,0);
-  await app.getByLabel("Încasare după reduceri (lei)").fill("47,50");
-  await app.getByLabel("Reducere efectivă acordată (lei)").fill("2,25");
-  await app.getByRole("button", { name: "Salvează închiderea", exact: true }).click();
-  await app.getByText("Vizită salvată. Un număr neconfirmat rămâne în afara facturării.",{exact:true}).waitFor();
-  assert(calls.some(x=>x.name==='biz_close_v2' && x.p.p_bill===47.5 && x.p.p_discount===2.25));
+  // Intrarea + 10% din bon (20.10): when the bill photo cannot be read, the venue writes the total on the entry.
+  await app.getByRole("button", { name: "Intrări", exact: true }).click();
+  await app.getByRole("button", { name: /^Intrarea #12 · Andrei \+ 4 · \d\d:\d\d, așteaptă bonul/ }).click();
+  await app.getByRole("button", { name: "Scrie totalul", exact: true }).click();
+  await app.getByLabel("Totalul de pe notă (lei)", {exact:true}).fill("abc");
+  await app.getByLabel("Motiv (de ce nu merge poza)", {exact:true}).fill("poza nu se citește");
+  await app.getByRole("button", { name: "Salvează totalul", exact: true }).click();
+  await app.getByText(/^Scrie /).first().waitFor();
+  assert.equal(calls.filter(x=>x.name==='biz_entry_total_v3').length,0);
+  await app.getByLabel("Totalul de pe notă (lei)", {exact:true}).fill("47,50");
+  await app.getByRole("button", { name: "Salvează totalul", exact: true }).click();
+  await app.getByText("Total scris: 47,50 lei", {exact:false}).waitFor();
+  assert(calls.some(x=>x.name==='biz_entry_total_v3' && x.p.p_visit===entry.id && x.p.p_total===47.5 && x.p.p_reason==='poza nu se citește'));
   // Saving a loaded Plus program preserves its base, including a current 0% interval,
   // and every interval for the same weekday.
   await app.getByRole("button", { name: "Oferte", exact: true }).click();
