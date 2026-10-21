@@ -312,3 +312,19 @@ begin
 end $$;
 revoke all on function public.biz_finance_v2(text,date,date) from public,anon,authenticated;
 grant execute on function public.biz_finance_v2(text,date,date) to authenticated;
+
+-- Business 2FA (20261009213831): every biz_* entry point checks the secured Business session and uses
+-- secured_member_role, finance uses the financial scope. The functions above are new or rewritten, so they get
+-- the same guards here, exactly as the original migration added them (biz_team_set lost them in 20261013010000).
+do $$declare f record; body text; guard text; definition text;
+begin
+ for f in select p.oid,p.proname,p.prosrc from pg_proc p join pg_namespace n on n.oid=p.pronamespace
+  where n.nspname='public' and p.proname in('biz_scan_v2','biz_entries_v3','biz_entry_total_v3','biz_receipt_dispute_v3','biz_finance_v2','biz_team_set')
+  and p.prosrc not like '%require_secure%'
+ loop
+  guard:=case when f.proname='biz_finance_v2' then 'private.require_secure_financial_scope()' else 'private.require_secure_scope(''business'')' end;
+  body:=replace(f.prosrc,'private.member_role(','private.secured_member_role(');
+  body:=regexp_replace(body,'\mbegin\M','begin perform '||guard||';','i');
+  definition:=replace(pg_get_functiondef(f.oid),f.prosrc,body);execute definition;
+ end loop;
+end $$;
