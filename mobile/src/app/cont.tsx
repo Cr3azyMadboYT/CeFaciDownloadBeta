@@ -114,6 +114,11 @@ export default function Cont() {
   const ins = useSafeAreaInsets();
   const winH = useWindowDimensions().height;
   const short = winH < 760; // small phones: a smaller Bilu, so the buttons stay on screen
+  const winW = useWindowDimensions().width;
+  // start screen (Cornel, 22.10: in English the title took 4 lines and the text went under the Google button):
+  // the title shrinks to fit its widest line, and Bilu gets only the height left above the text
+  const [startMid, setStartMid] = useState(0);
+  const [startTxt, setStartTxt] = useState(0);
   const prefs = useApp((s) => s.prefs);
   const [step, setStep] = useState<Step>('start');
   const [authErr, setAuthErr] = useState('');
@@ -252,6 +257,12 @@ export default function Cont() {
   if (step === 'start') {
     // fără scroll (Cornel, 13.10): totul încape pe ecran; termenii mici, jos de tot
     const tiny = winH < 680;
+    const title = tr('Nu mai stai acasă\nfără să vrei.');
+    const widest = Math.max(...title.split('\n').map((l) => l.length));
+    const titleSize = Math.min(tiny ? 30 : 36, Math.floor((winW - 48) / (widest * 0.6)));
+    const biluMax = tiny ? 96 : short ? 124 : 160;
+    const biluSize = startMid && startTxt ? Math.min(biluMax, startMid - startTxt - (tiny ? 18 : 26)) : biluMax;
+    const biluFits = biluSize >= 64;
     return (
       <Slide k="start">
         <View style={{ flex: 1, backgroundColor: '#0E1440', paddingTop: ins.top, overflow: 'hidden' }}>
@@ -267,10 +278,12 @@ export default function Cont() {
               <Icon name={themeName === 'noapte' ? 'sun' : 'moon'} size={16} color="#FFFFFF" />
             </Press>
           </View>
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <View style={{ alignItems: 'center' }}><Bilu size={tiny ? 96 : short ? 124 : 160} mood="hi" /></View>
-            <T accessibilityRole="header" style={{ marginTop: tiny ? 10 : 18, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: tiny ? 30 : 36, lineHeight: tiny ? 32 : 38, letterSpacing: -1, color: '#FFFFFF' }}>{tr('Nu mai stai acasă\nfără să vrei.')}</T>
+          <View style={{ flex: 1, justifyContent: 'center' }} onLayout={(e) => setStartMid(e.nativeEvent.layout.height)}>
+            {biluFits ? <View style={{ alignItems: 'center', marginTop: 8 }}><Bilu size={biluSize} mood="hi" /></View> : null}
+            <View onLayout={(e) => setStartTxt(e.nativeEvent.layout.height)}>
+            <T accessibilityRole="header" style={{ marginTop: biluFits ? (tiny ? 10 : 18) : 0, marginHorizontal: 24, textAlign: 'center', fontFamily: F.display, fontSize: titleSize, lineHeight: Math.round(titleSize * 1.06), letterSpacing: -1, color: '#FFFFFF' }}>{title}</T>
             <T style={{ marginTop: 10, marginHorizontal: 32, textAlign: 'center', fontFamily: F.m, fontSize: tiny ? 14.5 : 16, lineHeight: tiny ? 20 : 23, color: '#C9CEE6' }}>{returning ? tr('Bine ai revenit! Intră în cont și tot ce ai pe telefon (planuri, XP, ce-ți place) merge mai departe, cu prieteni și vremea pe zile.') : tr('Eu sunt Bilu. Îți fac contul în două minute și aflu ce-ți place.')}</T>
+            </View>
           </View>
           <View style={{ marginHorizontal: 20, marginBottom: Math.max(ins.bottom, 12) + 6, gap: 10 }}>
             {googleSignInAvailable&&<Press disabled={busy} onPress={async () => { setAuthErr(''); setBusy(true); const err = await APP.google(); if (err) { setBusy(false); setAuthErr(err); } else { afterAuth(); setTimeout(() => setBusy(false), 8000); } }}

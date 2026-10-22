@@ -7,10 +7,6 @@ const en: Record<string, string> = {
   'Tot pe gustul vostru': 'Also your style',
   'Uite ce am găsit.': 'Here\'s what I found.',
   'N-am găsit nimic.': 'Found nothing.',
-  'Am găsit una.': 'Found one.',
-  'Am găsit două.': 'Found two.',
-  'Am găsit trei.': 'Found three.',
-  ', pagina {n}': ', page {n}',
   '1 loc pentru „{q}”': '1 place for "{q}"',
   '{n} locuri pentru „{q}”': '{n} places for "{q}"',
   '{n} de locuri pentru „{q}”': '{n} places for "{q}"',
@@ -51,9 +47,6 @@ const en: Record<string, string> = {
   'Lipsește un loc? Spune-ne': 'Missing a place? Tell us',
   'Nu-l avem? Spune-ne de el': 'Don\'t have it? Tell us about it',
   'Trimite gășcii la vot': 'Send to the crew to vote',
-  'Doar atât': 'That\'s all',
-  'Altele ({n})': 'More ({n})',
-  'De la început': 'From the top',
   // filtrele (etichetele din lib/filters, afișate pe bara de sus)
   'Doar eu': 'Just me',
   'În doi': 'Two of us',
@@ -171,5 +164,13 @@ const en: Record<string, string> = {
 
   // Confidențialitate
   'Confidențialitate și termeni': 'Privacy and terms',
+  'Pentru voi, acum.': 'For you, right now.',
+  'Toate locurile ({n})': 'All places ({n})',
+  'Pune {name} la vot': 'Add {name} to the vote',
+  'Scoate {name} de la vot': 'Remove {name} from the vote',
+  'Trimite la vot ({n})': 'Send to vote ({n})',
+  'Mai vin…': 'Loading more…',
+  'Asta e tot ce se potrivește. Schimbă filtrele ca să vezi altceva.': 'That is everything that fits. Change the filters to see something else.',
+  'Bifează cercul de pe un loc ca să-l pui la votul cu gașca (cel mult 3).': 'Tick the circle on a place to add it to the crew vote (up to 3).',
 };
 export default en;
