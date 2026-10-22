@@ -74,6 +74,7 @@ const en: Record<string, string> = {
   '@{u} e deja luat. Încearcă una din astea:': '@{u} is already taken. Try one of these:',
   '@{u} e liber.': '@{u} is available.',
   'Verific dacă e liber…': 'Checking if it\'s free…',
+  '{n} din 20 de caractere': '{n} of 20 characters',
   'Data nașterii': 'Date of birth',
   'ZZ.LL.AAAA, ex: 14.05.2004': 'DD.MM.YYYY, e.g. 14.05.2004',
   'Ca să nu-ți arătăm locuri pentru care n-ai vârsta.': "So we don't show you places you're too young for.",

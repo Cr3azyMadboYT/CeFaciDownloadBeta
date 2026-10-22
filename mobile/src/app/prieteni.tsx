@@ -87,7 +87,7 @@ export default function Prieteni() {
         <View style={{ marginTop: 14, gap: 12 }}>
           <View style={{ padding: 14, borderRadius: 20, backgroundColor: t.blueSoft, gap: 6 }}>
             <Lbl>{tr('Te găsesc după')}</Lbl>
-            <T style={{ fontFamily: F.display, fontSize: 22 }}>{'@' + (user ?? '')}</T>
+            <T numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6} style={{ fontFamily: F.display, fontSize: 22 }}>{'@' + (user ?? '')}</T>
             {code ? <Muted>{tr('sau cu codul tău: {code} (pentru cei de 16–17 ani, care nu apar la căutare)', { code })}</Muted> : null}
             {code ? <Press onPress={() => Share.share({ message: tr('Hai în CeFaci! Mă găsești după @{user} sau cu codul {code}.', { user: user ?? '', code }) })} style={{ alignSelf: 'flex-start', marginTop: 4, height: 40, paddingHorizontal: 14, borderRadius: 999, backgroundColor: t.blue, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Icon name="share" size={16} color="#FFFFFF" /><T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>{tr('Trimite-le codul')}</T>

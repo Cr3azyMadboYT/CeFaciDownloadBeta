@@ -62,7 +62,7 @@ export default function Prieten() {
           </View>
           <View style={{ flex: 1, gap: 2 }}>
             <T style={{ fontFamily: F.display, fontSize: 26, lineHeight: 28, color: '#FFFFFF' }}>{p.first_name}</T>
-            <T style={{ fontFamily: F.sb, fontSize: 14, color: 'rgba(255,255,255,0.85)' }}>{'@' + p.username}</T>
+            <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 14, color: 'rgba(255,255,255,0.85)' }}>{'@' + p.username}</T>
             <T style={{ marginTop: 6, fontFamily: F.b, fontSize: 14, color: '#FFFFFF' }}>{lv ? tr('Nivel {n}', { n: lv }) + ' · ' + tr(LEVELS[lv]) : tr('Abia a început')}</T>
             <T style={{ fontFamily: F.sb, fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>{p.xp + ' XP · ' + (p.stamps === 1 ? tr('o ștampilă') : tr('{n} ștampile', { n: p.stamps }))}</T>
           </View>

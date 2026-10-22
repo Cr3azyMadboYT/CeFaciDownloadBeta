@@ -383,16 +383,17 @@ export default function Cont() {
                 focused={focus === 'fn'} onFocus={() => setFocus('fn')} onBlur={() => setFocus('')} />
               {rudeFirst ? <Note kind="err">{tr(RUDE_SAY)}</Note> : <Muted>{tr('Prietenii îți văd prenumele și inițiala numelui.')}</Muted>}
               <Lbl style={{ marginTop: 8 }}>Username</Lbl>
-              <Field prefix="@" value={u} onChangeText={(x) => { setUser(clean(x)); setSaveErr(''); }} placeholder={tr('cum te găsesc prietenii')} accessibilityLabel="Username" autoCapitalize="none" autoCorrect={false}
+              <Field prefix="@" value={u} onChangeText={(x) => { setUser(clean(x)); setSaveErr(''); }} placeholder={tr('cum te găsesc prietenii')} accessibilityLabel="Username" autoCapitalize="none" autoCorrect={false} maxLength={20}
                 focused={focus === 'un'} onFocus={() => setFocus('un')} onBlur={() => setFocus('')} />
               {rudeUser ? <Note kind="err">{tr(RUDE_SAY)}</Note> : userTaken ? (
                 <View style={{ gap: 8 }}>
                   <Note kind="err">{tr('@{u} e deja luat. Încearcă una din astea:', { u })}</Note>
                   <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-                    {[u + '.ies', u + '_cf', u + (bM ? bM[3].slice(2) : '23')].map((s) => <Chip key={s} small label={'@' + s} onPress={() => setUser(s)} />)}
+                    {[...new Set([u.slice(0, 16) + '.ies', u.slice(0, 17) + '_cf', u.slice(0, 18) + (bM ? bM[3].slice(2) : '23')])].filter((s) => s !== u).map((s) => <Chip key={s} small label={'@' + s} onPress={() => setUser(clean(s))} />)}
                   </View>
                 </View>
               ) : userOk && signedIn ? <Note kind="ok">{tr('@{u} e liber.', { u })}</Note> : signedIn && u.length >= 3 ? <Muted>{tr('Verific dacă e liber…')}</Muted> : null}
+              {u.length >= 15 ? <Muted>{tr('{n} din 20 de caractere', { n: u.length })}</Muted> : null}
               <Lbl style={{ marginTop: 8 }}>{tr('Data nașterii')}</Lbl>
               <Field value={birth} onChangeText={onBirth} placeholder={tr('ZZ.LL.AAAA, ex: 14.05.2004')} accessibilityLabel={tr('Data nașterii')} keyboardType="number-pad" maxLength={10}
                 focused={focus === 'bd'} onFocus={() => setFocus('bd')} onBlur={() => setFocus('')} />

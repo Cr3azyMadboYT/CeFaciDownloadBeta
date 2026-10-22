@@ -55,7 +55,8 @@ export default function Profil() {
       <Doodles />
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
       <View style={{ height: 44, flexDirection: 'row', alignItems: 'center' }}>
-        <H1 style={{ flex: 1, fontSize: 28 }}>{'@' + (prefs.user || tr('tu'))}</H1>
+        {/* one line whatever the length (max 20 characters): it shrinks instead of going under RO/EN */}
+        <H1 numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5} ellipsizeMode="tail" style={{ flex: 1, minWidth: 0, marginRight: 10, fontSize: 28 }}>{'@' + (prefs.user || tr('tu'))}</H1>
         <LangPick />
         <Press onPress={() => router.push('/setari')} accessibilityLabel={tr('Setări')} style={{ width: 44, height: 44, marginRight: -8, alignItems: 'center', justifyContent: 'center', borderRadius: 14 }}>
           <Icon name="gear" color={t.ink} />
