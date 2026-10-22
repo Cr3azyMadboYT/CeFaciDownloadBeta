@@ -37,6 +37,7 @@ import { CONF } from '../../ui/Magic';
 import { toast } from '../../lib/toast';
 import { pick, tr, trServer } from '../../lib/i18n';
 import * as Haptics from 'expo-haptics';
+import { EventsRail } from '../../features/events/EventsRail';
 
 const FLIP: Record<Phase, { word: string; flip: string[] }> = {
   morning: { word: 'astăzi?', flip: ['…o cafea bună?', '…un brunch?', '…o plimbare la lac?', '…padel dimineața?', '…Mogoșoaia?'] },
@@ -310,6 +311,8 @@ export default function Acasa() {
               </ScrollView>
             </>
           ) : null}
+
+          <EventsRail style={{ marginTop: 22 }} />{/* Evenimente (22.10): removable, features/events */}
 
           <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 22 }}>{tr('Ai chef de…')}</T>

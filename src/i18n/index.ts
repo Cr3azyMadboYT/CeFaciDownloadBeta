@@ -16,9 +16,10 @@ import social from './en/social';
 import profile from './en/profile';
 import engine from './en/engine';
 import server from './en/server';
+import events from './en/events';
 
 export type Lang = 'ro' | 'en';
-export const EN: Record<string, string> = { ...server, ...engine, ...core, ...onboarding, ...home, ...plan, ...explore, ...ticket, ...social, ...profile };
+export const EN: Record<string, string> = { ...server, ...engine, ...core, ...onboarding, ...home, ...plan, ...explore, ...ticket, ...social, ...profile, ...events };
 
 let cur: Lang = 'ro';
 export const lang = (): Lang => cur;

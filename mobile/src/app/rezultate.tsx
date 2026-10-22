@@ -23,6 +23,7 @@ import { tr, pick as byLang } from '../lib/i18n';
 import { mix, MIX_WAIT_MS } from '../lib/shuffle';
 import { forgetSearches, rememberSearch, useRecentSearches } from '../lib/recent';
 import { useCalm } from '../lib/motion';
+import { EventsRail } from '../features/events/EventsRail';
 
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
 const EXAMPLES_MINOR = ['pizza sector 2', 'escape room', 'cafenea deschisă acum', 'muzeu', 'bowling', 'cinema'];
@@ -255,7 +256,8 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
         </ScrollView>
       ) : null}
 
-      {onMap && all.length ? (
+      <EventsRail q={searching ? sq : undefined} style={{ marginTop: 16 }} />{/* Evenimente (22.10): removable, features/events */}
+  {onMap && all.length ? (
         <View style={{ marginTop: 14 }}>
           <PlacesMap
             pins={all.slice(0, 10).map((p, i) => ({ id: p.id, lat: p.real.lat, lon: p.real.lon, name: p.name, sub: p.title + (p.price ? ' · ~' + p.price + ' lei' : ''), bg: p.bg, fg: p.fg, n: i + 1, hot: i < 3 }))}
