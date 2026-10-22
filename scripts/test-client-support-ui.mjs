@@ -32,7 +32,7 @@ await context.route('**/*',async route=>{
     data={birth_date:'1990-01-01',prefs,app_state:board,plus_trial_started_at:null};
   }
   else if(name==='weather')data={data:null,updated_at:now};
-  else if(['friendships','venues','partner_catalog','my_plus_status','drop_catalog'].includes(name))data=[];
+  else if(['friendships','venues','partner_catalog','my_plus_status','drop_catalog','events','ticket_types','my_tickets'].includes(name))data=[];
   else if(name==='support_reports')data=reports.filter(r=>r.status!=='cancelled');
   else if(name==='support_report_create'){
     data=reports.find(r=>r.key===p.p_key);

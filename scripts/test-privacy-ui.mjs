@@ -53,7 +53,7 @@ async function fixture(app,{signed=true,active=false,role=app==='admin'?'fondato
   else if(name==='profiles')data={id:uid,username:'privacy_test',first_name:'Ana',xp:150,friend_code:'abcdef'};
   else if(name==='profile_private')data={birth_date:'1990-01-01',prefs,app_state:board,plus_trial_started_at:null};
   else if(name==='weather')data={data:null,updated_at:now};
-  else if(['friendships','venues','partner_catalog','my_plus_status','drop_catalog','biz_ownership_disputes','biz_partner_requests','biz_team','support_reports'].includes(name))data=[];
+  else if(['friendships','venues','partner_catalog','my_plus_status','drop_catalog','events','ticket_types','my_tickets','biz_ownership_disputes','biz_partner_requests','biz_team','support_reports'].includes(name))data=[];
   else {unexpected.push(`${req.method()} ${url.pathname}`);status=418;data={message:`Unexpected fixture ${name}`};}
   await route.fulfill({status,contentType:'application/json',headers:{'Access-Control-Allow-Origin':'*'},body:JSON.stringify(data)});
  });
