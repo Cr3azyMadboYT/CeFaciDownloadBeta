@@ -28,7 +28,7 @@ const DISCOUNT = 0.05;    // reducerea medie pe bon (Live Drop / Plus pe o parte
 const BILL_FOUND = 0.8;   // din intrări, câte au bon (scanat de client, de ospătar sau scris de local); restul = 0 lei
 const DISPUTED = 0.02;    // bonuri contestate și scoase
 const RATE = 0.10;
-const FOUNDERS = 20;      // primii 20: 3 luni gratis; ceilalți: 1 lună gratis
+const FOUNDERS = 20;      // primii 20: o lună gratis; ceilalți plătesc din prima zi (Cornel, 22.10)
 const VENUE_MARGIN = 0.55;
 
 // ---------- Plus ----------
@@ -76,7 +76,7 @@ function simulate(id) {
     const feePerEntry = billPerEntry * RATE * BILL_FOUND * (1 - DISPUTED);
     let venueRev = 0, wouldPay = 0;
     for (const v of venues) {
-      const free = m - v.start < (v.founder ? 3 : 1);
+      const free = v.founder && m - v.start < 1;
       const fee = perVenue * feePerEntry;
       if (free) wouldPay += fee * v.n; else venueRev += fee * v.n;
       // plecări: puțini oameni aduși sau taxa prea mare față de câștig

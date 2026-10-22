@@ -28,7 +28,7 @@ Taxa e pe persoană, după cât cheltuie un om la voi:
 
 **„Și ca fondator?”**
 
-Primele 3 luni sunt gratis. Dacă în ele n-a venit nimeni, mai primiți până la 3 luni gratis. Apoi aveți 1 leu în minus de persoană, pe viață.
+Prima lună e gratis, de când sunteți activi în aplicație. Apoi 10% din bonurile oamenilor aduși de CeFaci, ca toți ceilalți. (Cine nu e fondator plătește din prima zi.)
 
 **„Plătesc și pentru copii?”**
 
@@ -149,7 +149,7 @@ Spune povestea ta pe scurt și arată-le aplicația pe telefon.
 
 Filmezi la ele, ele te repostează, și câștigați amândoi.
 
-Pune asta în ofertă: „Te filmez gratis pentru TikTok-ul CeFaci.” Pentru un local mic, contează mai mult decât 3 luni gratis.
+Pune asta în ofertă: „Te filmez gratis pentru TikTok-ul CeFaci.” Pentru un local mic, contează mai mult decât luna gratis.
 
 ### Ordinea
 

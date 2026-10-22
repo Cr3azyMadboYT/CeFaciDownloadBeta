@@ -119,8 +119,8 @@ cere rezervări și nu se pot pune Live Drops** (regulă în baza de date).
 
 | | Luni gratuite | Prelungire dacă n-a venit nimeni plătibil |
 |---|---|---|
-| Fondator (cel mult 20) | 3 | până la primul om adus, cel mult încă 3 luni |
-| Ceilalți parteneri | **de hotărât de Cornel** (propunere: 1) | nu |
+| Fondator (cel mult 20) | **1** (Cornel, 22.10) | nu (prelungirea a fost scoasă) |
+| Ceilalți parteneri | **0**: plătesc din prima zi (Cornel, 22.10) | nu |
 
 Regulile exacte sunt în cap. 8.6. Pe scurt: se dau **o singură dată pentru același loc fizic** (adresă și coordonate),
 oricare ar fi firma, timp de 24 de luni; ieșitul și reintratul nu le mai dau.
@@ -509,9 +509,8 @@ dacă unii n-au consumat nimic (au băut doar apă, au plecat), se plătesc doar
 
 ### 8.6 Lunile gratuite, exact
 - **Încep în ziua de lucru a activării.** Se salvează o dată, cu început și sfârșit, și se arată localului.
-  Sfârșitul: aceeași zi a lunii, 3 luni mai târziu; dacă ziua nu există (31 → 30 aprilie), ultima zi a lunii.
-- **Prelungirea** (doar fondatori): dacă în cele 3 luni n-a venit nimeni plătibil, gratuitatea ține până la prima sosire
-  plătibilă, inclusiv, cel mult 3 luni. Sfârșitul se fixează abia când toate sosirile dinainte sunt definitive.
+  Sfârșitul: aceeași zi a lunii, o lună mai târziu (fondatorii; ceilalți nu au lună gratuită, 22.10); dacă ziua nu există (31 → 30 aprilie), ultima zi a lunii.
+- ~~**Prelungirea** (doar fondatori)~~: scoasă (Cornel, 22.10). Fondatorii au o lună, fără prelungire.
 - În lunile gratuite **serviciul e gratuit**, nu „iertat” (fără datorie, fără factură, fără venit). Localul vede „ai fi
   plătit X lei”, doar informativ. Verificarea de noapte se asigură că nicio taxă gratuită nu ajunge pe o factură.
 - O schimbare a perioadei gratuite nu atinge luni deja închise și cere al doilea om (cap. 8.9).

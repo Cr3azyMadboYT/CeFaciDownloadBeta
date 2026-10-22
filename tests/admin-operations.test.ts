@@ -116,3 +116,11 @@ it('filters reservation queues at the real local 05:00 boundary after autumn DST
 it('retains Europe/Bucharest financial 05:00 boundary across spring and autumn DST transitions',async()=>{
  expect((await q("select private.work_day('2026-03-29 01:30+00')::text a,private.work_day('2026-03-29 02:00+00')::text b,private.work_day('2026-10-25 02:00+00')::text c,private.work_day('2026-10-25 03:00+00')::text d")).rows[0]).toEqual({a:'2026-03-28',b:'2026-03-29',c:'2026-10-24',d:'2026-10-25'});
 });
+it('gives founders one free month and other partners none (Cornel, 22.10)',async()=>{
+ await q("insert into venues(id,name,cat,lat,lon,data)values('nf','Fondator nou','mancare',44,26,'{}'),('np','Partener nou','mancare',44,26,'{}')");
+ await as('founder',"select admin_partner_save('nf','Fondator SRL','18547290',true)");
+ await as('founder',"select admin_partner_save('np','Partener SRL','18547290',false)");
+ const r=(await q("select venue_id,free_until-activated_at days from partners where venue_id in('nf','np') order by venue_id")).rows;
+ expect(r[0].venue_id).toBe('nf');expect(r[0].days).toBeGreaterThanOrEqual(28);expect(r[0].days).toBeLessThanOrEqual(31);
+ expect(r[1]).toEqual({venue_id:'np',days:0});
+});

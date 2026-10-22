@@ -69,8 +69,8 @@ Clientul arată biletul („Arată biletul la plată”), ospătarul îl scaneaz
 - Luna: lista pe 3 ale lunii, 5 zile lucrătoare pentru contestații, factura prin e-Factura, plata în 15 zile.
 
 ## Ce rămâne
-- Fondatorii (primele 20 de localuri): 3 luni gratis de la activare (+ până la 3 luni dacă n-a venit nimeni).
-  Intrările din lunile gratuite apar cu „ai fi plătit X”.
+- Gratuitatea (Cornel, 22.10): fondatorii (primele 20 de localuri) au **o lună gratis** de la activare, fără prelungire.
+  Ceilalți parteneri plătesc 10% din prima zi, fără lună gratuită. Intrările din luna gratuită apar cu „ai fi plătit X”.
 - Reducerile (Plus, Live Drop): un singur procent pe toată nota; 10% se ia din totalul de pe bon (după reducere).
 - Copiii, plafoanele, treptele: nu mai contează la bani.
 

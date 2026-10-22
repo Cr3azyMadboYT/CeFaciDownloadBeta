@@ -162,8 +162,8 @@ MODELUL DE ACUM (strategia A)
    Reguli:
    - Doar cine a venit; o singură taxă pe om pe vizită; maxim 10 oameni
      plătiți la o masă; copiii sub 12 nu se plătesc.
-   - Fondatori (primele 20 de localuri): 3 luni gratis + tarife cu 1 leu
-     mai mici, cât rămân parteneri.
+   - Fondatori (primele 20 de localuri): 1 lună gratis (actualizat 22.10;
+     ceilalți plătesc din prima zi).
    - Plafon lunar la sosirile din plan: 300/600/1.000 lei, în primele
      6 luni (de testat: plafon ales de local, pentru totdeauna).
    - Ieșire oricând, fără penalizări.

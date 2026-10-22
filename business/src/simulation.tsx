@@ -160,7 +160,7 @@ export function BusinessSimulation({ onClose }: { onClose: () => void }) {
         Pe 3 ale lunii primești lista, 5 zile lucrătoare să contești, apoi factura prin e-Factura.
       </Txt>
       <Txt style={{ color: "#0E1440", fontSize: 14 }}>
-        În lunile gratuite (fondatori) vezi „ai fi plătit X”, dar nu plătești. Simularea n-a trimis nimic și nu a folosit bani reali.
+        În luna gratuită (doar fondatorii) vezi „ai fi plătit X”, dar nu plătești. Ceilalți parteneri plătesc din prima zi. Simularea n-a trimis nimic și nu a folosit bani reali.
       </Txt>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         <Button label="Începe din nou" onPress={restart} />
