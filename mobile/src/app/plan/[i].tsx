@@ -8,8 +8,9 @@ import * as WebBrowser from 'expo-web-browser';
 import { useFilters } from '../../lib/filters';
 import { telLink, webLink } from '../../lib/links';
 import { nextSurprise, refreshIfStale, setPlan, usePlans } from '../../lib/planAsk';
-import { Checking, makeTickets } from '../planuri-gata';
-import { APP } from '../../lib/session';
+import { Checking, madePid, makeTickets } from '../planuri-gata';
+import type { Plan } from '../../lib/plans';
+import { APP, useApp } from '../../lib/session';
 import { toast } from '../../lib/toast';
 import { tr } from '../../lib/i18n';
 import { Icon } from '../../ui/Icon';
@@ -32,6 +33,7 @@ export default function PlanDeschis() {
   const idx = surprise ? st.pick : Number(i) || 0;
   const { draft, plans } = st;
   const [vote, setVote] = useState(false);
+  const myPlans = useApp((s) => s.board.plans as Plan[] | undefined);
   useFocusEffect(useCallback(() => { refreshIfStale(); }, []));
   const p = plans[idx];
   if (draft && st.loading) return <View style={{ flex: 1, backgroundColor: t.bg, paddingTop: ins.top + 20, paddingHorizontal: 20 }}><Checking draft={draft} /></View>;
@@ -112,7 +114,8 @@ export default function PlanDeschis() {
             {people >= 2 ? <Big label={tr('La vot')} color="#0E1440" icon={<Icon name="users" color="#FFFFFF" />} style={{ flex: 1, minHeight: 50 }} onPress={() => setVote(true)} /> : null}
           </View>
         ) : null}
-        <Big label={tr('Facem așa')} color="#FFD43B" ink="#0E1440" onPress={make} />
+        {madePid(p, myPlans) ? <Big label={tr('E în Planuri · Vezi biletul')} color="#5FD39A" ink="#0E1440" icon={<Icon name="check" color="#0E1440" />} onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(madePid(p, myPlans)) } })} />
+          : <Big label={tr('Facem așa')} color="#FFD43B" ink="#0E1440" onPress={make} />}
       </View>
       <VoteStart open={vote} onClose={() => setVote(false)} places={[]} f={f}
         routes={[p, ...plans.filter((x) => x !== p)].map((x) => ({ label: x.title, sub: x.steps.map((s) => s.place.name).join(' → '), price: x.price, from: x.from, steps: x.steps.map((s) => ({ place: s.place, at: s.at, slot: s.slot })) }))} />

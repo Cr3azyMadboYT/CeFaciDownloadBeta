@@ -57,6 +57,8 @@ export default function Bilet() {
   useWeatherVersion(); // the warning follows a fresh forecast
   const [to, setTo] = useState<Target | null>(null);
   const [sending, setSending] = useState(false);
+  const [bOpen, setBOpen] = useState(false); // Plan B: „Mergeți la B în loc de A?”
+  const [dropOpen, setDropOpen] = useState(false);
   const [who, setWho] = useState<Going[]>([]);
   const me = useApp((s) => s.who);
   const all = useApp((s) => (s.board.plans as Plan[] | undefined));
@@ -98,16 +100,15 @@ export default function Bilet() {
   };
   const clash = all ? clashWith(pl, all) : null;
   const wxWarn = pl.inAt ? null : APP.weatherWarn(p.id, pl.slot === 'acum' ? new Date() : startsAt(pl));
-  // Plan B: the nearest place of the same kind, a short walk away, in case this one is full
-  const planB = (() => {
-    let best: { id: string; name: string; m: number } | null = null;
-    for (const x of APP.places) {
-      if (x.id === p.id || x.real.cat !== p.real.cat || !APP.canPlan(x.id)) continue;
-      const m = km(p.real, x.real) * 1000;
-      if (m < 1500 && (!best || m < best.m)) best = { id: x.id, name: x.name, m };
-    }
-    return best;
-  })();
+  // Plan B: the nearest place of the same kind, a short walk away and open then, in case this one is full. Taking
+  // it changes this ticket's place (same time, same evening): never a second plan at the same hour (Cornel 22.10)
+  const planB = pl.inAt ? null : APP.planBFor(p.id, pl.slot === 'acum' ? new Date() : startsAt(pl));
+  const takeB = () => {
+    if (!planB) return;
+    setBOpen(false);
+    updPlan(pl.pid, { placeId: planB.id, res: 'none', resVia: undefined, visitId: undefined, reservationAttempt: undefined });
+    toast(tr('Gata, mergeți la {name}. Biletul e actualizat.', { name: planB.name }));
+  };
   const clashP = clash ? APP.byId(clash.placeId) : undefined;
   const drop = async () => {try {if(pl.sid&&me)await dropShared(pl,me.id);await cancelReminders(pl.remind);removePlan(pl.pid);toast(tr('Planul a fost anulat.'));close();}catch(e){toast(trServer((e as Error).message));}};
   const shareToCrew = async () => {
@@ -228,7 +229,7 @@ export default function Bilet() {
             </View>
           ) : null}
           {planB && !pl.inAt ? (
-            <Press onPress={() => { try { const pid = createPlanAt(planB.id, startsAt(pl), pl.people); router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); } catch (e) { toast(e instanceof Error ? trServer(e.message) : tr('Nu am putut face planul.')); } }}
+            <Press onPress={() => (pl.sid ? router.push({ pathname: '/loc/[id]', params: { id: planB.id } }) : setBOpen(true))} accessibilityLabel={tr('Plan B: {name}', { name: planB.name })}
               style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 10, paddingHorizontal: 14, borderRadius: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
               <T style={{ fontFamily: F.b, fontSize: 13, color: t.ink2 }}>PLAN B</T>
               <T numberOfLines={1} style={{ flex: 1, fontFamily: F.sb, fontSize: 14 }}>{planB.name + tr(' · la {d}', { d: planB.m < 1000 ? Math.round(planB.m / 10) * 10 + ' m' : (planB.m / 1000).toFixed(1).replace('.', pick(',', '.')) + ' km' })}</T>
@@ -241,8 +242,9 @@ export default function Bilet() {
             <Action icon="M8 2v4M16 2v4M3 10h18M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M19 16v6M16 19h6" label={tr('În calendar')} onPress={calendar} />
             <Action icon="M18 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6M6 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6M18 16a3 3 0 1 0 0 6 3 3 0 0 0 0-6M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" label={tr('Trimite gășcii')} onPress={() => setShareOpen(true)} />
           </View>
-          <View style={{ alignItems: 'center', marginTop: 6 }}>
-            <Quiet label={tr('Renunț la plan')} color={t.ink2} onPress={drop} />
+          {/* Cornel 22.10: „Renunță la plan” e un buton roșu, nu doar text; întreabă o dată înainte */}
+          <Big style={{ marginTop: 6 }} label={tr('Renunț la plan')} color="#D93A1C" icon={<Icon name="close" color="#FFFFFF" />} onPress={() => setDropOpen(true)} />
+          <View style={{ alignItems: 'center' }}>
             <Quiet label={tr('Ceva nu e bun la locul ăsta?')} color={t.ink3} onPress={() => setReportOpen(true)} />
           </View>
         </View>
@@ -320,6 +322,24 @@ export default function Bilet() {
             <Quiet label={tr('Mai târziu')} onPress={() => setExt('closed')} />
           </View>
         )}
+      </Sheet>
+      <Sheet open={bOpen} onClose={() => setBOpen(false)}>
+        {planB ? (
+          <View style={{ gap: 12 }}>
+            <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 24 }}>{tr('Mergeți la {b} în loc de {a}?', { a: p.name, b: planB.name })}</T>
+            <Muted>{tr('Rămâne aceeași oră ({slot}) și același bilet; doar locul se schimbă. E la {d} de {a} și e deschis atunci.', { slot: pl.slot, a: p.name, d: planB.m < 1000 ? Math.round(planB.m / 10) * 10 + ' m' : (planB.m / 1000).toFixed(1).replace('.', pick(',', '.')) + ' km' })}</Muted>
+            <Big label={tr('Da, mergem la {b}', { b: planB.name })} onPress={takeB} />
+            <Quiet label={tr('Vezi întâi locul')} onPress={() => { setBOpen(false); router.push({ pathname: '/loc/[id]', params: { id: planB.id } }); }} />
+          </View>
+        ) : null}
+      </Sheet>
+      <Sheet open={dropOpen} onClose={() => setDropOpen(false)}>
+        <View style={{ gap: 12 }}>
+          <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 24 }}>{tr('Renunți la {name}?', { name: p.name })}</T>
+          <Muted>{pl.sid ? (pl.owner === false ? tr('Biletul dispare din Planuri, iar ceilalți văd că nu mai vii.') : tr('L-ai făcut tu, deci se anulează pentru toți cei chemați.')) : tr('Biletul dispare din Planuri.')}</Muted>
+          <Big label={tr('Da, renunț')} color="#D93A1C" onPress={() => { setDropOpen(false); void drop(); }} />
+          <Quiet label={tr('Nu, îl păstrez')} onPress={() => setDropOpen(false)} />
+        </View>
       </Sheet>
       <TopShade />
     </View>

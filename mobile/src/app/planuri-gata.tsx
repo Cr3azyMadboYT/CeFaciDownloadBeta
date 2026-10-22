@@ -11,7 +11,7 @@ import { tr } from '../lib/i18n';
 import { BUDGET_TOP, askOf, budgetLabel, low, refreshIfStale, runPlans, setPlan, usePlans, wholeLabel, whenText, type Draft, type Shown, startBuild } from '../lib/planAsk';
 import { createPlanAt, type Plan } from '../lib/plans';
 import { sharePlan } from '../lib/together';
-import { getApp } from '../lib/session';
+import { getApp, useApp } from '../lib/session';
 import { APP } from '../lib/session';
 import { toast } from '../lib/toast';
 import { addDays, eveningOf } from '../../../src/engine/time';
@@ -47,6 +47,15 @@ export function makeTickets(p: Shown, people: number, crew?: { id: string; name:
   router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pids[0]) } });
 }
 
+/** The ticket of this plan when „Facem așa” was already pressed (every step is in Planuri at its time), else null:
+ *  coming back to the plans shows „E în Planuri” instead of a button that seems to do nothing (22.10). */
+export function madePid(p: Shown, list: Plan[] | undefined): number | null {
+  const day = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const hm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  const found = p.steps.map((s) => (list ?? []).find((x) => !x.sid && x.placeId === s.place.id && x.date === day(s.at) && x.slot === hm(s.at)));
+  return found.every(Boolean) ? found[0]!.pid : null;
+}
+
 export function Checking({ draft }: { draft: Draft }) {
   const { t } = useTheme();
   const when = askOf(draft).now ? tr('acum') : low(whenText(draft));
@@ -68,6 +77,7 @@ export default function PlanuriGata() {
   const ins = useSafeAreaInsets();
   const { f } = useFilters();
   const st = usePlans();
+  const myPlans = useApp((s) => s.board.plans as Plan[] | undefined);
   const { draft, plans, loading } = st;
   const [vote, setVote] = useState(false);
   const [q, setQ] = useState('');
@@ -168,7 +178,8 @@ export default function PlanuriGata() {
                 </View>
               ) : null}
               <View style={{ marginTop: 12, flexDirection: 'row', gap: 8 }}>
-                <Big label={tr('Facem așa')} color={i === 0 ? '#FFD43B' : t.s2} ink="#0E1440" style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? tr('voastră') } : undefined)} />
+                {madePid(p, myPlans) ? <Big label={tr('E în Planuri · Vezi biletul')} color="#5FD39A" ink="#0E1440" icon={<Icon name="check" color="#0E1440" />} style={{ flex: 1, minHeight: 46 }} onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(madePid(p, myPlans)) } })} />
+                  : <Big label={tr('Facem așa')} color={i === 0 ? '#FFD43B' : t.s2} ink="#0E1440" style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? tr('voastră') } : undefined)} />}
                 <Big label={tr('Vezi pe hartă')} color={t.bg} ink={t.ink} style={{ minHeight: 46, paddingHorizontal: 14 }} onPress={() => router.push({ pathname: '/plan/[i]', params: { i: String(i) } })} />
               </View>
             </Press>

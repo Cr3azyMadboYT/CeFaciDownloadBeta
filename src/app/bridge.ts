@@ -7,7 +7,7 @@ import storiesEnJson from '../data/stories-en.json';
 import { lang, pick, tr } from '../i18n';
 import { addRows, mergePlaces, type PlaceCache, type PlaceRow } from './places';
 import { KINDS, ZONES } from '../engine/catalog';
-import { adultOnly, cuisineLabels, fold, kindName, nearestZone, info, km, openAt, parseQuery, priceOf, recommend, search, targetTime, vibesOf, zoneById, type Need } from '../engine/core';
+import { adultOnly, cuisineLabels, fold, kindName, nearestZone, info, km, openAt, parseQuery, priceOf, recommend, search, stayAt, targetTime, vibesOf, zoneById, type Need } from '../engine/core';
 import type { Ask, Ctx, Scored, Taste, Venue, When, Who } from '../engine/types';
 import { exposure, wxAt, wxLine, type Weather } from '../engine/weather';
 import { evenings, type TemplateId } from '../engine/evening';
@@ -434,6 +434,21 @@ export const APP = {
   searchNote(q: string) {
     const n = fold(q).trim();
     return n ? '' : '';
+  },
+  /** Plan B on a ticket (22.10): the nearest place of the same kind, ≤1,5 km, that can be planned and stays open an hour
+   *  from the plan's time (APP.places already leaves out 18+ places for a minor). */
+  planBFor(id: string, at: Date) {
+    const p = this.byIdMap.get(id);
+    if (!p) return null;
+    let best: { id: string; name: string; m: number } | null = null;
+    for (const x of this.places) {
+      if (x.id === p.id || x.real.cat !== p.real.cat || !this.canPlan(x.id)) continue;
+      const m = km(p.real, x.real) * 1000;
+      if (m >= 1500 || (best && m >= best.m)) continue;
+      if (!stayAt(x.real, at, 60).ok) continue;
+      best = { id: x.id, name: x.name, m };
+    }
+    return best;
   },
   /** Open or closed at the plan's moment: `at` (the plan's real day and time), else the "când" choice. */
   openLabel(id: string, when: string, at?: Date) {

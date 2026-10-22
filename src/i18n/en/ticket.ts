@@ -378,5 +378,19 @@ const en: Record<string, string> = {
   'poză de la client': 'photo from a guest',
   'de la ospătar': 'from the waiter',
   'scris de local': 'typed in by the venue',
+  // 22.10: plan B swaps the place; „Renunț la plan” asks first; a plan already made says so
+  'Gata, mergeți la {name}. Biletul e actualizat.': 'Done, you are going to {name}. The ticket is updated.',
+  'Plan B: {name}': 'Plan B: {name}',
+  'Mergeți la {b} în loc de {a}?': 'Go to {b} instead of {a}?',
+  'Rămâne aceeași oră ({slot}) și același bilet; doar locul se schimbă. E la {d} de {a} și e deschis atunci.': 'Same time ({slot}) and same ticket; only the place changes. It is {d} from {a} and open then.',
+  'Da, mergem la {b}': 'Yes, go to {b}',
+  'Vezi întâi locul': 'See the place first',
+  'Renunți la {name}?': 'Drop {name}?',
+  'Biletul dispare din Planuri, iar ceilalți văd că nu mai vii.': 'The ticket leaves Plans, and the others see you are not coming.',
+  'L-ai făcut tu, deci se anulează pentru toți cei chemați.': 'You made it, so it is cancelled for everyone invited.',
+  'Biletul dispare din Planuri.': 'The ticket leaves Plans.',
+  'Da, renunț': 'Yes, drop it',
+  'Nu, îl păstrez': 'No, keep it',
+  'E în Planuri · Vezi biletul': 'In Plans · See the ticket',
 };
 export default en;
