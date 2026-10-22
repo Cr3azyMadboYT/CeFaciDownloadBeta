@@ -54,6 +54,9 @@ async function fixture(app,{role=app==='admin'?'fondator':'proprietar',aal='aal1
   else if(name==='biz_identity_status')data={has_profile:true,username:'synthetic',first_name:'Test'};
   else if(name==='biz_my_venues')data=[{venue_id:'security-one',name:'Local sintetic',role:state.role,status:'active',founder:false,rate:0.1,free_until:null}];
   else if(name==='biz_entries_v3')data={day:'2026-10-09',entries:[]};
+  else if(name==='biz_ticket_events')data={live:false,commission:0.08,fee:2,payout:null,events:[]};
+  else if(name==='admin_ticket_payouts')data={live:false,list:[]};
+  else if(name==='admin_events')data=[];
   else if(name==='biz_dashboard_v2')data={role:state.role,day:'2026-10-09',word:'Bilu',token:null,partner:{firm:'Firmă sintetică',cui:'18547290'},settings:{mode:'recommended',on:true,paused:false,capacity:20,duration:120,auto:6,hours:[]},requests:[],visits:[],drops:[],statistics:{visits:0,people:0,unclosed:0,reservations:0},plus_program:{current_pct:0,base_pct:0,current_schedule:[],today_off:false,off_days_this_month:0,next:null}};
   else if(['admin_support_reports','admin_partner_requests','admin_places','admin_partners','admin_staff_list','admin_activity','admin_partner_suggestions','biz_ownership_disputes','biz_partner_requests','biz_team','support_reports'].includes(name))data=[];
   else{unexpected.push(`${req.method()} ${path}`);status=418;data={message:`Unexpected ${name}`};}

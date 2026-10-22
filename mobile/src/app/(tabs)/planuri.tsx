@@ -17,6 +17,7 @@ import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { Doodles } from '../../ui/Doodles';
 import { tr, trServer, pick, locale } from '../../lib/i18n';
+import { MyTicketsRow } from '../../features/events/MyTicketsRow'; // Evenimente (22.10): removable
 
 /** "la 21:00", "mâine la 21:00", "vineri la 21:00": a vote may close another day (07.10). */
 const WD = ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'];
@@ -79,6 +80,7 @@ export default function Planuri() {
       <Doodles />
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
       <View style={{ height: 44, justifyContent: 'center' }}><H1>{tr('Planuri')}</H1></View>
+      <MyTicketsRow />
       {votes.length ? (
         <View>
           <Lbl style={{ marginTop: 16, marginBottom: 10 }}>{votes.length === 1 ? tr('Un vot') : tr('Voturi ({n})', { n: votes.length })}</Lbl>

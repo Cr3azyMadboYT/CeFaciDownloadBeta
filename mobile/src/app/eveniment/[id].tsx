@@ -13,6 +13,7 @@ import { APP } from '../../lib/session';
 import { eventById, openTickets, useEvents } from '../../features/events/data';
 import { KIND_LOOK, whenOf } from '../../features/events/EventsRail';
 import { EVENTS_ON } from '../../features/events/flag';
+import { TicketBuy } from '../../features/events/TicketBuy';
 import { KIND_LABEL, priceText, sellerOf } from '../../../../src/events/events';
 
 export default function Eveniment() {
@@ -39,7 +40,8 @@ export default function Eveniment() {
   const end = e.ends_at ? whenOf(e.ends_at).time : null;
   const price = priceText(e, tr);
   const seller = sellerOf(e.ticket_url) ?? e.seller;
-  const canBuy = !!seller && (e.status === 'published' || e.status === 'postponed');
+  const inApp = e.sale_mode === 'cefaci'; // sold by the venue in CeFaci (faza 3)
+  const canBuy = !inApp && !!seller && (e.status === 'published' || e.status === 'postponed');
   const minorBlocked = APP.isMinor() && (e.min_age ?? 0) >= 18;
   const about = pick(e.about, e.about_en || e.about);
   const nav = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(e.lat + ',' + e.lon);
@@ -72,9 +74,9 @@ export default function Eveniment() {
           <T style={{ fontFamily: F.b, fontSize: 16, color: look.fg }}>{w.day + ' · ' + w.time + (end ? '–' + end : '')}</T>
         </View>
 
-        {e.status === 'cancelled' ? <View style={{ marginTop: 12 }}><Note kind="err">{seller ? tr('Evenimentul a fost anulat. Dacă ai bilet, banii îi dă înapoi {seller}, de la care l-ai cumpărat.', { seller }) : tr('Evenimentul a fost anulat.')}</Note></View> : null}
-        {e.status === 'postponed' ? <View style={{ marginTop: 12 }}><Note kind="err">{tr('Evenimentul a fost amânat. Data nouă o anunță organizatorul; verifică la vânzător.')}</Note></View> : null}
-        {e.status === 'sold_out' ? <View style={{ marginTop: 12 }}><Note kind="err">{tr('Biletele s-au terminat la vânzătorul oficial.')}</Note></View> : null}
+        {e.status === 'cancelled' ? <View style={{ marginTop: 12 }}><Note kind="err">{inApp ? tr('Evenimentul a fost anulat. Dacă ai bilet din CeFaci, banii se întorc singuri pe card.') : seller ? tr('Evenimentul a fost anulat. Dacă ai bilet, banii îi dă înapoi {seller}, de la care l-ai cumpărat.', { seller }) : tr('Evenimentul a fost anulat.')}</Note></View> : null}
+        {e.status === 'postponed' ? <View style={{ marginTop: 12 }}><Note kind="err">{inApp ? tr('Evenimentul a fost amânat. Biletele rămân valabile la data nouă.') : tr('Evenimentul a fost amânat. Data nouă o anunță organizatorul; verifică la vânzător.')}</Note></View> : null}
+        {e.status === 'sold_out' ? <View style={{ marginTop: 12 }}><Note kind="err">{inApp ? tr('Biletele s-au terminat.') : tr('Biletele s-au terminat la vânzătorul oficial.')}</Note></View> : null}
 
         <View style={{ marginTop: 14, gap: 10 }}>
           <Row icon="pin" title={e.place_name} sub={e.address ?? undefined} />
@@ -100,6 +102,7 @@ export default function Eveniment() {
               : <Big label={busy ? tr('Deschid…') : tr('Cumpără bilete pe {seller}', { seller: seller! })} disabled={busy} icon={<Icon name="ticket" color="#FFFFFF" />} onPress={() => void buy()} />}
           </View>
         ) : null}
+        {inApp && (e.status === 'published' || e.status === 'postponed') ? <TicketBuy e={e} blocked={minorBlocked} /> : null}
       </ScrollView>
     </View>
   );

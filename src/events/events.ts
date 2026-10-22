@@ -9,6 +9,8 @@ export interface CfEvent {
   venue_id: string | null; place_name: string; address: string | null; lat: number; lon: number;
   price_from: number | null; price_to: number | null; ticket_url: string | null; seller: string | null;
   min_age: number | null; about: string | null; about_en: string | null; status: EventStatus;
+  /** 'link' = the official seller (faza 1); 'cefaci' = sold by the partner venue in CeFaci (faza 3, tickets.ts) */
+  sale_mode?: 'link' | 'cefaci';
 }
 
 /** The official sellers (the same list as private.ticket_sellers on the server; tests/events-rank.test.ts compares them). */

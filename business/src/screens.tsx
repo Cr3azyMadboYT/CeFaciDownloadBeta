@@ -197,6 +197,14 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
     const n = ++scanRequest.current;
     S(null);
     C(false);
+    // a ticket bought in CeFaci (Evenimente și bilete): its own check, once per ticket
+    if (code.trim().startsWith("CFB1.")) {
+      void act(async () => {
+        const r = await call<any>("biz_ticket_scan", { p_venue: venue, p_code: code.trim() });
+        if (n === scanRequest.current) S({ ...r, ticket: true });
+      }, "Biletul a fost verificat.");
+      return;
+    }
     void act(async () => {
       const r = await call("biz_scan_v2", {
         p_venue: venue,
@@ -210,6 +218,7 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
     <>
       <Card title="Scanează biletul grupului">
         <Txt muted>
+          Tot aici scanezi și biletele la evenimente cumpărate în CeFaci.
           Biletul este comun participanților. Scanările repetate arată aceeași
           sosire. Camera funcționează pe web prin HTTPS. Pentru poza notei,
           folosește „Intrări” → „Scanează biletul clientului”.
@@ -229,7 +238,18 @@ export function Scanner({ venue, data, act, busy }: ScreenProps) {
           onPress={() => scan(ticket)}
         />
       </Card>
-      {result && (
+      {result?.ticket && (
+        <Card title={result.ok ? "Poate intra" : "Biletul a fost deja folosit"} tint={result.ok ? undefined : "#FFE4DE"}>
+          <Txt big>{result.type} · {result.name}</Txt>
+          <Txt>{result.event}{result.test ? " · bilet de TEST" : ""}</Txt>
+          <Txt muted>
+            {result.ok
+              ? `Au intrat ${result.inside} din ${result.sold}.`
+              : `Folosit la ${new Date(result.used_at).toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}. Nu-l lăsa să intre a doua oară.`}
+          </Txt>
+        </Card>
+      )}
+      {result && !result.ticket && (
         <Card title={`${result.name ?? "Grup"} · ${result.people} persoane`}>
           <Txt big>−{result.discount}%</Txt>
           <Txt>

@@ -9,7 +9,7 @@ import { EVENTS_ON } from './flag';
 
 const KEY = 'cefaci.events';
 const FRESH_MS = 10 * 60e3;
-const COLS = 'id,title,kind,starts_at,ends_at,venue_id,place_name,address,lat,lon,price_from,price_to,ticket_url,seller,min_age,about,about_en,status';
+const COLS = 'id,title,kind,starts_at,ends_at,venue_id,place_name,address,lat,lon,price_from,price_to,ticket_url,seller,min_age,about,about_en,status,sale_mode';
 
 let mem: { at: number; list: CfEvent[] } | null = null;
 let loading: Promise<void> | null = null;

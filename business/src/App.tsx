@@ -60,6 +60,7 @@ import {
   type ScreenProps,
   type Action,
 } from "./screens";
+import { Tickets } from "./tickets";
 function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { session: Session; hasAccess: boolean; checkAccess: () => Promise<void>; logout: () => Promise<void>; replayToken: number }) {
   const wide = useWindowDimensions().width >= 920;
   const [tourHighlight, TourHighlight] = useState<string | null>(null);
@@ -275,13 +276,7 @@ function Workspace({ session, hasAccess, checkAccess, logout, replayToken }: { s
     ) : tab === "Statistici" ? (
       <Statistics {...p} />
     ) : (
-      <Card title="Evenimente și bilete">
-        <Txt>
-          Vânzarea de bilete și încasarea plăților așteaptă configurarea
-          circuitului de plată și fiscal. Nu poți vinde bilete din această
-          versiune.
-        </Txt>
-      </Card>
+      <Tickets {...p} />
     )
   ) : (
     <Card title="Verific accesul">
