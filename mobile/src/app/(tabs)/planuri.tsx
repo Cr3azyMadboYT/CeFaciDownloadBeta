@@ -144,8 +144,9 @@ export default function Planuri() {
                   </View>
                   <Dashed vertical color="rgba(14,20,64,0.3)" />
                   <View style={{ flex: 1, gap: 4 }}>
-                    <T style={{ fontFamily: F.b, fontSize: 16, lineHeight: 19, color: '#0E1440' }}>{p.title}</T>
-                    <T style={{ fontFamily: F.sb, fontSize: 13, color: '#2C3363' }}>{bits.join(', ')}</T>
+                    {/* the place's name first (22.10: „Restaurant, italian și românesc” as the title said little) */}
+                    <T numberOfLines={2} style={{ fontFamily: F.b, fontSize: 16, lineHeight: 19, color: '#0E1440' }}>{p.name}</T>
+                    <T numberOfLines={2} style={{ fontFamily: F.sb, fontSize: 13, color: '#2C3363' }}>{[p.title, ...bits.slice(1)].join(' · ')}</T>
                   </View>
                   <Icon name="next" size={16} color="#0E1440" />
                 </Press>
