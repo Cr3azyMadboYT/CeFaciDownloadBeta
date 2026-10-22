@@ -21,6 +21,7 @@ import { MissingPlace } from '../ui/MissingPlace';
 import { openAt, PUBLIC_SPACE } from '../../../src/engine/core';
 import { tr, pick as byLang } from '../lib/i18n';
 import { mix, MIX_WAIT_MS } from '../lib/shuffle';
+import { forgetSearches, rememberSearch, useRecentSearches } from '../lib/recent';
 import { useCalm } from '../lib/motion';
 
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
@@ -96,7 +97,8 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
   const tweaks = useMemo(() => tweaksFor(f, sq, top), [f, sq, top, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
   const changed = JSON.stringify(first.current) !== JSON.stringify({ f, sq });
   // a place opens its details first; the plan comes from there (decision Cornel, 06.10: a plan at the first tap was stressful)
-  const pick = (id: string) => router.push({ pathname: '/loc/[id]', params: { id } });
+  const pick = (id: string) => { if (sq.trim().length > 1) rememberSearch(sq); router.push({ pathname: '/loc/[id]', params: { id } }); };
+  const recent = useRecentSearches();
 
   const listRef = useRef<FlatList<Place>>(null);
   const calm = useCalm();
@@ -199,13 +201,35 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
         <Icon name="search" size={16} color={t.ink2} />
         <TextInput maxFontSizeMultiplier={1.15} value={sq} onChangeText={(x) => setSearch(x.slice(0, 60))} placeholder={tr('Caută: un nume, „pizza sector 2”, „bar cu terasă”')} placeholderTextColor={t.ink3}
           accessibilityLabel={tr('Caută un loc')} returnKeyType="search" autoCorrect={false}
+  onSubmitEditing={() => rememberSearch(sq)} onEndEditing={() => { if (sq.trim().length > 2) rememberSearch(sq); }}
           style={{ flex: 1, height: 46, padding: 0, color: t.ink, fontFamily: F.sb, fontSize: 15 }} />
         {sq ? <Press onPress={() => setSearch('')} accessibilityLabel={tr('Șterge căutarea')} style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={16} color={t.ink2} /></Press> : null}
       </View>
       {sq.trim().length < 2 ? (
-        <View style={{ marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-          {(APP.isMinor() ? byLang(EXAMPLES_MINOR, EXAMPLES_MINOR_EN) : byLang(EXAMPLES, EXAMPLES_EN)).map((x) => <Chip key={x} label={x} onPress={() => setSearch(x)} />)}
-        </View>
+        recent.length ? (
+          // the last searches, newest first (Cornel, 22.10): instead of the examples; a long one is cut, never overlaps
+          <View style={{ marginTop: 8, gap: 6 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <T style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: t.ink2 }}>{tr('Ultimele căutări')}</T>
+              <Press onPress={forgetSearches} accessibilityLabel={tr('Șterge ultimele căutări')} style={{ minHeight: 32, paddingHorizontal: 6, justifyContent: 'center' }}>
+                <T style={{ fontFamily: F.sb, fontSize: 13, color: t.blueInk }}>{tr('Șterge')}</T>
+              </Press>
+            </View>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+              {recent.map((x) => (
+                <Press key={x} onPress={() => { setSearch(x); rememberSearch(x); }} accessibilityLabel={tr('Caută din nou: {q}', { q: x })}
+                  style={{ maxWidth: '100%', minHeight: 42, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Icon name="clock" size={14} color={t.ink2} />
+                  <T numberOfLines={1} ellipsizeMode="tail" style={{ flexShrink: 1, maxWidth: 200, fontFamily: F.sb, fontSize: 14 }}>{x}</T>
+                </Press>
+              ))}
+            </View>
+          </View>
+        ) : (
+          <View style={{ marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+            {(APP.isMinor() ? byLang(EXAMPLES_MINOR, EXAMPLES_MINOR_EN) : byLang(EXAMPLES, EXAMPLES_EN)).map((x) => <Chip key={x} label={x} onPress={() => setSearch(x)} />)}
+          </View>
+        )
       ) : null}
       <H1 style={{ marginTop: 14, fontSize: 38, lineHeight: 38 }}>{title}</H1>
       <Muted style={{ marginTop: 6 }}>{sub}</Muted>

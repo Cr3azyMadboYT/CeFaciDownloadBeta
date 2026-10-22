@@ -177,5 +177,9 @@ const en: Record<string, string> = {
   'Trimite la vot': 'Send to vote',
   'Amestecă lista': 'Shuffle the list',
   'Amestecă': 'Shuffle',
+  'Ultimele căutări': 'Recent searches',
+  'Șterge ultimele căutări': 'Clear recent searches',
+  'Caută din nou: {q}': 'Search again: {q}',
+  'Șterge': 'Clear',
 };
 export default en;
