@@ -308,5 +308,14 @@ const en: Record<string, string> = {
   'Pe cine chemi?': 'Who are you inviting?',
   'Nu mai găsim locul ăsta.': 'We can\'t find this place anymore.',
   'Nu e nimeni de chemat.': 'There\'s no one to invite.',
+  // Notificări (22.10): the bell
+  'Notificări': 'Notifications',
+  'Notificări, {n} noi': 'Notifications, {n} new',
+  'chiar acum': 'just now',
+  'acum {n} min': '{n} min ago',
+  'azi, {t}': 'today, {t}',
+  'ieri, {t}': 'yesterday, {t}',
+  'Liniște deocamdată': 'All quiet for now',
+  'Aici apar cererile de prietenie, invitațiile în gașcă, voturile și planurile la care te cheamă prietenii.': 'Friend requests, crew invites, votes and plans your friends call you to show up here.',
 };
 export default en;

@@ -28,6 +28,7 @@ import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { useBackTwiceToExit } from '../../lib/backTwice';
 import { useWeatherVersion } from '../../lib/weather';
+import { useInboxWatch, useUnread } from '../../lib/inbox';
 import { Doodles } from '../../ui/Doodles';
 import { SeasonCta, SeasonFall } from '../../ui/SeasonFall';
 import { LOOKS, useLook } from '../../lib/season';
@@ -189,9 +190,12 @@ export default function Acasa() {
               <T numberOfLines={1} style={{ fontFamily: F.sb, fontSize: 16, color: '#FFFFFF', maxWidth: 230 }}>{APP.zoneName() + ' · ' + APP.radiusKm() + ' km'}</T>
               <View style={{ opacity: 0.7 }}><Icon name="down" size={16} color="#FFFFFF" /></View>
             </Press>
-            <Press onPress={() => router.push('/profil')} accessibilityLabel={tr('Profilul tău')} style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
-              <Avatar size={34} />
-            </Press>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Bell />
+              <Press onPress={() => router.push('/profil')} accessibilityLabel={tr('Profilul tău')} style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
+                <Avatar size={34} />
+              </Press>
+            </View>
           </View>
           <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
             <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={40} color="#FFD43B" />
@@ -556,3 +560,20 @@ function Pill({ icon, text, dot }: { icon?: 'sun' | 'moon' | 'clock' | 'cloud' |
   );
 }
 
+
+/** The bell (22.10): everything you received, with how many are new. */
+function Bell() {
+  useInboxWatch();
+  const n = useUnread();
+  return (
+    <Press onPress={() => router.push('/notificari')} accessibilityLabel={n ? tr('Notificări, {n} noi', { n }) : tr('Notificări')}
+      style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
+      <Icon name="bell" size={22} color="#FFFFFF" />
+      {n ? (
+        <View style={{ position: 'absolute', top: 5, right: 4, minWidth: 18, height: 18, paddingHorizontal: 4, borderRadius: 99, backgroundColor: '#FF5A3C', alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: 'rgba(14,20,64,0.6)' }}>
+          <T style={{ fontFamily: F.b, fontSize: 10, color: '#FFFFFF' }}>{n > 9 ? '9+' : String(n)}</T>
+        </View>
+      ) : null}
+    </Press>
+  );
+}
