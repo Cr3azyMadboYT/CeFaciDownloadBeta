@@ -389,7 +389,8 @@ export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
       : tr('N-am găsit nimic deschis atunci, nici până la {km} km.', { km: Math.max(req.maxKm, top(req0)) });
   }
   // Bilu says one or two things, the most important first: a long speech is not read
-  return { plans, req, relaxed, note: notes.slice(0, 2).join(' ') || undefined, empty, soloNote: solo };
+  // one thing at a time in Bilu's bubble (22.10: two explanations glued together were too much to read)
+  return { plans, req, relaxed, note: notes[0], empty, soloNote: solo };
 }
 
 export interface Suggestion { v: Venue; tag: string; line: string; at: Date }

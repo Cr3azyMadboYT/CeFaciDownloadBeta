@@ -52,7 +52,10 @@ export function makeTickets(p: Shown, people: number, crew?: { id: string; name:
 export function madePid(p: Shown, list: Plan[] | undefined): number | null {
   const day = (d: Date) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   const hm = (d: Date) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-  const found = p.steps.map((s) => (list ?? []).find((x) => !x.sid && x.placeId === s.place.id && x.date === day(s.at) && x.slot === hm(s.at)));
+  // „Acum” plans are made again a few minutes later (the hours move a little): the same place, the same day, within 45 min
+  const mins = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  const near = (a: string, b: string) => a !== 'acum' && Math.abs(mins(a) - mins(b)) <= 45;
+  const found = p.steps.map((s) => (list ?? []).find((x) => !x.sid && x.placeId === s.place.id && x.date === day(s.at) && near(x.slot, hm(s.at))));
   return found.every(Boolean) ? found[0]!.pid : null;
 }
 
