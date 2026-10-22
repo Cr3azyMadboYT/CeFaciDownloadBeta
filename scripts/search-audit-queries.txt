@@ -1,0 +1,245 @@
+# Căutări cum le scriu oamenii (22.10). O linie = o căutare. Rulare: AUDIT=1 npx vitest run scripts/search-audit.test.ts
+# --- mâncare
+pizza
+pizza buna
+pizzerie
+pizza napoletana
+shaorma
+shawarma
+saorma noaptea
+doner
+kebap
+burger
+burgeri
+smash burger
+sushi
+sushi ieftin
+ramen
+pho
+asiatic
+chinezesc
+japonez
+coreean
+thai
+indian
+italian
+paste
+carbonara
+romanesc
+ciorba
+sarmale
+mici
+gratar
+steakhouse
+peste
+fructe de mare
+vegan
+vegetarian
+fara gluten
+mancare sanatoasa
+salate
+brunch
+mic dejun
+clatite
+gofre
+inghetata
+prajituri
+patiserie
+desert
+ciocolata calda
+cofetarie
+papanasi
+mancare ieftina
+cina romantica
+restaurant elegant
+restaurant fancy
+loc de date
+prima intalnire
+zi de nastere
+cu copii
+pet friendly
+cu caine
+terasa
+rooftop
+cu vedere
+mancare la 2 noaptea
+non stop
+fast food
+street food
+grecesc
+gyros
+falafel
+hummus
+libanez
+turcesc
+tacos
+burrito
+bbq
+aripioare
+# --- băut
+bar
+pub
+berarie
+bere artizanala
+craft beer
+cocktail
+cocktailuri bune
+bar de cocktailuri
+speakeasy
+vin
+wine bar
+crama
+bar cu biliard
+darts
+karaoke
+muzica live
+bar cu muzica live
+jazz
+rock
+bar ieftin
+narghilea
+shisha
+bar sportiv
+unde vad meciul
+meci
+bar gay
+# --- party
+club
+club techno
+techno
+house
+manele
+club cu manele
+hip hop
+party
+petrecere
+afterparty
+dans
+salsa
+centru vechi
+lipscani
+# --- activități
+escape room
+escape
+bowling
+biliard
+ping pong
+paintball
+karting
+laser tag
+trambuline
+patinoar
+patinaj
+piscina
+inot
+catarare
+escalada
+padel
+tenis
+minigolf
+jocuri video
+vr
+realitate virtuala
+arcade
+board games
+jocuri de societate
+cinema
+film
+imax
+teatru
+stand up
+comedie
+opera
+muzeu
+expozitie
+galerie de arta
+planetariu
+gradina botanica
+zoo
+parc
+plimbare
+parc mare
+natura
+lac
+padure
+bicicleta
+picnic
+spa
+masaj
+sauna
+therme
+# --- intenții și combinații
+ceva ieftin in centru
+gratis
+activitati gratuite
+ce fac diseara
+ce facem azi
+ploua ce fac
+ceva la interior
+afara
+unde ies cu prietenii
+unde ies cu iubita
+loc linistit
+loc de lucrat cu laptop
+cafenea cu wifi
+cafenea cu prize
+cafenea linistita
+bar in militari
+pizza titan
+sushi aviatorilor
+cafenea floreasca
+restaurant herastrau
+club in centru
+bar dristor
+shaorma unirii
+mancare drumul taberei
+restaurant voluntari
+otopeni
+pipera
+afi
+mega mall
+promenada
+bar deschis dupa 2
+cafenea deschisa la 8 dimineata
+mic dejun la 9
+restaurant sub 50 lei
+cocktail sub 60 lei
+cina pentru 8 persoane
+loc pentru 10 oameni
+bar cu terasa centru
+# --- nume
+caru cu bere
+beraria h
+control
+fratelli
+expirat
+hanu lui manuc
+obor
+arcul de triumf
+ateneu
+teatrul national
+muzeul antipa
+cismigiu
+herastrau
+parcul tineretului
+# --- greșeli
+restaurnt
+cafenia
+bowlig
+escap room
+clubb
+shaormerie
+piza
+sushy
+berarie artizanla
+coctail
+mancare chinezeasca
+# --- engleză
+pizza near me
+cocktail bar
+nightclub
+museum
+coffee
+breakfast
+cheap food
+date night

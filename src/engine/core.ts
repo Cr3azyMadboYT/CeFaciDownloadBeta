@@ -392,6 +392,11 @@ export interface Parsed {
   people?: number;
   needs: Need[];        // wifi, nefumători, scaun cu rotile…
   fancy: boolean; family: boolean; romantic: boolean;
+  indoor?: boolean;     // "plouă", "la interior": nothing in the open
+  free?: boolean;       // "gratis": price 0
+  pets?: boolean;       // "cu câinele": the map does not say, terraces usually take dogs
+  birthday?: boolean;   // "zi de naștere": a group that wants fun
+  novel?: boolean;      // "ceva nou", "locuri ascunse": chosen places, not the famous ones, not the ones already seen
   fixes: string[];      // typo corrections, e.g. "bowlng → bowling"
   fuzzy: Record<string, string>; // typed word -> topic id, when the topic was guessed from a typo
   note: string;         // shown when we had to relax the request
@@ -504,7 +509,11 @@ export function parseQuery(q: string): Parsed {
   take(new RegExp(' ' + NUMW + ' (?:de )?(?:lei|ron)' + PER + ' '), (m) => { p.budget = num(m[1]); });
   if (take(/ (ieftin|ieftina|ieftine|ieftini|ieftinut|ieftinica|buget|low cost|lowcost|studentesc|studenteasca|accesibil|accesibile|preturi accesibile|preturi mici|preturi bune|nu prea scump|nu scump|pe buget|pe bani putini|economic|cheap|cheaper|cheapest|affordable|inexpensive|not expensive|on a budget|budget|student) /, () => {})) { p.cheap = true; p.budget = Math.min(p.budget ?? 50, 50); }
   if (take(/ (scump|scumpa|lux|luxos|luxoasa|elegant|eleganta|fancy|fine dining|gourmet|de fite|select|exclusivist|expensive|luxury|luxurious|upscale|high end|classy|posh) /, () => {})) p.fancy = true;
+  if (take(/ (gratis|gratuit|gratuita|gratuite|gratuiti|pe gratis|moca|fara bani|fara sa platesc|for free|free entry|free things|free stuff|free activities) /, () => {})) { p.free = true; p.budget = 0; }
   if (p.budget !== undefined && p.budget < 50) p.cheap = true;
+  if (take(/ (ploua|ploaie|pe ploaie|e ploaie|ploua afara|la interior|interior|inauntru|indoor|indoors|inside|la adapost|sub acoperis|e frig|frig|ninge|zapada|rainy|raining) /, () => {})) p.indoor = true;
+  if (take(/ (ceva nou|ceva diferit|ceva altfel|ceva neobisnuit|ceva inedit|locuri ascunse|loc ascuns|locuri noi|ascunse|hidden gems|hidden gem|underrated|mai putin cunoscute|mai putin cunoscut|nestiute|ceva surprinzator|something new|something different) /, () => {})) p.novel = true;
+  if (take(/ (pet friendly|petfriendly|dog friendly|cu caine|cu cainele|cu catel|cu catelul|cu animalul|cu animale|cu animalutul|caini|with my dog|with a dog|with dogs) /, () => {})) { p.pets = true; p.outdoor = true; }
 
   // clock times, before people ("înainte de 9" is a time, not nine people) and with the right half of the day:
   // "la 8" is the evening for a bar, "la 10" the morning for brunch, "la 1 noaptea" is 01:00
@@ -541,6 +550,7 @@ export function parseQuery(q: string): Parsed {
 
   // people
   const setPeople = (n: number) => { if (n >= 1 && n <= 40) p.people = n; };
+  if (take(/ (zi de nastere|ziua de nastere|zile de nastere|ziua mea|ziua lui|ziua ei|petrecere de ziua|birthday party|birthday|bday|majorat|majoratul) /, () => {})) { p.birthday = true; p.people ??= 6; p.vibes.push('Fun'); }
   if (take(/ (date night|on a date|for a date|first date|with my girlfriend|with my boyfriend|with my partner|with my wife|with my husband|girlfriend|boyfriend|couples|couple|anniversary|in doi|in 2|cuplu|cu iubita|cu iubitul|cu prietena|cu prietenul|date|intalnire|prima intalnire|romantic|romantica|romantice|romantik|aniversare) /, () => {})) { p.romantic = true; p.people ??= 2; p.vibes.push('Chill'); }
   take(new RegExp(' ' + NUMW + ' (?:de )?(?:persoane|persoana|pers|oameni|prieteni|prietene|insi|inși|adulti|colegi|baieti|fete|people|persons|pax|guys|friends|of us) '), (m) => setPeople(num(m[1]))); // "20 de persoane"
   take(new RegExp(' (?:gasca|grup|grupul|gasca mea|echipa|group of|party of|group) (?:de )?' + NUMW + ' '), (m) => setPeople(num(m[1])));
@@ -574,7 +584,7 @@ export function parseQuery(q: string): Parsed {
 
   // places (longest phrase first), then topic phrases
   if (!p.place) for (const [w, pl] of PLACE_PHRASES) { if (s.includes(' ' + w + ' ')) { p.place = pl; s = s.replace(' ' + w + ' ', ' '); break; } }
-  const OUT = / (cu terasa|terasa|terase|terasei|afara|gradina|gradini|in aer liber|aer liber|outdoor|curte|curtea|vara|with a terrace|with terrace|terraces|terrace|outdoors|outside|open air|patio)(?= )/g;
+  const OUT = / (cu terasa|terasa|terase|terasei|afara|gradina(?! (?:de bere|botanica|zoologica|icoanei))|gradini|in aer liber|aer liber|outdoor|curte|curtea|vara|with a terrace|with terrace|terraces|terrace|outdoors|outside|open air|patio)(?= )/g;
   if (OUT.test(s)) { p.outdoor = true; s = s.replace(OUT, ' '); }
   const content = s.trim(); // what is left for names and topics
   for (const [w, id] of TOPIC_PHRASES) if (s.includes(' ' + w + ' ')) { addTopic(p, id); s = s.replace(' ' + w + ' ', ' § '); }
@@ -589,6 +599,8 @@ export function parseQuery(q: string): Parsed {
     p.words.push(w);
   }
   if (p.place?.zone) p.zone = p.place.zone;
+  // "loc de lucrat cu laptopul": a café, unless something else was asked
+  if (p.needs.includes('wifi') && !p.topics.length) addTopic(p, 'cafe');
   return p;
 }
 function addTopic(p: Parsed, id: string) {
@@ -698,7 +710,7 @@ function topicFit(id: string, v: Venue, name: string, related: boolean): number 
   if (ki >= 0) fit = ki === 0 ? 1 : 0.92;
   if (t.cuisines?.length) {
     let best = 0;
-    v.cuisines.forEach((c, i) => { const ti = t.cuisines!.indexOf(c); if (ti >= 0) best = Math.max(best, (i === 0 ? 1 : 0.88) * (ti < 2 ? 1 : 0.85)); });
+    v.cuisines.forEach((c, i) => { const ti = t.cuisines!.indexOf(c); if (ti >= 0) best = Math.max(best, (i === 0 ? 1 : 0.88) * (ti === 0 ? 1 : ti === 1 ? 0.95 : 0.85)); });
     fit = Math.max(fit, best);
   }
   if (!fit && t.cats?.includes(v.cat)) fit = 0.9;
@@ -711,6 +723,14 @@ function topicFit(id: string, v: Venue, name: string, related: boolean): number 
   return fit;
 }
 
+// words that only repeat the kind ("restaurant elegant" must not favour places called "Restaurant X")
+// the parks and squares that give an area its name ("Herăstrău", "Parcul Tineretului")
+const AREA_KINDS = new Set(['park', 'square', 'promenade', 'botanical_garden', 'nature_reserve']);
+const GENERIC_WORDS = new Set(['restaurant', 'restaurante', 'restaurantul', 'bar', 'baruri', 'pub', 'club', 'cafe', 'cafenea', 'cafenele', 'parc', 'parcul', 'muzeu', 'muzeul', 'teatru', 'teatrul', 'cinema', 'mancare', 'food']);
+// a place kind next to what is done there ("bar cu biliard", "pub cu meciuri"): the second one decides
+const GENERIC_TOPICS = new Set(['bar', 'pub', 'restaurant', 'cafe', 'club', 'mancare', 'party', 'fastfood', 'bere']);
+// shows and events: the map rarely has their hours, and the evening is when they play
+const SHOW_KINDS = new Set(['theatre', 'event_space', 'arts_centre', 'cinema']);
 const FOOD_TOPICS = new Set(Object.entries(TOPICS).filter(([, t]) => t.cuisines && !t.kinds).map(([id]) => id));
 const label = (n: number) => (n < 1 ? tr('La {n} m', { n: Math.max(50, Math.round(n * 1000 / 50) * 50) }) : tr('La {n} km', { n: n.toFixed(1).replace('.', pick(',', '.')) }));
 const ROMANTIC_NAME = /wine|\bvin|rooftop|sky|garden|gradin|bistro|trattori|osteri|brasserie|lounge|terrace|teras|cuisine|gourmet|atelier/;
@@ -754,6 +774,21 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
     }
     named.sort((a, b) => b.score - a.score);
   }
+  // a place's name that is also a venue's name ("parcul tineretului", "herastrau"): the venue itself first
+  // (only the park or square that gives the area its name, or a venue called exactly so: "otopeni" stays the town)
+  if (p.place && !named.length) {
+    const whole = fold(q).replace(/[^a-z0-9 ]/g, ' ').split(' ').filter((w) => w && !STOP.has(w));
+    const wq = whole.join('');
+    if (whole.length) for (const v of all) {
+      const ns = nameScore(whole, v);
+      const exact = squash(v.name) === wq;
+      if (!(exact || (ns >= 0.88 && AREA_KINDS.has(v.k))) || (ctx.minor && adultOnly(v))) continue;
+      const o = openAt(v, timeFor(v));
+      const d = km(ctx.origin, v);
+      named.push({ v, score: 300 + 40 * ns + (AREA_KINDS.has(v.k) ? 10 : 0) - d * 0.5, km: d, open: o, reasons: [o.label].filter((x) => x !== tr('Program necunoscut')), parts: empty });
+    }
+    named.sort((a, b) => b.score - a.score);
+  }
   const namedIds = new Set(named.map((x) => x.v.id));
 
   // 2) topics and modifiers
@@ -762,7 +797,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
   const food = topics.filter((id) => FOOD_TOPICS.has(id));
   const venueTopics = topics.filter((id) => !FOOD_TOPICS.has(id));
   const wantsSomething = topics.length > 0;
-  const anyModifier = !!(p.near || p.place || p.time || p.budget !== undefined || n || p.outdoor || p.family || p.romantic || p.fancy || p.street || p.vibes.length || p.needs.length);
+  const anyModifier = !!(p.near || p.place || p.time || p.budget !== undefined || n || p.outdoor || p.indoor || p.pets || p.birthday || p.novel || p.family || p.romantic || p.fancy || p.street || p.vibes.length || p.needs.length);
   if (nameIntent && !wantsSomething) return { results: named.slice(0, limit), parsed: p };
   if (!wantsSomething && !anyModifier && !nameIntent) {
     // nothing understood: loose name matches, so the person still sees something
@@ -771,7 +806,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
     return { results: loose.map(({ v, s }) => { const o = openAt(v, ctx.now); const d = km(origin, v); return { v, score: 100 * s, km: d, open: o, reasons: [o.label, label(d)], parts: empty }; }), parsed: p };
   }
 
-  const rank = (radius: number, useRelated: boolean, relaxOpen: boolean, relaxOutdoor: boolean): Cand[] => {
+  const rank = (radius: number, useRelated: boolean, relaxOpen: boolean, relaxOutdoor: boolean, relaxBudget = false): Cand[] => {
     const res: Cand[] = [];
     for (const v of all) {
       if (namedIds.has(v.id)) continue;
@@ -782,14 +817,22 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       let fit = 0.6;
       if (wantsSomething) {
         const ff = food.length ? Math.max(...food.map((id) => topicFit(id, v, name, useRelated))) : 0;
-        const vf = venueTopics.length ? Math.max(...venueTopics.map((id) => topicFit(id, v, name, useRelated))) : 0;
+        const specific = venueTopics.filter((id) => !GENERIC_TOPICS.has(id));
+        const generic = venueTopics.filter((id) => GENERIC_TOPICS.has(id));
+        let vf = venueTopics.length ? Math.max(...venueTopics.map((id) => topicFit(id, v, name, useRelated))) : 0;
+        if (specific.length && generic.length) {
+          const sf = Math.max(...specific.map((id) => topicFit(id, v, name, useRelated)));
+          vf = sf ? Math.min(1.2, sf + (generic.some((id) => topicFit(id, v, name, false) > 0) ? 0.08 : 0)) : 0;
+        }
         if (food.length && venueTopics.length) {
           if (!ff) continue;
           if (!vf && venueTopics.some((id) => !['restaurant', 'mancare', 'fastfood', 'cafe'].includes(id))) continue;
           fit = ff * (vf ? 1 : 0.8);
         } else fit = food.length ? ff : vf;
         if (!fit) continue;
-        if (p.raw.some((w) => w.length >= 4 && toks(v).includes(w))) fit += 0.12; // "opera", "jazz", "bistro" in the name itself
+        if (p.raw.some((w) => w.length >= 4 && !GENERIC_WORDS.has(w) && toks(v).includes(w))) fit += 0.12; // "opera", "jazz", "bistro" in the name itself
+        // a hookah lounge is not where people mean by a cocktail or a glass of wine
+        if (v.cuisines.includes('shisha') && topics.some((id) => id === 'cocktail' || id === 'vin') && !topics.includes('shisha')) fit *= 0.75;
       } else if (v.k === 'water_park' || v.k === 'zoo' || v.k === 'theme_park') fit = 0.45; // seasonal or day trips: not a default idea
       else if (v.cat === 'natura' || v.cat === 'sport') fit = 0.5; // a walk or a game: an idea, but not ahead of a place to sit
       // where
@@ -800,11 +843,12 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       // how many, how much, with whom
       if (n && ((n > k.max && !ROOMY.has(v.k)) || (n > 1 && n < k.min))) continue; // as the planner: a restaurant takes 15
       const price = priceOf(v);
-      if (p.budget !== undefined && price > p.budget) continue;
+      if (p.budget !== undefined && price > p.budget && !relaxBudget) continue;
       if (p.budgetMin !== undefined && price < p.budgetMin) continue;
       if (p.family && (v.cat === 'bar' || v.cat === 'club')) continue;
-      if (p.romantic && (v.fast || v.cat === 'sport' || (v.cat === 'activitate' && v.k !== 'ice_rink'))) continue;
+      if (p.romantic && !wantsSomething && (v.fast || v.cat === 'sport' || (v.cat === 'activitate' && v.k !== 'ice_rink'))) continue;
       if (p.outdoor && !relaxOutdoor && !(v.outdoor || OUTDOOR_HINT.test(name) || k.vibes.includes('Aer liber'))) continue;
+      if (p.indoor && exposure(v) === 'out') continue;
       // when
       const t = timeFor(v);
       if (dayOnly(v, t)) continue;
@@ -812,6 +856,7 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       if (st.known && !st.open && p.time) continue;
       if (p.openNow && !st.known && !relaxOpen) continue;
       if (p.time?.nonstop && !relaxOpen && !/24\/7|00:00-24:00|00:00\+/.test(v.hours ?? '')) continue;
+      if (p.time?.nonstop && !wantsSomething && v.cat === 'natura') continue; // "non stop" means a place that serves, not a park
 
       const chain = isChain(v, all) && FOODISH.has(v.cat) && !brandAsked(v);
       const complete = Math.min(1, [v.hours, v.website || v.phone, v.street, v.famous].filter(Boolean).length / 3);
@@ -826,10 +871,16 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       // closed now (no time asked): still shown, but after every open place (decision Cornel, 06.10: "îmi arată să mă
       // duc, însă e închis la ora asta"); without hours on the map, how often that kind of place is open at that hour
       // decides (a café at 01:00 almost never is); a park without hours is simply open by day
-      sc += !st.known ? (v.cat === 'natura' ? 10 : openChance(v, t) >= LIKELY ? (p.time ? 3 : 4) : -30) : st.open ? 12 : -45;
+      sc += !st.known ? (v.cat === 'natura' ? 10 : SHOW_KINDS.has(v.k) && hourNow >= 17 && hourNow < 23 ? 3 : openChance(v, t) >= LIKELY ? (p.time ? 3 : 4) : -30) : st.open ? 12 : -45;
       if (p.time && !wantsSomething) sc += 14 * nightFit;
       if (p.cheap) sc += 6 * Math.max(0, 1 - price / 60);
-      if (p.fancy) sc += Math.min(8, price / 15);
+      if (p.fancy) sc += Math.min(8, price / 15) + (v.cuisines.includes('fine_dining') || (v.price ?? 0) >= 120 ? 10 : 0);
+      if (relaxBudget && p.budget !== undefined && price > p.budget) sc -= Math.min(12, (price - p.budget) / 5); // the cheaper first, still what was asked
+      // "liniștit": a café or a park before a club or a busy pub
+      if (p.vibes.includes('Chill') && !p.vibes.includes('Party') && !wantsSomething) sc += v.k === 'nightclub' ? -14 : v.k === 'pub' || v.k === 'biergarten' ? -6 : v.cat === 'cafea' || v.cat === 'natura' || v.k === 'gallery' ? 5 : 0;
+      if (p.novel) sc += (v.pick ? 6 : 0) - (v.famous ? 5 : 0) - (ctx.history.includes(v.id) ? 12 : 0);
+      if (p.indoor && !wantsSomething && ['activitate', 'film', 'cultura', 'teatru', 'cafea', 'desert'].includes(v.cat)) sc += 6; // rain: something to do inside, not only a pub
+      if (p.birthday && (v.cat === 'activitate' || v.k === 'restaurant' || v.k === 'bar' || v.k === 'pub')) sc += 5;
       if (n && n >= 5 && (v.cat === 'activitate' || v.cat === 'bar' || v.k === 'restaurant' || v.k === 'soccer')) sc += 6;
       if (n && n >= 5 && v.cat === 'cafea') sc -= 6;
       if (p.romantic) {
@@ -870,17 +921,26 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
   let list: Cand[] = [];
   let used = tries[0];
   for (const tr of tries) { list = rank(tr[0], tr[1], tr[2], tr[3]); used = tr; if (list.length >= 3) break; }
+  // nothing (or almost) under the budget: the cheapest of what was asked, and say so ("sushi ieftin", "gratis")
+  let budgetRelaxed = false;
+  if (list.length < 3 && p.budget !== undefined) {
+    const wider = rank(used[0], used[1], used[2], used[3], true);
+    if (wider.length > list.length) { list = wider; budgetRelaxed = true; }
+  }
   const notes: string[] = [];
   if (used[1] && wantsSomething) {
     const exact = list.filter((c) => c.fit > 0.5).length;
     if (exact < 3) {
-      const what = topics.map((id) => tr(TOPICS[id].label).toLowerCase()).join(', ');
+      const asked = topics.some((id) => !GENERIC_TOPICS.has(id)) ? topics.filter((id) => !GENERIC_TOPICS.has(id)) : topics; // "bar cu biliard": biliard
+      const what = asked.map((id) => tr(TOPICS[id].label).toLowerCase()).join(', ');
       notes.push(exact
         ? (p.place ? tr('Am găsit puține locuri cu {what} în zonă, așa că am pus și ceva asemănător.', { what }) : tr('Am găsit puține locuri cu {what}, așa că am pus și ceva asemănător.', { what }))
         : (p.place ? tr('Nu am găsit {what} în zonă, așa că îți arăt ceva asemănător.', { what }) : tr('Nu am găsit {what}, așa că îți arăt ceva asemănător.', { what })));
     }
   }
   if (used[4] && used[4] !== 'far' && used[4] !== 'related') notes.push(used[4]);
+  if (budgetRelaxed) notes.push(p.budget === 0 ? tr('Puține lucruri de aici sunt gratuite, așa că îți arăt și cele mai ieftine.') : tr('Puține locuri se încadrează în {n} lei de persoană, așa că îți arăt și cele mai ieftine.', { n: p.budget ?? 0 }));
+  if (p.pets) notes.push(tr('Harta nu spune unde intri cu câinele. Îți arăt locuri cu terasă: de obicei primesc, dar întreabă înainte.'));
 
   // the same place mapped twice (a node and a building) shows once
   const seen = new Map<string, Venue[]>();

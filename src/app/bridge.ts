@@ -428,7 +428,7 @@ export const APP = {
   /** Free-text search, same card shape; `at`: as if it were then (the plan's moment). */
   search(q: string, at?: Date): Place[] {
     const ctx = this.ctx();
-    const r = search(VENUES, q, at ? { ...ctx, now: at } : ctx, 30);
+    const r = search(VENUES, q, at ? { ...ctx, now: at } : ctx, 80); // Explorează is a feed now (22.10): more than a page of results
     return r.results.flatMap((s: Scored) => { const pl = this.byIdMap.get(s.v.id); if (!pl) return []; this.reasons.set(s.v.id, s.reasons.join(' · ')); return [pl]; });
   },
   searchNote(q: string) {
