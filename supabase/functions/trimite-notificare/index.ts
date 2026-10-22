@@ -1,5 +1,6 @@
 // Edge Function "trimite-notificare": called by the database (pg_net) when someone starts a vote with you, calls you
-// to a plan, invites you into a crew, or (FreeNow) goes out / joins your outing. It reads the row itself (the call only says which one), sends the message
+// to a plan, invites you into a crew, asks to be friends / accepts (22.10), or (FreeNow) goes out / joins your outing.
+// Every message also stays in public.notifications (the bell in the app). It reads the row itself (the call only says which one), sends the message
 // once (push_log) through Firebase Cloud Messaging to every phone of that person, and forgets dead tokens.
 // Needs the secret FCM_SERVICE_ACCOUNT (the Firebase service account JSON). No JWT: the database calls it, with the
 // hook secret from Vault (push_hook_secret, made by the migration 20261007030000) in the x-cefaci-hook header; any
@@ -54,9 +55,7 @@ Deno.serve(async (req) => {
   if (!hook || given.length !== hook.length || given !== hook) return done();
   let kind = '', ref = '', user = '';
   try { const b = await req.json(); kind = String(b.kind ?? ''); ref = String(b.ref ?? ''); user = String(b.user ?? ''); } catch { /* bad body */ }
-  if (!['vote', 'plan', 'crew', 'free', 'free_join', 'free_left'].includes(kind) || !UUID.test(ref) || !UUID.test(user)) return done();
-  const raw = Deno.env.get('FCM_SERVICE_ACCOUNT');
-  if (!raw) return done();
+  if (!['vote', 'plan', 'crew', 'free', 'free_join', 'free_left', 'friend', 'friend_ok'].includes(kind) || !UUID.test(ref) || !UUID.test(user)) return done();
   const name = async (id: string | null) => (id ? ((await db.from('profiles').select('first_name').eq('id', id).maybeSingle()).data?.first_name ?? 'Cineva') : 'Cineva');
 
   // the message, from the real row (and only if this person is really in it)
@@ -115,6 +114,26 @@ Deno.serve(async (req) => {
     titleEn = 'The others can\'t make it';
     bodyEn = 'The outing is off. See who else is on FreeNow.';
     url = '/freenow';
+  } else if (kind === 'friend') {
+    // ref = cine cere, user = cine primește cererea (22.10)
+    const { data: f } = await db.from('friendships').select('status').eq('requester', ref).eq('addressee', user).maybeSingle();
+    if (!f || f.status !== 'pending') return done();
+    const who = await name(ref);
+    title = who + ' vrea să fiți prieteni';
+    body = 'Acceptă și ieșiți împreună: planuri, gășci, FreeNow.';
+    titleEn = who + ' wants to be friends';
+    bodyEn = 'Accept and go out together: plans, crews, FreeNow.';
+    url = '/prieteni';
+  } else if (kind === 'friend_ok') {
+    // ref = noul prieten, user = cine primește vestea
+    const { data: f } = await db.from('friendships').select('status').or(`and(requester.eq.${ref},addressee.eq.${user}),and(requester.eq.${user},addressee.eq.${ref})`).maybeSingle();
+    if (!f || f.status !== 'accepted') return done();
+    const who = await name(ref);
+    title = 'Tu și ' + who + ' sunteți prieteni';
+    body = 'Faceți un plan împreună?';
+    titleEn = 'You and ' + who + ' are now friends';
+    bodyEn = 'Make a plan together?';
+    url = '/prieten/' + ref;
   } else {
     const { data: c } = await db.from('crews').select('name').eq('id', ref).maybeSingle();
     const { data: me } = await db.from('crew_members').select('status, invited_by').eq('crew_id', ref).eq('user_id', user).maybeSingle();
@@ -130,6 +149,10 @@ Deno.serve(async (req) => {
   // once per person and thing
   const { error: dup } = await db.from('push_log').insert({ kind, ref, user_id: user });
   if (dup) return done();
+  // the bell: the list keeps everything, even when the phone has no notifications turned on (22.10)
+  await db.from('notifications').insert({ user_id: user, kind, ref, title, body, title_en: titleEn || null, body_en: bodyEn || null, url });
+  const raw = Deno.env.get('FCM_SERVICE_ACCOUNT');
+  if (!raw) return done();
   const { data: tokens } = await db.from('push_tokens').select('token, lang').eq('user_id', user);
   if (!tokens?.length) return done();
 
