@@ -317,5 +317,17 @@ const en: Record<string, string> = {
   'ieri, {t}': 'yesterday, {t}',
   'Liniște deocamdată': 'All quiet for now',
   'Aici apar cererile de prietenie, invitațiile în gașcă, voturile și planurile la care te cheamă prietenii.': 'Friend requests, crew invites, votes and plans your friends call you to show up here.',
+  // the friend's card (22.10)
+  'ștampilă': 'stamp',
+  'ștampile': 'stamps',
+  'prieten comun': 'mutual friend',
+  'prieteni comuni': 'mutual friends',
+  'Alegeți locul împreună': 'Pick the place together',
+  '{n} gășci': '{n} crews',
+  'E deja în gășcile tale': 'Already in your crews',
+  'Cu {name}': 'With {name}',
+  'Ștergi prietenia cu {name}?': 'Remove {name} from your friends?',
+  'Nu mai vedeți unul altuia FreeNow și nu vă mai puteți chema la planuri. Gășcile rămân cum sunt.': 'You will no longer see each other on FreeNow or invite each other to plans. Crews stay as they are.',
+  'Da, elimină': 'Yes, remove',
 };
 export default en;
