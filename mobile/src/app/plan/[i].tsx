@@ -57,17 +57,17 @@ export default function PlanDeschis() {
         </View>
         <View style={{ marginTop: -22, borderTopLeftRadius: 26, borderTopRightRadius: 26, backgroundColor: t.bg, paddingHorizontal: 20, paddingTop: 18 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View style={{ width: 26, height: 26, borderRadius: 99, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}><T style={{ fontFamily: F.b, fontSize: 13, color: '#FFD43B' }}>{String(idx + 1)}</T></View>
+            <View style={{ width: 26, height: 26, borderRadius: 99, backgroundColor: '#0E1440', alignItems: 'center', justifyContent: 'center' }}>{surprise ? <Icon name="dice" size={15} color="#FFD43B" /> : <T style={{ fontFamily: F.b, fontSize: 13, color: '#FFD43B' }}>{String(idx + 1)}</T>}</View>
             <T accessibilityRole="header" style={{ flex: 1, fontFamily: F.display, fontSize: 24 }}>{p.steps.length === 1 ? p.steps[0].place.name : p.title}</T>
           </View>
           <Muted style={{ marginTop: 2, fontSize: 14 }}>{(p.steps.length === 1 ? p.steps[0].place.title + ' · ' : '') + p.from + '–' + p.to + ' · ' + (people === 1 ? tr('doar tu') : tr('{n} persoane', { n: people }))}</Muted>
           <Checks plan={p} />
-          {surprise && st.note ? (
+          {surprise && st.soloNote ? (
             // what Bilu had to change to find it (further than the radius, over the budget…): said here too, the
             // surprise skips the list where it is written
             <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 14, backgroundColor: t.yellowSoft }}>
               <Icon name="sparkle" size={18} color={t.yellowInk} />
-              <T style={{ flex: 1, fontFamily: F.m, fontSize: 13, lineHeight: 18 }}>{st.note}</T>
+              <T style={{ flex: 1, fontFamily: F.m, fontSize: 13, lineHeight: 18 }}>{st.soloNote}</T>
             </View>
           ) : null}
 

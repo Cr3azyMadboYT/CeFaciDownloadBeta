@@ -55,7 +55,7 @@ export interface MadePlan {
 /** What Bilu changed to find plans: further away, wider still, without "fără fum"/"terasă", over the budget, not
  * only "aproape". */
 export type Relax = 'far' | 'wider' | 'needs' | 'budget' | 'near';
-export interface PlanSet { plans: MadePlan[]; req: PlanReq; relaxed: Relax[]; note?: string; empty?: string }
+export interface PlanSet { plans: MadePlan[]; req: PlanReq; relaxed: Relax[]; note?: string; empty?: string; /** what still holds for one plan alone (Surprinde-mă): further, over the budget… not about „the other plans” */ soloNote?: string }
 
 export const whoOf = (n: number): Who => (n <= 1 ? '1' : n === 2 ? '2' : n <= 4 ? '34' : '5');
 export { carMin };
@@ -366,6 +366,7 @@ export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
   if (relaxed.includes('budget')) notes.push(req0.budgetMax === 0 ? tr('Gratis nu e nimic deschis la ora asta: uite ce e mai ieftin.') : req0.budgetMin > 0 && req0.budgetMax === Infinity ? tr('De la {min} lei în sus nu e nimic deschis la ora asta: uite ce e.', { min: req0.budgetMin }) : tr('Cu {max} lei de persoană nu iese nimic la ora asta: uite ce e cel mai aproape de buget.', { max: req0.budgetMax }));
   if (relaxed.includes('near')) notes.push(tr('Chiar lângă tine nu e nimic deschis atunci, așa că m-am uitat puțin mai departe.'));
   else if ((relaxed.includes('far') || relaxed.includes('wider')) && !(close < 12 && farFirst)) notes.push(tr('Prin apropiere n-am găsit destule la ora asta, așa că m-am uitat până la {km} km.', { km: req.maxKm }));
+  const solo = notes.slice(0, 2).join(' ') || undefined;
   const lone = plans.filter((p) => p.id.startsWith('loc-')).length;
   const linked = plans.length - lone;
   if (req.mode === 'seara' && lone) {
@@ -388,7 +389,7 @@ export function makePlans(all: Venue[], req00: PlanReq, ctx: Ctx): PlanSet {
       : tr('N-am găsit nimic deschis atunci, nici până la {km} km.', { km: Math.max(req.maxKm, top(req0)) });
   }
   // Bilu says one or two things, the most important first: a long speech is not read
-  return { plans, req, relaxed, note: notes.slice(0, 2).join(' ') || undefined, empty };
+  return { plans, req, relaxed, note: notes.slice(0, 2).join(' ') || undefined, empty, soloNote: solo };
 }
 
 export interface Suggestion { v: Venue; tag: string; line: string; at: Date }

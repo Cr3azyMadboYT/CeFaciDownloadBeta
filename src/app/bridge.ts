@@ -515,7 +515,7 @@ export const APP = {
     const ctx = { ...ctx0, taste, minor: ctx0.minor || crewMinor };
     const set: PlanSet = makePlans(VENUES, { ...this.planReq(a), avoid: avoid.length ? avoid : undefined }, ctx);
     this.lastPlans = set.plans; this.lastReq = set.req; this.altSeen.clear();
-    return { plans: set.plans.map((p) => this.showPlan(p)), note: set.note, empty: set.empty, relaxed: set.relaxed };
+    return { plans: set.plans.map((p) => this.showPlan(p)), note: set.note, soloNote: set.soloNote, empty: set.empty, relaxed: set.relaxed };
   },
   // ---------- "O construiesc eu" (decision Cornel, 06.10): the evening step by step ----------
   built: { req: null as PlanReq | null, steps: [] as PlanStep[], parts: [] as string[], minor: false },

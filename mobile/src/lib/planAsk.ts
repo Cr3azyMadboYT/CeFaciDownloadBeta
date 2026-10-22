@@ -153,7 +153,7 @@ export function surpriseDraft(now = new Date()): Draft {
 export const moodDraft = (vibe: string, now = new Date()): Draft => ({ ...firstDraft(now), vibes: [vibe] });
 
 // ---------- the plans on screen ----------
-type S = { draft: Draft | null; plans: Shown[]; chips: string[]; note?: string; empty?: string; notice?: Notice; loading: boolean; madeAt: number; pick: number; seen: string[]; wider: boolean };
+type S = { draft: Draft | null; plans: Shown[]; chips: string[]; note?: string; soloNote?: string; empty?: string; notice?: Notice; loading: boolean; madeAt: number; pick: number; seen: string[]; wider: boolean };
 let s: S = { draft: null, plans: [], chips: [], loading: false, madeAt: 0, pick: 0, seen: [], wider: false };
 const subs = new Set<() => void>();
 const emit = () => subs.forEach((f) => f());
@@ -191,7 +191,7 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
     const pick = o.surprise && r.plans.length ? Math.min(r.plans.length - 1, roll < 0.45 ? 0 : roll < 0.75 ? 1 : 2) : 0;
     const opened = o.surprise && r.plans[pick] ? r.plans[pick].steps.map((x) => x.place.id) : [];
     if (opened.length) rememberSurprise(opened);
-    s = { ...s, notice: o.notice ?? minorNote, plans: r.plans, note: r.note, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
+    s = { ...s, notice: o.notice ?? minorNote, plans: r.plans, note: r.note, soloNote: r.soloNote, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
     emit();
     done(s);
     // then Google is asked whether they are really open at those hours; a closed one is swapped for another
