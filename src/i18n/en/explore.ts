@@ -171,6 +171,11 @@ const en: Record<string, string> = {
   'Trimite la vot ({n})': 'Send to vote ({n})',
   'Mai vin…': 'Loading more…',
   'Asta e tot ce se potrivește. Schimbă filtrele ca să vezi altceva.': 'That is everything that fits. Change the filters to see something else.',
-  'Bifează cercul de pe un loc ca să-l pui la votul cu gașca (cel mult 3).': 'Tick the circle on a place to add it to the crew vote (up to 3).',
+  'Bifează cercul de pe 2–3 locuri ca să le trimiți gășcii la vot.': 'Tick the circle on 2–3 places to send them to your crew to vote.',
+  'Mai bifează un loc': 'Tick one more place',
+  'Bifează 2–3 locuri': 'Tick 2–3 places',
+  'Trimite la vot': 'Send to vote',
+  'Amestecă lista': 'Shuffle the list',
+  'Amestecă': 'Shuffle',
 };
 export default en;

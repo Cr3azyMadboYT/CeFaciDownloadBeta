@@ -1,7 +1,7 @@
 // Rezultate: a feed of every place that fits (Cornel, 22.10: „ca un feed, nu câte 3 și Altele la infinit”), the first three
 // with a role (a safe bet first), the search box and the filters on top; up to 3 places can be ticked for the crew vote.
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
-import { FlatList, ScrollView, TextInput, View } from 'react-native';
+import { Animated, Easing, FlatList, ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from '../ui/insets';
 import { APP, useApp } from '../lib/session';
@@ -20,6 +20,8 @@ import { Doodles } from '../ui/Doodles';
 import { MissingPlace } from '../ui/MissingPlace';
 import { openAt, PUBLIC_SPACE } from '../../../src/engine/core';
 import { tr, pick as byLang } from '../lib/i18n';
+import { mix, MIX_WAIT_MS } from '../lib/shuffle';
+import { useCalm } from '../lib/motion';
 
 const EXAMPLES = ['pizza sector 2', 'bar cu terasă', 'escape room', 'cafenea deschisă acum', 'muzeu', 'club'];
 const EXAMPLES_MINOR = ['pizza sector 2', 'escape room', 'cafenea deschisă acum', 'muzeu', 'bowling', 'cinema'];
@@ -27,6 +29,7 @@ const EXAMPLES_MINOR = ['pizza sector 2', 'escape room', 'cafenea deschisă acum
 const EXAMPLES_EN = ['pizza sector 2', 'bar with terrace', 'escape room', 'coffee open now', 'museum', 'club'];
 const EXAMPLES_MINOR_EN = ['pizza sector 2', 'escape room', 'coffee open now', 'museum', 'bowling', 'cinema'];
 const ADULT_WORDS = /\b(club|bar|pub|cocktail|bere|beer|narghilea|shisha|hookah|vin|wine|party)/i;
+const SHUFFLE = 'M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22M18 2l4 4-4 4M2 6h1.9c1.5 0 2.9.9 3.6 2.2M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8M18 14l4 4-4 4';
 const CAR = 'M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2M9 17h6M5 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0M15 17a2 2 0 1 0 4 0 2 2 0 1 0-4 0';
 const WALLET = 'M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4';
 
@@ -59,15 +62,20 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
   const all = useMemo(() => listFor(f, typed), [f, typed, prefs, wxv]); // eslint-disable-line react-hooks/exhaustive-deps
   const [shown, setShown] = useState(STEP);
   const [picked, setPicked] = useState<string[]>([]);
-  useEffect(() => { setShown(STEP); setPicked([]); }, [f, typed]);
-  const items = all.slice(0, shown);
-  const top = all.slice(0, 3);
+  // "Amestecă": another order, the first places still the ones that fit the person best (lib/shuffle.ts)
+  const [seed, setSeed] = useState(0);
+  const [mixedAt, setMixedAt] = useState(0);
+  const before = useRef<string[]>([]);
+  useEffect(() => { setShown(STEP); setPicked([]); setSeed(0); before.current = []; }, [f, typed]);
+  const searching = sq.trim().length > 1;
+  const order = useMemo(() => (searching ? all : mix(all, seed, before.current)), [all, seed, searching]);
+  const items = order.slice(0, shown);
+  const top = order.slice(0, 3);
   const nearest = top.length ? top.reduce((a, b) => (b.dist < a.dist ? b : a)) : null;
   const used = { near: false, fresh: false };
   const roles = top.map((p, i) => role(t, i, p, nearest, used, tried));
-  const forVote = picked.length ? all.filter((p) => picked.includes(p.id)) : top;
+  const forVote = all.filter((p) => picked.includes(p.id));
   const togglePick = (id: string) => setPicked((x) => (x.includes(id) ? x.filter((y) => y !== id) : x.length >= VOTE_MAX ? x : [...x, id]));
-  const searching = sq.trim().length > 1;
   // few places within the radius: offer to look further (decision Cornel, 04.10: „caut pe o rază mai extinsă? da/nu”)
   const [noFurther, setNoFurther] = useState(false);
   const further = useMemo(() => {
@@ -90,6 +98,34 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
   // a place opens its details first; the plan comes from there (decision Cornel, 06.10: a plan at the first tap was stressful)
   const pick = (id: string) => router.push({ pathname: '/loc/[id]', params: { id } });
 
+  const listRef = useRef<FlatList<Place>>(null);
+  const calm = useCalm();
+  // nothing (or one) ticked: the button shakes and turns red for a moment, instead of sending places nobody chose
+  const shake = useRef(new Animated.Value(0)).current;
+  const [warn, setWarn] = useState(false);
+  const warnTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (warnTimer.current) clearTimeout(warnTimer.current); }, []);
+  const askVote = () => {
+    if (forVote.length >= 2) { setVote(true); return; }
+    setWarn(true);
+    if (warnTimer.current) clearTimeout(warnTimer.current);
+    warnTimer.current = setTimeout(() => setWarn(false), 1600);
+    if (!calm) {
+      shake.setValue(0);
+      Animated.sequence([10, -10, 8, -8, 4, 0].map((x) => Animated.timing(shake, { toValue: x, duration: 55, easing: Easing.linear, useNativeDriver: true }))).start();
+    }
+  };
+  // at most once every 2.5 s, so it cannot be hammered (Cornel, 22.10)
+  const [now, setNow] = useState(0);
+  const cooling = mixedAt > 0 && now - mixedAt < MIX_WAIT_MS;
+  useEffect(() => { if (!mixedAt) return; const id = setTimeout(() => setNow(Date.now()), MIX_WAIT_MS + 30); return () => clearTimeout(id); }, [mixedAt]);
+  const reshuffle = () => {
+    const at = Date.now();
+    if (at - mixedAt < MIX_WAIT_MS) return;
+    before.current = order.slice(0, 8).map((p) => p.id);
+    setSeed(Math.floor(Math.random() * 2 ** 31) + 1); setMixedAt(at); setNow(at); setShown(STEP);
+    listRef.current?.scrollToOffset({ offset: 0, animated: !calm });
+  };
   const renderItem = ({ item: p, index: i }: { item: Place; index: number }) => {
     const r = i < 3 ? roles[i] : null;
     const on = picked.includes(p.id);
@@ -173,7 +209,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
       ) : null}
       <H1 style={{ marginTop: 14, fontSize: 38, lineHeight: 38 }}>{title}</H1>
       <Muted style={{ marginTop: 6 }}>{sub}</Muted>
-      {all.length > 1 ? <Muted style={{ marginTop: 4, fontSize: 13 }}>{tr('Bifează cercul de pe un loc ca să-l pui la votul cu gașca (cel mult 3).')}</Muted> : null}
+      {all.length > 1 ? <Muted style={{ marginTop: 4, fontSize: 13 }}>{tr('Bifează cercul de pe 2–3 locuri ca să le trimiți gășcii la vot.')}</Muted> : null}
       {further && !noFurther ? (
         <View style={{ marginTop: 10, padding: 14, gap: 10, borderRadius: 18, backgroundColor: t.yellowSoft }}>
           <T style={{ fontFamily: F.sb, fontSize: 14, lineHeight: 20 }}>{all.length === 1
@@ -236,6 +272,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <Doodles />
       <FlatList
+        ref={listRef}
         data={items}
         keyExtractor={(p) => p.id}
         renderItem={renderItem}
@@ -250,7 +287,18 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
         showsVerticalScrollIndicator={false}
       />
       <View style={{ paddingHorizontal: 20, paddingTop: 12, paddingBottom: inTab ? 12 : Math.max(ins.bottom, 12) + 14, flexDirection: 'row', gap: 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
-        <Big style={{ flex: 1 }} label={picked.length ? tr('Trimite la vot ({n})', { n: picked.length }) : tr('Trimite gășcii la vot')} disabled={forVote.length < 2} icon={<Icon name="users" color={forVote.length >= 2 ? '#FFFFFF' : t.ink2} />} onPress={() => setVote(true)} />
+        <Animated.View style={{ flex: 1, transform: [{ translateX: shake }] }}>
+          <Big style={{ minHeight: 50, borderRadius: 16 }} color={warn ? t.coral : undefined}
+            label={warn ? (picked.length ? tr('Mai bifează un loc') : tr('Bifează 2–3 locuri')) : picked.length ? tr('Trimite la vot ({n})', { n: picked.length }) : tr('Trimite la vot')}
+            icon={<Icon name="users" size={18} color="#FFFFFF" />} onPress={askVote} />
+        </Animated.View>
+        {!searching && all.length > 3 ? (
+          <Press onPress={reshuffle} disabled={cooling} accessibilityLabel={tr('Amestecă lista')} accessibilityState={{ disabled: cooling }}
+            style={{ minHeight: 50, paddingHorizontal: 14, borderRadius: 16, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1, flexDirection: 'row', alignItems: 'center', gap: 6, opacity: cooling ? 0.45 : 1 }}>
+            <Icon d={SHUFFLE} size={18} color={t.ink} />
+            <T style={{ fontFamily: F.sb, fontSize: 15 }}>{tr('Amestecă')}</T>
+          </Press>
+        ) : null}
       </View>
       <FilterSheet open={sheet} value={f} onClose={() => setSheet(false)} onApply={(d) => { setSheet(false); setFilters(d); }} />
       <VoteStart open={vote} onClose={() => setVote(false)} places={forVote} f={f} />
