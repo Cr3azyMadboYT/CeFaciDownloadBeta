@@ -203,5 +203,10 @@ const en: Record<string, string> = {
   'Arată 1 variantă': 'Show 1 option',
   'Arată {n} variante': 'Show {n} options',
   'Nimic nu se potrivește': 'Nothing matches',
+  'Renunți la seara asta?': 'Give up this evening?',
+  'Ai ales deja {place}. Dacă ieși, o iei de la capăt.': 'You already picked {place}. If you leave, you start over.',
+  'Ai ales deja {n} locuri. Dacă ieși, o iei de la capăt.': 'You already picked {n} places. If you leave, you start over.',
+  'Continui seara': 'Keep building',
+  'Ies și renunț': 'Leave and start over',
 };
 export default en;

@@ -51,7 +51,7 @@ export default function PlanNou() {
   // "O construiesc eu": no vibe question (they choose each place), on to building the evening
   const last = d.mode === 'eu' ? STEPS.indexOf('buget') : STEPS.length - 1;
   const finish = (x = d) => {
-    if (x.mode === 'eu') { void startBuild(x).finally(() => router.replace('/construiesc')); return; } // gașca cu un minor e știută înainte de primul pas (QA 13.10)
+    if (x.mode === 'eu') { void startBuild(x).finally(() => router.push('/construiesc')); return; } // gașca cu un minor e știută înainte de primul pas (QA 13.10)
     void runPlans(x, { save: true }); if (params.edit && router.canGoBack()) router.back(); else router.replace('/planuri-gata');
   };
   const next = (x = d) => { if (k >= (x.mode === 'eu' ? STEPS.indexOf('buget') : STEPS.length - 1)) finish(x); else setK(k + 1); };

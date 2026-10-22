@@ -12,7 +12,7 @@ import { toast } from '../lib/toast';
 import { tr } from '../lib/i18n';
 import { Icon, type IconName } from '../ui/Icon';
 import { useSafeAreaInsets } from '../ui/insets';
-import { Big, H1, Muted, Press, Say, T } from '../ui/kit';
+import { Big, H1, Muted, Press, Quiet, Say, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { Doodles } from '../ui/Doodles';
 import { PARTS } from '../../../src/engine/planner';
@@ -44,7 +44,11 @@ export default function Construiesc() {
   const minor = APP.built.minor && !APP.isMinor();
 
   useEffect(() => { if (!APP.built.req) router.replace('/plan-nou'); }, []);
-  const back = () => { if (part) { setPart(null); setShown([]); return true; } router.canGoBack() ? router.back() : router.replace('/acasa'); return true; };
+  // Înapoi never throws the evening away by surprise (Cornel 22.10: „dai pe înapoi… și pierzi tot”): with places
+  // chosen it asks first; the questions of Creează plan are still behind this screen
+  const [leave, setLeave] = useState(false);
+  const away = () => { setLeave(false); APP.buildCut(0); setVer((v) => v + 1); router.canGoBack() ? router.back() : router.replace('/acasa'); };
+  const back = () => { if (part) { setPart(null); setShown([]); return true; } if (APP.built.steps.length) { setLeave(true); return true; } away(); return true; };
   useEffect(() => { const h = BackHandler.addEventListener('hardwareBackPress', back); return () => h.remove(); });
 
   const choose = (o: Opt) => {
@@ -69,7 +73,7 @@ export default function Construiesc() {
     const plan = APP.buildPlan();
     if (!plan) return;
     runBuilt(withLive([plan], live)[0]);
-    router.replace({ pathname: '/plan/[i]', params: { i: '0' } });
+    router.push({ pathname: '/plan/[i]', params: { i: '0' } }); // Înapoi from the plan comes back here, with the evening
   };
 
   const lastStep = steps[steps.length - 1];
@@ -241,6 +245,14 @@ export default function Construiesc() {
         ) : null}
         <Big label={busy ? tr('Verific pe Google…') : tr('Gata, vezi planul')} disabled={!steps.length || busy} color="#FFD43B" ink={INK} onPress={() => void done()} />
       </View>
+      <Sheet open={leave} onClose={() => setLeave(false)}>
+        <View style={{ gap: 12 }}>
+          <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 24 }}>{tr('Renunți la seara asta?')}</T>
+          <Muted>{steps.length === 1 ? tr('Ai ales deja {place}. Dacă ieși, o iei de la capăt.', { place: steps[0].place.name }) : tr('Ai ales deja {n} locuri. Dacă ieși, o iei de la capăt.', { n: steps.length })}</Muted>
+          <Big label={tr('Continui seara')} onPress={() => setLeave(false)} />
+          <Quiet label={tr('Ies și renunț')} onPress={away} />
+        </View>
+      </Sheet>
     </View>
   );
 }
