@@ -9,10 +9,10 @@ import { useApp } from '../../lib/session';
 import { toast } from '../../lib/toast';
 import { tr, locale } from '../../lib/i18n';
 import { CrewMark } from '../../ui/CrewMark';
+import { SkyHeader } from '../../ui/SkyHeader';
 import { Icon } from '../../ui/Icon';
 import { Big, Chip, H1, Lbl, Muted, Note, Press, Sheet, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
-import { TopShade } from '../../ui/TopShade';
 
 export default function GascaView() {
   const { t } = useTheme();
@@ -43,21 +43,15 @@ export default function GascaView() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: ins.bottom + 24, gap: 12 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
-        </View>
+      <ScrollView contentContainerStyle={{ paddingBottom: ins.bottom + 24 }}>
+        <SkyHeader title={crew ? crew.name : tr('Gașca')} onBack={back} bilu={!crew}
+          sub={crew ? ((n) => (n === 1 ? tr('Gașcă permanentă, un membru') : tr('Gașcă permanentă, {n} membri', { n })))(crew.members.filter((m) => m.status === 'member').length + 1) : undefined}
+          side={crew ? <View style={{ padding: 6, borderRadius: 26, backgroundColor: 'rgba(255,255,255,0.92)' }}><CrewMark icon={crew.icon} color={crew.color} size={64} /></View> : undefined} />
+        <View style={{ paddingHorizontal: 20, paddingTop: 16, gap: 12 }}>
         {crew === undefined ? <Muted>{tr('Se încarcă…')}</Muted> : crew === null ? (
           <Note kind="err">{tr('Gașca nu mai există sau nu mai faci parte din ea.')}</Note>
         ) : (
           <>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-              <CrewMark icon={crew.icon} color={ink(crew.color)} size={64} />
-              <View style={{ flex: 1 }}>
-                <H1 style={{ fontSize: 28, lineHeight: 30 }}>{crew.name}</H1>
-                <Muted>{((n) => (n === 1 ? tr('Gașcă permanentă, un membru') : tr('Gașcă permanentă, {n} membri', { n })))(crew.members.filter((m) => m.status === 'member').length + 1)}</Muted>
-              </View>
-            </View>
             {crew.mine === 'invited' ? (
               <View style={{ gap: 8, padding: 14, borderRadius: 18, backgroundColor: t.yellowSoft }}>
                 <T style={{ fontFamily: F.b, fontSize: 15 }}>{tr('Ai fost invitat în gașca asta.')}</T>
@@ -118,6 +112,7 @@ export default function GascaView() {
             ) : null}
           </>
         )}
+        </View>
       </ScrollView>
       <Sheet open={adding} onClose={() => setAdding(false)}>
         <H1 style={{ fontSize: 26 }}>{tr('Adaugă în gașcă')}</H1>
@@ -136,7 +131,6 @@ export default function GascaView() {
             onPress={async () => { if (!crew || !who) return; setBusy(true); const e = await inviteToCrew(crew.id, who.id, picked); setBusy(false); setAdding(false); toast(e ?? tr('Invitațiile au plecat.')); load(); }} />
         </View>
       </Sheet>
-      <TopShade />
     </View>
   );
 }

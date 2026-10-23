@@ -18,9 +18,9 @@ import { tr } from '../lib/i18n';
 import { Bilu } from '../ui/Bilu';
 import { Icon } from '../ui/Icon';
 import { SendTo, type Target } from '../ui/SendTo';
+import { SkyHeader } from '../ui/SkyHeader';
 import { Big, Chip, H1, Lbl, Muted, Note, Press, Quiet, Seg, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
-import { TopShade } from '../ui/TopShade';
 
 const COLORS = ['#8C6CFF', '#FF6A4D', '#FFD43B', '#5FD39A', '#8EA6FF', '#FF8A73'];
 const colorOf = (s: string) => COLORS[[...s].reduce((a, c) => a + c.charCodeAt(0), 0) % COLORS.length];
@@ -230,17 +230,9 @@ export default function FreeNowScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: ins.bottom + 32 }} keyboardShouldPersistTaps="handled">
-        <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
-          <View style={{ flex: 1 }}>
-            <H1 style={{ fontSize: 34, lineHeight: 35 }}>FreeNow ⚡</H1>
-            <Muted style={{ marginTop: 6, fontSize: 15, lineHeight: 21 }}>{tr('Ai timp de ieșit? Dă-le de veste. Cine are chef vine cu tine, iar Bilu alege locul.')}</Muted>
-          </View>
-          <Bilu size={58} mood="wink" shadow={false} />
-        </View>
+      <ScrollView contentContainerStyle={{ paddingBottom: ins.bottom + 32 }} keyboardShouldPersistTaps="handled">
+        <SkyHeader title="FreeNow ⚡" onBack={back} sub={tr('Ai timp de ieșit? Dă-le de veste. Cine are chef vine cu tine, iar Bilu alege locul.')} mood="yay" />
+        <View style={{ paddingHorizontal: 20, paddingTop: 4 }}>
 
         {!who || !known ? (
           <View style={{ marginTop: 16, gap: 10 }}>
@@ -333,8 +325,8 @@ export default function FreeNowScreen() {
             {st.quiet ? <Muted style={{ marginTop: 12 }}>{tr('Notificările FreeNow sunt oprite (Setări).')}</Muted> : null}
           </>
         )}
+        </View>
       </ScrollView>
-      <TopShade />
     </View>
   );
 }

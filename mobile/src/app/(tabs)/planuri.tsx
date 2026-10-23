@@ -16,6 +16,8 @@ import { Big, Field, H1, Lbl, Muted, Note, Press, Sheet, T } from '../../ui/kit'
 import { F, useTheme } from '../../ui/theme';
 import { TopShade } from '../../ui/TopShade';
 import { Doodles } from '../../ui/Doodles';
+import { SkyHeader } from '../../ui/SkyHeader';
+import { EmptyTicket } from '../../ui/EmptyTicket';
 import { tr, trServer, pick, locale } from '../../lib/i18n';
 import { MyTicketsRow } from '../../features/events/MyTicketsRow'; // Evenimente (22.10): removable
 
@@ -78,8 +80,11 @@ export default function Planuri() {
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
       <Doodles />
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: 24 }}>
-      <View style={{ height: 44, justifyContent: 'center' }}><H1>{tr('Planuri')}</H1></View>
+    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
+      {/* 23.10: the sky of Acasă on top (Cornel: „ecranele mai frumoase, pe tematica aplicației”) */}
+      <SkyHeader title={tr('Planuri')} bilu={!!plans.length} mood={plans.length || votes.some((v) => new Date(v.closesAt).getTime() > Date.now()) ? 'up' : 'wink'}
+        sub={plans.length ? (plans.length === 1 ? tr('Un plan te așteaptă') : tr('{n} planuri te așteaptă', { n: plans.length })) : tr('Nimic programat încă')} />
+      <View style={{ paddingHorizontal: 20 }}>
       <MyTicketsRow />
       {votes.length ? (
         <View>
@@ -155,11 +160,7 @@ export default function Planuri() {
           </View>
         </View>
       ) : (
-        <View style={{ marginTop: 18, padding: 18, paddingVertical: 22, gap: 10, borderRadius: 20, borderWidth: 1, borderColor: t.line, backgroundColor: t.s1, alignItems: 'flex-start' }}>
-          <T style={{ fontFamily: F.display, fontSize: 24, lineHeight: 25 }}>{tr('Niciun plan încă.')}</T>
-          <Muted>{tr('Alege ceva de pe Acasă și biletul apare aici.')}</Muted>
-          <Big style={{ marginTop: 6 }} label={tr('Ce facem?')} onPress={() => router.navigate('/acasa')} />
-        </View>
+        <EmptyTicket title={tr('Niciun plan încă.')} text={tr('Fă unul în un minut: biletul apare aici.')} action={tr('Creează plan')} onAction={() => router.push('/plan-nou')} />
       )}
       <View style={{ marginTop: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Lbl style={{ flex: 1 }}>{tr('Gășcile tale')}</Lbl>
@@ -194,6 +195,7 @@ export default function Planuri() {
           <Muted style={{ fontSize: 14, lineHeight: 20 }}>{known ? tr('Încă n-ai nicio gașcă. Fă una cu cel puțin 2 prieteni, iar ei primesc invitația.') : tr('Gășcile merg cu cont. Intră din Profil → Prieteni.')}</Muted>
         </View>
       )}
+      </View>
     </ScrollView>
     <Sheet open={joinOpen} onClose={() => setJoinOpen(false)}>
       <H1 style={{ fontSize: 26 }}>{tr('Intră într-o gașcă')}</H1>
@@ -202,7 +204,6 @@ export default function Planuri() {
       {joinErr ? <View style={{ marginTop: 10 }}><Note kind="err">{joinErr}</Note></View> : null}
       <Big style={{ marginTop: 14 }} label={busy === 'join' ? tr('Intru…') : tr('Intră')} disabled={joinCode.length < 12 || busy === 'join'} onPress={join} />
     </Sheet>
-    <TopShade />
     </View>
   );
 }

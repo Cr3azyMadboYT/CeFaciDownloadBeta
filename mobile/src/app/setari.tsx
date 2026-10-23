@@ -9,8 +9,8 @@ import { muteFree, refreshFreeNow, useFreeNow } from '../lib/freeNow';
 import { Icon } from '../ui/Icon';
 import { Big, H1, Lbl, Muted, Press, Seg, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
-import { TopShade } from '../ui/TopShade';
 import { LangPick } from '../ui/LangPick';
+import { SkyHeader } from '../ui/SkyHeader';
 import { tr } from '../lib/i18n';
 
 function Group({ title, note, children }: { title: string; note?: string; children: React.ReactNode }) {
@@ -36,11 +36,9 @@ export default function Setari() {
   const back = () => (router.canGoBack() ? router.back() : router.replace('/profil'));
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: ins.bottom + 32, gap: 12 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
-        </View>
-        <H1 style={{ fontSize: 34, lineHeight: 35 }}>{tr('Setări')}</H1>
+      <ScrollView contentContainerStyle={{ paddingBottom: ins.bottom + 32 }}>
+        <SkyHeader title={tr('Setări')} onBack={back} sub={tr('Cum îți place ție')} mood="wink" />
+        <View style={{ paddingHorizontal: 20, paddingTop: 16, gap: 12 }}>
         <Group title="Limba · Language" note={tr('Numele localurilor și adresele rămân cum sunt.')}>
           <LangPick />
         </Group>
@@ -75,8 +73,8 @@ export default function Setari() {
           <T style={{ fontFamily: F.m, fontSize: 14, color: t.ink2, textDecorationLine: 'underline' }} onPress={() => Linking.openURL('https://www.openstreetmap.org/copyright')}>OpenStreetMap</T>
           {tr(', licența ODbL. Prețurile sunt estimate.')}
         </Muted>
+        </View>
       </ScrollView>
-      <TopShade />
     </View>
   );
 }

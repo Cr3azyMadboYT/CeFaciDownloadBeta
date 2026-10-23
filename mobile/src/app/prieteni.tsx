@@ -8,6 +8,7 @@ import { accept, addByCode, ask, findUser, listFriends, myCode, remove, type Fri
 import { toast } from '../lib/toast';
 import { pick, tr } from '../lib/i18n';
 import { Icon } from '../ui/Icon';
+import { SkyHeader } from '../ui/SkyHeader';
 import { SignIn } from '../ui/SignIn';
 import { Big, Field, H1, Lbl, Muted, Note, Press, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
@@ -73,11 +74,9 @@ export default function Prieteni() {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: t.bg }} behavior="padding">
-    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: Math.max(ins.bottom, 12) + 24 }} keyboardShouldPersistTaps="handled">
-      <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-        <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
-      </View>
-      <H1 style={{ fontSize: 34, lineHeight: 35 }}>{tr('Prieteni')}</H1>
+    <ScrollView style={{ flex: 1, backgroundColor: t.bg }} contentContainerStyle={{ paddingBottom: Math.max(ins.bottom, 12) + 24 }} keyboardShouldPersistTaps="handled">
+      <SkyHeader title={tr('Prieteni')} onBack={back} mood="hi" />
+      <View style={{ paddingHorizontal: 20 }}>
       {!who || !known ? (
         <View style={{ marginTop: 14, gap: 12 }}>
           <Muted style={{ fontSize: 15, lineHeight: 21 }}>{tr('Prietenii merg doar cu cont, ca să vă găsiți unii pe alții. Contul îl faci cu Google sau cu emailul, fără parolă, iar ce ai deja pe telefon (planuri, XP, ce-ți place) trece în cont.')}</Muted>
@@ -121,6 +120,7 @@ export default function Prieteni() {
           {sent.map((r) => <Row key={r.person.id} p={r.person} right={<Muted>{tr('trimisă')}</Muted>} />)}
         </View>
       )}
+    </View>
     </ScrollView>
       <TopShade />
     </KeyboardAvoidingView>

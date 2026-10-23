@@ -8,7 +8,8 @@ import { useSafeAreaInsets } from '../ui/insets';
 import { Icon, type IconName } from '../ui/Icon';
 import { H1, Muted, Press, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
-import { Bilu } from '../ui/Bilu';
+import { EmptyTicket } from '../ui/EmptyTicket';
+import { SkyHeader } from '../ui/SkyHeader';
 import { tr, pick, locale } from '../lib/i18n';
 import { readAll, refreshInbox, useInbox, type Inbox } from '../lib/inbox';
 
@@ -41,18 +42,12 @@ export default function Notificari() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: ins.bottom + 24, gap: 10 }}
+      <ScrollView contentContainerStyle={{ paddingBottom: ins.bottom + 24 }}
         refreshControl={<RefreshControl refreshing={pulling} onRefresh={() => void pull()} />}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
-        </View>
-        <H1>{tr('Notificări')}</H1>
+        <SkyHeader title={tr('Notificări')} onBack={back} bilu={!!list.length} mood={list.some((x) => !x.read_at) ? 'up' : 'wink'} sub={list.length ? tr('Tot ce ai primit') : undefined} />
+        <View style={{ paddingHorizontal: 20, paddingTop: 16, gap: 10 }}>
         {!list.length ? (
-          <View style={{ alignItems: 'center', gap: 10, paddingTop: 40 }}>
-            <Bilu mood="wink" size={110} />
-            <T style={{ fontFamily: F.b, fontSize: 17, textAlign: 'center' }}>{tr('Liniște deocamdată')}</T>
-            <Muted style={{ textAlign: 'center' }}>{tr('Aici apar cererile de prietenie, invitațiile în gașcă, voturile și planurile la care te cheamă prietenii.')}</Muted>
-          </View>
+          <EmptyTicket title={tr('Liniște deocamdată')} text={tr('Aici apar cererile de prietenie, invitațiile în gașcă, voturile și planurile la care te cheamă prietenii.')} />
         ) : null}
         {list.map((x) => {
           const fresh = unreadAtOpen.has(x.id);
@@ -71,6 +66,7 @@ export default function Notificari() {
             </Press>
           );
         })}
+      </View>
       </ScrollView>
     </View>
   );

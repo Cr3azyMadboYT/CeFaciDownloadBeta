@@ -11,8 +11,10 @@ import { Press, T } from './kit';
 import { Sky, SKY_BG } from './Sky';
 import { F } from './theme';
 
-export function SkyHeader({ title, sub, onBack, right, mood = 'wink', children, bilu = true }: {
+export function SkyHeader({ title, sub, onBack, right, mood = 'wink', children, bilu = true, side }: {
   title: string; sub?: string; onBack?: () => void; right?: ReactNode; mood?: Mood; children?: ReactNode; bilu?: boolean;
+  /** in place of Bilu (a crew's mark) */
+  side?: ReactNode;
 }) {
   const ins = useSafeAreaInsets();
   const phase = phaseOfHour(new Date().getHours());
@@ -30,10 +32,10 @@ export function SkyHeader({ title, sub, onBack, right, mood = 'wink', children, 
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginTop: 10 }}>
         <View style={{ flex: 1, gap: 4 }}>
-          <T accessibilityRole="header" style={{ fontFamily: F.display, fontSize: 38, lineHeight: 39, letterSpacing: -1, color: '#FFFFFF' }}>{title}</T>
+          <T accessibilityRole="header" numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.6} style={{ fontFamily: F.display, fontSize: 38, lineHeight: 39, letterSpacing: -1, color: '#FFFFFF' }}>{title}</T>
           {sub ? <T style={{ fontFamily: F.sb, fontSize: 15, color: 'rgba(255,255,255,0.86)' }}>{sub}</T> : null}
         </View>
-        {bilu ? <View style={{ marginBottom: -6 }}><Bilu size={84} mood={mood} /></View> : null}
+        {side ?? (bilu ? <View style={{ marginBottom: -6 }}><Bilu size={84} mood={mood} /></View> : null)}
       </View>
       {children}
     </View>

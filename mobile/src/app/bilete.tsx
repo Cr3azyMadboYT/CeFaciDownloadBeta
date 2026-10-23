@@ -7,6 +7,8 @@ import { router } from 'expo-router';
 import QRCode from 'react-native-qrcode-svg';
 import { useSafeAreaInsets } from '../ui/insets';
 import { Icon } from '../ui/Icon';
+import { SkyHeader } from '../ui/SkyHeader';
+import { EmptyTicket } from '../ui/EmptyTicket';
 import { Big, H1, Muted, Note, Press, Quiet, Sheet, T } from '../ui/kit';
 import { F, useTheme } from '../ui/theme';
 import { tr, trServer } from '../lib/i18n';
@@ -26,15 +28,14 @@ export default function Bilete() {
   const rest = list.filter((x) => x.status !== 'valid');
   return (
     <View style={{ flex: 1, backgroundColor: t.bg }}>
-      <ScrollView contentContainerStyle={{ paddingTop: ins.top + 8, paddingHorizontal: 20, paddingBottom: ins.bottom + 24, gap: 12 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', height: 44 }}>
-          <Press onPress={back} accessibilityLabel={tr('Înapoi')} style={{ width: 44, height: 44, marginLeft: -12, alignItems: 'center', justifyContent: 'center' }}><Icon name="back" color={t.ink} /></Press>
-        </View>
-        <H1>{tr('Biletele mele')}</H1>
-        {!list.length ? <Muted>{tr('Biletele cumpărate în CeFaci apar aici, cu codul de la intrare. Merg și fără internet.')}</Muted> : null}
+      <ScrollView contentContainerStyle={{ paddingBottom: ins.bottom + 24 }}>
+        <SkyHeader title={tr('Biletele mele')} onBack={back} bilu={!!list.length} mood={valid.length ? 'yay' : 'wink'} sub={valid.length ? tr('Codul de intrare merge și fără internet') : undefined} />
+        <View style={{ paddingHorizontal: 20, paddingTop: 16, gap: 12 }}>
+        {!list.length ? <EmptyTicket title={tr('Niciun bilet încă.')} text={tr('Biletele cumpărate în CeFaci apar aici, cu codul de la intrare. Merg și fără internet.')} /> : null}
         {valid.map((x) => <TicketCard key={x.id} x={x} open={open === x.id} onToggle={() => setOpen(open === x.id ? null : x.id)} />)}
         {rest.length ? <Muted style={{ marginTop: 8 }}>{tr('Folosite sau rambursate')}</Muted> : null}
         {rest.map((x) => <TicketCard key={x.id} x={x} open={false} onToggle={() => {}} />)}
+      </View>
       </ScrollView>
     </View>
   );

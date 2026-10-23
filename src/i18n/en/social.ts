@@ -345,5 +345,12 @@ const en: Record<string, string> = {
   'Nu am putut închide votul.': 'Could not close the vote.',
   'Doar cine a pornit votul îl poate închide.': 'Only whoever started the vote can close it.',
   'Nimeni n-a votat încă.': 'Nobody has voted yet.',
+  'Un plan te așteaptă': 'One plan is waiting for you',
+  '{n} planuri te așteaptă': '{n} plans are waiting for you',
+  'Nimic programat încă': 'Nothing planned yet',
+  'Fă unul în un minut: biletul apare aici.': 'Make one in a minute: the ticket shows up here.',
+  'Tot ce ai primit': 'Everything you got',
+  'Niciun bilet încă.': 'No tickets yet.',
+  'Cum îți place ție': 'The way you like it',
 };
 export default en;
