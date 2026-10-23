@@ -329,5 +329,21 @@ const en: Record<string, string> = {
   'Ștergi prietenia cu {name}?': 'Remove {name} from your friends?',
   'Nu mai vedeți unul altuia FreeNow și nu vă mai puteți chema la planuri. Gășcile rămân cum sunt.': 'You will no longer see each other on FreeNow or invite each other to plans. Crews stay as they are.',
   'Da, elimină': 'Yes, remove',
+  // the vote (23.10)
+  'Votul s-a încheiat': 'The vote is over',
+  'Mai ai de votat la {place}.': 'You still have to vote on {place}.',
+  'Mai ai de votat la {n} locuri.': 'You still have to vote on {n} places.',
+  'Ai votat tot. Așteptăm pe {names}.': 'You voted on everything. Waiting for {names}.',
+  'Toți au votat!': 'Everyone voted!',
+  'Votul se încheie când fiecare a răspuns la toate locurile, sau la ora de închidere.': 'The vote ends when everyone has answered every place, or at closing time.',
+  'Gata, la restul Nu': 'Done, No to the rest',
+  'Închide votul acum': 'Close the vote now',
+  'Închid…': 'Closing…',
+  'CÂȘTIGĂ': 'WINNER',
+  'Încă n-ai votat aici': 'You have not voted here yet',
+  'Aveți deja un vot deschis. Ți-l deschid pe ăla: terminați-l întâi.': 'You already have an open vote. Opening that one: finish it first.',
+  'Nu am putut închide votul.': 'Could not close the vote.',
+  'Doar cine a pornit votul îl poate închide.': 'Only whoever started the vote can close it.',
+  'Nimeni n-a votat încă.': 'Nobody has voted yet.',
 };
 export default en;
