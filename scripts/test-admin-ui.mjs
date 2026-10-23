@@ -204,10 +204,13 @@ try {
   await page.getByLabel('Persoane eligibile de minimum 12 ani',{exact:true}).fill('5');
   await page.getByLabel('Persoane cu sursă Drop',{exact:true}).fill('3');
   await page.getByLabel('Motivul deciziei',{exact:true}).fill('Am verificat numărul cu ambele părți și documentul de sosire.');
-  await button(page,'Confirmă numărul').click();await button(page,'Verifică sosirea: '+visit.id).click();
+  // after a decision the list reloads and the selection is cleared: wait for that, then open the visit again
+  await button(page,'Confirmă numărul').click();await button(page,'Confirmă numărul').waitFor({state:'detached',timeout:10000});
   assert.equal(visit.count.state,'confirmed');assert.equal(visit.count.version,3);
-  await button(page,'Confirmă numărul').waitFor({state:'detached',timeout:10000});assert.equal(await button(page,'Confirmă numărul').count(),0);
-  await page.getByLabel('Motivul deciziei privind reducerea',{exact:true}).fill('Bonul confirmă lipsa reducerii promise pentru grup.');
+  const benefitReason=page.getByLabel('Motivul deciziei privind reducerea',{exact:true});
+  for(let i=0;i<5&&!(await benefitReason.isVisible());i++){await button(page,'Verifică sosirea: '+visit.id).click();await benefitReason.waitFor({timeout:2000}).catch(()=>{});}
+  assert.equal(await button(page,'Confirmă numărul').count(),0);
+  await benefitReason.fill('Bonul confirmă lipsa reducerii promise pentru grup.');
   await button(page,'Admite plângerea').click();await button(page,'Verifică sosirea: '+visit.id).click();
   assert.equal(visit.benefit.state,'upheld');assert.equal(visit.benefit.version,2);
   await button(page,'Admite plângerea').waitFor({state:'detached',timeout:10000});assert.equal(await button(page,'Admite plângerea').count(),0);
