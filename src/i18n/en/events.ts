@@ -89,4 +89,6 @@ export default {
   'Biletul a fost dat mai departe de prea multe ori.': 'The ticket has been passed on too many times.',
   'Poți da biletul doar unui prieten din CeFaci.': 'You can only give the ticket to a friend on CeFaci.',
   'Prietenul tău nu are vârsta pentru eveniment.': 'Your friend is not old enough for this event.',
+  'La un eveniment cu dată stabilită nu ai drept de retragere de 14 zile (art. 16 lit. l din OUG 34/2014); dacă se amână, biletul rămâne valabil.': 'For an event on a set date there is no 14-day right of withdrawal (art. 16(l) of GEO 34/2014); if it is postponed, the ticket stays valid.',
+  'Termenii pentru bilete': 'Ticket terms',
 };

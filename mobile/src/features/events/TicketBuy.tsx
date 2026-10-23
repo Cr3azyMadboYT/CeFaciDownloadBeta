@@ -94,6 +94,10 @@ export function TicketBuy({ e, blocked }: { e: CfEvent; blocked: boolean }) {
       <View style={{ padding: 14, borderRadius: 16, backgroundColor: t.s2, gap: 4 }}>
         <T style={{ fontFamily: F.b, fontSize: 14 }}>{tr('Cum plătești')}</T>
         <Muted>{tr('Biletele le vinde {place}, prin CeFaci. Plătești cu cardul prin Netopia; CeFaci nu vede datele cardului. Dacă evenimentul se anulează, banii se întorc singuri pe card.', { place: e.place_name })}</Muted>
+        <Muted>{tr('La un eveniment cu dată stabilită nu ai drept de retragere de 14 zile (art. 16 lit. l din OUG 34/2014); dacă se amână, biletul rămâne valabil.')}</Muted>
+        <Press accessibilityRole="link" onPress={() => router.push('/confidentialitate')} style={{ minHeight: 36, justifyContent: 'center' }}>
+          <T style={{ fontFamily: F.sb, fontSize: 13, color: t.blueInk }}>{tr('Termenii pentru bilete')}</T>
+        </Press>
       </View>
       {err ? <Note kind="err">{err}</Note> : null}
       {done ? <Note kind="ok">{tr('Gata! Biletele sunt în „Biletele mele”.')}</Note> : null}

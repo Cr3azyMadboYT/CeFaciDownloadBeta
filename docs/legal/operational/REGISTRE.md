@@ -1,6 +1,6 @@
 # Evidențe GDPR, retenție și furnizori
 
-Actualizat: 10 octombrie 2026. Responsabilul și aprobările nu sunt încă desemnate. Identitatea publică a operatorului se completează în `shared/legal-config.ts`; persoana fizică rămâne operator în această etapă, nu este exceptată de GDPR.
+Actualizat: 23 octombrie 2026 (evenimente și bilete, intrările cu 10% din bon, lista de notificări, FreeNow). Responsabilul și aprobările nu sunt încă desemnate. Identitatea publică a operatorului se completează în `shared/legal-config.ts`; persoana fizică rămâne operator în această etapă, nu este exceptată de GDPR.
 
 ## Registru inițial al prelucrărilor — art. 30 GDPR
 
@@ -19,6 +19,11 @@ Această evidență trebuie confirmată de operator. Volumul mic nu creează aut
 | Drepturi GDPR | Autor, tip/scop, descriere, deadline, răspuns, istoric | Respectarea obligațiilor legale art. 6(1)(c) | Proprietarul cazului; fondator/admin cu MFA | Disociere uid la ștergere; conținut poate rămâne personal, termen minim de justificat, cleanup încă de configurat |
 | Proba Plus | Hash derivat din ID dispozitiv, uid inițial, ora începerii | Prevenire reutilizare art. 6(1)(f) condiționată de LIA și reguli terminal | Tabel privat `trial_devices`; uid devine null la ștergere | Cod existent nu are TTL; persistența trebuie justificată/limitată, opozițiile evaluate |
 | Notificări | Token dispozitiv, uid, payload plan/invitație | Funcția solicitată; permisiune notificare | Firebase dacă activat; mementouri locale separat | Token eliminat la logout/invalidare când posibil; cleanup de confirmat |
+| FreeNow | Intervalul liber, „chef de”, zona aproximativă opțională, publicul ales, ieșirile, membrii, voturile | Funcția cerută art. 6(1)(b); limite și siguranță art. 6(1)(f) | Doar publicul ales (max. 2 pași de prieteni), sub 18 doar prietenii direcți | Istoric marcat încheiat; contoarele zilnice 30 de zile (`private.retention_daily`) |
+| Intrări la parteneri (10% din bon) | Intrarea (plan, gașcă, local, oră), bonul: total, reducere, dată/oră, număr, cine l-a trimis, cine l-a scanat; contestația localului | Serviciul cerut; calculul corect al sumei datorate de local și antifraudă art. 6(1)(f) | Localul vede totalul și numărul bonului pentru intrarea lui; Admin cu drept; poza notei nu se păstrează | Cât e nevoie pentru calcul și contestații; după facturare, termenul contabil (art. 25 Legea 82/1991) pentru ce intră în documente |
+| Evenimente | Deschiderea linkului vânzătorului oficial: eveniment, uid, zi | Măsurarea interesului art. 6(1)(f), minimizat la o înregistrare pe zi | Nimeni în afara CeFaci; vânzătorul vede doar vizita pe site-ul lui | 13 luni (`private.retention_daily`) |
+| Bilete vândute în CeFaci (acum test) | Comanda: eveniment, feluri, număr, preț, taxă, stare, momente; biletul: deținător, transferuri, scanare; cheia QR pe telefon | Executarea contractului art. 6(1)(b); obligații contabile art. 6(1)(c) la plăți reale | Localul organizator (vânzări și scanări pentru evenimentul lui); Netopia la pornirea plăților | Test: oricând; plătite: termenul contabil; la ștergerea contului uid devine null, contul nu se șterge cu bilete valabile |
+| Lista de notificări | Titlu, text, tip, link, citit/necitit | Funcția cerută art. 6(1)(b) | Doar destinatarul (RLS) | 180 de zile (`private.retention_daily`) |
 | Site/găzduire | IP, cerere HTTP, timestamp; tema aleasă | Livrare/securitate art. 6(1)(f), preferință cerută | Hosting; fonturi și assets selfhosted; fără analytics sau marketing | Logs în contract hosting; `cefaci.site.theme` până la ștergere |
 
 ## Registrul împuterniciților și destinatarilor
@@ -34,6 +39,9 @@ Nu trata numele produsului ca dovadă a entității juridice sau a regiunii. Com
 | Furnizor email tranzacțional | OTP în infrastructura Auth | Identitatea efectivă, DPA, regiune/metadate/logs și retenție; nu inventa SMTP/Resend dacă neconfirmat |
 | Firebase Cloud Messaging | Push când configurat în build/backend | Contract și date transmise, tokenuri, transferuri, permisiune; nu amesteca cu mementourile locale |
 | OpenStreetMap | Proveniența catalogului | Atribuire © contribuitorii OpenStreetMap/ODbL. Nu afirma că orice nume/telefon local este lipsit de date personale |
+| Netopia Payments | Plățile biletelor (marketplace / plăți împărțite), numai după pornire | Contract, rolul pentru datele de plată (operator distinct), DPA dacă e cazul, locația datelor, rambursări; SRL înainte |
+| Vânzători oficiali de bilete (`private.ticket_sellers`) | Linkuri externe; nu primesc date de la CeFaci | Doar https și vânzători cunoscuți; politica lor se aplică pe site-ul lor |
+| Google Places / Google Weather | Verificarea „deschis acum” și vremea, cereri de pe server fără date de cont | Termenii Google Maps Platform: păstrăm doar id-ul locului și verdictul nostru |
 | Google Play / App Store | Numai distribuție ori plăți viitoare efectiv active | Identitate developer, Data safety/privacy disclosures, rol fiscal și termenii achiziției înainte de checkout |
 
 ## Convenție cu localurile și DPA
@@ -47,5 +55,7 @@ O anexă de împuternicire, când este necesară, trebuie să includă: obiect/d
 Ține un registru pentru fiecare job: scop, categorie, termen, excepții și păstrare justificată pentru litigiu, ultima execuție, candidați, fișiere șterse, confirmări, erori, retry și persoana care verifică. Service role rămâne numai pe server. Nu șterge rânduri `storage.objects` direct cu SQL: binarul se șterge prin Storage API, apoi RPC confirmă eliminarea.
 
 RPC-uri reale: `business_proofs_retention_candidates()` → Storage remove → `business_proof_deleted(p_id)` și `support_photos_retention_candidates()` → Storage remove → `support_photo_deleted(p_id)`. Rulează dry-run și apoi o probă cu date sintetice înainte de a programa. Restricțiile de acces de 90 de zile și granturile numai pentru serviciul server nu demonstrează că schedulerul este activ. Dacă o păstrare justificată pentru litigiu este necesar, proiectează-l și documentează-l înainte de a păstra arbitrar documentul peste termen.
+
+Rulează zilnic (pg_cron `cefaci-retention`, 03:40): `private.retention_daily()` — notificări 180 de zile, `event_clicks` 13 luni, `free_starts`/`free_pushes` 30 de zile; întoarce câte rânduri a șters. Testat în `tests/legal-retention.test.ts`.
 
 Separat trebuie definite termene pentru cererile GDPR, textul suportului, operațiuni/jurnal, hashul trial, tokenuri, backup/log și exporturi. Nu aplica termenul fiscal fiecărei preferințe sau poze; nu confunda pseudonimizarea cu anonimizarea.

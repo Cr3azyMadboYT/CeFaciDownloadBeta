@@ -1,6 +1,6 @@
 # Termeni de utilizare Client
 
-Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-23. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Serviciul și etapa proiectului
 
@@ -21,6 +21,14 @@ Datele despre localuri provin din surse publice, inclusiv OpenStreetMap, din ver
 Localul răspunde pentru propriile produse, servire, reguli de acces și documente fiscale. CeFaci răspunde pentru propriile obligații privind serviciul digital. Regulile de eligibilitate, intervalul de sosire și numărul de persoane pot fi verificate de server. O reducere depinde de oferta și starea biletului, fără a restrânge drepturile legale ale clientului.
 
 Poți raporta o reducere neaplicată sau o eroare prin suport. Deciziile contestate sunt verificate pe baza datelor relevante; nu oferim automat compensații financiare sau beneficii neafișate. XP-ul și ștampilele nu sunt monedă, instrument financiar ori sold convertibil în numerar.
+
+## 3a. Evenimente și bilete
+
+Evenimentele sunt organizate de localuri sau de organizatori terți. Cu „Cumpără bilete pe” un vânzător oficial ajungi pe site-ul acelui vânzător: contractul de cumpărare este între tine și el, iar CeFaci nu încasează banii și nu răspunde pentru bilet, livrare sau rambursare. Verificăm doar ca linkul să ducă la un vânzător cunoscut, prin https.
+
+Vânzarea de bilete direct în CeFaci nu este încă deschisă publicului; acum rulează numai în test, fără bani reali. Când va porni: vânzătorul biletului și organizatorul evenimentului este localul afișat pe eveniment, iar CeFaci pune la dispoziție platforma. Înainte de plată vezi prețul total, inclusiv taxa de serviciu de 2 lei pe bilet (0 lei cu Plus activ). Plata se face prin Netopia Payments. Pentru serviciile de agrement cu o dată stabilită, dreptul de retragere de 14 zile nu se aplică (art. 16 lit. l din OUG 34/2014); îți spunem asta înainte de plată. Dacă evenimentul se anulează, primești înapoi tot ce ai plătit, inclusiv taxa; dacă se amână, biletul rămâne valabil.
+
+Biletul este legat de contul tău. Îl poți da unui prieten din CeFaci de cel mult 3 ori; după ce l-ai dat, codul tău nu mai merge. Codul QR se schimbă la 30 de secunde, așa că o captură de ecran nu ține loc de bilet. Un bilet scanat la intrare nu mai poate fi folosit. Pot exista limite (de exemplu cel mult 10 bilete de persoană la un eveniment) și vârsta minimă afișată pe eveniment.
 
 ## 4. Plus și plăți
 
@@ -47,3 +55,7 @@ Lucrăm la remedierea erorilor și la păstrarea funcțiilor sigure, dar pot exi
 Pentru reclamații scrie la contact@cornacidev.ro; suportul intern nu împiedică sesizarea ANPC, ANSPDCP sau a unei instanțe competente. Pentru litigii de consum poți consulta procedura SAL la https://anpc.ro/ce-este-sal/. Platforma europeană SOL/ODR a fost închisă la 20 iulie 2025 și nu este prezentată ca serviciu activ.
 
 Se aplică legea română, cu respectarea protecțiilor obligatorii aplicabile consumatorului. Nu impunem unui consumator competența exclusivă a unei instanțe dintr-un oraș ales de noi. Modificările importante se anunță în prealabil și nu afectează retroactiv drepturile dobândite.
+
+## Ce s-a schimbat la 23.10.2026
+
+Am adăugat secțiunea 3a despre evenimente și bilete: cumpărarea la vânzătorul oficial, vânzarea în CeFaci (acum doar test), taxa de 2 lei pe bilet (0 cu Plus), lipsa dreptului de retragere la evenimentele cu dată stabilită, rambursarea la anulare și darea biletului unui prieten. Celelalte reguli au rămas la fel.

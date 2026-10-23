@@ -1,6 +1,6 @@
 # Reguli și termeni Business beta
 
-Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-23. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Cine oferă dashboardul
 
@@ -28,6 +28,8 @@ Localul răspunde pentru autorizările proprii, informarea consumatorilor, limit
 
 La o dispută, răspunde în intervalul afișat și trimite numai dovezile relevante. Admin poate analiza și decide în limitele drepturilor sale; o decizie internă nu înlătură căile legale de reclamație.
 
+Ordinea în recomandări (Regulamentul (UE) 2019/1150): CeFaci ordonează localurile după potrivirea cu cererea clientului (felul locului, programul la ora planului, distanța, bugetul, vremea, gusturile declarate și voturile gășcii) și după verificarea noastră a locului. Parteneriatul, tariful sau Live Drops nu cumpără un loc mai sus. Dacă se va introduce promovare plătită, va fi marcată vizibil și anunțată înainte în acești termeni.
+
 ## 5. Date personale și confidențialitate
 
 Folosește datele clienților numai pentru rezervarea, vizita și cererea relevante. Nu exporta liste pentru marketing, nu contacta clienții în afara scopului declarat și nu publica bilete, bonuri sau capturi cu date personale. Accesul tehnic nu constituie acordul clientului pentru comunicări comerciale.
@@ -38,12 +40,20 @@ Transmite imediat suspiciunile de incident la contact@cornacidev.ro, fără codu
 
 ## 6. Estimări și circuit fiscal
 
-Modelul propus este o taxă fixă pe persoană venită, nu un procent din notă: pentru rezervări confirmate și Live Drops, după treapta de preț a localului, numai pentru persoanele confirmate ca prezente, fără copiii sub 12 ani și cu un plafon pe masă. Valorile din Plăți/Financiar sunt estimări și pot fi parțiale dacă lipsesc confirmări ori există dispute. Facturarea prin platformă nu este activată: afișarea unei sume estimate nu emite o factură, nu transmite e-Factura și nu autorizează debitarea unui cont.
+Modelul propus: CeFaci primește 10% din bonurile fiecărei intrări CeFaci, același procent pentru toți partenerii, fără trepte și fără numărat oameni. O intrare este gașca venită dintr-un plan făcut în CeFaci; procentul se aplică totalului de pe bon după reducere. Același bon (CUI, număr, zi) se numără o singură dată, iar mai multe note la aceeași intrare se adună. Localul poate scrie totalul sau poate contesta un bon („Nu e al lor”); bonul contestat nu intră în calcul. Fără bon până a doua zi la 12:00, intrarea rămâne „fără bon” și nu se datorează nimic pentru ea. Primii 20 de parteneri fondatori au o lună fără plată de la activare (intrările arată „ai fi plătit”), fără prelungire. Valorile din Financiar sunt estimări și pot fi parțiale dacă lipsesc bonuri ori există contestații. Facturarea prin platformă nu este activată: afișarea unei sume estimate nu emite o factură, nu transmite e-Factura și nu autorizează debitarea unui cont.
 
 Înainte de activarea comercială sunt necesare identitatea fiscală a operatorului, contractul cu preț/bază de calcul/TVA/scadență, procedura de corecție, emitentul documentelor, accesul SPV și integrarea RO e-Factura aplicabilă. Nu este activată prin acești termeni autofacturarea și nu înlocuim validarea unui contabil.
+
+## 6a. Bilete la evenimente
+
+Vânzarea de bilete în CeFaci este acum numai de test și nu încasează bani reali. Când va porni, localul este vânzătorul biletelor și organizatorul evenimentului și răspunde pentru eveniment, informarea cumpărătorilor, vârsta minimă, rambursări și documentele fiscale pentru bilete. Încasarea se face prin contul Netopia al localului, după ce Admin aprobă contul de încasare. CeFaci reține 8% din prețul biletelor, totul inclus; taxa de serviciu de 2 lei pe bilet (0 lei pentru clienții cu Plus) o plătește cumpărătorul și revine CeFaci, nu se scade din banii localului. Anularea unui eveniment înseamnă rambursarea tuturor biletelor plătite; amânarea păstrează biletele valabile.
 
 ## 7. Suspendare, încetare și modificări
 
 Putem limita accesul pentru fraudă, revendicare contestată, risc de securitate sau încălcare a regulilor, proporțional cu situația. Poți contesta la contact@cornacidev.ro. Închiderea unui cont de angajat nu transferă automat proprietatea localului și nu șterge datele obligatorii ale firmei.
 
 Contractul comercial viitor va preciza răspunderea, durata, încetarea și mecanismele de soluționare a disputelor. Acest document beta nu inventează aceste condiții și nu limitează obligațiile legale existente. Actualizările importante ale regulilor se comunică înaintea aplicării.
+
+## Ce s-a schimbat la 23.10.2026
+
+Modelul propus nu mai este taxa pe persoană: este 10% din bonurile fiecărei intrări CeFaci (6), cu o lună fără plată pentru primii 20 de parteneri fondatori. Am adăugat vânzarea de bilete (6a, acum doar test) și cum ordonăm localurile în recomandări (4). Nimic nu se facturează până la contractul semnat cu fiecare local.

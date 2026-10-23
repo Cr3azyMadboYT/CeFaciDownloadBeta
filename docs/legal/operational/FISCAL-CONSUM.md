@@ -29,3 +29,7 @@ OUG 34/2014 stabilește informarea și retragerea pentru contractele la distanț
 Păstrează un contact efectiv pentru reclamații și informarea SAL ANPC aplicabilă, inclusiv cerințele formale de afișare la lansarea comercială. **Platforma europeană SOL/ODR este închisă din 20 iulie 2025.** Nu o prezenta ca serviciu activ pe baza unor instrucțiuni vechi. Verifică ordinele ANPC curente și canalele funcționale.
 
 Revizuiește și licențele catalogului/OSM și fonturilor, transparența promovării plătite dacă se introduce, eventualele obligații DSA/P2B pentru modelul efectiv și accesibilitatea serviciului, cu excepțiile legale reale. Paginile juridice nu rezolvă singure aceste formalități.
+
+## Bilete la evenimente (23.10)
+
+Vânzarea în CeFaci rulează doar în test (`private.ticket_config.live = false`). Înainte de plăți reale: SRL, contractul Netopia (plăți împărțite) și contractul cu fiecare local. Localul este vânzătorul și organizatorul și emite documentele fiscale pentru bilete; CeFaci facturează localului comisionul de 8% și încasează taxa de serviciu de 2 lei pe bilet de la cumpărător (0 cu Plus) — contabilul stabilește documentul pentru taxă, TVA-ul și cine o emite. La cumpărare: prețul total înainte de plată, operatorul, vânzătorul, faptul că dreptul de retragere de 14 zile nu se aplică serviciilor de agrement cu dată stabilită (art. 16 lit. l OUG 34/2014), rambursarea la anulare. Comenzile plătite se păstrează după termenul contabil, fără legătura cu contul după ștergerea lui.

@@ -1,6 +1,6 @@
 # Contact și informații despre proiect
 
-Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-23. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Contact direct
 

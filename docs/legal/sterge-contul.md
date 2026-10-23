@@ -1,6 +1,6 @@
 # Șterge contul CeFaci
 
-Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-23. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Din aplicația Client
 
@@ -21,6 +21,8 @@ La un cont Business, clarificăm și drepturile echipei, reprezentarea localului
 Unele istorice de vizite, cereri de suport și jurnale păstrează evenimentul fără legătura directă cu contul. Textul liber și atașamentele pot necesita ștergere sau redactare separată. Dovezile și pozele au limita de acces de 90 de zile și o procedură de ștergere fizică, descrise în politica de confidențialitate.
 
 Marca pseudonimizată a dispozitivului pentru limitarea probei Plus poate rămâne fără asocierea cu contul. Backupurile și jurnalele urmează ciclurile furnizorului, nu o promisiune de ștergere totală în 30 de zile. Pentru o obligație legală ori un litigiu păstrăm numai datele necesare și explicăm o excepție aplicabilă cererii tale.
+
+Biletele la evenimente: dacă ai bilete valabile la un eveniment care nu a avut loc sau o rambursare în curs, ștergerea din aplicație este oprită până le folosești, le dai unui prieten sau primești banii înapoi, ca să nu pierzi bilete plătite. Comenzile plătite rămân, fără legătura cu contul, cât cere legea contabilității.
 
 ## 4. Confirmare și drepturi
 

@@ -1,6 +1,6 @@
 # Cookies și stocarea pe dispozitiv
 
-Versiunea: 2026-10-13. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-23. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Ce acoperă politica
 
@@ -19,6 +19,8 @@ Site-ul folosește cheia localStorage cefaci.site.theme numai când alegi explic
 Cheile cefaci.prefs și cefaci.state păstrează preferințele și progresul; cefaci.onboarded și cefaci.owner susțin reluarea și separarea stării conturilor. Cache-ul de localuri și cheile cefaci.planAsk și ale sugestiilor recente susțin catalogul și formularul cerut. Ele rămân până la resetarea aplicației, ștergerea datelor ori înlocuirea lor de fluxul aplicației; anumite sugestii recente sunt filtrate la două zile.
 
 Sesiunea Supabase folosește chei de tip sb-<proiect>-auth-token în stocarea aplicației Client; durata sesiunii și reînnoirea sunt controlate de autentificare. Nu susținem că tokenul Client este un cookie HttpOnly. Ștergerea datelor locale poate deconecta contul și poate pierde progresul nesincronizat. Hashul dispozitivului folosit pentru limitarea probei Plus este explicat în informarea de confidențialitate și necesită o evaluare separată a proporționalității și a regulilor privind terminalul.
+
+Cheile cefaci.tickets, cefaci.events, cefaci.inbox și cefaci.freenow păstrează biletele tale (cu cheia din care telefonul face codul QR fără internet), lista de evenimente, lista de notificări și ultima alegere din FreeNow. Când alt cont intră pe același telefon, toate cheile cefaci.* ale contului anterior se șterg, în afară de catalogul de localuri.
 
 ## 4. Business și Admin
 
