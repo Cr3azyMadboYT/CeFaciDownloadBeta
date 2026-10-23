@@ -3,12 +3,20 @@ package expo.modules.cefacibusinessicon
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
 class CefaciBusinessIconModule : Module() {
   private val looks = listOf("primavara", "vara", "toamna", "iarna", "craciun")
   private fun alias(p: String, look: String) = ComponentName(p, "$p.Icon_$look")
+  // 23.10: switched only after 10 minutes in the background (a sign-in sheet or a permission question is also
+  // „background” for a few seconds, and Samsung closed the app when its launcher entry changed then)
+  private val handler = Handler(Looper.getMainLooper())
+  private var wanted: String? = null
+  private var pending: Runnable? = null
+  private fun cancel() { pending?.let { handler.removeCallbacks(it) }; pending = null }
   override fun definition() = ModuleDefinition {
     Name("CefaciBusinessIcon")
     Function("current") {
@@ -23,9 +31,21 @@ class CefaciBusinessIconModule : Module() {
         }
       }
     }
-    AsyncFunction("set") { look: String ->
-      val context = appContext.reactContext ?: return@AsyncFunction false
-      if (look !in looks) return@AsyncFunction false
+    AsyncFunction("set") { look: String -> switchTo(look) }
+    Function("later") { look: String -> wanted = if (look in looks) look else null; true }
+    OnActivityEntersBackground {
+      cancel()
+      val look = wanted ?: return@OnActivityEntersBackground
+      val r = Runnable { pending = null; try { switchTo(look) } catch (_: Exception) { } }
+      pending = r
+      handler.postDelayed(r, 10L * 60L * 1000L)
+    }
+    OnActivityEntersForeground { cancel() }
+  }
+
+  private fun switchTo(look: String): Boolean {
+      val context = appContext.reactContext ?: return false
+      if (look !in looks) return false
       val pm = context.packageManager
       val components = listOf(look) + looks.filter { it != look }
       if (Build.VERSION.SDK_INT >= 33) {
@@ -45,7 +65,6 @@ class CefaciBusinessIconModule : Module() {
           throw error
         }
       }
-      true
-    }
+      return true
   }
 }

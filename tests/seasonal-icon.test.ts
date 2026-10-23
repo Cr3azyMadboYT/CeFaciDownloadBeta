@@ -8,16 +8,16 @@ const flush = async () => {await Promise.resolve(); await Promise.resolve();};
 function setup(platform='android', initial='active', nativePresent=true) {
   let listener = (_:string) => {}, look = 'toamna', date = new Date(2026,8,30,12);
   const remove = vi.fn();
-  const native: IconNative = {current: vi.fn(() => look),set: vi.fn(async (target:Look) => {look=target;return true;})};
+  const native: IconNative = {current: vi.fn(() => look),set: vi.fn(async (target:Look) => {look=target;return true;}),later: vi.fn((target:Look) => {look=target;return true;})};
   const stop = watchSeasonalIcon({platform,native:nativePresent?native:null,now:()=>date,appState:{currentState:initial,addEventListener:(_,fn)=>{listener=fn;return {remove};}}});
   return {native,stop,remove,emit:(state:string)=>listener(state),date:(next:Date)=>{date=next;}};
 }
 describe('Business native seasonal lifecycle',()=>{
- it('Android never changes the launcher while the app is active or inactive',async()=>{
-  const f=setup();f.date(new Date(2026,11,1,12));f.emit('active');f.emit('inactive');expect(f.native.set).not.toHaveBeenCalled();f.emit('background');await flush();expect(f.native.set).toHaveBeenCalledWith('craciun');f.emit('background');await flush();expect(f.native.set).toHaveBeenCalledTimes(1);
+ it('Android never switches the launcher from JS: it tells the native module the season, which waits 10 minutes in the background (23.10 crash at the first Google sign-in)',async()=>{
+  const f=setup();f.date(new Date(2026,11,1,12));f.emit('active');f.emit('inactive');f.emit('background');await flush();expect(f.native.set).not.toHaveBeenCalled();expect(f.native.later).toHaveBeenLastCalledWith('craciun');
  });
- it('rechecks the date across all seasons and the Christmas year boundary',async()=>{
-  const f=setup();for(const [month,day,year,target] of [[12,1,2026,'craciun'],[1,7,2027,'craciun'],[1,8,2027,'iarna'],[3,1,2027,'primavara'],[6,1,2027,'vara'],[9,1,2027,'toamna']] as const){f.date(new Date(year,month-1,day,12));f.emit('background');await flush();expect(f.native.current()).toBe(target);}expect(f.native.set).toHaveBeenCalledTimes(5);
+ it('tells the native module the right season across all seasons and the Christmas year boundary',async()=>{
+  const f=setup();for(const [month,day,year,target] of [[12,1,2026,'craciun'],[1,7,2027,'craciun'],[1,8,2027,'iarna'],[3,1,2027,'primavara'],[6,1,2027,'vara'],[9,1,2027,'toamna']] as const){f.date(new Date(year,month-1,day,12));f.emit('background');await flush();expect(f.native.later).toHaveBeenLastCalledWith(target);}expect(f.native.set).not.toHaveBeenCalled();
  });
  it('UIKit uses the foreground and stops after unmount',async()=>{
   const f=setup('ios','background');f.date(new Date(2026,5,1));f.emit('background');expect(f.native.set).not.toHaveBeenCalled();f.emit('active');await flush();expect(f.native.set).toHaveBeenCalledWith('vara');f.stop();f.date(new Date(2026,11,1));f.emit('active');expect(f.remove).toHaveBeenCalledOnce();expect(f.native.set).toHaveBeenCalledOnce();
@@ -26,10 +26,10 @@ describe('Business native seasonal lifecycle',()=>{
   for(const f of [setup('web'),setup('android','active',false)]){f.emit('background');expect(f.native.set).not.toHaveBeenCalled();f.stop();}
  });
  it('OS failure retries only on a later lifecycle event',async()=>{
-  const f=setup();vi.mocked(f.native.set).mockRejectedValueOnce(new Error('OS refused'));f.date(new Date(2026,5,1));f.emit('background');await flush();expect(f.native.set).toHaveBeenCalledOnce();f.emit('background');await flush();expect(f.native.current()).toBe('vara');expect(f.native.set).toHaveBeenCalledTimes(2);
+  const f=setup('ios','background');vi.mocked(f.native.set).mockRejectedValueOnce(new Error('OS refused'));f.date(new Date(2026,5,1));f.emit('active');await flush();expect(f.native.set).toHaveBeenCalledOnce();f.emit('active');await flush();expect(f.native.current()).toBe('vara');expect(f.native.set).toHaveBeenCalledTimes(2);
  });
  it('coalesces concurrent updates and never switches after returning to foreground',async()=>{
-  const f=setup();let resolve!:(v:boolean)=>void;vi.mocked(f.native.set).mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));f.date(new Date(2026,5,1));f.emit('background');f.date(new Date(2026,11,1));f.emit('background');expect(f.native.set).toHaveBeenCalledOnce();f.emit('active');resolve(true);await flush();expect(f.native.set).toHaveBeenCalledOnce();f.emit('background');await flush();expect(f.native.set).toHaveBeenLastCalledWith('craciun');
+  const f=setup('ios','active');let resolve!:(v:boolean)=>void;vi.mocked(f.native.set).mockImplementationOnce(()=>new Promise(r=>{resolve=r;}));f.date(new Date(2026,5,1));f.emit('active');f.date(new Date(2026,11,1));f.emit('active');expect(f.native.set).toHaveBeenCalledOnce();f.emit('background');resolve(true);await flush();expect(f.native.set).toHaveBeenCalledOnce();f.emit('active');await flush();expect(f.native.set).toHaveBeenLastCalledWith('craciun');
  });
 });
 describe('Business Android alias configuration',()=>{
