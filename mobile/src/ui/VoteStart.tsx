@@ -5,6 +5,7 @@ import { router } from 'expo-router';
 import type { Filters, Place } from '../lib/filters';
 import { dayFor, hhmm } from '../lib/plans';
 import { DEADLINES, startVote } from '../lib/votes';
+import { toast } from '../lib/toast';
 import { Big, H1, Lbl, Muted, Note, Seg, Sheet } from './kit';
 import { SendTo, type Target } from './SendTo';
 import { useTheme } from './theme';
@@ -43,6 +44,7 @@ export function VoteStart({ open, onClose, places, f, routes }: { open: boolean;
     setBusy(false);
     if (r.err) { setErr(r.err); return; }
     onClose();
+    if (r.open) { toast(tr('Aveți deja un vot deschis. Ți-l deschid pe ăla: terminați-l întâi.')); router.push({ pathname: '/vot/[id]', params: { id: r.open } }); return; }
     router.push({ pathname: '/vot/[id]', params: { id: r.id! } });
   };
   return (

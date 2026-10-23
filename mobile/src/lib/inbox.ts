@@ -52,6 +52,18 @@ export function readAll() {
   void db().rpc('notifications_read');
 }
 
+/** Its screen was opened (from the phone's notification bar, or by going there): that notification is read (23.10). */
+export function markSeen(path: string) {
+  if (!who()) return;
+  const list = load();
+  const here = list.some((x) => !x.read_at && x.url === path);
+  // right after a tap in the phone's bar the list may not be loaded yet: the screens a notification opens are told
+  // to the server anyway
+  if (!here && !/^\/(vot|gasca|prieten)\/|^\/freenow$/.test(path)) return;
+  if (here) { const now = new Date().toISOString(); save(list.map((x) => (x.read_at || x.url !== path ? x : { ...x, read_at: now }))); }
+  void db().rpc('notifications_seen', { p_url: path }).then(() => { if (!here) void refreshInbox(); }, () => {});
+}
+
 export function useInbox(): Inbox[] {
   return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, load, load);
 }

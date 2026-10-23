@@ -1,7 +1,8 @@
 import '../lib/boot';
 import { useEffect, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import { Stack, router } from 'expo-router';
+import { Stack, router, usePathname } from 'expo-router';
+import { markSeen } from '../lib/inbox';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
@@ -37,6 +38,9 @@ export default function Root() {
   const name: 'zi' | 'noapte' = mode === 'noapte' || (mode === 'auto' && sys === 'dark') ? 'noapte' : 'zi';
   const t = name === 'noapte' ? noapte : zi;
   const ctx = useMemo(() => ({ t, name, set: (n: 'zi' | 'noapte') => setBoard({ theme: n }) }), [t, name]);
+  // a notification's screen opened (tapped in the phone's bar, or reached by hand): it is read in the bell too
+  const path = usePathname();
+  useEffect(() => { if (path) markSeen(path); }, [path]);
   useEffect(() => { if (loaded) SplashScreen.hideAsync().catch(() => {}); }, [loaded]);
   // „bon” opens the ticket at the receipt, „arrive” at the table code (docs/flux-intrare-bon.md)
   useEffect(() => onReminderTap((pid, kind) => router.push({ pathname: '/bilet/[pid]', params: { pid: String(pid), ...(kind === 'bon' || kind === 'arrive' ? { step: kind } : {}) } }), (url) => router.push(url as never)), []);

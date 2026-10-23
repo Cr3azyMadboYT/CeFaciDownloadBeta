@@ -23,13 +23,15 @@ export interface Score { optionId: string; da: number; nu: number; super: number
 export const DEADLINES: [string, string, number][] = [['30m', '30 min', 30], ['1h', 'o oră', 60], ['3h', '3 ore', 180], ['24h', 'până mâine', 1440]];
 
 /** Starts a vote for a crew or for friends picked one by one. Returns the vote id or an error to show. */
-export async function startVote(o: { crewId?: string | null; friendIds?: string[]; minutes: number; options: { venueId: string; name: string; details: VoteOption['details'] }[] }): Promise<{ id?: string; err?: string }> {
+export async function startVote(o: { crewId?: string | null; friendIds?: string[]; minutes: number; options: { venueId: string; name: string; details: VoteOption['details'] }[] }): Promise<{ id?: string; err?: string; open?: string }> {
   if (o.options.length < 2) return { err: tr('Votul are nevoie de cel puțin 2 variante.') };
   const closes = new Date(Date.now() + o.minutes * 60000).toISOString();
   const { data, error } = await db().rpc('start_vote', {
     p_crew: o.crewId ?? null, p_friends: o.friendIds ?? [], p_closes_at: closes, p_title: 'Unde mergem?',
     p_options: o.options.map((x) => ({ venue_id: x.venueId, venue_name: x.name, details: x.details })),
   });
+  // the same people already have an open vote (23.10): that one opens instead of a second
+  if (error && /vot deschis cu ei/.test(String(error.message)) && error.details) return { open: String(error.details) };
   if (error) return { err: error.message ? trServer(String(error.message)) : tr('Nu am putut porni votul. Încearcă iar.') };
   return { id: data as string };
 }
@@ -109,6 +111,22 @@ export async function cast(v: VoteFull, me: string, optionId: string, value: Bal
   const { error } = await q;
   if (!error) return null;
   return /closes_at|row-level|policy/i.test(error.message ?? '') ? tr('Votul s-a închis.') : tr('Nu am putut trimite votul. Verifică internetul.');
+}
+
+/** „Gata, restul Nu” (23.10): the places I left without an answer get Nu, so the vote can end when everyone is done. */
+export async function finishRest(v: VoteFull, me: string): Promise<string | null> {
+  const rest = v.options.filter((o) => !v.ballots.some((b) => b.userId === me && b.optionId === o.id));
+  if (!rest.length) return null;
+  const now = new Date().toISOString();
+  const { error } = await db().from('ballots').upsert(rest.map((o) => ({ session_id: v.id, option_id: o.id, user_id: me, value: 'nu', updated_at: now })));
+  if (!error) return null;
+  return /closes_at|row-level|policy/i.test(error.message ?? '') ? tr('Votul s-a închis.') : tr('Nu am putut trimite votul. Verifică internetul.');
+}
+
+/** The one who started the vote ends it now (23.10); the place with the most votes so far wins. */
+export async function closeNow(id: string): Promise<string | null> {
+  const { error } = await db().rpc('vote_close_now', { p_session: id });
+  return error ? trServer(String(error.message ?? '')) || tr('Nu am putut închide votul.') : null;
 }
 
 /** Live updates for one vote: every change of a ballot or of the vote itself calls `cb`. Returns a stop function. */
