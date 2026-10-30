@@ -1,7 +1,9 @@
 // Edge Function "e-deschis" (decision Cornel, 06.10: "bagă la verificat dacă s-au închis, în afară de parcuri"): before
 // a plan is shown, asks Google Maps whether each place in it is open at the time of its step, for the whole step.
-// Google's opening hours are not kept anywhere (their terms): only the place id, which may be kept, so the next check
-// is one call (public.venue_google). Up to 12 places a call, signed-in people only.
+// The place id is kept (public.venue_google, so the next check is one call). Since 31.10 a place's hours are kept for the
+// current day only, for everybody (public.place_day), because Google Maps Platform support allowed exactly that in writing
+// ("pe durata zilei curente"; the next day they are asked again and the old row is deleted). Up to 12 places a call,
+// signed-in people only.
 // Safety (07.10): the phone sends only the place id and the time; the name and the position come from public.venues
 // (otherwise anyone could tie a real place to a closed one on Google, for everyone). Every check counts against a
 // quota (api_quota: per person and for the whole app each day), so nobody can run up the Google bill.
@@ -60,18 +62,42 @@ Deno.serve(async (req) => {
       if (v && typeof v.name === 'string' && typeof v.lat === 'number' && typeof v.lon === 'number') items.push({ id: x.id, at: x.at, until: x.until, name: v.name, lat: v.lat, lon: v.lon });
     }
   }
+  // Today's answer, kept for everybody (31.10, Google Maps Platform support: "you may keep a place's hours and reuse them for
+  // all the app's users during the current day; at the start of the next day the information must be updated"):
+  // public.place_day holds one row per place, always today's (Romania's day); older rows are deleted below.
+  const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Bucharest' });
+  // (the query only runs when it is awaited or .then() is called, so it is started here and not waited for)
+  db.from('place_day').delete().lt('day', today).then(() => {}, () => {});
+  const cached = new Map<string, { status: string | null; periods: Period[] | null; off: number }>();
   if (items.length) {
-    const { data: allowed } = await db.rpc('api_quota', { p_user: who.user.id, p_kind: 'e-deschis', p_n: items.length });
-    if (!allowed) return json({ checked: {}, limit: true }); // not checked: the plan stays as the app made it
+    const { data } = await db.from('place_day').select('venue_id, status, periods, utc_offset').eq('day', today).in('venue_id', items.map((x) => x.id));
+    for (const r of data ?? []) cached.set(r.venue_id, { status: r.status, periods: r.periods, off: typeof r.utc_offset === 'number' ? r.utc_offset : 180 });
+  }
+  // only the places Google must be asked about for today count against the quota (the ones kept from earlier today cost nothing)
+  const toAsk = items.filter((x) => !cached.has(x.id));
+  let limited = false;
+  if (toAsk.length) {
+    const { data: allowed } = await db.rpc('api_quota', { p_user: who.user.id, p_kind: 'e-deschis', p_n: toAsk.length });
+    if (!allowed) limited = true; // not checked: the plan stays as the app made it
   }
 
   const known = new Map<string, string>();
-  if (items.length) {
-    const { data } = await db.from('venue_google').select('venue_id, place_id').in('venue_id', items.map((x) => x.id));
+  if (toAsk.length && !limited) {
+    const { data } = await db.from('venue_google').select('venue_id, place_id').in('venue_id', toAsk.map((x) => x.id));
     for (const r of data ?? []) known.set(r.venue_id, r.place_id);
   }
   const out: Record<string, { open: boolean | null; closes?: string; status?: string }> = {};
-  await Promise.all(items.map(async (x) => {
+  /** The answer for one step from a place's status and weekly periods (the same for a fresh answer and for today's kept one). */
+  const answer = (x: Item, status: string | null, periods: Period[] | null, off: number) => {
+    if (status && status !== 'OPERATIONAL') return { open: false, status: status === 'CLOSED_PERMANENTLY' ? 'inchis-definitiv' : 'inchis-temporar' };
+    if (!periods?.length) return { open: null, status: 'fara-program' };
+    const a = weekMin(new Date(x.at), off), b = x.until ? weekMin(new Date(x.until), off) : a + 45;
+    const s = openSpan(periods, a, b);
+    return { open: s.open, ...(s.closes !== null ? { closes: hhmm(s.closes) } : {}) };
+  };
+  for (const x of items) { const c = cached.get(x.id); if (c) out[x.id] = answer(x, c.status, c.periods, c.off); }
+  if (limited) return json({ checked: out, limit: true });
+  await Promise.all(toAsk.map(async (x) => {
     try {
       let pid = known.get(x.id);
       if (!pid) {
@@ -90,13 +116,12 @@ Deno.serve(async (req) => {
       const res = await fetch('https://places.googleapis.com/v1/places/' + pid, { headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'businessStatus,currentOpeningHours,regularOpeningHours,utcOffsetMinutes' } });
       if (!res.ok) { out[x.id] = { open: null, status: 'google-' + res.status }; return; }
       const d = await res.json();
-      if (d.businessStatus && d.businessStatus !== 'OPERATIONAL') { out[x.id] = { open: false, status: d.businessStatus === 'CLOSED_PERMANENTLY' ? 'inchis-definitiv' : 'inchis-temporar' }; return; }
       const periods: Period[] = d.currentOpeningHours?.periods ?? d.regularOpeningHours?.periods ?? [];
-      if (!periods.length) { out[x.id] = { open: null, status: 'fara-program' }; return; }
       const off = typeof d.utcOffsetMinutes === 'number' ? d.utcOffsetMinutes : 180;
-      const a = weekMin(new Date(x.at), off), b = x.until ? weekMin(new Date(x.until), off) : a + 45;
-      const s = openSpan(periods, a, b);
-      out[x.id] = { open: s.open, ...(s.closes !== null ? { closes: hhmm(s.closes) } : {}) };
+      const status: string | null = typeof d.businessStatus === 'string' ? d.businessStatus.slice(0, 40) : null;
+      out[x.id] = answer(x, status, periods, off);
+      // kept for the rest of today, for everybody (one row per place, overwritten tomorrow)
+      await db.from('place_day').upsert({ venue_id: x.id, day: today, status, periods: periods.length ? periods : null, utc_offset: off, fetched_at: new Date().toISOString() });
     } catch { out[x.id] = { open: null }; }
   }));
   return json({ checked: out });
