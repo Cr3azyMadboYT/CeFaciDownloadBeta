@@ -6,6 +6,7 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 - `design/canvas/client/`, `design/canvas/business/`, `design/canvas/admin/` — toate cele 3 canvasuri (sursa de adevăr pentru UI).
 - `docs/directie-si-decizii.md` — deciziile de produs și bani. `START-AICI.md` — pașii de lucru.
 - `docs/predare-pc.md` — ce a rămas de făcut după mutarea de pe cloud pe PC (30.10). Citește-l la început.
+- Ramura de lucru: `main` (din 30.10). `claude/new-session-hzbjtf` = backup cu istoricul din cloud.
 
 ## Stare
 - Etapa 1 gata: ecranele din canvas (`design/Cont.dc.html`, `design/Demo.dc.html`) rulează pe 3.412 localuri reale OpenStreetMap (`src/data/venues.json`), cu motorul din `src/engine`.

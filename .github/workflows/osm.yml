@@ -10,7 +10,7 @@ on:
     - cron: '17 3 1 * *'
   workflow_dispatch:
   push:
-    branches: [claude/new-session-hzbjtf]
+    branches: [main]
     paths: [scripts/osm-kinds.mjs, .github/workflows/osm.yml]
 
 permissions:

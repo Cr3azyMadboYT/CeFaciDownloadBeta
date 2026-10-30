@@ -1,7 +1,7 @@
 # Predare: din cloud pe PC (30.10)
 
 Pentru Claude Code de pe PC-ul lui Cornel. Citește întâi `CLAUDE.md` (deciziile, unde e totul, regulile), apoi lista de mai jos.
-Lucrul e pe ramura `claude/new-session-hzbjtf` (nu pe `main`).
+Lucrul e pe ramura `main` (ramura principală din 30.10). `claude/new-session-hzbjtf` rămâne ca backup, cu tot istoricul din cloud.
 
 ## Ce a rămas de făcut de Cornel (în afara codului)
 - [ ] Supabase → SQL Editor: rulează `supabase/de-rulat/20261023_curatenie_zilnica.sql` (curățenia zilnică din politica de confidențialitate; unealta Supabase din cloud nu aplică SQL cu `delete`).
@@ -10,7 +10,7 @@ Lucrul e pe ramura `claude/new-session-hzbjtf` (nu pe `main`).
 - [ ] De confirmat pe telefon: crash-ul la prima intrare cu Google după instalare (reparat 23.10, încă neverificat pe Samsung).
 
 ## Următorii pași propuși (de ales de Cornel)
-1. Pull request `claude/new-session-hzbjtf` → `main`, ca PC-ul să lucreze pe `main`.
+1. ~~Aducerea pe `main`~~ — gata (30.10): `main` făcut din ramura de lucru și pus ramură principală.
 2. Google Play: cont de dezvoltator (decizie: pe SRL, `CLAUDE.md` → Bani), AAB-ul din `CeFaci-Client-native` la Testare internă, apoi amprenta SHA-1 din Play Console → App integrity adăugată la clientul OAuth Android (`docs/android.md`), formularul „Siguranța datelor” după `docs/legal/operational/PLAY-SIGURANTA-DATELOR.md`, clasificare 16+, cont de test cu email, poze pentru magazin. La fiecare urcare crește `version`/`versionCode` în `mobile/app.json` (acum 0.3.4 / 7).
 3. Partea legală înainte de lansare: identitatea operatorului (SRL), contractele cu Netopia și cu localurile (`docs/legal/operational/FISCAL-CONSUM.md`).
 4. Întrebare deschisă pentru Cornel: la „Surprinde-mă → La vot”, se trimite gășcii doar surpriza, nu toate cele 3 planuri?
