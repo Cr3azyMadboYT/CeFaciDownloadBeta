@@ -1,7 +1,7 @@
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
 
 export type SecurityFactor = { id: string; name: string };
-export type SecurityEnrollment = { id: string; secret: string; qr: string };
+export type SecurityEnrollment = { id: string; secret: string; qr: string; uri?: string };
 export type SecurityMfaState = {
   busy: boolean;
   phase: 'loading' | 'setup' | 'verify' | 'enroll' | 'complete';
@@ -154,7 +154,7 @@ export class SecurityMfaCoordinator {
         await this.cleanup(data.id); throw new Error('Invalid secret');
       }
       this.emit({ phase: 'enroll', selected: data.id, enrollment: {
-        id: data.id, secret: data.totp.secret, qr: data.totp.qr_code,
+        id: data.id, secret: data.totp.secret, qr: data.totp.qr_code, uri: data.totp.uri,
       } });
     });
   }

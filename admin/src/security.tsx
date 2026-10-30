@@ -3,7 +3,7 @@ import type { Session } from '@supabase/supabase-js';
 import { SecurityMfaCoordinator, normalizeTotp, securitySessionKey, type SecurityMfaState } from '../../shared/security-mfa';
 import { supabase } from './backend';
 import { Bilu, Brand, Card, Notice } from './ui';
-import { safeQrGeometry, type SafeQrNode } from './security-qr';
+import { qrFromOtpauth, safeQrGeometry, type SafeQrNode } from './security-qr';
 
 function renderQr(node: SafeQrNode, key = 'qr'): ReturnType<typeof createElement> {
   return createElement(node.tag, { ...node.attributes, key, ...(key === 'qr' ? { role: 'img', 'aria-label': 'Cod QR pentru aplicația de autentificare' } : {}) },
@@ -32,7 +32,7 @@ function AdminSecurityScreen({ session, onVerified, onLogout, forcedChallenge = 
     void controller.load();
     return () => { alive.current = false; controller.dispose(); if (coordinator.current === controller) coordinator.current = null; };
   }, [session.user.id, forcedChallenge]);
-  const qr = useMemo(() => state.enrollment ? safeQrGeometry(state.enrollment.qr) : null, [state.enrollment]);
+  const qr = useMemo(() => state.enrollment ? qrFromOtpauth(state.enrollment.uri) ?? safeQrGeometry(state.enrollment.qr) : null, [state.enrollment]);
   useEffect(() => { setCode(''); setVisible(false); setCopied(false); }, [state.enrollment?.id, state.selected]);
   async function copySecret() {
     const secret = state.enrollment?.secret;
