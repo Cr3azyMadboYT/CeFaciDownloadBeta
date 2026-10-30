@@ -19,7 +19,9 @@ Cheia nu intră niciodată în git (`*.jks` e în `.gitignore`).
 ## Google (deja făcut pe 03.10)
 - Client OAuth **Android**: `9736925899-q7tsi0l9bn6bt00s9t62aht9te3puock.apps.googleusercontent.com`, pachet `ro.cefaci.app`,
   amprenta SHA-1 a cheii: `17:63:E7:B2:9C:4A:3F:EA:98:68:21:B7:4D:A4:39:8A:DB:F1:E0:6F`.
-  După ce urci în Google Play, adaugi și amprenta din Play Console → App integrity → App signing.
+- Client OAuth **Android pentru Google Play** (30.10, „CeFaci Play”): `9736925899-srl2auroamg2kajvnfgk4k3vfrumte46.apps.googleusercontent.com`, pachet `ro.cefaci.app`,
+  amprenta SHA-1 a cheii de semnare din Play (App integrity → App signing): `F0:BA:00:86:BA:83:D2:B4:70:B0:7F:31:E9:F4:12:5C:E6:90:67:7C`.
+  Play resemnează aplicația cu cheia lui, deci „Continuă cu Google” în varianta din Play folosește clientul ăsta; APK-ul făcut pe PC (cheia CeFaci, `17:63…`) rămâne pe cel de mai sus. Aplicația folosește oricum doar ID-ul Web.
 - Client OAuth **Web** (cel din Supabase → Auth → Google): `9736925899-jlhik3chso7l5176auj2u5lcce8i80iu.apps.googleusercontent.com`, pus în `mobile/src/lib/auth.ts`.
 
 ## Pe un PC (dacă vreodată ai unul)
