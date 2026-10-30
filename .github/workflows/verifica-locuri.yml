@@ -42,6 +42,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Testele (vitest) importă și pachetele aplicațiilor mobile și Business (tests/business-proof.test.ts, tests/seasonal-icon.test.ts…):
+      # fără ele picau pe GitHub și datele nu se salvau (31.10).
+      - run: npm ci
+        working-directory: mobile
+      - run: npm ci
+        working-directory: business
       - name: Rezultatul de dinainte
         if: inputs.from_run != ''
         uses: actions/download-artifact@v4
