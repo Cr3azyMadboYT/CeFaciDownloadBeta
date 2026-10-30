@@ -191,11 +191,18 @@ export function runPlans(d: Draft, o: { chips?: string[]; notice?: Notice; surpr
     const pick = o.surprise && r.plans.length ? Math.min(r.plans.length - 1, roll < 0.45 ? 0 : roll < 0.75 ? 1 : 2) : 0;
     const opened = o.surprise && r.plans[pick] ? r.plans[pick].steps.map((x) => x.place.id) : [];
     if (opened.length) rememberSurprise(opened);
-    s = { ...s, notice: o.notice ?? minorNote, plans: r.plans, note: r.note, soloNote: r.soloNote, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: false, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
-    emit();
-    done(s);
-    // then Google is asked whether they are really open at those hours; a closed one is swapped for another
-    void verifyLive(id, (extra) => APP.makePlans(askOf(d), [...avoid, ...extra], tt, crewMinor));
+    // Not shown yet (31.10, Cornel: "să nu mai apară verificarea după ce omul și-a făcut planul… îi apare «stai că e
+    // închis»"): Google is asked first, while Bilu says he is checking; a closed place is swapped before anyone sees the
+    // plans. If Google is slow (7 s), the plans are shown as Bilu made them and a late answer is dropped (verifyLive
+    // stops once they are on screen), so nothing changes under their eyes.
+    s = { ...s, notice: o.notice ?? minorNote, plans: r.plans, note: r.note, soloNote: r.soloNote, empty: r.empty, wider: r.relaxed.includes('far') || r.relaxed.includes('wider'), loading: true, madeAt: Date.now(), pick, seen: [...(o.avoid ?? []), ...opened] };
+    const checked = verifyLive(id, (extra) => APP.makePlans(askOf(d), [...avoid, ...extra], tt, crewMinor)).catch(() => undefined);
+    void Promise.race([checked, new Promise((ok) => setTimeout(ok, 7000))]).then(() => {
+      if (id !== runId) { done(s); return; }
+      s = { ...s, loading: false };
+      emit();
+      done(s);
+    });
   }, 30)));
 }
 /** When a step ends, as a moment (its `until` is "HH:MM", after midnight on the next day). */
@@ -238,7 +245,7 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
       names.set(x.place.id, x.place.name);
     }
     const live = await checkOpen([...items.values()]);
-    if (id !== runId) return;
+    if (id !== runId || !s.loading) return; // a newer request, or the plans are already on screen: too late to change them
     const shut = Object.entries(live).filter(([, v]) => v.open === false).map(([k]) => k);
     if (!shut.length) { s = { ...s, plans: withLive(s.plans, live) }; emit(); return; }
     closed.push(...shut);
@@ -268,7 +275,7 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
     }
     // closed at that hour: the plans again without them, and Bilu says so
     const r = again(closed);
-    if (id !== runId) return;
+    if (id !== runId || !s.loading) return;
     s = { ...s, plans: r.plans, note: said(closed) + (r.note ? ' ' + r.note : ''), empty: r.empty, pick: Math.min(s.pick, Math.max(0, r.plans.length - 1)) };
     emit();
   }
