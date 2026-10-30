@@ -162,6 +162,10 @@ if (curated) {
   skipped.rated = out.filter((v) => v.rated).length;
   skipped.addedByHand = added;
 }
+// hours a venue publishes on its own website (scripts/hours-from-sites.mjs), only where the map has none
+const sitesFile = new URL('../src/data/hours-sites.json', import.meta.url);
+const sites = fs.existsSync(sitesFile) ? JSON.parse(fs.readFileSync(sitesFile, 'utf8')) : {};
+for (const v of out) if (!v.hours && sites[v.id]?.hours) v.hours = sites[v.id].hours;
 // pools inside an aqua park (Therme maps each one) are the aqua park itself
 const parks = out.filter((v) => v.k === 'water_park');
 for (let i = out.length - 1; i >= 0; i--) if (out[i].k === 'swimming' && parks.some((w) => km(w, out[i]) < 0.6)) { out.splice(i, 1); skipped.dupe++; }

@@ -1,0 +1,44 @@
+{
+ "n11463472510": {
+  "hours": "Mo,Tu,We,Th,Fr,Sa,Su 11:00-24:00",
+  "source": "https://dumanorientalcuisine.ro/",
+  "checked": "2026-10-30",
+  "name": "Duman"
+ },
+ "n12074907530": {
+  "hours": "Mo,Tu,We,Fr 08:30-18:00; Th 08:30-00:30; Sa,Su 09:00-19:00",
+  "source": "https://matineefloreasca.ro/meniu/",
+  "checked": "2026-10-30",
+  "name": "Matinée Floreasca"
+ },
+ "n12837417975": {
+  "hours": "Tu,We,Th,Fr,Sa,Su 12:00-22:00",
+  "source": "https://perennacafe.metro.rest/?lang=ro",
+  "checked": "2026-10-30",
+  "name": "Perenna"
+ },
+ "n2507541755": {
+  "hours": "Mo,Tu,We,Th,Fr,Sa,Su 10:00-22:00",
+  "source": "https://60minutes.ro/",
+  "checked": "2026-10-30",
+  "name": "60 Minutes"
+ },
+ "n3487482570": {
+  "hours": "Mo,Tu,We,Th,Fr 17:00-22:00; Sa 13:00-20:00; Su 13:00-17:00",
+  "source": "https://fabricadecatarat.ro/",
+  "checked": "2026-10-30",
+  "name": "Fabrica de Cățărat"
+ },
+ "n9162160977": {
+  "hours": "Tu,We,Th,Fr,Sa 12:00-22:00; Su 12:00-20:00",
+  "source": "https://www.potstories.ro/",
+  "checked": "2026-10-30",
+  "name": "POT"
+ },
+ "w281851047": {
+  "hours": "Mo,Tu,We,Th,Fr,Sa,Su 11:30-00:30",
+  "source": "https://piccolomondo.ro/",
+  "checked": "2026-10-30",
+  "name": "Piccolo Mondo"
+ }
+}
