@@ -1,4 +1,4 @@
-# Build Android pe PC-ul lui Cornel (din 30.10, în locul buildului de pe GitHub).
+﻿# Build Android pe PC-ul lui Cornel (din 30.10, în locul buildului de pe GitHub).
 # Face exact ce face jobul „native” din .github/workflows/android.yml: expo prebuild, APK + AAB semnate cu cheia reală,
 # verificarea semnăturii, apoi pune totul în release/.
 #
