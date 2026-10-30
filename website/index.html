@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#262066">
 <title>CeFaci — Ce facem în seara asta?</title>
-<meta name="description" content="CeFaci face planul de ieșit în oraș în sub un minut: 5 întrebări, 3 planuri verificate, votați cu gașca și primiți biletul. În curând pe Android și iOS, în București și Ilfov.">
+<meta name="description" content="CeFaci face planul de ieșit în oraș în sub un minut: 5 întrebări, 3 planuri verificate, votați cu gașca în timp real și primiți biletul. FreeNow, evenimente și concerte, în română și engleză. În curând pe Android și iOS, în București și Ilfov.">
 <link rel="canonical" href="https://cefaci.app/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ro_RO">
@@ -17,9 +17,9 @@
 <link rel="preload" href="/assets/bricolage-grotesque-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/instrument-sans-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/acasa-560.webp" as="image" type="image/webp" fetchpriority="high">
-<link rel="stylesheet" href="/assets/home.css?v=3">
-<script src="/assets/site.js?v=3" defer></script>
-<script src="/assets/home.js?v=3" defer></script>
+<link rel="stylesheet" href="/assets/home.css?v=4">
+<script src="/assets/site.js?v=4" defer></script>
+<script src="/assets/home.js?v=4" defer></script>
 </head>
 <body class="home">
 <a class="skip" href="#main">Sari la conținut</a>
@@ -98,7 +98,7 @@
     <article class="ticket">
       <span class="t-no">03</span>
       <h3>Planul devine bilet</h3>
-      <p>Fiecare loc are biletul lui. La local faci check-in și primești ștampila lui Bilu.</p>
+      <p>Îl trimiți gășcii, la local faci check-in și primești ștampila lui Bilu. Ceva nu merge? Biletul are și un plan B, deschis la aceeași oră.</p>
       <span class="t-perf" aria-hidden="true"></span>
       <span class="t-foot">CF-000001 · BILET DE IEȘIT</span>
     </article>
@@ -112,6 +112,7 @@
         <button type="button" class="active" data-screen="plan" aria-pressed="true">Tot planul</button>
         <button type="button" data-screen="surpriza" aria-pressed="false">Surprinde-mă</button>
         <button type="button" data-screen="loc" aria-pressed="false">Un loc nou</button>
+        <button type="button" data-screen="bilet" aria-pressed="false">Biletul</button>
       </div>
       <p class="caption" id="screen-caption">Tu alegi cum începe seara.</p>
     </div>
@@ -124,7 +125,7 @@
     <div>
       <p class="kicker light">CU GAȘCA</p>
       <h2 id="crew-title">Nu vă hotărâți?<br><span>Votați.</span></h2>
-      <p>Trimiți planurile în grup, fiecare votează, iar CeFaci știe cine vine. Data viitoare, Bilu ține minte ce v-a plăcut.</p>
+      <p>Trimiți planurile în gașcă și votați în timp real: fiecare primește notificare, vede cine a votat și câștigă locul cu cele mai multe voturi. După ieșire spuneți cum a fost, iar data viitoare Bilu ține minte ce v-a plăcut.</p>
     </div>
     <div class="votes" aria-hidden="true">
       <div class="vote win"><b>1</b><div><strong>Cină + desert</strong><small>20:40 – 23:10</small></div><i class="dots"><em></em><em></em><em></em></i></div>
@@ -136,9 +137,11 @@
 </section>
 
 <section class="perks wrap" aria-label="Ce mai face CeFaci">
-  <article><span aria-hidden="true">✦</span><h3>Surprinde-mă</h3><p>Fără chef de întrebări? Bilu alege o idee pentru acum.</p></article>
-  <article><span aria-hidden="true">☂</span><h3>Cu vremea în minte</h3><p>Plouă? Planuri la adăpost. Soare? Terase și parcuri.</p></article>
-  <article><span aria-hidden="true">★</span><h3>Locuri alese</h3><p>Sute de locuri verificate, fiecare cu povestea lui: de ce merită și când e lume.</p></article>
+  <article><span aria-hidden="true">✦</span><h3>Surprinde-mă</h3><p>Fără chef de întrebări? Dai cu zarul și Bilu alege o idee pentru acum.</p></article>
+  <article><span aria-hidden="true">⚡</span><h3>FreeNow</h3><p>Ai timp liber chiar acum? Dai de veste prietenilor, cine are chef vine, iar Bilu alege locul.</p></article>
+  <article><span aria-hidden="true">♪</span><h3>Concerte și evenimente</h3><p>Ce se întâmplă în oraș, pe Acasă. Biletele le iei de la vânzătorul oficial, dintr-un tap.</p></article>
+  <article><span aria-hidden="true">✎</span><h3>O construiesc eu</h3><p>Vrei să alegi tu? Pui seara pas cu pas, Bilu îți arată ce e deschis aproape.</p></article>
+  <article><span aria-hidden="true">★</span><h3>Locuri alese</h3><p>Peste 1.000 de locuri verificate, de la terase pe acoperiș la escape room-uri. Cele alese au povestea lor: de ce merită și când e lume.</p></article>
   <article><span aria-hidden="true">◉</span><h3>Ștampile și niveluri</h3><p>Fiecare ieșire te urcă un nivel. Bonul îți aduce XP în plus.</p></article>
 </section>
 
@@ -146,7 +149,7 @@
   <div>
     <p class="kicker">PENTRU LOCALURI</p>
     <h2 id="biz-title">Ai un local?<br><span>Hai în CeFaci.</span></h2>
-    <p>Rezervări, oferte live și oameni care chiar vin. Plătești doar pentru cei care ajung.</p>
+    <p>Oameni care chiar vin, oferte live și, în curând, bilete la evenimentele tale vândute direct în aplicație. Plătești 10% doar din bonurile celor veniți prin CeFaci, fără abonament. Primii 20 de parteneri au prima lună gratis.</p>
   </div>
   <a class="button" href="https://business.cefaci.app/">CeFaci Business <span aria-hidden="true">↗</span></a>
 </section>
@@ -156,7 +159,7 @@
     <div class="bt-main">
       <p class="bt-label">CEFACI · BILET DE IEȘIT</p>
       <h2 id="final-title">În curând.</h2>
-      <p class="bt-sub">Android · iOS · București &amp; Ilfov</p>
+      <p class="bt-sub">Android · iOS · București &amp; Ilfov · Română și engleză</p>
       <a class="cta small" href="/descopera/"><span class="cta-text"><strong>Ia-ți locul în tur</strong><small>și spune-ne dacă ai folosi-o</small></span><span class="cta-arrow" aria-hidden="true">›</span></a>
     </div>
     <div class="bt-stub" aria-hidden="true"><span class="barcode"></span><span>CF-2026</span></div>

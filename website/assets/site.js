@@ -26,6 +26,7 @@
     plan: {image: 'plan', alt: 'CeFaci: alegerea unui singur loc, a întregii seri sau a unui plan construit manual', caption: 'Tu alegi cum începe seara.'},
     surpriza: {image: 'surpriza', alt: 'Ecran real CeFaci: o surpriză pregătită de Bilu pentru ieșirea ta', caption: 'Ai chef de ceva spontan? Bilu vine cu o idee.'},
     loc: {image: 'loc', alt: 'Ecran real CeFaci: detalii despre un loc, cu adresă și opțiuni pentru ieșire', caption: 'Un loc nou, cu detaliile de care ai nevoie.'},
+    bilet: {image: 'bilet', alt: 'Ecran real CeFaci: biletul de ieșit, cu ora, câți sunteți, de ce merită locul și planul B', caption: 'Planul devine bilet, cu tot ce trebuie pentru seara asta.'},
   };
   document.querySelectorAll('[data-screen]').forEach(button => button.addEventListener('click', () => {
     const screen = screens[button.dataset.screen]; const image = document.getElementById('app-screen'); const caption = document.getElementById('screen-caption');
