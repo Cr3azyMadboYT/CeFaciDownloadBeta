@@ -15,6 +15,10 @@ Lucrul e pe ramura `main` (ramura principală din 30.10). `claude/new-session-hz
 3. Partea legală înainte de lansare: identitatea operatorului (SRL), contractele cu Netopia și cu localurile (`docs/legal/operational/FISCAL-CONSUM.md`).
 4. Întrebare deschisă pentru Cornel: la „Surprinde-mă → La vot”, se trimite gășcii doar surpriza, nu toate cele 3 planuri?
 
+## În ziua lansării pe Google Play
+- [ ] Supabase → SQL Editor: rulează `supabase/de-rulat/20261031_cote_la_lansare.sql` (ridică cota de bonuri de la 30 la 300 pe zi; „e deschis?” rămâne la 30 pe zi până trecem pe „doar planul ales”).
+- [ ] Google Cloud: bugetul de 10 $ cu alertă să fie pus (Billing → Budgets).
+
 ## Cum se lucrează (pe scurt)
 - APK/AAB semnate cu cheia reală le face GitHub la fiecare push (`.github/workflows/android.yml`); cheia e doar în secretele GitHub, nu în git. Fără `[skip ci]` doar când vrei build.
 - Verificări înainte de push: `npx vitest run`, `cd mobile && npx tsc --noEmit`, `npm run admin:typecheck`, `cd business && npx tsc --noEmit`.
