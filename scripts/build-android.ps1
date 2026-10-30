@@ -42,6 +42,9 @@ if (Test-Path $envFile) {
   }
 }
 
+# Metro păstrează codul deja transformat și nu ține cont de variabilele EXPO_PUBLIC_*: un build făcut fără cheie ar rămâne fără cheie (30.10, harta fără satelit).
+Remove-Item (Join-Path $env:TEMP 'metro-cache') -Recurse -Force -ErrorAction SilentlyContinue
+
 Push-Location (Join-Path $root $folder)
 try {
   $env:CI = '1'; $env:EXPO_NO_TELEMETRY = '1'
@@ -63,6 +66,19 @@ try {
   New-Item -ItemType Directory -Force $out | Out-Null
   Copy-Item android\app\build\outputs\apk\release\app-release.apk "$out\$name.apk" -Force
   Copy-Item (Get-ChildItem android\app\build\outputs\bundle\release\*.aab | Select-Object -First 1).FullName "$out\$name.aab" -Force
+
+  # Cu cheia Esri în .env.local, harta satelit trebuie să fie în aplicație (altfel Metro a servit din memorie un cod vechi).
+  if ($env:EXPO_PUBLIC_ESRI_MAPS_KEY) {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $zip = [IO.Compression.ZipFile]::OpenRead("$out\$name.apk")
+    try {
+      $entry = $zip.Entries | Where-Object { $_.FullName -match '^assets/index.*bundle$' } | Select-Object -First 1
+      $ms = New-Object IO.MemoryStream; $st = $entry.Open(); $st.CopyTo($ms); $st.Close()
+      $js = [Text.Encoding]::GetEncoding(28591).GetString($ms.ToArray())
+      if (-not $js.Contains('arcgis/imagery')) { throw 'Harta satelit nu a intrat in aplicatie (cheia Esri lipseste din cod)' }
+    } finally { $zip.Dispose() }
+    Write-Host 'Harta satelit: in aplicatie' -ForegroundColor Green
+  }
 
   # Semnătura: trebuie să fie cheia CeFaci, nu cea de test.
   $tools = Get-ChildItem "$env:ANDROID_HOME\build-tools" -Directory | Sort-Object { [version]$_.Name } | Select-Object -Last 1
