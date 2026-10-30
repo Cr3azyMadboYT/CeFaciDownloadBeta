@@ -16,6 +16,8 @@ business/.expo/
 mobile/.expo/
 mobile/android/
 mobile/ios/
+mobile/modules/*/android/build/
+business/modules/*/android/build/
 *.zip
 release/
 mobile/dist-android/

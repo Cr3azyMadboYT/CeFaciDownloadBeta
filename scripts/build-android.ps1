@@ -34,6 +34,14 @@ foreach ($k in 'CEFACI_KEYSTORE', 'CEFACI_KEYSTORE_PASSWORD', 'CEFACI_KEY_ALIAS'
 $jks = ([regex]::Match($text, '(?m)^CEFACI_KEYSTORE=(.+)$').Groups[1].Value).Trim()
 if (-not (Test-Path $jks)) { throw "Fișierul cheii nu există: $jks" }
 
+# Variabilele publice ale aplicației (ex. EXPO_PUBLIC_ESRI_MAPS_KEY) din <folder>\.env.local, fără să depindem de modul în care Expo le citește.
+$envFile = Join-Path $root "$folder\.env.local"
+if (Test-Path $envFile) {
+  Get-Content $envFile | ForEach-Object {
+    if ($_ -match '^\s*([A-Z][A-Z0-9_]*)\s*=\s*(.+?)\s*$') { Set-Item "env:$($matches[1])" $matches[2] }
+  }
+}
+
 Push-Location (Join-Path $root $folder)
 try {
   $env:CI = '1'; $env:EXPO_NO_TELEMETRY = '1'
