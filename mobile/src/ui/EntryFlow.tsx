@@ -1,6 +1,7 @@
 // Intrarea la un local partener, ca piese de ecran (docs/flux-intrare-bon.md): „Ai ajuns?”, codul de pe masă, „Ați
 // ajuns! · La ce masă stați?”, cardul intrării cu bonurile și biletul la plată. Primesc doar date și funcții, așa că
-// biletul adevărat (PartnerTicket) și „Simulează o seară” (app/simulare.tsx) arată exact aceleași lucruri.
+// biletul adevărat (PartnerTicket) folosește piesele de aici. („Simulează o seară” a ieșit din client la 30.10;
+// simularea rămâne în Business, `business/src/simulation.tsx`.)
 import { useState, type ReactNode } from 'react';
 import { Modal, ScrollView, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';

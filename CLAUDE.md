@@ -77,7 +77,8 @@ Aplicație românească pentru ieșit în oraș (București + Ilfov). Utilizator
 
 ## Comenzi
 - `npm i`, `npx vitest run`, `node scripts/extract-boards.mjs && npx vite build`
-- Telefonul: `cd mobile && npm ci && npx tsc --noEmit`. APK-ul îl face GitHub la fiecare push (`.github/workflows/android.yml`, Actions → Artifacts). Semnat cu cheia reală doar dacă există secretele `CEFACI_KEYSTORE_B64`, `CEFACI_KEYSTORE_PASSWORD`, `CEFACI_KEY_ALIAS`, `CEFACI_KEY_PASSWORD`; altfel cu o cheie de test (Google login nu merge). Pașii: `docs/android.md`.
+- Build Android pe PC (decizie Cornel, 30.10: „buildurile le rulăm la mine pe PC”): `powershell -ExecutionPolicy Bypass -File scripts\build-android.ps1` (sau `… business`) → `release/CeFaci-Client.apk` + `.aab`, semnate cu cheia din `%USERPROFILE%\.gradle\gradle.properties` (în afara proiectului). Push-urile pe `main` cu `[skip ci]` până hotărăște Cornel ce rămâne pe GitHub.
+- Telefonul: `cd mobile && npm ci && npx tsc --noEmit`. APK-ul îl făcea GitHub la fiecare push (`.github/workflows/android.yml`, Actions → Artifacts). Semnat cu cheia reală doar dacă există secretele `CEFACI_KEYSTORE_B64`, `CEFACI_KEYSTORE_PASSWORD`, `CEFACI_KEY_ALIAS`, `CEFACI_KEY_PASSWORD`; altfel cu o cheie de test (Google login nu merge). Pașii: `docs/android.md`.
 
 ## Bonul (decizie Cornel, 03.10)
 - Bonul se citește pe server: funcția Supabase `citeste-bon` (Google Vision, cheia în secretul `VISION_API_KEY`), cititorul în `supabase/functions/citeste-bon/bon.ts` (teste: `tests/bon.test.ts`).

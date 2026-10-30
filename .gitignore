@@ -5,6 +5,8 @@ android-release.jks
 android/assets/index.html
 *.jks
 *.keystore
+.env.local
+*.env.local
 
 supabase/.temp/
 business/node_modules/

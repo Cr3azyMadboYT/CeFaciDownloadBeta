@@ -3,14 +3,14 @@
     "name": "CeFaci",
     "slug": "cefaci",
     "scheme": "cefaci",
-    "version": "0.3.4",
+    "version": "0.3.5",
     "orientation": "portrait",
     "icon": "./assets/icons/vara.png",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#EEF1FB",
     "android": {
       "package": "ro.cefaci.app",
-      "versionCode": 7,
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/vara-fg.png",
         "backgroundImage": "./assets/icons/vara-bg.png",
