@@ -40,6 +40,9 @@ try {
   Write-Host "== ${name}: proiectul nativ Android" -ForegroundColor Cyan
   npx expo prebuild --platform android --clean --no-install
   if ($LASTEXITCODE) { throw 'expo prebuild a picat' }
+  # 2 GB / 512 MB Metaspace (implicitul Expo) nu ajung pentru APK + AAB într-o rulare: OutOfMemoryError: Metaspace (30.10).
+  $gp = 'android\gradle.properties'
+  (Get-Content $gp) -replace '^org\.gradle\.jvmargs=.*', 'org.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=2g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8' | Set-Content $gp -Encoding ascii
 
   Push-Location android
   try {
