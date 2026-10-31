@@ -75,7 +75,8 @@ async function worker() {
       else if (!v.wk) out.onlyGoogle.push(v.id);
       else {
         const bad = [1, 2, 3, 4, 5, 6, 0].filter((d) => !sameDay(v.wk[d], g[d]));
-        if (bad.length) out.differ[v.id] = bad; else out.agree.push(v.id);
+        // our own hours text is kept next to it: import-osm.mjs drops it only while it is still that text
+        if (bad.length) out.differ[v.id] = { days: bad, ours: v.hours }; else out.agree.push(v.id);
       }
     } catch (e) { console.error(v.id, e.message); out.errors++; if (/Places 40[13]/.test(e.message)) process.exit(1); }
   }
@@ -96,7 +97,7 @@ const lines = [
   `- Niciunul nu are program: ${out.neither.length}`,
   `- Închise pe Google: ${out.closed.length} · negăsite: ${out.notFound.length} · erori: ${out.errors}`, '',
   '### Diferă (zilele în care nu se potrivește)',
-  ...Object.entries(out.differ).sort((a, b) => b[1].length - a[1].length).map(([id, d]) => `- ${name.get(id)}: ${d.length === 7 ? 'toate zilele' : d.map((x) => DAYS[x]).join(', ')}`),
+  ...Object.entries(out.differ).sort((a, b) => b[1].days.length - a[1].days.length).map(([id, { days: d }]) => `- ${name.get(id)}: ${d.length === 7 ? 'toate zilele' : d.map((x) => DAYS[x]).join(', ')}`),
 ];
 fs.writeFileSync('docs/verificare-program.md', lines.join('\n'));
 console.log(lines.slice(0, 10).join('\n'));

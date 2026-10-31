@@ -166,6 +166,13 @@ if (curated) {
 const sitesFile = new URL('../src/data/hours-sites.json', import.meta.url);
 const sites = fs.existsSync(sitesFile) ? JSON.parse(fs.readFileSync(sitesFile, 'utf8')) : {};
 for (const v of out) if (!v.hours && sites[v.id]?.hours) v.hours = sites[v.id].hours;
+// hours that did not match Google Maps (scripts/check-hours.mjs, 31.10, Cornel: "scoate-l") are dropped while they are
+// still the same text that was checked; the app then guesses from the kind of place and checks live before a plan
+const checkFile = new URL('../src/data/hours-check.json', import.meta.url);
+const hoursCheck = fs.existsSync(checkFile) ? JSON.parse(fs.readFileSync(checkFile, 'utf8')) : { differ: {} };
+let wrongHours = 0;
+for (const v of out) if (v.hours && hoursCheck.differ?.[v.id]?.ours === v.hours) { delete v.hours; wrongHours++; }
+skipped.wrongHours = wrongHours;
 // pools inside an aqua park (Therme maps each one) are the aqua park itself
 const parks = out.filter((v) => v.k === 'water_park');
 for (let i = out.length - 1; i >= 0; i--) if (out[i].k === 'swimming' && parks.some((w) => km(w, out[i]) < 0.6)) { out.splice(i, 1); skipped.dupe++; }

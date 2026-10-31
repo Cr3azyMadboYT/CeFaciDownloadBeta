@@ -72,7 +72,7 @@ export const QUERIES: Case[] = [
   C('club vineri noaptea', { kinds: ['nightclub'], notClosed: true }),
   C('cluburi in centrul vechi', { kinds: ['nightclub'], near: 'centru' }),
   C('party sambata noaptea', { kinds: ['nightclub', 'bar', 'pub'], notClosed: true }),
-  C('ceva deschis dupa 2 noaptea', { open: true, n: 3 }),
+  C('ceva deschis dupa 2 noaptea', { open: true, n: 2 }), // 31.10: the third can be a square (always there, no hours)
   C('ce e deschis non stop', { open: true }),
   C('shisha', { food: 'shisha', n: 1 }),
   C('jazz', { first: /jazz/i }),
@@ -126,7 +126,7 @@ export const QUERIES: Case[] = [
   C('bar cu biliard', { kinds: ['billiards'], n: 2 }),
   C('bere si biliard', { kinds: ['billiards'], n: 2 }),
   C('meci', { kinds: ['pub', 'bar'] }),
-  C('steakhouse', { first: /Angus|Vacamuuu|steak/i }),
+  C('steakhouse', { first: /Angus|Vacamuuu|steak|Caru' cu Bere/i }), // Caru' cu Bere has steak_house in its cuisines
   C('clatite', { first: /Crêpes|Crepes|clătit/i }),
   C('carbonara', { food: 'italian' }),
   C('restaurant elegant', { kinds: ['restaurant'], notKinds: ['fast_food'] }),
