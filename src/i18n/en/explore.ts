@@ -167,6 +167,7 @@ const en: Record<string, string> = {
   // Confidențialitate
   'Confidențialitate și termeni': 'Privacy and terms',
   'Pentru voi, acum.': 'For you, right now.',
+  'Pentru voi, {w}.': 'For you, {w}.',
   'Toate locurile ({n})': 'All places ({n})',
   'Pune {name} la vot': 'Add {name} to the vote',
   'Scoate {name} de la vot': 'Remove {name} from the vote',

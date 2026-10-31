@@ -88,7 +88,8 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
     return n > all.length ? { km, n } : null;
   }, [searching, all, f]);
   const priceNote = useMemo(() => APP.priceNote(sq, f.budget), [sq, f.budget]);
-  const title = all.length ? (searching ? tr('Uite ce am găsit.') : tr('Pentru voi, acum.')) : tr('N-am găsit nimic.');
+  // the title says the time the filter is set to, not always "acum" (31.10, QA: "diseară" in the filter, "acum" above)
+  const title = all.length ? (searching ? tr('Uite ce am găsit.') : tr('Pentru voi, {w}.', { w: tr(WHEN[f.when]?.word ?? 'acum?').replace('?', '') })) : tr('N-am găsit nimic.');
   const q = sq.trim();
   const sub = (searching
     ? (all.length ? (all.length === 1 ? tr('1 loc pentru „{q}”', { q }) : all.length < 20 ? tr('{n} locuri pentru „{q}”', { n: all.length, q }) : tr('{n} de locuri pentru „{q}”', { n: all.length, q })) : tr('Încearcă un nume, „pizza”, „sector 2” sau „bar cu terasă”.'))
