@@ -112,6 +112,7 @@ const en: Record<string, string> = {
   'Poate': 'Maybe',
   'Da!': 'Yes!',
   'Ai merge aici?': 'Would you go here?',
+  'Gata, am notat ce-ți place: {y} „da”. Le schimbi oricând din Profil.': 'Done, I noted what you like: {y} "yes". Change it any time from Profile.',
   '{i} din {n} · {y} „da” până acum': '{i} of {n} · {y} "yes" so far',
   'Nu am găsit locuri aproape de zona aleasă. Mergi mai departe, le vezi în aplicație.': "I couldn't find places near the area you chose. Carry on, you'll see them in the app.",
   'Gata': 'Done',

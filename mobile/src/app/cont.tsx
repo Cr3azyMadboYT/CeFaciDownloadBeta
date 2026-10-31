@@ -508,9 +508,12 @@ export default function Cont() {
   if (step === 'picks') {
     const total = real.length || 5;
     const like = card ? LIKES.find((l) => l[0] === card.like) ?? LIKES[5] : LIKES[5];
+    // all answered (or back from the next step): no last card with a second button under it, just "Mai departe" below
+    // (31.10, QA: after Înapoi a "Next" sat over the last card, above three dead buttons)
+    const done = !!card && pick >= total;
     return (
       <Slide k="picks">
-        <StepScreen k={6} onBack={back} foot={
+        <StepScreen k={6} onBack={back} foot={done ? <Big label={tr('Mai departe')} onPress={() => go('friends')} /> :
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Press onPress={() => vote('no')} disabled={!card || pick >= total} style={{ flex: 1, height: 60, borderRadius: 20, backgroundColor: t.s1, borderWidth: 1, borderColor: t.line, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
               <Icon name="close" color={t.ink} /><T style={{ fontFamily: F.b, fontSize: 16 }}>{tr('Nu prea')}</T>
@@ -526,10 +529,10 @@ export default function Cont() {
           {bubble}
           <H1 style={{ fontSize: 26, lineHeight: 28 }}>{tr('Ai merge aici?')}</H1>
           <Muted style={{ marginTop: 4, marginBottom: 12 }}>{tr('{i} din {n} · {y} „da” până acum', { i: Math.min(pick, total - 1) + 1, n: total, y: yes })}</Muted>
-          {card ? <PickCard key={card.id + pick} odd={pick % 2 === 1} bg={card.bg} fg={card.fg} dot={card.dot} icon={like[3]} tag={card.tag} title={card.name} sub={card.sub} /> : (
+          {done ? <Note kind="ok">{tr('Gata, am notat ce-ți place: {y} „da”. Le schimbi oricând din Profil.', { y: yes })}</Note> : card ? <PickCard key={card.id + pick} odd={pick % 2 === 1} bg={card.bg} fg={card.fg} dot={card.dot} icon={like[3]} tag={card.tag} title={card.name} sub={card.sub} /> : (
             <Note kind="err">{tr('Nu am găsit locuri aproape de zona aleasă. Mergi mai departe, le vezi în aplicație.')}</Note>
           )}
-          {!card || pick >= total ? <View style={{ marginTop: 12 }}><Big label={tr('Mai departe')} onPress={() => go('friends')} /></View> : null}
+          {!card ? <View style={{ marginTop: 12 }}><Big label={tr('Mai departe')} onPress={() => go('friends')} /></View> : null}
         </StepScreen>
       </Slide>
     );
