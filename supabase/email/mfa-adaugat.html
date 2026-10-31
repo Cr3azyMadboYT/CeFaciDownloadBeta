@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+  Notificare: s-a pornit verificarea în doi pași (Admin/Business). Supabase → Authentication → Emails → Security notifications → „MFA factor enrolled” (de pornit acolo).
+  Subiectul: Ai pornit verificarea în doi pași în CeFaci
+  Generat de scripts/emails.mjs (nu-l edita de mână). Poza lui Bilu vine de pe cefaci.app (assets/bilu-email.png).
+-->
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>Verificarea în doi pași e pornită</title>
+</head>
+<body style="margin:0;padding:0;background:#E8EBF2;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#E8EBF2;">Contul tău CeFaci cere acum și codul din aplicația de autentificare.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#E8EBF2;">
+<tr><td align="center" style="padding:28px 12px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;">
+    <tr><td style="background:#262066;border-radius:28px 28px 0 0;padding:26px 28px 0 28px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td valign="bottom" style="padding-bottom:22px;">
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:22px;font-weight:800;color:#FFFFFF;letter-spacing:-0.5px;">CeFaci<span style="color:#FFD43B;">.</span></div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:30px;line-height:34px;font-weight:800;color:#FFFFFF;padding-top:18px;letter-spacing:-0.8px;">Cont mai sigur.</div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:23px;color:#C9CEF2;padding-top:8px;">Ai pornit verificarea în doi pași pentru contul tău CeFaci.</div>
+          </td>
+          <td width="96" valign="bottom" align="right"><img src="https://cefaci.app/assets/bilu-email.png" width="84" height="110" alt="Bilu" style="display:block;border:0;outline:none;"></td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td style="background:#FFFFFF;border-radius:0 0 28px 28px;padding:28px;">
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#2C3363;">De acum, la intrare îți cerem și codul din aplicația de autentificare (de exemplu Google Authenticator), pe lângă codul de pe email. Contul <strong style="color:#0E1440;">{{ .Email }}</strong> e mai greu de spart.</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;background:#F1F3F9;border-radius:18px;"><tr><td style="padding:16px 18px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#2C3363;"><strong style="color:#0E1440;">N-ai fost tu?</strong> Cineva poate avea acces la contul tău. Scrie-ne imediat la <a href="mailto:contact@cornacidev.ro" style="color:#2447E0;">contact@cornacidev.ro</a> și intră în cont ca să verifici.</td></tr></table>
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#2C3363;font-size:13px;line-height:20px;color:#5B6386;padding-top:20px;">Ai nevoie de ajutor? Scrie-ne la <a href="mailto:contact@cornacidev.ro" style="color:#2447E0;text-decoration:underline;">contact@cornacidev.ro</a>.</div>
+    </td></tr>
+    <tr><td align="center" style="padding:22px 20px 6px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:19px;color:#5B6386;">
+      <strong style="color:#0E1440;">CeFaci</strong> · Din „ce facem?” în „hai că mergem”. · București &amp; Ilfov<br>
+      Ai primit emailul pentru că s-a schimbat securitatea contului tău CeFaci.<br>
+      <a href="https://cefaci.app/" style="color:#2447E0;text-decoration:none;">cefaci.app</a> ·
+      <a href="https://cefaci.app/confidentialitate/" style="color:#2447E0;text-decoration:none;">Confidențialitate</a> ·
+      <a href="https://cefaci.app/termeni/" style="color:#2447E0;text-decoration:none;">Termeni</a>
+    </td></tr>
+  </table>
+</td></tr>
+</table>
+</body>
+</html>

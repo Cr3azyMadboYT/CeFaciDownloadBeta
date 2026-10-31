@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+  Primul email, la un cont nou făcut cu emailul. Supabase → Authentication → Emails → Templates → „Confirm signup”.
+  Subiectul: {{ .Token }} e codul tău CeFaci · Bun venit!
+  Generat de scripts/emails.mjs (nu-l edita de mână). Poza lui Bilu vine de pe cefaci.app (assets/bilu-email.png).
+-->
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>Bun venit în CeFaci</title>
+</head>
+<body style="margin:0;padding:0;background:#E8EBF2;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#E8EBF2;">Bun venit în CeFaci! Codul tău e {{ .Token }}. E valabil o oră.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#E8EBF2;">
+<tr><td align="center" style="padding:28px 12px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:520px;">
+    <tr><td style="background:#262066;border-radius:28px 28px 0 0;padding:26px 28px 0 28px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td valign="bottom" style="padding-bottom:22px;">
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:22px;font-weight:800;color:#FFFFFF;letter-spacing:-0.5px;">CeFaci<span style="color:#FFD43B;">.</span></div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:30px;line-height:34px;font-weight:800;color:#FFFFFF;padding-top:18px;letter-spacing:-0.8px;">Bun venit în CeFaci!</div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:23px;color:#C9CEF2;padding-top:8px;">Eu sunt Bilu. De azi te ajut să nu mai stați ore în șir pe „ce facem?”.</div>
+          </td>
+          <td width="96" valign="bottom" align="right"><img src="https://cefaci.app/assets/bilu-email.png" width="84" height="110" alt="Bilu" style="display:block;border:0;outline:none;"></td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td style="background:#FFFFFF;border-radius:0 0 28px 28px;padding:28px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#FFD43B;border-radius:22px;">
+        <tr><td align="center" style="padding:22px 18px 6px 18px;"><div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:2.5px;color:#2C3363;">CODUL TĂU DE ÎNCEPUT</div></td></tr>
+        <tr><td align="center" style="padding:6px 18px 4px 18px;"><div style="font-family:'Courier New',Courier,monospace;font-size:36px;line-height:46px;font-weight:700;letter-spacing:6px;color:#0E1440;">{{ .Token }}</div></td></tr>
+        <tr><td style="padding:10px 0 0 0;"><div style="border-top:2px dashed rgba(14,20,64,0.35);margin:0 18px;font-size:0;line-height:0;">&nbsp;</div></td></tr>
+        <tr><td align="center" style="padding:12px 18px 18px 18px;"><div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;color:#2C3363;">Valabil <strong style="color:#0E1440;">o oră</strong> · îl folosești <strong style="color:#0E1440;">o singură dată</strong></div></td></tr>
+      </table><div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:800;color:#0E1440;padding:28px 0 12px 0;">Ce urmează</div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td width="40" valign="top" style="padding:0 0 14px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background:#2F5BFF;color:#FFFFFF;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;">1</div></td>
+          <td valign="top" style="padding:4px 0 14px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#2C3363;">Scrie codul în <strong style="color:#0E1440;">CeFaci</strong>, pe ecranul unde ți l-am cerut.</td>
+        </tr>
+        <tr>
+          <td width="40" valign="top" style="padding:0 0 14px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background:#2F5BFF;color:#FFFFFF;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;">2</div></td>
+          <td valign="top" style="padding:4px 0 14px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#2C3363;">Îți pun câteva întrebări scurte: de unde pleci, ce buget ai, cu cine ieși. Durează un minut.</td>
+        </tr>
+        <tr>
+          <td width="40" valign="top" style="padding:0 0 14px 0;"><div style="width:30px;height:30px;line-height:30px;border-radius:15px;background:#2F5BFF;color:#FFFFFF;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;">3</div></td>
+          <td valign="top" style="padding:4px 0 14px 0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#2C3363;">Apasă <strong style="color:#0E1440;">Creează plan</strong> și îți fac 3 planuri gata, cu locuri deschise la ora voastră.</td>
+        </tr>
+      </table><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;background:#F1F3F9;border-radius:18px;"><tr><td style="padding:16px 18px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#2C3363;"><strong style="color:#0E1440;">Nu da codul nimănui.</strong> Echipa CeFaci nu ți-l cere niciodată: nici pe telefon, nici pe mesaj, nici pe email.<br><br><strong style="color:#0E1440;">N-ai cerut tu codul?</strong> Ignoră emailul. Fără cod nu intră nimeni în contul tău, iar codul expiră singur.</td></tr></table><div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#2C3363;font-size:13px;line-height:20px;color:#5B6386;padding-top:20px;">Codul a expirat sau nu merge? În aplicație apasă „Trimite din nou” și îți vine altul.</div>
+      <div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#2C3363;font-size:13px;line-height:20px;color:#5B6386;padding-top:20px;">Ai nevoie de ajutor? Scrie-ne la <a href="mailto:contact@cornacidev.ro" style="color:#2447E0;text-decoration:underline;">contact@cornacidev.ro</a>.</div>
+    </td></tr>
+    <tr><td align="center" style="padding:22px 20px 6px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:19px;color:#5B6386;">
+      <strong style="color:#0E1440;">CeFaci</strong> · Din „ce facem?” în „hai că mergem”. · București &amp; Ilfov<br>
+      Ai primit emailul pentru că cineva a început un cont CeFaci cu adresa ta.<br>
+      <a href="https://cefaci.app/" style="color:#2447E0;text-decoration:none;">cefaci.app</a> ·
+      <a href="https://cefaci.app/confidentialitate/" style="color:#2447E0;text-decoration:none;">Confidențialitate</a> ·
+      <a href="https://cefaci.app/termeni/" style="color:#2447E0;text-decoration:none;">Termeni</a>
+    </td></tr>
+  </table>
+</td></tr>
+</table>
+</body>
+</html>
