@@ -1,9 +1,9 @@
 // Edge Function "e-deschis" (decision Cornel, 06.10: "bagă la verificat dacă s-au închis, în afară de parcuri"): before
-// a plan is shown, asks Google Maps whether each place in it is open at the time of its step, for the whole step.
-// The place id is kept (public.venue_google, so the next check is one call). Since 31.10 a place's hours are kept for the
-// current day only, for everybody (public.place_day), because Google Maps Platform support allowed exactly that in writing
-// ("pe durata zilei curente"; the next day they are asked again and the old row is deleted). Up to 12 places a call,
-// signed-in people only.
+// a plan is shown, checks whether each place in it is open at the time of its step, for the whole step.
+// The place id is kept (public.venue_google, so the next check is one call). A place's weekly hours are kept for at
+// most 30 days (public.place_hours, filled monthly by scripts/fetch-hours.mjs or here); with them only the place's
+// status is asked. The status (and, without kept hours, the hours) is kept for the current day (public.place_day).
+// Up to 12 places a call, signed-in people only.
 // Safety (07.10): the phone sends only the place id and the time; the name and the position come from public.venues
 // (otherwise anyone could tie a real place to a closed one on Google, for everyone). Every check counts against a
 // quota (api_quota: per person and for the whole app each day), so nobody can run up the Google bill.
@@ -62,16 +62,22 @@ Deno.serve(async (req) => {
       if (v && typeof v.name === 'string' && typeof v.lat === 'number' && typeof v.lon === 'number') items.push({ id: x.id, at: x.at, until: x.until, name: v.name, lat: v.lat, lon: v.lon });
     }
   }
-  // Today's answer, kept for everybody (31.10, Google Maps Platform support: "you may keep a place's hours and reuse them for
-  // all the app's users during the current day; at the start of the next day the information must be updated"):
-  // public.place_day holds one row per place, always today's (Romania's day); older rows are deleted below.
+  // public.place_day holds today's answer per place (Romania's day), older rows are deleted below;
+  // public.place_hours holds the weekly hours for at most 30 days.
   const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Bucharest' });
   // (the query only runs when it is awaited or .then() is called, so it is started here and not waited for)
   db.from('place_day').delete().lt('day', today).then(() => {}, () => {});
+  const monthAgo = new Date(Date.now() - 30 * 864e5).toISOString();
+  db.from('place_hours').delete().lt('fetched_at', monthAgo).then(() => {}, () => {});
   const cached = new Map<string, { status: string | null; periods: Period[] | null; off: number }>();
   if (items.length) {
     const { data } = await db.from('place_day').select('venue_id, status, periods, utc_offset').eq('day', today).in('venue_id', items.map((x) => x.id));
     for (const r of data ?? []) cached.set(r.venue_id, { status: r.status, periods: r.periods, off: typeof r.utc_offset === 'number' ? r.utc_offset : 180 });
+  }
+  const kept = new Map<string, { periods: Period[] | null; off: number }>();
+  if (items.length) {
+    const { data } = await db.from('place_hours').select('venue_id, periods, utc_offset').gte('fetched_at', monthAgo).in('venue_id', items.map((x) => x.id));
+    for (const r of data ?? []) kept.set(r.venue_id, { periods: r.periods, off: typeof r.utc_offset === 'number' ? r.utc_offset : 180 });
   }
   // only the places Google must be asked about for today count against the quota (the ones kept from earlier today cost nothing)
   const toAsk = items.filter((x) => !cached.has(x.id));
@@ -95,7 +101,10 @@ Deno.serve(async (req) => {
     const s = openSpan(periods, a, b);
     return { open: s.open, ...(s.closes !== null ? { closes: hhmm(s.closes) } : {}) };
   };
-  for (const x of items) { const c = cached.get(x.id); if (c) out[x.id] = answer(x, c.status, c.periods, c.off); }
+  for (const x of items) {
+    const c = cached.get(x.id), h = kept.get(x.id);
+    if (c) out[x.id] = h ? answer(x, c.status, h.periods, h.off) : answer(x, c.status, c.periods, c.off);
+  }
   if (limited) return json({ checked: out, limit: true });
   await Promise.all(toAsk.map(async (x) => {
     try {
@@ -113,6 +122,17 @@ Deno.serve(async (req) => {
         pid = found.id as string;
         await db.from('venue_google').upsert({ venue_id: x.id, place_id: pid, checked_at: new Date().toISOString() });
       }
+      const h = kept.get(x.id);
+      if (h) {
+        // the weekly hours are kept: only the status is asked (closed for good, for a while, or working)
+        const res = await fetch('https://places.googleapis.com/v1/places/' + pid, { headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'businessStatus' } });
+        if (!res.ok) { out[x.id] = { open: null, status: 'google-' + res.status }; return; }
+        const d = await res.json();
+        const status: string | null = typeof d.businessStatus === 'string' ? d.businessStatus.slice(0, 40) : null;
+        out[x.id] = answer(x, status, h.periods, h.off);
+        await db.from('place_day').upsert({ venue_id: x.id, day: today, status, periods: null, utc_offset: h.off, fetched_at: new Date().toISOString() });
+        return;
+      }
       const res = await fetch('https://places.googleapis.com/v1/places/' + pid, { headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'businessStatus,currentOpeningHours,regularOpeningHours,utcOffsetMinutes' } });
       if (!res.ok) { out[x.id] = { open: null, status: 'google-' + res.status }; return; }
       const d = await res.json();
@@ -120,8 +140,11 @@ Deno.serve(async (req) => {
       const off = typeof d.utcOffsetMinutes === 'number' ? d.utcOffsetMinutes : 180;
       const status: string | null = typeof d.businessStatus === 'string' ? d.businessStatus.slice(0, 40) : null;
       out[x.id] = answer(x, status, periods, off);
-      // kept for the rest of today, for everybody (one row per place, overwritten tomorrow)
-      await db.from('place_day').upsert({ venue_id: x.id, day: today, status, periods: periods.length ? periods : null, utc_offset: off, fetched_at: new Date().toISOString() });
+      const now = new Date().toISOString();
+      await db.from('place_day').upsert({ venue_id: x.id, day: today, status, periods: periods.length ? periods : null, utc_offset: off, fetched_at: now });
+      // the regular weekly hours are kept for the next 30 days, so the next checks ask only for the status
+      const regular: Period[] = d.regularOpeningHours?.periods ?? [];
+      await db.from('place_hours').upsert({ venue_id: x.id, periods: regular.length ? regular : null, utc_offset: off, fetched_at: now });
     } catch { out[x.id] = { open: null }; }
   }));
   return json({ checked: out });
