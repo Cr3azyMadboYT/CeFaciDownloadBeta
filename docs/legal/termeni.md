@@ -1,6 +1,6 @@
 # Termeni de utilizare Client
 
-Versiunea: 2026-10-23. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-31. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Serviciul și etapa proiectului
 

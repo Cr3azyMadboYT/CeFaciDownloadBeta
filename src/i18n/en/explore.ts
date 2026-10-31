@@ -82,7 +82,7 @@ const en: Record<string, string> = {
   '{day} (azi)': '{day} (today)',
   'închis': 'closed',
   'non-stop': 'open 24h',
-  'Programul nu e pe hartă. Înainte de plan îl verificăm pe Google, la ora ta.': 'The hours aren\'t on the map. Before the plan we check them on Google, for your time.',
+  'Programul nu e pe hartă. Înainte de plan îl verificăm pe Google Maps, la ora ta.': 'The hours aren\'t on the map. Before the plan we check them on Google Maps, for your time.',
   'Drum': 'Directions',
   'Sună': 'Call',
   'Site': 'Website',

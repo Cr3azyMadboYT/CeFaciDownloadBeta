@@ -212,15 +212,15 @@ function untilOf(at: Date, until: string): Date {
   if (u.getTime() <= at.getTime()) u.setDate(u.getDate() + 1);
   return u;
 }
-/** The plans with what Google said: "Verificat acum pe Google: deschis până la 02:00" instead of Bilu's guess. */
+/** The plans with what Google said: "Verificat pe Google Maps: deschis până la 02:00" instead of Bilu's guess. */
 export function withLive(plans: Shown[], live: Record<string, Live>): Shown[] {
   return plans.map((p) => {
     const asked = p.steps.filter((x) => needsCheck(x.place.real.k, x.place.real.cat));
     if (!asked.length || !asked.every((x) => live[x.place.id]?.open === true && checkedFor(live[x.place.id], new Date(x.at), untilOf(new Date(x.at), x.until)))) return p;
     const one = asked.length === 1 ? live[asked[0].place.id] : null;
     const text = p.steps.length === 1
-      ? (one?.closes ? tr('Verificat acum pe Google: deschis până la {t}', { t: one.closes }) : tr('Verificat acum pe Google: deschis'))
-      : tr('Verificat acum pe Google: toate deschise la ora lor');
+      ? (one?.closes ? tr('Verificat pe Google Maps: deschis până la {t}', { t: one.closes }) : tr('Verificat pe Google Maps: deschis'))
+      : tr('Verificat pe Google Maps: toate deschise la ora lor');
     // the engine's own opening check, in either language (the engine's texts go through tr())
     const checks = [{ ok: true, text }, ...p.checks.filter((c) => !/^(Deschis la|Toate deschise|Program neconfirmat|Open at|All open|Hours not confirmed)/.test(c.text))];
     return { ...p, checks };
@@ -255,8 +255,8 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
       const one = ids.find((k) => names.get(k));
       return n.length === 1 && one ? tr('{why}, așa că l-am schimbat.', { why: closedWhy(n[0], whyOf[one]) })
         : n.length > 3
-          ? tr('Am verificat pe Google: {names} și încă {n} sunt închise la ora aia, așa că le-am schimbat.', { names: n.slice(0, 3).join(', '), n: n.length - 3 })
-          : tr('Am verificat pe Google: {names} sunt închise la ora aia, așa că le-am schimbat.', { names: n.join(', ') });
+          ? tr('Am verificat pe Google Maps: {names} și încă {n} sunt închise la ora aia, așa că le-am schimbat.', { names: n.slice(0, 3).join(', '), n: n.length - 3 })
+          : tr('Am verificat pe Google Maps: {names} sunt închise la ora aia, așa că le-am schimbat.', { names: n.join(', ') });
     };
     if (round === ROUNDS - 1) {
       // still closed ones after the last round: those plans go; the rest stay, checked
@@ -269,7 +269,7 @@ async function verifyLive(id: number, again: (closed: string[]) => Made) {
       if (APP.lastPlans.length === s.plans.length) APP.lastPlans = APP.lastPlans.filter((p) => ok(p.steps));
       s = keep.length
         ? { ...s, plans: keep, note: said(closed), pick: Math.min(s.pick, keep.length - 1) }
-        : { ...s, plans: [], note: undefined, empty: tr('Am verificat pe Google și locurile bune de pe aproape sunt închise la ora asta. Încearcă altă oră sau mai departe.'), pick: 0 };
+        : { ...s, plans: [], note: undefined, empty: tr('Am verificat pe Google Maps și locurile bune de pe aproape sunt închise la ora asta. Încearcă altă oră sau mai departe.'), pick: 0 };
       emit();
       return;
     }

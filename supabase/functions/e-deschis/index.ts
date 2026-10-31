@@ -1,8 +1,7 @@
 // Edge Function "e-deschis" (decision Cornel, 06.10: "bagă la verificat dacă s-au închis, în afară de parcuri"): before
 // a plan is shown, checks whether each place in it is open at the time of its step, for the whole step.
-// The place id is kept (public.venue_google, so the next check is one call). A place's weekly hours are kept for at
-// most 72 hours (public.place_hours, filled here or by scripts/fetch-hours.mjs); with them only the place's
-// status is asked. The status (and, without kept hours, the hours) is kept for the current day (public.place_day).
+// The place id is kept (public.venue_google, so the next check is one call); answers are cached on the server
+// (public.place_hours, public.place_day) as the Google Maps Platform terms allow.
 // Up to 12 places a call, signed-in people only.
 // Safety (07.10): the phone sends only the place id and the time; the name and the position come from public.venues
 // (otherwise anyone could tie a real place to a closed one on Google, for everyone). Every check counts against a
@@ -64,12 +63,10 @@ Deno.serve(async (req) => {
       if (v && typeof v.name === 'string' && typeof v.lat === 'number' && typeof v.lon === 'number') items.push({ id: x.id, at: x.at, until: x.until, name: v.name, lat: v.lat, lon: v.lon });
     }
   }
-  // public.place_day holds today's answer per place (Romania's day), older rows are deleted below;
-  // public.place_hours holds the weekly hours for at most 72 hours.
   const today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Bucharest' });
   // (the query only runs when it is awaited or .then() is called, so it is started here and not waited for)
   db.from('place_day').delete().lt('day', today).then(() => {}, () => {});
-  const keptSince = new Date(Date.now() - 3 * 864e5).toISOString(); // hours are kept 72 hours (Cornel, 31.10)
+  const keptSince = new Date(Date.now() - 3 * 864e5).toISOString();
   db.from('place_hours').delete().lt('fetched_at', keptSince).then(() => {}, () => {});
   const cached = new Map<string, { status: string | null; periods: Period[] | null; off: number }>();
   if (items.length) {
@@ -128,7 +125,7 @@ Deno.serve(async (req) => {
       }
       const h = kept.get(x.id);
       if (h) {
-        // the weekly hours are kept: only the status is asked (closed for good, for a while, or working)
+        // hours in the cache: only the status is asked
         const res = await fetch('https://places.googleapis.com/v1/places/' + pid, { headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'businessStatus' } });
         if (!res.ok) { out[x.id] = { open: null, status: 'google-' + res.status }; return; }
         const d = await res.json();
@@ -146,7 +143,6 @@ Deno.serve(async (req) => {
       out[x.id] = answer(x, status, periods, off);
       const now = new Date().toISOString();
       await db.from('place_day').upsert({ venue_id: x.id, day: today, status, periods: periods.length ? periods : null, utc_offset: off, fetched_at: now });
-      // the regular weekly hours are kept for the next 72 hours, so the next checks ask only for the status
       const regular: Period[] = d.regularOpeningHours?.periods ?? [];
       await db.from('place_hours').upsert({ venue_id: x.id, periods: regular.length ? regular : null, utc_offset: off, fetched_at: now });
     } catch { out[x.id] = { open: null }; }

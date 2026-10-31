@@ -1,5 +1,4 @@
-# Takes the businesses' opening hours from the Places API into public.place_hours (server only, kept at most 72 hours).
-# Only by hand (since 31.10 the hours live 72 hours, so a monthly run would be wasted); writes nothing to the repo.
+# Fills the server cache of the e-deschis function for the businesses. Only by hand; writes nothing to the repo.
 # Needs the secrets PLACES_API_KEY and SUPABASE_SERVICE_ROLE_KEY.
 name: Programul localurilor
 

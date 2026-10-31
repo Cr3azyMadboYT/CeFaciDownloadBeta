@@ -76,7 +76,7 @@ const en: Record<string, string> = {
 
   // src/app (cont, verificarea pe Google)
   'Profilul privat nu este disponibil.': 'The private profile isn\'t available.',
-  '{name} se închide la {t}, înainte să terminați acolo (am verificat pe Google)': '{name} closes at {t}, before you\'d be done there (checked on Google)',
-  '{name} e închis la ora aia (am verificat pe Google)': '{name} is closed at that time (checked on Google)',
+  '{name} se închide la {t}, înainte să terminați acolo (am verificat pe Google Maps)': '{name} closes at {t}, before you\'d be done there (checked on Google Maps)',
+  '{name} e închis la ora aia (am verificat pe Google Maps)': '{name} is closed at that time (checked on Google Maps)',
 };
 export default en;

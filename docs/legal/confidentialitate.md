@@ -1,6 +1,6 @@
 # Politica de confidențialitate
 
-Versiunea: 2026-10-23. Conținut comun cu aplicațiile și site-ul.
+Versiunea: 2026-10-31. Conținut comun cu aplicațiile și site-ul.
 
 ## 1. Cine răspunde de date
 
@@ -80,7 +80,7 @@ Ordinea recomandărilor nu se cumpără: un local nu urcă mai sus pentru că e 
 
 ## 7. Destinatari și transferuri
 
-Supabase furnizează autentificarea, baza de date, funcții server și stocarea fișierelor. Furnizorul de găzduire web procesează cererile către site. Google participă la autentificare dacă o alegi și Google Cloud Vision la OCR dacă funcția este activă. Pentru a verifica dacă un local din plan este deschis la ora pasului, serverul CeFaci întreabă Google Places despre acel local și ora respectivă; pentru vreme, serverul întreabă Google Weather despre o zonă. Aceste cereri pleacă de pe serverul CeFaci, fără numele, e-mailul sau identificatorul contului tău; păstrăm doar identificatorul Google al locului și verdictul nostru, nu programul sau recenziile de la Google. Firebase poate procesa identificatorii de notificare atunci când notificările push sunt configurate și permise; unele mementouri sunt exclusiv locale. Furnizorul efectiv de e-mail tranzacțional trebuie consemnat în registrul împuterniciților la activare.
+Supabase furnizează autentificarea, baza de date, funcții server și stocarea fișierelor. Furnizorul de găzduire web procesează cererile către site. Google participă la autentificare dacă o alegi și Google Cloud Vision la OCR dacă funcția este activă. Pentru a verifica dacă localurile din plan sunt deschise, folosim Google Maps Platform (Google Places API); pentru vreme, Google Weather. Aceste cereri pleacă de pe serverul CeFaci, fără numele, e-mailul sau identificatorul contului tău. Folosirea funcțiilor Google Maps este supusă și Termenilor suplimentari Google Maps/Google Earth (https://maps.google.com/help/terms_maps/) și Politicii de confidențialitate Google (https://policies.google.com/privacy). Firebase poate procesa identificatorii de notificare atunci când notificările push sunt configurate și permise; unele mementouri sunt exclusiv locale. Furnizorul efectiv de e-mail tranzacțional trebuie consemnat în registrul împuterniciților la activare.
 
 Nu promitem că toate datele, copiile de siguranță, metadatele și accesul furnizorilor rămân exclusiv în UE. Regiunea bazei de date nu acoperă automat toate serviciile, jurnalele și subîmputerniciții. Pentru transferuri în afara SEE trebuie verificate mecanismul aplicabil, acordurile de prelucrare și garanțiile, inclusiv clauzele contractuale standard sau o decizie de adecvare, după caz. Detaliile furnizorului și ale garanțiilor pot fi cerute la adresa de contact.
 
@@ -105,6 +105,10 @@ Poți solicita acces, copie, corectare, ștergere, restricționare și, când su
 Poți depune o plângere la ANSPDCP, https://www.dataprotection.ro/?page=Plangeri_meniu, sau te poți adresa unei instanțe competente. Nu este obligatoriu să renunți la aceste drepturi pentru a utiliza suportul nostru.
 
 Modificările importante ale scopurilor, temeiurilor sau destinatarilor vor fi comunicate înaintea aplicării. Un scop nou care necesită consimțământ nu este autorizat prin simpla actualizare a acestui document. Versiunea documentelor este indicată în aplicație și pe site.
+
+## Ce s-a schimbat la 31.10.2026
+
+Am actualizat secțiunea 7: verificarea programului localurilor folosește Google Maps Platform (Google Places API), cu trimitere la termenii și politica Google. Nu folosim datele tale în scopuri noi.
 
 ## Ce s-a schimbat la 23.10.2026
 

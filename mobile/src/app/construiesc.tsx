@@ -243,7 +243,7 @@ export default function Construiesc() {
             <T style={{ flex: 1, fontFamily: F.sb, fontSize: 13, color: over ? t.coralInk : t.ink2 }}>{(steps.length === 1 ? tr('1 loc') : tr('{n} locuri', { n: steps.length })) + ' · ' + tr('~{n} lei de persoană', { n: total }) + (over ? ' ' + tr('(peste buget)') : '')}</T>
           </View>
         ) : null}
-        <Big label={busy ? tr('Verific pe Google…') : tr('Gata, vezi planul')} disabled={!steps.length || busy} color="#FFD43B" ink={INK} onPress={() => void done()} />
+        <Big label={busy ? tr('Verific pe Google Maps…') : tr('Gata, vezi planul')} disabled={!steps.length || busy} color="#FFD43B" ink={INK} onPress={() => void done()} />
       </View>
       <Sheet open={leave} onClose={() => setLeave(false)}>
         <View style={{ gap: 12 }}>

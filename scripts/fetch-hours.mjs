@@ -1,6 +1,5 @@
-// Takes the weekly opening hours of the businesses (no parks, museums, theatres or public places) from the Places API
-// and keeps them on the server in public.place_hours for at most 72 hours; rows older than that are deleted first.
-// Runs only by hand (workflow "Programul localurilor"); normally e-deschis takes the hours when a place is in a plan.
+// Fills the server cache of e-deschis (public.place_hours) for the businesses (no parks, museums, theatres or public
+// places), by hand (workflow "Programul localurilor"); normally e-deschis fills it when a place is in a plan.
 // Nothing is written to the repo. Usage: PLACES_API_KEY=… SUPABASE_URL=… SUPABASE_SERVICE_ROLE_KEY=… node scripts/fetch-hours.mjs [--limit N]
 import fs from 'node:fs';
 
@@ -9,7 +8,7 @@ if (!key || !url || !service) { console.error('Lipsește PLACES_API_KEY, SUPABAS
 const limitArg = process.argv.indexOf('--limit');
 const limit = limitArg > 0 ? Number(process.argv[limitArg + 1]) : Infinity;
 const BUSINESS = new Set(['mancare', 'cafea', 'bar', 'club', 'desert', 'activitate', 'sport', 'film']);
-const MAX_DAYS = 3, FRESH_DAYS = 1; // kept at most 72 hours; rows younger than a day are not asked again
+const MAX_DAYS = 3, FRESH_DAYS = 1;
 
 const db = (path, init = {}) => fetch(`${url}/rest/v1/${path}`, { ...init, headers: { apikey: service, Authorization: `Bearer ${service}`, 'Content-Type': 'application/json', ...(init.headers ?? {}) } })
   .then(async (r) => { if (!r.ok) throw new Error(`Supabase ${r.status}: ${(await r.text()).slice(0, 200)}`); return r.status === 204 ? null : r.json().catch(() => null); });

@@ -15,7 +15,7 @@ export const needsCheck = (k: string, cat: string) => !OPEN_AIR.has(k) && cat !=
 // rebuilding a plan or "Altă surpriză" does not ask Google again for the same places (only on the phone, for an hour)
 /** Why a place cannot be used then, in Bilu's words (it may be open when you arrive but close before you leave). */
 export function closedWhy(name: string, v: Live | undefined): string {
-  return v?.closes ? tr('{name} se închide la {t}, înainte să terminați acolo (am verificat pe Google)', { name, t: v.closes }) : tr('{name} e închis la ora aia (am verificat pe Google)', { name });
+  return v?.closes ? tr('{name} se închide la {t}, înainte să terminați acolo (am verificat pe Google Maps)', { name, t: v.closes }) : tr('{name} e închis la ora aia (am verificat pe Google Maps)', { name });
 }
 
 export function createLiveChecker(invoke: (body: { items: { id: string; at: string; until?: string }[] }) => PromiseLike<{ data?: { checked?: Record<string, Live>; limit?: boolean } | null }>) {

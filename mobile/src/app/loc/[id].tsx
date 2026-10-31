@@ -138,7 +138,7 @@ export default function Loc() {
                 <T style={{ fontFamily: i === todayIdx ? F.b : F.m, fontSize: 14 }}>{i === todayIdx ? tr('{day} (azi)', { day: pick(DAYS, DAYS_EN)[ORDER[i]] }) : pick(DAYS, DAYS_EN)[ORDER[i]]}</T>
                 <T style={{ fontFamily: i === todayIdx ? F.b : F.m, fontSize: 14, color: line === 'închis' ? t.coralInk : t.ink }}>{line === 'închis' ? tr('închis') : line.replace('non-stop', tr('non-stop'))}</T>
               </View>
-            )) : <Muted>{tr('Programul nu e pe hartă. Înainte de plan îl verificăm pe Google, la ora ta.')}</Muted>}
+            )) : <Muted>{tr('Programul nu e pe hartă. Înainte de plan îl verificăm pe Google Maps, la ora ta.')}</Muted>}
           </View>
 
           <View style={{ gap: 8 }}>
