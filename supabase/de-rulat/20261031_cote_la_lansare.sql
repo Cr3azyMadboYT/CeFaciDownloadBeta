@@ -17,3 +17,6 @@ language sql immutable set search_path = '' as $$
     else array[0, 0, 0] end
 $$;
 revoke all on function private.quota(text) from public;
+
+-- Proba Plus o dată pe telefon: oprită cât testăm (31.10); la lansare se pornește din nou:
+update private.switches set enabled = true, changed_at = now() where key = 'proba_pe_telefon';
