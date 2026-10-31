@@ -1,17 +1,304 @@
 ## Programul comparat cu Google Maps (2026-10-31)
 
-Localuri verificate: 10 (fără parcuri, muzee, teatre, locuri publice).
+Localuri verificate: 901 (fără parcuri, muzee, teatre, locuri publice).
 
-- Programul nostru se potrivește: **3**
-- Diferă (cel puțin o zi, cu peste 30 min): **5**
-- Google are program, noi nu: **2**
-- Noi avem program, Google nu: 0
-- Niciunul nu are program: 0
-- Închise pe Google: 0 · negăsite: 0 · erori: 0
+- Programul nostru se potrivește: **212**
+- Diferă (cel puțin o zi, cu peste 30 min): **292**
+- Google are program, noi nu: **363**
+- Noi avem program, Google nu: 10
+- Niciunul nu are program: 13
+- Închise pe Google: 3 · negăsite: 7 · erori: 1
 
 ### Diferă (zilele în care nu se potrivește)
 - 2Nice Caffe (Restaurant, s6): toate zilele
+- Abel's Wine Bar (Bar, centru): toate zilele
+- ADESSO (Cafenea, s1): toate zilele
+- Alt Shift (Restaurant, centru): toate zilele
+- Amicii (Cafenea, popesti): toate zilele
+- Arc Bakery (Restaurant, s1): toate zilele
+- Argentine (Restaurant, s1): toate zilele
+- Atelierul de tarte (Patiserie, s1): toate zilele
+- Aubergine (Restaurant, centru): toate zilele
+- Avocadoo (Restaurant, s1): toate zilele
+- balls (Restaurant, centru): toate zilele
+- Bar Italia (Restaurant, s1): toate zilele
+- BAR TON (Bar, centru): toate zilele
+- Baristo (Cafenea, centru): toate zilele
+- Bazaar (Restaurant, centru): toate zilele
+- Beer O'Clock (Pub, centru): toate zilele
+- Benihana (Restaurant, centru): toate zilele
+- Beraria Nenea Iancu (Pub, centru): toate zilele
+- Berăria H (Pub, s1): toate zilele
+- Bernschutz and Co (Cafenea, centru): toate zilele
+- Blue Margarita (Restaurant, centru): toate zilele
+- Boiler Coffee Shop (Cafenea, s3): toate zilele
+- Boogie Bar (Bar, centru): toate zilele
+- Bordo Caffe & Pub (Pub, s1): toate zilele
+- Boulevard Pub (Pub, centru): toate zilele
+- Bruncherry by Happy Eggs (Fast food, centru): toate zilele
+- Burgr Factory (Fast food, s6): toate zilele
+- Burgr Factory (Fast food, centru): toate zilele
+- C.T W. Bubble ea (Cafenea, centru): toate zilele
+- Cafeneaua Nației (Cafenea, centru): toate zilele
+- Cafetăria Sebastian (Cantină, s5): toate zilele
+- Calif (Fast food, s2): toate zilele
+- Caju (Restaurant, centru): toate zilele
+- Camizo (Restaurant, s3): toate zilele
+- Capriccio (Restaurant, centru): toate zilele
+- Casa Oamenilor de Știință (Restaurant, centru): toate zilele
+- Ceaicoffski (Cafenea, s3): toate zilele
+- Cereal crunch (Cafenea, centru): toate zilele
+- Chiftelărie (Fast food, centru): toate zilele
+- Cinaș (Restaurant, s1): toate zilele
+- Divan (Restaurant, s2): toate zilele
+- Dristor Kebap (Fast food, centru): toate zilele
+- El Medina (Restaurant, centru): toate zilele
+- Escape Room Dacia 130 (Escape room, centru): toate zilele
+- Extra Time (Pub, centru): toate zilele
+- Fabrica (Club rock & pub, centru): toate zilele
+- First Coffee (Cafenea, centru): toate zilele
+- Fratellini Bistro (Restaurant, s1): toate zilele
+- Friddi (Gelaterie, centru): toate zilele
+- Friends Pub (Pub, s3): toate zilele
+- Genin Shaorma (Fast food, centru): toate zilele
+- Gelateria La Romana (Gelaterie, centru): toate zilele
+- Gio Cafe (Cafenea, s3): toate zilele
+- Gradina Mantuleasa (Bar, centru): toate zilele
+- Grădina Zoologică București (Grădină zoologică, voluntari): toate zilele
+- Half Time (Pub, centru): toate zilele
+- Handsome Monk (Cafenea, s3): toate zilele
+- Hanul La Bariera (Restaurant, s1): toate zilele
+- Herăstrău (Restaurant, s1): toate zilele
+- High Class Cafe & Lounge (Cafenea, s3): toate zilele
+- Home made Su Ramen (Fast food, centru): toate zilele
+- I'Ladrino (Restaurant, s2): toate zilele
+- Il Destino (Restaurant, centru): toate zilele
+- Jadoo (Restaurant, s1): toate zilele
+- Jeonjuu (Restaurant, centru): toate zilele
+- Jerry's Pizza - Vitan (Fast food, centru): toate zilele
+- Kilkenny (Restaurant, centru): toate zilele
+- Komodo Lounge (Lounge cu narghilea, s1): toate zilele
+- Kunnai (Restaurant, s1): toate zilele
+- La Buni (Restaurant, s4): toate zilele
+- La Cave de Bucarest (Restaurant, s6): toate zilele
+- La Crama (Restaurant, magurele): toate zilele
+- La Felinare (Restaurant, s6): toate zilele
+- La Finca by Alioli (Restaurant, centru): toate zilele
+- La Mama (Restaurant, s3): toate zilele
+- La Pescaderia by Alioli (Restaurant, voluntari): toate zilele
+- La Salumeria Cucina (Restaurant, centru): toate zilele
+- Le Bab (Restaurant, centru): toate zilele
+- Le Dôme (Restaurant, centru): toate zilele
+- Lolly Pop Lounge Cafe (Cafenea, s3): toate zilele
+- Los Amantes (Restaurant, centru): toate zilele
+- Machhapuchhre (Restaurant, s1): toate zilele
+- Mancave (Cafenea, s6): toate zilele
+- Manufaktura (Cafenea, s1): toate zilele
+- Mignon Bistro (Restaurant, s3): toate zilele
+- Mishi Mishi (Restaurant, s2): toate zilele
+- Mojo Music Club (Bar cu muzică live, centru): toate zilele
+- Mom (Restaurant, centru): toate zilele
+- Nativ (Bar, centru): toate zilele
+- Nexus Gamers Pub (Pub, centru): toate zilele
+- Negroni Aperitivo Bar (Bar, centru): toate zilele
+- Nikos Greek Taverna (Restaurant, s6): toate zilele
+- NINE BAR coffeeshop (Cafenea, centru): toate zilele
+- Noua Bar (Restaurant, s1): toate zilele
+- Nova (Bar, centru): toate zilele
+- One Club (Club, s1): toate zilele
+- Origo Coffee Shop (Cafenea, centru): toate zilele
+- Osteria Ciao Niki (Restaurant, centru): toate zilele
+- Paque Bistro & More (Restaurant, s2): toate zilele
+- Passione Ristorante (Restaurant, voluntari): toate zilele
+- Oyster Bar by Taverna Racilor (Restaurant, centru): toate zilele
+- Pardon Café (Cafenea, s6): toate zilele
+- Pizza Dorobanți (Fast food, s1): toate zilele
+- Pizza Natura (Fast food, s1): toate zilele
+- Pizza Real (Fast food, s1): toate zilele
+- Pizza Shop & Espresso Bar (Fast food, centru): toate zilele
+- Pizza Veneția (Restaurant, s3): toate zilele
+- Point (Pub, centru): toate zilele
+- POT (Restaurant, s1): toate zilele
+- Red Angus (Restaurant, centru): toate zilele
+- Reper (Cafenea, centru): toate zilele
+- Restaurant Burebista Traditional (Restaurant, centru): toate zilele
+- Restaurant Capitol (Restaurant, centru): toate zilele
+- Restaurant Casa Lazar (Restaurant, s5): toate zilele
+- Restaurant Diplomat (Restaurant, s1): toate zilele
+- Restaurant Nan Jing (Restaurant, centru): toate zilele
+- Sagakura (Restaurant, s1): toate zilele
+- Salon Golescu (Restaurant, centru): toate zilele
+- Saporia coffee and pizza (Restaurant, centru): toate zilele
+- Sea Ray - Fructe de mare (Restaurant, popesti): toate zilele
+- Sfeir (Restaurant, centru): toate zilele
+- Shift (Restaurant, centru): toate zilele
+- Simbio (Restaurant, centru): toate zilele
+- SPIZZA Artizanale (Restaurant, s4): toate zilele
+- STEAM Coffee Shop (Cafenea, centru): toate zilele
+- Teo's Tonics (Pub, centru): toate zilele
+- Terasa Obor 2 (Restaurant, s2): toate zilele
+- The Brasserie (Restaurant, popesti): toate zilele
+- The Burgr Factory Băneasa (Fast food, s1): toate zilele
+- The Dubliner (Pub, s1): toate zilele
+- The Great Hill (Bar, centru): toate zilele
+- The Lobby (Restaurant, centru): toate zilele
+- The Millenial Burger (Fast food, centru): toate zilele
+- The Kimchi (Fast food, centru): toate zilele
+- The Place (Pub, s1): toate zilele
+- Therme București (Parc acvatic, corbeanca): toate zilele
+- Toan's (Restaurant, centru): toate zilele
+- Trattoria Don Vito (Restaurant, centru): toate zilele
+- Trattoria Mezzaluna (Restaurant, centru): toate zilele
+- Trattoria Il Calcio Floreasca (Restaurant, s1): toate zilele
+- Trattoria Pizzerie Verdi (Restaurant, s1): toate zilele
+- Trattoria Roma Mântuleasa (Restaurant, centru): toate zilele
+- Trattoria Roz Cafe (Restaurant, chiajna): toate zilele
+- Trei Betivi (Bar, centru): toate zilele
+- Trick Shot (Restaurant, s1): toate zilele
+- Trickshot (Restaurant, s6): toate zilele
+- Troll Escape Rooms (Escape room, centru): toate zilele
+- Tudi's Pizza (Restaurant, s1): toate zilele
+- Tucano Coffee Guatemala (Cafenea, centru): toate zilele
+- Un Poco Pizza Fresca (Restaurant, centru): toate zilele
+- Urban Slice (Fast food, s2): toate zilele
+- Utopia Coffee Bar (Cafenea, s1): toate zilele
+- Vanfruct (Cafenea, centru): toate zilele
+- ViceCream (Gelaterie, centru): toate zilele
+- Vivo (Restaurant, s6): toate zilele
+- Vivo Fusion Food Bar (Restaurant, s1): toate zilele
+- Weiss Beer Garden (Restaurant, s6): toate zilele
+- Wellness & Pool BabySpa (Parc acvatic, s3): toate zilele
+- Wok pe Loc (Restaurant, centru): toate zilele
+- YOLK the egg station (Fast food, centru): toate zilele
+- Yusuf kebap (Fast food, centru): toate zilele
+- Zenzero Gelato (Gelaterie, s1): toate zilele
+- Bucătăria.localfood (Restaurant, centru): marți, miercuri, joi, vineri, sâmbătă, duminică
+- C22 Cafeteria (Cafenea, centru): luni, marți, miercuri, joi, vineri, sâmbătă
+- Derya Kebab (Fast food, centru): luni, marți, miercuri, joi, vineri, sâmbătă
+- Energiea (Restaurant, centru): luni, marți, miercuri, joi, sâmbătă, duminică
+- Erbario (Restaurant, centru): marți, miercuri, joi, vineri, sâmbătă, duminică
+- Gedo (Restaurant, s2): luni, marți, miercuri, joi, vineri, sâmbătă
+- Haute Pepper Restaurant Bucuresti (Restaurant, centru): marți, miercuri, joi, vineri, sâmbătă, duminică
+- Jerry's Pizza - Iancului (Fast food, s2): luni, marți, miercuri, joi, sâmbătă, duminică
+- Jerry's Pizza - Militari (Fast food, s6): luni, marți, miercuri, joi, sâmbătă, duminică
+- La Galette (Restaurant, s1): luni, marți, miercuri, joi, vineri, sâmbătă
+- Lacrimi și Sfinți (Restaurant, centru): luni, marți, miercuri, joi, sâmbătă, duminică
+- La Vita e Velo (Cafenea, centru): luni, marți, miercuri, joi, vineri, duminică
+- Maestro Pizza (Restaurant, s2): luni, marți, miercuri, joi, vineri, sâmbătă
+- MODELiER (Restaurant, s2): luni, marți, miercuri, joi, sâmbătă, duminică
+- moca coffè shop (Cafenea, s2): luni, marți, miercuri, joi, vineri, sâmbătă
+- Rawdia (Restaurant, s1): luni, marți, miercuri, joi, vineri, sâmbătă
+- Rio Juice (Cafenea, centru): marți, miercuri, joi, vineri, sâmbătă, duminică
+- Senvis #iacuma (Fast food, s1): luni, marți, miercuri, joi, vineri, sâmbătă
+- Sibelle (Restaurant, s2): marți, miercuri, joi, vineri, sâmbătă, duminică
+- Sip Coffee & Wine (Cafenea, centru): luni, marți, miercuri, joi, sâmbătă, duminică
+- Suta de Grame (Fast food, centru): marți, miercuri, joi, vineri, sâmbătă, duminică
+- Tava cu de toate (Fast food, s6): marți, miercuri, joi, vineri, sâmbătă, duminică
+- Taverna Syrtaki (Restaurant, centru): luni, marți, miercuri, joi, vineri, sâmbătă
+- Wienerhaus (Restaurant, centru): marți, miercuri, joi, vineri, sâmbătă, duminică
 - 60 Minutes (Escape room, centru): luni, marți, miercuri, joi, vineri
+- BCheese - Pasta Restaurant (Restaurant, s2): luni, marți, miercuri, joi, vineri
+- Boutique Du Pain (Restaurant, s1): luni, marți, miercuri, joi, vineri
+- Bucate Gustoase (Restaurant, centru): luni, marți, miercuri, joi, vineri
+- Buoni e Bravi (Fast food, centru): luni, marți, miercuri, joi, vineri
+- Casa de Tacos (Restaurant, centru): luni, marți, miercuri, joi, sâmbătă
+- Casa Jienilor (Restaurant, s2): marți, miercuri, joi, vineri, sâmbătă
+- Chimichanga (Fast food, centru): luni, marți, vineri, sâmbătă, duminică
+- Cineplexx (Cinema, voluntari): luni, marți, miercuri, joi, sâmbătă
+- Coffee Hub (Cafenea, centru): luni, marți, miercuri, joi, vineri
+- Control Club (Club, centru): luni, marți, miercuri, joi, vineri
+- Die deutsche Kneipe (Restaurant, centru): luni, marți, miercuri, joi, vineri
+- Dönerboom (Fast food, s2): luni, marți, miercuri, joi, vineri
+- Hotspot (Cafenea, centru): luni, marți, miercuri, joi, vineri
+- Limoncello Club (Club, centru): luni, marți, miercuri, joi, vineri
+- Mace (Restaurant, centru): marți, miercuri, joi, vineri, sâmbătă
+- Nikos Greek Taverna (Restaurant, centru): luni, marți, miercuri, joi, duminică
+- Okfea (Cafenea, centru): luni, marți, miercuri, joi, vineri
+- Sweetology (Gelaterie, centru): luni, marți, miercuri, joi, vineri
+- Switch.eat (Restaurant, s2): marți, miercuri, joi, sâmbătă, duminică
 - 7 Days (Restaurant, s3): luni, marți, miercuri, duminică
+- Black Habit (Cafenea, centru): joi, vineri, sâmbătă, duminică
+- Boiler x Guido (Cafenea, centru): joi, vineri, sâmbătă, duminică
+- Cineplexx (Cinema, s3): marți, vineri, sâmbătă, duminică
+- Elvira Popescu (Cinema, centru): luni, marți, sâmbătă, duminică
+- Gioelia (Gelaterie, centru): luni, marți, miercuri, joi
+- Kiss Tea Bubble Tea (Cafenea, centru): luni, marți, miercuri, joi
+- Naan Project (Restaurant, s6): joi, vineri, sâmbătă, duminică
+- Restaurant Thalia Tineretului (Restaurant, centru): joi, vineri, sâmbătă, duminică
+- Suzana Ribs & Wings (Restaurant, centru): luni, marți, miercuri, joi
 - 1UP Gamers Pub (Pub, centru): luni, marți, vineri
+- Big Ben Pub (Pub, centru): luni, marți, miercuri
+- Blokx (Escaladă, voluntari): vineri, sâmbătă, duminică
+- Face Club (Club, s1): vineri, sâmbătă, duminică
+- Ganesha Caffe (Lounge cu narghilea, centru): vineri, sâmbătă, duminică
+- HARE (Restaurant, s1): vineri, sâmbătă, duminică
+- SAO (Cafenea, s1): joi, sâmbătă, duminică
+- Saray (Restaurant, centru): vineri, sâmbătă, duminică
+- Terminus (Pub, centru): luni, marți, duminică
+- Aero Squash (Padel, s1): sâmbătă, duminică
+- Asian Lab (Restaurant, centru): marți, sâmbătă
+- Bomber (Fast food, centru): sâmbătă, duminică
+- Carpatic Escaladă & Bouldering (Escaladă, s6): sâmbătă, duminică
+- Chanh (Restaurant, s6): joi, vineri
+- Check (Restaurant, centru): vineri, duminică
+- Citrick (Cafenea, centru): sâmbătă, duminică
+- Coppa Coffee & Wine Bar (Cafenea, s1): sâmbătă, duminică
+- Cotroceni on Ice (Patinoar, s6): sâmbătă, duminică
+- Gigi Burgers (Fast food, s2): luni, marți
+- Guido (Cafenea, centru): sâmbătă, duminică
+- Happy Pub (Pub, centru): sâmbătă, duminică
+- Innocent & Delicious (Restaurant, centru): sâmbătă, duminică
+- Jessie's (Cafenea, s6): sâmbătă, duminică
+- Oma Speciality Coffee (Cafenea, centru): sâmbătă, duminică
+- Rainbow (Bar, s3): vineri, duminică
+- Râșnit Specialty Coffee Shop (Cafenea, centru): sâmbătă, duminică
+- Restaurant Sabatini (Restaurant, s3): marți, duminică
+- Savormanger (Fast food, centru): sâmbătă, duminică
+- Slow (Restaurant, centru): vineri, sâmbătă
+- Tamashi (Restaurant, centru): luni, duminică
+- Tata Gigi (Restaurant, s6): sâmbătă, duminică
+- Taverna Studioului (Restaurant, buftea): sâmbătă, duminică
+- Terasa Obor (Restaurant, s2): sâmbătă, duminică
+- The Void (Escape room, centru): sâmbătă, duminică
+- Trio Bar & Lounge (Bar, centru): luni, vineri
+- Tudor's (Cafenea, s6): sâmbătă, duminică
+- UNDA Open Possibilities (Restaurant, s1): luni, duminică
+- Zepelin 1929 (Pub, centru): sâmbătă, duminică
 - 20 grams (Cafenea, centru): duminică
+- Boutique du Pain (Brutărie, centru): duminică
+- Burgerati (Fast food, s1): miercuri
+- Burgeria Știrbei (Fast food, centru): duminică
+- Caffe Saccaria (Cafenea, centru): duminică
+- Cannoleria Decebal (Patiserie, s3): duminică
+- Centrale Pizza (Restaurant, centru): luni
+- Comics Club (Club, centru): sâmbătă
+- Corner Pub & Grill (Pub, s3): duminică
+- Edo Sushi (Restaurant, centru): marți
+- Efes (Restaurant, centru): duminică
+- Encore Club (Pub, s6): luni
+- Eshte (Cafenea, centru): luni
+- Flair Angel (Bar, centru): vineri
+- Geek Hub (Pub, centru): sâmbătă
+- Gotti (Restaurant, pantelimon): duminică
+- Greek Taverna Mediterannia by Hades (Restaurant, s3): luni
+- Hugo - Bar & Lounge (Bar, centru): vineri
+- Il Pizzaiolo (Restaurant, s3): luni
+- Latin Pizza (Restaurant, centru): sâmbătă
+- MiT Burger (Fast food, popesti): luni
+- Mosto - Natural Wine Bar & Bistró (Restaurant, centru): duminică
+- Nice Touch (Restaurant, centru): duminică
+- Nicorești (Restaurant, centru): luni
+- Nomad Skybar (Bar, centru): vineri
+- Oficiul 1 (Bar, centru): duminică
+- Pastrami & More (Fast food, centru): luni
+- Pizzeria Margherita (Restaurant, s2): duminică
+- Restaurant Allucinante (Restaurant, centru): luni
+- Restaurant Potcoava (Restaurant, s6): duminică
+- S'pressi (Restaurant, centru): vineri
+- Sabatini Pizza & Restaurant (Restaurant, s1): luni
+- South Burger Garden (Restaurant, s4): marți
+- Sweet Concept (Cafenea, s6): sâmbătă
+- Trattoria Adagio (Restaurant, centru): sâmbătă
+- Trattoria Roma (Restaurant, s6): luni
+- True Social Club (Club, centru): duminică
+- Wicked Bar (Bar, centru): vineri
