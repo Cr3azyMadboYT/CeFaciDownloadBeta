@@ -137,12 +137,17 @@ export function Tour() {
           </View>
         )}
         {!st.final && !st.magic ? (
-          <Pressable onPress={() => finish()} hitSlop={10} style={{ position: 'absolute', right: 16, top: 48, paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: 'rgba(255,255,255,0.14)' }} accessibilityLabel={tr('Sari peste tur')}>
+          // when the lit part is at the top (the area and the weather), "Sari peste" goes to the bottom so it does not sit on
+          // the avatar (31.10, QA)
+          <Pressable onPress={() => finish()} hitSlop={10} style={{ position: 'absolute', right: 16, ...(hole && hole.y < 140 ? { bottom: ins.bottom + 48 } : { top: 48 }), paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: 'rgba(14,20,64,0.85)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' }} accessibilityLabel={tr('Sari peste tur')}>
             <T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>{tr('Sari peste')}</T>
           </Pressable>
         ) : null}
-        <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: ins.bottom + 16, flexDirection: 'row', justifyContent: 'center', gap: 6, opacity: hole && !below ? 0 : 1 }}>
-          {steps.map((_, i) => <View key={i} style={{ width: i === tour.step ? 18 : 6, height: 6, borderRadius: 3, backgroundColor: i === tour.step ? '#FFD43B' : 'rgba(255,255,255,0.35)' }} />)}
+        {/* the dots on their own dark pill, so they don't mix with the tab names under them (31.10, QA) */}
+        <View pointerEvents="none" style={{ position: 'absolute', left: 0, right: 0, bottom: ins.bottom + 16, alignItems: 'center', opacity: hole && !below ? 0 : 1 }}>
+          <View style={{ flexDirection: 'row', gap: 6, paddingVertical: 7, paddingHorizontal: 10, borderRadius: 99, backgroundColor: 'rgba(14,20,64,0.85)' }}>
+            {steps.map((_, i) => <View key={i} style={{ width: i === tour.step ? 18 : 6, height: 6, borderRadius: 3, backgroundColor: i === tour.step ? '#FFD43B' : 'rgba(255,255,255,0.35)' }} />)}
+          </View>
         </View>
         <View style={{ width: W, height: 0 }} />
       </Pressable>
