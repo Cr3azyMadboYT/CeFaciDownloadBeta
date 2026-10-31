@@ -23,6 +23,8 @@ const sameName = (a: string, b: string) => { const fa = fold(a), fb = fold(b); r
 
 /** Minute of the week (0 = Sunday 00:00) of a moment, in the place's local time. */
 const weekMin = (t: Date, offset: number) => { const l = new Date(t.getTime() + offset * 60e3); return l.getUTCDay() * 1440 + l.getUTCHours() * 60 + l.getUTCMinutes(); };
+/** Minutes Romania is ahead of UTC at a moment (kept hours can outlive a summer/winter time change). */
+const roOffset = (t: Date) => Math.round((Date.parse(t.toLocaleString('sv-SE', { timeZone: 'Europe/Bucharest' }).replace(' ', 'T') + 'Z') - t.getTime()) / 60e3);
 const W = 7 * 1440;
 /** Open from `a` to `b` (minutes of the week)? And when the period that covers `a` closes. */
 function openSpan(periods: Period[], a: number, b: number): { open: boolean; closes: number | null } {
@@ -94,10 +96,12 @@ Deno.serve(async (req) => {
   }
   const out: Record<string, { open: boolean | null; closes?: string; status?: string }> = {};
   /** The answer for one step from a place's status and weekly periods (the same for a fresh answer and for today's kept one). */
-  const answer = (x: Item, status: string | null, periods: Period[] | null, off: number) => {
+  const answer = (x: Item, status: string | null, periods: Period[] | null, _off: number) => {
     if (status && status !== 'OPERATIONAL') return { open: false, status: status === 'CLOSED_PERMANENTLY' ? 'inchis-definitiv' : 'inchis-temporar' };
     if (!periods?.length) return { open: null, status: 'fara-program' };
-    const a = weekMin(new Date(x.at), off), b = x.until ? weekMin(new Date(x.until), off) : a + 45;
+    // all places are in Romania: the offset is the one at the step's own time, not the one kept with the hours
+    const at = new Date(x.at), until = x.until ? new Date(x.until) : null;
+    const a = weekMin(at, roOffset(at)), b = until ? weekMin(until, roOffset(until)) : a + 45;
     const s = openSpan(periods, a, b);
     return { open: s.open, ...(s.closes !== null ? { closes: hhmm(s.closes) } : {}) };
   };
