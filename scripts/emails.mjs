@@ -81,7 +81,7 @@ const resendHint = p('Codul a expirat sau nu merge? În aplicație apasă „Tri
 const safety = box(`${strong('Nu da codul nimănui.')} Echipa CeFaci nu ți-l cere niciodată: nici pe telefon, nici pe mesaj, nici pe email.<br><br>${strong('N-ai cerut tu codul?')} Ignoră emailul. Fără cod nu intră nimeni în contul tău, iar codul expiră singur.`);
 
 const EMAILS = {
-  'cod-intrare': {
+  'magic-link': {
     note: 'Emailul cu codul de intrare, pentru un cont care există deja. Supabase → Authentication → Emails → Templates → „Magic Link”.',
     subject: '{{ .Token }} e codul tău CeFaci', title: 'Codul tău CeFaci',
     preheader: 'Codul tău de intrare în CeFaci e {{ .Token }}. E valabil o oră. Nu-l da nimănui.',
@@ -93,7 +93,7 @@ const EMAILS = {
     ]) + safety + resendHint,
     why: 'Ai primit emailul pentru că s-a cerut un cod de intrare pentru adresa ta.',
   },
-  'confirmare-cont': {
+  'confirm-signup': {
     note: 'Primul email, la un cont nou făcut cu emailul. Supabase → Authentication → Emails → Templates → „Confirm signup”.',
     subject: '{{ .Token }} e codul tău CeFaci · Bun venit!', title: 'Bun venit în CeFaci',
     preheader: 'Bun venit în CeFaci! Codul tău e {{ .Token }}. E valabil o oră.',
@@ -105,7 +105,7 @@ const EMAILS = {
     ]) + safety + resendHint,
     why: 'Ai primit emailul pentru că cineva a început un cont CeFaci cu adresa ta.',
   },
-  'mfa-adaugat': {
+  'mfa-factor-enrolled': {
     note: 'Notificare: s-a pornit verificarea în doi pași (Admin/Business). Supabase → Authentication → Emails → Security notifications → „MFA factor enrolled” (de pornit acolo).',
     subject: 'Ai pornit verificarea în doi pași în CeFaci', title: 'Verificarea în doi pași e pornită',
     preheader: 'Contul tău CeFaci cere acum și codul din aplicația de autentificare.',
@@ -113,7 +113,7 @@ const EMAILS = {
     body: p(`De acum, la intrare îți cerem și codul din aplicația de autentificare (de exemplu Google Authenticator), pe lângă codul de pe email. Contul ${strong('{{ .Email }}')} e mai greu de spart.`) + notYou('Cineva poate avea acces la contul tău.'),
     why: 'Ai primit emailul pentru că s-a schimbat securitatea contului tău CeFaci.',
   },
-  'mfa-scos': {
+  'mfa-factor-unenrolled': {
     note: 'Notificare: s-a oprit verificarea în doi pași. Supabase → Authentication → Emails → Security notifications → „MFA factor unenrolled” (de pornit acolo).',
     subject: 'Ai oprit verificarea în doi pași în CeFaci', title: 'Verificarea în doi pași e oprită',
     preheader: 'Contul tău CeFaci nu mai cere codul din aplicația de autentificare.',
@@ -121,7 +121,7 @@ const EMAILS = {
     body: p(`Contul ${strong('{{ .Email }}')} nu mai cere codul din aplicația de autentificare la intrare. Pentru Admin și Business, verificarea în doi pași trebuie pornită din nou înainte de lucru.`) + notYou('Oprirea poate însemna că altcineva a intrat în contul tău.'),
     why: 'Ai primit emailul pentru că s-a schimbat securitatea contului tău CeFaci.',
   },
-  'cont-legat': {
+  'identity-linked': {
     note: 'Notificare: la cont s-a legat o altă metodă de intrare (de exemplu Google). Supabase → Authentication → Emails → Security notifications → „Identity linked” (de pornit acolo).',
     subject: 'Ai o metodă nouă de intrare în CeFaci', title: 'Metodă nouă de intrare',
     preheader: 'La contul tău CeFaci s-a adăugat o metodă nouă de intrare.',
@@ -129,7 +129,7 @@ const EMAILS = {
     body: p(`Acum poți intra în contul ${strong('{{ .Email }}')} și cu ${strong('{{ .Provider }}')}. Planurile, prietenii și găștile tale rămân aceleași, indiferent cum intri.`) + notYou('Cineva poate fi intrat în contul tău.'),
     why: 'Ai primit emailul pentru că s-a schimbat felul în care intri în contul tău CeFaci.',
   },
-  'cont-dezlegat': {
+  'identity-unlinked': {
     note: 'Notificare: de la cont s-a scos o metodă de intrare. Supabase → Authentication → Emails → Security notifications → „Identity unlinked” (de pornit acolo).',
     subject: 'O metodă de intrare a fost scoasă din CeFaci', title: 'Metodă de intrare scoasă',
     preheader: 'De la contul tău CeFaci s-a scos o metodă de intrare.',
@@ -139,5 +139,6 @@ const EMAILS = {
   },
 };
 
+fs.mkdirSync('supabase/email', { recursive: true });
 for (const [name, e] of Object.entries(EMAILS)) fs.writeFileSync(`supabase/email/${name}.html`, page(e));
 console.log('Scrise: ' + Object.keys(EMAILS).map((n) => n + '.html').join(', '));
