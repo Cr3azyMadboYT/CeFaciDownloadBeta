@@ -165,7 +165,7 @@ function GiftCard() {
       </View>
       <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 44, lineHeight: 44, letterSpacing: -1.2, color: '#0E1440' }}>{tr('7 zile gratis')}</T>
       <View style={{ marginTop: 10, gap: 6 }}>
-        {['10–20% reducere la localurile partenere', 'Pentru întreaga notă eligibilă a grupului', 'Live Drops cu 10 minute mai devreme'].map((x) => (
+        {['Reduceri mai mari la Live Drops: 15–30%', 'Pentru întreaga notă eligibilă a grupului', 'Live Drops cu 10 minute mai devreme'].map((x) => (
           <View key={x} style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}><Icon name="check" size={16} color="#0E1440" width={2.6} /><T style={{ flex: 1, fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{tr(x)}</T></View>
         ))}
       </View>

@@ -51,8 +51,8 @@ export default function Plus() {
         </View>
         <View style={{ marginTop: 10, padding: 18, borderRadius: 22, backgroundColor: '#FFD43B' }}>
           <T style={{ fontFamily: F.b, fontSize: 13, color: '#3A4270' }}>{st === 'trial' || st === 'locked' ? tr('Probă gratuită · ziua {d} din 7', { d: st === 'locked' ? 1 : day }) : st === 'active' ? tr('Plus activ') : tr('Plus e oprit')}</T>
-          <T style={{ marginTop: 10, fontFamily: F.display, fontSize: 54, lineHeight: 52, letterSpacing: -1.6, color: '#0E1440' }}>—</T>
-          <T style={{ fontFamily: F.sb, fontSize: 14, color: '#0E1440' }}>{tr('Economii: total indisponibil')}</T>
+          {/* no big "—" and "total indisponibil" (31.10, QA): the savings are not counted yet, so it says when they will be */}
+          <T style={{ marginTop: 10, fontFamily: F.sb, fontSize: 15, lineHeight: 21, color: '#0E1440' }}>{tr('Economiile tale apar aici după prima notă cu reducere Plus.')}</T>
           {st === 'trial' || st === 'locked' ? (
             <View style={{ marginTop: 14, flexDirection: 'row', gap: 5 }} accessibilityLabel={tr('Ziua {d} din 7 de probă', { d: day })}>
               {[1, 2, 3, 4, 5, 6, 7].map((d) => <View key={d} style={{ flex: 1, height: 6, borderRadius: 99, backgroundColor: d <= day ? '#0E1440' : 'rgba(14,20,64,0.18)' }} />)}
@@ -86,7 +86,7 @@ export default function Plus() {
               <Muted>{offer.percent > 0 ? tr('{pct}% Plus acum · verifică în bilet reducerea la ora ieșirii', { pct: offer.percent }) : tr('Plus nu este disponibil acum la acest local.')}</Muted>
             </Press>
           )) : <View style={{ padding: 14, borderRadius: 20, borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line }}>
-            <Muted style={{ fontSize: 14, lineHeight: 20 }}>{tr('Nu sunt localuri partenere disponibile în catalogul încărcat. Lista se actualizează când revii online.')}</Muted>
+            <Muted style={{ fontSize: 14, lineHeight: 20 }}>{tr('Încă nu avem localuri partenere. Când intră primele, le vezi aici, cu reducerea lor.')}</Muted>
           </View>}
         </View>
       </ScrollView>
