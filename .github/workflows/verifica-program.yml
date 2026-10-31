@@ -1,0 +1,58 @@
+# Compares our opening hours with Google Maps for the businesses only (no parks, museums, theatres or public places).
+# Runs only by hand (Actions → "Verifică programul" → Run workflow); ~900 Text Search calls. Saves only our verdict
+# (src/data/hours-check.json + docs/verificare-program.md), never Google's hours. Needs the secret PLACES_API_KEY.
+name: Verifică programul
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Câte localuri (gol = toate)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: osm-data
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Programul pe Google Maps
+        env:
+          PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
+          LIMIT: ${{ inputs.limit }}
+        run: |
+          if [ -n "$LIMIT" ]; then [[ "$LIMIT" =~ ^[0-9]+$ ]] || { echo "limit trebuie să fie un număr"; exit 1; }; node scripts/check-hours.mjs --limit "$LIMIT"; else node scripts/check-hours.mjs; fi
+          cat docs/verificare-program.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: program-${{ github.run_number }}
+          path: |
+            docs/verificare-program.md
+            src/data/hours-check.json
+      - name: Salvează în repo
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          cp src/data/hours-check.json docs/verificare-program.md /tmp/
+          for i in 1 2 3; do
+            git fetch -q origin "${GITHUB_REF_NAME}" && git reset -q --hard "origin/${GITHUB_REF_NAME}"
+            cp /tmp/hours-check.json src/data/; cp /tmp/verificare-program.md docs/
+            git add src/data/hours-check.json docs/verificare-program.md
+            if git diff --cached --quiet; then echo "Nimic nou"; exit 0; fi
+            git commit -q -m "Program comparat cu Google Maps ($(date -u +%F)) [skip ci]"
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            sleep 15
+          done
+          exit 1
