@@ -866,7 +866,8 @@ export function search(all: Venue[], q: string, ctx: Ctx, limit = 40): { results
       sc += 12 * (0.4 + 0.6 * complete);
       if (chain) sc -= p.fancy ? 30 : 20;
       if (v.fast && (p.romantic || p.fancy || venueTopics.includes('restaurant') || (!wantsSomething && !p.cheap))) sc -= 8;
-      sc += p.place ? 22 * Math.max(0, 1 - d / (radius * 1.15)) : 14 * Math.max(0, 1 - d / 12);
+      // distance weighs more (31.10, QA from Buftea: "pizza" put a place 18 km away before the one 0.9 km away)
+      sc += p.place ? 22 * Math.max(0, 1 - d / (radius * 1.15)) : 20 * Math.max(0, 1 - d / 15);
       if (p.near && !p.place) sc += 22 * Math.max(0, 1 - d / 5);
       // closed now (no time asked): still shown, but after every open place (decision Cornel, 06.10: "îmi arată să mă
       // duc, însă e închis la ora asta"); without hours on the map, how often that kind of place is open at that hour
