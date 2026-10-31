@@ -57,6 +57,8 @@ const en: Record<string, string> = {
   // locul: detaliile
   'Locul ăsta nu mai e în aplicație.': 'This place isn\'t in the app anymore.',
   'Nu am putut face planul.': 'Couldn\'t make the plan.',
+  'Folosește două degete ca să miști harta': 'Use two fingers to move the map',
+  '{name} nu e deschis la ora planului tău. Alege altă oră din Creează plan.': '{name} isn\'t open at your plan\'s time. Pick another time in Create plan.',
   'Localul nu este disponibil pentru planuri noi.': 'This place isn\'t available for new plans.',
   'Loc public, oricând': 'Public place, any time',
   'Ales de noi': 'Our pick',

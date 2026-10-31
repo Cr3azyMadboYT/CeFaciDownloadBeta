@@ -98,7 +98,8 @@ export function Seg({ label, on, onPress }: { label: string; on?: boolean; onPre
   return (
     <Press onPress={onPress} accessibilityState={{ selected: !!on }}
       style={{ flex: 1, minHeight: 48, paddingVertical: 6, paddingHorizontal: 6, borderRadius: 14, borderWidth: on ? 2 : 1, borderColor: on ? t.blue : t.line, backgroundColor: on ? t.blueSoft : t.s1, alignItems: 'center', justifyContent: 'center' }}>
-      <T style={{ fontFamily: F.sb, fontSize: 14, textAlign: 'center', color: on ? t.blueInk : t.ink }}>{label}</T>
+      {/* one word shrinks instead of breaking in two ("Weeken/d" on a narrow phone, 31.10) */}
+      <T numberOfLines={/\s/.test(label) ? undefined : 1} adjustsFontSizeToFit={!/\s/.test(label)} minimumFontScale={0.7} style={{ fontFamily: F.sb, fontSize: 14, textAlign: 'center', color: on ? t.blueInk : t.ink }}>{label}</T>
     </Press>
   );
 }

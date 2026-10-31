@@ -30,17 +30,19 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
   const { t } = useTheme();
   const bar = useBarBottom(logBar);
   const plus = useApp((s) => s.board.plus);
-  const veiled = !plus || plus === 'locked' || plus === 'off';
+  // blurred only while it is Bilu's closed gift; once the trial is over ('off') it stays readable, in grey (31.10, QA:
+  // after the trial the tab was a faint yellow blur forever)
+  const veiled = !plus || plus === 'locked';
   return (
     <View ref={bar.ref} onLayout={bar.onLayout} collapsable={false} style={{ flexDirection: 'row', paddingTop: 8, paddingHorizontal: 12, paddingBottom: Math.max(bar.bottom, 8) + 8, backgroundColor: t.bg, borderTopWidth: 1, borderTopColor: t.line }}>
       {state.routes.map((r, i) => {
         const on = state.index === i;
         const isPlus = r.name === 'plus';
-        const color = isPlus ? '#E0A800' : on ? t.blueInk : t.ink3;
+        const color = isPlus ? (plus === 'off' ? t.ink3 : '#E0A800') : on ? t.blueInk : t.ink3;
         return (
           <TourTarget key={r.key} id={'tab-' + r.name} style={{ flex: 1 }}>
           <Press style={{ minHeight: 52, alignItems: 'center', justifyContent: 'center', gap: 4 }}
-            accessibilityLabel={isPlus ? (veiled ? (plus === 'off' ? tr('CeFaci Plus, oprit') : tr('Plus: un cadou de la Bilu')) : 'CeFaci Plus') : tr(LABEL[r.name])}
+            accessibilityLabel={isPlus ? (plus === 'off' ? tr('CeFaci Plus, oprit') : veiled ? tr('Plus: un cadou de la Bilu') : 'CeFaci Plus') : tr(LABEL[r.name])}
             accessibilityState={{ selected: on }}
             onPress={() => {
               const ev = navigation.emit({ type: 'tabPress', target: r.key, canPreventDefault: true });

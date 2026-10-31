@@ -182,7 +182,7 @@ export default function PlanuriGata() {
               ) : null}
               <View style={{ marginTop: 12, flexDirection: 'row', gap: 8 }}>
                 {madePid(p, myPlans) ? <Big label={tr('E în Planuri · Vezi biletul')} color="#5FD39A" ink="#0E1440" icon={<Icon name="check" color="#0E1440" />} style={{ flex: 1, minHeight: 46 }} onPress={() => router.push({ pathname: '/bilet/[pid]', params: { pid: String(madePid(p, myPlans)) } })} />
-                  : <Big label={tr('Facem așa')} color={i === 0 ? '#FFD43B' : t.s2} ink="#0E1440" style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? tr('voastră') } : undefined)} />}
+                  : <Big label={tr('Facem așa')} color={i === 0 ? '#FFD43B' : t.s2} ink={i === 0 ? '#0E1440' : t.ink} style={{ flex: 1, minHeight: 46 }} onPress={() => makeTickets(p, people, draft.crewId ? { id: draft.crewId, name: draft.crewName ?? tr('voastră') } : undefined)} />}
                 <Big label={tr('Vezi pe hartă')} color={t.bg} ink={t.ink} style={{ minHeight: 46, paddingHorizontal: 14 }} onPress={() => router.push({ pathname: '/plan/[i]', params: { i: String(i) } })} />
               </View>
             </Press>

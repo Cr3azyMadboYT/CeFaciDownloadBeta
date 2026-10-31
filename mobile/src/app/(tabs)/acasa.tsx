@@ -197,7 +197,7 @@ export default function Acasa() {
               </Press>
             </View>
           </View>
-          <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.12)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>
+          <View style={{ marginTop: 10, flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 22, backgroundColor: 'rgba(14,20,64,0.32)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.22)' }}>{/* dark enough that white text reads over the sky's sun (31.10, QA: "Tonight 11°" was white on yellow) */}
             <Icon name={(nowWx?.icon as never) ?? (phase === 'morning' || phase === 'day' ? 'sun' : 'moon')} size={40} color="#FFD43B" />
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>

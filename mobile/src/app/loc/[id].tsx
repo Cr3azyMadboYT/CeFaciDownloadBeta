@@ -9,14 +9,14 @@ import * as WebBrowser from 'expo-web-browser';
 import { useSafeAreaInsets } from '../../ui/insets';
 import { APP } from '../../lib/session';
 import { telLink, webLink } from '../../lib/links';
-import { fmtDur, useFilters } from '../../lib/filters';
-import { createPlan } from '../../lib/plans';
+import { fmtDur } from '../../lib/filters';
+import { firstDraft, runPlace } from '../../lib/planAsk';
 import { Icon, type IconName } from '../../ui/Icon';
 import { Big, Muted, Press, T, Tag } from '../../ui/kit';
 import { F, useTheme } from '../../ui/theme';
 import { PlacesMap } from '../../ui/PlacesMap';
 import { openAt, PUBLIC_SPACE } from '../../../../src/engine/core';
-import { tr, trServer, pick } from '../../lib/i18n';
+import { tr, pick } from '../../lib/i18n';
 
 const DAYS = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
 const DAYS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -43,7 +43,6 @@ function weekLines(wk: number[][][]): string[] {
 export default function Loc() {
   const { t } = useTheme();
   const ins = useSafeAreaInsets();
-  const { f } = useFilters();
   const { id } = useLocalSearchParams<{ id: string }>();
   const p = APP.byId(String(id));
   const now = useMemo(() => new Date(), []);
@@ -60,7 +59,12 @@ export default function Loc() {
   const week = v.wk ? weekLines(v.wk) : null;
   const todayIdx = ORDER.indexOf(now.getDay());
   const back = () => (router.canGoBack() ? router.back() : router.replace('/exploreaza'));
-  const plan = () => { try { const pid = createPlan(p.id, f); router.replace({ pathname: '/bilet/[pid]', params: { pid: String(pid) } }); } catch (e) { toast(e instanceof Error ? trServer(e.message) : tr('Nu am putut face planul.')); } };
+  // the plan is shown first, like the ideas on Acasă: the ticket is made only with "Facem așa" there (31.10, QA: it made a
+  // ticket for 4 people at 20:00 straight away, from old filters, without asking)
+  const plan = () => {
+    if (runPlace(p.id, { ...firstDraft(), mode: 'loc' })) router.push({ pathname: '/plan/[i]', params: { i: '0' } });
+    else toast(tr('{name} nu e deschis la ora planului tău. Alege altă oră din Creează plan.', { name: v.name }));
+  };
   const nav = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v.lat + ',' + v.lon);
   const site = webLink(v.website);
   const tel = telLink(v.phone);
@@ -143,7 +147,7 @@ export default function Loc() {
 
           <View style={{ gap: 8 }}>
             {address ? <T style={{ fontFamily: F.sb, fontSize: 14, color: t.ink2 }}>{address}</T> : null}
-            <PlacesMap height={180} pins={[{ id: p.id, lat: v.lat, lon: v.lon, name: p.name, sub: p.title, bg: p.bg, fg: p.fg, n: 1, hot: true }]} origin={{ ...APP.origin(), label: APP.zoneName() }} />
+            <PlacesMap height={180} pins={[{ id: p.id, lat: v.lat, lon: v.lon, name: p.name, sub: p.title, bg: p.bg, fg: p.fg, n: 1, hot: true }]} origin={{ ...APP.origin(), label: APP.zoneName() }} focus />
             <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
               <Pill icon="map" label={tr('Drum')} onPress={() => void Linking.openURL(nav)} />
               {tel ? <Pill icon="phone" label={tr('Sună')} onPress={() => void Linking.openURL(tel)} /> : null}

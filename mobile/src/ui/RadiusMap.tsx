@@ -16,6 +16,7 @@ function html(p: { lat: number; lon: number }, r: number, dark: boolean, movable
 <link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'}}
 .pin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#FFD43B;border:3px solid #0E1440;box-shadow:0 3px 8px rgba(14,20,64,.35)}
+/* the attribution stays visible (Esri, OSM) but small, so it does not cover the map (31.10) */.maplibregl-ctrl-attrib{font-size:9px;line-height:12px;max-width:62%}.maplibregl-ctrl-attrib-inner{padding:1px 4px}
 .err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#5A6390;font:600 14px system-ui;text-align:center;padding:20px}</style></head>
 <body><div id="m"></div>
 <script integrity="sha384-GfxBM9x46BaAFxtCq39Fxir8fNZ4VDnwgfi6Kzi5/F1tAFsm0amuuV8kd+Pxzuf/" crossorigin="anonymous" src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
