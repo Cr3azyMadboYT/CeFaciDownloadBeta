@@ -137,9 +137,9 @@ export function Tour() {
           </View>
         )}
         {!st.final && !st.magic ? (
-          // when the lit part is at the top (the area and the weather), "Sari peste" goes to the bottom so it does not sit on
-          // the avatar (31.10, QA)
-          <Pressable onPress={() => finish()} hitSlop={10} style={{ position: 'absolute', right: 16, ...(hole && hole.y < 140 ? { bottom: ins.bottom + 48 } : { top: 48 }), paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: 'rgba(14,20,64,0.85)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' }} accessibilityLabel={tr('Sari peste tur')}>
+          // "Sari peste" at the bottom left, above the dots (the top corners hold the area and the avatar it covered, 31.10,
+          // QA); when the lit part is low (the bottom bar), at the top right instead
+          <Pressable onPress={() => finish()} hitSlop={10} style={{ position: 'absolute', ...(hole && hole.y > H / 2 ? { right: 16, top: 48 } : { left: 16, bottom: ins.bottom + 48 }), paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, backgroundColor: 'rgba(14,20,64,0.85)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.25)' }} accessibilityLabel={tr('Sari peste tur')}>
             <T style={{ fontFamily: F.sb, fontSize: 14, color: '#FFFFFF' }}>{tr('Sari peste')}</T>
           </Pressable>
         ) : null}

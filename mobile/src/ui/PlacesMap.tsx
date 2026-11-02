@@ -18,8 +18,8 @@ export const MAP_SATELLITE = !!ESRI;
 
 export interface MapPin { id: string; lat: number; lon: number; name: string; sub: string; bg: string; fg: string; n: number; hot?: boolean }
 
-function html(pins: MapPin[], origin: { lat: number; lon: number; label: string }, line: boolean, dark: boolean, pick: boolean, focus: boolean) {
-  const data = JSON.stringify({ pins, origin, line, dark, pick, focus, style: MAP_STYLE, sat: MAP_SATELLITE, txt: { offline: tr('Harta are nevoie de internet. Lista de mai jos merge și fără.'), details: tr('Vezi detalii'), twoFingers: tr('Folosește două degete ca să miști harta') } }).replace(/</g, '\\u003c');
+function html(pins: MapPin[], origin: { lat: number; lon: number; label: string }, line: boolean, dark: boolean, pick: boolean, focus: boolean, coop: boolean) {
+  const data = JSON.stringify({ pins, origin, line, dark, pick, focus, coop, style: MAP_STYLE, sat: MAP_SATELLITE, txt: { offline: tr('Harta are nevoie de internet. Lista de mai jos merge și fără.'), details: tr('Vezi detalii'), twoFingers: tr('Folosește două degete ca să miști harta') } }).replace(/</g, '\\u003c');
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <link rel="stylesheet" integrity="sha384-Nq6PQ+9vJPvw7U/VfDELyrWoGQMsy0gi6QShhaSrGzkpF5KkM40csg2leky+YMTd" crossorigin="anonymous" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" onerror="this.href='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css'">
 <style>html,body,#m{margin:0;height:100%;background:${dark ? '#0B1030' : '#EEF1FB'};font-family:system-ui,sans-serif}
@@ -39,7 +39,7 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
   function start(){
     if(!window.maplibregl){ var e=document.createElement('div');e.className='err';e.textContent=D.txt.offline;document.body.innerHTML='';document.body.appendChild(e); return; }
     // focus (one place's page): centred on the place, two fingers to move it, so one finger still scrolls the page (31.10, QA)
-    var map=new maplibregl.Map({container:'m',style:D.style,center:D.focus&&D.pins.length?[D.pins[0].lon,D.pins[0].lat]:[D.origin.lon,D.origin.lat],zoom:D.focus?15:13,attributionControl:false,cooperativeGestures:!!D.focus,locale:{'CooperativeGesturesHandler.MobileHelpText':D.txt.twoFingers,'CooperativeGesturesHandler.WindowsHelpText':D.txt.twoFingers,'CooperativeGesturesHandler.MacHelpText':D.txt.twoFingers}});
+    var map=new maplibregl.Map({container:'m',style:D.style,center:D.focus&&D.pins.length?[D.pins[0].lon,D.pins[0].lat]:[D.origin.lon,D.origin.lat],zoom:D.focus?15:13,attributionControl:false,cooperativeGestures:!!D.coop,locale:{'CooperativeGesturesHandler.MobileHelpText':D.txt.twoFingers,'CooperativeGesturesHandler.WindowsHelpText':D.txt.twoFingers,'CooperativeGesturesHandler.MacHelpText':D.txt.twoFingers}});
     // the route through the steps (yellow on the satellite photo, where blue would not show)
     map.on('style.load',function(){ if(D.line&&D.pins.length>1&&!map.getSource('r')){
       map.addSource('r',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:D.pins.map(function(p){return[p.lon,p.lat];})}}});
@@ -67,9 +67,10 @@ function html(pins: MapPin[], origin: { lat: number; lon: number; label: string 
 </script></body></html>`;
 }
 
-export function PlacesMap({ pins, origin, line = false, height = 360, onPick, focus = false }: { pins: MapPin[]; origin: { lat: number; lon: number; label: string }; line?: boolean; height?: number; onPick?: (id: string) => void; focus?: boolean }) {
+export function PlacesMap({ pins, origin, line = false, height = 360, onPick, focus = false, inPage = focus }: { pins: MapPin[]; origin: { lat: number; lon: number; label: string }; line?: boolean; height?: number; onPick?: (id: string) => void; focus?: boolean; inPage?: boolean }) {
   const { t } = useTheme();
-  const page = useMemo(() => html(pins, origin, line, t.dark, !!onPick, focus), [pins, origin, line, t.dark, onPick, focus]);
+  // inPage: the map sits in a page that scrolls, so it moves with two fingers (31.10, QA: one finger dragged it to the mountains)
+  const page = useMemo(() => html(pins, origin, line, t.dark, !!onPick, focus, inPage), [pins, origin, line, t.dark, onPick, focus, inPage]);
   if (Platform.OS === 'web') {
     return <View style={{ height: 120, borderRadius: 20, borderWidth: 1, borderColor: t.line, alignItems: 'center', justifyContent: 'center' }}><Muted>{tr('Harta se vede în aplicația de telefon.')}</Muted></View>;
   }

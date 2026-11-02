@@ -13,8 +13,9 @@ function Opt({ label, on, onPress, grow = true }: { label: string; on: boolean; 
   const { t } = useTheme();
   return (
     <Press onPress={onPress} accessibilityState={{ selected: on }}
-      style={{ flexGrow: grow ? 1 : 0, flexBasis: grow ? 0 : 'auto', minHeight: 42, paddingVertical: 4, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center' }}>
-      <T style={{ fontFamily: F.sb, fontSize: 14, color: on ? t.bg : t.ink }}>{label}</T>
+      style={{ flexGrow: grow ? 1 : 0, flexBasis: grow ? 0 : 'auto', minHeight: 42, paddingVertical: 4, paddingHorizontal: grow ? 6 : 14, borderRadius: 999, borderWidth: 1, borderColor: on ? t.ink : t.line, backgroundColor: on ? t.ink : t.s1, alignItems: 'center', justifyContent: 'center' }}>
+      {/* one line that shrinks, not "Disear/ă" or "5/km" on a narrow phone (31.10, QA) */}
+      <T numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7} style={{ fontFamily: F.sb, fontSize: 14, color: on ? t.bg : t.ink }}>{label}</T>
     </Press>
   );
 }

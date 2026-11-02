@@ -264,6 +264,7 @@ export function Results({ inTab = false }: { inTab?: boolean }) {
             pins={all.slice(0, 10).map((p, i) => ({ id: p.id, lat: p.real.lat, lon: p.real.lon, name: p.name, sub: p.title + (p.price ? ' · ~' + p.price + ' lei' : ''), bg: p.bg, fg: p.fg, n: i + 1, hot: i < 3 }))}
             origin={{ ...APP.origin(), label: APP.zoneName() }}
             onPick={pick}
+            inPage
           />
           <Muted style={{ marginTop: 6 }}>{tr('Primele 10 variante; cele mari sunt cele de mai jos. Hartă © OpenFreeMap, OpenStreetMap.')}</Muted>
         </View>

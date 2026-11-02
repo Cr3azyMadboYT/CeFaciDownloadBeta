@@ -53,8 +53,21 @@ export function setPage(page: number) { s = { ...s, page }; subs.forEach((x) => 
 export function resetFilters() { s = { ...s, f: initial(), page: 0 }; subs.forEach((x) => x()); }
 
 /** What the results screen shows: the search when there is one, else the filters' ranking. */
+/** The budget filter as a lei range per person (null = any). */
+function budgetRange(key: string): [number, number] | null {
+  const r = /^(\d*)-(\d*)$/.exec(key);
+  if (r) return [r[1] ? Number(r[1]) : 0, r[2] ? Number(r[2]) : Infinity];
+  return key === 'any' || !(key in BUDGET) ? null : [0, Number(key)];
+}
 export function listFor(f: Filters, sq: string): Place[] {
-  return sq.trim().length > 1 ? APP.search(sq.trim()) : matchesOf(f);
+  if (sq.trim().length <= 1) return matchesOf(f);
+  // typed words go through the same km and budget filters as the list (31.10, QA: "restaurant" with 5 km and ≤50 lei
+  // gave a place 25 min away at ~90 lei); if nothing is left, the search's own order rather than an empty page
+  const found = APP.search(sq.trim());
+  const max = DIST[f.dist]?.max ?? APP.radiusKm();
+  const b = budgetRange(f.budget);
+  const kept = found.filter((p) => p.km <= max && (!b || (p.price >= b[0] && p.price <= b[1])));
+  return kept.length ? kept : found;
 }
 /** The engine's ranking for the filters, with the distance in km. */
 export const matchesOf = (f: Filters) => APP.matches({ ...f, km: DIST[f.dist]?.max ?? APP.radiusKm() });
